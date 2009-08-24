@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.talend.dataquality.indicators.sql.provider;
+package org.talend.dataquality.properties.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +12,6 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -24,8 +23,7 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-
-import org.talend.dataquality.indicators.sql.util.IndicatorSqlAdapterFactory;
+import org.talend.dataquality.properties.util.PropertiesAdapterFactory;
 
 /**
  * This is the factory that is used to provide the interfaces needed to support Viewers.
@@ -36,7 +34,7 @@ import org.talend.dataquality.indicators.sql.util.IndicatorSqlAdapterFactory;
  * <!-- end-user-doc -->
  * @generated
  */
-public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
+public class PropertiesItemProviderAdapterFactory extends PropertiesAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**
      * This keeps track of the root adapter factory that delegates to this adapter factory.
      * <!-- begin-user-doc -->
@@ -67,7 +65,7 @@ public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterF
      * <!-- end-user-doc -->
      * @generated
      */
-    public IndicatorSqlItemProviderAdapterFactory() {
+    public PropertiesItemProviderAdapterFactory() {
         supportedTypes.add(IEditingDomainItemProvider.class);
         supportedTypes.add(IStructuredItemContentProvider.class);
         supportedTypes.add(ITreeItemContentProvider.class);
@@ -76,49 +74,118 @@ public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterF
     }
 
     /**
-     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.sql.UserDefIndicator} instances.
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.properties.ITDQProperty} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected UserDefIndicatorItemProvider userDefIndicatorItemProvider;
+    protected ITDQPropertyItemProvider itdqPropertyItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.talend.dataquality.indicators.sql.UserDefIndicator}.
+     * This creates an adapter for a {@link org.talend.dataquality.properties.ITDQProperty}.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
-    public Adapter createUserDefIndicatorAdapter() {
-        if (userDefIndicatorItemProvider == null) {
-            userDefIndicatorItemProvider = new UserDefIndicatorItemProvider(this);
+    public Adapter createITDQPropertyAdapter() {
+        if (itdqPropertyItemProvider == null) {
+            itdqPropertyItemProvider = new ITDQPropertyItemProvider(this);
         }
 
-        return userDefIndicatorItemProvider;
+        return itdqPropertyItemProvider;
     }
 
     /**
-     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.sql.WhereRuleIndicator} instances.
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.properties.ITDQItem} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected WhereRuleIndicatorItemProvider whereRuleIndicatorItemProvider;
+    protected ITDQItemItemProvider itdqItemItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.talend.dataquality.indicators.sql.WhereRuleIndicator}.
+     * This creates an adapter for a {@link org.talend.dataquality.properties.ITDQItem}.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
-    public Adapter createWhereRuleIndicatorAdapter() {
-        if (whereRuleIndicatorItemProvider == null) {
-            whereRuleIndicatorItemProvider = new WhereRuleIndicatorItemProvider(this);
+    public Adapter createITDQItemAdapter() {
+        if (itdqItemItemProvider == null) {
+            itdqItemItemProvider = new ITDQItemItemProvider(this);
         }
 
-        return whereRuleIndicatorItemProvider;
+        return itdqItemItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.properties.ITDQUser} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected ITDQUserItemProvider itdqUserItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.properties.ITDQUser}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createITDQUserAdapter() {
+        if (itdqUserItemProvider == null) {
+            itdqUserItemProvider = new ITDQUserItemProvider(this);
+        }
+
+        return itdqUserItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.properties.ITDQItemState} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected ITDQItemStateItemProvider itdqItemStateItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.properties.ITDQItemState}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createITDQItemStateAdapter() {
+        if (itdqItemStateItemProvider == null) {
+            itdqItemStateItemProvider = new ITDQItemStateItemProvider(this);
+        }
+
+        return itdqItemStateItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.properties.IMockModelElement} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected IMockModelElementItemProvider iMockModelElementItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.properties.IMockModelElement}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createIMockModelElementAdapter() {
+        if (iMockModelElementItemProvider == null) {
+            iMockModelElementItemProvider = new IMockModelElementItemProvider(this);
+        }
+
+        return iMockModelElementItemProvider;
     }
 
     /**
@@ -220,8 +287,11 @@ public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterF
      * @generated
      */
     public void dispose() {
-        if (userDefIndicatorItemProvider != null) userDefIndicatorItemProvider.dispose();
-        if (whereRuleIndicatorItemProvider != null) whereRuleIndicatorItemProvider.dispose();
+        if (itdqPropertyItemProvider != null) itdqPropertyItemProvider.dispose();
+        if (itdqItemItemProvider != null) itdqItemItemProvider.dispose();
+        if (itdqUserItemProvider != null) itdqUserItemProvider.dispose();
+        if (itdqItemStateItemProvider != null) itdqItemStateItemProvider.dispose();
+        if (iMockModelElementItemProvider != null) iMockModelElementItemProvider.dispose();
     }
 
 }

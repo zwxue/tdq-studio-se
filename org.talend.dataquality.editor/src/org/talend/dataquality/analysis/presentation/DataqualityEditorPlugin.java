@@ -7,11 +7,8 @@
 package org.talend.dataquality.analysis.presentation;
 
 import org.eclipse.emf.common.EMFPlugin;
-
 import org.eclipse.emf.common.ui.EclipseUIPlugin;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import orgomg.cwm.objectmodel.core.provider.Cwm_mipEditPlugin;
 
 /**
@@ -38,15 +35,22 @@ public final class DataqualityEditorPlugin extends EMFPlugin {
     private static Implementation plugin;
 
     /**
-     * Create the instance.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
+     * Create the instance. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
      */
     public DataqualityEditorPlugin() {
         super
             (new ResourceLocator [] {
+        // BusinessEditPlugin.INSTANCE,
+                // componentEditPlugin.INSTANCE,
                 Cwm_mipEditPlugin.INSTANCE,
+                // EcoreEditPlugin.INSTANCE,
+                // JobletEditPlugin.INSTANCE,
+                // MetadataEditPlugin.INSTANCE,
+                // NotationEditPlugin.INSTANCE,
+                // PropertiesEditPlugin.INSTANCE,
+                // TalendFileEditPlugin.INSTANCE,
             });
     }
 

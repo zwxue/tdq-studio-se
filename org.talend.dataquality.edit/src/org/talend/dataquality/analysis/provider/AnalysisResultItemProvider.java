@@ -12,12 +12,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
-
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -25,25 +21,22 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.AnalysisResult;
-
 import org.talend.dataquality.domain.DomainFactory;
-
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
-import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.SqlFactory;
+import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
-
 import orgomg.cwmx.analysis.informationreporting.provider.ReportGroupItemProvider;
 
 /**
@@ -81,31 +74,8 @@ public class AnalysisResultItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
-            addIndicatorsPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
-    }
-
-    /**
-     * This adds a property descriptor for the Indicators feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected void addIndicatorsPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_AnalysisResult_indicators_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_AnalysisResult_indicators_feature", "_UI_AnalysisResult_type"),
-                 AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
-                 true,
-                 false,
-                 true,
-                 null,
-                 null,
-                 null));
     }
 
     /**
@@ -122,6 +92,7 @@ public class AnalysisResultItemProvider
             super.getChildrenFeatures(object);
             childrenFeatures.add(AnalysisPackage.Literals.ANALYSIS_RESULT__RESULT_METADATA);
             childrenFeatures.add(AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES);
+            childrenFeatures.add(AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS);
         }
         return childrenFeatures;
     }
@@ -178,6 +149,7 @@ public class AnalysisResultItemProvider
         switch (notification.getFeatureID(AnalysisResult.class)) {
             case AnalysisPackage.ANALYSIS_RESULT__RESULT_METADATA:
             case AnalysisPackage.ANALYSIS_RESULT__INDICATOR_VALUES:
+            case AnalysisPackage.ANALYSIS_RESULT__INDICATORS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -448,12 +420,12 @@ public class AnalysisResultItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 IndicatorSqlFactory.eINSTANCE.createUserDefIndicator()));
+                 SqlFactory.eINSTANCE.createUserDefIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator()));
+                 SqlFactory.eINSTANCE.createWhereRuleIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
@@ -527,6 +499,31 @@ public class AnalysisResultItemProvider
 
         newChildDescriptors.add
             (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQProperty()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQItem()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQUser()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQItemState()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createIMockModelElement()));
+
+        newChildDescriptors.add
+            (createChildParameter
                 (CorePackage.Literals.CLASSIFIER__FEATURE,
                  ReportsFactory.eINSTANCE.createPresentationParameter()));
 
@@ -569,6 +566,256 @@ public class AnalysisResultItemProvider
             (createChildParameter
                 (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES,
                  DomainFactory.eINSTANCE.createDateValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createRowCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createSumIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createMeanIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createCompositeIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createRangeIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createBoxIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createFrequencyIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createBlankCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createMedianIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createValueIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createMinValueIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createMaxValueIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createModeIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createNullCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createDistinctCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createUniqueCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createIQRIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createTextIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createLengthIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createMinLengthIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createMaxLengthIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createAverageLengthIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createLowerQuartileIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createUpperQuartileIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createCountsIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createSqlPatternMatchingIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createLowFrequencyIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createPatternFreqIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createPatternLowFreqIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createDefValueCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createSoundexFreqIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 IndicatorsFactory.eINSTANCE.createSoundexLowFreqIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 SchemaFactory.eINSTANCE.createSchemaIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 SchemaFactory.eINSTANCE.createAbstractTableIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 SchemaFactory.eINSTANCE.createTableIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 SchemaFactory.eINSTANCE.createCatalogIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 SchemaFactory.eINSTANCE.createConnectionIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 SchemaFactory.eINSTANCE.createViewIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 SqlFactory.eINSTANCE.createUserDefIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 SqlFactory.eINSTANCE.createWhereRuleIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 ColumnsetFactory.eINSTANCE.createValueMatchingIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 ColumnsetFactory.eINSTANCE.createRowMatchingIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 ColumnsetFactory.eINSTANCE.createColumnSetMultiValueIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 ColumnsetFactory.eINSTANCE.createCountAvgNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 ColumnsetFactory.eINSTANCE.createMinMaxDateIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 ColumnsetFactory.eINSTANCE.createWeakCorrelationIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS,
+                 ColumnsetFactory.eINSTANCE.createColumnDependencyIndicator()));
     }
 
     /**
@@ -584,7 +831,8 @@ public class AnalysisResultItemProvider
 
         boolean qualify =
             childFeature == CorePackage.Literals.NAMESPACE__OWNED_ELEMENT ||
-            childFeature == CorePackage.Literals.CLASSIFIER__FEATURE;
+            childFeature == CorePackage.Literals.CLASSIFIER__FEATURE ||
+            childFeature == AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATORS;
 
         if (qualify) {
             return getString

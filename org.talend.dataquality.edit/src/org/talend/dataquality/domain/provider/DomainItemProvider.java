@@ -12,9 +12,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -22,13 +21,9 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.talend.dataquality.analysis.AnalysisFactory;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
+import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
-
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.DomainPackage;
@@ -37,12 +32,12 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
-import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.SqlFactory;
+import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.provider.NamespaceItemProvider;
-import orgomg.cwm.objectmodel.core.provider.ModelElementItemProvider;
 
 /**
  * This is the item provider adapter for a {@link org.talend.dataquality.domain.Domain} object.
@@ -80,8 +75,6 @@ public class DomainItemProvider
             super.getPropertyDescriptors(object);
 
             addDataTypePropertyDescriptor(object);
-            addLengthRestrictionPropertyDescriptor(object);
-            addRangesPropertyDescriptor(object);
             addPatternsPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
@@ -110,50 +103,6 @@ public class DomainItemProvider
     }
 
     /**
-     * This adds a property descriptor for the Length Restriction feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected void addLengthRestrictionPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_Domain_lengthRestriction_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Domain_lengthRestriction_feature", "_UI_Domain_type"),
-                 DomainPackage.Literals.DOMAIN__LENGTH_RESTRICTION,
-                 true,
-                 false,
-                 true,
-                 null,
-                 null,
-                 null));
-    }
-
-    /**
-     * This adds a property descriptor for the Ranges feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected void addRangesPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_Domain_ranges_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Domain_ranges_feature", "_UI_Domain_type"),
-                 DomainPackage.Literals.DOMAIN__RANGES,
-                 true,
-                 false,
-                 true,
-                 null,
-                 null,
-                 null));
-    }
-
-    /**
      * This adds a property descriptor for the Patterns feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -173,6 +122,37 @@ public class DomainItemProvider
                  null,
                  null,
                  null));
+    }
+
+    /**
+     * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+     * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+        if (childrenFeatures == null) {
+            super.getChildrenFeatures(object);
+            childrenFeatures.add(DomainPackage.Literals.DOMAIN__LENGTH_RESTRICTION);
+            childrenFeatures.add(DomainPackage.Literals.DOMAIN__RANGES);
+        }
+        return childrenFeatures;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    protected EStructuralFeature getChildFeature(Object object, Object child) {
+        // Check the type of the specified child object and return the proper feature to use for
+        // adding (see {@link AddCommand}) it as a child.
+
+        return super.getChildFeature(object, child);
     }
 
     /**
@@ -210,6 +190,13 @@ public class DomainItemProvider
     @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
+
+        switch (notification.getFeatureID(Domain.class)) {
+            case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
+            case DomainPackage.DOMAIN__RANGES:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+                return;
+        }
         super.notifyChanged(notification);
     }
 
@@ -487,12 +474,12 @@ public class DomainItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 IndicatorSqlFactory.eINSTANCE.createUserDefIndicator()));
+                 SqlFactory.eINSTANCE.createUserDefIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator()));
+                 SqlFactory.eINSTANCE.createWhereRuleIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
@@ -553,6 +540,64 @@ public class DomainItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  RulesFactory.eINSTANCE.createWhereRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQProperty()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQItem()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQUser()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQItemState()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createIMockModelElement()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.DOMAIN__LENGTH_RESTRICTION,
+                 DomainFactory.eINSTANCE.createLengthRestriction()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.DOMAIN__RANGES,
+                 DomainFactory.eINSTANCE.createRangeRestriction()));
+    }
+
+    /**
+     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+        Object childFeature = feature;
+        Object childObject = child;
+
+        boolean qualify =
+            childFeature == CorePackage.Literals.NAMESPACE__OWNED_ELEMENT ||
+            childFeature == DomainPackage.Literals.DOMAIN__RANGES;
+
+        if (qualify) {
+            return getString
+                ("_UI_CreateChild_text2",
+                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+        }
+        return super.getCreateChildText(owner, feature, child, selection);
     }
 
     /**

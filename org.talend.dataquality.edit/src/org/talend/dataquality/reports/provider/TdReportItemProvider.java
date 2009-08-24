@@ -12,11 +12,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -26,10 +23,8 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
-
 import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.expressions.ExpressionsFactory;
@@ -37,15 +32,14 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
-import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.SqlFactory;
+import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.TdReport;
-
 import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
-
 import orgomg.cwmx.analysis.informationreporting.provider.ReportItemProvider;
 
 /**
@@ -599,12 +593,12 @@ public class TdReportItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 IndicatorSqlFactory.eINSTANCE.createUserDefIndicator()));
+                 SqlFactory.eINSTANCE.createUserDefIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator()));
+                 SqlFactory.eINSTANCE.createWhereRuleIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
@@ -675,6 +669,31 @@ public class TdReportItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  RulesFactory.eINSTANCE.createWhereRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQProperty()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQItem()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQUser()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createITDQItemState()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 PropertiesFactory.eINSTANCE.createIMockModelElement()));
 
         newChildDescriptors.add
             (createChildParameter

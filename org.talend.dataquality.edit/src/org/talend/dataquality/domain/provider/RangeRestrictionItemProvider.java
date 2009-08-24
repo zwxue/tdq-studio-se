@@ -12,22 +12,20 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemProviderAdapter;
-
+import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
-
+import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.expressions.ExpressionsFactory;
 import orgomg.cwm.objectmodel.core.provider.ModelElementItemProvider;
 
 /**
@@ -65,77 +63,40 @@ public class RangeRestrictionItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
-            addLowerValuePropertyDescriptor(object);
-            addUpperValuePropertyDescriptor(object);
-            addExpressionsPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
 
     /**
-     * This adds a property descriptor for the Lower Value feature.
+     * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+     * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void addLowerValuePropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_RangeRestriction_lowerValue_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_RangeRestriction_lowerValue_feature", "_UI_RangeRestriction_type"),
-                 DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE,
-                 true,
-                 false,
-                 true,
-                 null,
-                 null,
-                 null));
+    @Override
+    public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+        if (childrenFeatures == null) {
+            super.getChildrenFeatures(object);
+            childrenFeatures.add(DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE);
+            childrenFeatures.add(DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE);
+            childrenFeatures.add(DomainPackage.Literals.RANGE_RESTRICTION__EXPRESSIONS);
+        }
+        return childrenFeatures;
     }
 
     /**
-     * This adds a property descriptor for the Upper Value feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void addUpperValuePropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_RangeRestriction_upperValue_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_RangeRestriction_upperValue_feature", "_UI_RangeRestriction_type"),
-                 DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE,
-                 true,
-                 false,
-                 true,
-                 null,
-                 null,
-                 null));
-    }
+    @Override
+    protected EStructuralFeature getChildFeature(Object object, Object child) {
+        // Check the type of the specified child object and return the proper feature to use for
+        // adding (see {@link AddCommand}) it as a child.
 
-    /**
-     * This adds a property descriptor for the Expressions feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected void addExpressionsPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_RangeRestriction_expressions_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_RangeRestriction_expressions_feature", "_UI_RangeRestriction_type"),
-                 DomainPackage.Literals.RANGE_RESTRICTION__EXPRESSIONS,
-                 true,
-                 false,
-                 true,
-                 null,
-                 null,
-                 null));
+        return super.getChildFeature(object, child);
     }
 
     /**
@@ -173,6 +134,14 @@ public class RangeRestrictionItemProvider
     @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
+
+        switch (notification.getFeatureID(RangeRestriction.class)) {
+            case DomainPackage.RANGE_RESTRICTION__LOWER_VALUE:
+            case DomainPackage.RANGE_RESTRICTION__UPPER_VALUE:
+            case DomainPackage.RANGE_RESTRICTION__EXPRESSIONS:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+                return;
+        }
         super.notifyChanged(notification);
     }
 
@@ -186,6 +155,94 @@ public class RangeRestrictionItemProvider
     @Override
     protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE,
+                 DomainFactory.eINSTANCE.createLiteralValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE,
+                 DomainFactory.eINSTANCE.createNumericValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE,
+                 DomainFactory.eINSTANCE.createTextValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE,
+                 DomainFactory.eINSTANCE.createIntegerValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE,
+                 DomainFactory.eINSTANCE.createRealNumberValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE,
+                 DomainFactory.eINSTANCE.createDateValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE,
+                 DomainFactory.eINSTANCE.createLiteralValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE,
+                 DomainFactory.eINSTANCE.createNumericValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE,
+                 DomainFactory.eINSTANCE.createTextValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE,
+                 DomainFactory.eINSTANCE.createIntegerValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE,
+                 DomainFactory.eINSTANCE.createRealNumberValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE,
+                 DomainFactory.eINSTANCE.createDateValue()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DomainPackage.Literals.RANGE_RESTRICTION__EXPRESSIONS,
+                 ExpressionsFactory.eINSTANCE.createBooleanExpressionNode()));
+    }
+
+    /**
+     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+        Object childFeature = feature;
+        Object childObject = child;
+
+        boolean qualify =
+            childFeature == DomainPackage.Literals.RANGE_RESTRICTION__LOWER_VALUE ||
+            childFeature == DomainPackage.Literals.RANGE_RESTRICTION__UPPER_VALUE;
+
+        if (qualify) {
+            return getString
+                ("_UI_CreateChild_text2",
+                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+        }
+        return super.getCreateChildText(owner, feature, child, selection);
     }
 
     /**
