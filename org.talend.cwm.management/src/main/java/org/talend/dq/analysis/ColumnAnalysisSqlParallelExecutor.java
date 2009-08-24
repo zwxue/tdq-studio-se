@@ -47,7 +47,8 @@ public class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor
         ColumnAnalysisSqlParallelExecutor inst = new ColumnAnalysisSqlParallelExecutor();
         if (parent != null) {
             inst.errorMessage = parent.errorMessage;
-            inst.dbmsLanguage = parent.dbmsLanguage;
+            // MOD scorreia 2009-08-20 line commented out: use protected method dbms() instead
+            // inst.dbmsLanguage = parent.dbmsLanguage;
             inst.cachedAnalysis = parent.cachedAnalysis;
             inst.schemata = parent.schemata;
         }

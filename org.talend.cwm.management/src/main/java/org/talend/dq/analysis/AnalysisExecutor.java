@@ -46,8 +46,11 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     protected String errorMessage;
 
-    DbmsLanguage dbmsLanguage;
-
+    /**
+     * use {@link #dbms()} to access this attribute.
+     */
+    private DbmsLanguage dbmsLanguage;
+    
     protected Analysis cachedAnalysis;
 
     /*
