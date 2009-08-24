@@ -20,7 +20,6 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -29,6 +28,8 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dq.writer.EMFSharedResources;
+
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
