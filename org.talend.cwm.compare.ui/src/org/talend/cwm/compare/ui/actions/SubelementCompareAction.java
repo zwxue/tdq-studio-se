@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.ui.viewer.content.part.diff.ModelContentMergeDiff
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
@@ -31,6 +30,8 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.dq.writer.EMFSharedResources;
+
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;

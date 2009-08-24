@@ -38,7 +38,6 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -52,6 +51,8 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.writer.EMFSharedResources;
+
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
