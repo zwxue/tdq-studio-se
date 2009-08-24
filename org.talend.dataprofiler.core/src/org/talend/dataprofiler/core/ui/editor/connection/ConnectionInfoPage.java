@@ -36,18 +36,16 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
-import org.talend.dataquality.exception.ExceptionHandler;
-import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -185,32 +183,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
         ReturnCode returnCode = ConnectionService.checkConnection(this.urlText.getText(), connection.getDriverClassName(), props);
         return returnCode;
-    }
-
-    @Override
-    protected void saveTextChange() {
-        this.tdDataProvider.setName(nameText.getText());
-        MetadataHelper.setPurpose(purposeText.getText(), this.tdDataProvider);
-        MetadataHelper.setDescription(descriptionText.getText(), this.tdDataProvider);
-        MetadataHelper.setAuthor(this.tdDataProvider, authorText.getText());
-        MetadataHelper.setDevStatus(this.tdDataProvider, DevelopmentStatus.get(statusCombo.getText()));
-
-        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
-        DataProviderHelper.setUser(loginText.getText(), connection);
-        DataProviderHelper.encryptAndSetPassword(connection, passwordText.getText());
-    }
-
-    @Override
-    protected void initMetaTextFied() {
-        nameText.setText(tdDataProvider.getName() == null ? PluginConstant.EMPTY_STRING : tdDataProvider.getName());
-        String purpose = MetadataHelper.getPurpose(tdDataProvider);
-        purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
-        String description = MetadataHelper.getDescription(tdDataProvider);
-        descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
-        String author = MetadataHelper.getAuthor(tdDataProvider);
-        authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
-        DevelopmentStatus devStatus = MetadataHelper.getDevStatus(tdDataProvider);
-        statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus.getLiteral());
     }
 
     @Override

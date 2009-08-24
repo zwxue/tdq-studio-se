@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
 import org.talend.dataprofiler.ecos.EcosConstants;
@@ -42,7 +43,6 @@ import org.talend.dataprofiler.ecos.jobs.DownloadListener;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataprofiler.ecos.service.JobService;
 import org.talend.dataquality.domain.pattern.ExpressionType;
-import org.talend.dataquality.exception.ExceptionHandler;
 import org.talend.resource.ResourceManager;
 
 /**

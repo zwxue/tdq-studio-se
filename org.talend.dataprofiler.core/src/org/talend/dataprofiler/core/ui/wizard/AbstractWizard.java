@@ -124,6 +124,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
         MetadataHelper.setAuthor(cwmElement, getParameter().getAuthor());
         MetadataHelper.setPurpose(getParameter().getPurpose(), cwmElement);
         MetadataHelper.setDescription(getParameter().getDescription(), cwmElement);
+        MetadataHelper.setVersion(getParameter().getVersion(), cwmElement);
     }
 
     protected abstract ResourceFileMap getResourceFileMap();

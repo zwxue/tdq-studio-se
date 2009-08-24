@@ -33,7 +33,7 @@ import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.talend.dataquality.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataquality.indicators.Indicator;
 
 /**

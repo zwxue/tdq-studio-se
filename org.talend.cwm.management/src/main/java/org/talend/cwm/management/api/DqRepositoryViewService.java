@@ -60,6 +60,7 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
@@ -388,6 +389,17 @@ public final class DqRepositoryViewService {
         }
         contents.addAll(ranges);
         return util.save();
+    }
+
+    /**
+     * DOC bZhou Comment method "createLogicalFileNmae".
+     * 
+     * @param element
+     * @param extension
+     * @return
+     */
+    public static String createLogicalFileNmae(ModelElement element, String extension) {
+        return element.getName() + "_" + MetadataHelper.getVersion(element) + "." + extension;
     }
 
     /**
