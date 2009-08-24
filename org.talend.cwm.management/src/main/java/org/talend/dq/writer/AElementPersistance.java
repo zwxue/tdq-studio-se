@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
@@ -69,7 +68,8 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             trc.setMessage("File extension is null.");
             log.error("Get file extension error");
         } else {
-            String fname = DqRepositoryViewService.createFilename(element.getName(), getFileExtension());
+
+            String fname = DqRepositoryViewService.createLogicalFileNmae(element, getFileExtension());
             IFile file = folder.getFile(fname);
 
             if (file.exists()) {
@@ -161,6 +161,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         // String author = MetadataHelper.getAuthor(element);
         String purpose = MetadataHelper.getPurpose(element);
         String description = MetadataHelper.getDescription(element);
+        String version = MetadataHelper.getVersion(element);
         String status = MetadataHelper.getDevStatus(element).getLiteral();
 
         property.setId(EcoreUtil.generateUUID());
@@ -173,7 +174,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         property.setPurpose(purpose);
         property.setDescription(description);
         property.setStatusCode(status);
-        property.setVersion(VersionUtils.DEFAULT_VERSION);
+        property.setVersion(version);
         property.setCreationDate(new Date());
 
         computePropertyMaxInformationLevel(property);

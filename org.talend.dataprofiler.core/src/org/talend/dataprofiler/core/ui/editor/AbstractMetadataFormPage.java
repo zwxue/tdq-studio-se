@@ -18,17 +18,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -44,6 +47,18 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private static final int META_FIELD_WIDTH = 200;
 
+    private static final String NAME_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.name");
+
+    private static final String PURPOSE_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.purpose");
+
+    private static final String DESCRIPTION_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.description");
+
+    private static final String AUTHOR_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.author");
+
+    private static final String VERSION_LABEL = "Version:";
+
+    private static final String STATUS_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.status");
+
     protected Text nameText;
 
     protected Text purposeText;
@@ -51,6 +66,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected Text descriptionText;
 
     protected Text authorText;
+
+    protected Text versionText;
 
     protected CCombo statusCombo;
 
@@ -96,49 +113,41 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
         currentEditor.registerSections(new Section[] { metadataSection });
     }
-    
-    public String getCurrentModelName(){
-        if(currentModelElement == null){
+
+    public String getCurrentModelName() {
+        if (currentModelElement == null) {
             currentModelElement = getCurrentModelElement(getEditor());
         }
         return currentModelElement.getName();
     }
-    
+
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {
         Section section = createSection(form, topComp, getMetadataTitle(), true, ""); //$NON-NLS-1$ //$NON-NLS-2$
-        Composite labelButtonClient = toolkit.createComposite(section);
-        labelButtonClient.setLayout(new GridLayout(2, false));
-        Label label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.name")); //$NON-NLS-1$
-        label.setLayoutData(new GridData());
-        nameText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(nameText);
-        ((GridData) nameText.getLayoutData()).widthHint = META_FIELD_WIDTH;
-        label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.purpose")); //$NON-NLS-1$
-        label.setLayoutData(new GridData());
-        purposeText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
-        // purposeText.setLayoutData(new GridData());
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(purposeText);
-        ((GridData) purposeText.getLayoutData()).widthHint = META_FIELD_WIDTH;
-        label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.description")); //$NON-NLS-1$
-        label.setLayoutData(new GridData());
-        descriptionText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
-        // descriptionText.setLayoutData(new GridData());
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(descriptionText);
-        ((GridData) descriptionText.getLayoutData()).widthHint = META_FIELD_WIDTH;
-        label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.author")); //$NON-NLS-1$
-        authorText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(authorText);
-        ((GridData) authorText.getLayoutData()).widthHint = META_FIELD_WIDTH;
-        label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.status")); //$NON-NLS-1$
-        statusCombo = new CCombo(labelButtonClient, SWT.BORDER);
+        Composite parent = toolkit.createComposite(section);
+        parent.setLayout(new GridLayout(2, false));
+
+        nameText = createMetadataTextFiled(NAME_LABEL, nameText, parent);
+
+        purposeText = createMetadataTextFiled(PURPOSE_LABEL, purposeText, parent);
+
+        descriptionText = createMetadataTextFiled(DESCRIPTION_LABEL, descriptionText, parent);
+
+        authorText = createMetadataTextFiled(AUTHOR_LABEL, authorText, parent);
+
+        toolkit.createLabel(parent, VERSION_LABEL);
+        createVersionUI(parent);
+
+        toolkit.createLabel(parent, STATUS_LABEL); //$NON-NLS-1$
+        statusCombo = new CCombo(parent, SWT.BORDER);
         statusCombo.setEditable(false);
         for (DevelopmentStatus status : DevelopmentStatus.values()) {
-
             statusCombo.add(status.getLiteral());
         }
+
         initMetaTextFied();
+
         nameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -172,6 +181,18 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             }
         });
 
+        versionText.addModifyListener(new ModifyListener() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+             */
+            public void modifyText(ModifyEvent e) {
+                setDirty(true);
+            }
+        });
+
         statusCombo.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -181,20 +202,85 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         });
 
-        section.setClient(labelButtonClient);
+        section.setClient(parent);
         return section;
     }
 
+    /**
+     * DOC bZhou Comment method "createVersionUI".
+     * 
+     * @param parent
+     */
+    private void createVersionUI(Composite parent) {
+        Composite versionContainer = new Composite(parent, SWT.NONE);
+        versionContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        GridLayout versionLayout = new GridLayout(3, false);
+        versionLayout.marginHeight = 0;
+        versionLayout.marginWidth = 0;
+        versionLayout.horizontalSpacing = 0;
+        versionContainer.setLayout(versionLayout);
+
+        versionText = new Text(versionContainer, SWT.BORDER);
+        versionText.setEnabled(false);
+        versionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        Button versionMajorBtn = new Button(versionContainer, SWT.PUSH);
+        versionMajorBtn.setText("M");
+
+        Button versionMinorBtn = new Button(versionContainer, SWT.PUSH);
+        versionMinorBtn.setText("m"); //$NON-NLS-1$
+
+        versionMajorBtn.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                String version = versionText.getText();
+                version = VersionUtils.upMajor(version);
+                versionText.setText(version);
+            }
+        });
+
+        versionMinorBtn.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                String version = versionText.getText();
+                version = VersionUtils.upMinor(version);
+                versionText.setText(version);
+            }
+        });
+    }
+
+    /**
+     * DOC bZhou Comment method "createMetadataTextFiled".
+     * 
+     * @param text
+     * @param parent
+     * @return
+     */
+    private Text createMetadataTextFiled(String label, Text text, Composite parent) {
+        toolkit.createLabel(parent, label);
+
+        text = toolkit.createText(parent, null, SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(text);
+        ((GridData) text.getLayoutData()).widthHint = META_FIELD_WIDTH;
+        return text;
+    }
+
     protected void initMetaTextFied() {
-        nameText.setText(currentModelElement.getName() == null ? PluginConstant.EMPTY_STRING : currentModelElement.getName());
-        purposeText.setText(MetadataHelper.getPurpose(currentModelElement) == null ? PluginConstant.EMPTY_STRING : MetadataHelper
-                .getPurpose(currentModelElement));
-        descriptionText.setText(MetadataHelper.getDescription(currentModelElement) == null ? PluginConstant.EMPTY_STRING
-                : MetadataHelper.getDescription(currentModelElement));
-        authorText.setText(MetadataHelper.getAuthor(currentModelElement) == null ? PluginConstant.EMPTY_STRING : MetadataHelper
-                .getAuthor(currentModelElement));
-        statusCombo.setText(MetadataHelper.getDevStatus(currentModelElement) == null ? PluginConstant.EMPTY_STRING
-                : MetadataHelper.getDevStatus(currentModelElement).getLiteral());
+        String name = currentModelElement.getName();
+        String purpose = MetadataHelper.getPurpose(currentModelElement);
+        String description = MetadataHelper.getDescription(currentModelElement);
+        String author = MetadataHelper.getAuthor(currentModelElement);
+        String version = MetadataHelper.getVersion(currentModelElement);
+        DevelopmentStatus devStatus = MetadataHelper.getDevStatus(currentModelElement);
+
+        nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
+        purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
+        descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
+        authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
+        versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
+        statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus.getLiteral());
     }
 
     public void doSave(IProgressMonitor monitor) {
@@ -207,6 +293,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         MetadataHelper.setPurpose(purposeText.getText(), currentModelElement);
         MetadataHelper.setDescription(descriptionText.getText(), currentModelElement);
         MetadataHelper.setAuthor(currentModelElement, authorText.getText());
+        MetadataHelper.setVersion(versionText.getText(), currentModelElement);
         MetadataHelper.setDevStatus(currentModelElement, DevelopmentStatus.get(statusCombo.getText()));
     }
 

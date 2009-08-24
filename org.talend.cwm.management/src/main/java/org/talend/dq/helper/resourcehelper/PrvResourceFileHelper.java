@@ -35,182 +35,156 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
- * This class help the '.prv' file to store the corresponding DataProvider
- * value.
+ * This class help the '.prv' file to store the corresponding DataProvider value.
  * 
  */
 public final class PrvResourceFileHelper extends ResourceFileMap {
 
-	protected static Logger log = Logger.getLogger(PrvResourceFileHelper.class);
+    protected static Logger log = Logger.getLogger(PrvResourceFileHelper.class);
 
-	private Map<IFile, TypedReturnCode<TdDataProvider>> providerMap = new HashMap<IFile, TypedReturnCode<TdDataProvider>>();
+    private Map<IFile, TypedReturnCode<TdDataProvider>> providerMap = new HashMap<IFile, TypedReturnCode<TdDataProvider>>();
 
-	private static PrvResourceFileHelper instance;
+    private static PrvResourceFileHelper instance;
 
-	private PrvResourceFileHelper() {
-		super();
-	}
+    private PrvResourceFileHelper() {
+        super();
+    }
 
-	public static PrvResourceFileHelper getInstance() {
-		if (instance == null) {
-			instance = new PrvResourceFileHelper();
-		}
-		return instance;
-	}
+    public static PrvResourceFileHelper getInstance() {
+        if (instance == null) {
+            instance = new PrvResourceFileHelper();
+        }
+        return instance;
+    }
 
-	/**
-	 * Method "readFromFile".
-	 * 
-	 * @param file
-	 *            the file to read
-	 * @return the Data provider if found.
-	 */
-	public TypedReturnCode<TdDataProvider> findProvider(IFile file) {
-		TypedReturnCode<TdDataProvider> rc = providerMap.get(file);
-		if (rc != null) {
-			return rc;
+    /**
+     * Method "readFromFile".
+     * 
+     * @param file the file to read
+     * @return the Data provider if found.
+     */
+    public TypedReturnCode<TdDataProvider> findProvider(IFile file) {
+        TypedReturnCode<TdDataProvider> rc = providerMap.get(file);
+        if (rc != null) {
+            return rc;
 
-		}
-		return readFromFile(file);
-	}
+        }
+        return readFromFile(file);
+    }
 
-	public IFile findCorrespondingFile(TdDataProvider provider) {
-		Iterator<IFile> iterator = this.providerMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			IFile next = iterator.next();
-			TypedReturnCode<TdDataProvider> typedReturnCode = providerMap
-					.get(next);
-			// tried to compare ids instead of instances but it gives another
-			// exception later...
-			// if (ResourceHelper.areSame(provider,
-			// typedReturnCode.getObject())) {
-			if (ResourceHelper.areSame(provider, typedReturnCode.getObject())) {
-				return next;
-			}
-		}
-		return null;
-	}
+    public IFile findCorrespondingFile(TdDataProvider provider) {
+        Iterator<IFile> iterator = this.providerMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            IFile next = iterator.next();
+            TypedReturnCode<TdDataProvider> typedReturnCode = providerMap.get(next);
+            // tried to compare ids instead of instances but it gives another
+            // exception later...
+            // if (ResourceHelper.areSame(provider,
+            // typedReturnCode.getObject())) {
+            if (ResourceHelper.areSame(provider, typedReturnCode.getObject())) {
+                return next;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * DOC rli Comment method "readFromFile".
-	 * 
-	 * @param file
-	 * @return
-	 */
-	private TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
-		TypedReturnCode<TdDataProvider> rc;
-		this.remove(file);
-		rc = new TypedReturnCode<TdDataProvider>();
-		Resource resource = getFileResource(file);
+    /**
+     * DOC rli Comment method "readFromFile".
+     * 
+     * @param file
+     * @return
+     */
+    private TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
+        TypedReturnCode<TdDataProvider> rc;
+        this.remove(file);
+        rc = new TypedReturnCode<TdDataProvider>();
+        Resource resource = getFileResource(file);
 
-		// MOD scorreia 2009-01-09 password decryption is handled elsewhere
-		// PasswordHelper.decryptResource(resource);
+        // MOD scorreia 2009-01-09 password decryption is handled elsewhere
+        // PasswordHelper.decryptResource(resource);
 
-		Iterator<IFile> fileIterator = providerMap.keySet().iterator();
-		while (fileIterator.hasNext()) {
-			IFile key = fileIterator.next();
-			TypedReturnCode<TdDataProvider> returnValue = providerMap.get(key);
-			Resource resourceObj = returnValue.getObject().eResource();
-			if (resourceObj == resource) {
-				registedResourceMap.remove(key);
-				providerMap.remove(key);
-				break;
-			}
-		}
-		retireTdProvider(file, rc, resource);
-		return rc;
-	}
+        Iterator<IFile> fileIterator = providerMap.keySet().iterator();
+        while (fileIterator.hasNext()) {
+            IFile key = fileIterator.next();
+            TypedReturnCode<TdDataProvider> returnValue = providerMap.get(key);
+            Resource resourceObj = returnValue.getObject().eResource();
+            if (resourceObj == resource) {
+                registedResourceMap.remove(key);
+                providerMap.remove(key);
+                break;
+            }
+        }
+        retireTdProvider(file, rc, resource);
+        return rc;
+    }
 
-	/**
-	 * DOC rli Comment method "findTdProvider".
-	 * 
-	 * @param file
-	 * @param rc
-	 * @param resource
-	 */
-	private void retireTdProvider(IFile file,
-			TypedReturnCode<TdDataProvider> rc, Resource resource) {
-		Collection<TdDataProvider> tdDataProviders = DataProviderHelper
-				.getTdDataProviders(resource.getContents());
-		if (tdDataProviders.isEmpty()) {
-			rc
-					.setReturnCode(
-							Messages
-									.getString(
-											"PrvResourceFileHelper.NoDataProviderFound", file.getLocation().toFile().getAbsolutePath()), false); //$NON-NLS-1$
-		}
-		if (tdDataProviders.size() > 1) {
-			rc
-					.setReturnCode(
-							Messages
-									.getString(
-											"PrvResourceFileHelper.FoundTooManyDataProvider", tdDataProviders.size(), //$NON-NLS-1$
-											file.getLocation().toFile()
-													.getAbsolutePath()), false);
-		}
-		TdDataProvider prov = tdDataProviders.iterator().next();
-		rc.setObject(prov);
-		providerMap.put(file, rc);
-	}
+    /**
+     * DOC rli Comment method "findTdProvider".
+     * 
+     * @param file
+     * @param rc
+     * @param resource
+     */
+    private void retireTdProvider(IFile file, TypedReturnCode<TdDataProvider> rc, Resource resource) {
+        Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(resource.getContents());
+        if (tdDataProviders.isEmpty()) {
+            rc.setReturnCode(Messages.getString(
+                    "PrvResourceFileHelper.NoDataProviderFound", file.getLocation().toFile().getAbsolutePath()), false); //$NON-NLS-1$
+        }
+        if (tdDataProviders.size() > 1) {
+            rc.setReturnCode(Messages.getString("PrvResourceFileHelper.FoundTooManyDataProvider", tdDataProviders.size(), //$NON-NLS-1$
+                    file.getLocation().toFile().getAbsolutePath()), false);
+        }
+        TdDataProvider prov = tdDataProviders.iterator().next();
+        rc.setObject(prov);
+        providerMap.put(file, rc);
+    }
 
-	public void remove(IFile file) {
-		super.remove(file);
-		this.providerMap.remove(file);
-	}
+    public void remove(IFile file) {
+        super.remove(file);
+        this.providerMap.remove(file);
+    }
 
-	public ReturnCode save(TdDataProvider dataProvider) {
-		ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(
-				dataProvider, false);
-		return returnCode;
-	}
+    public ReturnCode save(TdDataProvider dataProvider) {
+        ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
+        return returnCode;
+    }
 
-	public List<TdDataProvider> getAllDataProviders(IFolder folder) {
-		List<IFile> allPRVFiles = new ArrayList<IFile>();
-		searchAllDataProvider(folder, allPRVFiles);
+    public List<TdDataProvider> getAllDataProviders(IFolder folder) {
+        List<IFile> allPRVFiles = new ArrayList<IFile>();
+        searchAllDataProvider(folder, allPRVFiles);
 
-		List<TdDataProvider> allDataProviders = new ArrayList<TdDataProvider>();
-		if (!allPRVFiles.isEmpty()) {
-			for (IFile file : allPRVFiles) {
-				TypedReturnCode<TdDataProvider> rc = readFromFile(file);
-				if (rc.isOk()) {
-					TdDataProvider dataProvider = rc.getObject();
-					allDataProviders.add(dataProvider);
-				}
-			}
-		}
+        List<TdDataProvider> allDataProviders = new ArrayList<TdDataProvider>();
+        if (!allPRVFiles.isEmpty()) {
+            for (IFile file : allPRVFiles) {
+                TypedReturnCode<TdDataProvider> rc = readFromFile(file);
+                if (rc.isOk()) {
+                    TdDataProvider dataProvider = rc.getObject();
+                    allDataProviders.add(dataProvider);
+                }
+            }
+        }
 
-		return allDataProviders;
-	}
+        return allDataProviders;
+    }
 
-	private List<IFile> searchAllDataProvider(IFolder folder,
-			List<IFile> allPRVFiles) {
+    private List<IFile> searchAllDataProvider(IFolder folder, List<IFile> allPRVFiles) {
 
-		try {
-			for (IResource resource : folder.members()) {
-				if (resource.getType() == IResource.FOLDER) {
-					searchAllDataProvider(folder.getFolder(resource.getName()),
-							allPRVFiles);
-					continue;
-				}
-				IFile file = (IFile) resource;
-				if (file.getFileExtension().equals(FactoriesUtil.PROV)) {
-					allPRVFiles.add(file);
-				}
-			}
-		} catch (CoreException e) {
-			log.error(e, e);
-		}
+        try {
+            for (IResource resource : folder.members()) {
+                if (resource.getType() == IResource.FOLDER) {
+                    searchAllDataProvider(folder.getFolder(resource.getName()), allPRVFiles);
+                    continue;
+                }
+                IFile file = (IFile) resource;
+                if (file.getFileExtension().equals(FactoriesUtil.PROV)) {
+                    allPRVFiles.add(file);
+                }
+            }
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
 
-		return allPRVFiles;
-	}
-
-	private List<TdDataProvider> operation(
-			Collection<TypedReturnCode<TdDataProvider>> values) {
-		List<TdDataProvider> dataProviders = new ArrayList<TdDataProvider>();
-		for (TypedReturnCode<TdDataProvider> rc : values) {
-			dataProviders.add(rc.getObject());
-		}
-
-		return dataProviders;
-	}
+        return allPRVFiles;
+    }
 }

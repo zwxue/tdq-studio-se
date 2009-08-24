@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis.parameters;
 
+import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 
@@ -88,7 +89,7 @@ public class ConnectionParameter {
     }
 
     public String getVersion() {
-        return version;
+        return version == null ? VersionUtils.DEFAULT_VERSION : version;
     }
 
     public void setVersion(String version) {
