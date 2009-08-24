@@ -14,12 +14,12 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
-import org.talend.dataquality.properties.*;
+import org.talend.dataquality.properties.IMockModelElement;
+import org.talend.dataquality.properties.ITDQItem;
+import org.talend.dataquality.properties.ITDQItemState;
+import org.talend.dataquality.properties.ITDQProperty;
+import org.talend.dataquality.properties.ITDQUser;
 import org.talend.dataquality.properties.PropertiesPackage;
-import org.talend.dataquality.properties.TdqItem;
-import org.talend.dataquality.properties.TdqItemState;
-import org.talend.dataquality.properties.TdqProperty;
-import org.talend.dataquality.properties.TdqUser;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -80,24 +80,24 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
     protected PropertiesSwitch<Adapter> modelSwitch =
         new PropertiesSwitch<Adapter>() {
             @Override
-            public Adapter caseTdqProperty(TdqProperty object) {
-                return createTdqPropertyAdapter();
+            public Adapter caseITDQProperty(ITDQProperty object) {
+                return createITDQPropertyAdapter();
             }
             @Override
-            public Adapter caseTdqItem(TdqItem object) {
-                return createTdqItemAdapter();
+            public Adapter caseITDQItem(ITDQItem object) {
+                return createITDQItemAdapter();
             }
             @Override
-            public Adapter caseTdqUser(TdqUser object) {
-                return createTdqUserAdapter();
+            public Adapter caseITDQUser(ITDQUser object) {
+                return createITDQUserAdapter();
             }
             @Override
-            public Adapter caseTdqItemState(TdqItemState object) {
-                return createTdqItemStateAdapter();
+            public Adapter caseITDQItemState(ITDQItemState object) {
+                return createITDQItemStateAdapter();
             }
             @Override
-            public Adapter caseMockModelElement(MockModelElement object) {
-                return createMockModelElementAdapter();
+            public Adapter caseIMockModelElement(IMockModelElement object) {
+                return createIMockModelElementAdapter();
             }
             @Override
             public Adapter caseElement(Element object) {
@@ -144,72 +144,72 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
 
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TdqProperty <em>Tdq Property</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.ITDQProperty <em>ITDQ Property</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.properties.TdqProperty
+     * @see org.talend.dataquality.properties.ITDQProperty
      * @generated
      */
-    public Adapter createTdqPropertyAdapter() {
+    public Adapter createITDQPropertyAdapter() {
         return null;
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TdqItem <em>Tdq Item</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.ITDQItem <em>ITDQ Item</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.properties.TdqItem
+     * @see org.talend.dataquality.properties.ITDQItem
      * @generated
      */
-    public Adapter createTdqItemAdapter() {
+    public Adapter createITDQItemAdapter() {
         return null;
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TdqUser <em>Tdq User</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.ITDQUser <em>ITDQ User</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.properties.TdqUser
+     * @see org.talend.dataquality.properties.ITDQUser
      * @generated
      */
-    public Adapter createTdqUserAdapter() {
+    public Adapter createITDQUserAdapter() {
         return null;
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TdqItemState <em>Tdq Item State</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.ITDQItemState <em>ITDQ Item State</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.properties.TdqItemState
+     * @see org.talend.dataquality.properties.ITDQItemState
      * @generated
      */
-    public Adapter createTdqItemStateAdapter() {
+    public Adapter createITDQItemStateAdapter() {
         return null;
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.MockModelElement <em>Mock Model Element</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.IMockModelElement <em>IMock Model Element</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.properties.MockModelElement
+     * @see org.talend.dataquality.properties.IMockModelElement
      * @generated
      */
-    public Adapter createMockModelElementAdapter() {
+    public Adapter createIMockModelElementAdapter() {
         return null;
     }
 

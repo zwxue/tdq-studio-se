@@ -10,7 +10,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.talend.dataquality.reports.*;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.PresentationParameter;
 import org.talend.dataquality.reports.ReportsFactory;

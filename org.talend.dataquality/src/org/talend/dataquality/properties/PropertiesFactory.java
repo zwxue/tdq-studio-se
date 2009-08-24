@@ -26,49 +26,49 @@ public interface PropertiesFactory extends EFactory {
     PropertiesFactory eINSTANCE = org.talend.dataquality.properties.impl.PropertiesFactoryImpl.init();
 
     /**
-     * Returns a new object of class '<em>Tdq Property</em>'.
+     * Returns a new object of class '<em>ITDQ Property</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Tdq Property</em>'.
+     * @return a new object of class '<em>ITDQ Property</em>'.
      * @generated
      */
-    TdqProperty createTdqProperty();
+    ITDQProperty createITDQProperty();
 
     /**
-     * Returns a new object of class '<em>Tdq Item</em>'.
+     * Returns a new object of class '<em>ITDQ Item</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Tdq Item</em>'.
+     * @return a new object of class '<em>ITDQ Item</em>'.
      * @generated
      */
-    TdqItem createTdqItem();
+    ITDQItem createITDQItem();
 
     /**
-     * Returns a new object of class '<em>Tdq User</em>'.
+     * Returns a new object of class '<em>ITDQ User</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Tdq User</em>'.
+     * @return a new object of class '<em>ITDQ User</em>'.
      * @generated
      */
-    TdqUser createTdqUser();
+    ITDQUser createITDQUser();
 
     /**
-     * Returns a new object of class '<em>Tdq Item State</em>'.
+     * Returns a new object of class '<em>ITDQ Item State</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Tdq Item State</em>'.
+     * @return a new object of class '<em>ITDQ Item State</em>'.
      * @generated
      */
-    TdqItemState createTdqItemState();
+    ITDQItemState createITDQItemState();
 
     /**
-     * Returns a new object of class '<em>Mock Model Element</em>'.
+     * Returns a new object of class '<em>IMock Model Element</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Mock Model Element</em>'.
+     * @return a new object of class '<em>IMock Model Element</em>'.
      * @generated
      */
-    MockModelElement createMockModelElement();
+    IMockModelElement createIMockModelElement();
 
     /**
      * Returns the package supported by this factory.

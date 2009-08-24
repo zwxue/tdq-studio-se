@@ -15,7 +15,6 @@ package org.talend.dq.analysis;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 

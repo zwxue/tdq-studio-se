@@ -29,7 +29,7 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.dataquality.properties.MockModelElement;
+import org.talend.dataquality.properties.IMockModelElement;
 import org.talend.dataquality.properties.PropertiesFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -66,7 +66,7 @@ public final class EMFSharedResources {
             getSoftwareDeploymentResource().getContents().add(softwareSystem);
             // MOD mzhao feature 7488 .
             // Create a mock ModelElement to add dependency.
-            saveSoftwareDeploymentProperties(createMockModelElement());
+            saveSoftwareDeploymentProperties(createIMockModelElement());
         } else {
             getSoftwareDeploymentResource().getContents().add(softwareSystem);
         }
@@ -105,8 +105,8 @@ public final class EMFSharedResources {
         // ~
     }
 
-    private ModelElement createMockModelElement() {
-        MockModelElement mockModElm = PropertiesFactory.eINSTANCE.createMockModelElement();
+    private ModelElement createIMockModelElement() {
+        IMockModelElement mockModElm = PropertiesFactory.eINSTANCE.createIMockModelElement();
         mockModElm.setName(SOFTWARE_DEP);
         return mockModElm;
     }

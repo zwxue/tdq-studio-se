@@ -30,8 +30,8 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.properties.TdqItem;
-import org.talend.dataquality.properties.TdqProperty;
+import org.talend.dataquality.properties.ITDQItem;
+import org.talend.dataquality.properties.ITDQProperty;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -128,7 +128,7 @@ public final class DependenciesHandler {
     }
     
     public static boolean isTDQElementProperties(ModelElement modelElement) {
-        if (modelElement instanceof TdqProperty || modelElement instanceof TdqItem) {
+        if (modelElement instanceof ITDQProperty || modelElement instanceof ITDQItem) {
             return true;
         }
         return false;

@@ -31,13 +31,13 @@ import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
 import org.talend.dataquality.indicators.sql.SqlPackage;
 import org.talend.dataquality.indicators.sql.impl.SqlPackageImpl;
-import org.talend.dataquality.properties.MockModelElement;
+import org.talend.dataquality.properties.IMockModelElement;
+import org.talend.dataquality.properties.ITDQItem;
+import org.talend.dataquality.properties.ITDQItemState;
+import org.talend.dataquality.properties.ITDQProperty;
+import org.talend.dataquality.properties.ITDQUser;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.PropertiesPackage;
-import org.talend.dataquality.properties.TdqItem;
-import org.talend.dataquality.properties.TdqItemState;
-import org.talend.dataquality.properties.TdqProperty;
-import org.talend.dataquality.properties.TdqUser;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 import org.talend.dataquality.rules.RulesPackage;
@@ -86,35 +86,35 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass tdqPropertyEClass = null;
+    private EClass itdqPropertyEClass = null;
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass tdqItemEClass = null;
+    private EClass itdqItemEClass = null;
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass tdqUserEClass = null;
+    private EClass itdqUserEClass = null;
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass tdqItemStateEClass = null;
+    private EClass itdqItemStateEClass = null;
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass mockModelElementEClass = null;
+    private EClass iMockModelElementEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -264,8 +264,8 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getTdqProperty() {
-        return tdqPropertyEClass;
+    public EClass getITDQProperty() {
+        return itdqPropertyEClass;
     }
 
     /**
@@ -273,8 +273,8 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getTdqItem() {
-        return tdqItemEClass;
+    public EClass getITDQItem() {
+        return itdqItemEClass;
     }
 
     /**
@@ -282,8 +282,8 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getTdqItem_Filename() {
-        return (EAttribute)tdqItemEClass.getEStructuralFeatures().get(0);
+    public EAttribute getITDQItem_Filename() {
+        return (EAttribute)itdqItemEClass.getEStructuralFeatures().get(0);
     }
 
     /**
@@ -291,8 +291,8 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getTdqUser() {
-        return tdqUserEClass;
+    public EClass getITDQUser() {
+        return itdqUserEClass;
     }
 
     /**
@@ -300,8 +300,8 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getTdqItemState() {
-        return tdqItemStateEClass;
+    public EClass getITDQItemState() {
+        return itdqItemStateEClass;
     }
 
     /**
@@ -309,8 +309,8 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getMockModelElement() {
-        return mockModelElementEClass;
+    public EClass getIMockModelElement() {
+        return iMockModelElementEClass;
     }
 
     /**
@@ -341,16 +341,16 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         isCreated = true;
 
         // Create classes and their features
-        tdqPropertyEClass = createEClass(TDQ_PROPERTY);
+        itdqPropertyEClass = createEClass(ITDQ_PROPERTY);
 
-        tdqItemEClass = createEClass(TDQ_ITEM);
-        createEAttribute(tdqItemEClass, TDQ_ITEM__FILENAME);
+        itdqItemEClass = createEClass(ITDQ_ITEM);
+        createEAttribute(itdqItemEClass, ITDQ_ITEM__FILENAME);
 
-        tdqUserEClass = createEClass(TDQ_USER);
+        itdqUserEClass = createEClass(ITDQ_USER);
 
-        tdqItemStateEClass = createEClass(TDQ_ITEM_STATE);
+        itdqItemStateEClass = createEClass(ITDQ_ITEM_STATE);
 
-        mockModelElementEClass = createEClass(MOCK_MODEL_ELEMENT);
+        iMockModelElementEClass = createEClass(IMOCK_MODEL_ELEMENT);
     }
 
     /**
@@ -385,27 +385,27 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         // Set bounds for type parameters
 
         // Add supertypes to classes
-        tdqPropertyEClass.getESuperTypes().add(theCorePackage.getModelElement());
-        tdqPropertyEClass.getESuperTypes().add(thePropertiesPackage_1.getProperty());
-        tdqItemEClass.getESuperTypes().add(thePropertiesPackage_1.getItem());
-        tdqItemEClass.getESuperTypes().add(theCorePackage.getModelElement());
-        tdqUserEClass.getESuperTypes().add(thePropertiesPackage_1.getUser());
-        tdqUserEClass.getESuperTypes().add(theCorePackage.getModelElement());
-        tdqItemStateEClass.getESuperTypes().add(thePropertiesPackage_1.getItemState());
-        tdqItemStateEClass.getESuperTypes().add(theCorePackage.getModelElement());
-        mockModelElementEClass.getESuperTypes().add(theCorePackage.getModelElement());
+        itdqPropertyEClass.getESuperTypes().add(theCorePackage.getModelElement());
+        itdqPropertyEClass.getESuperTypes().add(thePropertiesPackage_1.getProperty());
+        itdqItemEClass.getESuperTypes().add(theCorePackage.getModelElement());
+        itdqItemEClass.getESuperTypes().add(thePropertiesPackage_1.getItem());
+        itdqUserEClass.getESuperTypes().add(theCorePackage.getModelElement());
+        itdqUserEClass.getESuperTypes().add(thePropertiesPackage_1.getUser());
+        itdqItemStateEClass.getESuperTypes().add(theCorePackage.getModelElement());
+        itdqItemStateEClass.getESuperTypes().add(thePropertiesPackage_1.getItemState());
+        iMockModelElementEClass.getESuperTypes().add(theCorePackage.getModelElement());
 
         // Initialize classes and features; add operations and parameters
-        initEClass(tdqPropertyEClass, TdqProperty.class, "TdqProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEClass(itdqPropertyEClass, ITDQProperty.class, "ITDQProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-        initEClass(tdqItemEClass, TdqItem.class, "TdqItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getTdqItem_Filename(), ecorePackage.getEString(), "filename", null, 0, 1, TdqItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(itdqItemEClass, ITDQItem.class, "ITDQItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getITDQItem_Filename(), ecorePackage.getEString(), "filename", null, 0, 1, ITDQItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(tdqUserEClass, TdqUser.class, "TdqUser", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEClass(itdqUserEClass, ITDQUser.class, "ITDQUser", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-        initEClass(tdqItemStateEClass, TdqItemState.class, "TdqItemState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEClass(itdqItemStateEClass, ITDQItemState.class, "ITDQItemState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-        initEClass(mockModelElementEClass, MockModelElement.class, "MockModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEClass(iMockModelElementEClass, IMockModelElement.class, "IMockModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Create resource
         createResource(eNS_URI);

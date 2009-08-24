@@ -11,7 +11,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.sql.*;
 import org.talend.dataquality.indicators.sql.SqlPackage;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;

@@ -14,12 +14,12 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
-import org.talend.dataquality.properties.*;
+import org.talend.dataquality.properties.IMockModelElement;
+import org.talend.dataquality.properties.ITDQItem;
+import org.talend.dataquality.properties.ITDQItemState;
+import org.talend.dataquality.properties.ITDQProperty;
+import org.talend.dataquality.properties.ITDQUser;
 import org.talend.dataquality.properties.PropertiesPackage;
-import org.talend.dataquality.properties.TdqItem;
-import org.talend.dataquality.properties.TdqItemState;
-import org.talend.dataquality.properties.TdqProperty;
-import org.talend.dataquality.properties.TdqUser;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -97,47 +97,47 @@ public class PropertiesSwitch<T> {
      */
     protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-            case PropertiesPackage.TDQ_PROPERTY: {
-                TdqProperty tdqProperty = (TdqProperty)theEObject;
-                T result = caseTdqProperty(tdqProperty);
-                if (result == null) result = caseModelElement(tdqProperty);
-                if (result == null) result = caseProperty(tdqProperty);
-                if (result == null) result = caseElement(tdqProperty);
+            case PropertiesPackage.ITDQ_PROPERTY: {
+                ITDQProperty itdqProperty = (ITDQProperty)theEObject;
+                T result = caseITDQProperty(itdqProperty);
+                if (result == null) result = caseModelElement(itdqProperty);
+                if (result == null) result = caseProperty(itdqProperty);
+                if (result == null) result = caseElement(itdqProperty);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
-            case PropertiesPackage.TDQ_ITEM: {
-                TdqItem tdqItem = (TdqItem)theEObject;
-                T result = caseTdqItem(tdqItem);
-                if (result == null) result = caseItem(tdqItem);
-                if (result == null) result = caseModelElement(tdqItem);
-                if (result == null) result = caseElement(tdqItem);
+            case PropertiesPackage.ITDQ_ITEM: {
+                ITDQItem itdqItem = (ITDQItem)theEObject;
+                T result = caseITDQItem(itdqItem);
+                if (result == null) result = caseModelElement(itdqItem);
+                if (result == null) result = caseItem(itdqItem);
+                if (result == null) result = caseElement(itdqItem);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
-            case PropertiesPackage.TDQ_USER: {
-                TdqUser tdqUser = (TdqUser)theEObject;
-                T result = caseTdqUser(tdqUser);
-                if (result == null) result = caseUser(tdqUser);
-                if (result == null) result = caseModelElement(tdqUser);
-                if (result == null) result = caseElement(tdqUser);
+            case PropertiesPackage.ITDQ_USER: {
+                ITDQUser itdqUser = (ITDQUser)theEObject;
+                T result = caseITDQUser(itdqUser);
+                if (result == null) result = caseModelElement(itdqUser);
+                if (result == null) result = caseUser(itdqUser);
+                if (result == null) result = caseElement(itdqUser);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
-            case PropertiesPackage.TDQ_ITEM_STATE: {
-                TdqItemState tdqItemState = (TdqItemState)theEObject;
-                T result = caseTdqItemState(tdqItemState);
-                if (result == null) result = caseItemState(tdqItemState);
-                if (result == null) result = caseModelElement(tdqItemState);
-                if (result == null) result = caseElement(tdqItemState);
+            case PropertiesPackage.ITDQ_ITEM_STATE: {
+                ITDQItemState itdqItemState = (ITDQItemState)theEObject;
+                T result = caseITDQItemState(itdqItemState);
+                if (result == null) result = caseModelElement(itdqItemState);
+                if (result == null) result = caseItemState(itdqItemState);
+                if (result == null) result = caseElement(itdqItemState);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
-            case PropertiesPackage.MOCK_MODEL_ELEMENT: {
-                MockModelElement mockModelElement = (MockModelElement)theEObject;
-                T result = caseMockModelElement(mockModelElement);
-                if (result == null) result = caseModelElement(mockModelElement);
-                if (result == null) result = caseElement(mockModelElement);
+            case PropertiesPackage.IMOCK_MODEL_ELEMENT: {
+                IMockModelElement iMockModelElement = (IMockModelElement)theEObject;
+                T result = caseIMockModelElement(iMockModelElement);
+                if (result == null) result = caseModelElement(iMockModelElement);
+                if (result == null) result = caseElement(iMockModelElement);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -146,77 +146,77 @@ public class PropertiesSwitch<T> {
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Tdq Property</em>'.
+     * Returns the result of interpreting the object as an instance of '<em>ITDQ Property</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
      * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Tdq Property</em>'.
+     * @return the result of interpreting the object as an instance of '<em>ITDQ Property</em>'.
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseTdqProperty(TdqProperty object) {
+    public T caseITDQProperty(ITDQProperty object) {
         return null;
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Tdq Item</em>'.
+     * Returns the result of interpreting the object as an instance of '<em>ITDQ Item</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
      * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Tdq Item</em>'.
+     * @return the result of interpreting the object as an instance of '<em>ITDQ Item</em>'.
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseTdqItem(TdqItem object) {
+    public T caseITDQItem(ITDQItem object) {
         return null;
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Tdq User</em>'.
+     * Returns the result of interpreting the object as an instance of '<em>ITDQ User</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
      * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Tdq User</em>'.
+     * @return the result of interpreting the object as an instance of '<em>ITDQ User</em>'.
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseTdqUser(TdqUser object) {
+    public T caseITDQUser(ITDQUser object) {
         return null;
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Tdq Item State</em>'.
+     * Returns the result of interpreting the object as an instance of '<em>ITDQ Item State</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
      * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Tdq Item State</em>'.
+     * @return the result of interpreting the object as an instance of '<em>ITDQ Item State</em>'.
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseTdqItemState(TdqItemState object) {
+    public T caseITDQItemState(ITDQItemState object) {
         return null;
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Mock Model Element</em>'.
+     * Returns the result of interpreting the object as an instance of '<em>IMock Model Element</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
      * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Mock Model Element</em>'.
+     * @return the result of interpreting the object as an instance of '<em>IMock Model Element</em>'.
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseMockModelElement(MockModelElement object) {
+    public T caseIMockModelElement(IMockModelElement object) {
         return null;
     }
 

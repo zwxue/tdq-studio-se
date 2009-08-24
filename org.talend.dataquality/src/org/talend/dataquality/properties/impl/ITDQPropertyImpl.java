@@ -22,35 +22,35 @@ import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
+import org.talend.dataquality.properties.ITDQProperty;
 import org.talend.dataquality.properties.PropertiesPackage;
-import org.talend.dataquality.properties.TdqProperty;
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Tdq Property</b></em>'.
+ * An implementation of the model object '<em><b>ITDQ Property</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getId <em>Id</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getLabel <em>Label</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getPurpose <em>Purpose</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getCreationDate <em>Creation Date</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getModificationDate <em>Modification Date</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getVersion <em>Version</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getStatusCode <em>Status Code</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getItem <em>Item</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getAuthor <em>Author</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getInformations <em>Informations</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TdqPropertyImpl#getMaxInformationLevel <em>Max Information Level</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getLabel <em>Label</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getPurpose <em>Purpose</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getDescription <em>Description</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getCreationDate <em>Creation Date</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getModificationDate <em>Modification Date</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getVersion <em>Version</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getStatusCode <em>Status Code</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getItem <em>Item</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getAuthor <em>Author</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getInformations <em>Informations</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.ITDQPropertyImpl#getMaxInformationLevel <em>Max Information Level</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
+public class ITDQPropertyImpl extends ModelElementImpl implements ITDQProperty {
     /**
      * The default value of the '{@link #getId() <em>Id</em>}' attribute.
      * <!-- begin-user-doc -->
@@ -266,7 +266,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected TdqPropertyImpl() {
+    protected ITDQPropertyImpl() {
         super();
     }
 
@@ -277,7 +277,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
      */
     @Override
     protected EClass eStaticClass() {
-        return PropertiesPackage.Literals.TDQ_PROPERTY;
+        return PropertiesPackage.Literals.ITDQ_PROPERTY;
     }
 
     /**
@@ -298,7 +298,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         String oldId = id;
         id = newId;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__ID, oldId, id));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__ID, oldId, id));
     }
 
     /**
@@ -319,7 +319,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         String oldLabel = label;
         label = newLabel;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__LABEL, oldLabel, label));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__LABEL, oldLabel, label));
     }
 
     /**
@@ -340,7 +340,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         String oldPurpose = purpose;
         purpose = newPurpose;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__PURPOSE, oldPurpose, purpose));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__PURPOSE, oldPurpose, purpose));
     }
 
     /**
@@ -361,7 +361,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         String oldDescription = description;
         description = newDescription;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__DESCRIPTION, oldDescription, description));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__DESCRIPTION, oldDescription, description));
     }
 
     /**
@@ -382,7 +382,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         Date oldCreationDate = creationDate;
         creationDate = newCreationDate;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__CREATION_DATE, oldCreationDate, creationDate));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__CREATION_DATE, oldCreationDate, creationDate));
     }
 
     /**
@@ -403,7 +403,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         Date oldModificationDate = modificationDate;
         modificationDate = newModificationDate;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__MODIFICATION_DATE, oldModificationDate, modificationDate));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__MODIFICATION_DATE, oldModificationDate, modificationDate));
     }
 
     /**
@@ -424,7 +424,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         String oldVersion = version;
         version = newVersion;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__VERSION, oldVersion, version));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__VERSION, oldVersion, version));
     }
 
     /**
@@ -445,7 +445,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         String oldStatusCode = statusCode;
         statusCode = newStatusCode;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__STATUS_CODE, oldStatusCode, statusCode));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__STATUS_CODE, oldStatusCode, statusCode));
     }
 
     /**
@@ -459,7 +459,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
             item = (Item)eResolveProxy(oldItem);
             if (item != oldItem) {
                 if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, PropertiesPackage.TDQ_PROPERTY__ITEM, oldItem, item));
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, PropertiesPackage.ITDQ_PROPERTY__ITEM, oldItem, item));
             }
         }
         return item;
@@ -483,7 +483,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         Item oldItem = item;
         item = newItem;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__ITEM, oldItem, newItem);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__ITEM, oldItem, newItem);
             if (msgs == null) msgs = notification; else msgs.add(notification);
         }
         return msgs;
@@ -505,7 +505,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
             if (msgs != null) msgs.dispatch();
         }
         else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__ITEM, newItem, newItem));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__ITEM, newItem, newItem));
     }
 
     /**
@@ -519,7 +519,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
             author = (User)eResolveProxy(oldAuthor);
             if (author != oldAuthor) {
                 if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, PropertiesPackage.TDQ_PROPERTY__AUTHOR, oldAuthor, author));
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, PropertiesPackage.ITDQ_PROPERTY__AUTHOR, oldAuthor, author));
             }
         }
         return author;
@@ -543,7 +543,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         User oldAuthor = author;
         author = newAuthor;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__AUTHOR, oldAuthor, author));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__AUTHOR, oldAuthor, author));
     }
 
     /**
@@ -553,7 +553,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
      */
     public EList getInformations() {
         if (informations == null) {
-            informations = new EObjectContainmentEList<Information>(Information.class, this, PropertiesPackage.TDQ_PROPERTY__INFORMATIONS);
+            informations = new EObjectContainmentEList<Information>(Information.class, this, PropertiesPackage.ITDQ_PROPERTY__INFORMATIONS);
         }
         return informations;
     }
@@ -576,7 +576,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         InformationLevel oldMaxInformationLevel = maxInformationLevel;
         maxInformationLevel = newMaxInformationLevel == null ? MAX_INFORMATION_LEVEL_EDEFAULT : newMaxInformationLevel;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_PROPERTY__MAX_INFORMATION_LEVEL, oldMaxInformationLevel, maxInformationLevel));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.ITDQ_PROPERTY__MAX_INFORMATION_LEVEL, oldMaxInformationLevel, maxInformationLevel));
     }
 
     /**
@@ -587,7 +587,7 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
     @Override
     public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_PROPERTY__ITEM:
+            case PropertiesPackage.ITDQ_PROPERTY__ITEM:
                 if (item != null)
                     msgs = ((InternalEObject)item).eInverseRemove(this, org.talend.core.model.properties.PropertiesPackage.ITEM__PROPERTY, Item.class, msgs);
                 return basicSetItem((Item)otherEnd, msgs);
@@ -603,9 +603,9 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_PROPERTY__ITEM:
+            case PropertiesPackage.ITDQ_PROPERTY__ITEM:
                 return basicSetItem(null, msgs);
-            case PropertiesPackage.TDQ_PROPERTY__INFORMATIONS:
+            case PropertiesPackage.ITDQ_PROPERTY__INFORMATIONS:
                 return ((InternalEList<?>)getInformations()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -619,31 +619,31 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_PROPERTY__ID:
+            case PropertiesPackage.ITDQ_PROPERTY__ID:
                 return getId();
-            case PropertiesPackage.TDQ_PROPERTY__LABEL:
+            case PropertiesPackage.ITDQ_PROPERTY__LABEL:
                 return getLabel();
-            case PropertiesPackage.TDQ_PROPERTY__PURPOSE:
+            case PropertiesPackage.ITDQ_PROPERTY__PURPOSE:
                 return getPurpose();
-            case PropertiesPackage.TDQ_PROPERTY__DESCRIPTION:
+            case PropertiesPackage.ITDQ_PROPERTY__DESCRIPTION:
                 return getDescription();
-            case PropertiesPackage.TDQ_PROPERTY__CREATION_DATE:
+            case PropertiesPackage.ITDQ_PROPERTY__CREATION_DATE:
                 return getCreationDate();
-            case PropertiesPackage.TDQ_PROPERTY__MODIFICATION_DATE:
+            case PropertiesPackage.ITDQ_PROPERTY__MODIFICATION_DATE:
                 return getModificationDate();
-            case PropertiesPackage.TDQ_PROPERTY__VERSION:
+            case PropertiesPackage.ITDQ_PROPERTY__VERSION:
                 return getVersion();
-            case PropertiesPackage.TDQ_PROPERTY__STATUS_CODE:
+            case PropertiesPackage.ITDQ_PROPERTY__STATUS_CODE:
                 return getStatusCode();
-            case PropertiesPackage.TDQ_PROPERTY__ITEM:
+            case PropertiesPackage.ITDQ_PROPERTY__ITEM:
                 if (resolve) return getItem();
                 return basicGetItem();
-            case PropertiesPackage.TDQ_PROPERTY__AUTHOR:
+            case PropertiesPackage.ITDQ_PROPERTY__AUTHOR:
                 if (resolve) return getAuthor();
                 return basicGetAuthor();
-            case PropertiesPackage.TDQ_PROPERTY__INFORMATIONS:
+            case PropertiesPackage.ITDQ_PROPERTY__INFORMATIONS:
                 return getInformations();
-            case PropertiesPackage.TDQ_PROPERTY__MAX_INFORMATION_LEVEL:
+            case PropertiesPackage.ITDQ_PROPERTY__MAX_INFORMATION_LEVEL:
                 return getMaxInformationLevel();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -658,41 +658,41 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_PROPERTY__ID:
+            case PropertiesPackage.ITDQ_PROPERTY__ID:
                 setId((String)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__LABEL:
+            case PropertiesPackage.ITDQ_PROPERTY__LABEL:
                 setLabel((String)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__PURPOSE:
+            case PropertiesPackage.ITDQ_PROPERTY__PURPOSE:
                 setPurpose((String)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__DESCRIPTION:
+            case PropertiesPackage.ITDQ_PROPERTY__DESCRIPTION:
                 setDescription((String)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__CREATION_DATE:
+            case PropertiesPackage.ITDQ_PROPERTY__CREATION_DATE:
                 setCreationDate((Date)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__MODIFICATION_DATE:
+            case PropertiesPackage.ITDQ_PROPERTY__MODIFICATION_DATE:
                 setModificationDate((Date)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__VERSION:
+            case PropertiesPackage.ITDQ_PROPERTY__VERSION:
                 setVersion((String)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__STATUS_CODE:
+            case PropertiesPackage.ITDQ_PROPERTY__STATUS_CODE:
                 setStatusCode((String)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__ITEM:
+            case PropertiesPackage.ITDQ_PROPERTY__ITEM:
                 setItem((Item)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__AUTHOR:
+            case PropertiesPackage.ITDQ_PROPERTY__AUTHOR:
                 setAuthor((User)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__INFORMATIONS:
+            case PropertiesPackage.ITDQ_PROPERTY__INFORMATIONS:
                 getInformations().clear();
                 getInformations().addAll((Collection<? extends Information>)newValue);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__MAX_INFORMATION_LEVEL:
+            case PropertiesPackage.ITDQ_PROPERTY__MAX_INFORMATION_LEVEL:
                 setMaxInformationLevel((InformationLevel)newValue);
                 return;
         }
@@ -707,40 +707,40 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_PROPERTY__ID:
+            case PropertiesPackage.ITDQ_PROPERTY__ID:
                 setId(ID_EDEFAULT);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__LABEL:
+            case PropertiesPackage.ITDQ_PROPERTY__LABEL:
                 setLabel(LABEL_EDEFAULT);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__PURPOSE:
+            case PropertiesPackage.ITDQ_PROPERTY__PURPOSE:
                 setPurpose(PURPOSE_EDEFAULT);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__DESCRIPTION:
+            case PropertiesPackage.ITDQ_PROPERTY__DESCRIPTION:
                 setDescription(DESCRIPTION_EDEFAULT);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__CREATION_DATE:
+            case PropertiesPackage.ITDQ_PROPERTY__CREATION_DATE:
                 setCreationDate(CREATION_DATE_EDEFAULT);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__MODIFICATION_DATE:
+            case PropertiesPackage.ITDQ_PROPERTY__MODIFICATION_DATE:
                 setModificationDate(MODIFICATION_DATE_EDEFAULT);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__VERSION:
+            case PropertiesPackage.ITDQ_PROPERTY__VERSION:
                 setVersion(VERSION_EDEFAULT);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__STATUS_CODE:
+            case PropertiesPackage.ITDQ_PROPERTY__STATUS_CODE:
                 setStatusCode(STATUS_CODE_EDEFAULT);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__ITEM:
+            case PropertiesPackage.ITDQ_PROPERTY__ITEM:
                 setItem((Item)null);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__AUTHOR:
+            case PropertiesPackage.ITDQ_PROPERTY__AUTHOR:
                 setAuthor((User)null);
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__INFORMATIONS:
+            case PropertiesPackage.ITDQ_PROPERTY__INFORMATIONS:
                 getInformations().clear();
                 return;
-            case PropertiesPackage.TDQ_PROPERTY__MAX_INFORMATION_LEVEL:
+            case PropertiesPackage.ITDQ_PROPERTY__MAX_INFORMATION_LEVEL:
                 setMaxInformationLevel(MAX_INFORMATION_LEVEL_EDEFAULT);
                 return;
         }
@@ -755,29 +755,29 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_PROPERTY__ID:
+            case PropertiesPackage.ITDQ_PROPERTY__ID:
                 return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-            case PropertiesPackage.TDQ_PROPERTY__LABEL:
+            case PropertiesPackage.ITDQ_PROPERTY__LABEL:
                 return LABEL_EDEFAULT == null ? label != null : !LABEL_EDEFAULT.equals(label);
-            case PropertiesPackage.TDQ_PROPERTY__PURPOSE:
+            case PropertiesPackage.ITDQ_PROPERTY__PURPOSE:
                 return PURPOSE_EDEFAULT == null ? purpose != null : !PURPOSE_EDEFAULT.equals(purpose);
-            case PropertiesPackage.TDQ_PROPERTY__DESCRIPTION:
+            case PropertiesPackage.ITDQ_PROPERTY__DESCRIPTION:
                 return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-            case PropertiesPackage.TDQ_PROPERTY__CREATION_DATE:
+            case PropertiesPackage.ITDQ_PROPERTY__CREATION_DATE:
                 return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
-            case PropertiesPackage.TDQ_PROPERTY__MODIFICATION_DATE:
+            case PropertiesPackage.ITDQ_PROPERTY__MODIFICATION_DATE:
                 return MODIFICATION_DATE_EDEFAULT == null ? modificationDate != null : !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
-            case PropertiesPackage.TDQ_PROPERTY__VERSION:
+            case PropertiesPackage.ITDQ_PROPERTY__VERSION:
                 return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
-            case PropertiesPackage.TDQ_PROPERTY__STATUS_CODE:
+            case PropertiesPackage.ITDQ_PROPERTY__STATUS_CODE:
                 return STATUS_CODE_EDEFAULT == null ? statusCode != null : !STATUS_CODE_EDEFAULT.equals(statusCode);
-            case PropertiesPackage.TDQ_PROPERTY__ITEM:
+            case PropertiesPackage.ITDQ_PROPERTY__ITEM:
                 return item != null;
-            case PropertiesPackage.TDQ_PROPERTY__AUTHOR:
+            case PropertiesPackage.ITDQ_PROPERTY__AUTHOR:
                 return author != null;
-            case PropertiesPackage.TDQ_PROPERTY__INFORMATIONS:
+            case PropertiesPackage.ITDQ_PROPERTY__INFORMATIONS:
                 return informations != null && !informations.isEmpty();
-            case PropertiesPackage.TDQ_PROPERTY__MAX_INFORMATION_LEVEL:
+            case PropertiesPackage.ITDQ_PROPERTY__MAX_INFORMATION_LEVEL:
                 return maxInformationLevel != MAX_INFORMATION_LEVEL_EDEFAULT;
         }
         return super.eIsSet(featureID);
@@ -792,18 +792,18 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
     public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
         if (baseClass == Property.class) {
             switch (derivedFeatureID) {
-                case PropertiesPackage.TDQ_PROPERTY__ID: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__ID;
-                case PropertiesPackage.TDQ_PROPERTY__LABEL: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__LABEL;
-                case PropertiesPackage.TDQ_PROPERTY__PURPOSE: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__PURPOSE;
-                case PropertiesPackage.TDQ_PROPERTY__DESCRIPTION: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__DESCRIPTION;
-                case PropertiesPackage.TDQ_PROPERTY__CREATION_DATE: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__CREATION_DATE;
-                case PropertiesPackage.TDQ_PROPERTY__MODIFICATION_DATE: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__MODIFICATION_DATE;
-                case PropertiesPackage.TDQ_PROPERTY__VERSION: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__VERSION;
-                case PropertiesPackage.TDQ_PROPERTY__STATUS_CODE: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__STATUS_CODE;
-                case PropertiesPackage.TDQ_PROPERTY__ITEM: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__ITEM;
-                case PropertiesPackage.TDQ_PROPERTY__AUTHOR: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__AUTHOR;
-                case PropertiesPackage.TDQ_PROPERTY__INFORMATIONS: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__INFORMATIONS;
-                case PropertiesPackage.TDQ_PROPERTY__MAX_INFORMATION_LEVEL: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__MAX_INFORMATION_LEVEL;
+                case PropertiesPackage.ITDQ_PROPERTY__ID: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__ID;
+                case PropertiesPackage.ITDQ_PROPERTY__LABEL: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__LABEL;
+                case PropertiesPackage.ITDQ_PROPERTY__PURPOSE: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__PURPOSE;
+                case PropertiesPackage.ITDQ_PROPERTY__DESCRIPTION: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__DESCRIPTION;
+                case PropertiesPackage.ITDQ_PROPERTY__CREATION_DATE: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__CREATION_DATE;
+                case PropertiesPackage.ITDQ_PROPERTY__MODIFICATION_DATE: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__MODIFICATION_DATE;
+                case PropertiesPackage.ITDQ_PROPERTY__VERSION: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__VERSION;
+                case PropertiesPackage.ITDQ_PROPERTY__STATUS_CODE: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__STATUS_CODE;
+                case PropertiesPackage.ITDQ_PROPERTY__ITEM: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__ITEM;
+                case PropertiesPackage.ITDQ_PROPERTY__AUTHOR: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__AUTHOR;
+                case PropertiesPackage.ITDQ_PROPERTY__INFORMATIONS: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__INFORMATIONS;
+                case PropertiesPackage.ITDQ_PROPERTY__MAX_INFORMATION_LEVEL: return org.talend.core.model.properties.PropertiesPackage.PROPERTY__MAX_INFORMATION_LEVEL;
                 default: return -1;
             }
         }
@@ -819,18 +819,18 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
     public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
         if (baseClass == Property.class) {
             switch (baseFeatureID) {
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__ID: return PropertiesPackage.TDQ_PROPERTY__ID;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__LABEL: return PropertiesPackage.TDQ_PROPERTY__LABEL;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__PURPOSE: return PropertiesPackage.TDQ_PROPERTY__PURPOSE;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__DESCRIPTION: return PropertiesPackage.TDQ_PROPERTY__DESCRIPTION;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__CREATION_DATE: return PropertiesPackage.TDQ_PROPERTY__CREATION_DATE;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__MODIFICATION_DATE: return PropertiesPackage.TDQ_PROPERTY__MODIFICATION_DATE;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__VERSION: return PropertiesPackage.TDQ_PROPERTY__VERSION;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__STATUS_CODE: return PropertiesPackage.TDQ_PROPERTY__STATUS_CODE;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__ITEM: return PropertiesPackage.TDQ_PROPERTY__ITEM;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__AUTHOR: return PropertiesPackage.TDQ_PROPERTY__AUTHOR;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__INFORMATIONS: return PropertiesPackage.TDQ_PROPERTY__INFORMATIONS;
-                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__MAX_INFORMATION_LEVEL: return PropertiesPackage.TDQ_PROPERTY__MAX_INFORMATION_LEVEL;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__ID: return PropertiesPackage.ITDQ_PROPERTY__ID;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__LABEL: return PropertiesPackage.ITDQ_PROPERTY__LABEL;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__PURPOSE: return PropertiesPackage.ITDQ_PROPERTY__PURPOSE;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__DESCRIPTION: return PropertiesPackage.ITDQ_PROPERTY__DESCRIPTION;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__CREATION_DATE: return PropertiesPackage.ITDQ_PROPERTY__CREATION_DATE;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__MODIFICATION_DATE: return PropertiesPackage.ITDQ_PROPERTY__MODIFICATION_DATE;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__VERSION: return PropertiesPackage.ITDQ_PROPERTY__VERSION;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__STATUS_CODE: return PropertiesPackage.ITDQ_PROPERTY__STATUS_CODE;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__ITEM: return PropertiesPackage.ITDQ_PROPERTY__ITEM;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__AUTHOR: return PropertiesPackage.ITDQ_PROPERTY__AUTHOR;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__INFORMATIONS: return PropertiesPackage.ITDQ_PROPERTY__INFORMATIONS;
+                case org.talend.core.model.properties.PropertiesPackage.PROPERTY__MAX_INFORMATION_LEVEL: return PropertiesPackage.ITDQ_PROPERTY__MAX_INFORMATION_LEVEL;
                 default: return -1;
             }
         }
@@ -869,4 +869,4 @@ public class TdqPropertyImpl extends ModelElementImpl implements TdqProperty {
         return result.toString();
     }
 
-} //TdqPropertyImpl
+} //ITDQPropertyImpl

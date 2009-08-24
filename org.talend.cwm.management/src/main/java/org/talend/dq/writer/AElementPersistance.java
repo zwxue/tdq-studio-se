@@ -35,9 +35,9 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.properties.ITDQItem;
+import org.talend.dataquality.properties.ITDQProperty;
 import org.talend.dataquality.properties.PropertiesFactory;
-import org.talend.dataquality.properties.TdqItem;
-import org.talend.dataquality.properties.TdqProperty;
 import org.talend.dq.helper.resourcehelper.ResourceFilenameHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFilenameHelper.FileName;
 import org.talend.utils.sugars.ReturnCode;
@@ -114,8 +114,8 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
     
     public ReturnCode savePerperties(ModelElement element, IFile file) {
         // Create properties.
-        TdqProperty property = initProperty(element);
-        TdqItem item = initItem(element, property, file.getName());
+        ITDQProperty property = initProperty(element);
+        ITDQItem item = initItem(element, property, file.getName());
         IPath parentPath = file.getParent().getFullPath();
 
         // MOD mzhao Add dependencies.
@@ -155,8 +155,8 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * 
      * @see org.talend.dq.writer.IElementSerialize#initProperty(orgomg.cwm.objectmodel.core.ModelElement)
      */
-    public TdqProperty initProperty(ModelElement element) {
-        TdqProperty property = PropertiesFactory.eINSTANCE.createTdqProperty();
+    public ITDQProperty initProperty(ModelElement element) {
+        ITDQProperty property = PropertiesFactory.eINSTANCE.createITDQProperty();
 
         // String author = MetadataHelper.getAuthor(element);
         String purpose = MetadataHelper.getPurpose(element);
@@ -187,10 +187,10 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @see org.talend.dq.writer.IElementSerialize#initItem(orgomg.cwm.objectmodel.core.ModelElement,
      * org.talend.core.model.properties.Property, java.lang.String)
      */
-    public TdqItem initItem(ModelElement element, Property property, String fileName) {
-        TdqItem item = PropertiesFactory.eINSTANCE.createTdqItem();
+    public ITDQItem initItem(ModelElement element, Property property, String fileName) {
+        ITDQItem item = PropertiesFactory.eINSTANCE.createITDQItem();
 
-        // ItemState itemState = PropertiesFactory.eINSTANCE.createTdqItemState();
+        // ItemState itemState = PropertiesFactory.eINSTANCE.createITDQItemState();
         // itemState.setDeleted(false);
         // itemState.setPath("");
         // item.setState(itemState);

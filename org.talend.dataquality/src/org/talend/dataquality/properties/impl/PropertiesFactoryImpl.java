@@ -11,13 +11,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.talend.dataquality.properties.*;
+import org.talend.dataquality.properties.IMockModelElement;
+import org.talend.dataquality.properties.ITDQItem;
+import org.talend.dataquality.properties.ITDQItemState;
+import org.talend.dataquality.properties.ITDQProperty;
+import org.talend.dataquality.properties.ITDQUser;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.PropertiesPackage;
-import org.talend.dataquality.properties.TdqItem;
-import org.talend.dataquality.properties.TdqItemState;
-import org.talend.dataquality.properties.TdqProperty;
-import org.talend.dataquality.properties.TdqUser;
 
 /**
  * <!-- begin-user-doc -->
@@ -63,11 +63,11 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
     @Override
     public EObject create(EClass eClass) {
         switch (eClass.getClassifierID()) {
-            case PropertiesPackage.TDQ_PROPERTY: return createTdqProperty();
-            case PropertiesPackage.TDQ_ITEM: return createTdqItem();
-            case PropertiesPackage.TDQ_USER: return createTdqUser();
-            case PropertiesPackage.TDQ_ITEM_STATE: return createTdqItemState();
-            case PropertiesPackage.MOCK_MODEL_ELEMENT: return createMockModelElement();
+            case PropertiesPackage.ITDQ_PROPERTY: return createITDQProperty();
+            case PropertiesPackage.ITDQ_ITEM: return createITDQItem();
+            case PropertiesPackage.ITDQ_USER: return createITDQUser();
+            case PropertiesPackage.ITDQ_ITEM_STATE: return createITDQItemState();
+            case PropertiesPackage.IMOCK_MODEL_ELEMENT: return createIMockModelElement();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -78,9 +78,9 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public TdqProperty createTdqProperty() {
-        TdqPropertyImpl tdqProperty = new TdqPropertyImpl();
-        return tdqProperty;
+    public ITDQProperty createITDQProperty() {
+        ITDQPropertyImpl itdqProperty = new ITDQPropertyImpl();
+        return itdqProperty;
     }
 
     /**
@@ -88,9 +88,9 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public TdqItem createTdqItem() {
-        TdqItemImpl tdqItem = new TdqItemImpl();
-        return tdqItem;
+    public ITDQItem createITDQItem() {
+        ITDQItemImpl itdqItem = new ITDQItemImpl();
+        return itdqItem;
     }
 
     /**
@@ -98,9 +98,9 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public TdqUser createTdqUser() {
-        TdqUserImpl tdqUser = new TdqUserImpl();
-        return tdqUser;
+    public ITDQUser createITDQUser() {
+        ITDQUserImpl itdqUser = new ITDQUserImpl();
+        return itdqUser;
     }
 
     /**
@@ -108,9 +108,9 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public TdqItemState createTdqItemState() {
-        TdqItemStateImpl tdqItemState = new TdqItemStateImpl();
-        return tdqItemState;
+    public ITDQItemState createITDQItemState() {
+        ITDQItemStateImpl itdqItemState = new ITDQItemStateImpl();
+        return itdqItemState;
     }
 
     /**
@@ -118,9 +118,9 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public MockModelElement createMockModelElement() {
-        MockModelElementImpl mockModelElement = new MockModelElementImpl();
-        return mockModelElement;
+    public IMockModelElement createIMockModelElement() {
+        IMockModelElementImpl iMockModelElement = new IMockModelElementImpl();
+        return iMockModelElement;
     }
 
     /**

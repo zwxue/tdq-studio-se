@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import org.eclipse.emf.common.util.EList;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 
 /**

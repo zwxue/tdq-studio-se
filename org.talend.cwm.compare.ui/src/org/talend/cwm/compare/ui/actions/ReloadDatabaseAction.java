@@ -52,7 +52,6 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
-
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -127,6 +126,10 @@ public class ReloadDatabaseAction extends Action {
 		for (Dependency dep : clientDependencies) {
 			StringBuffer impactedAnaStr = new StringBuffer();
 			for (ModelElement mod : dep.getClient()) {
+			 // MOD mzhao 2009-08-24 The dependencies include "Property" and "Analysis"
+			    if (!(mod instanceof Analysis)) {
+			        continue;
+                }
 				Analysis ana = (Analysis) mod;
 				unsynedAnalyses.add(ana);
 				impactedAnaStr.append(ana.getName());

@@ -11,7 +11,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.rules.*;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.InferredDQRule;
 import org.talend.dataquality.rules.JoinElement;

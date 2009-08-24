@@ -13,7 +13,6 @@
 package org.talend.dq.analysis.parameters;
 
 import org.apache.commons.lang.StringUtils;
-import org.talend.dq.analysis.parameters.ConnectionParameter.EParameterType;
 
 
 /**

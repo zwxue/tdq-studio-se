@@ -16,7 +16,6 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsFactory;
-
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
