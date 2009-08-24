@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
+import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Classifier;
@@ -30,6 +31,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
 
 /**
@@ -194,6 +196,36 @@ public final class ColumnHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "isForeignKey",Feature 8690.
+     * 
+     * @param column
+     * @return
+     */
+    public static boolean isForeignKey(Column column) {
+        return getForeignKey(column) != null;
+    }
+    /**
+     * 
+     * DOC mzhao Comment method "getForeignKey",Feature 8690.
+     * 
+     * @param column
+     * @return
+     */
+    public static ForeignKey getForeignKey(Column column){
+        EList<KeyRelationship> foreignKeys = column.getKeyRelationship();
+        for (KeyRelationship foreignKey : foreignKeys) {
+            if (foreignKey != null) {
+                ForeignKey fk = SwitchHelpers.FOREIGN_KEY_SWITCH.doSwitch(foreignKey);
+                if (fk != null) {
+                    return fk;
+                }
+            }
+        }
+        return null;        
     }
 
     /**

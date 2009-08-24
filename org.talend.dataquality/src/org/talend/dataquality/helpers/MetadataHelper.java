@@ -14,6 +14,7 @@ package org.talend.dataquality.helpers;
 
 import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
@@ -49,6 +50,11 @@ public final class MetadataHelper {
      * @return the DataminingType or null if none has been set.
      */
     public static DataminingType getDataminingType(TdColumn column) {
+        // ~ MOD mzhao feature 8690. 2009-08-24
+        if (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column)) {
+            return DataminingType.NOMINAL;
+        }
+        // ~
         return DataminingType.get(column.getContentType());
     }
 
