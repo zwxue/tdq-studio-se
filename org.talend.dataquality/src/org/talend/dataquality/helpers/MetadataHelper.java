@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -187,7 +188,7 @@ public final class MetadataHelper {
      * @param element the element
      * @return true if the value was not set before.
      */
-    public static boolean setVersion(Boolean version, ModelElement element) {
+    public static boolean setVersion(String version, ModelElement element) {
         String statusStr = String.valueOf(version);
         return TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.VERSION, statusStr);
     }
@@ -201,7 +202,7 @@ public final class MetadataHelper {
     public static String getVersion(ModelElement element) {
         TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VERSION, element.getTaggedValue());
         if (tv == null) {
-            return PluginConstant.EMPTY_STRING;
+            return VersionUtils.DEFAULT_VERSION;
         }
         return tv.getValue();
     }
