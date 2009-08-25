@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.views.filters;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
@@ -58,6 +59,11 @@ public class EMFObjFilter extends AbstractViewerFilter {
             TreePath path = (TreePath) parentElement;
             if (path.getLastSegment() instanceof AnaElementFolderNode) {
                 return true;
+            }
+        } else if (parentElement instanceof IFolder) {
+            IFolder folder = (IFolder) parentElement;
+            if ("Exchange".equals(folder.getName())) {
+                return false;
             }
         }
         if (element instanceof EObject) {
