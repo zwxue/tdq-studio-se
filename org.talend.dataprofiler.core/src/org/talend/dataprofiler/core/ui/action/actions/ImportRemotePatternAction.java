@@ -108,9 +108,20 @@ public class ImportRemotePatternAction extends Action {
                 List<File> files = new ArrayList<File>();
                 extractFiles(file, files);
 
+                // MOD yyi 8746: strange behaviour for imported patterns!
+                ExpressionType type = ExpressionType.REGEXP;
+
+                if ("regex".equals(componet.getCategry().getName())) {
+                    type = ExpressionType.REGEXP;
+                } else if ("pattern".equals(componet.getCategry().getName())) {
+                    type = ExpressionType.REGEXP;
+                } else if ("sql".equals(componet.getCategry().getName())) {
+                    type = ExpressionType.SQL_LIKE;
+                }
+
                 for (File oneFile : files) {
-                    information.append(ImportFactory.importToStucture(oneFile, getFolder(DQStructureManager.PATTERNS),
-                            ExpressionType.REGEXP, true, true));
+                    information.append(ImportFactory.importToStucture(oneFile, getFolder(DQStructureManager.PATTERNS), type,
+                            true, true));
 
                     information.append("\n");
                 }

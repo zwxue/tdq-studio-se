@@ -118,11 +118,10 @@ public final class ImportFactory {
                         }
                     }
 
-                    createAndStorePattern(patternParameters, selectionFolder, type);
+                    String relativePath = createAndStorePattern(patternParameters, selectionFolder, type);
                     names.add(name);
 
-                    information = "Pattern \"" + name + "\" imported in the \"" + "\"Patterns/" + patternParameters.relativePath
-                            + "\" folder";
+                    information = "Pattern \"" + name + "\" imported in the \"" + "Patterns/" + relativePath + "\" folder";
                 }
 
                 reader.close();
@@ -197,7 +196,7 @@ public final class ImportFactory {
         return information;
     }
 
-    private static void createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
+    private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
 
         Pattern pattern = PatternResourceFileHelper.getInstance().createPattern(parameters.name, parameters.auther,
                 parameters.description, parameters.purpose, parameters.status);
@@ -216,12 +215,24 @@ public final class ImportFactory {
 
             String[] folderNames = parameters.relativePath.split("/"); //$NON-NLS-1$
 
+            // MOD yyi 8746: strange behaviour for imported patterns!
+            if (1 == folderNames.length && "".equals(folderNames[0])) {
+                switch (type) {
+                case SQL_LIKE:
+                    folderNames[0] = DQStructureManager.SQL;
+                    break;
+                case REGEXP:
+                    folderNames[0] = DQStructureManager.REGEX;
+                    break;
+                }
+            }
+
             for (String folderName : folderNames) {
+
                 IFolder folder = selectionFolder.getFolder(folderName);
                 if (!folder.exists()) {
                     folder.create(false, true, null);
                 }
-
                 folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, DQStructureManager.PATTERNS_FOLDER_PROPERTY);
                 selectionFolder = folder;
             }
@@ -233,6 +244,8 @@ public final class ImportFactory {
 
         EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), pattern);
         EMFSharedResources.getInstance().saveLastResource();
+
+        return selectionFolder.getName();
     }
 
     private static String getFileExtName(File file) {
