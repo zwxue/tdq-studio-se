@@ -57,7 +57,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnsComparisonMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnDependencyMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -70,583 +70,523 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * DOC mzhao 2009-06-17 feature 5887
  */
 public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
-	private static Logger log = Logger
-			.getLogger(AnalysisColumnCompareTreeViewer.class);
-	private AbstractAnalysisMetadataPage masterPage;
-	private Composite parentComp;
-	private ScrolledForm form = null;
-	private List<Column> columnListA;
-	// MOD mzhao 2009-06-17 feature 5887
-	private SelectionListener selectionListener = null;
 
-	// ADD mzhao 2009-02-03 Tableviewer creation stack that remember left or
-	// right position.
-	private List<TableViewer> tableViewerPosStack = null;
+    private static Logger log = Logger.getLogger(AnalysisColumnCompareTreeViewer.class);
 
-	private List<Column> columnListB;
-	
-	private Section columnsComparisonSection = null;
-	
-	private FormToolkit toolkit;
-	
-	private Button checkComputeButton;
-	
-	private TableViewer rightTable = null;
-	
-	private TableViewer leftTable = null;
-	
-	private String mainTitle;
-	
-	private String titleDescription;
+    private AbstractAnalysisMetadataPage masterPage;
 
-	private Analysis analysis = null;
-	
-	private boolean showCheckButton = true;
-	
-	private boolean checkComputButton = false;
-	
-	
-	
+    private Composite parentComp;
 
-	public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp,
-            List<Column> columnSetA , List<Column> columnSetB,String mainTitle,String description,boolean showCheckButton){
-	    this.masterPage = masterPage;
+    private ScrolledForm form = null;
+
+    private List<Column> columnListA;
+
+    // MOD mzhao 2009-06-17 feature 5887
+    private SelectionListener selectionListener = null;
+
+    // ADD mzhao 2009-02-03 Tableviewer creation stack that remember left or
+    // right position.
+    private List<TableViewer> tableViewerPosStack = null;
+
+    private List<Column> columnListB;
+
+    private Section columnsComparisonSection = null;
+
+    private FormToolkit toolkit;
+
+    private Button checkComputeButton;
+
+    private TableViewer rightTable = null;
+
+    private TableViewer leftTable = null;
+
+    private String mainTitle;
+
+    private String titleDescription;
+
+    private Analysis analysis = null;
+
+    private boolean showCheckButton = true;
+
+    private boolean checkComputButton = false;
+
+    public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, List<Column> columnSetA,
+            List<Column> columnSetB, String mainTitle, String description, boolean showCheckButton) {
+        this.masterPage = masterPage;
         form = masterPage.getScrolledForm();
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
-        
+
         columnListA = new ArrayList<Column>();
         columnListB = new ArrayList<Column>();
         tableViewerPosStack = new ArrayList<TableViewer>();
-        
+
         columnListA.addAll(columnSetA);
         columnListB.addAll(columnSetB);
-        
+
         this.showCheckButton = showCheckButton;
-        createAnalyzedColumnSetsSection(mainTitle,description);
-	}
-	
-	public AnalysisColumnCompareTreeViewer(
-	        AbstractAnalysisMetadataPage masterPage, Composite topComp,
-			Analysis analysis) {
-	    
-	    this(masterPage,topComp,new ArrayList<Column>(),new ArrayList<Column>(),DefaultMessagesImpl
-                .getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"),DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare"),true);
-		
-	    if (analysis.getResults().getIndicators().size() >0) {
+        createAnalyzedColumnSetsSection(mainTitle, description);
+    }
+
+    public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, Analysis analysis) {
+
+        this(masterPage, topComp, new ArrayList<Column>(), new ArrayList<Column>(), DefaultMessagesImpl
+                .getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), DefaultMessagesImpl //$NON-NLS-1$
+                .getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare"), true); //$NON-NLS-1$
+
+        if (analysis.getResults().getIndicators().size() > 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
-            RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators
-                    .get(0);
+            RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
             columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
-             RowMatchingIndicator rowMatchingIndicatorB =  (RowMatchingIndicator) indicators.get(1);
+            RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
             columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
-            
+
         }
-	  
-		this.analysis = analysis;
-		checkComputButton = analysis.getParameters().getDeactivatedIndicators().size() != 0;
-		
-	}
 
-	
+        this.analysis = analysis;
+        checkComputButton = analysis.getParameters().getDeactivatedIndicators().size() != 0;
 
-    private void createAnalyzedColumnSetsSection(String mainTitle,String description) {
-		columnsComparisonSection = masterPage
-				.createSection(
-						form,
-						parentComp,
-						mainTitle, false, description); //$NON-NLS-1$ //$NON-NLS-2$
-		Composite sectionClient = toolkit
-				.createComposite(columnsComparisonSection);
-		sectionClient.setLayout(new GridLayout());
-		// sectionClient.setLayout(new GridLayout(2, true));
-		// this.createSectionPart(form, sectionClient, "left Columns");
-		// this.createSectionPart(form, sectionClient, "Right Columns");
+    }
 
-		if(showCheckButton){
-    		checkComputeButton = new Button(sectionClient, SWT.CHECK);
-    		GridData layoutData = new GridData(GridData.FILL_BOTH);
-    		layoutData.horizontalAlignment = SWT.CENTER;
-    		checkComputeButton.setLayoutData(layoutData);
-    		checkComputeButton.setText(DefaultMessagesImpl
-    				.getString("ColumnsComparisonMasterDetailsPage.Compute")); //$NON-NLS-1$
-    		checkComputeButton.setToolTipText(DefaultMessagesImpl
-    				.getString("ColumnsComparisonMasterDetailsPage.WhenUnchecked")); //$NON-NLS-1$
-    		checkComputeButton.addSelectionListener(new SelectionAdapter() {
-    
-    			public void widgetSelected(SelectionEvent e) {
-    				setDirty(true);
-    			}
-    
-    		});
-    		checkComputeButton.setSelection(checkComputButton);
-		}
+    private void createAnalyzedColumnSetsSection(String mainTitle, String description) {
+        columnsComparisonSection = masterPage.createSection(form, parentComp, mainTitle, false, description); //$NON-NLS-1$ //$NON-NLS-2$
+        Composite sectionClient = toolkit.createComposite(columnsComparisonSection);
+        sectionClient.setLayout(new GridLayout());
+        // sectionClient.setLayout(new GridLayout(2, true));
+        // this.createSectionPart(form, sectionClient, "left Columns");
+        // this.createSectionPart(form, sectionClient, "Right Columns");
 
-		Composite columnComp = toolkit.createComposite(sectionClient);
-		columnComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-		columnComp.setLayout(new GridLayout());
-		// ~ MOD mzhao 2009-05-05,Bug 6587.
-		masterPage.createConnBindWidget(columnComp);
-		// ~
-		SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
-		sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+        if (showCheckButton) {
+            checkComputeButton = new Button(sectionClient, SWT.CHECK);
+            GridData layoutData = new GridData(GridData.FILL_BOTH);
+            layoutData.horizontalAlignment = SWT.CENTER;
+            checkComputeButton.setLayoutData(layoutData);
+            checkComputeButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.Compute")); //$NON-NLS-1$
+            checkComputeButton.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.WhenUnchecked")); //$NON-NLS-1$
+            checkComputeButton.addSelectionListener(new SelectionAdapter() {
 
-		Composite leftComp = toolkit.createComposite(sashForm);
-		leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-		leftComp.setLayout(new GridLayout());
-		leftTable = this
-				.createSectionPart(
-						leftComp,
-						columnListA,
-						DefaultMessagesImpl
-								.getString("ColumnsComparisonMasterDetailsPage.leftColumns"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForASet")); //$NON-NLS-1$ //$NON-NLS-2$
+                public void widgetSelected(SelectionEvent e) {
+                    setDirty(true);
+                }
 
-		Composite rightComp = toolkit.createComposite(sashForm);
-		rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-		rightComp.setLayout(new GridLayout());
-		rightTable = this
-				.createSectionPart(
-						rightComp,
-						columnListB,
-						DefaultMessagesImpl
-								.getString("ColumnsComparisonMasterDetailsPage.rightColumns"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForBSet")); //$NON-NLS-1$ //$NON-NLS-2$
-		// MOD mzhao 2009-05-05 bug:6587.
-		updateBindConnection(masterPage, tableViewerPosStack);
-		columnsComparisonSection.setClient(sectionClient);
-	}
+            });
+            checkComputeButton.setSelection(checkComputButton);
+        }
+
+        Composite columnComp = toolkit.createComposite(sectionClient);
+        columnComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        columnComp.setLayout(new GridLayout());
+        // ~ MOD mzhao 2009-05-05,Bug 6587.
+        masterPage.createConnBindWidget(columnComp);
+        // ~
+        SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
+        sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+        String hyperlinkTextLeft = null;
+        String hyperlinkTextRight = null;
+        if (masterPage instanceof ColumnDependencyMasterDetailsPage) {
+            hyperlinkTextLeft = DefaultMessagesImpl.getString("AnalysisColumnCompareTreeViewer.DeterminantCol"); //$NON-NLS-1$
+            hyperlinkTextRight = DefaultMessagesImpl.getString("AnalysisColumnCompareTreeViewer.DependentCol"); //$NON-NLS-1$
+        } else {
+            hyperlinkTextLeft = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForASet"); //$NON-NLS-1$
+            hyperlinkTextRight = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForBSet"); //$NON-NLS-1$
+        }
+        Composite leftComp = toolkit.createComposite(sashForm);
+        leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        leftComp.setLayout(new GridLayout());
+        leftTable = this.createSectionPart(leftComp, columnListA, DefaultMessagesImpl
+                .getString("ColumnsComparisonMasterDetailsPage.leftColumns"), hyperlinkTextLeft); //$NON-NLS-1$ 
+
+        Composite rightComp = toolkit.createComposite(sashForm);
+        rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        rightComp.setLayout(new GridLayout());
+        rightTable = this.createSectionPart(rightComp, columnListB, DefaultMessagesImpl
+                .getString("ColumnsComparisonMasterDetailsPage.rightColumns"), hyperlinkTextRight); //$NON-NLS-1$ 
+        // MOD mzhao 2009-05-05 bug:6587.
+        updateBindConnection(masterPage, tableViewerPosStack);
+        columnsComparisonSection.setClient(sectionClient);
+    }
 
     /**
-     * DOC jet Comment method "refreash".
-     * redraw selected content.
+     * DOC jet Comment method "refreash". redraw selected content.
      */
-    public void refreash(){
+    public void refreash() {
         rightTable.refresh();
         leftTable.refresh();
     }
-    
-	private TableViewer createSectionPart(Composite parentComp,
-			final List<Column> columnList, String title, String hyperlinkText) {
-		Section columnSetElementSection = masterPage.createSection(form,
-				parentComp, title, true, null);
-		Composite sectionComp = toolkit
-				.createComposite(columnSetElementSection);
-		sectionComp.setLayout(new GridLayout());
 
-		Hyperlink selectColumnBtn = toolkit.createHyperlink(sectionComp,
-				hyperlinkText, SWT.NONE);
-		GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING)
-				.applyTo(selectColumnBtn);
+    private TableViewer createSectionPart(Composite parentComp, final List<Column> columnList, String title, String hyperlinkText) {
+        Section columnSetElementSection = masterPage.createSection(form, parentComp, title, true, null);
+        Composite sectionComp = toolkit.createComposite(columnSetElementSection);
+        sectionComp.setLayout(new GridLayout());
 
-		Composite columsComp = toolkit.createComposite(sectionComp, SWT.NULL);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(
-				true, true).applyTo(columsComp);
-		columsComp.setLayout(new GridLayout());
-		final TableViewer columnsElementViewer = createTreeViewer(columnList,
-				columsComp);
-		// ~ADD mzhao for cheat sheets later open column selection dialog.
-		tableViewerPosStack.add(columnsElementViewer);
-		// ~
-		// DragAndDropDecorate decorate = new DragAndDropDecorate();
-		// decorate.toDecorateDragAndDrop(columnsElementViewer);
-		TableViewerDNDDecorate dndDecorate = new TableViewerDNDDecorate();
-		dndDecorate.installDND(columnsElementViewer, true,
-				TableViewerDNDDecorate.COLUMN_VALIDATETYPE);
+        Hyperlink selectColumnBtn = toolkit.createHyperlink(sectionComp, hyperlinkText, SWT.NONE);
+        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(selectColumnBtn);
 
-		Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);
-		buttonsComp.setLayout(new GridLayout(4, true));
-		buttonsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		final Button delButton = new Button(buttonsComp, SWT.NULL);
-		delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-		GridData buttonGridData = new GridData(GridData.FILL_BOTH);
-		delButton.setLayoutData(buttonGridData);
-		final Button moveUpButton = new Button(buttonsComp, SWT.NULL);
-		moveUpButton.setText(DefaultMessagesImpl
-				.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
-		moveUpButton.setLayoutData(buttonGridData);
-		final Button moveDownButton = new Button(buttonsComp, SWT.NULL);
-		moveDownButton.setText(DefaultMessagesImpl
-				.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
-		moveDownButton.setLayoutData(buttonGridData);
+        Composite columsComp = toolkit.createComposite(sectionComp, SWT.NULL);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, true).applyTo(columsComp);
+        columsComp.setLayout(new GridLayout());
+        final TableViewer columnsElementViewer = createTreeViewer(columnList, columsComp);
+        // ~ADD mzhao for cheat sheets later open column selection dialog.
+        tableViewerPosStack.add(columnsElementViewer);
+        // ~
+        // DragAndDropDecorate decorate = new DragAndDropDecorate();
+        // decorate.toDecorateDragAndDrop(columnsElementViewer);
+        TableViewerDNDDecorate dndDecorate = new TableViewerDNDDecorate();
+        dndDecorate.installDND(columnsElementViewer, true, TableViewerDNDDecorate.COLUMN_VALIDATETYPE);
 
-		Button sortButton = new Button(buttonsComp, SWT.NULL);
-		sortButton.setText(DefaultMessagesImpl
-				.getString("ColumnsComparisonMasterDetailsPage.sort")); //$NON-NLS-1$
-		sortButton.setLayoutData(buttonGridData);
+        Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);
+        buttonsComp.setLayout(new GridLayout(4, true));
+        buttonsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        final Button delButton = new Button(buttonsComp, SWT.NULL);
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        GridData buttonGridData = new GridData(GridData.FILL_BOTH);
+        delButton.setLayoutData(buttonGridData);
+        final Button moveUpButton = new Button(buttonsComp, SWT.NULL);
+        moveUpButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
+        moveUpButton.setLayoutData(buttonGridData);
+        final Button moveDownButton = new Button(buttonsComp, SWT.NULL);
+        moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
+        moveDownButton.setLayoutData(buttonGridData);
 
-		final Button[] buttons = new Button[] { delButton, moveUpButton,
-				moveDownButton };
-		columnsElementViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
+        Button sortButton = new Button(buttonsComp, SWT.NULL);
+        sortButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.sort")); //$NON-NLS-1$
+        sortButton.setLayoutData(buttonGridData);
 
-					public void selectionChanged(SelectionChangedEvent event) {
-						enabledButtons(buttons, event.getSelection() != null);
+        final Button[] buttons = new Button[] { delButton, moveUpButton, moveDownButton };
+        columnsElementViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-					}
-				});
+            public void selectionChanged(SelectionChangedEvent event) {
+                enabledButtons(buttons, event.getSelection() != null);
 
-		// ADD 2009-01-07 mzhao for feature:0005664
-		createTableViewerMenu(columnsElementViewer, columnList, buttons);
-		delButton.addSelectionListener(new SelectionAdapter() {
+            }
+        });
 
-			public void widgetSelected(SelectionEvent e) {
-				columnList.remove(((IStructuredSelection) columnsElementViewer
-						.getSelection()).getFirstElement());
-				columnsElementViewer.setInput(columnList);
-				enabledButtons(buttons, false);
-				masterPage.setDirty(true);
-				// MOD mzhao 2009-05-05 bug:6587.
-				// MOD mzhao feature 5887 2009-06-17
-				// updateBindConnection(masterPage);
-			}
+        // ADD 2009-01-07 mzhao for feature:0005664
+        createTableViewerMenu(columnsElementViewer, columnList, buttons);
+        delButton.addSelectionListener(new SelectionAdapter() {
 
-		});
+            public void widgetSelected(SelectionEvent e) {
+                columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement());
+                columnsElementViewer.setInput(columnList);
+                enabledButtons(buttons, false);
+                masterPage.setDirty(true);
+                // MOD mzhao 2009-05-05 bug:6587.
+                // MOD mzhao feature 5887 2009-06-17
+                // updateBindConnection(masterPage);
+            }
 
-		moveUpButton.addSelectionListener(new SelectionAdapter() {
+        });
 
-			public void widgetSelected(SelectionEvent e) {
-				moveElement(columnList, columnsElementViewer, false);
+        moveUpButton.addSelectionListener(new SelectionAdapter() {
 
-			}
+            public void widgetSelected(SelectionEvent e) {
+                moveElement(columnList, columnsElementViewer, false);
 
-		});
-		moveDownButton.addSelectionListener(new SelectionAdapter() {
+            }
 
-			public void widgetSelected(SelectionEvent e) {
-				moveElement(columnList, columnsElementViewer, true);
+        });
+        moveDownButton.addSelectionListener(new SelectionAdapter() {
 
-			}
+            public void widgetSelected(SelectionEvent e) {
+                moveElement(columnList, columnsElementViewer, true);
 
-		});
-		sortButton.addSelectionListener(new SelectionAdapter() {
+            }
 
-			public void widgetSelected(SelectionEvent e) {
-				// MOD xqliu 2009-01-17, bug 5940: achieve the function of sort
-				// button
-				sortElement(columnList, columnsElementViewer);
-			}
+        });
+        sortButton.addSelectionListener(new SelectionAdapter() {
 
-		});
-		this.enabledButtons(new Button[] { delButton, moveUpButton,
-				moveDownButton }, false);
-		final List<Column> columnsOfSectionPart = columnList;
-		selectColumnBtn.addHyperlinkListener(new HyperlinkAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                // MOD xqliu 2009-01-17, bug 5940: achieve the function of sort
+                // button
+                sortElement(columnList, columnsElementViewer);
+            }
 
-			public void linkActivated(HyperlinkEvent e) {
-				openColumnsSelectionDialog(columnsElementViewer,
-						columnsOfSectionPart);
-				// Object input = columnsElementViewer.getInput();
-				// List<Object> columnSet = (List<Object>) input;
-				enabledButtons(buttons, false);
-			}
+        });
+        this.enabledButtons(new Button[] { delButton, moveUpButton, moveDownButton }, false);
+        final List<Column> columnsOfSectionPart = columnList;
+        selectColumnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
-		});
+            public void linkActivated(HyperlinkEvent e) {
+                openColumnsSelectionDialog(columnsElementViewer, columnsOfSectionPart);
+                // Object input = columnsElementViewer.getInput();
+                // List<Object> columnSet = (List<Object>) input;
+                enabledButtons(buttons, false);
+            }
 
-		columnSetElementSection.setClient(sectionComp);
-		return columnsElementViewer;
+        });
 
-	}
+        columnSetElementSection.setClient(sectionComp);
+        return columnsElementViewer;
 
-	/**
-	 * MOD mzhao 2009-02-03,remove the first parameter, extract it to class
-	 * property filed for the convenience of invoking this method from cheat
-	 * sheets.
-	 */
-	public void openColumnsSelectionDialog(TableViewer columnsElementViewer,
-			List<Column> columnsOfSectionPart) {
-		ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
-				masterPage,
-				null,
-				DefaultMessagesImpl
-						.getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, //$NON-NLS-1$
-				DefaultMessagesImpl
-						.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
-		if (dialog.open() == Window.OK) {
-			Object[] columns = dialog.getResult();
-			List<Column> columnSet = new ArrayList<Column>();
-			for (Object obj : columns) {
-				columnSet.add((Column) obj);
-			}
-			columnsElementViewer.setInput(columnSet);
-			columnsOfSectionPart.clear();
-			columnsOfSectionPart.addAll(columnSet);
-			if (columnSet.size() != 0) {
-				String tableName = ColumnHelper.getColumnSetOwner(
-						(TdColumn) columnSet.get(0)).getName();
-				columnsElementViewer
-						.getTable()
-						.getColumn(0)
-						.setText(
-								DefaultMessagesImpl
-										.getString(
-												"ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
-			}
-			updateBindConnection(masterPage, tableViewerPosStack);
-		}
-	}
+    }
 
-	/**
-	 * DOC rli Comment method "moveElement".
-	 * 
-	 * @param columnList
-	 * @param columnsElementViewer
-	 */
-	private void moveElement(List<Column> columnList,
-			TableViewer columnsElementViewer, boolean isDown) {
-		Object firstElement = ((IStructuredSelection) columnsElementViewer
-				.getSelection()).getFirstElement();
-		int index = columnList.indexOf(firstElement);
-		if (isDown) {
-			if ((index + 1) < columnList.size()) {
-				columnList.remove(firstElement);
-				columnList.add((index + 1), (Column) firstElement);
-			}
-		} else {
-			if ((index - 1) >= 0) {
-				columnList.remove(firstElement);
-				columnList.add((index - 1), (Column) firstElement);
-			}
+    /**
+     * MOD mzhao 2009-02-03,remove the first parameter, extract it to class property filed for the convenience of
+     * invoking this method from cheat sheets.
+     */
+    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<Column> columnsOfSectionPart) {
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(masterPage, null, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
+        if (dialog.open() == Window.OK) {
+            Object[] columns = dialog.getResult();
+            List<Column> columnSet = new ArrayList<Column>();
+            for (Object obj : columns) {
+                columnSet.add((Column) obj);
+            }
+            columnsElementViewer.setInput(columnSet);
+            columnsOfSectionPart.clear();
+            columnsOfSectionPart.addAll(columnSet);
+            if (columnSet.size() != 0) {
+                String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnSet.get(0)).getName();
+                columnsElementViewer.getTable().getColumn(0).setText(
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
+            }
+            updateBindConnection(masterPage, tableViewerPosStack);
+        }
+    }
 
-		}
-		columnsElementViewer.setInput(columnList);
-	}
+    /**
+     * DOC rli Comment method "moveElement".
+     * 
+     * @param columnList
+     * @param columnsElementViewer
+     */
+    private void moveElement(List<Column> columnList, TableViewer columnsElementViewer, boolean isDown) {
+        Object firstElement = ((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement();
+        int index = columnList.indexOf(firstElement);
+        if (isDown) {
+            if ((index + 1) < columnList.size()) {
+                columnList.remove(firstElement);
+                columnList.add((index + 1), (Column) firstElement);
+            }
+        } else {
+            if ((index - 1) >= 0) {
+                columnList.remove(firstElement);
+                columnList.add((index - 1), (Column) firstElement);
+            }
 
-	/**
-	 * 
-	 * DOC xqliu Comment method "sortElement".
-	 * 
-	 * @param columnList
-	 * @param columnsElementViewer
-	 * @param asc
-	 */
-	private void sortElement(List<Column> columnList,
-			TableViewer columnsElementViewer) {
-		Collections.sort(columnList, new CaseInsensitiveComparator());
-		columnsElementViewer.setInput(columnList);
-	}
+        }
+        columnsElementViewer.setInput(columnList);
+    }
 
-	/**
-	 * 
-	 * DOC xqliu ColumnsComparisonMasterDetailsPage class global comment.
-	 * Detailled comment
-	 */
-	private class CaseInsensitiveComparator implements Comparator {
+    /**
+     * 
+     * DOC xqliu Comment method "sortElement".
+     * 
+     * @param columnList
+     * @param columnsElementViewer
+     * @param asc
+     */
+    private void sortElement(List<Column> columnList, TableViewer columnsElementViewer) {
+        Collections.sort(columnList, new CaseInsensitiveComparator());
+        columnsElementViewer.setInput(columnList);
+    }
 
-		public int compare(Object element1, Object element2) {
-			Column col1 = (Column) element1;
-			Column col2 = (Column) element2;
-			String lower1 = col1.getName().toLowerCase();
-			String lower2 = col2.getName().toLowerCase();
-			return lower1.compareTo(lower2);
-		}
-	}
+    /**
+     * 
+     * DOC xqliu ColumnsComparisonMasterDetailsPage class global comment. Detailled comment
+     */
+    private class CaseInsensitiveComparator implements Comparator {
 
-	/**
-	 * DOC rli Comment method "setColumnAB".
-	 */
-	public void setColumnABForMatchingIndicator(
-			RowMatchingIndicator rowMatchingIndicator, List<Column> columnsA,
-			List<Column> columnsB) {
-		if (columnsA.size() != 0) {
-			ColumnSet columnSetOwner = ColumnHelper
-					.getColumnSetOwner((TdColumn) columnsA.get(0));
-			rowMatchingIndicator.setAnalyzedElement(columnSetOwner);
-		}
-		rowMatchingIndicator.getColumnSetA().clear();
-		rowMatchingIndicator.getColumnSetA().addAll(columnsA);
-		rowMatchingIndicator.getColumnSetB().clear();
-		rowMatchingIndicator.getColumnSetB().addAll(columnsB);
-	}
+        public int compare(Object element1, Object element2) {
+            Column col1 = (Column) element1;
+            Column col2 = (Column) element2;
+            String lower1 = col1.getName().toLowerCase();
+            String lower2 = col2.getName().toLowerCase();
+            return lower1.compareTo(lower2);
+        }
+    }
 
-	private TableViewer createTreeViewer(final List<Column> columnList,
-			Composite columsComp) {
-		TableViewer columnsElementViewer = new TableViewer(columsComp,
-				SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    /**
+     * DOC rli Comment method "setColumnAB".
+     */
+    public void setColumnABForMatchingIndicator(RowMatchingIndicator rowMatchingIndicator, List<Column> columnsA,
+            List<Column> columnsB) {
+        if (columnsA.size() != 0) {
+            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner((TdColumn) columnsA.get(0));
+            rowMatchingIndicator.setAnalyzedElement(columnSetOwner);
+        }
+        rowMatchingIndicator.getColumnSetA().clear();
+        rowMatchingIndicator.getColumnSetA().addAll(columnsA);
+        rowMatchingIndicator.getColumnSetB().clear();
+        rowMatchingIndicator.getColumnSetB().addAll(columnsB);
+    }
 
-		Table table = columnsElementViewer.getTable();
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
-		((GridData) table.getLayoutData()).heightHint = 280;
-		table.setHeaderVisible(true);
-		table.setDragDetect(true);
-		table
-				.setToolTipText(DefaultMessagesImpl
-						.getString("ColumnsComparisonMasterDetailsPage.reorderElementsByDragAnddrop")); //$NON-NLS-1$
-		final TableColumn columnHeader = new TableColumn(table, SWT.CENTER);
+    private TableViewer createTreeViewer(final List<Column> columnList, Composite columsComp) {
+        TableViewer columnsElementViewer = new TableViewer(columsComp, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 
-		columnHeader.setWidth(260);
-		columnHeader.setAlignment(SWT.CENTER);
-		if (columnList.size() > 0) {
-			String tableName = ColumnHelper.getColumnSetOwner(
-					(TdColumn) columnList.get(0)).getName();
-			columnHeader.setText(DefaultMessagesImpl.getString(
-					"ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
-		}
+        Table table = columnsElementViewer.getTable();
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
+        ((GridData) table.getLayoutData()).heightHint = 280;
+        table.setHeaderVisible(true);
+        table.setDragDetect(true);
+        table.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.reorderElementsByDragAnddrop")); //$NON-NLS-1$
+        final TableColumn columnHeader = new TableColumn(table, SWT.CENTER);
 
-		ColumnsElementViewerProvider provider = new ColumnsElementViewerProvider();
-		columnsElementViewer.setContentProvider(provider);
-		columnsElementViewer.setLabelProvider(provider);
-		columnsElementViewer.setInput(columnList);
-		return columnsElementViewer;
+        columnHeader.setWidth(260);
+        columnHeader.setAlignment(SWT.CENTER);
+        if (columnList.size() > 0) {
+            String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnList.get(0)).getName();
+            columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
+        }
 
-	}
+        ColumnsElementViewerProvider provider = new ColumnsElementViewerProvider();
+        columnsElementViewer.setContentProvider(provider);
+        columnsElementViewer.setLabelProvider(provider);
+        columnsElementViewer.setInput(columnList);
+        return columnsElementViewer;
 
-	private void createTableViewerMenu(final TableViewer columnsElementViewer,
-			final List<Column> columnList, final Button[] buttons) {
-		Table table = columnsElementViewer.getTable();
+    }
 
-		Menu menu = new Menu(table);
-		MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-		menuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-		menuItem.setText(DefaultMessagesImpl
-				.getString("ColumnsComparisonMasterDetailsPage.removeElement")); //$NON-NLS-1$
+    private void createTableViewerMenu(final TableViewer columnsElementViewer, final List<Column> columnList,
+            final Button[] buttons) {
+        Table table = columnsElementViewer.getTable();
 
-		menuItem.addSelectionListener(new SelectionAdapter() {
+        Menu menu = new Menu(table);
+        MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+        menuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        menuItem.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.removeElement")); //$NON-NLS-1$
 
-			public void widgetSelected(SelectionEvent e) {
-				columnList.remove(((IStructuredSelection) columnsElementViewer
-						.getSelection()).getFirstElement());
-				columnsElementViewer.setInput(columnList);
-				enabledButtons(buttons, false);
-				// MOD mzhao 2009-05-05 bug:6587.
-				// MOD mzhao 2009-06-17 remove the connection bind here feature
-				// 5887
-				// updateBindConnection();
-			}
-		});
+        menuItem.addSelectionListener(new SelectionAdapter() {
 
-		MenuItem showMenuItem = new MenuItem(menu, SWT.CASCADE);
-		showMenuItem.setText(DefaultMessagesImpl
-				.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
-		showMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-		showMenuItem.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement());
+                columnsElementViewer.setInput(columnList);
+                enabledButtons(buttons, false);
+                // MOD mzhao 2009-05-05 bug:6587.
+                // MOD mzhao 2009-06-17 remove the connection bind here feature
+                // 5887
+                // updateBindConnection();
+            }
+        });
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
-			 * .swt.events.SelectionEvent)
-			 */
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				showSelectedElements(columnsElementViewer);
-			}
+        MenuItem showMenuItem = new MenuItem(menu, SWT.CASCADE);
+        showMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
+        showMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        showMenuItem.addSelectionListener(new SelectionAdapter() {
 
-		});
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                showSelectedElements(columnsElementViewer);
+            }
 
-		table.setMenu(menu);
-	}
+        });
 
-	/**
-	 * 
-	 * DOC mzhao Comment method "showSelectedElements".
-	 * 
-	 * @param newTree
-	 */
-	private void showSelectedElements(TableViewer tableView) {
-		TableItem[] selection = tableView.getTable().getSelection();
+        table.setMenu(menu);
+    }
 
-		DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault()
-				.findView(DQRespositoryView.ID);
-		if (selection.length == 1) {
-			try {
-				Column column = (Column) selection[0].getData();
-				dqview.showSelectedElements(column);
-			} catch (Exception e) {
-				log.error(e, e);
-			}
-		}
-	}
+    /**
+     * 
+     * DOC mzhao Comment method "showSelectedElements".
+     * 
+     * @param newTree
+     */
+    private void showSelectedElements(TableViewer tableView) {
+        TableItem[] selection = tableView.getTable().getSelection();
 
-	private void enabledButtons(Button[] buttons, boolean enabled) {
-		for (Button button : buttons) {
-			button.setEnabled(enabled);
-		}
-	}
+        DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        if (selection.length == 1) {
+            try {
+                Column column = (Column) selection[0].getData();
+                dqview.showSelectedElements(column);
+            } catch (Exception e) {
+                log.error(e, e);
+            }
+        }
+    }
 
-	/**
-	 * The provider for ColumnsElementViewer.
-	 */
-	class ColumnsElementViewerProvider extends LabelProvider implements
-			IStructuredContentProvider {
+    private void enabledButtons(Button[] buttons, boolean enabled) {
+        for (Button button : buttons) {
+            button.setEnabled(enabled);
+        }
+    }
 
-		@SuppressWarnings("unchecked")
-		public Object[] getElements(Object inputElement) {
-			List<Object> columnSet = (List<Object>) inputElement;
-			return columnSet.toArray();
-		}
+    /**
+     * The provider for ColumnsElementViewer.
+     */
+    class ColumnsElementViewerProvider extends LabelProvider implements IStructuredContentProvider {
 
-		@SuppressWarnings("unchecked")
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			if (oldInput != null && newInput != null) {
-				if (!((List) newInput).isEmpty()) {
-					masterPage.setDirty(true);
-				}
-			}
-		}
+        @SuppressWarnings("unchecked")
+        public Object[] getElements(Object inputElement) {
+            List<Object> columnSet = (List<Object>) inputElement;
+            return columnSet.toArray();
+        }
 
-		public Image getImage(Object element) {
-			if (element instanceof TdColumn) {
-				return ImageLib.getImage(ImageLib.TD_COLUMN);
-			}
-			return null;
-		}
+        @SuppressWarnings("unchecked")
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            if (oldInput != null && newInput != null) {
+                if (!((List) newInput).isEmpty()) {
+                    masterPage.setDirty(true);
+                }
+            }
+        }
 
-		public String getText(Object element) {
-			if (element instanceof Column) {
-				return ((Column) element).getName();
-			}
-			return PluginConstant.EMPTY_STRING;
-		}
+        public Image getImage(Object element) {
+            if (element instanceof TdColumn) {
+                return ImageLib.getImage(ImageLib.TD_COLUMN);
+            }
+            return null;
+        }
 
-	}
+        public String getText(Object element) {
+            if (element instanceof Column) {
+                return ((Column) element).getName();
+            }
+            return PluginConstant.EMPTY_STRING;
+        }
 
-	/**
-	 * 
-	 * DOC mzhao Open column selection dialog for left column set. this method
-	 * is intended to use from cheat sheets.
-	 */
-	public void openColumnsSetASelectionDialog() {
-		openColumnsSelectionDialog(tableViewerPosStack.get(0), columnListA);
-	}
+    }
 
-	/**
-	 * 
-	 * DOC mzhao Open column selection dialog for right column set. this method
-	 * is intended to use from cheat sheets.
-	 */
-	public void openColumnsSetBSelectionDialog() {
-		openColumnsSelectionDialog(tableViewerPosStack.get(1), columnListB);
-	}
+    /**
+     * 
+     * DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat sheets.
+     */
+    public void openColumnsSetASelectionDialog() {
+        openColumnsSelectionDialog(tableViewerPosStack.get(0), columnListA);
+    }
 
-	@Override
-	public void updateModelViewer() {
-		if (analysis.getResults().getIndicators().size() != 0) {
-			EList<Indicator> indicators = analysis.getResults().getIndicators();
-			RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators
-					.get(0);
-			columnListA.clear();
-			columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
-			tableViewerPosStack.get(0).setInput(columnListA);
-			columnListB.clear();
-			columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
-			tableViewerPosStack.get(1).setInput(columnListB);
-		}
+    /**
+     * 
+     * DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat sheets.
+     */
+    public void openColumnsSetBSelectionDialog() {
+        openColumnsSelectionDialog(tableViewerPosStack.get(1), columnListB);
+    }
 
-	}
+    @Override
+    public void updateModelViewer() {
+        if (analysis.getResults().getIndicators().size() != 0) {
+            EList<Indicator> indicators = analysis.getResults().getIndicators();
+            RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
+            columnListA.clear();
+            columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
+            tableViewerPosStack.get(0).setInput(columnListA);
+            columnListB.clear();
+            columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
+            tableViewerPosStack.get(1).setInput(columnListB);
+        }
 
-	public Section getColumnsComparisonSection() {
-		return columnsComparisonSection;
-	}
+    }
 
-	public Button getCheckComputeButton() {
-		return checkComputeButton;
-	}
+    public Section getColumnsComparisonSection() {
+        return columnsComparisonSection;
+    }
 
-	public List<Column> getColumnListA() {
-		return columnListA;
-	}
+    public Button getCheckComputeButton() {
+        return checkComputeButton;
+    }
 
-	public List<Column> getColumnListB() {
-		return columnListB;
-	}
+    public List<Column> getColumnListA() {
+        return columnListA;
+    }
+
+    public List<Column> getColumnListB() {
+        return columnListB;
+    }
 }
