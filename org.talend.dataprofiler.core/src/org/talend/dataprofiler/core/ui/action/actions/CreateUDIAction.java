@@ -13,17 +13,21 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.help.HelpSystem;
+import org.eclipse.help.IContext;
+import org.eclipse.help.IHelpResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
+import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
 import org.talend.resource.ResourceManager;
 
@@ -56,7 +60,10 @@ public class CreateUDIAction extends Action implements ICheatSheetAction {
         parameter.setFolderProvider(folderProvider);
         NewUDIndicatorWizard fileWizard = WizardFactory.createNewUDIWizard(parameter);
         fileWizard.setWindowTitle(getText());
-        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), fileWizard);
+        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getUDIndicatorHelpContextID());
+        IHelpResource[] relatedTopics = context.getRelatedTopics();
+        String href = relatedTopics[0].getHref();
+        WizardDialog dialog = new OpeningHelpWizardDialog(null, fileWizard, href);
         dialog.open();
     }
 
