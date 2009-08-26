@@ -70,4 +70,8 @@ public class HelpPlugin extends AbstractUIPlugin {
     public String getAnalysisHelpContextID() {
         return PLUGIN_ID + ".helpAnalysisContext"; //$NON-NLS-1$
     }
+
+    public String getUDIndicatorHelpContextID() {
+        return PLUGIN_ID + ".helpUDIndicatorContext";//$NON-NLS-1$
+    }
 }
