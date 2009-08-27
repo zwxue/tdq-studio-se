@@ -188,7 +188,7 @@ public class JungGraphGenerator {
 
         JPanel pSlider = new JPanel();
         pSlider.setLayout(new BoxLayout(pSlider, BoxLayout.Y_AXIS));
-        pSlider.setBorder(new TitledBorder("Filter edge weight"));
+        pSlider.setBorder(new TitledBorder("Filter Edge Weight"));
 
         final JSlider slider = new JSlider(0, 10, 0);
         slider.setMajorTickSpacing(2);
@@ -213,7 +213,7 @@ public class JungGraphGenerator {
         });
         pSlider.add(slider);
 
-        final JCheckBox inverse = new JCheckBox("inverse edge weight");
+        final JCheckBox inverse = new JCheckBox("Inverse Edge Weight");
         inverse.addActionListener(new ActionListener() {
 
             /*
@@ -244,7 +244,7 @@ public class JungGraphGenerator {
                 scaler.scale(vv, 1 / 1.1f, vv.getCenter());
             }
         });
-        JButton reset = new JButton("reset");
+        JButton reset = new JButton("Reset");
         reset.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
