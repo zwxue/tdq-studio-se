@@ -822,8 +822,8 @@
            name="Connection Analysis Creation">
      </cheatsheet>
      <category
-           id="org.talend.dataprofiler.core.category.connectionanalysis"
-           name="ConnectionAnalysis"
+           id="org.talend.dataprofiler.core.category.indicator"
+           name="Indicator"
            parentCategory="org.talend.dataprofiler.core.category">
      </category>
      <cheatsheet
@@ -857,10 +857,10 @@
            name="Time Column Correlation Analysis Creation">
      </cheatsheet>
           <cheatsheet
-                category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.userdefinedindicator"
+                category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.indicator"
                 contentFile="cheatsheets/UDI_cheat.xml"
                 id="org.talend.dataprofiler.core.userdefinedindicator"
-                name="User Defined Inciator Creation">
+                name="User Defined Indicator Creation">
           </cheatsheet>
   </extension>
    

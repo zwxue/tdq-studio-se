@@ -11,30 +11,23 @@
       <description>
          This step opens the &quot;New Indicator&quot; wizard.  <b>Right click on the folder &quot;Libraries/Indicators/User Defined Indicators&quot;</b> and select the menu &quot;New Indicator&quot;.
 
-This wizard creates a User Defined Indicator.
+At the end of this wizard, a User Defined Indicator is created and opened in the appropriate editor for editing.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateUDIAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
    <item
          href="http://en.wikipedia.org/wiki/Database_management_system"
-         title="Content of the User Defined Indicator">
+         title="Review the content of the indicator">
       <description>
-         Please select the Language and input the SQL Template in the Wizard. These keywords can be use here: 
-&lt;%=__AND_WHERE_CLAUSE__%&gt;, 
-&lt;%=__WHERE_CLAUSE__%&gt;, 
-&lt;%=__TABLE_NAME__%&gt;, 
-&lt;%=__TABLE_NAME_2__%&gt;, 
-&lt;%=__COLUMN_NAMES__%&gt;, 
-&lt;%=__GROUP_BY_ALIAS__%&gt;, 
-&lt;%=__LIMIT_ROW__%&gt;, 
-&lt;%=__PATTERN_EXPR__%&gt;, 
-&lt;%=__JOIN_CLAUSE__%&gt;, 
-&lt;%=__LIMIT_OFFSET__%&gt;, 
-&lt;%=__LIMIT_ROW_PLUS_OFFSET__%&gt;, 
-&lt;%=__COLUMN_NAME_A__%&gt;, 
-&lt;%=__COLUMN_NAME_B__%&gt;. 
-When you complete the User Defined Indicator, the Editor will open, the default category of User Defined Indicator is &quot;User Defined Count&quot;.
+         Please select the database specific language (or &quot;All Database Type&quot; if the query is generic enough to work on any database) and review the SQL template in the wizard. 
+The indicator template is a SQL query with some variables represented by the following keywords:
+&lt;%=__COLUMN_NAMES__%&gt; replaces the column(s),
+&lt;%=__TABLE_NAME__%&gt; replaces the table name,
+&lt;%=__WHERE_CLAUSE__%&gt; replaces the where clause provided by the data filter,
+&lt;%=__GROUP_BY_ALIAS__%&gt; replaces &quot;group by&quot; whole clause.
+
+The default category of the new indicator is &quot;User Defined Count&quot;. Choose the category depending on the kind of output the indicator will return.
       </description>
    </item>
 </cheatsheet>
