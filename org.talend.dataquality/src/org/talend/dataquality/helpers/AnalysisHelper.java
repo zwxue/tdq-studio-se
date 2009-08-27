@@ -335,7 +335,7 @@ public final class AnalysisHelper {
             if (indicator instanceof PatternMatchingIndicator) {
                 rets.addAll(((PatternMatchingIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
             } else if (indicator instanceof UserDefIndicator) {
-                if (IndicatorCategoryHelper.isMatching(getIndicatorCategory(indicator.getIndicatorDefinition()))) {
+                if (IndicatorCategoryHelper.isUserDefMatching(getIndicatorCategory(indicator.getIndicatorDefinition()))) {
                     rets.addAll(((UserDefIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
                 }
             }

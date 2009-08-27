@@ -554,7 +554,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         Indicator indicator = unit.getIndicator();
         if (indicator instanceof UserDefIndicator) {
             reomveElements.add(indicator.getIndicatorDefinition());
-            if (IndicatorCategoryHelper.isMatching(UDIHelper.getUDICategory(indicator))) {
+            if (IndicatorCategoryHelper.isUserDefMatching(UDIHelper.getUDICategory(indicator))) {
                 reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
             }
         } else if (indicator instanceof PatternMatchingIndicator) {

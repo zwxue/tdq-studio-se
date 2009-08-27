@@ -568,7 +568,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      */
     @Override
     public Long getIntegerValue() {
-        if (IndicatorCategoryHelper.isMatching(getIndicatorCategory())) {
+        if (IndicatorCategoryHelper.isUserDefMatching(getIndicatorCategory())) {
             return this.getMatchingValueCount();
         }
         return this.getUserCount();
@@ -583,11 +583,11 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      */
     @Override
     public boolean storeSqlResults(List<Object[]> objects) {
-        if (IndicatorCategoryHelper.isCount(getIndicatorCategory())) {
+        if (IndicatorCategoryHelper.isUserDefCount(getIndicatorCategory())) {
             return storeSqlResultsRowCount(objects);
-        } else if (IndicatorCategoryHelper.isFrequency(getIndicatorCategory())) {
+        } else if (IndicatorCategoryHelper.isUserDefFrequency(getIndicatorCategory())) {
             return storeSqlResultsFrequency(objects);
-        } else if (IndicatorCategoryHelper.isMatching(getIndicatorCategory())) {
+        } else if (IndicatorCategoryHelper.isUserDefMatching(getIndicatorCategory())) {
             return storeSqlResultsMatching(objects);
         }
         return false;

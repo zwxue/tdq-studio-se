@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.helper.ResourceHelper;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -36,31 +39,50 @@ public final class IndicatorCategoryHelper {
     public static final String USER_DEFINED_INTERVAL_CORRELATION_CATEGORY = "_6giZsHsXEd63r-VLO3_0OQ";
 
     public static final String USER_DEFINED_TIME_CORRELATION_CATEGORY = "_-fpTkHsXEd63r-VLO3_0OQ";
+    
+    public static final String SYSTEM_CORRELATION = "_-DfJgLrcEd2PGrJOyhNk-w";
 
-    public static final boolean isCount(IndicatorCategory indicatorCategory) {
+    public static final boolean isUserDefCount(IndicatorCategory indicatorCategory) {
         if (indicatorCategory != null) {
-            return USER_DEFINED_COUNT_CATEGORY.equals(getUuid(indicatorCategory));
+            return USER_DEFINED_COUNT_CATEGORY.equals(ResourceHelper.getUUID(indicatorCategory));
         }
         return false;
     }
 
-    public static final boolean isFrequency(IndicatorCategory indicatorCategory) {
+    public static final boolean isUserDefFrequency(IndicatorCategory indicatorCategory) {
         if (indicatorCategory != null) {
-            return USER_DEFINED_FREQUENCY_CATEGORY.equals(getUuid(indicatorCategory));
+            return USER_DEFINED_FREQUENCY_CATEGORY.equals(ResourceHelper.getUUID(indicatorCategory));
         }
         return false;
     }
 
-    public static final boolean isMatching(IndicatorCategory indicatorCategory) {
+    public static final boolean isUserDefMatching(IndicatorCategory indicatorCategory) {
         if (indicatorCategory != null) {
-            return USER_DEFINED_MATCH_CATEGORY.equals(getUuid(indicatorCategory));
+            return USER_DEFINED_MATCH_CATEGORY.equals(ResourceHelper.getUUID(indicatorCategory));
         }
         return false;
     }
     
-    private static String getUuid(ModelElement element) {
-        if (element != null) {
-            return element.eResource().getURIFragment(element);
+    public static final boolean isCorrelation(IndicatorCategory indicatorCategory) {
+        if (indicatorCategory != null) {
+            return SYSTEM_CORRELATION.equals(ResourceHelper.getUUID(indicatorCategory));
+        }
+        return false;
+    }
+    
+    public static IndicatorCategory getCategory(IndicatorDefinition indicatorDefinition) {
+        if (indicatorDefinition != null) {
+            EList<IndicatorCategory> categories = indicatorDefinition.getCategories();
+            if (categories != null && categories.size() > 0) {
+                return categories.get(0);
+            }
+        }
+        return null;
+    }
+    
+    public static IndicatorCategory getUDICategory(Indicator indicator) {
+        if (indicator != null) {
+            return getCategory(indicator.getIndicatorDefinition());
         }
         return null;
     }
