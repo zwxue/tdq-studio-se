@@ -12,27 +12,34 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.pref;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -44,6 +51,7 @@ import org.talend.commons.i18n.BabiliTool;
 import org.talend.commons.i18n.BabiliUpdateUtil;
 import org.talend.commons.i18n.ImportBabiliCancelException;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
@@ -52,11 +60,9 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  */
 public class I18nPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
+    private boolean updateCompleted;
 
-
-	private boolean updateCompleted;
-
-    private CCombo execCombo;
+    private Combo execCombo;
 
     private Label header;
 
@@ -92,8 +98,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
         GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         header.setLayoutData(gd);
 
-        execCombo = new CCombo(mainComposite, SWT.BORDER);
-        execCombo.setEditable(false);
+        execCombo = new Combo(mainComposite, SWT.READ_ONLY);
         for (LocalToLanguageEnum oneEnum : LocalToLanguageEnum.values()) {
             execCombo.add(oneEnum.getLocale());
             String language = getPreferenceStore().getString(header.getText());
@@ -144,12 +149,13 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
 
         return mainComposite;
     }
+
     @Override
-	protected void performDefaults() {
-    	execCombo.deselectAll();
-    	getPreferenceStore().setValue(header.getText(), execCombo.getText());
-		super.performDefaults();
-	}
+    protected void performDefaults() {
+        execCombo.deselectAll();
+        getPreferenceStore().setValue(header.getText(), execCombo.getText());
+        super.performDefaults();
+    }
 
     public void runProgressMonitorDialog(final boolean validated, final String language) {
         updateCompleted = false;
@@ -217,9 +223,67 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
     @Override
     public boolean performOk() {
         boolean ok = super.performOk();
-        // saveLanguageType
+        saveLanguageType();
         getPreferenceStore().setValue(header.getText(), execCombo.getText());
         return ok;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.preference.PreferencePage#performApply()
+     */
+    @Override
+    protected void performApply() {
+        saveLanguageType();
+        CorePlugin.getDefault().savePluginPreferences();
+    }
+
+    /**
+     * 
+     * DOC hcheng Comment method "saveLanguageType".
+     */
+    private void saveLanguageType() {
+        FileInputStream fin = null;
+        FileOutputStream fout = null;
+        try {
+            URL url = Platform.getConfigurationLocation().getURL();
+            log(url.getFile());
+            Properties p = new Properties();
+            // load the file configuration/config.ini
+            File iniFile = new File(url.getFile(), "config.ini"); //$NON-NLS-1$
+            fin = new FileInputStream(iniFile);
+            p.load(fin);
+            String languageType = PluginConstant.LANGUAGE_SELECTOR;
+            if (languageType.equals(p.getProperty(EclipseStarter.PROP_NL))) {
+                return;
+            }
+
+            p.setProperty(EclipseStarter.PROP_NL, languageType);
+            fout = new FileOutputStream(iniFile);
+            p.store(fout, "#Configuration File"); //$NON-NLS-1$
+            fout.flush();
+
+        } catch (Exception e) {
+            ExceptionHandler.process(e);
+        } finally {
+            if (fin != null) {
+                try {
+                    fin.close();
+                } catch (Exception e) {
+                    // do nothing
+                }
+
+            }
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (Exception e) {
+                    // do nothing
+                }
+
+            }
+        }
     }
 
     /**
