@@ -62,7 +62,7 @@ public class ExportUDIWizardPage extends WizardPage {
         super(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIWizardPage")); //$NON-NLS-1$
 
         if (isForExchange) {
-            setTitle("Export indicatorts for Talend Exchange");
+            setTitle("Export Indicators for Talend Exchange");
             setDescription("Choose a folder where to export the indicators.");
         } else {
             setTitle(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIToCSVFile")); //$NON-NLS-1$

@@ -27,7 +27,7 @@ public class ExportIndicatorDefinitionAction extends Action {
     protected static Logger log = Logger.getLogger(ExportIndicatorDefinitionAction.class);
 
     public ExportIndicatorDefinitionAction() {
-        super("Export");
+        super("Export Indicators");
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
     }
 

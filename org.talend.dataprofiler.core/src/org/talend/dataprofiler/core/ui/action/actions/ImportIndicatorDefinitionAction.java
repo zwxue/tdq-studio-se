@@ -24,7 +24,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.ImportIndicatorDefinitio
 public class ImportIndicatorDefinitionAction extends Action {
 
     public ImportIndicatorDefinitionAction() {
-        super("Import");
+        super("Import Indicators");
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
     }
 
