@@ -62,7 +62,7 @@ public final class ExportFactory {
 
         if (exportFile.isDirectory()) {
             for (Pattern pattern : patterns) {
-                File file = new File(exportFile, pattern.getName() + ".csv");
+                File file = new File(exportFile, toLocalFileName(pattern.getName() + ".csv"));
                 export(file, folder, pattern);
             }
         }
@@ -253,6 +253,52 @@ public final class ExportFactory {
                 FilesUtils.copyFile(exportFile, bakFile);
             }
             FilesUtils.copyFile(file, exportFile);
+        }
+    }
+
+    /**
+     * DOC yyi Comment method "toLocalFileName".
+     * 
+     * @param src
+     * @return localFileName
+     */
+    public static String toLocalFileName(String src) {
+
+        if (!"Linux".equalsIgnoreCase(System.getProperty("os.name"))) {
+
+            int i;
+            int srcLength = src.length();
+            char j;
+            StringBuffer tmp = new StringBuffer();
+            tmp.ensureCapacity(src.length() * 6);
+
+            for (i = 0; i < srcLength; i++) {
+                j = src.charAt(i);
+                if ('\\' == j) {
+                    tmp.append("%5c");
+                } else if ('/' == j) {
+                    tmp.append("%2f");
+                } else if (':' == j) {
+                    tmp.append("%3a");
+                } else if ('*' == j) {
+                    tmp.append("%2a");
+                } else if ('?' == j) {
+                    tmp.append("%3f");
+                } else if ('"' == j) {
+                    tmp.append("%22");
+                } else if ('<' == j) {
+                    tmp.append("%3c");
+                } else if ('>' == j) {
+                    tmp.append("%3e");
+                } else if ('|' == j) {
+                    tmp.append("%7c");
+                } else {
+                    tmp.append(j);
+                }
+            }
+            return tmp.length() > 255 ? tmp.toString().substring(0, 255) : tmp.toString();
+        } else {
+            return src.length() > 255 ? src.substring(0, 255) : src;
         }
     }
 }

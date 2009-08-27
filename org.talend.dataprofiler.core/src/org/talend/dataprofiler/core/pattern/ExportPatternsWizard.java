@@ -79,7 +79,7 @@ public class ExportPatternsWizard extends Wizard {
 
                 for (Iterator iterator = seletedPatterns.iterator(); iterator.hasNext();) {
                     Pattern pattern = (Pattern) iterator.next();
-                    File patternFile = new File(resource, pattern.getName() + ".csv");
+                    File patternFile = new File(resource, ExportFactory.toLocalFileName(pattern.getName() + ".csv"));
                     if (patternFile.isFile() && patternFile.exists()) {
                         try {
                             FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
