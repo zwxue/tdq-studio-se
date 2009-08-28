@@ -88,7 +88,7 @@
               <details key="documentation" value="Identifies the Document instances relevant to a particular ModelElement."/>
             </eAnnotations>
           </eStructuralFeatures>
-          <eStructuralFeatures xsi:type="ecore:EReference" name="descriptions" upperBound="-1"
+          <eStructuralFeatures xsi:type="ecore:EReference" name="description" upperBound="-1"
               eType="#//cwm/foundation/businessinformation/Description" eOpposite="#//cwm/foundation/businessinformation/Description/modelElement">
             <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
               <details key="documentation" value="Identifies the Description instances relevant for a particular ModelElement instance."/>
@@ -1162,7 +1162,7 @@
             </eAnnotations>
           </eStructuralFeatures>
           <eStructuralFeatures xsi:type="ecore:EReference" name="modelElement" upperBound="-1"
-              eType="#//cwm/objectmodel/core/ModelElement" eOpposite="#//cwm/objectmodel/core/ModelElement/descriptions">
+              eType="#//cwm/objectmodel/core/ModelElement" eOpposite="#//cwm/objectmodel/core/ModelElement/description">
             <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
               <details key="documentation" value="Identifies the ModelElement instances for which this Description instance is relevant."/>
             </eAnnotations>

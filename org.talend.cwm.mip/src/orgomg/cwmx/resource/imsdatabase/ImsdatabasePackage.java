@@ -191,13 +191,13 @@ public interface ImsdatabasePackage extends EPackage {
     int DBD__DOCUMENT = RecordPackage.RECORD_FILE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DBD__DESCRIPTIONS = RecordPackage.RECORD_FILE__DESCRIPTIONS;
+    int DBD__DESCRIPTION = RecordPackage.RECORD_FILE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -543,13 +543,13 @@ public interface ImsdatabasePackage extends EPackage {
     int PSB__DOCUMENT = RecordPackage.RECORD_FILE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PSB__DESCRIPTIONS = RecordPackage.RECORD_FILE__DESCRIPTIONS;
+    int PSB__DESCRIPTION = RecordPackage.RECORD_FILE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -904,13 +904,13 @@ public interface ImsdatabasePackage extends EPackage {
     int PCB__DOCUMENT = RecordPackage.RECORD_FILE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PCB__DESCRIPTIONS = RecordPackage.RECORD_FILE__DESCRIPTIONS;
+    int PCB__DESCRIPTION = RecordPackage.RECORD_FILE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1301,13 +1301,13 @@ public interface ImsdatabasePackage extends EPackage {
     int SEGMENT__DOCUMENT = RecordPackage.RECORD_DEF__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SEGMENT__DESCRIPTIONS = RecordPackage.RECORD_DEF__DESCRIPTIONS;
+    int SEGMENT__DESCRIPTION = RecordPackage.RECORD_DEF__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1815,13 +1815,13 @@ public interface ImsdatabasePackage extends EPackage {
     int SEGMENT_COMPLEX__DOCUMENT = SEGMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SEGMENT_COMPLEX__DESCRIPTIONS = SEGMENT__DESCRIPTIONS;
+    int SEGMENT_COMPLEX__DESCRIPTION = SEGMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2428,13 +2428,13 @@ public interface ImsdatabasePackage extends EPackage {
     int SEGMENT_LOGICAL__DOCUMENT = SEGMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SEGMENT_LOGICAL__DESCRIPTIONS = SEGMENT__DESCRIPTIONS;
+    int SEGMENT_LOGICAL__DESCRIPTION = SEGMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2969,13 +2969,13 @@ public interface ImsdatabasePackage extends EPackage {
     int FIELD__DOCUMENT = RecordPackage.FIXED_OFFSET_FIELD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FIELD__DESCRIPTIONS = RecordPackage.FIXED_OFFSET_FIELD__DESCRIPTIONS;
+    int FIELD__DESCRIPTION = RecordPackage.FIXED_OFFSET_FIELD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3438,13 +3438,13 @@ public interface ImsdatabasePackage extends EPackage {
     int DATASET__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATASET__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int DATASET__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3826,13 +3826,13 @@ public interface ImsdatabasePackage extends EPackage {
     int SEN_SEGMENT__DOCUMENT = RecordPackage.RECORD_DEF__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SEN_SEGMENT__DESCRIPTIONS = RecordPackage.RECORD_DEF__DESCRIPTIONS;
+    int SEN_SEGMENT__DESCRIPTION = RecordPackage.RECORD_DEF__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4259,13 +4259,13 @@ public interface ImsdatabasePackage extends EPackage {
     int SEN_FIELD__DOCUMENT = RecordPackage.FIXED_OFFSET_FIELD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SEN_FIELD__DESCRIPTIONS = RecordPackage.FIXED_OFFSET_FIELD__DESCRIPTIONS;
+    int SEN_FIELD__DESCRIPTION = RecordPackage.FIXED_OFFSET_FIELD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4683,13 +4683,13 @@ public interface ImsdatabasePackage extends EPackage {
     int ACBLIB__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ACBLIB__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int ACBLIB__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4918,13 +4918,13 @@ public interface ImsdatabasePackage extends EPackage {
     int ACCESS_METHOD__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ACCESS_METHOD__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int ACCESS_METHOD__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5117,13 +5117,13 @@ public interface ImsdatabasePackage extends EPackage {
     int INDEX__DOCUMENT = ACCESS_METHOD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDEX__DESCRIPTIONS = ACCESS_METHOD__DESCRIPTIONS;
+    int INDEX__DESCRIPTION = ACCESS_METHOD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5379,13 +5379,13 @@ public interface ImsdatabasePackage extends EPackage {
     int HIDAM__DOCUMENT = ACCESS_METHOD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int HIDAM__DESCRIPTIONS = ACCESS_METHOD__DESCRIPTIONS;
+    int HIDAM__DESCRIPTION = ACCESS_METHOD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5587,13 +5587,13 @@ public interface ImsdatabasePackage extends EPackage {
     int DEDB__DOCUMENT = ACCESS_METHOD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DEDB__DESCRIPTIONS = ACCESS_METHOD__DESCRIPTIONS;
+    int DEDB__DESCRIPTION = ACCESS_METHOD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5813,13 +5813,13 @@ public interface ImsdatabasePackage extends EPackage {
     int HDAM__DOCUMENT = ACCESS_METHOD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int HDAM__DESCRIPTIONS = ACCESS_METHOD__DESCRIPTIONS;
+    int HDAM__DESCRIPTION = ACCESS_METHOD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6048,13 +6048,13 @@ public interface ImsdatabasePackage extends EPackage {
     int MSDB__DOCUMENT = ACCESS_METHOD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MSDB__DESCRIPTIONS = ACCESS_METHOD__DESCRIPTIONS;
+    int MSDB__DESCRIPTION = ACCESS_METHOD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6265,13 +6265,13 @@ public interface ImsdatabasePackage extends EPackage {
     int SECONDARY_INDEX__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SECONDARY_INDEX__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int SECONDARY_INDEX__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6536,13 +6536,13 @@ public interface ImsdatabasePackage extends EPackage {
     int EXIT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int EXIT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int EXIT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6816,13 +6816,13 @@ public interface ImsdatabasePackage extends EPackage {
     int LCHILD__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LCHILD__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int LCHILD__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7087,13 +7087,13 @@ public interface ImsdatabasePackage extends EPackage {
     int PSB_LIB__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PSB_LIB__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int PSB_LIB__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7313,13 +7313,13 @@ public interface ImsdatabasePackage extends EPackage {
     int DBD_LIB__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DBD_LIB__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int DBD_LIB__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

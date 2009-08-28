@@ -49,7 +49,7 @@ import orgomg.cwmx.resource.dmsii.DASDLProperty;
  *   <li>{@link orgomg.cwm.objectmodel.core.ModelElement#getStereotype <em>Stereotype</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.ModelElement#getTaggedValue <em>Tagged Value</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.ModelElement#getDocument <em>Document</em>}</li>
- *   <li>{@link orgomg.cwm.objectmodel.core.ModelElement#getDescriptions <em>Descriptions</em>}</li>
+ *   <li>{@link orgomg.cwm.objectmodel.core.ModelElement#getDescription <em>Description</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.ModelElement#getResponsibleParty <em>Responsible Party</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.ModelElement#getElementNode <em>Element Node</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.ModelElement#getSet <em>Set</em>}</li>
@@ -276,7 +276,7 @@ public interface ModelElement extends Element {
     EList<Document> getDocument();
 
     /**
-     * Returns the value of the '<em><b>Descriptions</b></em>' reference list.
+     * Returns the value of the '<em><b>Description</b></em>' reference list.
      * The list contents are of type {@link orgomg.cwm.foundation.businessinformation.Description}.
      * It is bidirectional and its opposite is '{@link orgomg.cwm.foundation.businessinformation.Description#getModelElement <em>Model Element</em>}'.
      * <!-- begin-user-doc -->
@@ -284,13 +284,13 @@ public interface ModelElement extends Element {
      * <!-- begin-model-doc -->
      * Identifies the Description instances relevant for a particular ModelElement instance.
      * <!-- end-model-doc -->
-     * @return the value of the '<em>Descriptions</em>' reference list.
-     * @see orgomg.cwm.objectmodel.core.CorePackage#getModelElement_Descriptions()
+     * @return the value of the '<em>Description</em>' reference list.
+     * @see orgomg.cwm.objectmodel.core.CorePackage#getModelElement_Description()
      * @see orgomg.cwm.foundation.businessinformation.Description#getModelElement
      * @model opposite="modelElement"
      * @generated
      */
-    EList<Description> getDescriptions();
+    EList<Description> getDescription();
 
     /**
      * Returns the value of the '<em><b>Responsible Party</b></em>' reference list.

@@ -208,13 +208,13 @@ public interface CoboldataPackage extends EPackage {
     int COBOLFD__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COBOLFD__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int COBOLFD__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -794,13 +794,13 @@ public interface CoboldataPackage extends EPackage {
     int COBOL_ITEM__DOCUMENT = RecordPackage.FIELD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COBOL_ITEM__DESCRIPTIONS = RecordPackage.FIELD__DESCRIPTIONS;
+    int COBOL_ITEM__DESCRIPTION = RecordPackage.FIELD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1227,13 +1227,13 @@ public interface CoboldataPackage extends EPackage {
     int COBOL_FIELD__DOCUMENT = COBOL_ITEM__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COBOL_FIELD__DESCRIPTIONS = COBOL_ITEM__DESCRIPTIONS;
+    int COBOL_FIELD__DESCRIPTION = COBOL_ITEM__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1831,13 +1831,13 @@ public interface CoboldataPackage extends EPackage {
     int RENAMES__DOCUMENT = COBOL_ITEM__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RENAMES__DESCRIPTIONS = COBOL_ITEM__DESCRIPTIONS;
+    int RENAMES__DESCRIPTION = COBOL_ITEM__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2282,13 +2282,13 @@ public interface CoboldataPackage extends EPackage {
     int SECTION__DOCUMENT = CorePackage.CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SECTION__DESCRIPTIONS = CorePackage.CLASSIFIER__DESCRIPTIONS;
+    int SECTION__DESCRIPTION = CorePackage.CLASSIFIER__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2625,13 +2625,13 @@ public interface CoboldataPackage extends EPackage {
     int WORKING_STORAGE_SECTION__DOCUMENT = SECTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WORKING_STORAGE_SECTION__DESCRIPTIONS = SECTION__DESCRIPTIONS;
+    int WORKING_STORAGE_SECTION__DESCRIPTION = SECTION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2968,13 +2968,13 @@ public interface CoboldataPackage extends EPackage {
     int FILE_SECTION__DOCUMENT = SECTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FILE_SECTION__DESCRIPTIONS = SECTION__DESCRIPTIONS;
+    int FILE_SECTION__DESCRIPTION = SECTION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3320,13 +3320,13 @@ public interface CoboldataPackage extends EPackage {
     int REPORT_WRITER_SECTION__DOCUMENT = SECTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REPORT_WRITER_SECTION__DESCRIPTIONS = SECTION__DESCRIPTIONS;
+    int REPORT_WRITER_SECTION__DESCRIPTION = SECTION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3663,13 +3663,13 @@ public interface CoboldataPackage extends EPackage {
     int LINKAGE_SECTION__DOCUMENT = SECTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LINKAGE_SECTION__DESCRIPTIONS = SECTION__DESCRIPTIONS;
+    int LINKAGE_SECTION__DESCRIPTION = SECTION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4006,13 +4006,13 @@ public interface CoboldataPackage extends EPackage {
     int OCCURS_KEY__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int OCCURS_KEY__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int OCCURS_KEY__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4223,13 +4223,13 @@ public interface CoboldataPackage extends EPackage {
     int LINAGE_INFO__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LINAGE_INFO__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int LINAGE_INFO__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4449,13 +4449,13 @@ public interface CoboldataPackage extends EPackage {
     int COBOLFD_INDEX__DOCUMENT = KeysindexesPackage.INDEX__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COBOLFD_INDEX__DESCRIPTIONS = KeysindexesPackage.INDEX__DESCRIPTIONS;
+    int COBOLFD_INDEX__DESCRIPTION = KeysindexesPackage.INDEX__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4693,13 +4693,13 @@ public interface CoboldataPackage extends EPackage {
     int USAGE__DOCUMENT = CorePackage.DATA_TYPE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int USAGE__DESCRIPTIONS = CorePackage.DATA_TYPE__DESCRIPTIONS;
+    int USAGE__DESCRIPTION = CorePackage.DATA_TYPE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

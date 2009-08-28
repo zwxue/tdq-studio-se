@@ -213,13 +213,13 @@ public interface InformationsetPackage extends EPackage {
     int INFORMATION_SET__DOCUMENT = OlapPackage.SCHEMA__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INFORMATION_SET__DESCRIPTIONS = OlapPackage.SCHEMA__DESCRIPTIONS;
+    int INFORMATION_SET__DESCRIPTION = OlapPackage.SCHEMA__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -484,13 +484,13 @@ public interface InformationsetPackage extends EPackage {
     int SEGMENT__DOCUMENT = OlapPackage.CUBE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SEGMENT__DESCRIPTIONS = OlapPackage.CUBE__DESCRIPTIONS;
+    int SEGMENT__DESCRIPTION = OlapPackage.CUBE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -881,13 +881,13 @@ public interface InformationsetPackage extends EPackage {
     int SEGMENT_REGION__DOCUMENT = OlapPackage.CUBE_REGION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SEGMENT_REGION__DESCRIPTIONS = OlapPackage.CUBE_REGION__DESCRIPTIONS;
+    int SEGMENT_REGION__DESCRIPTION = OlapPackage.CUBE_REGION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1278,13 +1278,13 @@ public interface InformationsetPackage extends EPackage {
     int RULE__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RULE__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int RULE__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1513,13 +1513,13 @@ public interface InformationsetPackage extends EPackage {
     int INFO_SET_ADMINISTRATION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INFO_SET_ADMINISTRATION__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int INFO_SET_ADMINISTRATION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1739,13 +1739,13 @@ public interface InformationsetPackage extends EPackage {
     int INFO_SET_DATE__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INFO_SET_DATE__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int INFO_SET_DATE__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

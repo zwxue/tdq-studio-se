@@ -244,13 +244,13 @@ public interface DataminingPackage extends EPackage {
     int APPLICATION_INPUT_SPECIFICATION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int APPLICATION_INPUT_SPECIFICATION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int APPLICATION_INPUT_SPECIFICATION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -605,13 +605,13 @@ public interface DataminingPackage extends EPackage {
     int ATTRIBUTE_USAGE_RELATION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ATTRIBUTE_USAGE_RELATION__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int ATTRIBUTE_USAGE_RELATION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -849,13 +849,13 @@ public interface DataminingPackage extends EPackage {
     int CATEGORY__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CATEGORY__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int CATEGORY__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1075,13 +1075,13 @@ public interface DataminingPackage extends EPackage {
     int CATEGORY_HIERARCHY__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CATEGORY_HIERARCHY__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int CATEGORY_HIERARCHY__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1427,13 +1427,13 @@ public interface DataminingPackage extends EPackage {
     int COST_MATRIX__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COST_MATRIX__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int COST_MATRIX__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1779,13 +1779,13 @@ public interface DataminingPackage extends EPackage {
     int MINING_ATTRIBUTE__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MINING_ATTRIBUTE__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
+    int MINING_ATTRIBUTE__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2158,13 +2158,13 @@ public interface DataminingPackage extends EPackage {
     int MINING_DATA_SPECIFICATION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MINING_DATA_SPECIFICATION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int MINING_DATA_SPECIFICATION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2519,13 +2519,13 @@ public interface DataminingPackage extends EPackage {
     int MINING_MODEL__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MINING_MODEL__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int MINING_MODEL__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2907,13 +2907,13 @@ public interface DataminingPackage extends EPackage {
     int MINING_MODEL_RESULT__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MINING_MODEL_RESULT__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int MINING_MODEL_RESULT__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3268,13 +3268,13 @@ public interface DataminingPackage extends EPackage {
     int NUMERIC_ATTRIBUTE__DOCUMENT = MINING_ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int NUMERIC_ATTRIBUTE__DESCRIPTIONS = MINING_ATTRIBUTE__DESCRIPTIONS;
+    int NUMERIC_ATTRIBUTE__DESCRIPTION = MINING_ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3683,13 +3683,13 @@ public interface DataminingPackage extends EPackage {
     int SUPERVISED_MINING_MODEL__DOCUMENT = MINING_MODEL__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SUPERVISED_MINING_MODEL__DESCRIPTIONS = MINING_MODEL__DESCRIPTIONS;
+    int SUPERVISED_MINING_MODEL__DESCRIPTION = MINING_MODEL__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4080,13 +4080,13 @@ public interface DataminingPackage extends EPackage {
     int CATEGORICAL_ATTRIBUTE__DOCUMENT = MINING_ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CATEGORICAL_ATTRIBUTE__DESCRIPTIONS = MINING_ATTRIBUTE__DESCRIPTIONS;
+    int CATEGORICAL_ATTRIBUTE__DESCRIPTION = MINING_ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4477,13 +4477,13 @@ public interface DataminingPackage extends EPackage {
     int ORDINAL_ATTRIBUTE__DOCUMENT = CATEGORICAL_ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ORDINAL_ATTRIBUTE__DESCRIPTIONS = CATEGORICAL_ATTRIBUTE__DESCRIPTIONS;
+    int ORDINAL_ATTRIBUTE__DESCRIPTION = CATEGORICAL_ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4892,13 +4892,13 @@ public interface DataminingPackage extends EPackage {
     int MINING_SETTINGS__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MINING_SETTINGS__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int MINING_SETTINGS__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5280,13 +5280,13 @@ public interface DataminingPackage extends EPackage {
     int CLUSTERING_SETTINGS__DOCUMENT = MINING_SETTINGS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CLUSTERING_SETTINGS__DESCRIPTIONS = MINING_SETTINGS__DESCRIPTIONS;
+    int CLUSTERING_SETTINGS__DESCRIPTION = MINING_SETTINGS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5686,13 +5686,13 @@ public interface DataminingPackage extends EPackage {
     int STATISTICS_SETTINGS__DOCUMENT = MINING_SETTINGS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int STATISTICS_SETTINGS__DESCRIPTIONS = MINING_SETTINGS__DESCRIPTIONS;
+    int STATISTICS_SETTINGS__DESCRIPTION = MINING_SETTINGS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6074,13 +6074,13 @@ public interface DataminingPackage extends EPackage {
     int SUPERVISED_MINING_SETTINGS__DOCUMENT = MINING_SETTINGS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SUPERVISED_MINING_SETTINGS__DESCRIPTIONS = MINING_SETTINGS__DESCRIPTIONS;
+    int SUPERVISED_MINING_SETTINGS__DESCRIPTION = MINING_SETTINGS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6489,13 +6489,13 @@ public interface DataminingPackage extends EPackage {
     int CLASSIFICATION_SETTINGS__DOCUMENT = SUPERVISED_MINING_SETTINGS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CLASSIFICATION_SETTINGS__DESCRIPTIONS = SUPERVISED_MINING_SETTINGS__DESCRIPTIONS;
+    int CLASSIFICATION_SETTINGS__DESCRIPTION = SUPERVISED_MINING_SETTINGS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6913,13 +6913,13 @@ public interface DataminingPackage extends EPackage {
     int REGRESSION_SETTINGS__DOCUMENT = SUPERVISED_MINING_SETTINGS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REGRESSION_SETTINGS__DESCRIPTIONS = SUPERVISED_MINING_SETTINGS__DESCRIPTIONS;
+    int REGRESSION_SETTINGS__DESCRIPTION = SUPERVISED_MINING_SETTINGS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7328,13 +7328,13 @@ public interface DataminingPackage extends EPackage {
     int ASSOCIATION_RULES_SETTINGS__DOCUMENT = MINING_SETTINGS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ASSOCIATION_RULES_SETTINGS__DESCRIPTIONS = MINING_SETTINGS__DESCRIPTIONS;
+    int ASSOCIATION_RULES_SETTINGS__DESCRIPTION = MINING_SETTINGS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7743,13 +7743,13 @@ public interface DataminingPackage extends EPackage {
     int APPLICATION_ATTRIBUTE__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int APPLICATION_ATTRIBUTE__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
+    int APPLICATION_ATTRIBUTE__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

@@ -189,13 +189,13 @@ public interface XmlPackage extends EPackage {
     int SCHEMA__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEMA__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int SCHEMA__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -424,13 +424,13 @@ public interface XmlPackage extends EPackage {
     int ELEMENT_TYPE__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ELEMENT_TYPE__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int ELEMENT_TYPE__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -776,13 +776,13 @@ public interface XmlPackage extends EPackage {
     int ATTRIBUTE__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ATTRIBUTE__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
+    int ATTRIBUTE__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1137,13 +1137,13 @@ public interface XmlPackage extends EPackage {
     int CONTENT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONTENT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int CONTENT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1363,13 +1363,13 @@ public interface XmlPackage extends EPackage {
     int ELEMENT_CONTENT__DOCUMENT = CONTENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ELEMENT_CONTENT__DESCRIPTIONS = CONTENT__DESCRIPTIONS;
+    int ELEMENT_CONTENT__DESCRIPTION = CONTENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1616,13 +1616,13 @@ public interface XmlPackage extends EPackage {
     int MIXED_CONTENT__DOCUMENT = CONTENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MIXED_CONTENT__DESCRIPTIONS = CONTENT__DESCRIPTIONS;
+    int MIXED_CONTENT__DESCRIPTION = CONTENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1851,13 +1851,13 @@ public interface XmlPackage extends EPackage {
     int ELEMENT_TYPE_REFERENCE__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ELEMENT_TYPE_REFERENCE__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
+    int ELEMENT_TYPE_REFERENCE__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2221,13 +2221,13 @@ public interface XmlPackage extends EPackage {
     int TEXT__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TEXT__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
+    int TEXT__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2582,13 +2582,13 @@ public interface XmlPackage extends EPackage {
     int ELEMENT__DOCUMENT = InstancePackage.OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ELEMENT__DESCRIPTIONS = InstancePackage.OBJECT__DESCRIPTIONS;
+    int ELEMENT__DESCRIPTION = InstancePackage.OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2799,13 +2799,13 @@ public interface XmlPackage extends EPackage {
     int DOCUMENT__DOCUMENT = InstancePackage.EXTENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOCUMENT__DESCRIPTIONS = InstancePackage.EXTENT__DESCRIPTIONS;
+    int DOCUMENT__DESCRIPTION = InstancePackage.EXTENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

@@ -215,13 +215,13 @@ public interface EssbasePackage extends EPackage {
     int ALIAS__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ALIAS__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int ALIAS__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -585,13 +585,13 @@ public interface EssbasePackage extends EPackage {
     int APPLICATION__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int APPLICATION__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int APPLICATION__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -802,13 +802,13 @@ public interface EssbasePackage extends EPackage {
     int COMMENT__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COMMENT__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int COMMENT__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1172,13 +1172,13 @@ public interface EssbasePackage extends EPackage {
     int CONSOLIDATION__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONSOLIDATION__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int CONSOLIDATION__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1542,13 +1542,13 @@ public interface EssbasePackage extends EPackage {
     int CURRENCY_CONVERSION__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CURRENCY_CONVERSION__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int CURRENCY_CONVERSION__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1912,13 +1912,13 @@ public interface EssbasePackage extends EPackage {
     int DATA_STORAGE__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATA_STORAGE__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int DATA_STORAGE__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2282,13 +2282,13 @@ public interface EssbasePackage extends EPackage {
     int DATABASE__DOCUMENT = MultidimensionalPackage.SCHEMA__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATABASE__DESCRIPTIONS = MultidimensionalPackage.SCHEMA__DESCRIPTIONS;
+    int DATABASE__DESCRIPTION = MultidimensionalPackage.SCHEMA__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2535,13 +2535,13 @@ public interface EssbasePackage extends EPackage {
     int DIMENSION__DOCUMENT = MultidimensionalPackage.DIMENSION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DIMENSION__DESCRIPTIONS = MultidimensionalPackage.DIMENSION__DESCRIPTIONS;
+    int DIMENSION__DESCRIPTION = MultidimensionalPackage.DIMENSION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2950,13 +2950,13 @@ public interface EssbasePackage extends EPackage {
     int FORMULA__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FORMULA__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int FORMULA__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3320,13 +3320,13 @@ public interface EssbasePackage extends EPackage {
     int GENERATION__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int GENERATION__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int GENERATION__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3690,13 +3690,13 @@ public interface EssbasePackage extends EPackage {
     int IMMEDIATE_PARENT__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int IMMEDIATE_PARENT__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int IMMEDIATE_PARENT__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4060,13 +4060,13 @@ public interface EssbasePackage extends EPackage {
     int LEVEL__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LEVEL__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int LEVEL__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4430,13 +4430,13 @@ public interface EssbasePackage extends EPackage {
     int MEMBER_NAME__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEMBER_NAME__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int MEMBER_NAME__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4800,13 +4800,13 @@ public interface EssbasePackage extends EPackage {
     int OLAP_SERVER__DOCUMENT = SoftwaredeploymentPackage.DATA_MANAGER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int OLAP_SERVER__DESCRIPTIONS = SoftwaredeploymentPackage.DATA_MANAGER__DESCRIPTIONS;
+    int OLAP_SERVER__DESCRIPTION = SoftwaredeploymentPackage.DATA_MANAGER__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5080,13 +5080,13 @@ public interface EssbasePackage extends EPackage {
     int OUTLINE__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int OUTLINE__DESCRIPTIONS = CorePackage.NAMESPACE__DESCRIPTIONS;
+    int OUTLINE__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5306,13 +5306,13 @@ public interface EssbasePackage extends EPackage {
     int PARTITION__DOCUMENT = OlapPackage.CUBE_REGION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PARTITION__DESCRIPTIONS = OlapPackage.CUBE_REGION__DESCRIPTIONS;
+    int PARTITION__DESCRIPTION = OlapPackage.CUBE_REGION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5721,13 +5721,13 @@ public interface EssbasePackage extends EPackage {
     int REPLICATED_PARTITION__DOCUMENT = PARTITION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REPLICATED_PARTITION__DESCRIPTIONS = PARTITION__DESCRIPTIONS;
+    int REPLICATED_PARTITION__DESCRIPTION = PARTITION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6136,13 +6136,13 @@ public interface EssbasePackage extends EPackage {
     int TIME_BALANCE__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TIME_BALANCE__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int TIME_BALANCE__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6506,13 +6506,13 @@ public interface EssbasePackage extends EPackage {
     int TRANSPARENT_PARTITION__DOCUMENT = PARTITION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSPARENT_PARTITION__DESCRIPTIONS = PARTITION__DESCRIPTIONS;
+    int TRANSPARENT_PARTITION__DESCRIPTION = PARTITION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6921,13 +6921,13 @@ public interface EssbasePackage extends EPackage {
     int TWO_PASS_CALCULATION__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TWO_PASS_CALCULATION__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int TWO_PASS_CALCULATION__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7291,13 +7291,13 @@ public interface EssbasePackage extends EPackage {
     int UDA__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int UDA__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int UDA__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7661,13 +7661,13 @@ public interface EssbasePackage extends EPackage {
     int VARIANCE_REPORTING__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VARIANCE_REPORTING__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
+    int VARIANCE_REPORTING__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -8031,13 +8031,13 @@ public interface EssbasePackage extends EPackage {
     int LINKED_PARTITION__DOCUMENT = PARTITION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LINKED_PARTITION__DESCRIPTIONS = PARTITION__DESCRIPTIONS;
+    int LINKED_PARTITION__DESCRIPTION = PARTITION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

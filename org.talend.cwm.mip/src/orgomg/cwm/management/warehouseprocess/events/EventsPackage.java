@@ -164,13 +164,13 @@ public interface EventsPackage extends EPackage {
     int WAREHOUSE_EVENT__DOCUMENT = BehavioralPackage.EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WAREHOUSE_EVENT__DESCRIPTIONS = BehavioralPackage.EVENT__DESCRIPTIONS;
+    int WAREHOUSE_EVENT__DESCRIPTION = BehavioralPackage.EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -372,13 +372,13 @@ public interface EventsPackage extends EPackage {
     int SCHEDULE_EVENT__DOCUMENT = WAREHOUSE_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEDULE_EVENT__DESCRIPTIONS = WAREHOUSE_EVENT__DESCRIPTIONS;
+    int SCHEDULE_EVENT__DESCRIPTION = WAREHOUSE_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -580,13 +580,13 @@ public interface EventsPackage extends EPackage {
     int POINT_IN_TIME_EVENT__DOCUMENT = SCHEDULE_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int POINT_IN_TIME_EVENT__DESCRIPTIONS = SCHEDULE_EVENT__DESCRIPTIONS;
+    int POINT_IN_TIME_EVENT__DESCRIPTION = SCHEDULE_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -788,13 +788,13 @@ public interface EventsPackage extends EPackage {
     int CUSTOM_CALENDAR_EVENT__DOCUMENT = POINT_IN_TIME_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CUSTOM_CALENDAR_EVENT__DESCRIPTIONS = POINT_IN_TIME_EVENT__DESCRIPTIONS;
+    int CUSTOM_CALENDAR_EVENT__DESCRIPTION = POINT_IN_TIME_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1005,13 +1005,13 @@ public interface EventsPackage extends EPackage {
     int CUSTOM_CALENDAR__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CUSTOM_CALENDAR__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int CUSTOM_CALENDAR__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1231,13 +1231,13 @@ public interface EventsPackage extends EPackage {
     int CALENDAR_DATE__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CALENDAR_DATE__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int CALENDAR_DATE__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1430,13 +1430,13 @@ public interface EventsPackage extends EPackage {
     int INTERVAL_EVENT__DOCUMENT = SCHEDULE_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INTERVAL_EVENT__DESCRIPTIONS = SCHEDULE_EVENT__DESCRIPTIONS;
+    int INTERVAL_EVENT__DESCRIPTION = SCHEDULE_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1647,13 +1647,13 @@ public interface EventsPackage extends EPackage {
     int EXTERNAL_EVENT__DOCUMENT = WAREHOUSE_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int EXTERNAL_EVENT__DESCRIPTIONS = WAREHOUSE_EVENT__DESCRIPTIONS;
+    int EXTERNAL_EVENT__DESCRIPTION = WAREHOUSE_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1855,13 +1855,13 @@ public interface EventsPackage extends EPackage {
     int INTERNAL_EVENT__DOCUMENT = WAREHOUSE_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INTERNAL_EVENT__DESCRIPTIONS = WAREHOUSE_EVENT__DESCRIPTIONS;
+    int INTERNAL_EVENT__DESCRIPTION = WAREHOUSE_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2081,13 +2081,13 @@ public interface EventsPackage extends EPackage {
     int CASCADE_EVENT__DOCUMENT = INTERNAL_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CASCADE_EVENT__DESCRIPTIONS = INTERNAL_EVENT__DESCRIPTIONS;
+    int CASCADE_EVENT__DESCRIPTION = INTERNAL_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2316,13 +2316,13 @@ public interface EventsPackage extends EPackage {
     int RETRY_EVENT__DOCUMENT = INTERNAL_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RETRY_EVENT__DESCRIPTIONS = INTERNAL_EVENT__DESCRIPTIONS;
+    int RETRY_EVENT__DESCRIPTION = INTERNAL_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2560,13 +2560,13 @@ public interface EventsPackage extends EPackage {
     int RECURRING_POINT_IN_TIME_EVENT__DOCUMENT = POINT_IN_TIME_EVENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RECURRING_POINT_IN_TIME_EVENT__DESCRIPTIONS = POINT_IN_TIME_EVENT__DESCRIPTIONS;
+    int RECURRING_POINT_IN_TIME_EVENT__DESCRIPTION = POINT_IN_TIME_EVENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

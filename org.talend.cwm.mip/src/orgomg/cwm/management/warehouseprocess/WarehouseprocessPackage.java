@@ -226,13 +226,13 @@ public interface WarehouseprocessPackage extends EPackage {
     int WAREHOUSE_PROCESS__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WAREHOUSE_PROCESS__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int WAREHOUSE_PROCESS__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -452,13 +452,13 @@ public interface WarehouseprocessPackage extends EPackage {
     int WAREHOUSE_STEP__DOCUMENT = WAREHOUSE_PROCESS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WAREHOUSE_STEP__DESCRIPTIONS = WAREHOUSE_PROCESS__DESCRIPTIONS;
+    int WAREHOUSE_STEP__DESCRIPTION = WAREHOUSE_PROCESS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -696,13 +696,13 @@ public interface WarehouseprocessPackage extends EPackage {
     int PROCESS_PACKAGE__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PROCESS_PACKAGE__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int PROCESS_PACKAGE__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -913,13 +913,13 @@ public interface WarehouseprocessPackage extends EPackage {
     int WAREHOUSE_ACTIVITY__DOCUMENT = WAREHOUSE_PROCESS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WAREHOUSE_ACTIVITY__DESCRIPTIONS = WAREHOUSE_PROCESS__DESCRIPTIONS;
+    int WAREHOUSE_ACTIVITY__DESCRIPTION = WAREHOUSE_PROCESS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

@@ -270,13 +270,13 @@ public interface CorePackage extends EPackage {
     int MODEL_ELEMENT__DOCUMENT = ELEMENT_FEATURE_COUNT + 9;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MODEL_ELEMENT__DESCRIPTIONS = ELEMENT_FEATURE_COUNT + 10;
+    int MODEL_ELEMENT__DESCRIPTION = ELEMENT_FEATURE_COUNT + 10;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -460,13 +460,13 @@ public interface CorePackage extends EPackage {
     int NAMESPACE__DOCUMENT = MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int NAMESPACE__DESCRIPTIONS = MODEL_ELEMENT__DESCRIPTIONS;
+    int NAMESPACE__DESCRIPTION = MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -659,13 +659,13 @@ public interface CorePackage extends EPackage {
     int CLASSIFIER__DOCUMENT = NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CLASSIFIER__DESCRIPTIONS = NAMESPACE__DESCRIPTIONS;
+    int CLASSIFIER__DESCRIPTION = NAMESPACE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -993,13 +993,13 @@ public interface CorePackage extends EPackage {
     int CLASS__DOCUMENT = CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CLASS__DESCRIPTIONS = CLASSIFIER__DESCRIPTIONS;
+    int CLASS__DESCRIPTION = CLASSIFIER__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1336,13 +1336,13 @@ public interface CorePackage extends EPackage {
     int DATA_TYPE__DOCUMENT = CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATA_TYPE__DESCRIPTIONS = CLASSIFIER__DESCRIPTIONS;
+    int DATA_TYPE__DESCRIPTION = CLASSIFIER__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1670,13 +1670,13 @@ public interface CorePackage extends EPackage {
     int PACKAGE__DOCUMENT = NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PACKAGE__DESCRIPTIONS = NAMESPACE__DESCRIPTIONS;
+    int PACKAGE__DESCRIPTION = NAMESPACE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1887,13 +1887,13 @@ public interface CorePackage extends EPackage {
     int SUBSYSTEM__DOCUMENT = CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SUBSYSTEM__DESCRIPTIONS = CLASSIFIER__DESCRIPTIONS;
+    int SUBSYSTEM__DESCRIPTION = CLASSIFIER__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2239,13 +2239,13 @@ public interface CorePackage extends EPackage {
     int MODEL__DOCUMENT = PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MODEL__DESCRIPTIONS = PACKAGE__DESCRIPTIONS;
+    int MODEL__DESCRIPTION = PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2456,13 +2456,13 @@ public interface CorePackage extends EPackage {
     int FEATURE__DOCUMENT = MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FEATURE__DESCRIPTIONS = MODEL_ELEMENT__DESCRIPTIONS;
+    int FEATURE__DESCRIPTION = MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2691,13 +2691,13 @@ public interface CorePackage extends EPackage {
     int STRUCTURAL_FEATURE__DOCUMENT = FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int STRUCTURAL_FEATURE__DESCRIPTIONS = FEATURE__DESCRIPTIONS;
+    int STRUCTURAL_FEATURE__DESCRIPTION = FEATURE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3034,13 +3034,13 @@ public interface CorePackage extends EPackage {
     int ATTRIBUTE__DOCUMENT = STRUCTURAL_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ATTRIBUTE__DESCRIPTIONS = STRUCTURAL_FEATURE__DESCRIPTIONS;
+    int ATTRIBUTE__DESCRIPTION = STRUCTURAL_FEATURE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3386,13 +3386,13 @@ public interface CorePackage extends EPackage {
     int CONSTRAINT__DOCUMENT = MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONSTRAINT__DESCRIPTIONS = MODEL_ELEMENT__DESCRIPTIONS;
+    int CONSTRAINT__DESCRIPTION = MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3603,13 +3603,13 @@ public interface CorePackage extends EPackage {
     int DEPENDENCY__DOCUMENT = MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DEPENDENCY__DESCRIPTIONS = MODEL_ELEMENT__DESCRIPTIONS;
+    int DEPENDENCY__DESCRIPTION = MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4005,13 +4005,13 @@ public interface CorePackage extends EPackage {
     int STEREOTYPE__DOCUMENT = MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int STEREOTYPE__DESCRIPTIONS = MODEL_ELEMENT__DESCRIPTIONS;
+    int STEREOTYPE__DESCRIPTION = MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4434,15 +4434,15 @@ public interface CorePackage extends EPackage {
     EReference getModelElement_Document();
 
     /**
-     * Returns the meta object for the reference list '{@link orgomg.cwm.objectmodel.core.ModelElement#getDescriptions <em>Descriptions</em>}'.
+     * Returns the meta object for the reference list '{@link orgomg.cwm.objectmodel.core.ModelElement#getDescription <em>Description</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the reference list '<em>Descriptions</em>'.
-     * @see orgomg.cwm.objectmodel.core.ModelElement#getDescriptions()
+     * @return the meta object for the reference list '<em>Description</em>'.
+     * @see orgomg.cwm.objectmodel.core.ModelElement#getDescription()
      * @see #getModelElement()
      * @generated
      */
-    EReference getModelElement_Descriptions();
+    EReference getModelElement_Description();
 
     /**
      * Returns the meta object for the reference list '{@link orgomg.cwm.objectmodel.core.ModelElement#getResponsibleParty <em>Responsible Party</em>}'.
@@ -5597,12 +5597,12 @@ public interface CorePackage extends EPackage {
         EReference MODEL_ELEMENT__DOCUMENT = eINSTANCE.getModelElement_Document();
 
         /**
-         * The meta object literal for the '<em><b>Descriptions</b></em>' reference list feature.
+         * The meta object literal for the '<em><b>Description</b></em>' reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
-        EReference MODEL_ELEMENT__DESCRIPTIONS = eINSTANCE.getModelElement_Descriptions();
+        EReference MODEL_ELEMENT__DESCRIPTION = eINSTANCE.getModelElement_Description();
 
         /**
          * The meta object literal for the '<em><b>Responsible Party</b></em>' reference list feature.

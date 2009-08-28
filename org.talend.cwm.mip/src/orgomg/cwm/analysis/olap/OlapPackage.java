@@ -339,13 +339,13 @@ public interface OlapPackage extends EPackage {
     int CONTENT_MAP__DOCUMENT = TransformationPackage.TRANSFORMATION_MAP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONTENT_MAP__DESCRIPTIONS = TransformationPackage.TRANSFORMATION_MAP__DESCRIPTIONS;
+    int CONTENT_MAP__DESCRIPTION = TransformationPackage.TRANSFORMATION_MAP__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -601,13 +601,13 @@ public interface OlapPackage extends EPackage {
     int CUBE__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CUBE__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int CUBE__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -980,13 +980,13 @@ public interface OlapPackage extends EPackage {
     int CUBE_DEPLOYMENT__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CUBE_DEPLOYMENT__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int CUBE_DEPLOYMENT__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1350,13 +1350,13 @@ public interface OlapPackage extends EPackage {
     int CUBE_DIMENSION_ASSOCIATION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CUBE_DIMENSION_ASSOCIATION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int CUBE_DIMENSION_ASSOCIATION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1720,13 +1720,13 @@ public interface OlapPackage extends EPackage {
     int CUBE_REGION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CUBE_REGION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int CUBE_REGION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2108,13 +2108,13 @@ public interface OlapPackage extends EPackage {
     int DEPLOYMENT_GROUP__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DEPLOYMENT_GROUP__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int DEPLOYMENT_GROUP__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2352,13 +2352,13 @@ public interface OlapPackage extends EPackage {
     int DIMENSION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DIMENSION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int DIMENSION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2758,13 +2758,13 @@ public interface OlapPackage extends EPackage {
     int DIMENSION_DEPLOYMENT__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DIMENSION_DEPLOYMENT__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int DIMENSION_DEPLOYMENT__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3155,13 +3155,13 @@ public interface OlapPackage extends EPackage {
     int HIERARCHY__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int HIERARCHY__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int HIERARCHY__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3525,13 +3525,13 @@ public interface OlapPackage extends EPackage {
     int HIERARCHY_LEVEL_ASSOCIATION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int HIERARCHY_LEVEL_ASSOCIATION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int HIERARCHY_LEVEL_ASSOCIATION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3895,13 +3895,13 @@ public interface OlapPackage extends EPackage {
     int LEVEL_BASED_HIERARCHY__DOCUMENT = HIERARCHY__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LEVEL_BASED_HIERARCHY__DESCRIPTIONS = HIERARCHY__DESCRIPTIONS;
+    int LEVEL_BASED_HIERARCHY__DESCRIPTION = HIERARCHY__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4274,13 +4274,13 @@ public interface OlapPackage extends EPackage {
     int MEMBER_SELECTION_GROUP__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEMBER_SELECTION_GROUP__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int MEMBER_SELECTION_GROUP__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4635,13 +4635,13 @@ public interface OlapPackage extends EPackage {
     int MEMBER_SELECTION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEMBER_SELECTION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int MEMBER_SELECTION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4996,13 +4996,13 @@ public interface OlapPackage extends EPackage {
     int SCHEMA__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEMA__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int SCHEMA__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5240,13 +5240,13 @@ public interface OlapPackage extends EPackage {
     int VALUE_BASED_HIERARCHY__DOCUMENT = HIERARCHY__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VALUE_BASED_HIERARCHY__DESCRIPTIONS = HIERARCHY__DESCRIPTIONS;
+    int VALUE_BASED_HIERARCHY__DESCRIPTION = HIERARCHY__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5619,13 +5619,13 @@ public interface OlapPackage extends EPackage {
     int LEVEL__DOCUMENT = MEMBER_SELECTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LEVEL__DESCRIPTIONS = MEMBER_SELECTION__DESCRIPTIONS;
+    int LEVEL__DESCRIPTION = MEMBER_SELECTION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5989,13 +5989,13 @@ public interface OlapPackage extends EPackage {
     int CODED_LEVEL__DOCUMENT = LEVEL__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CODED_LEVEL__DESCRIPTIONS = LEVEL__DESCRIPTIONS;
+    int CODED_LEVEL__DESCRIPTION = LEVEL__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6368,13 +6368,13 @@ public interface OlapPackage extends EPackage {
     int MEASURE__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEASURE__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
+    int MEASURE__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6720,13 +6720,13 @@ public interface OlapPackage extends EPackage {
     int STRUCTURE_MAP__DOCUMENT = TransformationPackage.TRANSFORMATION_MAP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int STRUCTURE_MAP__DESCRIPTIONS = TransformationPackage.TRANSFORMATION_MAP__DESCRIPTIONS;
+    int STRUCTURE_MAP__DESCRIPTION = TransformationPackage.TRANSFORMATION_MAP__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

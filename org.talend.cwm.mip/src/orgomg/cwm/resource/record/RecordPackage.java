@@ -189,13 +189,13 @@ public interface RecordPackage extends EPackage {
     int FIELD__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FIELD__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
+    int FIELD__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -568,13 +568,13 @@ public interface RecordPackage extends EPackage {
     int RECORD_DEF__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RECORD_DEF__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int RECORD_DEF__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -956,13 +956,13 @@ public interface RecordPackage extends EPackage {
     int FIXED_OFFSET_FIELD__DOCUMENT = FIELD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FIXED_OFFSET_FIELD__DESCRIPTIONS = FIELD__DESCRIPTIONS;
+    int FIXED_OFFSET_FIELD__DESCRIPTION = FIELD__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1353,13 +1353,13 @@ public interface RecordPackage extends EPackage {
     int RECORD_FILE__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RECORD_FILE__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int RECORD_FILE__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1606,13 +1606,13 @@ public interface RecordPackage extends EPackage {
     int FIELD_VALUE__DOCUMENT = InstancePackage.DATA_VALUE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FIELD_VALUE__DESCRIPTIONS = InstancePackage.DATA_VALUE__DESCRIPTIONS;
+    int FIELD_VALUE__DESCRIPTION = InstancePackage.DATA_VALUE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1823,13 +1823,13 @@ public interface RecordPackage extends EPackage {
     int RECORD__DOCUMENT = InstancePackage.OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RECORD__DESCRIPTIONS = InstancePackage.OBJECT__DESCRIPTIONS;
+    int RECORD__DESCRIPTION = InstancePackage.OBJECT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2040,13 +2040,13 @@ public interface RecordPackage extends EPackage {
     int RECORD_SET__DOCUMENT = InstancePackage.EXTENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RECORD_SET__DESCRIPTIONS = InstancePackage.EXTENT__DESCRIPTIONS;
+    int RECORD_SET__DESCRIPTION = InstancePackage.EXTENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2257,13 +2257,13 @@ public interface RecordPackage extends EPackage {
     int GROUP__DOCUMENT = CorePackage.CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int GROUP__DESCRIPTIONS = CorePackage.CLASSIFIER__DESCRIPTIONS;
+    int GROUP__DESCRIPTION = CorePackage.CLASSIFIER__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

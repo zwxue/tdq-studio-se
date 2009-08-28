@@ -238,13 +238,13 @@ public interface RelationshipsPackage extends EPackage {
     int ASSOCIATION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ASSOCIATION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int ASSOCIATION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -581,13 +581,13 @@ public interface RelationshipsPackage extends EPackage {
     int ASSOCIATION_END__DOCUMENT = CorePackage.STRUCTURAL_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ASSOCIATION_END__DESCRIPTIONS = CorePackage.STRUCTURAL_FEATURE__DESCRIPTIONS;
+    int ASSOCIATION_END__DESCRIPTION = CorePackage.STRUCTURAL_FEATURE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -942,13 +942,13 @@ public interface RelationshipsPackage extends EPackage {
     int GENERALIZATION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int GENERALIZATION__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int GENERALIZATION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

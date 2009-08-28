@@ -208,13 +208,13 @@ public interface WarehouseoperationPackage extends EPackage {
     int MEASUREMENT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEASUREMENT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int MEASUREMENT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -452,13 +452,13 @@ public interface WarehouseoperationPackage extends EPackage {
     int CHANGE_REQUEST__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CHANGE_REQUEST__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int CHANGE_REQUEST__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -705,13 +705,13 @@ public interface WarehouseoperationPackage extends EPackage {
     int TRANSFORMATION_EXECUTION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSFORMATION_EXECUTION__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int TRANSFORMATION_EXECUTION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -940,13 +940,13 @@ public interface WarehouseoperationPackage extends EPackage {
     int ACTIVITY_EXECUTION__DOCUMENT = TRANSFORMATION_EXECUTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ACTIVITY_EXECUTION__DESCRIPTIONS = TRANSFORMATION_EXECUTION__DESCRIPTIONS;
+    int ACTIVITY_EXECUTION__DESCRIPTION = TRANSFORMATION_EXECUTION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1193,13 +1193,13 @@ public interface WarehouseoperationPackage extends EPackage {
     int STEP_EXECUTION__DOCUMENT = TRANSFORMATION_EXECUTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int STEP_EXECUTION__DESCRIPTIONS = TRANSFORMATION_EXECUTION__DESCRIPTIONS;
+    int STEP_EXECUTION__DESCRIPTION = TRANSFORMATION_EXECUTION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

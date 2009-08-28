@@ -188,13 +188,13 @@ public interface ErPackage extends EPackage {
     int ENTITY__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ENTITY__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
+    int ENTITY__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -531,13 +531,13 @@ public interface ErPackage extends EPackage {
     int NONUNIQUE_KEY__DOCUMENT = KeysindexesPackage.INDEX__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int NONUNIQUE_KEY__DESCRIPTIONS = KeysindexesPackage.INDEX__DESCRIPTIONS;
+    int NONUNIQUE_KEY__DESCRIPTION = KeysindexesPackage.INDEX__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -766,13 +766,13 @@ public interface ErPackage extends EPackage {
     int CANDIDATE_KEY__DOCUMENT = KeysindexesPackage.UNIQUE_KEY__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CANDIDATE_KEY__DESCRIPTIONS = KeysindexesPackage.UNIQUE_KEY__DESCRIPTIONS;
+    int CANDIDATE_KEY__DESCRIPTION = KeysindexesPackage.UNIQUE_KEY__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -974,13 +974,13 @@ public interface ErPackage extends EPackage {
     int FOREIGN_KEY__DOCUMENT = KeysindexesPackage.KEY_RELATIONSHIP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FOREIGN_KEY__DESCRIPTIONS = KeysindexesPackage.KEY_RELATIONSHIP__DESCRIPTIONS;
+    int FOREIGN_KEY__DESCRIPTION = KeysindexesPackage.KEY_RELATIONSHIP__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1191,13 +1191,13 @@ public interface ErPackage extends EPackage {
     int DOMAIN__DOCUMENT = CorePackage.CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOMAIN__DESCRIPTIONS = CorePackage.CLASSIFIER__DESCRIPTIONS;
+    int DOMAIN__DESCRIPTION = CorePackage.CLASSIFIER__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1552,13 +1552,13 @@ public interface ErPackage extends EPackage {
     int ATTRIBUTE__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ATTRIBUTE__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
+    int ATTRIBUTE__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1904,13 +1904,13 @@ public interface ErPackage extends EPackage {
     int RELATIONSHIP__DOCUMENT = RelationshipsPackage.ASSOCIATION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RELATIONSHIP__DESCRIPTIONS = RelationshipsPackage.ASSOCIATION__DESCRIPTIONS;
+    int RELATIONSHIP__DESCRIPTION = RelationshipsPackage.ASSOCIATION__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2247,13 +2247,13 @@ public interface ErPackage extends EPackage {
     int RELATIONSHIP_END__DOCUMENT = RelationshipsPackage.ASSOCIATION_END__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RELATIONSHIP_END__DESCRIPTIONS = RelationshipsPackage.ASSOCIATION_END__DESCRIPTIONS;
+    int RELATIONSHIP_END__DESCRIPTION = RelationshipsPackage.ASSOCIATION_END__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2644,13 +2644,13 @@ public interface ErPackage extends EPackage {
     int MODEL_LIBRARY__DOCUMENT = CorePackage.SUBSYSTEM__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MODEL_LIBRARY__DESCRIPTIONS = CorePackage.SUBSYSTEM__DESCRIPTIONS;
+    int MODEL_LIBRARY__DESCRIPTION = CorePackage.SUBSYSTEM__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2996,13 +2996,13 @@ public interface ErPackage extends EPackage {
     int MODEL__DOCUMENT = CorePackage.MODEL__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MODEL__DESCRIPTIONS = CorePackage.MODEL__DESCRIPTIONS;
+    int MODEL__DESCRIPTION = CorePackage.MODEL__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3213,13 +3213,13 @@ public interface ErPackage extends EPackage {
     int SUBJECT_AREA__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SUBJECT_AREA__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
+    int SUBJECT_AREA__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3430,13 +3430,13 @@ public interface ErPackage extends EPackage {
     int PRIMARY_KEY__DOCUMENT = CANDIDATE_KEY__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PRIMARY_KEY__DESCRIPTIONS = CANDIDATE_KEY__DESCRIPTIONS;
+    int PRIMARY_KEY__DESCRIPTION = CANDIDATE_KEY__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

@@ -700,7 +700,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getModelElement_Descriptions() {
+    public EReference getModelElement_Description() {
         return (EReference)modelElementEClass.getEStructuralFeatures().get(10);
     }
 
@@ -1609,7 +1609,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
         createEReference(modelElementEClass, MODEL_ELEMENT__STEREOTYPE);
         createEReference(modelElementEClass, MODEL_ELEMENT__TAGGED_VALUE);
         createEReference(modelElementEClass, MODEL_ELEMENT__DOCUMENT);
-        createEReference(modelElementEClass, MODEL_ELEMENT__DESCRIPTIONS);
+        createEReference(modelElementEClass, MODEL_ELEMENT__DESCRIPTION);
         createEReference(modelElementEClass, MODEL_ELEMENT__RESPONSIBLE_PARTY);
         createEReference(modelElementEClass, MODEL_ELEMENT__ELEMENT_NODE);
         createEReference(modelElementEClass, MODEL_ELEMENT__SET);
@@ -1813,7 +1813,7 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
         initEReference(getModelElement_Stereotype(), this.getStereotype(), this.getStereotype_ExtendedElement(), "stereotype", null, 0, 1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getModelElement_TaggedValue(), this.getTaggedValue(), this.getTaggedValue_ModelElement(), "taggedValue", null, 0, -1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getModelElement_Document(), theBusinessinformationPackage.getDocument(), theBusinessinformationPackage.getDocument_ModelElement(), "document", null, 0, -1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getModelElement_Descriptions(), theBusinessinformationPackage.getDescription(), theBusinessinformationPackage.getDescription_ModelElement(), "descriptions", null, 0, -1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getModelElement_Description(), theBusinessinformationPackage.getDescription(), theBusinessinformationPackage.getDescription_ModelElement(), "description", null, 0, -1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getModelElement_ResponsibleParty(), theBusinessinformationPackage.getResponsibleParty(), theBusinessinformationPackage.getResponsibleParty_ModelElement(), "responsibleParty", null, 0, -1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getModelElement_ElementNode(), theExpressionsPackage.getElementNode(), theExpressionsPackage.getElementNode_ModelElement(), "elementNode", null, 0, -1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getModelElement_Set(), theTransformationPackage.getDataObjectSet(), theTransformationPackage.getDataObjectSet_Element(), "set", null, 0, -1, ModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
