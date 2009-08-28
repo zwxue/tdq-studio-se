@@ -56,7 +56,7 @@ public class ReportWriter extends AElementPersistance {
     @Override
     protected void addResourceContent(ModelElement element) {
         EList<EObject> resourceContents = element.eResource().getContents();
-        resourceContents.addAll(element.getDescriptions());
+        resourceContents.addAll(element.getDescription());
     }
 
     /*

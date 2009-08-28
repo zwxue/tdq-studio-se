@@ -29,8 +29,7 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.dataquality.properties.IMockModelElement;
-import org.talend.dataquality.properties.PropertiesFactory;
+import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -66,7 +65,7 @@ public final class EMFSharedResources {
             getSoftwareDeploymentResource().getContents().add(softwareSystem);
             // MOD mzhao feature 7488 .
             // Create a mock ModelElement to add dependency.
-            saveSoftwareDeploymentProperties(createIMockModelElement());
+            saveSoftwareDeploymentProperties();
         } else {
             getSoftwareDeploymentResource().getContents().add(softwareSystem);
         }
@@ -77,7 +76,7 @@ public final class EMFSharedResources {
     }
         
     
-    private void saveSoftwareDeploymentProperties(ModelElement softwareSystem) {
+    private void saveSoftwareDeploymentProperties() {
         // ~MOD mzhao feature 7488 2009-08-21.
         AElementPersistance elePersistance = new AElementPersistance() {
 
@@ -97,19 +96,17 @@ public final class EMFSharedResources {
             }
 
         };
-        softwareDeploymentResource.getContents().add(softwareSystem);
+        ModelElement mockedModelElement = CoreFactory.eINSTANCE.createModel();
+        mockedModelElement.setName("softwareSystem");
+        softwareDeploymentResource.getContents().add(mockedModelElement);
         String platformString = softwareDeploymentResource.getURI().toPlatformString(true);
         String platformStringPath = platformString.substring(0, platformString.lastIndexOf(SOFTWARE_DEP));
         IFolder fileFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot().findMember(platformStringPath);
-        elePersistance.savePerperties(softwareSystem, fileFolder.getFile(SOFTWARE_DEP));
+        elePersistance.savePerperties(mockedModelElement, fileFolder.getFile(SOFTWARE_DEP));
         // ~
     }
 
-    private ModelElement createIMockModelElement() {
-        IMockModelElement mockModElm = PropertiesFactory.eINSTANCE.createIMockModelElement();
-        mockModElm.setName(SOFTWARE_DEP);
-        return mockModElm;
-    }
+
     /**
      * DOC scorreia Comment method "initSoftwareDeploymentResource".
      * 
