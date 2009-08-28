@@ -95,6 +95,12 @@ public final class TaggedValueHelper {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    // Property tagged values.
+    // MOD mzhao feature 7488
+    public static final String PROPERTY_FILE = "Property File"; //$NON-NLS-1$
+
+    public static final String TDQ_ELEMENT_FILE = "TDQ Element File"; //$NON-NLS-1$
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~
     private TaggedValueHelper() {
     }
 

@@ -208,6 +208,7 @@ public final class ColumnHelper {
     public static boolean isForeignKey(Column column) {
         return getForeignKey(column) != null;
     }
+
     /**
      * 
      * DOC mzhao Comment method "getForeignKey",Feature 8690.
@@ -215,7 +216,7 @@ public final class ColumnHelper {
      * @param column
      * @return
      */
-    public static ForeignKey getForeignKey(Column column){
+    public static ForeignKey getForeignKey(Column column) {
         EList<KeyRelationship> foreignKeys = column.getKeyRelationship();
         for (KeyRelationship foreignKey : foreignKeys) {
             if (foreignKey != null) {
@@ -225,7 +226,7 @@ public final class ColumnHelper {
                 }
             }
         }
-        return null;        
+        return null;
     }
 
     /**

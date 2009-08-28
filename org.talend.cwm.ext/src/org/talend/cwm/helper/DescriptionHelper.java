@@ -41,7 +41,7 @@ public final class DescriptionHelper {
 
     public static Description getTypedDescription(String type, ModelElement element) {
         assert type != null;
-        EList<Description> descriptions = element.getDescriptions();
+        EList<Description> descriptions = element.getDescription();
         for (Description description : descriptions) {
             if (type.equals(description.getType())) {
                 return description;
@@ -56,7 +56,7 @@ public final class DescriptionHelper {
         if (descr != null) {
             descr.setBody(description);
         } else {
-            element.getDescriptions().add(createDescription(type, description));
+            element.getDescription().add(createDescription(type, description));
         }
     }
 
