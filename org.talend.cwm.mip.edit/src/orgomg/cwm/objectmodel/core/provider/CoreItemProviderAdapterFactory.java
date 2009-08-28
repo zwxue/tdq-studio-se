@@ -38,502 +38,502 @@ import orgomg.cwm.objectmodel.core.util.CoreAdapterFactory;
  */
 public class CoreItemProviderAdapterFactory extends CoreAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**
-	 * This keeps track of the root adapter factory that delegates to this adapter factory.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the root adapter factory that delegates to this adapter factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected ComposedAdapterFactory parentAdapterFactory;
 
     /**
-	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
-	 * <!-- begin-user-doc -->
+     * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
     /**
-	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
-	 * <!-- begin-user-doc -->
+     * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
     /**
-	 * This constructs an instance.
-	 * <!-- begin-user-doc -->
+     * This constructs an instance.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public CoreItemProviderAdapterFactory() {
-		supportedTypes.add(IEditingDomainItemProvider.class);
-		supportedTypes.add(IStructuredItemContentProvider.class);
-		supportedTypes.add(ITreeItemContentProvider.class);
-		supportedTypes.add(IItemLabelProvider.class);
-		supportedTypes.add(IItemPropertySource.class);
-	}
+        supportedTypes.add(IEditingDomainItemProvider.class);
+        supportedTypes.add(IStructuredItemContentProvider.class);
+        supportedTypes.add(ITreeItemContentProvider.class);
+        supportedTypes.add(IItemLabelProvider.class);
+        supportedTypes.add(IItemPropertySource.class);
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Class} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Class} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected ClassItemProvider classItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Class}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Class}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createClassAdapter() {
-		if (classItemProvider == null) {
-			classItemProvider = new ClassItemProvider(this);
-		}
+        if (classItemProvider == null) {
+            classItemProvider = new ClassItemProvider(this);
+        }
 
-		return classItemProvider;
-	}
+        return classItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.DataType} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.DataType} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected DataTypeItemProvider dataTypeItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.DataType}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.DataType}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createDataTypeAdapter() {
-		if (dataTypeItemProvider == null) {
-			dataTypeItemProvider = new DataTypeItemProvider(this);
-		}
+        if (dataTypeItemProvider == null) {
+            dataTypeItemProvider = new DataTypeItemProvider(this);
+        }
 
-		return dataTypeItemProvider;
-	}
+        return dataTypeItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Package} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Package} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected PackageItemProvider packageItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Package}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Package}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createPackageAdapter() {
-		if (packageItemProvider == null) {
-			packageItemProvider = new PackageItemProvider(this);
-		}
+        if (packageItemProvider == null) {
+            packageItemProvider = new PackageItemProvider(this);
+        }
 
-		return packageItemProvider;
-	}
+        return packageItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Subsystem} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Subsystem} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected SubsystemItemProvider subsystemItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Subsystem}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Subsystem}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createSubsystemAdapter() {
-		if (subsystemItemProvider == null) {
-			subsystemItemProvider = new SubsystemItemProvider(this);
-		}
+        if (subsystemItemProvider == null) {
+            subsystemItemProvider = new SubsystemItemProvider(this);
+        }
 
-		return subsystemItemProvider;
-	}
+        return subsystemItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Model} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Model} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected ModelItemProvider modelItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Model}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Model}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createModelAdapter() {
-		if (modelItemProvider == null) {
-			modelItemProvider = new ModelItemProvider(this);
-		}
+        if (modelItemProvider == null) {
+            modelItemProvider = new ModelItemProvider(this);
+        }
 
-		return modelItemProvider;
-	}
+        return modelItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Attribute} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Attribute} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected AttributeItemProvider attributeItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Attribute}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Attribute}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createAttributeAdapter() {
-		if (attributeItemProvider == null) {
-			attributeItemProvider = new AttributeItemProvider(this);
-		}
+        if (attributeItemProvider == null) {
+            attributeItemProvider = new AttributeItemProvider(this);
+        }
 
-		return attributeItemProvider;
-	}
+        return attributeItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Constraint} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Constraint} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected ConstraintItemProvider constraintItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Constraint}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Constraint}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createConstraintAdapter() {
-		if (constraintItemProvider == null) {
-			constraintItemProvider = new ConstraintItemProvider(this);
-		}
+        if (constraintItemProvider == null) {
+            constraintItemProvider = new ConstraintItemProvider(this);
+        }
 
-		return constraintItemProvider;
-	}
+        return constraintItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Dependency} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Dependency} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected DependencyItemProvider dependencyItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Dependency}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Dependency}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createDependencyAdapter() {
-		if (dependencyItemProvider == null) {
-			dependencyItemProvider = new DependencyItemProvider(this);
-		}
+        if (dependencyItemProvider == null) {
+            dependencyItemProvider = new DependencyItemProvider(this);
+        }
 
-		return dependencyItemProvider;
-	}
+        return dependencyItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Expression} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Expression} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected ExpressionItemProvider expressionItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Expression}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Expression}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createExpressionAdapter() {
-		if (expressionItemProvider == null) {
-			expressionItemProvider = new ExpressionItemProvider(this);
-		}
+        if (expressionItemProvider == null) {
+            expressionItemProvider = new ExpressionItemProvider(this);
+        }
 
-		return expressionItemProvider;
-	}
+        return expressionItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.BooleanExpression} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.BooleanExpression} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected BooleanExpressionItemProvider booleanExpressionItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.BooleanExpression}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.BooleanExpression}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createBooleanExpressionAdapter() {
-		if (booleanExpressionItemProvider == null) {
-			booleanExpressionItemProvider = new BooleanExpressionItemProvider(this);
-		}
+        if (booleanExpressionItemProvider == null) {
+            booleanExpressionItemProvider = new BooleanExpressionItemProvider(this);
+        }
 
-		return booleanExpressionItemProvider;
-	}
+        return booleanExpressionItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.ProcedureExpression} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.ProcedureExpression} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected ProcedureExpressionItemProvider procedureExpressionItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.ProcedureExpression}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.ProcedureExpression}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createProcedureExpressionAdapter() {
-		if (procedureExpressionItemProvider == null) {
-			procedureExpressionItemProvider = new ProcedureExpressionItemProvider(this);
-		}
+        if (procedureExpressionItemProvider == null) {
+            procedureExpressionItemProvider = new ProcedureExpressionItemProvider(this);
+        }
 
-		return procedureExpressionItemProvider;
-	}
+        return procedureExpressionItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Multiplicity} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Multiplicity} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected MultiplicityItemProvider multiplicityItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Multiplicity}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Multiplicity}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createMultiplicityAdapter() {
-		if (multiplicityItemProvider == null) {
-			multiplicityItemProvider = new MultiplicityItemProvider(this);
-		}
+        if (multiplicityItemProvider == null) {
+            multiplicityItemProvider = new MultiplicityItemProvider(this);
+        }
 
-		return multiplicityItemProvider;
-	}
+        return multiplicityItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.MultiplicityRange} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.MultiplicityRange} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected MultiplicityRangeItemProvider multiplicityRangeItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.MultiplicityRange}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.MultiplicityRange}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createMultiplicityRangeAdapter() {
-		if (multiplicityRangeItemProvider == null) {
-			multiplicityRangeItemProvider = new MultiplicityRangeItemProvider(this);
-		}
+        if (multiplicityRangeItemProvider == null) {
+            multiplicityRangeItemProvider = new MultiplicityRangeItemProvider(this);
+        }
 
-		return multiplicityRangeItemProvider;
-	}
+        return multiplicityRangeItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Stereotype} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.Stereotype} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected StereotypeItemProvider stereotypeItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Stereotype}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.Stereotype}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createStereotypeAdapter() {
-		if (stereotypeItemProvider == null) {
-			stereotypeItemProvider = new StereotypeItemProvider(this);
-		}
+        if (stereotypeItemProvider == null) {
+            stereotypeItemProvider = new StereotypeItemProvider(this);
+        }
 
-		return stereotypeItemProvider;
-	}
+        return stereotypeItemProvider;
+    }
 
     /**
-	 * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.TaggedValue} instances.
-	 * <!-- begin-user-doc -->
+     * This keeps track of the one adapter used for all {@link orgomg.cwm.objectmodel.core.TaggedValue} instances.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected TaggedValueItemProvider taggedValueItemProvider;
 
     /**
-	 * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.TaggedValue}.
-	 * <!-- begin-user-doc -->
+     * This creates an adapter for a {@link orgomg.cwm.objectmodel.core.TaggedValue}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter createTaggedValueAdapter() {
-		if (taggedValueItemProvider == null) {
-			taggedValueItemProvider = new TaggedValueItemProvider(this);
-		}
+        if (taggedValueItemProvider == null) {
+            taggedValueItemProvider = new TaggedValueItemProvider(this);
+        }
 
-		return taggedValueItemProvider;
-	}
+        return taggedValueItemProvider;
+    }
 
     /**
-	 * This returns the root adapter factory that contains this factory.
-	 * <!-- begin-user-doc -->
+     * This returns the root adapter factory that contains this factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public ComposeableAdapterFactory getRootAdapterFactory() {
-		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
-	}
+        return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
+    }
 
     /**
-	 * This sets the composed adapter factory that contains this factory.
-	 * <!-- begin-user-doc -->
+     * This sets the composed adapter factory that contains this factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
-		this.parentAdapterFactory = parentAdapterFactory;
-	}
+        this.parentAdapterFactory = parentAdapterFactory;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public boolean isFactoryForType(Object type) {
-		return supportedTypes.contains(type) || super.isFactoryForType(type);
-	}
+        return supportedTypes.contains(type) || super.isFactoryForType(type);
+    }
 
     /**
-	 * This implementation substitutes the factory itself as the key for the adapter.
-	 * <!-- begin-user-doc -->
+     * This implementation substitutes the factory itself as the key for the adapter.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Adapter adapt(Notifier notifier, Object type) {
-		return super.adapt(notifier, this);
-	}
+        return super.adapt(notifier, this);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Object adapt(Object object, Object type) {
-		if (isFactoryForType(type)) {
-			Object adapter = super.adapt(object, type);
-			if (!(type instanceof Class) || (((Class<?>)type).isInstance(adapter))) {
-				return adapter;
-			}
-		}
+        if (isFactoryForType(type)) {
+            Object adapter = super.adapt(object, type);
+            if (!(type instanceof Class) || (((Class<?>)type).isInstance(adapter))) {
+                return adapter;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * This adds a listener.
-	 * <!-- begin-user-doc -->
+     * This adds a listener.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void addListener(INotifyChangedListener notifyChangedListener) {
-		changeNotifier.addListener(notifyChangedListener);
-	}
+        changeNotifier.addListener(notifyChangedListener);
+    }
 
     /**
-	 * This removes a listener.
-	 * <!-- begin-user-doc -->
+     * This removes a listener.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void removeListener(INotifyChangedListener notifyChangedListener) {
-		changeNotifier.removeListener(notifyChangedListener);
-	}
+        changeNotifier.removeListener(notifyChangedListener);
+    }
 
     /**
-	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
-	 * <!-- begin-user-doc -->
+     * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void fireNotifyChanged(Notification notification) {
-		changeNotifier.fireNotifyChanged(notification);
+        changeNotifier.fireNotifyChanged(notification);
 
-		if (parentAdapterFactory != null) {
-			parentAdapterFactory.fireNotifyChanged(notification);
-		}
-	}
+        if (parentAdapterFactory != null) {
+            parentAdapterFactory.fireNotifyChanged(notification);
+        }
+    }
 
     /**
-	 * This disposes all of the item providers created by this factory. 
-	 * <!-- begin-user-doc -->
+     * This disposes all of the item providers created by this factory. 
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void dispose() {
-		if (classItemProvider != null) classItemProvider.dispose();
-		if (dataTypeItemProvider != null) dataTypeItemProvider.dispose();
-		if (packageItemProvider != null) packageItemProvider.dispose();
-		if (subsystemItemProvider != null) subsystemItemProvider.dispose();
-		if (modelItemProvider != null) modelItemProvider.dispose();
-		if (attributeItemProvider != null) attributeItemProvider.dispose();
-		if (constraintItemProvider != null) constraintItemProvider.dispose();
-		if (dependencyItemProvider != null) dependencyItemProvider.dispose();
-		if (expressionItemProvider != null) expressionItemProvider.dispose();
-		if (booleanExpressionItemProvider != null) booleanExpressionItemProvider.dispose();
-		if (procedureExpressionItemProvider != null) procedureExpressionItemProvider.dispose();
-		if (multiplicityItemProvider != null) multiplicityItemProvider.dispose();
-		if (multiplicityRangeItemProvider != null) multiplicityRangeItemProvider.dispose();
-		if (stereotypeItemProvider != null) stereotypeItemProvider.dispose();
-		if (taggedValueItemProvider != null) taggedValueItemProvider.dispose();
-	}
+        if (classItemProvider != null) classItemProvider.dispose();
+        if (dataTypeItemProvider != null) dataTypeItemProvider.dispose();
+        if (packageItemProvider != null) packageItemProvider.dispose();
+        if (subsystemItemProvider != null) subsystemItemProvider.dispose();
+        if (modelItemProvider != null) modelItemProvider.dispose();
+        if (attributeItemProvider != null) attributeItemProvider.dispose();
+        if (constraintItemProvider != null) constraintItemProvider.dispose();
+        if (dependencyItemProvider != null) dependencyItemProvider.dispose();
+        if (expressionItemProvider != null) expressionItemProvider.dispose();
+        if (booleanExpressionItemProvider != null) booleanExpressionItemProvider.dispose();
+        if (procedureExpressionItemProvider != null) procedureExpressionItemProvider.dispose();
+        if (multiplicityItemProvider != null) multiplicityItemProvider.dispose();
+        if (multiplicityRangeItemProvider != null) multiplicityRangeItemProvider.dispose();
+        if (stereotypeItemProvider != null) stereotypeItemProvider.dispose();
+        if (taggedValueItemProvider != null) taggedValueItemProvider.dispose();
+    }
 
 }
