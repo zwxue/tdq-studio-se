@@ -48,6 +48,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
 import com.csvreader.CsvReader;
@@ -74,11 +75,11 @@ public final class ImportFactory {
     public static String importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
             boolean rename) {
 
-        String information = "Patterns imported in the \"Patterns\" folder";
+        StringBuffer importInformation = new StringBuffer();
+
         Set<String> names = PatternUtilities.getAllPatternNames(selectionFolder);
 
         String fileExtName = getFileExtName(importFile);
-        String name = "";
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
 
@@ -92,11 +93,13 @@ public final class ImportFactory {
                 reader.readHeaders();
 
                 while (reader.readRecord()) {
-                    name = reader.get(PatternToExcelEnum.Label.getLiteral());
+
+                    String name = reader.get(PatternToExcelEnum.Label.getLiteral());
 
                     if (names.contains(name)) {
                         if (skip) {
-                            information = "Pattern \"" + name + "\" has already imported";
+                            importInformation.append("Pattern \"" + name + "\" has already imported");
+                            importInformation.append("\n");
                             continue;
                         }
                         if (rename) {
@@ -121,14 +124,16 @@ public final class ImportFactory {
                     String relativePath = createAndStorePattern(patternParameters, selectionFolder, type);
                     names.add(name);
 
-                    information = "Pattern \"" + name + "\" imported in the \"" + "Patterns/" + relativePath + "\" folder";
+                    importInformation.append("Pattern \"" + name + "\" imported in the \"" + relativePath + "\" folder");
+                    importInformation.append("\n");
                 }
 
                 reader.close();
 
             } catch (Exception e) {
                 log.error(e, e);
-                information = "Pattern \"" + name + "\" import failed";
+                importInformation.append("Import failed");
+                importInformation.append("\n");
             }
         }
 
@@ -157,6 +162,8 @@ public final class ImportFactory {
                             String contents = cell.getContents();
                             if (names.contains(contents)) {
                                 if (skip) {
+                                    importInformation.append("Pattern \"" + contents + "\" has already imported");
+                                    importInformation.append("\n");
                                     continue;
                                 }
                                 if (rename) {
@@ -179,9 +186,13 @@ public final class ImportFactory {
                                 }
                             }
 
-                            createAndStorePattern(patternParameters, selectionFolder, type);
+                            String relativePath = createAndStorePattern(patternParameters, selectionFolder, type);
 
                             names.add(contents);
+
+                            importInformation.append("Pattern \"" + contents + "\" imported in the \"" + relativePath
+                                    + "\" folder");
+                            importInformation.append("\n");
                         }
                     }
                 }
@@ -189,11 +200,16 @@ public final class ImportFactory {
                 rwb.close();
             } catch (BiffException e) {
                 log.error(e, e);
+                importInformation.append("Import failed");
+                importInformation.append("\n");
             } catch (IOException e) {
                 log.error(e, e);
+                importInformation.append("Import failed");
+                importInformation.append("\n");
             }
         }
-        return information;
+
+        return importInformation.toString();
     }
 
     private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
@@ -215,18 +231,6 @@ public final class ImportFactory {
 
             String[] folderNames = parameters.relativePath.split("/"); //$NON-NLS-1$
 
-            // MOD yyi 8746: strange behaviour for imported patterns!
-            if (1 == folderNames.length && "".equals(folderNames[0])) {
-                switch (type) {
-                case SQL_LIKE:
-                    folderNames[0] = DQStructureManager.SQL;
-                    break;
-                case REGEXP:
-                    folderNames[0] = DQStructureManager.REGEX;
-                    break;
-                }
-            }
-
             for (String folderName : folderNames) {
 
                 IFolder folder = selectionFolder.getFolder(folderName);
@@ -245,7 +249,8 @@ public final class ImportFactory {
         EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), pattern);
         EMFSharedResources.getInstance().saveLastResource();
 
-        return selectionFolder.getName();
+        return ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.PATTERNS).getLocationURI().relativize(
+                selectionFolder.getLocationURI()).toString();
     }
 
     private static String getFileExtName(File file) {

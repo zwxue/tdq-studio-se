@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
@@ -36,6 +35,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
+import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
 import org.talend.dataprofiler.ecos.EcosConstants;
 import org.talend.dataprofiler.ecos.jobs.ComponentDownloader;
 import org.talend.dataprofiler.ecos.jobs.ComponentInstaller;
@@ -110,18 +110,21 @@ public class ImportRemotePatternAction extends Action {
 
                 // MOD yyi 8746: strange behaviour for imported patterns!
                 ExpressionType type = ExpressionType.REGEXP;
+                IFolder folder = getFolder(DQStructureManager.PATTERNS);
 
                 if ("regex".equals(componet.getCategry().getName())) {
                     type = ExpressionType.REGEXP;
+                    folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.REGEX);
                 } else if ("pattern".equals(componet.getCategry().getName())) {
                     type = ExpressionType.REGEXP;
+                    folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.REGEX);
                 } else if ("sql".equals(componet.getCategry().getName())) {
                     type = ExpressionType.SQL_LIKE;
+                    folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.SQL);
                 }
 
                 for (File oneFile : files) {
-                    information.append(ImportFactory.importToStucture(oneFile, getFolder(DQStructureManager.PATTERNS), type,
-                            true, true));
+                    information.append(ImportFactory.importToStucture(oneFile, folder, type, true, true));
 
                     information.append("\n");
                 }
@@ -130,7 +133,7 @@ public class ImportRemotePatternAction extends Action {
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
-                    MessageDialog.openInformation(null, "Information", information.toString());
+                    ImportInfoDialog.openImportInformation(null, information);
                 }
             });
 

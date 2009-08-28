@@ -16,6 +16,8 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
@@ -64,9 +66,16 @@ public class ImportPatternsWizard extends Wizard {
 
         File file = new File(page.getSourceFile());
 
-        ImportFactory.importToStucture(file, folder, type, page.getSkip(), page.getRename());
+        final StringBuffer information = new StringBuffer();
+        information.append(ImportFactory.importToStucture(file, folder, type, page.getSkip(), page.getRename()));
+
+        Display.getDefault().asyncExec(new Runnable() {
+
+            public void run() {
+                ImportInfoDialog.openImportInformation(null, information);
+            }
+        });
 
         return true;
     }
-
 }
