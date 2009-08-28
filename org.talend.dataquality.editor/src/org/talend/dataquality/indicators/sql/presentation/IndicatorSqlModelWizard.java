@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.talend.dataquality.properties.presentation;
+package org.talend.dataquality.indicators.sql.presentation;
 
 
 import java.util.ArrayList;
@@ -17,52 +17,78 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.StringTokenizer;
 
+import org.eclipse.emf.common.CommonPlugin;
+
+import org.eclipse.emf.common.util.URI;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+
+import org.eclipse.emf.ecore.EObject;
+
+import org.eclipse.emf.ecore.xmi.XMLResource;
+
+import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.CommonPlugin;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
+
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
+
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
+
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
+
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
+
+import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
+
+import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.part.ISetSelectionTarget;
+
+import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
+import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
+
+
+import org.eclipse.core.runtime.Path;
+
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.part.ISetSelectionTarget;
+
 import org.talend.dataquality.analysis.presentation.DataqualityEditorPlugin;
-import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
-import org.talend.dataquality.properties.PropertiesFactory;
-import org.talend.dataquality.properties.PropertiesPackage;
 
 
 /**
@@ -71,7 +97,7 @@ import org.talend.dataquality.properties.PropertiesPackage;
  * <!-- end-user-doc -->
  * @generated
  */
-public class PropertiesModelWizard extends Wizard implements INewWizard {
+public class IndicatorSqlModelWizard extends Wizard implements INewWizard {
     /**
      * The supported extensions for created files.
      * <!-- begin-user-doc -->
@@ -79,7 +105,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * @generated
      */
     public static final List<String> FILE_EXTENSIONS =
-        Collections.unmodifiableList(Arrays.asList(DataqualityEditorPlugin.INSTANCE.getString("_UI_PropertiesEditorFilenameExtensions").split("\\s*,\\s*")));
+        Collections.unmodifiableList(Arrays.asList(DataqualityEditorPlugin.INSTANCE.getString("_UI_IndicatorSqlEditorFilenameExtensions").split("\\s*,\\s*")));
 
     /**
      * A formatted list of supported file extensions, suitable for display.
@@ -88,7 +114,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * @generated
      */
     public static final String FORMATTED_FILE_EXTENSIONS =
-        DataqualityEditorPlugin.INSTANCE.getString("_UI_PropertiesEditorFilenameExtensions").replaceAll("\\s*,\\s*", ", ");
+        DataqualityEditorPlugin.INSTANCE.getString("_UI_IndicatorSqlEditorFilenameExtensions").replaceAll("\\s*,\\s*", ", ");
 
     /**
      * This caches an instance of the model package.
@@ -96,7 +122,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected PropertiesPackage propertiesPackage = PropertiesPackage.eINSTANCE;
+    protected IndicatorSqlPackage indicatorSqlPackage = IndicatorSqlPackage.eINSTANCE;
 
     /**
      * This caches an instance of the model factory.
@@ -104,7 +130,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected PropertiesFactory propertiesFactory = propertiesPackage.getPropertiesFactory();
+    protected IndicatorSqlFactory indicatorSqlFactory = indicatorSqlPackage.getIndicatorSqlFactory();
 
     /**
      * This is the file creation page.
@@ -112,7 +138,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected PropertiesModelWizardNewFileCreationPage newFileCreationPage;
+    protected IndicatorSqlModelWizardNewFileCreationPage newFileCreationPage;
 
     /**
      * This is the initial object creation page.
@@ -120,7 +146,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected PropertiesModelWizardInitialObjectCreationPage initialObjectCreationPage;
+    protected IndicatorSqlModelWizardInitialObjectCreationPage initialObjectCreationPage;
 
     /**
      * Remember the selection during initialization for populating the default container.
@@ -156,7 +182,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
         this.workbench = workbench;
         this.selection = selection;
         setWindowTitle(DataqualityEditorPlugin.INSTANCE.getString("_UI_Wizard_label"));
-        setDefaultPageImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(DataqualityEditorPlugin.INSTANCE.getImage("full/wizban/NewProperties")));
+        setDefaultPageImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(DataqualityEditorPlugin.INSTANCE.getImage("full/wizban/NewIndicatorSql")));
     }
 
     /**
@@ -168,7 +194,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
     protected Collection<String> getInitialObjectNames() {
         if (initialObjectNames == null) {
             initialObjectNames = new ArrayList<String>();
-            for (EClassifier eClassifier : propertiesPackage.getEClassifiers()) {
+            for (EClassifier eClassifier : indicatorSqlPackage.getEClassifiers()) {
                 if (eClassifier instanceof EClass) {
                     EClass eClass = (EClass)eClassifier;
                     if (!eClass.isAbstract()) {
@@ -188,8 +214,8 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * @generated
      */
     protected EObject createInitialModel() {
-        EClass eClass = (EClass)propertiesPackage.getEClassifier(initialObjectCreationPage.getInitialObjectName());
-        EObject rootObject = propertiesFactory.create(eClass);
+        EClass eClass = (EClass)indicatorSqlPackage.getEClassifier(initialObjectCreationPage.getInitialObjectName());
+        EObject rootObject = indicatorSqlFactory.create(eClass);
         return rootObject;
     }
 
@@ -290,14 +316,14 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * <!-- end-user-doc -->
      * @generated
      */
-    public class PropertiesModelWizardNewFileCreationPage extends WizardNewFileCreationPage {
+    public class IndicatorSqlModelWizardNewFileCreationPage extends WizardNewFileCreationPage {
         /**
          * Pass in the selection.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
-        public PropertiesModelWizardNewFileCreationPage(String pageId, IStructuredSelection selection) {
+        public IndicatorSqlModelWizardNewFileCreationPage(String pageId, IStructuredSelection selection) {
             super(pageId, selection);
         }
 
@@ -307,7 +333,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
          * <!-- end-user-doc -->
          * @generated
          */
-        @Override
+    @Override
         protected boolean validatePage() {
             if (super.validatePage()) {
                 String extension = new Path(getFileName()).getFileExtension();
@@ -337,7 +363,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
      * <!-- end-user-doc -->
      * @generated
      */
-    public class PropertiesModelWizardInitialObjectCreationPage extends WizardPage {
+    public class IndicatorSqlModelWizardInitialObjectCreationPage extends WizardPage {
         /**
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -365,7 +391,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
          * <!-- end-user-doc -->
          * @generated
          */
-        public PropertiesModelWizardInitialObjectCreationPage(String pageId) {
+        public IndicatorSqlModelWizardInitialObjectCreationPage(String pageId) {
             super(pageId);
         }
 
@@ -375,8 +401,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
          * @generated
          */
         public void createControl(Composite parent) {
-            Composite composite = new Composite(parent, SWT.NONE);
-            {
+            Composite composite = new Composite(parent, SWT.NONE); {
                 GridLayout layout = new GridLayout();
                 layout.numColumns = 1;
                 layout.verticalSpacing = 12;
@@ -550,10 +575,10 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
     public void addPages() {
         // Create a page, set the title, and the initial model file name.
         //
-        newFileCreationPage = new PropertiesModelWizardNewFileCreationPage("Whatever", selection);
-        newFileCreationPage.setTitle(DataqualityEditorPlugin.INSTANCE.getString("_UI_PropertiesModelWizard_label"));
-        newFileCreationPage.setDescription(DataqualityEditorPlugin.INSTANCE.getString("_UI_PropertiesModelWizard_description"));
-        newFileCreationPage.setFileName(DataqualityEditorPlugin.INSTANCE.getString("_UI_PropertiesEditorFilenameDefaultBase") + "." + FILE_EXTENSIONS.get(0));
+        newFileCreationPage = new IndicatorSqlModelWizardNewFileCreationPage("Whatever", selection);
+        newFileCreationPage.setTitle(DataqualityEditorPlugin.INSTANCE.getString("_UI_IndicatorSqlModelWizard_label"));
+        newFileCreationPage.setDescription(DataqualityEditorPlugin.INSTANCE.getString("_UI_IndicatorSqlModelWizard_description"));
+        newFileCreationPage.setFileName(DataqualityEditorPlugin.INSTANCE.getString("_UI_IndicatorSqlEditorFilenameDefaultBase") + "." + FILE_EXTENSIONS.get(0));
         addPage(newFileCreationPage);
 
         // Try and get the resource selection to determine a current directory for the file dialog.
@@ -579,7 +604,7 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
 
                     // Make up a unique new name here.
                     //
-                    String defaultModelBaseFilename = DataqualityEditorPlugin.INSTANCE.getString("_UI_PropertiesEditorFilenameDefaultBase");
+                    String defaultModelBaseFilename = DataqualityEditorPlugin.INSTANCE.getString("_UI_IndicatorSqlEditorFilenameDefaultBase");
                     String defaultModelFilenameExtension = FILE_EXTENSIONS.get(0);
                     String modelFilename = defaultModelBaseFilename + "." + defaultModelFilenameExtension;
                     for (int i = 1; ((IContainer)selectedResource).findMember(modelFilename) != null; ++i) {
@@ -589,8 +614,8 @@ public class PropertiesModelWizard extends Wizard implements INewWizard {
                 }
             }
         }
-        initialObjectCreationPage = new PropertiesModelWizardInitialObjectCreationPage("Whatever2");
-        initialObjectCreationPage.setTitle(DataqualityEditorPlugin.INSTANCE.getString("_UI_PropertiesModelWizard_label"));
+        initialObjectCreationPage = new IndicatorSqlModelWizardInitialObjectCreationPage("Whatever2");
+        initialObjectCreationPage.setTitle(DataqualityEditorPlugin.INSTANCE.getString("_UI_IndicatorSqlModelWizard_label"));
         initialObjectCreationPage.setDescription(DataqualityEditorPlugin.INSTANCE.getString("_UI_Wizard_initial_object_description"));
         addPage(initialObjectCreationPage);
     }

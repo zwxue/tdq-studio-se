@@ -12,6 +12,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -23,7 +24,8 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.talend.dataquality.indicators.sql.util.SqlAdapterFactory;
+
+import org.talend.dataquality.indicators.sql.util.IndicatorSqlAdapterFactory;
 
 /**
  * This is the factory that is used to provide the interfaces needed to support Viewers.
@@ -34,7 +36,7 @@ import org.talend.dataquality.indicators.sql.util.SqlAdapterFactory;
  * <!-- end-user-doc -->
  * @generated
  */
-public class SqlItemProviderAdapterFactory extends SqlAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
+public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**
      * This keeps track of the root adapter factory that delegates to this adapter factory.
      * <!-- begin-user-doc -->
@@ -65,7 +67,7 @@ public class SqlItemProviderAdapterFactory extends SqlAdapterFactory implements 
      * <!-- end-user-doc -->
      * @generated
      */
-    public SqlItemProviderAdapterFactory() {
+    public IndicatorSqlItemProviderAdapterFactory() {
         supportedTypes.add(IEditingDomainItemProvider.class);
         supportedTypes.add(IStructuredItemContentProvider.class);
         supportedTypes.add(ITreeItemContentProvider.class);

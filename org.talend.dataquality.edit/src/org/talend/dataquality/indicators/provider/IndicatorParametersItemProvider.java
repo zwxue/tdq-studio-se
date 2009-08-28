@@ -12,7 +12,9 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -23,9 +25,11 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
+
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
-import org.talend.dataquality.domain.DomainFactory;
+
+import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -65,9 +69,78 @@ public class IndicatorParametersItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
+            addIndicatorValidDomainPropertyDescriptor(object);
+            addDataValidDomainPropertyDescriptor(object);
+            addBinsPropertyDescriptor(object);
             addTopNPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
+    }
+
+    /**
+     * This adds a property descriptor for the Indicator Valid Domain feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addIndicatorValidDomainPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_IndicatorParameters_indicatorValidDomain_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_IndicatorParameters_indicatorValidDomain_feature", "_UI_IndicatorParameters_type"),
+                 IndicatorsPackage.Literals.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Data Valid Domain feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDataValidDomainPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_IndicatorParameters_dataValidDomain_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_IndicatorParameters_dataValidDomain_feature", "_UI_IndicatorParameters_type"),
+                 IndicatorsPackage.Literals.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Bins feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addBinsPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_IndicatorParameters_bins_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_IndicatorParameters_bins_feature", "_UI_IndicatorParameters_type"),
+                 IndicatorsPackage.Literals.INDICATOR_PARAMETERS__BINS,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
     }
 
     /**
@@ -104,9 +177,6 @@ public class IndicatorParametersItemProvider
     public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
-            childrenFeatures.add(IndicatorsPackage.Literals.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN);
-            childrenFeatures.add(IndicatorsPackage.Literals.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN);
-            childrenFeatures.add(IndicatorsPackage.Literals.INDICATOR_PARAMETERS__BINS);
             childrenFeatures.add(IndicatorsPackage.Literals.INDICATOR_PARAMETERS__TEXT_PARAMETER);
             childrenFeatures.add(IndicatorsPackage.Literals.INDICATOR_PARAMETERS__DATE_PARAMETERS);
         }
@@ -164,9 +234,6 @@ public class IndicatorParametersItemProvider
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
-            case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
-            case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
-            case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
             case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
             case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
@@ -188,21 +255,6 @@ public class IndicatorParametersItemProvider
 
         newChildDescriptors.add
             (createChildParameter
-                (IndicatorsPackage.Literals.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN,
-                 DomainFactory.eINSTANCE.createDomain()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (IndicatorsPackage.Literals.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN,
-                 DomainFactory.eINSTANCE.createDomain()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (IndicatorsPackage.Literals.INDICATOR_PARAMETERS__BINS,
-                 DomainFactory.eINSTANCE.createDomain()));
-
-        newChildDescriptors.add
-            (createChildParameter
                 (IndicatorsPackage.Literals.INDICATOR_PARAMETERS__TEXT_PARAMETER,
                  IndicatorsFactory.eINSTANCE.createTextParameters()));
 
@@ -210,30 +262,6 @@ public class IndicatorParametersItemProvider
             (createChildParameter
                 (IndicatorsPackage.Literals.INDICATOR_PARAMETERS__DATE_PARAMETERS,
                  IndicatorsFactory.eINSTANCE.createDateParameters()));
-    }
-
-    /**
-     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
-        Object childFeature = feature;
-        Object childObject = child;
-
-        boolean qualify =
-            childFeature == IndicatorsPackage.Literals.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN ||
-            childFeature == IndicatorsPackage.Literals.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN ||
-            childFeature == IndicatorsPackage.Literals.INDICATOR_PARAMETERS__BINS;
-
-        if (qualify) {
-            return getString
-                ("_UI_CreateChild_text2",
-                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
-        }
-        return super.getCreateChildText(owner, feature, child, selection);
     }
 
     /**

@@ -7,7 +7,9 @@
 package org.talend.dataquality.analysis.provider;
 
 import org.eclipse.emf.common.EMFPlugin;
+
 import org.eclipse.emf.common.util.ResourceLocator;
+
 import orgomg.cwm.objectmodel.core.provider.Cwm_mipEditPlugin;
 
 /**
@@ -34,14 +36,15 @@ public final class DataqualityEditPlugin extends EMFPlugin {
     private static Implementation plugin;
 
     /**
-     * Create the instance. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated NOT
+     * Create the instance.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
      */
     public DataqualityEditPlugin() {
         super
           (new ResourceLocator [] {
-             Cwm_mipEditPlugin.INSTANCE
+             Cwm_mipEditPlugin.INSTANCE,
            });
     }
 

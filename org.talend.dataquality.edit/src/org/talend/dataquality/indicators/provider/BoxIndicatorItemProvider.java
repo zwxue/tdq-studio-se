@@ -12,14 +12,21 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
+
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -59,8 +66,31 @@ public class BoxIndicatorItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
+            addIQRPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
+    }
+
+    /**
+     * This adds a property descriptor for the IQR feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addIQRPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_BoxIndicator_IQR_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_BoxIndicator_IQR_feature", "_UI_BoxIndicator_type"),
+                 IndicatorsPackage.Literals.BOX_INDICATOR__IQR,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
     }
 
     /**
@@ -75,7 +105,6 @@ public class BoxIndicatorItemProvider
     public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
-            childrenFeatures.add(IndicatorsPackage.Literals.BOX_INDICATOR__IQR);
             childrenFeatures.add(IndicatorsPackage.Literals.BOX_INDICATOR__RANGE_INDICATOR);
             childrenFeatures.add(IndicatorsPackage.Literals.BOX_INDICATOR__MEAN_INDICATOR);
             childrenFeatures.add(IndicatorsPackage.Literals.BOX_INDICATOR__MEDIAN_INDICATOR);
@@ -133,7 +162,6 @@ public class BoxIndicatorItemProvider
         updateChildren(notification);
 
         switch (notification.getFeatureID(BoxIndicator.class)) {
-            case IndicatorsPackage.BOX_INDICATOR__IQR:
             case IndicatorsPackage.BOX_INDICATOR__RANGE_INDICATOR:
             case IndicatorsPackage.BOX_INDICATOR__MEAN_INDICATOR:
             case IndicatorsPackage.BOX_INDICATOR__MEDIAN_INDICATOR:
@@ -156,11 +184,6 @@ public class BoxIndicatorItemProvider
 
         newChildDescriptors.add
             (createChildParameter
-                (IndicatorsPackage.Literals.BOX_INDICATOR__IQR,
-                 IndicatorsFactory.eINSTANCE.createIQRIndicator()));
-
-        newChildDescriptors.add
-            (createChildParameter
                 (IndicatorsPackage.Literals.BOX_INDICATOR__RANGE_INDICATOR,
                  IndicatorsFactory.eINSTANCE.createRangeIndicator()));
 
@@ -178,29 +201,6 @@ public class BoxIndicatorItemProvider
             (createChildParameter
                 (IndicatorsPackage.Literals.BOX_INDICATOR__MEDIAN_INDICATOR,
                  IndicatorsFactory.eINSTANCE.createMedianIndicator()));
-    }
-
-    /**
-     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
-        Object childFeature = feature;
-        Object childObject = child;
-
-        boolean qualify =
-            childFeature == IndicatorsPackage.Literals.BOX_INDICATOR__IQR ||
-            childFeature == IndicatorsPackage.Literals.BOX_INDICATOR__RANGE_INDICATOR;
-
-        if (qualify) {
-            return getString
-                ("_UI_CreateChild_text2",
-                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
-        }
-        return super.getCreateChildText(owner, feature, child, selection);
     }
 
 }

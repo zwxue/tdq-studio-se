@@ -12,7 +12,9 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.EStructuralFeature;
+
+import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -20,9 +22,11 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
+
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.RangeIndicator;
 
@@ -61,10 +65,56 @@ public class RangeIndicatorItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
+            addLowerValuePropertyDescriptor(object);
+            addUpperValuePropertyDescriptor(object);
             addDatatypePropertyDescriptor(object);
             addRangePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
+    }
+
+    /**
+     * This adds a property descriptor for the Lower Value feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addLowerValuePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_RangeIndicator_lowerValue_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_RangeIndicator_lowerValue_feature", "_UI_RangeIndicator_type"),
+                 IndicatorsPackage.Literals.RANGE_INDICATOR__LOWER_VALUE,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Upper Value feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addUpperValuePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_RangeIndicator_upperValue_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_RangeIndicator_upperValue_feature", "_UI_RangeIndicator_type"),
+                 IndicatorsPackage.Literals.RANGE_INDICATOR__UPPER_VALUE,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
     }
 
     /**
@@ -84,7 +134,7 @@ public class RangeIndicatorItemProvider
                  true,
                  false,
                  false,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
                  null,
                  null));
     }
@@ -103,43 +153,12 @@ public class RangeIndicatorItemProvider
                  getString("_UI_RangeIndicator_range_feature"),
                  getString("_UI_PropertyDescriptor_description", "_UI_RangeIndicator_range_feature", "_UI_RangeIndicator_type"),
                  IndicatorsPackage.Literals.RANGE_INDICATOR__RANGE,
-                 false,
+                 true,
                  false,
                  false,
                  ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
                  null,
                  null));
-    }
-
-    /**
-     * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
-     * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
-        if (childrenFeatures == null) {
-            super.getChildrenFeatures(object);
-            childrenFeatures.add(IndicatorsPackage.Literals.RANGE_INDICATOR__LOWER_VALUE);
-            childrenFeatures.add(IndicatorsPackage.Literals.RANGE_INDICATOR__UPPER_VALUE);
-        }
-        return childrenFeatures;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    protected EStructuralFeature getChildFeature(Object object, Object child) {
-        // Check the type of the specified child object and return the proper feature to use for
-        // adding (see {@link AddCommand}) it as a child.
-
-        return super.getChildFeature(object, child);
     }
 
     /**
@@ -183,10 +202,6 @@ public class RangeIndicatorItemProvider
             case IndicatorsPackage.RANGE_INDICATOR__RANGE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
-            case IndicatorsPackage.RANGE_INDICATOR__LOWER_VALUE:
-            case IndicatorsPackage.RANGE_INDICATOR__UPPER_VALUE:
-                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
-                return;
         }
         super.notifyChanged(notification);
     }
@@ -201,26 +216,6 @@ public class RangeIndicatorItemProvider
     @Override
     protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
-
-        newChildDescriptors.add
-            (createChildParameter
-                (IndicatorsPackage.Literals.RANGE_INDICATOR__LOWER_VALUE,
-                 IndicatorsFactory.eINSTANCE.createMinValueIndicator()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (IndicatorsPackage.Literals.RANGE_INDICATOR__LOWER_VALUE,
-                 IndicatorsFactory.eINSTANCE.createLowerQuartileIndicator()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (IndicatorsPackage.Literals.RANGE_INDICATOR__UPPER_VALUE,
-                 IndicatorsFactory.eINSTANCE.createMaxValueIndicator()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (IndicatorsPackage.Literals.RANGE_INDICATOR__UPPER_VALUE,
-                 IndicatorsFactory.eINSTANCE.createUpperQuartileIndicator()));
     }
 
 }

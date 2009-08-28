@@ -12,8 +12,11 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -24,10 +27,13 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+
 import org.talend.dataquality.analysis.AnalysisType;
+
 import org.talend.dataquality.analysis.category.AnalysisCategory;
 import org.talend.dataquality.analysis.category.CategoryFactory;
 import org.talend.dataquality.analysis.category.CategoryPackage;
+
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
 /**
