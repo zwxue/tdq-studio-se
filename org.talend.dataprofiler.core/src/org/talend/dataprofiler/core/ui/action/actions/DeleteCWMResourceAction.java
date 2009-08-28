@@ -101,6 +101,7 @@ public class DeleteCWMResourceAction extends Action {
         delRelatedResource(isDeleteContent, resources);
         EObjectHelper.removeDependencys(resources);
 
+
         // refresh the parent resource in order to avoid unsynchronized resources
         for (IResource res : resources) {
             try {
@@ -119,6 +120,8 @@ public class DeleteCWMResourceAction extends Action {
 
         CorePlugin.getDefault().refreshDQView();
     }
+
+
 
     public boolean isFilesDeleted() {
         return isDeleteContent;
@@ -205,8 +208,7 @@ public class DeleteCWMResourceAction extends Action {
                 TypedReturnCode<TdDataProvider> findProvider = PrvResourceFileHelper.getInstance().findProvider(
                         (IFile) selectedResource);
                 TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(findProvider.getObject());
-                EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(
-                        softwareSystem);
+                EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(softwareSystem);
                 EMFSharedResources.getInstance().saveSoftwareDeploymentResource();
 
                 // remove the alias from SQL Plugin

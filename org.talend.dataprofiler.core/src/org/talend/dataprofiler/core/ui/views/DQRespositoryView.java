@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -73,6 +74,7 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
+import org.talend.dataprofiler.core.ui.ResoureceChangedListener;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditorInput;
@@ -124,6 +126,13 @@ public class DQRespositoryView extends CommonNavigator {
         CorePlugin.getDefault().setRespositoryView(this);
         // MOD mzhao bug 8581 Add pre window close listener.
         addPostWindowCloseListener();
+        // MOD mzhao bug 7488 ,Add resource changed listener.
+        addResourceChangedListener();
+    }
+
+    private void addResourceChangedListener() {
+        IWorkspace workspace = ResourceManager.getRootProject().getWorkspace();
+        workspace.addResourceChangeListener(new ResoureceChangedListener());
     }
 
     /**

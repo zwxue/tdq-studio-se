@@ -20,7 +20,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.indicators.sql.SqlFactory;
+import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -35,7 +35,7 @@ public final class UDIFactory {
     }
 
     public static Indicator createUserDefIndicator(IndicatorDefinition indicatorDefinition) {
-        UserDefIndicator userDefIndicator = SqlFactory.eINSTANCE.createUserDefIndicator();
+        UserDefIndicator userDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
         IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         userDefIndicator.setParameters(indicParams);
         userDefIndicator.setName(indicatorDefinition.getName());
@@ -72,7 +72,7 @@ public final class UDIFactory {
      * @return
      */
     public static Indicator createUserDefIndicator(IndicatorDefinition indicatorDefinition, Pattern pattern) {
-        UserDefIndicator indicator = SqlFactory.eINSTANCE.createUserDefIndicator();
+        UserDefIndicator indicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
         IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         Domain validData = DomainFactory.eINSTANCE.createDomain();
         validData.getPatterns().add(pattern);
