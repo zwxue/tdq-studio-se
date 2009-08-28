@@ -35,7 +35,7 @@ import org.talend.dataquality.indicators.Indicator;
  * </ul>
  * </p>
  *
- * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator()
+ * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator()
  * @model
  * @generated
  */
@@ -50,7 +50,7 @@ public interface UserDefIndicator extends Indicator {
      * <!-- end-model-doc -->
      * @return the value of the '<em>User Count</em>' attribute.
      * @see #setUserCount(Long)
-     * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator_UserCount()
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_UserCount()
      * @model
      * @generated
      */
@@ -76,7 +76,7 @@ public interface UserDefIndicator extends Indicator {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Matching Value Count</em>' attribute.
      * @see #setMatchingValueCount(Long)
-     * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator_MatchingValueCount()
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_MatchingValueCount()
      * @model
      * @generated
      */
@@ -102,7 +102,7 @@ public interface UserDefIndicator extends Indicator {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Not Matching Value Count</em>' attribute.
      * @see #setNotMatchingValueCount(Long)
-     * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator_NotMatchingValueCount()
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_NotMatchingValueCount()
      * @model
      * @generated
      */
@@ -128,7 +128,7 @@ public interface UserDefIndicator extends Indicator {
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Unique Values</em>' attribute list.
-     * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator_UniqueValues()
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_UniqueValues()
      * @model
      * @generated
      */
@@ -144,7 +144,7 @@ public interface UserDefIndicator extends Indicator {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Distinct Value Count</em>' attribute.
      * @see #setDistinctValueCount(Long)
-     * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator_DistinctValueCount()
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_DistinctValueCount()
      * @model
      * @generated
      */
@@ -170,7 +170,7 @@ public interface UserDefIndicator extends Indicator {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Unique Value Count</em>' attribute.
      * @see #setUniqueValueCount(Long)
-     * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator_UniqueValueCount()
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_UniqueValueCount()
      * @model
      * @generated
      */
@@ -195,7 +195,7 @@ public interface UserDefIndicator extends Indicator {
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Duplicate Value Count</em>' attribute.
-     * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator_DuplicateValueCount()
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_DuplicateValueCount()
      * @model transient="true" changeable="false" volatile="true"
      * @generated
      */
@@ -211,7 +211,7 @@ public interface UserDefIndicator extends Indicator {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Value To Freq</em>' attribute.
      * @see #setValueToFreq(HashMap)
-     * @see org.talend.dataquality.indicators.sql.SqlPackage#getUserDefIndicator_ValueToFreq()
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_ValueToFreq()
      * @model dataType="org.talend.dataquality.indicators.JavaHashMap"
      * @generated
      */

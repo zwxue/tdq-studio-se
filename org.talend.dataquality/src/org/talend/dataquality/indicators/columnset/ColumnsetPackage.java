@@ -162,13 +162,13 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMNS_COMPARE_INDICATOR__DOCUMENT = IndicatorsPackage.MATCHING_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COLUMNS_COMPARE_INDICATOR__DESCRIPTIONS = IndicatorsPackage.MATCHING_INDICATOR__DESCRIPTIONS;
+    int COLUMNS_COMPARE_INDICATOR__DESCRIPTION = IndicatorsPackage.MATCHING_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -470,13 +470,13 @@ public interface ColumnsetPackage extends EPackage {
     int VALUE_MATCHING_INDICATOR__DOCUMENT = COLUMNS_COMPARE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VALUE_MATCHING_INDICATOR__DESCRIPTIONS = COLUMNS_COMPARE_INDICATOR__DESCRIPTIONS;
+    int VALUE_MATCHING_INDICATOR__DESCRIPTION = COLUMNS_COMPARE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -777,13 +777,13 @@ public interface ColumnsetPackage extends EPackage {
     int ROW_MATCHING_INDICATOR__DOCUMENT = COLUMNS_COMPARE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ROW_MATCHING_INDICATOR__DESCRIPTIONS = COLUMNS_COMPARE_INDICATOR__DESCRIPTIONS;
+    int ROW_MATCHING_INDICATOR__DESCRIPTION = COLUMNS_COMPARE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1085,13 +1085,13 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMN_SET_MULTI_VALUE_INDICATOR__DOCUMENT = IndicatorsPackage.COMPOSITE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTIONS = IndicatorsPackage.COMPOSITE_INDICATOR__DESCRIPTIONS;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTION = IndicatorsPackage.COMPOSITE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1456,13 +1456,13 @@ public interface ColumnsetPackage extends EPackage {
     int COUNT_AVG_NULL_INDICATOR__DOCUMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COUNT_AVG_NULL_INDICATOR__DESCRIPTIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTIONS;
+    int COUNT_AVG_NULL_INDICATOR__DESCRIPTION = COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1826,13 +1826,13 @@ public interface ColumnsetPackage extends EPackage {
     int MIN_MAX_DATE_INDICATOR__DOCUMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MIN_MAX_DATE_INDICATOR__DESCRIPTIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTIONS;
+    int MIN_MAX_DATE_INDICATOR__DESCRIPTION = COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2196,13 +2196,13 @@ public interface ColumnsetPackage extends EPackage {
     int WEAK_CORRELATION_INDICATOR__DOCUMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WEAK_CORRELATION_INDICATOR__DESCRIPTIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTIONS;
+    int WEAK_CORRELATION_INDICATOR__DESCRIPTION = COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2566,13 +2566,13 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMN_DEPENDENCY_INDICATOR__DOCUMENT = IndicatorsPackage.INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COLUMN_DEPENDENCY_INDICATOR__DESCRIPTIONS = IndicatorsPackage.INDICATOR__DESCRIPTIONS;
+    int COLUMN_DEPENDENCY_INDICATOR__DESCRIPTION = IndicatorsPackage.INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

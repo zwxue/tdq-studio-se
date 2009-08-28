@@ -22,7 +22,7 @@ import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl;
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
-import org.talend.dataquality.indicators.sql.SqlPackage;
+import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 
 /**
@@ -233,7 +233,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      */
     @Override
     protected EClass eStaticClass() {
-        return SqlPackage.Literals.USER_DEF_INDICATOR;
+        return IndicatorSqlPackage.Literals.USER_DEF_INDICATOR;
     }
 
     /**
@@ -252,7 +252,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         Long oldUserCount = userCount;
         userCount = newUserCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SqlPackage.USER_DEF_INDICATOR__USER_COUNT, oldUserCount, userCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT, oldUserCount, userCount));
     }
 
     /**
@@ -271,7 +271,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         Long oldMatchingValueCount = matchingValueCount;
         matchingValueCount = newMatchingValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
     }
 
     /**
@@ -290,7 +290,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         Long oldNotMatchingValueCount = notMatchingValueCount;
         notMatchingValueCount = newNotMatchingValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount, notMatchingValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount, notMatchingValueCount));
     }
 
     /**
@@ -299,7 +299,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      */
     public EList<Object> getUniqueValues() {
         if (uniqueValues == null) {
-            uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this, SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES);
+            uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this, IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES);
         }
         return uniqueValues;
     }
@@ -320,7 +320,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         Long oldDistinctValueCount = distinctValueCount;
         distinctValueCount = newDistinctValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT, oldDistinctValueCount, distinctValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT, oldDistinctValueCount, distinctValueCount));
     }
 
     /**
@@ -339,7 +339,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         Long oldUniqueValueCount = uniqueValueCount;
         uniqueValueCount = newUniqueValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT, oldUniqueValueCount, uniqueValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT, oldUniqueValueCount, uniqueValueCount));
     }
 
     /**
@@ -367,7 +367,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         HashMap<Object, Long> oldValueToFreq = valueToFreq;
         valueToFreq = newValueToFreq;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ, oldValueToFreq, valueToFreq));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ, oldValueToFreq, valueToFreq));
     }
 
     /**
@@ -419,21 +419,21 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case SqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
                 return getUserCount();
-            case SqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
                 return getMatchingValueCount();
-            case SqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
                 return getNotMatchingValueCount();
-            case SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
                 return getUniqueValues();
-            case SqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
                 return getDistinctValueCount();
-            case SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
                 return getUniqueValueCount();
-            case SqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
                 return getDuplicateValueCount();
-            case SqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 return getValueToFreq();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -447,26 +447,26 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case SqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
                 setUserCount((Long)newValue);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
                 setMatchingValueCount((Long)newValue);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
                 setNotMatchingValueCount((Long)newValue);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
                 getUniqueValues().clear();
                 getUniqueValues().addAll((Collection<? extends Object>)newValue);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
                 setDistinctValueCount((Long)newValue);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
                 setUniqueValueCount((Long)newValue);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 setValueToFreq((HashMap<Object, Long>)newValue);
                 return;
         }
@@ -480,25 +480,25 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case SqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
                 setUserCount(USER_COUNT_EDEFAULT);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
                 setMatchingValueCount(MATCHING_VALUE_COUNT_EDEFAULT);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
                 setNotMatchingValueCount(NOT_MATCHING_VALUE_COUNT_EDEFAULT);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
                 getUniqueValues().clear();
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
                 setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
                 setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
                 return;
-            case SqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 setValueToFreq(VALUE_TO_FREQ_EDEFAULT);
                 return;
         }
@@ -512,21 +512,21 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case SqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
                 return USER_COUNT_EDEFAULT == null ? userCount != null : !USER_COUNT_EDEFAULT.equals(userCount);
-            case SqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
                 return MATCHING_VALUE_COUNT_EDEFAULT == null ? matchingValueCount != null : !MATCHING_VALUE_COUNT_EDEFAULT.equals(matchingValueCount);
-            case SqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
                 return NOT_MATCHING_VALUE_COUNT_EDEFAULT == null ? notMatchingValueCount != null : !NOT_MATCHING_VALUE_COUNT_EDEFAULT.equals(notMatchingValueCount);
-            case SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
                 return uniqueValues != null && !uniqueValues.isEmpty();
-            case SqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
                 return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT.equals(distinctValueCount);
-            case SqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
                 return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT.equals(uniqueValueCount);
-            case SqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
                 return DUPLICATE_VALUE_COUNT_EDEFAULT == null ? getDuplicateValueCount() != null : !DUPLICATE_VALUE_COUNT_EDEFAULT.equals(getDuplicateValueCount());
-            case SqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 return VALUE_TO_FREQ_EDEFAULT == null ? valueToFreq != null : !VALUE_TO_FREQ_EDEFAULT.equals(valueToFreq);
         }
         return super.eIsSet(featureID);

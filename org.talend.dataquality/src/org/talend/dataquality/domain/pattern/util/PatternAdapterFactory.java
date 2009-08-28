@@ -10,6 +10,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.dataquality.domain.pattern.*;
 import org.talend.dataquality.domain.pattern.AttributeReference;
 import org.talend.dataquality.domain.pattern.ComponentReference;
 import org.talend.dataquality.domain.pattern.Pattern;

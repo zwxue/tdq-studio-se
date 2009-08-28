@@ -30,8 +30,6 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
-import org.talend.dataquality.indicators.sql.SqlFactory;
-import org.talend.dataquality.indicators.sql.SqlPackage;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.rules.RulesFactory;
@@ -117,7 +115,6 @@ public final class FactoriesUtil {
         IndicatorsFactory.eINSTANCE.getIndicatorsPackage();
         ReportsFactory.eINSTANCE.getReportsPackage();
         DefinitionFactory.eINSTANCE.getDefinitionPackage();
-        SqlFactory.eINSTANCE.getSqlPackage();
 
         PatternFactory.eINSTANCE.getEPackage();
         CategoryFactory.eINSTANCE.getEPackage();
@@ -155,7 +152,6 @@ public final class FactoriesUtil {
         extensions.add(CategoryPackage.eNAME);
         extensions.add(ReportsPackage.eNAME);
         extensions.add(DefinitionPackage.eNAME);
-        extensions.add(SqlPackage.eNAME);
 
         // --- add specific extensions
         extensions.add(PROV);
@@ -190,7 +186,6 @@ public final class FactoriesUtil {
         org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE.getEFactoryInstance();
         org.talend.dataquality.reports.ReportsPackage.eINSTANCE.getEFactoryInstance();
         DefinitionPackage.eINSTANCE.getEFactoryInstance();
-        SqlPackage.eINSTANCE.getEFactoryInstance();
 
         // CWM generated packages
         // TODO scorreia add other packages

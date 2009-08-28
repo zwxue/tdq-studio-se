@@ -22,11 +22,11 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  *   <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * @see org.talend.dataquality.indicators.sql.SqlFactory
+ * @see org.talend.dataquality.indicators.sql.IndicatorSqlFactory
  * @model kind="package"
  * @generated
  */
-public interface SqlPackage extends EPackage {
+public interface IndicatorSqlPackage extends EPackage {
     /**
      * The package name.
      * <!-- begin-user-doc -->
@@ -57,14 +57,14 @@ public interface SqlPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    SqlPackage eINSTANCE = org.talend.dataquality.indicators.sql.impl.SqlPackageImpl.init();
+    IndicatorSqlPackage eINSTANCE = org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl.init();
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl <em>User Def Indicator</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl
-     * @see org.talend.dataquality.indicators.sql.impl.SqlPackageImpl#getUserDefIndicator()
+     * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getUserDefIndicator()
      * @generated
      */
     int USER_DEF_INDICATOR = 0;
@@ -160,13 +160,13 @@ public interface SqlPackage extends EPackage {
     int USER_DEF_INDICATOR__DOCUMENT = IndicatorsPackage.INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int USER_DEF_INDICATOR__DESCRIPTIONS = IndicatorsPackage.INDICATOR__DESCRIPTIONS;
+    int USER_DEF_INDICATOR__DESCRIPTION = IndicatorsPackage.INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -407,7 +407,7 @@ public interface SqlPackage extends EPackage {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl
-     * @see org.talend.dataquality.indicators.sql.impl.SqlPackageImpl#getWhereRuleIndicator()
+     * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getWhereRuleIndicator()
      * @generated
      */
     int WHERE_RULE_INDICATOR = 1;
@@ -503,13 +503,13 @@ public interface SqlPackage extends EPackage {
     int WHERE_RULE_INDICATOR__DOCUMENT = USER_DEF_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WHERE_RULE_INDICATOR__DESCRIPTIONS = USER_DEF_INDICATOR__DESCRIPTIONS;
+    int WHERE_RULE_INDICATOR__DESCRIPTION = USER_DEF_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -861,7 +861,7 @@ public interface SqlPackage extends EPackage {
      * @return the factory that creates the instances of the model.
      * @generated
      */
-    SqlFactory getSqlFactory();
+    IndicatorSqlFactory getIndicatorSqlFactory();
 
     /**
      * <!-- begin-user-doc -->
@@ -881,7 +881,7 @@ public interface SqlPackage extends EPackage {
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @see org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl
-         * @see org.talend.dataquality.indicators.sql.impl.SqlPackageImpl#getUserDefIndicator()
+         * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getUserDefIndicator()
          * @generated
          */
         EClass USER_DEF_INDICATOR = eINSTANCE.getUserDefIndicator();
@@ -955,11 +955,11 @@ public interface SqlPackage extends EPackage {
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @see org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl
-         * @see org.talend.dataquality.indicators.sql.impl.SqlPackageImpl#getWhereRuleIndicator()
+         * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getWhereRuleIndicator()
          * @generated
          */
         EClass WHERE_RULE_INDICATOR = eINSTANCE.getWhereRuleIndicator();
 
     }
 
-} //SqlPackage
+} //IndicatorSqlPackage

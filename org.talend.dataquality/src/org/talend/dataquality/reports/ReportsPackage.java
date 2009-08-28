@@ -162,13 +162,13 @@ public interface ReportsPackage extends EPackage {
     int TD_REPORT__DOCUMENT = InformationreportingPackage.REPORT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_REPORT__DESCRIPTIONS = InformationreportingPackage.REPORT__DESCRIPTIONS;
+    int TD_REPORT__DESCRIPTION = InformationreportingPackage.REPORT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -686,13 +686,13 @@ public interface ReportsPackage extends EPackage {
     int PRESENTATION_PARAMETER__DOCUMENT = InformationvisualizationPackage.RENDERING__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PRESENTATION_PARAMETER__DESCRIPTIONS = InformationvisualizationPackage.RENDERING__DESCRIPTIONS;
+    int PRESENTATION_PARAMETER__DESCRIPTION = InformationvisualizationPackage.RENDERING__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

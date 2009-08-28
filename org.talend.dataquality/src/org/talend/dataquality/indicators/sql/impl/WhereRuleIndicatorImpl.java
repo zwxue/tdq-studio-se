@@ -8,7 +8,7 @@ package org.talend.dataquality.indicators.sql.impl;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
-import org.talend.dataquality.indicators.sql.SqlPackage;
+import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 
 /**
@@ -35,7 +35,7 @@ public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements Wher
      */
     @Override
     protected EClass eStaticClass() {
-        return SqlPackage.Literals.WHERE_RULE_INDICATOR;
+        return IndicatorSqlPackage.Literals.WHERE_RULE_INDICATOR;
     }
 
     /*

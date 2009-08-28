@@ -11,8 +11,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.talend.dataquality.indicators.sql.SqlFactory;
-import org.talend.dataquality.indicators.sql.SqlPackage;
+import org.talend.dataquality.indicators.sql.*;
+import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 
@@ -22,24 +23,24 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
  * <!-- end-user-doc -->
  * @generated
  */
-public class SqlFactoryImpl extends EFactoryImpl implements SqlFactory {
+public class IndicatorSqlFactoryImpl extends EFactoryImpl implements IndicatorSqlFactory {
     /**
      * Creates the default factory implementation.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    public static SqlFactory init() {
+    public static IndicatorSqlFactory init() {
         try {
-            SqlFactory theSqlFactory = (SqlFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.sql"); 
-            if (theSqlFactory != null) {
-                return theSqlFactory;
+            IndicatorSqlFactory theIndicatorSqlFactory = (IndicatorSqlFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.sql"); 
+            if (theIndicatorSqlFactory != null) {
+                return theIndicatorSqlFactory;
             }
         }
         catch (Exception exception) {
             EcorePlugin.INSTANCE.log(exception);
         }
-        return new SqlFactoryImpl();
+        return new IndicatorSqlFactoryImpl();
     }
 
     /**
@@ -48,7 +49,7 @@ public class SqlFactoryImpl extends EFactoryImpl implements SqlFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    public SqlFactoryImpl() {
+    public IndicatorSqlFactoryImpl() {
         super();
     }
 
@@ -60,8 +61,8 @@ public class SqlFactoryImpl extends EFactoryImpl implements SqlFactory {
     @Override
     public EObject create(EClass eClass) {
         switch (eClass.getClassifierID()) {
-            case SqlPackage.USER_DEF_INDICATOR: return createUserDefIndicator();
-            case SqlPackage.WHERE_RULE_INDICATOR: return createWhereRuleIndicator();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR: return createUserDefIndicator();
+            case IndicatorSqlPackage.WHERE_RULE_INDICATOR: return createWhereRuleIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -92,8 +93,8 @@ public class SqlFactoryImpl extends EFactoryImpl implements SqlFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    public SqlPackage getSqlPackage() {
-        return (SqlPackage)getEPackage();
+    public IndicatorSqlPackage getIndicatorSqlPackage() {
+        return (IndicatorSqlPackage)getEPackage();
     }
 
     /**
@@ -103,8 +104,8 @@ public class SqlFactoryImpl extends EFactoryImpl implements SqlFactory {
      * @generated
      */
     @Deprecated
-    public static SqlPackage getPackage() {
-        return SqlPackage.eINSTANCE;
+    public static IndicatorSqlPackage getPackage() {
+        return IndicatorSqlPackage.eINSTANCE;
     }
 
-} //SqlFactoryImpl
+} //IndicatorSqlFactoryImpl

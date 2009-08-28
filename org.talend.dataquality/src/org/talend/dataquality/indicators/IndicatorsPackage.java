@@ -163,13 +163,13 @@ public interface IndicatorsPackage extends EPackage {
     int INDICATOR__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDICATOR__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
+    int INDICATOR__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -434,13 +434,13 @@ public interface IndicatorsPackage extends EPackage {
     int ROW_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ROW_COUNT_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int ROW_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -715,13 +715,13 @@ public interface IndicatorsPackage extends EPackage {
     int SUM_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SUM_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int SUM_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -994,13 +994,13 @@ public interface IndicatorsPackage extends EPackage {
     int MEAN_INDICATOR__DOCUMENT = SUM_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEAN_INDICATOR__DESCRIPTIONS = SUM_INDICATOR__DESCRIPTIONS;
+    int MEAN_INDICATOR__DESCRIPTION = SUM_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1283,13 +1283,13 @@ public interface IndicatorsPackage extends EPackage {
     int COMPOSITE_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COMPOSITE_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int COMPOSITE_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1554,13 +1554,13 @@ public interface IndicatorsPackage extends EPackage {
     int RANGE_INDICATOR__DOCUMENT = COMPOSITE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RANGE_INDICATOR__DESCRIPTIONS = COMPOSITE_INDICATOR__DESCRIPTIONS;
+    int RANGE_INDICATOR__DESCRIPTION = COMPOSITE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1861,13 +1861,13 @@ public interface IndicatorsPackage extends EPackage {
     int BOX_INDICATOR__DOCUMENT = COMPOSITE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int BOX_INDICATOR__DESCRIPTIONS = COMPOSITE_INDICATOR__DESCRIPTIONS;
+    int BOX_INDICATOR__DESCRIPTION = COMPOSITE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2168,13 +2168,13 @@ public interface IndicatorsPackage extends EPackage {
     int FREQUENCY_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FREQUENCY_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int FREQUENCY_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2494,13 +2494,13 @@ public interface IndicatorsPackage extends EPackage {
     int BLANK_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int BLANK_COUNT_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int BLANK_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2847,13 +2847,13 @@ public interface IndicatorsPackage extends EPackage {
     int MEDIAN_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEDIAN_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int MEDIAN_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3145,13 +3145,13 @@ public interface IndicatorsPackage extends EPackage {
     int VALUE_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VALUE_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int VALUE_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3434,13 +3434,13 @@ public interface IndicatorsPackage extends EPackage {
     int MIN_VALUE_INDICATOR__DOCUMENT = VALUE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MIN_VALUE_INDICATOR__DESCRIPTIONS = VALUE_INDICATOR__DESCRIPTIONS;
+    int MIN_VALUE_INDICATOR__DESCRIPTION = VALUE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3723,13 +3723,13 @@ public interface IndicatorsPackage extends EPackage {
     int MAX_VALUE_INDICATOR__DOCUMENT = VALUE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MAX_VALUE_INDICATOR__DESCRIPTIONS = VALUE_INDICATOR__DESCRIPTIONS;
+    int MAX_VALUE_INDICATOR__DESCRIPTION = VALUE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4012,13 +4012,13 @@ public interface IndicatorsPackage extends EPackage {
     int MODE_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int MODE_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4292,13 +4292,13 @@ public interface IndicatorsPackage extends EPackage {
     int NULL_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int NULL_COUNT_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int NULL_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4563,13 +4563,13 @@ public interface IndicatorsPackage extends EPackage {
     int DISTINCT_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DISTINCT_COUNT_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int DISTINCT_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4843,13 +4843,13 @@ public interface IndicatorsPackage extends EPackage {
     int UNIQUE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int UNIQUE_COUNT_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int UNIQUE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5123,13 +5123,13 @@ public interface IndicatorsPackage extends EPackage {
     int DUPLICATE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DUPLICATE_COUNT_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int DUPLICATE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5403,13 +5403,13 @@ public interface IndicatorsPackage extends EPackage {
     int IQR_INDICATOR__DOCUMENT = RANGE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int IQR_INDICATOR__DESCRIPTIONS = RANGE_INDICATOR__DESCRIPTIONS;
+    int IQR_INDICATOR__DESCRIPTION = RANGE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5700,13 +5700,13 @@ public interface IndicatorsPackage extends EPackage {
     int TEXT_INDICATOR__DOCUMENT = COMPOSITE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TEXT_INDICATOR__DESCRIPTIONS = COMPOSITE_INDICATOR__DESCRIPTIONS;
+    int TEXT_INDICATOR__DESCRIPTION = COMPOSITE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5998,13 +5998,13 @@ public interface IndicatorsPackage extends EPackage {
     int LENGTH_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LENGTH_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int LENGTH_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6278,13 +6278,13 @@ public interface IndicatorsPackage extends EPackage {
     int MIN_LENGTH_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MIN_LENGTH_INDICATOR__DESCRIPTIONS = LENGTH_INDICATOR__DESCRIPTIONS;
+    int MIN_LENGTH_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6558,13 +6558,13 @@ public interface IndicatorsPackage extends EPackage {
     int MAX_LENGTH_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_INDICATOR__DESCRIPTIONS = LENGTH_INDICATOR__DESCRIPTIONS;
+    int MAX_LENGTH_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6838,13 +6838,13 @@ public interface IndicatorsPackage extends EPackage {
     int AVERAGE_LENGTH_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int AVERAGE_LENGTH_INDICATOR__DESCRIPTIONS = LENGTH_INDICATOR__DESCRIPTIONS;
+    int AVERAGE_LENGTH_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7200,13 +7200,13 @@ public interface IndicatorsPackage extends EPackage {
     int LOWER_QUARTILE_INDICATOR__DOCUMENT = MIN_VALUE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LOWER_QUARTILE_INDICATOR__DESCRIPTIONS = MIN_VALUE_INDICATOR__DESCRIPTIONS;
+    int LOWER_QUARTILE_INDICATOR__DESCRIPTION = MIN_VALUE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7489,13 +7489,13 @@ public interface IndicatorsPackage extends EPackage {
     int UPPER_QUARTILE_INDICATOR__DOCUMENT = MAX_VALUE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int UPPER_QUARTILE_INDICATOR__DESCRIPTIONS = MAX_VALUE_INDICATOR__DESCRIPTIONS;
+    int UPPER_QUARTILE_INDICATOR__DESCRIPTION = MAX_VALUE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7778,13 +7778,13 @@ public interface IndicatorsPackage extends EPackage {
     int COUNTS_INDICATOR__DOCUMENT = COMPOSITE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COUNTS_INDICATOR__DESCRIPTIONS = COMPOSITE_INDICATOR__DESCRIPTIONS;
+    int COUNTS_INDICATOR__DESCRIPTION = COMPOSITE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -8140,13 +8140,13 @@ public interface IndicatorsPackage extends EPackage {
     int MATCHING_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MATCHING_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int MATCHING_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -8429,13 +8429,13 @@ public interface IndicatorsPackage extends EPackage {
     int PATTERN_MATCHING_INDICATOR__DOCUMENT = MATCHING_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__DESCRIPTIONS = MATCHING_INDICATOR__DESCRIPTIONS;
+    int PATTERN_MATCHING_INDICATOR__DESCRIPTION = MATCHING_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -8718,13 +8718,13 @@ public interface IndicatorsPackage extends EPackage {
     int SQL_PATTERN_MATCHING_INDICATOR__DOCUMENT = PATTERN_MATCHING_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_PATTERN_MATCHING_INDICATOR__DESCRIPTIONS = PATTERN_MATCHING_INDICATOR__DESCRIPTIONS;
+    int SQL_PATTERN_MATCHING_INDICATOR__DESCRIPTION = PATTERN_MATCHING_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -9007,13 +9007,13 @@ public interface IndicatorsPackage extends EPackage {
     int REGEXP_MATCHING_INDICATOR__DOCUMENT = PATTERN_MATCHING_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REGEXP_MATCHING_INDICATOR__DESCRIPTIONS = PATTERN_MATCHING_INDICATOR__DESCRIPTIONS;
+    int REGEXP_MATCHING_INDICATOR__DESCRIPTION = PATTERN_MATCHING_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -9296,13 +9296,13 @@ public interface IndicatorsPackage extends EPackage {
     int LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LOW_FREQUENCY_INDICATOR__DESCRIPTIONS = FREQUENCY_INDICATOR__DESCRIPTIONS;
+    int LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -9612,13 +9612,13 @@ public interface IndicatorsPackage extends EPackage {
     int PATTERN_FREQ_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PATTERN_FREQ_INDICATOR__DESCRIPTIONS = FREQUENCY_INDICATOR__DESCRIPTIONS;
+    int PATTERN_FREQ_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -9928,13 +9928,13 @@ public interface IndicatorsPackage extends EPackage {
     int PATTERN_LOW_FREQ_INDICATOR__DOCUMENT = LOW_FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PATTERN_LOW_FREQ_INDICATOR__DESCRIPTIONS = LOW_FREQUENCY_INDICATOR__DESCRIPTIONS;
+    int PATTERN_LOW_FREQ_INDICATOR__DESCRIPTION = LOW_FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -10244,13 +10244,13 @@ public interface IndicatorsPackage extends EPackage {
     int DEF_VALUE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DEF_VALUE_COUNT_INDICATOR__DESCRIPTIONS = INDICATOR__DESCRIPTIONS;
+    int DEF_VALUE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -10524,13 +10524,13 @@ public interface IndicatorsPackage extends EPackage {
     int SOUNDEX_FREQ_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SOUNDEX_FREQ_INDICATOR__DESCRIPTIONS = FREQUENCY_INDICATOR__DESCRIPTIONS;
+    int SOUNDEX_FREQ_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -10849,13 +10849,13 @@ public interface IndicatorsPackage extends EPackage {
     int SOUNDEX_LOW_FREQ_INDICATOR__DOCUMENT = SOUNDEX_FREQ_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SOUNDEX_LOW_FREQ_INDICATOR__DESCRIPTIONS = SOUNDEX_FREQ_INDICATOR__DESCRIPTIONS;
+    int SOUNDEX_LOW_FREQ_INDICATOR__DESCRIPTION = SOUNDEX_FREQ_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

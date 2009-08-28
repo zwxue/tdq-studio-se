@@ -72,7 +72,7 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
      * @generated
      * @ordered
      */
-    protected static final Integer DATATYPE_EDEFAULT = null;
+    protected static final int DATATYPE_EDEFAULT = 0;
 
     /**
      * The cached value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
@@ -82,7 +82,7 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
      * @generated
      * @ordered
      */
-    protected Integer datatype = DATATYPE_EDEFAULT;
+    protected int datatype = DATATYPE_EDEFAULT;
 
     /**
      * The default value of the '{@link #getRange() <em>Range</em>}' attribute.
@@ -195,16 +195,17 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public Integer getDatatype() {
+    public int getDatatype() {
         return datatype;
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-    public void setDatatype(Integer newDatatype) {
-        Integer oldDatatype = datatype;
+    public void setDatatype(int newDatatype) {
+        int oldDatatype = datatype;
         datatype = newDatatype;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.RANGE_INDICATOR__DATATYPE, oldDatatype, datatype));
@@ -271,7 +272,7 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
             case IndicatorsPackage.RANGE_INDICATOR__UPPER_VALUE:
                 return getUpperValue();
             case IndicatorsPackage.RANGE_INDICATOR__DATATYPE:
-                return getDatatype();
+                return new Integer(getDatatype());
             case IndicatorsPackage.RANGE_INDICATOR__RANGE:
                 return getRange();
         }
@@ -292,7 +293,7 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
                 setUpperValue((MaxValueIndicator)newValue);
                 return;
             case IndicatorsPackage.RANGE_INDICATOR__DATATYPE:
-                setDatatype((Integer)newValue);
+                setDatatype(((Integer)newValue).intValue());
                 return;
         }
         super.eSet(featureID, newValue);
@@ -330,7 +331,7 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
             case IndicatorsPackage.RANGE_INDICATOR__UPPER_VALUE:
                 return upperValue != null;
             case IndicatorsPackage.RANGE_INDICATOR__DATATYPE:
-                return DATATYPE_EDEFAULT == null ? datatype != null : !DATATYPE_EDEFAULT.equals(datatype);
+                return datatype != DATATYPE_EDEFAULT;
             case IndicatorsPackage.RANGE_INDICATOR__RANGE:
                 return RANGE_EDEFAULT == null ? getRange() != null : !RANGE_EDEFAULT.equals(getRange());
         }

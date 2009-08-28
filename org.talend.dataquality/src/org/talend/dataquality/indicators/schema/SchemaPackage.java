@@ -161,13 +161,13 @@ public interface SchemaPackage extends EPackage {
     int SCHEMA_INDICATOR__DOCUMENT = IndicatorsPackage.COMPOSITE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEMA_INDICATOR__DESCRIPTIONS = IndicatorsPackage.COMPOSITE_INDICATOR__DESCRIPTIONS;
+    int SCHEMA_INDICATOR__DESCRIPTION = IndicatorsPackage.COMPOSITE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -544,13 +544,13 @@ public interface SchemaPackage extends EPackage {
     int ABSTRACT_TABLE_INDICATOR__DOCUMENT = IndicatorsPackage.INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ABSTRACT_TABLE_INDICATOR__DESCRIPTIONS = IndicatorsPackage.INDICATOR__DESCRIPTIONS;
+    int ABSTRACT_TABLE_INDICATOR__DESCRIPTION = IndicatorsPackage.INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -823,13 +823,13 @@ public interface SchemaPackage extends EPackage {
     int TABLE_INDICATOR__DOCUMENT = ABSTRACT_TABLE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TABLE_INDICATOR__DESCRIPTIONS = ABSTRACT_TABLE_INDICATOR__DESCRIPTIONS;
+    int TABLE_INDICATOR__DESCRIPTION = ABSTRACT_TABLE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1120,13 +1120,13 @@ public interface SchemaPackage extends EPackage {
     int CATALOG_INDICATOR__DOCUMENT = SCHEMA_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CATALOG_INDICATOR__DESCRIPTIONS = SCHEMA_INDICATOR__DESCRIPTIONS;
+    int CATALOG_INDICATOR__DESCRIPTION = SCHEMA_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1480,13 +1480,13 @@ public interface SchemaPackage extends EPackage {
     int CONNECTION_INDICATOR__DOCUMENT = CATALOG_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__DESCRIPTIONS = CATALOG_INDICATOR__DESCRIPTIONS;
+    int CONNECTION_INDICATOR__DESCRIPTION = CATALOG_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1868,13 +1868,13 @@ public interface SchemaPackage extends EPackage {
     int VIEW_INDICATOR__DOCUMENT = ABSTRACT_TABLE_INDICATOR__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
+     * The feature id for the '<em><b>Description</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VIEW_INDICATOR__DESCRIPTIONS = ABSTRACT_TABLE_INDICATOR__DESCRIPTIONS;
+    int VIEW_INDICATOR__DESCRIPTION = ABSTRACT_TABLE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

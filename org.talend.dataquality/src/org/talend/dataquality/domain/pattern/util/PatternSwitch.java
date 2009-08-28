@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.dataquality.domain.pattern.*;
 import org.talend.dataquality.domain.pattern.AttributeReference;
 import org.talend.dataquality.domain.pattern.ComponentReference;
 import org.talend.dataquality.domain.pattern.Pattern;
