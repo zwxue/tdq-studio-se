@@ -599,6 +599,11 @@ public class TdReportItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 DefinitionFactory.eINSTANCE.createCharactersMapping()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  IndicatorSqlFactory.eINSTANCE.createUserDefIndicator()));
 
         newChildDescriptors.add

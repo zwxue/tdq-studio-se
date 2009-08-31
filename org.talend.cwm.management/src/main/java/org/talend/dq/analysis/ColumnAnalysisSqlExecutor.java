@@ -60,6 +60,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -296,10 +297,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 // wrap column name into a function for pattern finder indicator
                 if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternFreqIndicator())
                         || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternLowFreqIndicator())) {
-                    // TODO scorreia get user defined functions for pattern finder
+                    // done scorreia: get user defined functions for pattern finder
                     // MOD xqliu 2009-07-01 bug 7818
                     if (!Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
-                        colName = dbms().getPatternFinderDefaultFunction(colName);
+                        final EList<CharactersMapping> charactersMapping = indicatorDefinition.getCharactersMapping();
+                        colName = dbms().getPatternFinderFunction(colName, charactersMapping);
+                        if (colName == null) { // no replacement found, try the default one
+                            colName = dbms().getPatternFinderDefaultFunction(colName);
+                        }
                     }
                     // ~
                 }

@@ -61,6 +61,17 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
                 + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9')"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    @Override
+    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
+        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
+        for (int i = 0; i < charsToReplace.length(); i++) {
+            final char charToReplace = charsToReplace.charAt(i);
+            final char replacement = replacementChars.charAt(i);
+            expression = replaceOneChar(expression, charToReplace, replacement);
+        }
+        return expression;
+    }
+
     /*
      * (non-Javadoc)
      * 

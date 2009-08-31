@@ -25,6 +25,7 @@ import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
@@ -98,6 +99,13 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
      * @generated
      */
     private EClass indicatorCategoryEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass charactersMappingEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -342,6 +350,15 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
      * <!-- end-user-doc -->
      * @generated
      */
+    public EReference getIndicatorDefinition_CharactersMapping() {
+        return (EReference)indicatorDefinitionEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getIndicatorCategory() {
         return indicatorCategoryEClass;
     }
@@ -353,6 +370,42 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
      */
     public EAttribute getIndicatorCategory_Label() {
         return (EAttribute)indicatorCategoryEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getCharactersMapping() {
+        return charactersMappingEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getCharactersMapping_Language() {
+        return (EAttribute)charactersMappingEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getCharactersMapping_CharactersToReplace() {
+        return (EAttribute)charactersMappingEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getCharactersMapping_ReplacementCharacters() {
+        return (EAttribute)charactersMappingEClass.getEStructuralFeatures().get(2);
     }
 
     /**
@@ -395,9 +448,15 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
         createEReference(indicatorDefinitionEClass, INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION);
         createEReference(indicatorDefinitionEClass, INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS);
         createEReference(indicatorDefinitionEClass, INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS);
+        createEReference(indicatorDefinitionEClass, INDICATOR_DEFINITION__CHARACTERS_MAPPING);
 
         indicatorCategoryEClass = createEClass(INDICATOR_CATEGORY);
         createEAttribute(indicatorCategoryEClass, INDICATOR_CATEGORY__LABEL);
+
+        charactersMappingEClass = createEClass(CHARACTERS_MAPPING);
+        createEAttribute(charactersMappingEClass, CHARACTERS_MAPPING__LANGUAGE);
+        createEAttribute(charactersMappingEClass, CHARACTERS_MAPPING__CHARACTERS_TO_REPLACE);
+        createEAttribute(charactersMappingEClass, CHARACTERS_MAPPING__REPLACEMENT_CHARACTERS);
     }
 
     /**
@@ -434,6 +493,7 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
         indicatorsDefinitionsEClass.getESuperTypes().add(theCorePackage.getModelElement());
         indicatorDefinitionEClass.getESuperTypes().add(theCorePackage.getModelElement());
         indicatorCategoryEClass.getESuperTypes().add(theCorePackage.getModelElement());
+        charactersMappingEClass.getESuperTypes().add(theCorePackage.getModelElement());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorsDefinitionsEClass, IndicatorsDefinitions.class, "IndicatorsDefinitions", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -448,9 +508,15 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
         initEReference(getIndicatorDefinition_SqlGenericExpression(), theCorePackage.getExpression(), null, "sqlGenericExpression", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicatorDefinition_Aggregate1argFunctions(), theCorePackage.getExpression(), null, "aggregate1argFunctions", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicatorDefinition_Date1argFunctions(), theCorePackage.getExpression(), null, "date1argFunctions", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getIndicatorDefinition_CharactersMapping(), this.getCharactersMapping(), null, "charactersMapping", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(indicatorCategoryEClass, IndicatorCategory.class, "IndicatorCategory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getIndicatorCategory_Label(), ecorePackage.getEString(), "label", null, 0, 1, IndicatorCategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(charactersMappingEClass, CharactersMapping.class, "CharactersMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getCharactersMapping_Language(), theCorePackage.getName_(), "language", null, 0, 1, CharactersMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getCharactersMapping_CharactersToReplace(), theCorePackage.getString(), "charactersToReplace", null, 0, 1, CharactersMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getCharactersMapping_ReplacementCharacters(), theCorePackage.getString(), "replacementCharacters", null, 0, 1, CharactersMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     }
 
 } //DefinitionPackageImpl

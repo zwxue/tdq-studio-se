@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -37,6 +38,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getSqlGenericExpression <em>Sql Generic Expression</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getAggregate1argFunctions <em>Aggregate1arg Functions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getDate1argFunctions <em>Date1arg Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getCharactersMapping <em>Characters Mapping</em>}</li>
  * </ul>
  * </p>
  *
@@ -122,6 +124,16 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * @ordered
      */
     protected EList<Expression> date1argFunctions;
+
+    /**
+     * The cached value of the '{@link #getCharactersMapping() <em>Characters Mapping</em>}' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getCharactersMapping()
+     * @generated
+     * @ordered
+     */
+    protected EList<CharactersMapping> charactersMapping;
 
     /**
      * <!-- begin-user-doc -->
@@ -240,6 +252,18 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * <!-- end-user-doc -->
      * @generated
      */
+    public EList<CharactersMapping> getCharactersMapping() {
+        if (charactersMapping == null) {
+            charactersMapping = new EObjectContainmentEList<CharactersMapping>(CharactersMapping.class, this, DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING);
+        }
+        return charactersMapping;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -249,6 +273,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return ((InternalEList<?>)getAggregate1argFunctions()).basicRemove(otherEnd, msgs);
             case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
                 return ((InternalEList<?>)getDate1argFunctions()).basicRemove(otherEnd, msgs);
+            case DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING:
+                return ((InternalEList<?>)getCharactersMapping()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -275,6 +301,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return getAggregate1argFunctions();
             case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
                 return getDate1argFunctions();
+            case DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING:
+                return getCharactersMapping();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -315,6 +343,10 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 getDate1argFunctions().clear();
                 getDate1argFunctions().addAll((Collection<? extends Expression>)newValue);
                 return;
+            case DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING:
+                getCharactersMapping().clear();
+                getCharactersMapping().addAll((Collection<? extends CharactersMapping>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -348,6 +380,9 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
             case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
                 getDate1argFunctions().clear();
                 return;
+            case DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING:
+                getCharactersMapping().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -374,6 +409,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return aggregate1argFunctions != null && !aggregate1argFunctions.isEmpty();
             case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
                 return date1argFunctions != null && !date1argFunctions.isEmpty();
+            case DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING:
+                return charactersMapping != null && !charactersMapping.isEmpty();
         }
         return super.eIsSet(featureID);
     }

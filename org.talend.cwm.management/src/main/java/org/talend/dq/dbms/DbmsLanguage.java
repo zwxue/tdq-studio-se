@@ -34,6 +34,7 @@ import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.utils.ProductVersion;
@@ -283,9 +284,77 @@ public class DbmsLanguage {
      * 
      * @param expression a column name or a string
      * @return a default SQL expression which can be used as pattern finder or null
+     * @deprecated use {@link #getPatternFinderFunction(String, String, String)} instead
      */
     public String getPatternFinderDefaultFunction(String expression) {
         return null;
+    }
+
+    /**
+     * Method "getPatternFinderFunction".
+     * 
+     * @param expression a column name or a string
+     * @param charsToReplace the list of characters to remove
+     * @param replacementChars the replacement characters
+     * @return a default SQL expression which can be used as pattern finder or null
+     */
+    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
+        return null;
+    }
+
+    
+    /**
+     * Method "getPatternFinderFunction".
+     * 
+     * @param colName a column name or a string
+     * @param charactersMapping the mapping of the character to replace
+     * @return an SQL expression which can be used as pattern finder or null
+     */
+    public String getPatternFinderFunction(String colName, EList<CharactersMapping> charactersMapping) {
+        String resultingExpressionWithDefaultLang = null;
+        for (CharactersMapping charactersMap : charactersMapping) {
+            if (this.is(charactersMap.getLanguage())) {
+                final String charactersToReplace = charactersMap.getCharactersToReplace();
+                final String replacementCharacters = charactersMap.getReplacementCharacters();
+                if (StringUtils.isEmpty(charactersToReplace) || StringUtils.isEmpty(replacementCharacters)
+                        || charactersToReplace.length() != replacementCharacters.length()) {
+                    // go to next character mapping
+                    continue;
+                }
+                // try with default language in case we don't find the appropriate language
+                if (this.getDefaultLanguage().equalsIgnoreCase(charactersMap.getLanguage())) {
+                    resultingExpressionWithDefaultLang = this.getPatternFinderFunction(colName, charactersToReplace,
+                            replacementCharacters);
+                }
+                return this.getPatternFinderFunction(colName, charactersToReplace, replacementCharacters);
+            }
+            
+        }
+        return resultingExpressionWithDefaultLang;
+    }
+
+    /**
+     * Method "replaceOneChar".
+     * 
+     * @param partialExpression
+     * @param toReplace
+     * @param replacement
+     * @return the string REPLACE(partialExpression,'toReplace','replacement')
+     */
+    protected String replaceOneChar(String partialExpression, char toReplace, char replacement) {
+        return "REPLACE(" + partialExpression + ",'" + toReplace + "','" + replacement + "')";
+    }
+
+    /**
+     * Method "translateUsingPattern".
+     * 
+     * @param expression
+     * @param charsToReplace
+     * @param replacementChars
+     * @return the string "TRANSLATE(expression,charsToReplace,replacementChars)"
+     */
+    protected String translateUsingPattern(String expression, String charsToReplace, String replacementChars) {
+        return "TRANSLATE(" + expression + " , '" + charsToReplace + "' , '" + replacementChars + "')";
     }
 
     public String replaceNullsWithString(String colName, String replacement) {
@@ -996,5 +1065,6 @@ public class DbmsLanguage {
     public String createGenericSqlWithRegexFunction(String function){
         return new GenericSQLHandler("").createGenericSqlWithRegexFunction(function);
     }
+
 
 }

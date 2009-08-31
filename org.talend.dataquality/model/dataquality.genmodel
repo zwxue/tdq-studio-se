@@ -15,6 +15,7 @@
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/COLUMNS_COMPARISON"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/TABLE"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/TABLE_COMPARISON"/>
+        <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/TABLE_FUNCTIONAL_DEPENDENCY"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/CONNECTION"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/SCHEMA"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/MULTIPLE_COLUMN"/>
@@ -424,15 +425,35 @@
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/sqlGenericExpression"/>
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/aggregate1argFunctions"/>
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/date1argFunctions"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/charactersMapping"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/definition/IndicatorCategory">
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/IndicatorCategory/label"/>
+        </genClasses>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/definition/CharactersMapping">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/CharactersMapping/language"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/CharactersMapping/charactersToReplace"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/CharactersMapping/replacementCharacters"/>
         </genClasses>
       </nestedGenPackages>
       <nestedGenPackages prefix="IndicatorSql" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/sql">
         <genClasses ecoreClass="dataquality.ecore#//indicators/sql/UserDefIndicator">
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/userCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/matchingValueCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/notMatchingValueCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/uniqueValues"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/distinctValueCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/uniqueValueCount"/>
+          <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/duplicateValueCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/valueToFreq"/>
+          <genOperations ecoreOperation="dataquality.ecore#//indicators/sql/UserDefIndicator/getFrequency">
+            <genParameters ecoreParameter="dataquality.ecore#//indicators/sql/UserDefIndicator/getFrequency/dataValue"/>
+          </genOperations>
+          <genOperations ecoreOperation="dataquality.ecore#//indicators/sql/UserDefIndicator/getDistinctValues"/>
+          <genOperations ecoreOperation="dataquality.ecore#//indicators/sql/UserDefIndicator/getCount">
+            <genParameters ecoreParameter="dataquality.ecore#//indicators/sql/UserDefIndicator/getCount/dataValue"/>
+          </genOperations>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/sql/WhereRuleIndicator"/>
       </nestedGenPackages>

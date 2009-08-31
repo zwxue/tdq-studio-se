@@ -145,6 +145,29 @@ public class DefinitionItemProviderAdapterFactory extends DefinitionAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.definition.CharactersMapping} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected CharactersMappingItemProvider charactersMappingItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.definition.CharactersMapping}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createCharactersMappingAdapter() {
+        if (charactersMappingItemProvider == null) {
+            charactersMappingItemProvider = new CharactersMappingItemProvider(this);
+        }
+
+        return charactersMappingItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -246,6 +269,7 @@ public class DefinitionItemProviderAdapterFactory extends DefinitionAdapterFacto
         if (indicatorsDefinitionsItemProvider != null) indicatorsDefinitionsItemProvider.dispose();
         if (indicatorDefinitionItemProvider != null) indicatorDefinitionItemProvider.dispose();
         if (indicatorCategoryItemProvider != null) indicatorCategoryItemProvider.dispose();
+        if (charactersMappingItemProvider != null) charactersMappingItemProvider.dispose();
     }
 
 }

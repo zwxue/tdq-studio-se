@@ -53,6 +53,15 @@ public interface DefinitionFactory extends EFactory {
     IndicatorCategory createIndicatorCategory();
 
     /**
+     * Returns a new object of class '<em>Characters Mapping</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Characters Mapping</em>'.
+     * @generated
+     */
+    CharactersMapping createCharactersMapping();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

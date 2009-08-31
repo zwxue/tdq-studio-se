@@ -50,6 +50,13 @@ public class DB2DbmsLanguage extends DbmsLanguage {
                 + " '1234567890BCDEFGHIJKLMNOPQRSTUVWXYZbcdefghijklmnopqrstuvwxyz')"; // cannot put accents //$NON-NLS-1$
     }
 
+    
+    @Override
+    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
+        return "TRANSLATE(CHAR(" + expression + ") ,VARCHAR('" + replacementChars + "'),'" //$NON-NLS-1$ //$NON-NLS-2$
+                + charsToReplace + "')"; //$NON-NLS-1$
+    }
+
     /*
      * (non-Javadoc)
      * 

@@ -116,6 +116,14 @@ public class DefinitionSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case DefinitionPackage.CHARACTERS_MAPPING: {
+                CharactersMapping charactersMapping = (CharactersMapping)theEObject;
+                T result = caseCharactersMapping(charactersMapping);
+                if (result == null) result = caseModelElement(charactersMapping);
+                if (result == null) result = caseElement(charactersMapping);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -162,6 +170,21 @@ public class DefinitionSwitch<T> {
      * @generated
      */
     public T caseIndicatorCategory(IndicatorCategory object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Characters Mapping</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Characters Mapping</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseCharactersMapping(CharactersMapping object) {
         return null;
     }
 

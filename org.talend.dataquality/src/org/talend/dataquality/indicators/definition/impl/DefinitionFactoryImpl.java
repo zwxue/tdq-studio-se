@@ -65,6 +65,7 @@ public class DefinitionFactoryImpl extends EFactoryImpl implements DefinitionFac
             case DefinitionPackage.INDICATORS_DEFINITIONS: return createIndicatorsDefinitions();
             case DefinitionPackage.INDICATOR_DEFINITION: return createIndicatorDefinition();
             case DefinitionPackage.INDICATOR_CATEGORY: return createIndicatorCategory();
+            case DefinitionPackage.CHARACTERS_MAPPING: return createCharactersMapping();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -98,6 +99,16 @@ public class DefinitionFactoryImpl extends EFactoryImpl implements DefinitionFac
     public IndicatorCategory createIndicatorCategory() {
         IndicatorCategoryImpl indicatorCategory = new IndicatorCategoryImpl();
         return indicatorCategory;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public CharactersMapping createCharactersMapping() {
+        CharactersMappingImpl charactersMapping = new CharactersMappingImpl();
+        return charactersMapping;
     }
 
     /**

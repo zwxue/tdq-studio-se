@@ -29,6 +29,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
@@ -184,6 +185,7 @@ public class IndicatorDefinitionItemProvider
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION);
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS);
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS);
+            childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__CHARACTERS_MAPPING);
         }
         return childrenFeatures;
     }
@@ -244,6 +246,7 @@ public class IndicatorDefinitionItemProvider
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:
             case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
             case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
+            case DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -320,6 +323,11 @@ public class IndicatorDefinitionItemProvider
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
                  DatatypesFactory.eINSTANCE.createQueryExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__CHARACTERS_MAPPING,
+                 DefinitionFactory.eINSTANCE.createCharactersMapping()));
     }
 
     /**

@@ -68,6 +68,13 @@ public class UserDefIndicatorItemProvider
             super.getPropertyDescriptors(object);
 
             addUserCountPropertyDescriptor(object);
+            addMatchingValueCountPropertyDescriptor(object);
+            addNotMatchingValueCountPropertyDescriptor(object);
+            addUniqueValuesPropertyDescriptor(object);
+            addDistinctValueCountPropertyDescriptor(object);
+            addUniqueValueCountPropertyDescriptor(object);
+            addDuplicateValueCountPropertyDescriptor(object);
+            addValueToFreqPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -86,6 +93,160 @@ public class UserDefIndicatorItemProvider
                  getString("_UI_UserDefIndicator_userCount_feature"),
                  getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_userCount_feature", "_UI_UserDefIndicator_type"),
                  IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__USER_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Matching Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addMatchingValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_matchingValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_matchingValueCount_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Not Matching Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addNotMatchingValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_notMatchingValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_notMatchingValueCount_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Unique Values feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addUniqueValuesPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_uniqueValues_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_uniqueValues_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__UNIQUE_VALUES,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Distinct Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDistinctValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_distinctValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_distinctValueCount_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Unique Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addUniqueValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_uniqueValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_uniqueValueCount_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Duplicate Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDuplicateValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_duplicateValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_duplicateValueCount_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT,
+                 false,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Value To Freq feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addValueToFreqPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_valueToFreq_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_valueToFreq_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__VALUE_TO_FREQ,
                  true,
                  false,
                  false,
@@ -132,6 +293,13 @@ public class UserDefIndicatorItemProvider
 
         switch (notification.getFeatureID(UserDefIndicator.class)) {
             case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

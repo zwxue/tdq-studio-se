@@ -25,6 +25,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getSqlGenericExpression <em>Sql Generic Expression</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getAggregate1argFunctions <em>Aggregate1arg Functions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getDate1argFunctions <em>Date1arg Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getCharactersMapping <em>Characters Mapping</em>}</li>
  * </ul>
  * </p>
  *
@@ -155,5 +156,20 @@ public interface IndicatorDefinition extends ModelElement {
      * @generated
      */
     EList<Expression> getDate1argFunctions();
+
+    /**
+     * Returns the value of the '<em><b>Characters Mapping</b></em>' containment reference list.
+     * The list contents are of type {@link org.talend.dataquality.indicators.definition.CharactersMapping}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * Useful for the Pattern Finder indicator definition. It gives a default mapping of the characters to replace.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Characters Mapping</em>' containment reference list.
+     * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorDefinition_CharactersMapping()
+     * @model containment="true"
+     * @generated
+     */
+    EList<CharactersMapping> getCharactersMapping();
 
 } // IndicatorDefinition

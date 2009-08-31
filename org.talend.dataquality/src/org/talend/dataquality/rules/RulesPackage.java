@@ -316,6 +316,15 @@ public interface RulesPackage extends EPackage {
     int DQ_RULE__DATE1ARG_FUNCTIONS = DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS;
 
     /**
+     * The feature id for the '<em><b>Characters Mapping</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DQ_RULE__CHARACTERS_MAPPING = DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING;
+
+    /**
      * The feature id for the '<em><b>Criticality Level</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -585,6 +594,15 @@ public interface RulesPackage extends EPackage {
      * @ordered
      */
     int SPECIFIED_DQ_RULE__DATE1ARG_FUNCTIONS = DQ_RULE__DATE1ARG_FUNCTIONS;
+
+    /**
+     * The feature id for the '<em><b>Characters Mapping</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SPECIFIED_DQ_RULE__CHARACTERS_MAPPING = DQ_RULE__CHARACTERS_MAPPING;
 
     /**
      * The feature id for the '<em><b>Criticality Level</b></em>' attribute.
@@ -858,6 +876,15 @@ public interface RulesPackage extends EPackage {
     int INFERRED_DQ_RULE__DATE1ARG_FUNCTIONS = DQ_RULE__DATE1ARG_FUNCTIONS;
 
     /**
+     * The feature id for the '<em><b>Characters Mapping</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INFERRED_DQ_RULE__CHARACTERS_MAPPING = DQ_RULE__CHARACTERS_MAPPING;
+
+    /**
      * The feature id for the '<em><b>Criticality Level</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1127,6 +1154,15 @@ public interface RulesPackage extends EPackage {
      * @ordered
      */
     int WHERE_RULE__DATE1ARG_FUNCTIONS = SPECIFIED_DQ_RULE__DATE1ARG_FUNCTIONS;
+
+    /**
+     * The feature id for the '<em><b>Characters Mapping</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE__CHARACTERS_MAPPING = SPECIFIED_DQ_RULE__CHARACTERS_MAPPING;
 
     /**
      * The feature id for the '<em><b>Criticality Level</b></em>' attribute.
