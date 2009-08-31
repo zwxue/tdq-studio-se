@@ -47,7 +47,7 @@ public class ExportPatternsAction extends Action {
         } else {
             setText(DefaultMessagesImpl.getString("ExportPatternsAction.exportPattern")); //$NON-NLS-1$
         }
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPORT));
 
         this.folder = folder;
         this.isForExchange = isForExchange;

@@ -39,8 +39,8 @@ public class ExportUDIAction extends Action {
         } else {
             setText(DefaultMessagesImpl.getString("UserDefinedIndicatorsActionProvider.exportUDI")); //$NON-NLS-1$
         }
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION));
-        
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPORT));
+
         this.folder = folder;
         this.isForExchange = isForExchange;
     }

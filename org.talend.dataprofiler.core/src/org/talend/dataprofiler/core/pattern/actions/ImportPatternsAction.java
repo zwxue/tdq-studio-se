@@ -47,7 +47,7 @@ public class ImportPatternsAction extends Action {
      */
     public ImportPatternsAction(IFolder folder, ExpressionType type) {
         setText(DefaultMessagesImpl.getString("ImportPatternsAction.importPatternOne")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IMPORT));
         this.folder = folder;
         this.type = type;
     }

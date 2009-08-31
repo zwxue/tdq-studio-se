@@ -29,9 +29,8 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
@@ -58,7 +57,7 @@ public class ImportRemotePatternAction extends Action {
 
     public ImportRemotePatternAction(IEcosComponent[] components) {
         super("Import in DQ Repository");
-        setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IMPORT));
 
         this.components = components;
     }

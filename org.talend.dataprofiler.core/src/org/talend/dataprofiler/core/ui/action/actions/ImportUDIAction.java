@@ -33,7 +33,7 @@ public class ImportUDIAction extends Action {
 
     public ImportUDIAction(IFolder folder) {
         setText(DefaultMessagesImpl.getString("UserDefinedIndicatorsActionProvider.importUDI")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IMPORT));
         this.folder = folder;
     }
 

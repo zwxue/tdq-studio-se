@@ -14,8 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.wizard.indicator.ImportIndicatorDefinitionWizard;
 
 /**
@@ -25,7 +24,7 @@ public class ImportIndicatorDefinitionAction extends Action {
 
     public ImportIndicatorDefinitionAction() {
         super("Import Indicators");
-        setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IMPORT));
     }
 
     @Override

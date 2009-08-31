@@ -15,8 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.wizard.indicator.ExportIndicatorDefinitionWizard;
 
 /**
@@ -28,7 +27,7 @@ public class ExportIndicatorDefinitionAction extends Action {
 
     public ExportIndicatorDefinitionAction() {
         super("Export Indicators");
-        setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPORT));
     }
 
     @Override
