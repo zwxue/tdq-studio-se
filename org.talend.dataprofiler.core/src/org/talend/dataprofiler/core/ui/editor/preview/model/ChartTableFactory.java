@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -33,9 +35,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -54,12 +59,15 @@ import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dq.analysis.explore.IDataExplorer;
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.analysis.parameters.ParameterFactory;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -105,12 +113,6 @@ public final class ChartTableFactory {
 
                             item.addSelectionListener(new SelectionAdapter() {
 
-                                /*
-                                 * (non-Javadoc)
-                                 * 
-                                 * @seeorg.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.
-                                 * SelectionEvent)
-                                 */
                                 @Override
                                 public void widgetSelected(SelectionEvent e) {
                                     DataManager connection = analysis.getContext().getConnection();
@@ -126,13 +128,6 @@ public final class ChartTableFactory {
                                 itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
-                                    /*
-                                     * (non-Javadoc)
-                                     * 
-                                     * @see
-                                     * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events
-                                     * .SelectionEvent)
-                                     */
                                     @Override
                                     public void widgetSelected(SelectionEvent e) {
                                         DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
@@ -151,16 +146,6 @@ public final class ChartTableFactory {
                                 rmDuplicated.setText("Remove duplicates");
                                 rmDuplicated.addSelectionListener(new SelectionAdapter() {
 
-                                    /*
-                                     * (non-Javadoc)
-                                     * 
-                                     * 
-                                     * 
-                                     * 
-                                     * 
-                                     * @seeorg.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.
-                                     * SelectionEvent)
-                                     */
                                     @Override
                                     public void widgetSelected(SelectionEvent e) {
                                         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
@@ -170,13 +155,37 @@ public final class ChartTableFactory {
                                             IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister
                                                     .getDefault().getService(IJobService.class);
                                             if (service != null) {
-                                                service.setDataManager(dataManager);
+                                                DBConnectionParameter parameter = buildParameter(dataManager);
+                                                service.setConnectionParameter(parameter);
                                                 service.setSelectedColumn(column);
                                                 service.executeJob();
                                             }
                                         } catch (Exception e2) {
                                             e2.printStackTrace();
                                         }
+                                    }
+
+                                    private DBConnectionParameter buildParameter(DataManager dataManager) {
+                                        DBConnectionParameter parameter = ParameterFactory.createDBConnectionParameter();
+
+                                        DataProvider dataProvider = (DataProvider) dataManager;
+                                        TdProviderConnection providerConnection = (TdProviderConnection) dataProvider
+                                                .getResourceConnection().get(0);
+
+                                        Properties prop = new Properties();
+                                        prop.setProperty(TaggedValueHelper.USER, DataProviderHelper.getUser(providerConnection));
+                                        prop.setProperty(TaggedValueHelper.PASSWORD, DataProviderHelper
+                                                .getClearTextPassword(providerConnection));
+                                        parameter.setParameters(prop);
+
+                                        parameter.setHost(DataProviderHelper.getHost(providerConnection));
+                                        parameter.setPort(DataProviderHelper.getPort(providerConnection));
+                                        parameter.setDbName(DataProviderHelper.getDBName(providerConnection));
+                                        parameter.setJdbcUrl(providerConnection.getConnectionString());
+                                        parameter.setDriverClassName(providerConnection.getDriverClassName());
+                                        parameter.setSqlTypeName(DataProviderHelper.getDBType(providerConnection));
+
+                                        return parameter;
                                     }
                                 });
                             }

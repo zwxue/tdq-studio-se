@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.service;
 
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -20,7 +20,17 @@ import orgomg.cwm.resource.relational.Column;
  */
 public interface IDatabaseJobService extends IJobService {
 
-    public void setDataManager(DataManager dataManager);
+    /**
+     * DOC bZhou Comment method "setConnectionParameter".
+     * 
+     * @param connectionParameter
+     */
+    public void setConnectionParameter(DBConnectionParameter connectionParameter);
 
+    /**
+     * DOC bZhou Comment method "setSelectedColumn".
+     * 
+     * @param column
+     */
     public void setSelectedColumn(Column column);
 }
