@@ -18,9 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -51,6 +53,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.composite.JoinConditionTableViewer;
 import org.talend.dataprofiler.core.ui.views.WhereClauseDND;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
@@ -89,6 +92,10 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     private Text criticalityLevelText;
 
     private List<JoinElement> tempJoinElements;
+    
+    public List<JoinElement> getTempJoinElements() {
+        return tempJoinElements;
+    }
 
     private Composite joinElementComp;
 
@@ -341,17 +348,61 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         Composite newComp = toolkit.createComposite(joinConditionSection);
         newComp.setLayout(new GridLayout());
-
-        joinElementComp = new Composite(newComp, SWT.NONE);
-        joinElementComp.setLayout(new GridLayout());
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(joinElementComp);
-        for (int i = 0; i < tempJoinElements.size(); i++) {
-            creatNewJoinElementLine(tempJoinElements.get(i));
+        // MOD xqliu 2009-08-31 bug 8791
+        if (true) {
+            JoinConditionTableViewer jcTableViewer = new JoinConditionTableViewer(newComp, this);
+            jcTableViewer.setDirty(false);
+            jcTableViewer.addPropertyChangeListener(this);
+            createButtons(newComp, jcTableViewer);
+        } else {
+            joinElementComp = new Composite(newComp, SWT.NONE);
+            joinElementComp.setLayout(new GridLayout());
+            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(joinElementComp);
+            for (int i = 0; i < tempJoinElements.size(); i++) {
+                creatNewJoinElementLine(tempJoinElements.get(i));
+            }
+            createAddButton(newComp);
         }
-        createAddButton(newComp);
-
+        // ~
         joinConditionSection.setClient(newComp);
         return newComp;
+    }
+
+    /**
+     * DOC xqliu Comment method "createButtons".
+     * 
+     * @param parent
+     */
+    private void createButtons(Composite parent, final JoinConditionTableViewer jcTableViewer) {
+        Composite buttonsComposite = new Composite(parent, SWT.NONE);
+        buttonsComposite.setLayout(new GridLayout(2, false));
+        
+        GridData labelGd = new GridData();
+        labelGd.horizontalAlignment = SWT.LEFT;
+        labelGd.widthHint = 30;
+
+        final Button addButton = new Button(buttonsComposite, SWT.NONE);
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setLayoutData(labelGd);
+        addButton.addSelectionListener(new SelectionAdapter() {
+            
+            public void widgetSelected(SelectionEvent e) {
+                jcTableViewer.addJoinElement();
+            }
+        });
+        
+        final Button delButton = new Button(buttonsComposite, SWT.NONE);
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        delButton.setLayoutData(labelGd);
+        delButton.addSelectionListener(new SelectionAdapter() {
+            
+            public void widgetSelected(SelectionEvent e) {
+                JoinElement join = (JoinElement) ((IStructuredSelection) jcTableViewer.getSelection()).getFirstElement();
+                if (join != null) {
+                    jcTableViewer.removeJoinElement(join);
+                }
+            }
+        });
     }
 
     /**
@@ -458,7 +509,31 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         } else {
             tempJoinElements.clear();
         }
-        tempJoinElements.addAll(whereRule.getJoins());
+        EList<JoinElement> joins = whereRule.getJoins();
+        for (JoinElement join : joins) {
+            tempJoinElements.add(cloneJoin(join));
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "cloneJoin".
+     * 
+     * @param joinElement
+     * @return
+     */
+    private JoinElement cloneJoin(JoinElement joinElement) {
+        if (joinElement != null) {
+            JoinElement newJoinElement = RulesFactory.eINSTANCE.createJoinElement();
+            newJoinElement.setColA(joinElement.getColA());
+            newJoinElement.setColB(joinElement.getColB());
+            newJoinElement.setColumnAliasA(joinElement.getColumnAliasA());
+            newJoinElement.setColumnAliasB(joinElement.getColumnAliasB());
+            newJoinElement.setOperator(joinElement.getOperator());
+            newJoinElement.setTableAliasA(joinElement.getTableAliasA());
+            newJoinElement.setTableAliasB(joinElement.getTableAliasB());
+            return newJoinElement;
+        }
+        return null;
     }
 
     /**

@@ -24,10 +24,14 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.TableDropTargetEffect;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TreeDropTargetEffect;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -330,4 +334,128 @@ public class ColumnViewerDND {
         }
 
     }
+
+    /**
+     * DOC xqliu Comment method "installDND". bug 8791 2009-08-31.
+     * 
+     * @param myTable
+     */
+    public static void installDND(final Table targetControl) {
+
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        DQRespositoryView findView = (DQRespositoryView) activePage.findView(DQRespositoryView.ID);
+        final CommonViewer commonViewer = findView.getCommonViewer();
+        final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
+        int operations = DND.DROP_COPY | DND.DROP_MOVE;
+        Transfer[] transfers = new Transfer[] { transfer };
+        DropTarget dropTarget = new DropTarget(targetControl, operations);
+        dropTarget.setTransfer(transfers);
+
+        DropTargetListener dndListener = new TableDropTargetEffect(targetControl) {
+
+            ISelectionReceiver receiver = null;
+
+            @Override
+            public void dragEnter(DropTargetEvent event) {
+                super.dragEnter(event);
+                IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
+                Object object = selection.getFirstElement();
+
+                if (object instanceof TdColumn) {
+                    receiver = new ColumnReceiverTable();
+                }
+
+                if (receiver == null) {
+                    event.detail = DND.DROP_NONE;
+                } else {
+                    event.feedback = DND.FEEDBACK_EXPAND;
+                    receiver.doDropValidation(event, commonViewer);
+                }
+
+            }
+
+            @Override
+            public void dragOver(DropTargetEvent event) {
+                if (receiver == null)
+                    return;
+                
+                super.dragOver(event);
+                receiver.doDropValidation(event, commonViewer);
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void drop(DropTargetEvent event) {
+                if (receiver == null)
+                    return;
+                
+                int index = targetControl.getItemCount();
+                super.drop(event);
+                if (event.item == null) {
+                    index = 0;
+                } else {
+                    Widget widget = event.widget;
+                    Object data = event.data;
+                    TableItem item = (TableItem) event.item;
+                    TableItem[] items = targetControl.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                        if (items[i] == item) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                }
+                receiver.drop(event, commonViewer, index);
+            }
+        };
+
+        dropTarget.addDropListener(dndListener);
+    }
+
+    /**
+     * DOC xqliu ColumnViewerDND class global comment. bug 8791 2009-08-31.
+     */
+    static class ColumnReceiverTable implements ISelectionReceiver {
+
+        // @Override
+        public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
+
+            event.detail = DND.DROP_NONE;
+            Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
+
+            if (firstElement instanceof TdColumn) {
+                TdColumn column = (TdColumn) firstElement;
+
+                Table table = (Table) ((DropTarget) event.widget).getControl();
+                AbstractColumnDropTree viewer = (AbstractColumnDropTree) table.getData();
+
+                if (viewer != null && viewer.canDrop(column)) {
+                    event.detail = DND.DROP_MOVE;
+                }
+
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        // @Override
+        public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
+            LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();
+            Table control = (Table) ((DropTarget) event.widget).getControl();
+            AbstractColumnDropTree viewer = (AbstractColumnDropTree) control.getData();
+
+            StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
+            Iterator it = selection.iterator();
+            List<Column> selectedColumn = new ArrayList<Column>();
+
+            if (it.hasNext()) {
+                Column column = (Column) it.next();
+                selectedColumn.add(column);
+                viewer.dropColumns(selectedColumn, index);
+            }
+
+            localSelection = null;
+        }
+    }
+
 }
