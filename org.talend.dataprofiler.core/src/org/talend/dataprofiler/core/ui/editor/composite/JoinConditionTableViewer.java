@@ -216,13 +216,16 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "addJoinElement".
+     * 
+     * @return
      */
-    public void addJoinElement() {
+    public JoinElement addJoinElement() {
         JoinElement newJoinElement = RulesFactory.eINSTANCE.createJoinElement();
         newJoinElement.setOperator(DEFAULT_OPERATOR);
         this.myTableViewer.add(newJoinElement);
         this.myJoinElement.add(newJoinElement);
         JoinConditionTableViewer.this.masterPage.setDirty(true);
+        return newJoinElement;
     }
 
     /**
@@ -255,6 +258,9 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         JoinElementColumnDialog joinElementColumnDialog = new JoinElementColumnDialog(null);
         if (joinElementColumnDialog.open() == Window.OK) {
             JoinElement join = (JoinElement) this.myTableViewer.getElementAt(index);
+            if (join == null) {
+                join = this.addJoinElement();
+            }
             if (join != null) {
                 for (Column column : columns) {
                     if (column != null) {

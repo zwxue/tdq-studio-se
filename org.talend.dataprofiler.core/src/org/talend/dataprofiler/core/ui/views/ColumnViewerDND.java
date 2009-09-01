@@ -392,7 +392,7 @@ public class ColumnViewerDND {
                 int index = targetControl.getItemCount();
                 super.drop(event);
                 if (event.item == null) {
-                    index = 0;
+                    index = -1;
                 } else {
                     Widget widget = event.widget;
                     Object data = event.data;
