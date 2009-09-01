@@ -257,7 +257,7 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
     public Double getDependencyFactor() {
     
         if(getACount() != null && getDistinctACount() != null){
-            return getDistinctACount().doubleValue() / getACount().doubleValue();
+            return (getACount() == 0L) ? Double.NaN : getDistinctACount().doubleValue() / getACount().doubleValue();
         }
         return null;
     }

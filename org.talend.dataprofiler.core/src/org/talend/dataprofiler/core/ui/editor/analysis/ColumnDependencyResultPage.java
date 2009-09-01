@@ -228,8 +228,8 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
             ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
             String label = getRowLabel(indicator);
             if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
-                dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label);
                 dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
+                dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label);
             }
         }
         return dataset;
