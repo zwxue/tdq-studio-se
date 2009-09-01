@@ -245,13 +245,34 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
 
     @Override
     public boolean storeSqlResults(List<Object[]> objects) {
-        
+        this.setACount(getNB(objects));
+        this.setDistinctACount(getNBDistinct(objects));
         return true;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * DOC jet Comment method "getNBDistinct".
+     * 
+     * @param myResultSet
+     * @return
+     */
+    private static Long getNBDistinct(List<Object[]> myResultSet) {
+        if (myResultSet.size() == 1 && myResultSet.get(0).length == 2) {
+            return (Long) myResultSet.get(0)[1];
+        }
+        return null;
+    }
+
+    private static Long getNB(List<Object[]> myResultSet) {
+        if (myResultSet.size() == 1 && myResultSet.get(0).length == 2) {
+            return (Long) myResultSet.get(0)[0];
+        }
+        return null;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated not
      */
     public Double getDependencyFactor() {

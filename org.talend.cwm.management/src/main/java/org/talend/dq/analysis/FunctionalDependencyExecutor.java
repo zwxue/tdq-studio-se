@@ -14,6 +14,7 @@ package org.talend.dq.analysis;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -100,12 +101,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
         try {
 
             List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
-            if (indicator instanceof ColumnDependencyIndicator) {
-                ((ColumnDependencyIndicator) indicator).setACount(getNB(myResultSet));
-                ((ColumnDependencyIndicator) indicator).setDistinctACount(getNBDistinct(myResultSet));
-
-            }
-            // computer result
+            indicator.storeSqlResults(myResultSet);
 
         } catch (SQLException e) {
             log.error(e, e);
@@ -115,34 +111,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
         return true;
     }
 
-    /**
-     * DOC jet Comment method "getNBDistinct".
-     * 
-     * @param myResultSet
-     * @return
-     */
-    private Long getNBDistinct(List<Object[]> myResultSet) {
 
-        if (myResultSet.size() == 1 && myResultSet.get(0).length == 2) {
-            return (Long) myResultSet.get(0)[1];
-        }
-
-        return null;
-    }
-
-    /**
-     * DOC jet Comment method "getNB".
-     * 
-     * @param myResultSet
-     * @return
-     */
-    private Long getNB(List<Object[]> myResultSet) {
-        if (myResultSet.size() == 1 && myResultSet.get(0).length == 2) {
-            return (Long) myResultSet.get(0)[0];
-        }
-
-        return null;
-    }
 
     @Override
     protected String createSqlStatement(Analysis analysis) {
@@ -197,9 +166,16 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
        
         sqlHandler.replaceColumnA(dbmsLanguage.quote(columnA.getName())).replaceColumnB(dbmsLanguage.quote(columnB.getName())).replaceTable(
                 dbmsLanguage.quote(getTableNameFromColumn(columnA)));
+        
+        String instantiatedSQL = sqlHandler.getSqlString();
+
+        // FIXME scorreia get the where clause when the UI gives the ability to set it
+        // bug 8946 add an empty where clause
+        List<String> whereClauses = Collections.emptyList();
+        instantiatedSQL = dbms().addWhereToSqlStringStatement(instantiatedSQL, whereClauses);
+        
         Expression instantiatedExpression = CoreFactory.eINSTANCE.createExpression();
         instantiatedExpression.setLanguage(sqlGenericExpression.getLanguage());
-        String instantiatedSQL = sqlHandler.getSqlString();
         instantiatedExpression.setBody(instantiatedSQL);
         return instantiatedExpression;
     }

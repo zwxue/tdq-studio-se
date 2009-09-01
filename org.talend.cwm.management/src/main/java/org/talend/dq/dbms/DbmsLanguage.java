@@ -484,6 +484,13 @@ public class DbmsLanguage {
         return left + toSurround + right;
     }
 
+    /**
+     * Method "addWhereToSqlStringStatement". The list
+     * 
+     * @param completedSqlString a generic SQL expression in which the where clause variable will be replaced.
+     * @param whereExpressions the list of where expressions to concatenate (must not be null)
+     * @return the SQL statement with the where clause
+     */
     public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) {
         String query = completedSqlString;
         String where = this.buildWhereExpression(whereExpressions);
