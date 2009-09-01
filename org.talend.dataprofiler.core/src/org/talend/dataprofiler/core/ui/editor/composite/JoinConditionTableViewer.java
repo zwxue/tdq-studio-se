@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -28,6 +29,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -36,17 +38,23 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -55,6 +63,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class JoinConditionTableViewer extends AbstractColumnDropTree {
     
+    protected static Logger log = Logger.getLogger(JoinConditionTableViewer.class);
+
     private static final String COLUMN_A = "A";
 
     private static final String COLUMN_B = "B";
@@ -77,7 +87,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             "ColumnB", "ColumnAliasB" };
 
     private int[] widths = { 100, 100, 100, 100, 70, 100, 100, 100, 100 };
-
+    
     public JoinConditionTableViewer(Composite parent, DQRuleMasterDetailsPage masterPage) {
         this.parentComposite = parent;
         this.masterPage = masterPage;
@@ -92,7 +102,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
      */
     private Table createTable(Composite parent) {
         int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
-
+        
         final Table table = new Table(parentComposite, style);
 
         table.setHeaderVisible(true);
@@ -133,6 +143,10 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         myTableViewer.setLabelProvider(new JoinElementLabelProvider());
         myTableViewer.setInput(this.myJoinElement);
         
+        // ADD xqliu 2009-09-01 bug 8790
+        table.setMenu(createMenus(table)); 
+        // ~
+        
         ColumnViewerDND.installDND(table);
         table.setData(this);
         GridData tableGD = new GridData(GridData.FILL_BOTH);
@@ -140,6 +154,64 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         table.setLayoutData(tableGD);
         
         return table;
+    }
+
+    /**
+     * DOC xqliu Comment method "createMenus".
+     * @param table
+     * @return
+     */
+    private Menu createMenus(final Table table) {
+        Menu menu = new Menu(table);
+
+        MenuItem menuItemA = new MenuItem(menu, SWT.CASCADE);
+        menuItemA.setText(DefaultMessagesImpl.getString("JoinConditionTableViewer.showDQElementA")); //$NON-NLS-1$
+        menuItemA.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        menuItemA.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                showSelectedElements(table, COLUMN_A);
+            }
+
+        });
+        
+        MenuItem menuItemB = new MenuItem(menu, SWT.CASCADE);
+        menuItemB.setText(DefaultMessagesImpl.getString("JoinConditionTableViewer.showDQElementB")); //$NON-NLS-1$
+        menuItemB.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        menuItemB.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                showSelectedElements(table, COLUMN_B);
+            }
+
+        });
+        
+        return menu;
+    }
+
+    /**
+     * DOC xqliu Comment method "showSelectedElements".
+     * 
+     * @param table
+     * @param ab
+     */
+    protected void showSelectedElements(Table table, String ab) {
+        TableItem[] selection = table.getSelection();
+        DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        if (selection.length == 1) {
+            try {
+                JoinElement join = (JoinElement) selection[0].getData();
+                ModelElement column = join.getColA();
+                if (COLUMN_B.equals(ab)) {
+                    column = join.getColB();
+                }
+                dqview.showSelectedElements(column);
+            } catch (Exception e) {
+                log.error(e, e);
+            }
+        }
     }
 
     /**
