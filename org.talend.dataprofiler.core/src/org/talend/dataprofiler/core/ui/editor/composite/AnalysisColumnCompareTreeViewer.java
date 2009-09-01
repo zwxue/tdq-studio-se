@@ -166,7 +166,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             checkComputeButton.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
-                    setDirty(true);
+                    masterPage.setDirty(true);
                 }
 
             });
