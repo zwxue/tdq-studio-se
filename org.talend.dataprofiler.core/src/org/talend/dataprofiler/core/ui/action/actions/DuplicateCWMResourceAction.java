@@ -28,8 +28,8 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -110,6 +110,12 @@ public class DuplicateCWMResourceAction extends Action {
         if (file.getFileExtension().equals(FactoriesUtil.DQRULE)) {
             object = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
         }
+
+        // MOD 2009-09-02 yyi 8881: Add "Duplicate" menu on the user defined indicators
+        if (file.getFileExtension().equals(FactoriesUtil.UDI)) {
+            object = UDIResourceFileHelper.getInstance().findUDI(file);
+        }
+
         return object;
     }
 }
