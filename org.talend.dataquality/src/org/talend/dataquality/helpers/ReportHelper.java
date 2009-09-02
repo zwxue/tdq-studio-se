@@ -42,7 +42,7 @@ import orgomg.cwmx.analysis.informationreporting.Report;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public final class ReportHelper {
+public final class ReportHelper { 
 
     private static Logger log = Logger.getLogger(ReportHelper.class);
 
@@ -90,6 +90,11 @@ public final class ReportHelper {
         // Analysis: column correation
         BASIC_COLUMNS_CORRELATION(BASIC, PROPS.getProperty("BASIC_COLUMNS_CORRELATION")), //$NON-NLS-1$
         EVOLUTION_COLUMNS_CORRELATION(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_CORRELATION")), //$NON-NLS-1$
+        
+        // Analysis: Functional Dependency analysis.
+        BASIC_TABLE_FUNCTIONAL_DEPENDENCY(BASIC, PROPS.getProperty("BASIC_MUTICOLUMN")), //$NON-NLS-1$
+        EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY(EVOLUTION, PROPS.getProperty("EVOLUTION_TABLE")), //$NON-NLS-1$
+        
 
         USER_MADE(USER_DEFINED, null); // for the user to set his own file path
 
@@ -192,6 +197,12 @@ public final class ReportHelper {
                 } else if (EVOLUTION_COLUMNS_CORRELATION.getLabel().equals(text)) {
                     return EVOLUTION_COLUMNS_CORRELATION;
                 }
+            } else if (anaType.getName().equals(AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY.getName())) {
+                if (BASIC_TABLE_FUNCTIONAL_DEPENDENCY.getLabel().equals(text)) {
+                    return BASIC_TABLE_FUNCTIONAL_DEPENDENCY;
+                } else if (EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY.getLabel().equals(text)) {
+                    return EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY;
+                }                
             }
 
             return null;
