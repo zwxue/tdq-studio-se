@@ -17,7 +17,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,15 +28,14 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
-import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.core.model.properties.User;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.helper.resourcehelper.ResourceFilenameHelper;
-import org.talend.dq.helper.resourcehelper.ResourceFilenameHelper.FileName;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
@@ -100,7 +98,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             if (!util.addEObjectToResourceSet(filePath, element)) {
                 rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
             } else {
-                savePerperties(element, file);
                 rc = save(element);
                 if (rc.isOk() && element instanceof RenderedObject) {
                     ((RenderedObject) element).setFileName(file.getFullPath().toString());
@@ -112,30 +109,23 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         return rc;
     }
 
-    public ReturnCode savePerperties(ModelElement element, IFile file) {
-        ReturnCode rc = new ReturnCode();
-        // Create properties.
+    /**
+     * DOC bZhou Comment method "savePerperties".
+     * 
+     * @param element
+     * @return
+     */
+    public Property savePerperties(ModelElement element) {
+        Resource resource = element.eResource();
+        String fileName = resource.getURI().lastSegment();
+
         Property property = initProperty(element);
-        TDQItem item = initItem(element, property, file.getName());
-        IPath parentPath = file.getParent().getFullPath();
+        ((TDQItem) property.getItem()).setFilename(fileName);
 
-        // Add tagged value.
-        TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TDQ_ELEMENT_FILE, element.eResource()
-                .getURI().toPlatformString(true));
-        serialize(item, parentPath);
+        URI uri = element.eResource().getURI();
+        serialize(property, uri);
 
-        property.eResource().getContents().add(taggedValue);
-        try {
-            EmfHelper.saveResource(property.eResource());
-        } catch (PersistenceException e) {
-            rc.setMessage(e.getMessage());
-            log.error(e.getMessage(), e);
-        }
-        // Add tagged value.
-        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PROPERTY_FILE, property.eResource().getURI()
-                .toPlatformString(true));
-
-        return rc;
+        return property;
     }
 
     /*
@@ -149,6 +139,11 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         addResourceContent(element);
 
         addDependencies(element);
+
+        Property property = savePerperties(element);
+
+        String propertyPath = property.eResource().getURI().toPlatformString(true);
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PROPERTY_FILE, propertyPath);
 
         rc.setOk(util.saveResource(element.eResource()));
 
@@ -169,7 +164,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
     public Property initProperty(ModelElement element) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
 
-        // String author = MetadataHelper.getAuthor(element);
+        String author = MetadataHelper.getAuthor(element);
         String purpose = MetadataHelper.getPurpose(element);
         String description = MetadataHelper.getDescription(element);
         String version = MetadataHelper.getVersion(element);
@@ -177,9 +172,9 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         property.setId(EcoreUtil.generateUUID());
 
-        // User user = PropertiesFactory.eINSTANCE.createTdqUser();
-        // user.setLogin(author);
-        // property.setAuthor(user);
+        User user = PropertiesFactory.eINSTANCE.createUser();
+        user.setLogin(author);
+        property.setAuthor(user);
 
         property.setLabel(element.getName());
         property.setPurpose(purpose);
@@ -190,6 +185,9 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         computePropertyMaxInformationLevel(property);
 
+        TDQItem item = initItem(element, property);
+        property.setItem(item);
+
         return property;
     }
 
@@ -199,15 +197,14 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @see org.talend.dq.writer.IElementSerialize#initItem(orgomg.cwm.objectmodel.core.ModelElement,
      * org.talend.core.model.properties.Property, java.lang.String)
      */
-    public TDQItem initItem(ModelElement element, Property property, String fileName) {
+    public TDQItem initItem(ModelElement element, Property property) {
         TDQItem item = PropertiesFactory.eINSTANCE.createTDQItem();
 
-        // ItemState itemState = PropertiesFactory.eINSTANCE.createITDQItemState();
-        // itemState.setDeleted(false);
-        // itemState.setPath("");
-        // item.setState(itemState);
+        ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+        itemState.setDeleted(false);
+        itemState.setPath("");
+        item.setState(itemState);
 
-        item.setFilename(fileName);
         item.setProperty(property);
 
         return item;
@@ -216,36 +213,25 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.writer.IElementSerialize#serialize(org.talend.core.model.properties.Item,
+     * @see org.talend.dq.writer.IElementSerialize#serialize(org.talend.core.model.properties.Property,
      * org.eclipse.emf.common.util.URI)
      */
-    public ReturnCode serialize(Item item, URI uri) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.IElementSerialize#serialize(org.talend.core.model.properties.Item,
-     * org.eclipse.core.runtime.IPath)
-     */
-    public ReturnCode serialize(Item item, IPath parentPath) {
+    public ReturnCode serialize(Property property, URI uri) {
         ReturnCode rc = new ReturnCode();
 
-        FileName fileName = ResourceFilenameHelper.create(item.getProperty());
-        IPath resourcePath = ResourceFilenameHelper.getExpectedFilePath(fileName, parentPath, FactoriesUtil.ITEM_EXTENSION);
-        URI itemURI = URI.createPlatformResourceURI(resourcePath.toString(), false);
-        // Resource itemResource = resourceSet.createResource(itemURI);
-        // itemResource.getContents().add(item);
-
-        URI propertiesURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
         Resource propertyResource = resourceSet.createResource(propertiesURI);
-        propertyResource.getContents().add(item.getProperty());
-        propertyResource.getContents().add(item);
+
+        // Create tagged value.
+        TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TDQ_ELEMENT_FILE, uri
+                .toPlatformString(true));
+        propertyResource.getContents().add(property);
+        propertyResource.getContents().add(property.getAuthor());
+        propertyResource.getContents().add(property.getItem().getState());
+        propertyResource.getContents().add(property.getItem());
+        propertyResource.getContents().add(taggedValue);
 
         try {
-            // EmfHelper.saveResource(itemResource);
             EmfHelper.saveResource(propertyResource);
             rc.setOk(true);
         } catch (PersistenceException e) {

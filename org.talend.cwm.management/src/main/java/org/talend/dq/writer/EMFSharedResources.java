@@ -17,8 +17,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -48,6 +46,7 @@ public final class EMFSharedResources {
     private final static String SOFTWARE_DEP_EXT = "softwaredeployment";
 
     private final static String SOFTWARE_DEP = ".softwaresystem." + SOFTWARE_DEP_EXT;
+
     /**
      * Getter for softwareDeploymentResource.
      * 
@@ -71,11 +70,11 @@ public final class EMFSharedResources {
         }
         return saveSoftwareDeploymentResource();
     }
+
     public boolean saveSoftwareDeploymentResource() {
-            return (softwareDeploymentResource != null) ? EMFUtil.saveSingleResource(softwareDeploymentResource) : false;
+        return (softwareDeploymentResource != null) ? EMFUtil.saveSingleResource(softwareDeploymentResource) : false;
     }
-        
-    
+
     private void saveSoftwareDeploymentProperties() {
         // ~MOD mzhao feature 7488 2009-08-21.
         AElementPersistance elePersistance = new AElementPersistance() {
@@ -99,13 +98,9 @@ public final class EMFSharedResources {
         ModelElement mockedModelElement = CoreFactory.eINSTANCE.createModel();
         mockedModelElement.setName("softwareSystem");
         softwareDeploymentResource.getContents().add(mockedModelElement);
-        String platformString = softwareDeploymentResource.getURI().toPlatformString(true);
-        String platformStringPath = platformString.substring(0, platformString.lastIndexOf(SOFTWARE_DEP));
-        IFolder fileFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot().findMember(platformStringPath);
-        elePersistance.savePerperties(mockedModelElement, fileFolder.getFile(SOFTWARE_DEP));
+        elePersistance.savePerperties(mockedModelElement);
         // ~
     }
-
 
     /**
      * DOC scorreia Comment method "initSoftwareDeploymentResource".
@@ -118,13 +113,13 @@ public final class EMFSharedResources {
                 .createPlatformResourceURI(
                         "/"     + ReponsitoryContextBridge.getProjectName() + "/TDQ_Libraries/.softwaresystem." + SoftwaredeploymentPackage.eNAME, false); //$NON-NLS-1$
         Resource resource = resourceSet.getResource(sUri, false);
-        
+
         if (resource == null) {
             resource = resourceSet.createResource(sUri);
         }
-        
+
         return resource;
-        
+
     }
 
     /**

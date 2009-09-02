@@ -39,14 +39,14 @@ public interface IElementSerialize {
      * @param fileName
      * @return
      */
-    public Item initItem(ModelElement element, Property property, String fileName);
+    public Item initItem(ModelElement element, Property property);
 
     /**
      * DOC bZhou Comment method "serialize".
      * 
-     * @param item
-     * @param parentPath
+     * @param property
+     * @param uri
      * @return
      */
-    public ReturnCode serialize(Item item, URI uri);
+    public ReturnCode serialize(Property property, URI uri);
 }

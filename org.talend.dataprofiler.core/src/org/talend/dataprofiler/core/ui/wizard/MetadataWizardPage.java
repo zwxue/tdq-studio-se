@@ -28,8 +28,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -40,7 +38,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
-import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -139,27 +136,27 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         getParameter().setAuthor(author);
 
         // Version
-        Label versionLab = new Label(container, SWT.NONE);
-        versionLab.setText("Version");
-
-        Composite versionContainer = new Composite(container, SWT.NONE);
-        versionContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        GridLayout versionLayout = new GridLayout(3, false);
-        versionLayout.marginHeight = 0;
-        versionLayout.marginWidth = 0;
-        versionLayout.horizontalSpacing = 0;
-        versionContainer.setLayout(versionLayout);
-
-        versionText = new Text(versionContainer, SWT.BORDER);
-        versionText.setEnabled(false);
-        versionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        versionText.setText(getParameter().getVersion());
-
-        versionMajorBtn = new Button(versionContainer, SWT.PUSH);
-        versionMajorBtn.setText("M");
-
-        versionMinorBtn = new Button(versionContainer, SWT.PUSH);
-        versionMinorBtn.setText("m"); //$NON-NLS-1$
+        // Label versionLab = new Label(container, SWT.NONE);
+        // versionLab.setText("Version");
+        //
+        // Composite versionContainer = new Composite(container, SWT.NONE);
+        // versionContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        // GridLayout versionLayout = new GridLayout(3, false);
+        // versionLayout.marginHeight = 0;
+        // versionLayout.marginWidth = 0;
+        // versionLayout.horizontalSpacing = 0;
+        // versionContainer.setLayout(versionLayout);
+        //
+        // versionText = new Text(versionContainer, SWT.BORDER);
+        // versionText.setEnabled(false);
+        // versionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        // versionText.setText(getParameter().getVersion());
+        //
+        // versionMajorBtn = new Button(versionContainer, SWT.PUSH);
+        // versionMajorBtn.setText("M");
+        //
+        // versionMinorBtn = new Button(versionContainer, SWT.PUSH);
+        //        versionMinorBtn.setText("m"); //$NON-NLS-1$
 
         // Status
         Label statusLab = new Label(container, SWT.NONE);
@@ -295,27 +292,27 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         });
 
-        versionMajorBtn.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                String version = getParameter().getVersion();
-                version = VersionUtils.upMajor(version);
-                versionText.setText(version);
-                getParameter().setVersion(version);
-            }
-        });
-
-        versionMinorBtn.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                String version = getParameter().getVersion();
-                version = VersionUtils.upMinor(version);
-                versionText.setText(version);
-                getParameter().setVersion(version);
-            }
-        });
+        // versionMajorBtn.addSelectionListener(new SelectionAdapter() {
+        //
+        // @Override
+        // public void widgetSelected(SelectionEvent e) {
+        // String version = getParameter().getVersion();
+        // version = VersionUtils.upMajor(version);
+        // versionText.setText(version);
+        // getParameter().setVersion(version);
+        // }
+        // });
+        //
+        // versionMinorBtn.addSelectionListener(new SelectionAdapter() {
+        //
+        // @Override
+        // public void widgetSelected(SelectionEvent e) {
+        // String version = getParameter().getVersion();
+        // version = VersionUtils.upMinor(version);
+        // versionText.setText(version);
+        // getParameter().setVersion(version);
+        // }
+        // });
 
         statusText.addModifyListener(new ModifyListener() {
 

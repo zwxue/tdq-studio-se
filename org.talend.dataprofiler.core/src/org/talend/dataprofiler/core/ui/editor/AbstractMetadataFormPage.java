@@ -142,8 +142,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         authorText = createMetadataTextFiled(AUTHOR_LABEL, authorText, parent);
 
-        toolkit.createLabel(parent, VERSION_LABEL);
-        createVersionUI(parent);
+        // toolkit.createLabel(parent, VERSION_LABEL);
+        // createVersionUI(parent);
 
         toolkit.createLabel(parent, STATUS_LABEL); //$NON-NLS-1$
         statusCombo = new CCombo(parent, SWT.BORDER);
@@ -187,17 +187,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             }
         });
 
-        versionText.addModifyListener(new ModifyListener() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-             */
-            public void modifyText(ModifyEvent e) {
-                setDirty(true);
-            }
-        });
+        // versionText.addModifyListener(new ModifyListener() {
+        //
+        // /*
+        // * (non-Javadoc)
+        // *
+        // * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+        // */
+        // public void modifyText(ModifyEvent e) {
+        // setDirty(true);
+        // }
+        // });
 
         statusCombo.addModifyListener(new ModifyListener() {
 
@@ -285,7 +285,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
         descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
         authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
-        versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
+        // versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
         statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus.getLiteral());
     }
 
@@ -299,7 +299,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         MetadataHelper.setPurpose(purposeText.getText(), currentModelElement);
         MetadataHelper.setDescription(descriptionText.getText(), currentModelElement);
         MetadataHelper.setAuthor(currentModelElement, authorText.getText());
-        MetadataHelper.setVersion(versionText.getText(), currentModelElement);
+        // MetadataHelper.setVersion(versionText.getText(), currentModelElement);
         MetadataHelper.setDevStatus(currentModelElement, DevelopmentStatus.get(statusCombo.getText()));
     }
 
