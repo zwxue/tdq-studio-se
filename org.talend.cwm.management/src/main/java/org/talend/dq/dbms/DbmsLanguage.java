@@ -934,10 +934,8 @@ public class DbmsLanguage {
             String tableAliasA = joinElement.getTableAliasA();
             
             String columnAName = getColumnName(colA);
-            String columnAliasA = joinElement.getColumnAliasA();
 
             boolean hasTableAliasA = !StringUtils.isEmpty(tableAliasA);
-            boolean hasColumnAliasA = !StringUtils.isEmpty(columnAliasA);
 
             
             ModelElement colB = joinElement.getColB();
@@ -945,47 +943,26 @@ public class DbmsLanguage {
             String tableAliasB = joinElement.getTableAliasB();
 
             String columnBName = getColumnName(colB);            
-            String columnAliasB = joinElement.getColumnAliasB();
 
             boolean hasTableAliasB = !StringUtils.isEmpty(tableAliasB);
-            boolean hasColumnAliasB = !StringUtils.isEmpty(columnAliasB);
 
             String operator = joinElement.getOperator();
 
             if (joinClauseStartsWithWrongTable(leftTable, getTable(colB)) && !hasTableAliasA && !hasTableAliasB) {
-                // // we need to exchange the table names otherwise we could get "tableA join tableA" which would cause
-                // an
-                // // SQL exception.
-                buildJoinClause(builder, tableB, tableAliasB, columnBName, columnAliasB, hasTableAliasB, hasColumnAliasB, tableA,
-                        tableAliasA, columnAName, columnAliasA, hasTableAliasA, hasColumnAliasA, operator);
+                // we need to exchange the table names otherwise we could get "tableA join tableA" which would cause
+                // an SQL exception.
+                buildJoinClause(builder, tableB, tableAliasB, columnBName, hasTableAliasB, tableA, tableAliasA, columnAName,
+                        hasTableAliasA, operator);
             } else {
-                buildJoinClause(builder, tableA, tableAliasA, columnAName, columnAliasA, hasTableAliasA, hasColumnAliasA, tableB,
-                        tableAliasB, columnBName, columnAliasB, hasTableAliasB, hasColumnAliasB, operator);
+                buildJoinClause(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName,
+                        hasTableAliasB, operator);
             }
         }
         return builder.toString();
     }
 
-    /**
-     * DOC scorreia Comment method "fillBuffer".
-     * @param builder
-     * @param tableA
-     * @param tableAliasA
-     * @param columnAName
-     * @param columnAliasA
-     * @param hasTableAliasA
-     * @param hasColumnAliasA
-     * @param tableB
-     * @param tableAliasB
-     * @param columnBName
-     * @param columnAliasB
-     * @param hasTableAliasB
-     * @param hasColumnAliasB
-     * @param operator
-     */
-    private void buildJoinClause(StringBuilder builder, String tableA, String tableAliasA, String columnAName, String columnAliasA,
-            boolean hasTableAliasA, boolean hasColumnAliasA, String tableB, String tableAliasB, String columnBName,
-            String columnAliasB, boolean hasTableAliasB, boolean hasColumnAliasB, String operator) {
+    private void buildJoinClause(StringBuilder builder, String tableA, String tableAliasA, String columnAName,
+            boolean hasTableAliasA, String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
         // begin of query is built ouside this method and should be:
         // SELECT count(*) FROM leftTableName
         // tableAliasA JOIN
@@ -1001,10 +978,10 @@ public class DbmsLanguage {
         }
         builder.append(" ON ");
 
-        String tA = hasTableAliasA ? null : quote(tableA);
-        String tB = hasTableAliasB ? null : quote(tableB);
-        String cA = hasColumnAliasA ? columnAliasA : quote(columnAName);
-        String cB = hasColumnAliasB ? columnAliasB : quote(columnBName);
+        String tA = hasTableAliasA ? tableAliasA : quote(tableA);
+        String tB = hasTableAliasB ? tableAliasB : quote(tableB);
+        String cA = quote(columnAName);
+        String cB = quote(columnBName);
         createJoinClause(builder, tA, cA, tB, cB, operator);
     }
 
@@ -1033,7 +1010,7 @@ public class DbmsLanguage {
      */
     private void createJoinClause(StringBuilder builder, String tableA, String columnAName, String tableB, String columnBName,
             String operator) {
-        // (columaliasA = columnaliasB)
+        // (tablealiasA.colA = tablealiasB.colB)
         builder.append('(');
         if (tableA != null) {
             builder.append(surroundWithSpaces(tableA + "."));
