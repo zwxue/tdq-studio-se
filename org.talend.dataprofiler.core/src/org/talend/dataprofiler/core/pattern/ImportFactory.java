@@ -31,8 +31,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -312,14 +310,26 @@ public final class ImportFactory {
 
     }
 
-    public static void importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip, boolean rename) {
+    /**
+     * DOC xqliu Comment method "importIndicatorToStucture".
+     * 
+     * @param importFile
+     * @param selectionFolder
+     * @param skip
+     * @param rename
+     * @return
+     */
+    public static String importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip, boolean rename) {
 
+        String information = "User Defined Indicators imported in the \"Indicators\" folder";
+        
         Set<String> names = UDIHelper.getAllIndicatorNames(selectionFolder);
 
         String fileExtName = getFileExtName(importFile);
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
 
+            String name = "";
             try {
 
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
@@ -332,10 +342,11 @@ public final class ImportFactory {
                 java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
 
                 while (reader.readRecord()) {
-                    String name = reader.get(PatternToExcelEnum.Label.getLiteral());
+                    name = reader.get(PatternToExcelEnum.Label.getLiteral());
 
                     if (names.contains(name)) {
                         if (skip) {
+                            information = "User Defined Indicator \"" + name + "\" has already imported";
                             continue;
                         }
                         if (rename) {
@@ -361,18 +372,15 @@ public final class ImportFactory {
                     createAndStoreUDI(udiParameters, selectionFolder);
 
                     names.add(name);
+
+                    information = "User Defined Indicator \"" + name
+                            + "\" imported in the \"Indicators/User Defined Indicators\" folder";
                 }
 
                 reader.close();
-
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    public void run() {
-                        MessageDialog.openInformation(null, "Information", "Indicators imported in the \"Indicators\" folder");
-                    }
-                });
             } catch (Exception e) {
                 log.error(e, e);
+                information = "User Defined Indicator \"" + name + "\" import failed";
             }
         }
 
@@ -438,8 +446,16 @@ public final class ImportFactory {
                 log.error(e, e);
             }
         }
+        
+        return information;
     }
 
+    /**
+     * DOC xqliu Comment method "createAndStoreUDI".
+     * 
+     * @param parameters
+     * @param selectionFolder
+     */
     private static void createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
 
         IndicatorDefinition id = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,

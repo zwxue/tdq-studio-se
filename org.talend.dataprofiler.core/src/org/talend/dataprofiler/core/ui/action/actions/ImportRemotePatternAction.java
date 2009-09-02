@@ -120,10 +120,18 @@ public class ImportRemotePatternAction extends Action {
                 } else if ("sql".equals(componet.getCategry().getName())) {
                     type = ExpressionType.SQL_LIKE;
                     folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.SQL);
+                } else if ("indicator".equals(componet.getCategry().getName())) {
+                    type = null;
                 }
 
                 for (File oneFile : files) {
-                    information.append(ImportFactory.importToStucture(oneFile, folder, type, true, true));
+                    if (type == null) {
+                        IFolder udiFolder = getFolder(DQStructureManager.INDICATORS).getFolder(
+                                DQStructureManager.USER_DEFINED_INDICATORS);
+                        information.append(ImportFactory.importIndicatorToStucture(oneFile, udiFolder, true, true));
+                    } else {
+                        information.append(ImportFactory.importToStucture(oneFile, folder, type, true, true));
+                    }
 
                     information.append("\n");
                 }
