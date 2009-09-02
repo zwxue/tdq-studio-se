@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.writer;
 
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.URI;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.utils.sugars.ReturnCode;
@@ -48,5 +48,5 @@ public interface IElementSerialize {
      * @param parentPath
      * @return
      */
-    public ReturnCode serialize(Item item, IPath parentPath);
+    public ReturnCode serialize(Item item, URI uri);
 }

@@ -30,7 +30,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.AnalysisWriter;
+import org.talend.dq.writer.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
@@ -176,8 +178,9 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
     }
 
     public ReturnCode save(Analysis analysis) {
-        AnalysisWriter writer = new AnalysisWriter();
-        // MODSCA 20080425 do not overwrite existing file.
+        String version = MetadataHelper.getVersion(analysis);
+
+        AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
         ReturnCode saved = writer.save(analysis);
         return saved;
     }

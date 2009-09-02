@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -29,18 +27,11 @@ import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonLabelProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.reports.TdReport;
-import org.talend.dataquality.rules.WhereRule;
-import org.talend.dataquality.utils.DateFormatUtils;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -49,6 +40,7 @@ import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
@@ -117,49 +109,41 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     }
 
     protected String decorateText(String input, Object element) {
-        if (input.endsWith(org.talend.dq.PluginConstant.PRV_SUFFIX)) {
-            IFile fileElement = (IFile) element;
-            TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(fileElement);
-            String decorateText = PluginConstant.EMPTY_STRING;
-            if (rc.isOk()) {
-                decorateText = rc.getObject().getName();
-            } else {
-                log.warn(rc.getMessage());
-            }
-            return decorateText;
-        } else if (input.endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)) {
-            IFile fileElement = (IFile) element;
-            if (log.isDebugEnabled()) {
-                log.debug("Loading file " + (fileElement).getLocation()); //$NON-NLS-1$
-            }
-            Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(fileElement);
-            if (analysis != null) {
-                Date executionDate = analysis.getResults().getResultMetadata().getExecutionDate();
-                String executeInfo = executionDate == null ? DefaultMessagesImpl.getString("ResourceViewLabelProvider.executed") : PluginConstant.PARENTHESIS_LEFT //$NON-NLS-1$
-                                + DateFormatUtils.getSimpleDateString(executionDate) + PluginConstant.PARENTHESIS_RIGHT;
-                return analysis.getName() + PluginConstant.SPACE_STRING + executeInfo;
-            }
-        } else if (input.endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
+        if (element instanceof IFile) {
             IFile file = (IFile) element;
-            Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-            return pattern.getName();
-        } else if (input.endsWith(org.talend.dq.PluginConstant.REP_SUFFIX)) {
-            IFile fileElement = (IFile) element;
-            TdReport findReport = RepResourceFileHelper.getInstance().findReport(fileElement);
-            return findReport.getName();
-        } else if (input.endsWith(FactoriesUtil.DQRULE)) {
-            IFile file = (IFile) element;
-            WhereRule wr = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-            return wr.getName();
-        } else if (input.endsWith(FactoriesUtil.UDI)) {
-            IFile file = (IFile) element;
-            IndicatorDefinition id = UDIResourceFileHelper.getInstance().findUDI(file);
-            return id.getName();
+            if (log.isInfoEnabled()) {
+                log.info("Loading file " + file.getLocation());
+            }
+
+            ModelElement mElement = null;
+            if (input.endsWith(FactoriesUtil.PROV)) {
+                TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(file);
+                if (rc.isOk()) {
+                    mElement = rc.getObject();
+                } else {
+                    log.error(rc.getMessage());
+                }
+            } else if (input.endsWith(FactoriesUtil.ANA)) {
+                mElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
+            } else if (input.endsWith(FactoriesUtil.PATTERN)) {
+                mElement = PatternResourceFileHelper.getInstance().findPattern(file);
+            } else if (input.endsWith(FactoriesUtil.REP)) {
+                mElement = RepResourceFileHelper.getInstance().findReport(file);
+            } else if (input.endsWith(FactoriesUtil.DQRULE)) {
+                mElement = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+            } else if (input.endsWith(FactoriesUtil.UDI)) {
+                mElement = UDIResourceFileHelper.getInstance().findUDI(file);
+            }
+
+            if (mElement != null) {
+                return DqRepositoryViewService.buildElementName(mElement);
+            }
         }
-        // MOD scorreia 2009-03-23 remove prefix in DQ Repository view
+
         if (element instanceof IFolder && input.startsWith(DQStructureManager.PREFIX_TDQ)) {
             input = input.replaceFirst(DQStructureManager.PREFIX_TDQ, "");
         }
+
         return super.decorateText(input, element);
     }
 }

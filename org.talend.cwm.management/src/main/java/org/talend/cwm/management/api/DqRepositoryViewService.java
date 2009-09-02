@@ -608,4 +608,14 @@ public final class DqRepositoryViewService {
         rc.setObject(prov);
         return rc;
     }
+
+    /**
+     * DOC bZhou Comment method "buildElementName".
+     * 
+     * @param element
+     * @return
+     */
+    public static String buildElementName(ModelElement element) {
+        return element.getName() + " " + MetadataHelper.getVersion(element);
+    }
 }

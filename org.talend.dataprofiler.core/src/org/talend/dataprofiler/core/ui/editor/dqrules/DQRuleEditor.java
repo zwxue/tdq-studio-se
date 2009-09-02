@@ -33,20 +33,20 @@ public class DQRuleEditor extends CommonFormEditor {
     private DefaultSaveAction saveAction;
 
     // ~
-    
+
     protected void addPages() {
         masterPage = new DQRuleMasterDetailsPage(
                 this,
                 DefaultMessagesImpl.getString("DQRuleEditor.masterPage"), DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-        
-        setPartName(((DQRuleMasterDetailsPage)masterPage).getCurrentModelName()); //$NON-NLS-1$
-       
+
+        setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
-        
+
         // ADD xqliu 2009-07-02 bug 7687
         TdEditorToolBar toolbar = getToolBar();
         if (toolbar != null && masterPage != null) {
@@ -79,7 +79,7 @@ public class DQRuleEditor extends CommonFormEditor {
     public IFormPage getMasterPage() {
         return this.masterPage;
     }
-    
+
     @Override
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);

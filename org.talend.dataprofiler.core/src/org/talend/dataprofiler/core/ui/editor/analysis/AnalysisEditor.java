@@ -21,9 +21,9 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
-import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.analysis.Analysis;
@@ -60,6 +60,7 @@ public class AnalysisEditor extends CommonFormEditor {
 
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
+
     // ~
 
     private boolean isRefreshResultPage = false;
@@ -68,14 +69,13 @@ public class AnalysisEditor extends CommonFormEditor {
      * 
      */
     public AnalysisEditor() {
-        
-       
+
     }
 
     protected void addPages() {
-       
+
         switch (analysisType) {
-        
+
         case COLUMN_CORRELATION:
             masterPage = new ColumnCorrelationNominalAndIntervalMasterPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             resultPage = new ColumnCorrelationNominalIntervalResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
@@ -143,7 +143,7 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case TABLE_FUNCTIONAL_DEPENDENCY:
             masterPage = new ColumnDependencyMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-//            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.ColumnDependencyAnalysisEditor")); //$NON-NLS-1$
+            //            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.ColumnDependencyAnalysisEditor")); //$NON-NLS-1$
             resultPage = new ColumnDependencyResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
@@ -165,9 +165,9 @@ public class AnalysisEditor extends CommonFormEditor {
             toolbar.addActions(saveAction, runAction, refreshAction);
             // ~
         }
-        if(masterPage.getAnalysis() != null){
-            setPartName(masterPage.getCurrentModelName());
-        }else{
+        if (masterPage.getAnalysis() != null) {
+            setPartName(masterPage.getIntactElemenetName());
+        } else {
             setPartName(getEditorInput().getName());
         }
 
@@ -181,11 +181,10 @@ public class AnalysisEditor extends CommonFormEditor {
         super.doSave(monitor);
     }
 
-    
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         super.init(site, input);
-      
+
     }
 
     protected void firePropertyChange(final int propertyId) {
@@ -231,13 +230,13 @@ public class AnalysisEditor extends CommonFormEditor {
             ((ColumnsComparisonAnalysisResultPage) resultPage).refresh((ColumnsComparisonMasterDetailsPage) masterPage);
             isRefreshResultPage = false;
         }
-        
+
         if (isRefreshResultPage && resultPage != null && newPageIndex == resultPage.getIndex()
                 && resultPage instanceof ColumnDependencyResultPage) {
             ((ColumnDependencyResultPage) resultPage).refresh((ColumnDependencyMasterDetailsPage) masterPage);
             isRefreshResultPage = false;
         }
-        
+
         if (isRefreshResultPage && resultPage != null && newPageIndex == resultPage.getIndex()
                 && resultPage instanceof TableAnalysisResultPage) {
             ((TableAnalysisResultPage) resultPage).refresh((TableMasterDetailsPage) masterPage);

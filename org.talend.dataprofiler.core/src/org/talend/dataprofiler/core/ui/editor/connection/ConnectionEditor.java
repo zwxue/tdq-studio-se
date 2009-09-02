@@ -34,13 +34,15 @@ public class ConnectionEditor extends CommonFormEditor {
     }
 
     protected void addPages() {
-        masterPage = new ConnectionInfoPage(this, DefaultMessagesImpl.getString("ConnectionEditor.masterPage"), DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+        masterPage = new ConnectionInfoPage(
+                this,
+                DefaultMessagesImpl.getString("ConnectionEditor.masterPage"), DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$ //$NON-NLS-2$
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
             MessageBoxExceptionHandler.process(e);
         }
-        setPartName(((ConnectionInfoPage)masterPage).getCurrentModelName()); //$NON-NLS-1$
+        setPartName(((ConnectionInfoPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
     }
 
     public void doSave(IProgressMonitor monitor) {
@@ -61,7 +63,7 @@ public class ConnectionEditor extends CommonFormEditor {
      */
     protected void setInput(IEditorInput input) {
         super.setInput(input);
-       
+
     }
 
 }

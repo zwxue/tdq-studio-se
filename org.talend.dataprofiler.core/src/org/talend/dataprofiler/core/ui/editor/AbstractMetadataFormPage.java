@@ -33,6 +33,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -114,11 +115,16 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         currentEditor.registerSections(new Section[] { metadataSection });
     }
 
-    public String getCurrentModelName() {
+    /**
+     * DOC bZhou Comment method "getIntactElemenetName".
+     * 
+     * @return
+     */
+    public String getIntactElemenetName() {
         if (currentModelElement == null) {
             currentModelElement = getCurrentModelElement(getEditor());
         }
-        return currentModelElement.getName();
+        return DqRepositoryViewService.buildElementName(currentModelElement);
     }
 
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);

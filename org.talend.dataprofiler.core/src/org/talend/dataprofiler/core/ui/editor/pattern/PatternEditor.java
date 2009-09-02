@@ -35,14 +35,16 @@ public class PatternEditor extends CommonFormEditor {
     // ~
 
     protected void addPages() {
-        masterPage = new PatternMasterDetailsPage(this, DefaultMessagesImpl.getString("PatternEditor.masterPage"), DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-        setPartName(((PatternMasterDetailsPage)masterPage).getCurrentModelName()); //$NON-NLS-1$
+        masterPage = new PatternMasterDetailsPage(
+                this,
+                DefaultMessagesImpl.getString("PatternEditor.masterPage"), DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+        setPartName(((PatternMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
-        
+
         // ADD xqliu 2009-07-02 bug 7687
         TdEditorToolBar toolbar = getToolBar();
         if (toolbar != null && masterPage != null) {
@@ -75,7 +77,7 @@ public class PatternEditor extends CommonFormEditor {
     public IFormPage getMasterPage() {
         return this.masterPage;
     }
-    
+
     @Override
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);

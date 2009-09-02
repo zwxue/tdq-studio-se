@@ -118,12 +118,12 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         Property property = initProperty(element);
         TDQItem item = initItem(element, property, file.getName());
         IPath parentPath = file.getParent().getFullPath();
-       
+
         // Add tagged value.
-        TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TDQ_ELEMENT_FILE,  element.eResource().getURI()
-                .toPlatformString(true));
+        TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TDQ_ELEMENT_FILE, element.eResource()
+                .getURI().toPlatformString(true));
         serialize(item, parentPath);
-        
+
         property.eResource().getContents().add(taggedValue);
         try {
             EmfHelper.saveResource(property.eResource());
@@ -133,8 +133,8 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         }
         // Add tagged value.
         TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PROPERTY_FILE, property.eResource().getURI()
-                .toPlatformString(true));        
-         
+                .toPlatformString(true));
+
         return rc;
     }
 
@@ -211,6 +211,17 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         item.setProperty(property);
 
         return item;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.IElementSerialize#serialize(org.talend.core.model.properties.Item,
+     * org.eclipse.emf.common.util.URI)
+     */
+    public ReturnCode serialize(Item item, URI uri) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /*
