@@ -76,8 +76,8 @@ public class EMFObjFilter extends AbstractViewerFilter {
             if (file.getName().indexOf(".") == 0) { //$NON-NLS-1$
                 return false;
             }
-            if (file.getFileExtension().equals(FactoriesUtil.ITEM_EXTENSION)
-                    || file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+            if (FactoriesUtil.ITEM_EXTENSION.equals(file.getFileExtension())
+                    || FactoriesUtil.PROPERTIES_EXTENSION.equals(file.getFileExtension())) {
                 return false;
             }
             return file.getFileExtension() != null;

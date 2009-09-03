@@ -248,7 +248,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @see org.talend.dq.writer.IElementPersistence#check(org.eclipse.core.resources.IFile)
      */
     public boolean check(IFile file) {
-        return file.getFileExtension().equalsIgnoreCase(getFileExtension());
+        return getFileExtension().equalsIgnoreCase(file.getFileExtension());
     }
 
     /**

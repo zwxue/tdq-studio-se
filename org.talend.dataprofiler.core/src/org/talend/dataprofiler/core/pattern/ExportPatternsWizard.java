@@ -62,7 +62,7 @@ public class ExportPatternsWizard extends Wizard {
         for (Object element : elements) {
             if (element instanceof IFile) {
                 IFile file = (IFile) element;
-                if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+                if (FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension())) {
                     seletedPatterns.add(PatternResourceFileHelper.getInstance().findPattern(file));
                 }
             }

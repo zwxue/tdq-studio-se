@@ -79,7 +79,7 @@ public final class RepResourceFileHelper extends ResourceFileMap {
     }
 
     public TdReport findReport(IFile file) {
-        if (file != null && file.getFileExtension().equals(FactoriesUtil.REP)) {
+        if (file != null && FactoriesUtil.REP.equals(file.getFileExtension())) {
             TdReport report = allRepMap.get(file);
             if (report != null) {
                 return report;

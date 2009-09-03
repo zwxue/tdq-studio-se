@@ -72,7 +72,7 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
                 }
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
-                if (file.getFileExtension().equalsIgnoreCase(EXTENSION_PATTERN)) {
+                if (EXTENSION_PATTERN.equalsIgnoreCase(file.getFileExtension())) {
                     // menu.add(new RenameSqlFileAction((IFile) obj));
                 }
             }
@@ -98,7 +98,7 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
             Object obj = iterator.next();
             if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
-                if (file.getFileExtension().equalsIgnoreCase(EXTENSION_PATTERN)) {
+                if (EXTENSION_PATTERN.equalsIgnoreCase(file.getFileExtension()) {
                     selectedFiles.add(file);
                 }
             } else {

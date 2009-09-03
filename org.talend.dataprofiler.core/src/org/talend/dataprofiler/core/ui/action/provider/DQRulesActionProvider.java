@@ -78,7 +78,7 @@ public class DQRulesActionProvider extends CommonActionProvider {
             Object obj = iterator.next();
             if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
-                if (file.getFileExtension().equalsIgnoreCase(EXTENSION_DQRULE)) {
+                if (EXTENSION_DQRULE.equalsIgnoreCase(file.getFileExtension())) {
                     selectedFiles.add(file);
                 }
             } else {

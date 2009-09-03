@@ -64,7 +64,7 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
 				}
 			} else if (obj instanceof IFile) {
 				IFile file = (IFile) obj;
-				if (file.getFileExtension().equalsIgnoreCase("sql")) { //$NON-NLS-1$
+				if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$
 					menu.add(new RenameSqlFileAction((IFile) obj));
 				}
 			}
@@ -92,7 +92,7 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
 			Object obj = iterator.next();
 			if (obj instanceof IFile) {
 				IFile file = (IFile) obj;
-				if (file.getFileExtension().equalsIgnoreCase("sql")) { //$NON-NLS-1$
+				if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$
 					selectedFiles.add(file);
 				}
 			} else {

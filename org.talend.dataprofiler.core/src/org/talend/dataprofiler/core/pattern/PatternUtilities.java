@@ -317,7 +317,7 @@ public final class PatternUtilities {
             for (IResource resource : folder.members()) {
                 if (resource instanceof IFile) {
                     IFile file = (IFile) resource;
-                    if (file.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+                    if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
                         list.add((IFile) resource);
                     }
                 } else {

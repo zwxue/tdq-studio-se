@@ -95,24 +95,24 @@ public class DuplicateCWMResourceAction extends Action {
 
     private ModelElement getOldEObject(IFile file) {
         ModelElement object = null;
-        if (file.getFileExtension().equals(FactoriesUtil.ANA)) {
+        if (FactoriesUtil.ANA.equals(file.getFileExtension())) {
             object = AnaResourceFileHelper.getInstance().findAnalysis(file);
         }
 
-        if (file.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+        if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
             object = PatternResourceFileHelper.getInstance().findPattern(file);
         }
         // MOD 2009-01-03 mzhao Support duplicate report files.
-        if (file.getFileExtension().equals(FactoriesUtil.REP)) {
+        if (FactoriesUtil.REP.equals(file.getFileExtension())) {
             object = RepResourceFileHelper.getInstance().findReport(file);
         }
         // MOD 2009-04-28 mzhao Support duplicate dq rules files.
-        if (file.getFileExtension().equals(FactoriesUtil.DQRULE)) {
+        if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
             object = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
         }
 
         // MOD 2009-09-02 yyi 8881: Add "Duplicate" menu on the user defined indicators
-        if (file.getFileExtension().equals(FactoriesUtil.UDI)) {
+        if (FactoriesUtil.UDI.equals(file.getFileExtension())) {
             object = UDIResourceFileHelper.getInstance().findUDI(file);
         }
 

@@ -79,7 +79,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
                 continue;
             }
             IFile file = (IFile) resource;
-            if (file.getFileExtension().equals(FactoriesUtil.ANA)) {
+            if (FactoriesUtil.ANA.equals(file.getFileExtension())) {
                 findAnalysis(file);
             }
         }

@@ -56,7 +56,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     protected ImageDescriptor decorateImage(ImageDescriptor input, Object element) {
         if (element instanceof IFile) {
             IFile file = (IFile) element;
-            if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+            if (FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension())) {
                 Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
                 if (findPattern != null) {
@@ -70,7 +70,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                     }
                 }
                 return imageDescriptor;
-            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
+            } else if (FactoriesUtil.REP.equalsIgnoreCase(file.getFileExtension())) {
                 return ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
             }
         }

@@ -180,7 +180,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
                     continue;
                 }
                 IFile file = (IFile) resource;
-                if (file.getFileExtension().equals(FactoriesUtil.PROV)) {
+                if (FactoriesUtil.PROV.equals(file.getFileExtension())) {
                     allPRVFiles.add(file);
                 }
             }

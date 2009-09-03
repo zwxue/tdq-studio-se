@@ -111,12 +111,12 @@ public final class EObjectHelper {
 
     private static ModelElement getModelElement(IFile file) {
         ModelElement findModelElement = null;
-        if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
+        if (FactoriesUtil.PROV.equalsIgnoreCase(file.getFileExtension())) {
             TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
             findModelElement = returnValue.getObject();
-        } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.ANA)) {
+        } else if (FactoriesUtil.ANA.equalsIgnoreCase(file.getFileExtension())) {
             findModelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
-        } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
+        } else if (FactoriesUtil.REP.equalsIgnoreCase(file.getFileExtension())) {
             findModelElement = RepResourceFileHelper.getInstance().findReport(file);
             if (findModelElement == null) {
                 return findModelElement;
@@ -143,7 +143,7 @@ public final class EObjectHelper {
             for (Resource resource : modifiedResources) {
                 EMFUtil.saveSingleResource(resource);
             }
-        } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+        } else if (FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension())) {
             findModelElement = PatternResourceFileHelper.getInstance().findPattern(file);
         }
         return findModelElement;

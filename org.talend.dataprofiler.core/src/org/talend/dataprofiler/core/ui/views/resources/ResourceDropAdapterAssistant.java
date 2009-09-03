@@ -217,7 +217,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                         && (targetRes.getType() == IResource.FILE)) {
                     // if (targetRes instanceof IFile) {
                     IFile tfile = (IFile) targetRes;
-                    if (tfile.getFileExtension().equals(FactoriesUtil.REP)) {
+                    if (FactoriesUtil.REP.equals(tfile.getFileExtension())) {
                         // dropRep = true;
                         return Status.OK_STATUS;
                     }
