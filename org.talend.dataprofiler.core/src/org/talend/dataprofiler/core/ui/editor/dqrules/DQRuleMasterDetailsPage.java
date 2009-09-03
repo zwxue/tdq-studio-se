@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -48,12 +47,14 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.JoinConditionTableViewer;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.views.WhereClauseDND;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
@@ -98,6 +99,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     }
 
     private Composite joinElementComp;
+    
+    private JoinConditionTableViewer joinConditionTableViewer;
 
     public Text getCriticalityLevelText() {
         return criticalityLevelText;
@@ -236,14 +239,16 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
      */
     private boolean saveDQRule() {
         boolean ret = false;
+        this.tempJoinElements = cleanJoins(tempJoinElements);
         if (checkValus()) {
             TaggedValueHelper.setValidStatus(true, whereRule);
             whereRule.setCriticalityLevel(Integer.valueOf(getCriticalityLevelText().getText()));
             whereRule.setWhereExpression(whereText.getText());
             whereRule.getJoins().clear();
-            whereRule.getJoins().addAll(cleanJoins(tempJoinElements));
+            whereRule.getJoins().addAll(this.tempJoinElements);
             EMFUtil.saveSingleResource(whereRule.eResource());
             ret = true;
+            this.joinConditionTableViewer.updateModelViewer();
         }
         return ret;
 
@@ -299,8 +304,22 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
                 msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsInvalid") + "\n";
             }
         }
+        for (JoinElement join : this.tempJoinElements) {
+            String tableAliasA = join.getTableAliasA();
+            String tableAliasB = join.getTableAliasB();
+            if (tableAliasA == null || "".equals(tableAliasA) || tableAliasB == null || "".equals(tableAliasB)) {
+                ret = false;
+                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.emptyTableAlias") + "\n";
+                break;
+            } else if (tableAliasA.equals(tableAliasB)) {
+                ret = false;
+                String tableA = ColumnHelper.getColumnSetOwner((Column) join.getColA()).getName();
+                String tableB = ColumnHelper.getColumnSetOwner((Column) join.getColB()).getName();
+                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.sameTableAlias", tableA, tableB) + "\n";
+            }
+        }
         if (!ret) {
-            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.warning"), msg); //$NON-NLS-1$
+            MessageUI.openWarning(msg);
         }
         return ret;
     }
@@ -350,10 +369,10 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         newComp.setLayout(new GridLayout());
         // MOD xqliu 2009-08-31 bug 8791
         if (true) {
-            JoinConditionTableViewer jcTableViewer = new JoinConditionTableViewer(newComp, this);
-            jcTableViewer.setDirty(false);
-            jcTableViewer.addPropertyChangeListener(this);
-            createButtons(newComp, jcTableViewer);
+            joinConditionTableViewer = new JoinConditionTableViewer(newComp, this);
+            joinConditionTableViewer.setDirty(false);
+            joinConditionTableViewer.addPropertyChangeListener(this);
+            createButtons(newComp, joinConditionTableViewer);
         } else {
             joinElementComp = new Composite(newComp, SWT.NONE);
             joinElementComp.setLayout(new GridLayout());

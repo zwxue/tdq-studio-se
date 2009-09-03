@@ -83,10 +83,9 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" };
 
-    private String[] headers = { "TableA", "TableAliasA", "ColumnA", "ColumnAliasA", "Operator", "TableB", "TableAliasB",
-            "ColumnB", "ColumnAliasB" };
+    private String[] headers = { "TableA", "TableAliasA", "ColumnA", "Operator", "TableB", "TableAliasB", "ColumnB" };
 
-    private int[] widths = { 100, 100, 100, 100, 70, 100, 100, 100, 100 };
+    private int[] widths = { 100, 100, 100, 70, 100, 100, 100 };
     
     public JoinConditionTableViewer(Composite parent, DQRuleMasterDetailsPage masterPage) {
         this.parentComposite = parent;
@@ -124,12 +123,10 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         for (int i = 0; i < editors.length; ++i) {
             switch (i) {
             case 1:
-            case 3:
-            case 6:
-            case 8:
+            case 5:
                 editors[i] = new TextCellEditor(table);
                 break;
-            case 4:
+            case 3:
                 editors[i] = new ComboBoxCellEditor(table, OPERATORS, SWT.READ_ONLY);
                 break;
             default:
@@ -224,7 +221,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         newJoinElement.setOperator(DEFAULT_OPERATOR);
         this.myTableViewer.add(newJoinElement);
         this.myJoinElement.add(newJoinElement);
-        JoinConditionTableViewer.this.masterPage.setDirty(true);
+        this.masterPage.setDirty(true);
         return newJoinElement;
     }
 
@@ -275,7 +272,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                         }
                     }
                 }
-                this.setDirty(true);
+                this.masterPage.setDirty(true);
                 this.myTableViewer.update(join, null);
             }
         }
@@ -283,7 +280,8 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     @Override
     public void updateModelViewer() {
-
+        this.myJoinElement = this.masterPage.getTempJoinElements();
+        this.myTableViewer.setInput(this.myJoinElement);
     }
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
@@ -330,9 +328,6 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 result = colA == null ? "" : colA.getName();
                 break;
             case 3:
-                result = join.getColumnAliasA() == null ? "" : join.getColumnAliasA();
-                break;
-            case 4:
                 String stringValue = join.getOperator();
                 int i = OPERATORS.length - 1;
                 while (!stringValue.equals(OPERATORS[i]) && i > 0) {
@@ -340,17 +335,14 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 }
                 result = new Integer(i);
                 break;
-            case 5:
+            case 4:
                 result = tabB == null ? "" : tabB.getName();
                 break;
-            case 6:
+            case 5:
                 result = join.getTableAliasB() == null ? "" : join.getTableAliasB();
                 break;
-            case 7:
+            case 6:
                 result = colB == null ? "" : colB.getName();
-                break;
-            case 8:
-                result = join.getColumnAliasB() == null ? "" : join.getColumnAliasB();
                 break;
             default:
                 result = "";
@@ -362,33 +354,31 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             int columnIndex = this.columeNames.indexOf(property);
 
             TableItem tableItem = (TableItem) element;
-            JoinElement join = (JoinElement) tableItem.getData();
-            String valueString = String.valueOf(value).trim();
+            if (tableItem != null) {
+                JoinElement join = (JoinElement) tableItem.getData();
+                if (join != null) {
+                    String valueString = String.valueOf(value).trim();
 
-            switch (columnIndex) {
-            case 1:
-                join.setTableAliasA(valueString);
-                break;
-            case 3:
-                join.setColumnAliasA(valueString);
-                break;
-            case 4:
-                valueString = OPERATORS[((Integer) value).intValue()].trim();
-                if (!join.getOperator().equals(valueString)) {
-                    join.setOperator(valueString);
+                    switch (columnIndex) {
+                    case 1:
+                        join.setTableAliasA(valueString);
+                        break;
+                    case 3:
+                        valueString = OPERATORS[((Integer) value).intValue()].trim();
+                        if (!join.getOperator().equals(valueString)) {
+                            join.setOperator(valueString);
+                        }
+                        join.setOperator(valueString);
+                        break;
+                    case 5:
+                        join.setTableAliasB(valueString);
+                        break;
+                    default:
+                    }
+                    tableViewer.update(join, null);
+                    JoinConditionTableViewer.this.masterPage.setDirty(true);
                 }
-                join.setOperator(valueString);
-                break;
-            case 6:
-                join.setTableAliasB(valueString);
-                break;
-            case 8:
-                join.setColumnAliasB(valueString);
-                break;
-            default:
             }
-            tableViewer.update(join, null);
-            JoinConditionTableViewer.this.masterPage.setDirty(true);
         }
 
     }
@@ -429,10 +419,10 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             case 2:
                 result = ImageLib.getImage(ImageLib.TD_COLUMN);
                 break;
-            case 5:
+            case 4:
                 result = ImageLib.getImage(ImageLib.TABLE);
                 break;
-            case 7:
+            case 6:
                 result = ImageLib.getImage(ImageLib.TD_COLUMN);
                 break;
             default:
@@ -462,22 +452,16 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 result = colA == null ? "" : colA.getName();
                 break;
             case 3:
-                result = join.getColumnAliasA() == null ? "" : join.getColumnAliasA();
-                break;
-            case 4:
                 result = join.getOperator();
                 break;
-            case 5:
+            case 4:
                 result = tabB == null ? "" : tabB.getName();
                 break;
-            case 6:
+            case 5:
                 result = join.getTableAliasB() == null ? "" : join.getTableAliasB();
                 break;
-            case 7:
+            case 6:
                 result = colB == null ? "" : colB.getName();
-                break;
-            case 8:
-                result = join.getColumnAliasB() == null ? "" : join.getColumnAliasB();
                 break;
             default:
                 result = "";
@@ -497,7 +481,6 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         public String getAb() {
             return ab;
         }
-
         
         public void setAb(String ab) {
             this.ab = ab;
