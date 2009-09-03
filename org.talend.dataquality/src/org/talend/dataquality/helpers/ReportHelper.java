@@ -93,7 +93,7 @@ public final class ReportHelper {
         
         // Analysis: Functional Dependency analysis.
         BASIC_TABLE_FUNCTIONAL_DEPENDENCY(BASIC, PROPS.getProperty("BASIC_TABLE_FUNCTIONAL_DEPENDENCY")), //$NON-NLS-1$
-        EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY(EVOLUTION, PROPS.getProperty("EVOLUTION_TABLE")), //$NON-NLS-1$
+        EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY(EVOLUTION, PROPS.getProperty("EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY")), //$NON-NLS-1$
         
 
         USER_MADE(USER_DEFINED, null); // for the user to set his own file path
