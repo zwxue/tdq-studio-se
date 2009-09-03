@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -276,9 +277,15 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
     }
 
     private boolean isModelElementFile(IFile file) {
-        if (DQStructureManager.getInstance().getModelElementSuffixs().contains(file.getFileExtension())) {
+        List<String> allSufix = new ArrayList<String>();
+        allSufix.addAll(DQStructureManager.getInstance().getModelElementSuffixs());
+        allSufix.addAll(Arrays.asList(EXTEND_ME_SUFIX));
+        if (allSufix.contains(
+                file.getFileExtension())) {
             return true;
         }
         return false;
     }
+    
+    private static final String[] EXTEND_ME_SUFIX = { "sql", "pattern", "rules", "definition" };
 }
