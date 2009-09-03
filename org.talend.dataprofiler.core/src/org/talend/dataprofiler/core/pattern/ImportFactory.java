@@ -15,8 +15,10 @@ package org.talend.dataprofiler.core.pattern;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -70,10 +72,10 @@ public final class ImportFactory {
 
     }
 
-    public static String importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
+    public static List<String> importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
             boolean rename) {
 
-        StringBuffer importInformation = new StringBuffer();
+        List<String> importInformation = new ArrayList<String>();
 
         Set<String> names = PatternUtilities.getAllPatternNames(selectionFolder);
 
@@ -96,8 +98,7 @@ public final class ImportFactory {
 
                     if (names.contains(name)) {
                         if (skip) {
-                            importInformation.append("Pattern \"" + name + "\" has already imported");
-                            importInformation.append("\n");
+                            importInformation.add("Pattern \"" + name + "\" has already imported");
                             continue;
                         }
                         if (rename) {
@@ -119,19 +120,17 @@ public final class ImportFactory {
                         }
                     }
 
-                    String relativePath = createAndStorePattern(patternParameters, selectionFolder, type);
+                    String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
                     names.add(name);
 
-                    importInformation.append("Pattern \"" + name + "\" imported in the \"" + relativePath + "\" folder");
-                    importInformation.append("\n");
+                    importInformation.add("Pattern \"" + name + "\" imported in the \"" + relativePath + "\" folder");
                 }
 
                 reader.close();
 
             } catch (Exception e) {
                 log.error(e, e);
-                importInformation.append("Import failed");
-                importInformation.append("\n");
+                importInformation.add("Import failed");
             }
         }
 
@@ -160,8 +159,7 @@ public final class ImportFactory {
                             String contents = cell.getContents();
                             if (names.contains(contents)) {
                                 if (skip) {
-                                    importInformation.append("Pattern \"" + contents + "\" has already imported");
-                                    importInformation.append("\n");
+                                    importInformation.add("Pattern \"" + contents + "\" has already imported");
                                     continue;
                                 }
                                 if (rename) {
@@ -184,13 +182,11 @@ public final class ImportFactory {
                                 }
                             }
 
-                            String relativePath = createAndStorePattern(patternParameters, selectionFolder, type);
+                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
 
                             names.add(contents);
 
-                            importInformation.append("Pattern \"" + contents + "\" imported in the \"" + relativePath
-                                    + "\" folder");
-                            importInformation.append("\n");
+                            importInformation.add("Pattern \"" + contents + "\" imported in the \"" + relativePath + "\" folder");
                         }
                     }
                 }
@@ -198,16 +194,14 @@ public final class ImportFactory {
                 rwb.close();
             } catch (BiffException e) {
                 log.error(e, e);
-                importInformation.append("Import failed");
-                importInformation.append("\n");
+                importInformation.add("Import failed");
             } catch (IOException e) {
                 log.error(e, e);
-                importInformation.append("Import failed");
-                importInformation.append("\n");
+                importInformation.add("Import failed");
             }
         }
 
-        return importInformation.toString();
+        return importInformation;
     }
 
     private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
@@ -319,10 +313,10 @@ public final class ImportFactory {
      * @param rename
      * @return
      */
-    public static String importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip, boolean rename) {
+    public static List<String> importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip, boolean rename) {
 
-        String information = "User Defined Indicators imported in the \"Indicators\" folder";
-        
+        List<String> information = new ArrayList<String>();
+
         Set<String> names = UDIHelper.getAllIndicatorNames(selectionFolder);
 
         String fileExtName = getFileExtName(importFile);
@@ -346,7 +340,7 @@ public final class ImportFactory {
 
                     if (names.contains(name)) {
                         if (skip) {
-                            information = "User Defined Indicator \"" + name + "\" has already imported";
+                            information.add("User Defined Indicator \"" + name + "\" has already imported");
                             continue;
                         }
                         if (rename) {
@@ -373,14 +367,14 @@ public final class ImportFactory {
 
                     names.add(name);
 
-                    information = "User Defined Indicator \"" + name
-                            + "\" imported in the \"Indicators/User Defined Indicators\" folder";
+                    information.add("User Defined Indicator \"" + name
+                            + "\" imported in the \"Indicators/User Defined Indicators\" folder");
                 }
 
                 reader.close();
             } catch (Exception e) {
                 log.error(e, e);
-                information = "User Defined Indicator \"" + name + "\" import failed";
+                information.add("User Defined Indicator \"" + name + "\" import failed");
             }
         }
 
@@ -446,7 +440,7 @@ public final class ImportFactory {
                 log.error(e, e);
             }
         }
-        
+
         return information;
     }
 

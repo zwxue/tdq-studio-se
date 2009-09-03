@@ -96,7 +96,7 @@ public class ImportRemotePatternAction extends Action {
 
     private void updateUI(IJobChangeEvent event) {
 
-        final StringBuffer information = new StringBuffer();
+        final List<String> information = new ArrayList<String>();
 
         setEnabled(true);
         if (fExtensionDownloaded > 0) {
@@ -111,16 +111,17 @@ public class ImportRemotePatternAction extends Action {
                 ExpressionType type = ExpressionType.REGEXP;
                 IFolder folder = getFolder(DQStructureManager.PATTERNS);
 
-                if ("regex".equals(componet.getCategry().getName())) {
+                if ("regex".equalsIgnoreCase(componet.getCategry().getName())) {
                     type = ExpressionType.REGEXP;
                     folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.REGEX);
-                } else if ("pattern".equals(componet.getCategry().getName())) {
+                } else if ("pattern".equalsIgnoreCase(componet.getCategry().getName())) {
                     type = ExpressionType.REGEXP;
                     folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.REGEX);
-                } else if ("sql".equals(componet.getCategry().getName())) {
+                } else if ("SQL".equalsIgnoreCase(componet.getCategry().getName())) {
+                    // MOD yyi 8960: Patterns imported from Exchange/SQL can not be put in "Patterns/SQL" folder
                     type = ExpressionType.SQL_LIKE;
                     folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.SQL);
-                } else if ("indicator".equals(componet.getCategry().getName())) {
+                } else if ("indicator".equalsIgnoreCase(componet.getCategry().getName())) {
                     type = null;
                 }
 
@@ -128,19 +129,19 @@ public class ImportRemotePatternAction extends Action {
                     if (type == null) {
                         IFolder udiFolder = getFolder(DQStructureManager.INDICATORS).getFolder(
                                 DQStructureManager.USER_DEFINED_INDICATORS);
-                        information.append(ImportFactory.importIndicatorToStucture(oneFile, udiFolder, true, true));
+                        information.addAll(ImportFactory.importIndicatorToStucture(oneFile, udiFolder, true, true));
                     } else {
-                        information.append(ImportFactory.importToStucture(oneFile, folder, type, true, true));
+                        information.addAll(ImportFactory.importToStucture(oneFile, folder, type, true, true));
                     }
 
-                    information.append("\n");
                 }
             }
 
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
-                    ImportInfoDialog.openImportInformation(null, information);
+
+                    ImportInfoDialog.openImportInformation(null, "Import finish.", (String[]) information.toArray(new String[0]));
                 }
             });
 

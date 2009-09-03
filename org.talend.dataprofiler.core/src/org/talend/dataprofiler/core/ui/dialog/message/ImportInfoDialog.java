@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ImportInfoDialog extends MessageDialog {
 
-    StringBuffer information;
+    String[] information;
 
     /**
      * DOC Administrator ImportInfoDialog constructor comment.
@@ -41,7 +41,7 @@ public class ImportInfoDialog extends MessageDialog {
      * @param defaultIndex
      */
     public ImportInfoDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
-            int dialogImageType, String[] dialogButtonLabels, int defaultIndex, StringBuffer information) {
+            int dialogImageType, String[] dialogButtonLabels, int defaultIndex, String[] information) {
         super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels, defaultIndex);
         this.information = information;
     }
@@ -49,15 +49,13 @@ public class ImportInfoDialog extends MessageDialog {
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
+     * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse. swt.widgets.Composite)
      */
     @Override
     protected Control createCustomArea(Composite parent) {
 
         List list = new List(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-        String allinfo = this.information.toString().replaceAll("[\n]+", "\n");
-        String[] info = allinfo.toString().split("\n");
-        list.setItems(info);
+        list.setItems(this.information);
         GridData data = new GridData();
         data.heightHint = 120;
         data.widthHint = 350;
@@ -74,9 +72,7 @@ public class ImportInfoDialog extends MessageDialog {
      * 
      * @param information
      */
-    public static void openImportInformation(Shell parent, StringBuffer information) {
-
-        String message = "Import finish";
+    public static void openImportInformation(Shell parent, String message, String[] information) {
 
         ImportInfoDialog dialog = new ImportInfoDialog(parent, "Information", null, message, INFORMATION,
                 new String[] { IDialogConstants.OK_LABEL }, 0, information);

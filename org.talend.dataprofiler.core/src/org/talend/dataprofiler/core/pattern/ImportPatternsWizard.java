@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
+import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
@@ -66,13 +67,13 @@ public class ImportPatternsWizard extends Wizard {
 
         File file = new File(page.getSourceFile());
 
-        final StringBuffer information = new StringBuffer();
-        information.append(ImportFactory.importToStucture(file, folder, type, page.getSkip(), page.getRename()));
+        final List<String> information = ImportFactory.importToStucture(file, folder, type, page.getSkip(), page.getRename());
 
         Display.getDefault().asyncExec(new Runnable() {
 
             public void run() {
-                ImportInfoDialog.openImportInformation(null, information);
+
+                ImportInfoDialog.openImportInformation(null, "Import finish.", (String[]) information.toArray(new String[0]));
             }
         });
 
