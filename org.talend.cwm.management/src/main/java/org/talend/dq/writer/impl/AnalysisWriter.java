@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.analysis;
+package org.talend.dq.writer.impl;
 
 import java.util.List;
 
@@ -37,6 +37,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * This class saves the analysis.
  */
 public class AnalysisWriter extends AElementPersistance {
+
+    /**
+     * DOC bZhou AnalysisWriter constructor comment.
+     */
+    AnalysisWriter() {
+        super();
+    }
 
     /*
      * (non-Javadoc)

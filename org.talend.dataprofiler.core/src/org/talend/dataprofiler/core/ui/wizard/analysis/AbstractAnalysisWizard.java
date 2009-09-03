@@ -20,12 +20,12 @@ import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.AnalysisBuilder;
-import org.talend.dq.analysis.AnalysisWriter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.dq.writer.ElementWriterFactory;
+import org.talend.dq.writer.impl.AnalysisWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

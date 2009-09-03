@@ -25,13 +25,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.dq.writer.impl.PatternWriter;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -168,11 +170,9 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
     }
 
     public boolean save(Pattern pattern) {
-        boolean saved = EMFUtil.saveSingleResource(pattern.eResource());
-        // if (saved) {
-        // setResourcesNumberChanged(true);
-        // }
-        return saved;
+        PatternWriter writer = ElementWriterFactory.getInstance().createPatternWriter();
+        ReturnCode save = writer.save(pattern);
+        return save.isOk();
     }
 
     /**

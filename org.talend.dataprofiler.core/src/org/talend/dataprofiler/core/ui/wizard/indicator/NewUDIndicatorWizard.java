@@ -23,7 +23,7 @@ import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.UDIndicatorBuilder;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.writer.ElementWriterFactory;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;

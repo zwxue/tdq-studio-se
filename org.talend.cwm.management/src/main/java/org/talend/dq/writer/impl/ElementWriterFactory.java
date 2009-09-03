@@ -10,13 +10,8 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.writer;
+package org.talend.dq.writer.impl;
 
-import org.talend.dq.analysis.AnalysisWriter;
-import org.talend.dq.analysis.ReportWriter;
-import org.talend.dq.connection.DataProviderWriter;
-import org.talend.dq.indicators.UDIndicatorWriter;
-import org.talend.dq.pattern.PatternWriter;
 
 /**
  * DOC bZhou class global comment. Detailled comment

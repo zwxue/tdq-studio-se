@@ -39,7 +39,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.writer.ElementWriterFactory;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sugars.TypedReturnCode;

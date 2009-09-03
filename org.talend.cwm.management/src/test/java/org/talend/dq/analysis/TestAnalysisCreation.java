@@ -47,7 +47,7 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.sql.converters.CwmZExpression;
-import org.talend.dq.writer.ElementWriterFactory;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sugars.ReturnCode;

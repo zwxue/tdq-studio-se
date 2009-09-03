@@ -26,8 +26,7 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.analysis.parameters.PatternParameter;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.pattern.PatternBuilder;
-import org.talend.dq.pattern.PatternWriter;
-import org.talend.dq.writer.ElementWriterFactory;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -104,7 +103,6 @@ public class CreatePatternWizard extends AbstractWizard {
     }
 
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
-        PatternWriter writer = new PatternWriter();
         Pattern pattern = (Pattern) cwmElement;
         IFolder folderResource = parameter.getFolderProvider().getFolderResource();
 

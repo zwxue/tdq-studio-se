@@ -54,7 +54,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -98,15 +97,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private IndicatorCategory category;
 
     private Section additionalFunctionsSection;
-    
+
     private Composite additionalFunctionsComp;
 
     private Composite afExpressionComp;
-    
+
     private Map<String, AggregateDateExpression> afExpressionMap, afExpressionMapTemp;
 
     private List<String> remainDBTypeListAF;
-    
+
     private boolean isAggregateExpression, isDateExpression;
 
     private boolean systemIndicator;
@@ -146,7 +145,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         remainDBTypeList = new ArrayList<String>();
         remainDBTypeList.addAll(allDBTypeList);
-        
+
         remainDBTypeListAF = new ArrayList<String>();
         remainDBTypeListAF.addAll(allDBTypeList);
 
@@ -163,7 +162,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
         }
-        
+
         if (definition != null) {
             isAggregateExpression = definition.getAggregate1argFunctions().size() > 0;
             isDateExpression = definition.getDate1argFunctions().size() > 0;
@@ -171,7 +170,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         // initialize indicator type
         systemIndicator = this.getEditor().getEditorInput() instanceof IndicatorEditorInput;
-        
+
         afExpressionMap = new HashMap<String, AggregateDateExpression>();
         afExpressionMapTemp = new HashMap<String, AggregateDateExpression>();
     }
@@ -234,24 +233,24 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (definition != null) {
             EList<Expression> aggregate1argFunctions = definition.getAggregate1argFunctions();
             EList<Expression> date1argFunctions = definition.getDate1argFunctions();
-            
+
             if (aggregate1argFunctions != null && aggregate1argFunctions.size() > 0) {
                 for (Expression expression : aggregate1argFunctions) {
                     recordAFExpression(afExpressionMap, expression, null);
                 }
             }
-            
+
             if (date1argFunctions != null && date1argFunctions.size() > 0) {
                 for (Expression expression : date1argFunctions) {
                     recordAFExpression(afExpressionMap, null, expression);
                 }
             }
-            
+
             afExpressionMapTemp.clear();
             for (String key : afExpressionMap.keySet()) {
                 afExpressionMapTemp.put(key, afExpressionMap.get(key).clone());
             }
-            
+
             for (String language : afExpressionMapTemp.keySet()) {
                 createNewAFExpressLine(language, afExpressionMapTemp.get(language));
             }
@@ -275,7 +274,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         final Composite expressionLanguageComp = new Composite(expressComp, SWT.NONE);
         expressionLanguageComp.setLayout(new GridLayout());
         expressionLanguageComp.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-        
+
         new Label(expressionLanguageComp, SWT.NONE);
         final CCombo combo = new CCombo(expressionLanguageComp, SWT.BORDER);
         GridData comboGridData = new GridData();
@@ -373,7 +372,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             tableViewer.setLabelProvider(new AggregateLabelProvider());
             tableViewer.setInput(new AggregateVO(aggregateDateExpression.getAggregateExpression()));
         }
-        
+
         if (aggregateDateExpression.haveDateExpression()) {
             tableViewer.setCellModifier(new DateCellModifier(headers, tableViewer));
             tableViewer.setContentProvider(new AggregateDateContentProvider());
@@ -460,7 +459,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 setDirty(true);
             }
         });
-        
+
     }
 
     /**
@@ -685,7 +684,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 expressiones.add(expression);
             }
         }
-        
+
         if (isAggregateExpression) {
             EList<Expression> aggregate1argFunctions = definition.getAggregate1argFunctions();
             aggregate1argFunctions.clear();
@@ -696,7 +695,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
-        
+
         if (isDateExpression) {
             EList<Expression> date1argFunctions = definition.getDate1argFunctions();
             date1argFunctions.clear();
@@ -708,7 +707,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
 
-        EMFUtil.saveSingleResource(definition.eResource());
+        // EMFUtil.saveSingleResource(definition.eResource());
+        UDIResourceFileHelper.getInstance().save(definition);
         this.isDirty = false;
     }
 
@@ -739,7 +739,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         public AggregateDateExpression() {
         }
-        
+
         public void setLanguage(String language) {
             if (aggregateExpression != null) {
                 aggregateExpression.setLanguage(language);
@@ -748,7 +748,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 dateExpression.setLanguage(language);
             }
         }
-        
+
         public String getLanguage() {
             if (aggregateExpression != null) {
                 return aggregateExpression.getLanguage();
@@ -758,13 +758,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
             return "";
         }
-        
+
         public void setAggregateBody(String body) {
             if (aggregateExpression != null) {
                 aggregateExpression.setBody(body);
             }
         }
-        
+
         public String getAggregateBody() {
             if (aggregateExpression != null) {
                 return aggregateExpression.getBody();
@@ -777,7 +777,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 dateExpression.setBody(body);
             }
         }
-        
+
         public String getDateBody() {
             if (dateExpression != null) {
                 return dateExpression.getBody();
@@ -819,7 +819,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private final class AggregateVO {
 
         String horizontalAxis, verticalAxis, bubbleSize;
-        
+
         Expression aggreagetExpression;
 
         public String getHorizontalAxis() {
@@ -897,7 +897,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
             return false;
         }
-        
+
         public int hashCode() {
             return this.getLanguage().concat(this.getBody()).hashCode();
         }
@@ -908,9 +908,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
     private final class AggregateCellModifier implements ICellModifier {
-        
+
         private List<String> columeNames;
-        
+
         private TableViewer tableViewer;
 
         public AggregateCellModifier(String[] columeNames, TableViewer tableViewer) {
@@ -921,7 +921,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
             this.tableViewer = tableViewer;
         }
-        
+
         public boolean canModify(Object element, String property) {
             return true;
         }
@@ -945,12 +945,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             default:
                 result = "";
             }
-            return result;  
+            return result;
         }
 
         public void modify(Object element, String property, Object value) {
             int columnIndex = this.columeNames.indexOf(property);
-            
+
             Table table = (Table) element;
             AggregateVO vo = (AggregateVO) table.getItem(0).getData();
             String valueString = ((String) value).trim();
@@ -972,6 +972,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
     }
+
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
@@ -988,9 +989,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         }
-        
+
     }
-    
+
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
      */

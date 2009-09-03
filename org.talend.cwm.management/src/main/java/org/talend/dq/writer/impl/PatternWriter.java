@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.pattern;
+package org.talend.dq.writer.impl;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.emf.FactoriesUtil;
@@ -23,6 +23,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class PatternWriter extends AElementPersistance {
 
     static Logger log = Logger.getLogger(PatternWriter.class);
+
+    /**
+     * DOC bZhou PatternWriter constructor comment.
+     */
+    PatternWriter() {
+        super();
+    }
 
     /*
      * (non-Javadoc)

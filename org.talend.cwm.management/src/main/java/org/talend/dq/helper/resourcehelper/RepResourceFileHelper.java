@@ -28,8 +28,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.reports.util.ReportsSwitch;
-import org.talend.dq.analysis.ReportWriter;
-import org.talend.dq.writer.ElementWriterFactory;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.dq.writer.impl.ReportWriter;
 import org.talend.utils.sugars.ReturnCode;
 
 /**

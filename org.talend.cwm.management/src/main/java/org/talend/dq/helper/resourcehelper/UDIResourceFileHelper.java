@@ -27,6 +27,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.dq.writer.impl.UDIndicatorWriter;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -138,5 +141,11 @@ public class UDIResourceFileHelper extends ResourceFileMap {
             IFile file = (IFile) resource;
             findUDI(file);
         }
+    }
+
+    public ReturnCode save(IndicatorDefinition indicator) {
+        UDIndicatorWriter writer = ElementWriterFactory.getInstance().createUDIndicatorWriter();
+        ReturnCode saved = writer.save(indicator);
+        return saved;
     }
 }

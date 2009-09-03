@@ -45,7 +45,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.dq.indicators.graph.tests.MyFirstTest;
 import org.talend.dq.sql.converters.CwmZExpression;
-import org.talend.dq.writer.ElementWriterFactory;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.Java2SqlType;

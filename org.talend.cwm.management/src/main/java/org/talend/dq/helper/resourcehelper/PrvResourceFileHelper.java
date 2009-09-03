@@ -28,9 +28,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dq.writer.impl.DataProviderWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -146,8 +147,10 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     }
 
     public ReturnCode save(TdDataProvider dataProvider) {
-        ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
-        return returnCode;
+        DataProviderWriter writer = ElementWriterFactory.getInstance().createDataProviderWriter();
+        // ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
+        ReturnCode rc = writer.save(dataProvider);
+        return rc;
     }
 
     public List<TdDataProvider> getAllDataProviders(IFolder folder) {

@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.indicators;
+package org.talend.dq.writer.impl;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.emf.FactoriesUtil;
@@ -23,6 +23,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class UDIndicatorWriter extends AElementPersistance {
 
     static Logger log = Logger.getLogger(UDIndicatorWriter.class);
+
+    /**
+     * DOC bZhou UDIndicatorWriter constructor comment.
+     */
+    UDIndicatorWriter() {
+        super();
+    }
 
     /*
      * (non-Javadoc)

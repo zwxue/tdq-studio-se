@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.connection;
+package org.talend.dq.writer.impl;
 
 import java.util.Collection;
 
@@ -34,6 +34,12 @@ public class DataProviderWriter extends AElementPersistance {
 
     static Logger log = Logger.getLogger(DataProviderWriter.class);
 
+    /**
+     * DOC bZhou DataProviderWriter constructor comment.
+     */
+    DataProviderWriter() {
+        super();
+    }
 
     /*
      * (non-Javadoc)
@@ -44,7 +50,7 @@ public class DataProviderWriter extends AElementPersistance {
     protected void addDependencies(ModelElement element) {
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem((TdDataProvider) element);
         if (softwareSystem != null) {
-            DqRepositoryViewService.saveSoftwareSystem(softwareSystem);            
+            DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
         }
     }
 

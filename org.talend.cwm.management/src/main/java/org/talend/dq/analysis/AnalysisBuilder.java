@@ -30,6 +30,8 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.writer.impl.AnalysisWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -233,7 +235,7 @@ public class AnalysisBuilder {
      */
     public boolean saveAnalysis(IFolder folder) {
         assert analysis != null;
-        AnalysisWriter writer = new AnalysisWriter();
+        AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
         String filename = DqRepositoryViewService.createFilename(this.analysis.getName(), FactoriesUtil.ANA);
         IFile file = folder.getFile(filename);
         ReturnCode saved = writer.save(analysis, file);

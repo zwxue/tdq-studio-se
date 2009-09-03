@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.analysis;
+package org.talend.dq.writer.impl;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -31,6 +31,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * This class saves the analysis.
  */
 public class ReportWriter extends AElementPersistance {
+
+    /**
+     * DOC bZhou ReportWriter constructor comment.
+     */
+    ReportWriter() {
+        super();
+    }
 
     /*
      * (non-Javadoc)

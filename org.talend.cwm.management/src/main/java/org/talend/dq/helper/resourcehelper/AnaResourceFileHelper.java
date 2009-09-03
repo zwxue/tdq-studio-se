@@ -31,8 +31,8 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.analysis.AnalysisWriter;
-import org.talend.dq.writer.ElementWriterFactory;
+import org.talend.dq.writer.impl.AnalysisWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
