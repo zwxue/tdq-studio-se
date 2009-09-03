@@ -98,7 +98,7 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
             Object obj = iterator.next();
             if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
-                if (EXTENSION_PATTERN.equalsIgnoreCase(file.getFileExtension()) {
+                if (EXTENSION_PATTERN.equalsIgnoreCase(file.getFileExtension())) {
                     selectedFiles.add(file);
                 }
             } else {
