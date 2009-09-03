@@ -118,6 +118,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         this.systemIndicator = systemIndicator;
     }
 
+    private static final String BODY_AGGREGATE = "AVG({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)";
+
+    private static final String BODY_DATE = "MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)";
+
     /**
      * DOC bZhou IndicatorDefinitionMaterPage constructor comment.
      * 
@@ -448,9 +452,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 Expression expression = BooleanExpressionHelper.createExpression(language, "");
                 AggregateDateExpression ade = new AggregateDateExpression();
                 if (isAggregateExpression) {
+                    expression.setBody(BODY_AGGREGATE);
                     ade.setAggregateExpression(expression);
                 }
                 if (isDateExpression) {
+                    expression.setBody(BODY_DATE);
                     ade.setDateExpression(expression);
                 }
                 createNewAFExpressLine(language, ade);
