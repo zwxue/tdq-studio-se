@@ -356,8 +356,22 @@ public final class IndicatorHelper {
             // --- add threholds to the mean and median indicator
             setDataThreshold(boxIndicator.getMeanIndicator(), dataThreshold[0], dataThreshold[1]);
             setDataThreshold(boxIndicator.getMedianIndicator(), dataThreshold[0], dataThreshold[1]);
-        }
+        } else if (IndicatorsPackage.eINSTANCE.getRangeIndicator().equals(indicator.eClass())
+                || IndicatorsPackage.eINSTANCE.getIQRIndicator().equals(indicator.eClass())) {
+            RangeIndicator rangeIndicator = (RangeIndicator) indicator;
+            String[] dataThreshold = IndicatorHelper.getDataThreshold(rangeIndicator);
+            if (dataThreshold == null) {
+                // clear all data thresholds
+                final EList<Indicator> allChildIndicators = rangeIndicator.getAllChildIndicators();
+                for (Indicator ind : allChildIndicators) {
+                    clearDataThresholds(ind);
+                }
+                return;
+            }
 
+            // --- add thresholds in (min and max) or (lower and upper quartile) indicators
+            setDataThresholds(rangeIndicator, dataThreshold);
+        }
     }
 
     /**
@@ -380,6 +394,7 @@ public final class IndicatorHelper {
      */
     private static void setDataThresholds(RangeIndicator rangeIndicator, String[] dataThreshold) {
         if (rangeIndicator != null) {
+            IndicatorHelper.setDataThreshold(rangeIndicator, dataThreshold[0], dataThreshold[1]);
             MinValueIndicator lowerValue = rangeIndicator.getLowerValue();
             if (lowerValue != null) {
                 IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
