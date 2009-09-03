@@ -166,19 +166,18 @@ public enum FormEnum {
 
             break;
         case BoxIIndicatorEnum:
+        case RangeIndicatorEnum:
+        case IQRIndicatorEnum:
             forms = new FormEnum[] { DataThresholdsForm };
 
             break;
         case MeanIndicatorEnum:
         case MedianIndicatorEnum:
-            forms = new FormEnum[] { IndicatorThresholdsForm };
-
-            break;
         case LowerQuartileIndicatorEnum:
         case UpperQuartileIndicatorEnum:
         case MinValueIndicatorEnum:
         case MaxValueIndicatorEnum:
-            forms = new FormEnum[] { IndicatorThresholdsForm, DataThresholdsForm };
+            forms = new FormEnum[] { IndicatorThresholdsForm };
 
             break;
         case RegexpMatchingIndicatorEnum:
