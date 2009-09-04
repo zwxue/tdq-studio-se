@@ -23,9 +23,10 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
 import org.talend.dq.dqrule.DqRuleBuilder;
-import org.talend.dq.dqrule.DqRuleWriter;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -74,7 +75,7 @@ public class NewDQRulesWizard extends AbstractWizard {
         whereRule.setWhereExpression(parameter.getWhereClause());
         whereRule.setCriticalityLevel(CRITICALITY_LEVEL_DEFAULT);
         whereRule.getSqlGenericExpression().add(getExpression());
-        
+
         // MOD scorreia 2009-04-29 bug 7151: add the category
         IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
         if (ruleIndicatorCategory != null && !whereRule.getCategories().contains(ruleIndicatorCategory)) {
@@ -82,7 +83,8 @@ public class NewDQRulesWizard extends AbstractWizard {
         }
 
         IFolder folder = parameter.getFolderProvider().getFolderResource();
-        return DqRuleWriter.getInstance().createDqRuleFile(whereRule, folder);
+
+        return ElementWriterFactory.getInstance().createdRuleWriter().create(whereRule, folder);
     }
 
     public ModelElement initCWMResourceBuilder() {
@@ -115,8 +117,7 @@ public class NewDQRulesWizard extends AbstractWizard {
 
     @Override
     protected ResourceFileMap getResourceFileMap() {
-        // TODO Auto-generated method stub
-        return null;
+        return DQRuleResourceFileHelper.getInstance();
     }
 
     @Override

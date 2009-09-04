@@ -29,7 +29,9 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -66,8 +68,10 @@ public class DuplicateCWMResourceAction extends Action {
                         }
                     }
 
-                    EMFSharedResources.getInstance().addEObjectToResourceSet(newFile.getFullPath().toString(), newObject);
-                    EMFSharedResources.getInstance().saveLastResource();
+                    AElementPersistance elementPersistance = ElementWriterFactory.getInstance()
+                            .create(newFile.getFileExtension());
+
+                    elementPersistance.save(newObject, newFile);
                 }
             }
         }

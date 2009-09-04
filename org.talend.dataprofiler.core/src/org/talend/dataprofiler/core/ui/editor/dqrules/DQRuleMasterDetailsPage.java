@@ -48,7 +48,6 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
@@ -62,6 +61,7 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 
@@ -95,7 +95,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     private Text criticalityLevelText;
 
     private List<JoinElement> tempJoinElements;
-    
+
     public List<JoinElement> getTempJoinElements() {
         return tempJoinElements;
     }
@@ -248,8 +248,10 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             whereRule.setWhereExpression(whereText.getText());
             whereRule.getJoins().clear();
             whereRule.getJoins().addAll(this.tempJoinElements);
-            EMFUtil.saveSingleResource(whereRule.eResource());
-            ret = true;
+
+            ReturnCode rc = DQRuleResourceFileHelper.getInstance().save(whereRule);
+
+            ret = rc.isOk();
             this.joinConditionTableViewer.updateModelViewer();
         }
         return ret;
@@ -426,7 +428,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     private void createButtons(Composite parent, final JoinConditionTableViewer jcTableViewer) {
         Composite buttonsComposite = new Composite(parent, SWT.NONE);
         buttonsComposite.setLayout(new GridLayout(2, false));
-        
+
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
@@ -435,17 +437,17 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
-            
+
             public void widgetSelected(SelectionEvent e) {
                 jcTableViewer.addJoinElement();
             }
         });
-        
+
         final Button delButton = new Button(buttonsComposite, SWT.NONE);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setLayoutData(labelGd);
         delButton.addSelectionListener(new SelectionAdapter() {
-            
+
             public void widgetSelected(SelectionEvent e) {
                 JoinElement join = (JoinElement) ((IStructuredSelection) jcTableViewer.getSelection()).getFirstElement();
                 if (join != null) {

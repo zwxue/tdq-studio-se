@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dq.writer.AElementPersistance;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -78,5 +80,39 @@ public class ElementWriterFactory {
      */
     public UDIndicatorWriter createUDIndicatorWriter() {
         return new UDIndicatorWriter();
+    }
+
+    /**
+     * DOC bZhou Comment method "createdRuleWriter".
+     * 
+     * @return
+     */
+    public DQRuleWriter createdRuleWriter() {
+        return new DQRuleWriter();
+    }
+
+    /**
+     * DOC bZhou Comment method "create".
+     * 
+     * @param fileExtension
+     * @return
+     */
+    public AElementPersistance create(String fileExtension) {
+
+        if (FactoriesUtil.ANA.equals(fileExtension)) {
+            return createAnalysisWrite();
+        } else if (FactoriesUtil.REP.equals(fileExtension)) {
+            return createReportWriter();
+        } else if (FactoriesUtil.PROV.equals(fileExtension)) {
+            return createDataProviderWriter();
+        } else if (FactoriesUtil.PATTERN.equals(fileExtension)) {
+            return createPatternWriter();
+        } else if (FactoriesUtil.UDI.equals(fileExtension)) {
+            return createUDIndicatorWriter();
+        } else if (FactoriesUtil.DQRULE.equals(fileExtension)) {
+            return createdRuleWriter();
+        }
+
+        return null;
     }
 }

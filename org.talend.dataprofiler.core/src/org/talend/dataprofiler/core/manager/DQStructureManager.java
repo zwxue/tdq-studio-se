@@ -154,6 +154,9 @@ public final class DQStructureManager {
         modleElementSuffixs.add(FactoriesUtil.ANA);
         modleElementSuffixs.add(FactoriesUtil.REP);
         modleElementSuffixs.add(FactoriesUtil.PROV);
+        modleElementSuffixs.add(FactoriesUtil.SQL);
+        modleElementSuffixs.add(FactoriesUtil.DQRULE);
+        modleElementSuffixs.add(FactoriesUtil.PATTERN);
     }
 
     public List<String> getModelElementSuffixs() {

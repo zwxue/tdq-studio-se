@@ -26,8 +26,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
+import org.talend.dq.writer.impl.DQRuleWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -145,5 +149,16 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
             findWhereRule(file);
 
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "save".
+     * 
+     * @param dqrule
+     * @return
+     */
+    public ReturnCode save(DQRule dqrule) {
+        DQRuleWriter writer = ElementWriterFactory.getInstance().createdRuleWriter();
+        return writer.save(dqrule);
     }
 }
