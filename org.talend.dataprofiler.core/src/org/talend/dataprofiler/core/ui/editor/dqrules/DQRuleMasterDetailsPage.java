@@ -16,6 +16,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -316,12 +318,41 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
                 String tableA = ColumnHelper.getColumnSetOwner((Column) join.getColA()).getName();
                 String tableB = ColumnHelper.getColumnSetOwner((Column) join.getColB()).getName();
                 msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.sameTableAlias", tableA, tableB) + "\n";
+            } else {
+                if (!checkAlias(tableAliasA)) {
+                    ret = false;
+                    msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.invalidAliasName", tableAliasA) + "\n";
+                }
+                if (!checkAlias(tableAliasB)) {
+                    ret = false;
+                    msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.invalidAliasName", tableAliasB) + "\n";
+                }
             }
         }
         if (!ret) {
             MessageUI.openWarning(msg);
         }
         return ret;
+    }
+
+    /**
+     * DOC xqliu Comment method "checkAlias".
+     * 
+     * @param alias
+     * @return
+     */
+    private boolean checkAlias(String alias) {
+        // not number
+        try {
+            Double.valueOf(alias);
+            return false;
+        } catch (NumberFormatException e) {
+        }
+
+        String regEx = "^\\w+$";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(alias);
+        return m.find();
     }
 
     /**

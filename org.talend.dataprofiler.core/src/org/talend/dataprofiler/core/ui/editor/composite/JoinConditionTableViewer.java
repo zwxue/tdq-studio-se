@@ -45,16 +45,19 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -87,13 +90,38 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     private int[] widths = { 100, 100, 100, 70, 100, 100, 100 };
     
+    private Package columnSetPackage; 
+    
     public JoinConditionTableViewer(Composite parent, DQRuleMasterDetailsPage masterPage) {
         this.parentComposite = parent;
         this.masterPage = masterPage;
         this.myJoinElement = masterPage.getTempJoinElements();
         this.myTable = createTable(parent);
+
+        if (this.myJoinElement.size() > 0) {
+            updateColumnSetPackage((Column) this.myJoinElement.get(0).getColA());
+        }
     }
 
+    /**
+     * DOC xqliu Comment method "updateColumnSetPackage".
+     * 
+     * @param column
+     * @return
+     */
+    private boolean updateColumnSetPackage(Column column) {
+        Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(ColumnHelper.getColumnSetOwner(column));
+        if (this.columnSetPackage == null) {
+            this.columnSetPackage = parentCatalogOrSchema;
+        } else {
+            if (!this.columnSetPackage.equals(parentCatalogOrSchema)) {
+                MessageUI.openWarning(DefaultMessagesImpl.getString("JoinConditionTableViewer.warning"));
+                return false;
+            }
+        }
+        return true;
+    }
+    
     /**
      * DOC xqliu Comment method "createTable".
      * 
@@ -242,7 +270,10 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     public void removeJoinElement(JoinElement join) {
         this.myTableViewer.remove(join);
         this.myJoinElement.remove(join);
-        JoinConditionTableViewer.this.masterPage.setDirty(true);
+        this.masterPage.setDirty(true);
+        if (this.myJoinElement.size() == 0) {
+            this.columnSetPackage = null;
+        }
     }
 
     @Override
@@ -261,6 +292,9 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             if (join != null) {
                 for (Column column : columns) {
                     if (column != null) {
+                        if (!updateColumnSetPackage(column)) {
+                            break;
+                        }
                         if (COLUMN_A.equals(joinElementColumnDialog.getAb())) {
                             join.setColA(column);
                             join.setColumnAliasA(column.getName());
