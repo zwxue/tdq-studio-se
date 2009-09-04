@@ -97,6 +97,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
@@ -138,7 +139,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     // ADD xqliu 2009-08-24 bug 8776
     private ExecutionLanguage language;
-    
+
     public ExecutionLanguage getLanguage() {
         return language;
     }
@@ -146,8 +147,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     public void setLanguage(ExecutionLanguage language) {
         this.language = language;
     }
+
     // ~
-    
+
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
@@ -449,8 +451,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(
                     UDIHelper.getUDICategory(indicatorUnit.getIndicator().getIndicatorDefinition()))) {
                 return ImageLib.getImage(ImageLib.PATTERN_REG);
-            }
-            else {
+            } else {
                 return ImageLib.getImage(ImageLib.IND_DEFINITION);
             }
             // ~
@@ -1054,6 +1055,25 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 });
             }
 
+            if (isSelectedUDIndicator(tree.getSelection())) {
+                MenuItem editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
+                editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.editUDIndicator")); //$NON-NLS-1$
+                editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.IND_DEFINITION));
+                editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                    /*
+                     * (non-Javadoc)
+                     * 
+                     * @seeorg.eclipse.swt.events.SelectionAdapter# widgetSelected(org
+                     * .eclipse.swt.events.SelectionEvent)
+                     */
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        editUDIndicator(tree);
+                    }
+
+                });
+            }
             // add common menu to the tree
             MenuItem addTaskItem = new MenuItem(menu, SWT.CASCADE);
             addTaskItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.AddTask")); //$NON-NLS-1$
@@ -1118,6 +1138,32 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 try {
                     activePage.openEditor(new FileEditorInput(file),
                             "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"); //$NON-NLS-1$
+                } catch (PartInitException e1) {
+                    log.error(e1, e1);
+                }
+            }
+        }
+
+        /**
+         * DOC yyi Comment method "editUDIndicator" 2009-09-04.
+         * 
+         * @param tree
+         */
+        private void editUDIndicator(Tree tree) {
+            TreeItem[] selection = tree.getSelection();
+            if (selection.length > 0) {
+                TreeItem treeItem = selection[0];
+                IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
+                UserDefIndicator indicator = (UserDefIndicator) indicatorUnit.getIndicator();
+
+                IFolder userFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.USER_DEFINED_INDICATORS);
+                IFile file = UDIResourceFileHelper.getInstance().getUDIFile(indicator.getIndicatorDefinition(),
+                        new IFolder[] { userFolder });
+
+                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                try {
+                    activePage.openEditor(new FileEditorInput(file),
+                            "org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"); //$NON-NLS-1$
                 } catch (PartInitException e1) {
                     log.error(e1, e1);
                 }
@@ -1226,6 +1272,31 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
                     Indicator indicator = unit.getIndicator();
                     if (!(indicator instanceof PatternMatchingIndicator)) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /**
+         * DOC yyi Comment method "isSelectedUDIndicator" 2009-09-04.
+         * 
+         * @param items
+         * @return
+         */
+        private boolean isSelectedUDIndicator(TreeItem[] items) {
+            if (!isSelectedIndicator(items)) {
+                return false;
+            }
+
+            for (TreeItem item : items) {
+                IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                if (unit != null) {
+
+                    Indicator indicator = unit.getIndicator();
+                    if (!(indicator instanceof UserDefIndicator)) {
                         return false;
                     }
                 }
