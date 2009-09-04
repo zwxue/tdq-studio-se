@@ -14,9 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditorInput;
@@ -32,8 +30,7 @@ public class OpenIndicatorDefinitionAction extends Action {
     private IndicatorDefinition[] definitiones;
 
     public OpenIndicatorDefinitionAction(IndicatorDefinition[] definitiones) {
-        super("Edit");
-        setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+        super("Open");
 
         this.definitiones = definitiones;
     }
