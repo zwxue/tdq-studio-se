@@ -61,6 +61,8 @@ import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
@@ -106,7 +108,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private List<String> remainDBTypeListAF;
 
-    private boolean isAggregateExpression, isDateExpression;
+    private boolean hasAggregateExpression, hasDateExpression, hasCharactersMapping;
 
     private boolean systemIndicator;
 
@@ -121,6 +123,20 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private static final String BODY_AGGREGATE = "AVG({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)";
 
     private static final String BODY_DATE = "MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)";
+
+    private Section charactersMappingSection;
+
+    private Composite charactersMappingComp;
+    
+    private Composite charactersMappingLineComp;
+
+    private Map<String, CharactersMapping> charactersMappingMap, charactersMappingMapTemp;
+
+    private List<String> remainDBTypeListCM;
+    
+    private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789";
+
+    private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
 
     /**
      * DOC bZhou IndicatorDefinitionMaterPage constructor comment.
@@ -152,6 +168,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         remainDBTypeListAF = new ArrayList<String>();
         remainDBTypeListAF.addAll(allDBTypeList);
+        
+        remainDBTypeListCM = new ArrayList<String>();
+        remainDBTypeListCM.addAll(allDBTypeList);
 
         if (tempExpression == null) {
             tempExpression = new ArrayList<Expression>();
@@ -168,8 +187,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         if (definition != null) {
-            isAggregateExpression = definition.getAggregate1argFunctions().size() > 0;
-            isDateExpression = definition.getDate1argFunctions().size() > 0;
+            hasAggregateExpression = definition.getAggregate1argFunctions().size() > 0;
+            hasDateExpression = definition.getDate1argFunctions().size() > 0;
+            hasCharactersMapping = definition.getCharactersMapping().size() > 0;
         }
 
         // initialize indicator type
@@ -177,6 +197,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         afExpressionMap = new HashMap<String, AggregateDateExpression>();
         afExpressionMapTemp = new HashMap<String, AggregateDateExpression>();
+        
+        charactersMappingMap = new HashMap<String, CharactersMapping>();
+        charactersMappingMapTemp = new HashMap<String, CharactersMapping>();
     }
 
     /*
@@ -202,8 +225,226 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (IndicatorCategoryHelper.isCorrelation(category)) {
                 createAdditionalFunctionsSection(topComp);
             }
+            if (this.hasCharactersMapping) {
+                createCharactersMappingSection(topComp);
+            }
         } else {
             createCategorySection(topComp);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "createCharactersMappingSection".
+     * 
+     * @param topComp
+     */
+    private void createCharactersMappingSection(Composite topComp) {
+        charactersMappingSection = createSection(form, topComp, "Character mapping", false, null);
+
+        charactersMappingComp = createCharactersMappingComp(charactersMappingSection);
+
+        charactersMappingSection.setClient(charactersMappingComp);
+    }
+
+    /**
+     * DOC xqliu Comment method "createCharactersMappingComp".
+     * @param charactersMappingSection
+     * @return
+     */
+    private Composite createCharactersMappingComp(Section charactersMappingSection) {
+        Composite composite = toolkit.createComposite(charactersMappingSection);
+        composite.setLayout(new GridLayout());
+
+        charactersMappingLineComp = new Composite(composite, SWT.NONE);
+        charactersMappingLineComp.setLayout(new GridLayout());
+        charactersMappingLineComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        if (definition != null) {
+            EList<CharactersMapping> charactersMappings = definition.getCharactersMapping();
+            // private Map<String, CharactersMapping> charactersMappingMap, charactersMappingMapTemp;
+
+            if (charactersMappings != null && charactersMappings.size() > 0) {
+                for (CharactersMapping charactersMapping : charactersMappings) {
+                    recordCharactersMapping(charactersMappingMap, charactersMapping);
+                }
+            }
+
+            charactersMappingMapTemp.clear();
+            for (String key : charactersMappingMap.keySet()) {
+                charactersMappingMapTemp.put(key, cloneCharactersMapping(charactersMappingMap.get(key)));
+            }
+
+            for (String language : charactersMappingMapTemp.keySet()) {
+                createNewCharactersMappingLine(language, charactersMappingMapTemp.get(language));
+            }
+        }
+
+        createCMAddButton(composite);
+
+        return composite;
+    }
+
+    /**
+     * DOC xqliu Comment method "createCMAddButton".
+     * 
+     * @param composite
+     */
+    private void createCMAddButton(Composite composite) {
+        final Button addButton = new Button(composite, SWT.NONE);
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
+        GridData labelGd = new GridData();
+        labelGd.horizontalAlignment = SWT.CENTER;
+        labelGd.widthHint = 65;
+        addButton.setLayoutData(labelGd);
+        addButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                remainDBTypeListCM.clear();
+                remainDBTypeListCM.addAll(allDBTypeList);
+                for (CharactersMapping cm : charactersMappingMapTemp.values()) {
+                    String language = cm.getLanguage();
+                    String languageName = PatternLanguageType.findNameByLanguage(language);
+                    remainDBTypeListCM.remove(languageName);
+                }
+                if (remainDBTypeListCM.size() == 0) {
+                    MessageDialog
+                            .openWarning(
+                                    null,
+                                    DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
+                    return;
+                }
+
+                String language = PatternLanguageType.findLanguageByName(remainDBTypeListCM.get(0));
+                CharactersMapping cm = DefinitionFactory.eINSTANCE.createCharactersMapping();
+                cm.setLanguage(language);
+                cm.setCharactersToReplace(BODY_CHARACTERS_TO_REPLACE);
+                cm.setReplacementCharacters(BODY_REPLACEMENT_CHARACTERS);
+                createNewCharactersMappingLine(language, cm);
+                charactersMappingMapTemp.put(language, cm);
+                charactersMappingSection.setExpanded(true);
+                setDirty(true);
+            }
+        });
+
+    }
+
+    /**
+     * DOC xqliu Comment method "createNewCharactersMappingLine".
+     * 
+     * @param language
+     * @param charactersMapping
+     */
+    private void createNewCharactersMappingLine(String language, final CharactersMapping charactersMapping) {
+        final Composite cmComp = new Composite(charactersMappingLineComp, SWT.NONE);
+        cmComp.setLayout(new GridLayout(2, false));
+
+        final Composite cmLanguageComp = new Composite(cmComp, SWT.NONE);
+        cmLanguageComp.setLayout(new GridLayout());
+        cmLanguageComp.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+
+        final CCombo combo = new CCombo(cmLanguageComp, SWT.BORDER);
+        GridData comboGridData = new GridData();
+        comboGridData.widthHint = 150;
+        comboGridData.verticalAlignment = SWT.TOP;
+        combo.setLayoutData(comboGridData);
+        combo.setEditable(false);
+        combo.setItems(remainDBTypeListCM.toArray(new String[remainDBTypeListCM.size()]));
+        if (language == null) {
+            combo.setText(remainDBTypeListCM.get(0));
+        } else {
+            combo.setText(PatternLanguageType.findNameByLanguage(language));
+        }
+        combo.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                String lang = combo.getText();
+                charactersMapping.setLanguage(PatternLanguageType.findLanguageByName(lang));
+                setDirty(true);
+            }
+        });
+
+        final Composite cmBodyComp = new Composite(cmComp, SWT.NONE);
+        cmBodyComp.setLayout(new GridLayout(1, false));
+        cmBodyComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+        String[] headers = { "Characters to replace", "Replacement characters" };
+        int[] widths = { 300, 300 };
+        buildCharactersMappingLineComp(cmBodyComp, charactersMapping, style, headers, widths);
+
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(cmComp);
+    }
+
+    /**
+     * DOC xqliu Comment method "buildCharactersMappingLineComp".
+     * 
+     * @param cmBodyComp
+     * @param charactersMapping
+     * @param style
+     * @param headers
+     * @param widths
+     */
+    private void buildCharactersMappingLineComp(Composite cmBodyComp, CharactersMapping charactersMapping, int style,
+            String[] headers, int[] widths) {
+        Table table = new Table(cmBodyComp, style);
+
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+        table.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        for (int i = 0; i < headers.length; ++i) {
+            TableColumn tableColumn = new TableColumn(table, SWT.LEFT, i);
+            tableColumn.setText(headers[i]);
+            tableColumn.setWidth(widths[i]);
+        }
+
+        TableViewer tableViewer = new TableViewer(table);
+
+        tableViewer.setUseHashlookup(true);
+        tableViewer.setColumnProperties(headers);
+
+        CellEditor[] editors = new CellEditor[headers.length];
+        for (int i = 0; i < editors.length; ++i) {
+            editors[i] = new TextCellEditor(table);
+        }
+        tableViewer.setCellEditors(editors);
+        tableViewer.setCellModifier(new CharactersMappingCellModifier(headers, tableViewer));
+        tableViewer.setContentProvider(new CommonContentProvider());
+        tableViewer.setLabelProvider(new CharactersMappingLabelProvider());
+        tableViewer.setInput(charactersMapping);
+    }
+
+    /**
+     * DOC xqliu Comment method "cloneCharactersMapping".
+     * 
+     * @param charactersMapping
+     * @return
+     */
+    private CharactersMapping cloneCharactersMapping(CharactersMapping charactersMapping) {
+        if (charactersMapping != null) {
+            CharactersMapping newCharactersMapping = DefinitionFactory.eINSTANCE.createCharactersMapping();
+            newCharactersMapping.setLanguage(charactersMapping.getLanguage());
+            newCharactersMapping.setCharactersToReplace(charactersMapping.getCharactersToReplace());
+            newCharactersMapping.setReplacementCharacters(charactersMapping.getReplacementCharacters());
+            return newCharactersMapping;
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "recordCharactersMapping".
+     * 
+     * @param charactersMappingMap
+     * @param charactersMapping
+     */
+    private void recordCharactersMapping(Map<String, CharactersMapping> charactersMappingMap, CharactersMapping charactersMapping) {
+        String language = null;
+        if (charactersMapping != null) {
+            language = charactersMapping.getLanguage();
+        }
+        if (language != null) {
+            charactersMappingMap.put(language, charactersMapping);
         }
     }
 
@@ -372,14 +613,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         if (aggregateDateExpression.haveAggregateExpression()) {
             tableViewer.setCellModifier(new AggregateCellModifier(headers, tableViewer));
-            tableViewer.setContentProvider(new AggregateDateContentProvider());
+            tableViewer.setContentProvider(new CommonContentProvider());
             tableViewer.setLabelProvider(new AggregateLabelProvider());
             tableViewer.setInput(new AggregateVO(aggregateDateExpression.getAggregateExpression()));
         }
 
         if (aggregateDateExpression.haveDateExpression()) {
             tableViewer.setCellModifier(new DateCellModifier(headers, tableViewer));
-            tableViewer.setContentProvider(new AggregateDateContentProvider());
+            tableViewer.setContentProvider(new CommonContentProvider());
             tableViewer.setLabelProvider(new DateLabelProvider());
             tableViewer.setInput(new DateVO(aggregateDateExpression.getDateExpression()));
         }
@@ -451,11 +692,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 String language = PatternLanguageType.findLanguageByName(remainDBTypeListAF.get(0));
                 Expression expression = BooleanExpressionHelper.createExpression(language, "");
                 AggregateDateExpression ade = new AggregateDateExpression();
-                if (isAggregateExpression) {
+                if (hasAggregateExpression) {
                     expression.setBody(BODY_AGGREGATE);
                     ade.setAggregateExpression(expression);
                 }
-                if (isDateExpression) {
+                if (hasDateExpression) {
                     expression.setBody(BODY_DATE);
                     ade.setDateExpression(expression);
                 }
@@ -691,7 +932,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
 
-        if (isAggregateExpression) {
+        if (hasAggregateExpression) {
             EList<Expression> aggregate1argFunctions = definition.getAggregate1argFunctions();
             aggregate1argFunctions.clear();
             for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
@@ -702,13 +943,25 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
 
-        if (isDateExpression) {
+        if (hasDateExpression) {
             EList<Expression> date1argFunctions = definition.getDate1argFunctions();
             date1argFunctions.clear();
             for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
                 Expression expression = ade.getDateExpression();
                 if (expression.getBody() != null && !"".equals(expression.getBody())) { //$NON-NLS-1$
                     date1argFunctions.add(expression);
+                }
+            }
+        }
+        
+        if (hasCharactersMapping) {
+            EList<CharactersMapping> charactersMappings = definition.getCharactersMapping();
+            charactersMappings.clear();
+            for (CharactersMapping cm : charactersMappingMapTemp.values()) {
+                String c = cm.getCharactersToReplace();
+                String r = cm.getReplacementCharacters();
+                if (c != null && !"".equals(c) && r != null && !"".equals(r)) { //$NON-NLS-1$
+                    charactersMappings.add(cm);
                 }
             }
         }
@@ -982,7 +1235,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
-    private final class AggregateDateContentProvider implements IStructuredContentProvider {
+    private final class CommonContentProvider implements IStructuredContentProvider {
 
         public Object[] getElements(Object inputElement) {
             Object[] results = new Object[1];
@@ -1230,6 +1483,96 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 break;
             case 3:
                 result = vo.getHighlightedValues();
+                break;
+            default:
+                break;
+            }
+            return result;
+        }
+
+    }
+
+    /**
+     * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     */
+    private final class CharactersMappingCellModifier implements ICellModifier {
+
+        private List<String> columeNames;
+
+        private TableViewer tableViewer;
+
+        public CharactersMappingCellModifier(String[] columeNames, TableViewer tableViewer) {
+            super();
+            this.columeNames = new ArrayList<String>();
+            for (String columnName : columeNames) {
+                this.columeNames.add(columnName);
+            }
+            this.tableViewer = tableViewer;
+        }
+
+        public boolean canModify(Object element, String property) {
+            return true;
+        }
+
+        public Object getValue(Object element, String property) {
+            int columnIndex = columeNames.indexOf(property);
+
+            Object result = null;
+            CharactersMapping cm = (CharactersMapping) element;
+
+            switch (columnIndex) {
+            case 0:
+                result = cm.getCharactersToReplace();
+                break;
+            case 1:
+                result = cm.getReplacementCharacters();
+                break;
+            default:
+                result = "";
+            }
+            return result;
+        }
+
+        public void modify(Object element, String property, Object value) {
+            int columnIndex = this.columeNames.indexOf(property);
+
+            Table table = (Table) element;
+            CharactersMapping cm = (CharactersMapping) table.getItem(0).getData();
+            String valueString = ((String) value).trim();
+
+            switch (columnIndex) {
+            case 0:
+                cm.setCharactersToReplace(valueString);
+                break;
+            case 1:
+                cm.setReplacementCharacters(valueString);
+                break;
+            default:
+            }
+            tableViewer.setInput(cm);
+            IndicatorDefinitionMaterPage.this.setDirty(true);
+        }
+
+    }
+
+    /**
+     * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     */
+    private class CharactersMappingLabelProvider extends LabelProvider implements ITableLabelProvider {
+
+        public Image getColumnImage(Object element, int columnIndex) {
+            return null;
+        }
+
+        public String getColumnText(Object element, int columnIndex) {
+            String result = "";
+            CharactersMapping cm = (CharactersMapping) element;
+            switch (columnIndex) {
+            case 0:
+                result = cm.getCharactersToReplace();
+                break;
+            case 1:
+                result = cm.getReplacementCharacters();
                 break;
             default:
                 break;
