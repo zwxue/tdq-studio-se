@@ -21,6 +21,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -132,24 +133,29 @@ public enum FormEnum {
         case LowFrequencyIndicatorEnum:
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
-            if (dataminingType == DataminingType.INTERVAL) {
-                if (Java2SqlType.isNumbericInSQL(sqlType)) {
+        case UserDefinedIndicatorEnum:
+            if (indicatorUnit.getIndicator() instanceof UserDefIndicator) {
+                forms = new FormEnum[] { NumbericNominalForm };
+            } else {
+                if (dataminingType == DataminingType.INTERVAL) {
+                    if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { FreqBinsDesignerForm };
-                }
+                        forms = new FormEnum[] { FreqBinsDesignerForm };
+                    }
 
-                if (Java2SqlType.isDateInSQL(sqlType)) {
+                    if (Java2SqlType.isDateInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { FreqTimeSliceForm };
-                }
-            } else if (Java2SqlType.isTextInSQL(sqlType)) {
+                        forms = new FormEnum[] { FreqTimeSliceForm };
+                    }
+                } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
-            } else if (dataminingType == DataminingType.NOMINAL) {
+                    forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
+                } else if (dataminingType == DataminingType.NOMINAL) {
 
-                if (Java2SqlType.isNumbericInSQL(sqlType)) {
+                    if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { NumbericNominalForm };
+                        forms = new FormEnum[] { NumbericNominalForm };
+                    }
                 }
             }
 
