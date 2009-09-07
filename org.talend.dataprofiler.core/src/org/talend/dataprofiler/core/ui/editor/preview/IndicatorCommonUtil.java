@@ -69,7 +69,10 @@ public final class IndicatorCommonUtil {
         try {
             if (type == IndicatorEnum.RangeIndicatorEnum || type == IndicatorEnum.IQRIndicatorEnum) {
                 indicatorUnit.setValue(((RangeIndicator) indicator).getRange());
+                ((RangeIndicator) indicator).setComputed(true);
             } else if (indicatorUnit.isExcuted()) {
+
+                // log.warn("now getting the value of indicator [" + indicator.getName() + "]");
 
                 switch (type) {
                 case RowCountIndicatorEnum:
@@ -162,11 +165,14 @@ public final class IndicatorCommonUtil {
 
                 }
 
+                if (tempObject == null || "null".equalsIgnoreCase(tempObject.toString())) {
+                    indicator.setComputed(false);
+                }
+
                 indicatorUnit.setValue(tempObject);
             }
         } catch (Exception e) {
-            String msg = "Get result error: " + indicator.getName() + "[" + e.getMessage() + "]";
-            log.error(msg);
+            indicator.setComputed(false);
         }
     }
 

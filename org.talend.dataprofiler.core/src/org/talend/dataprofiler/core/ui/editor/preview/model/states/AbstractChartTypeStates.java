@@ -13,7 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -32,7 +32,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -43,20 +42,40 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
 
     public AbstractChartTypeStates(List<IndicatorUnit> units) {
 
-        Iterator<IndicatorUnit> it = units.iterator();
-        while (it.hasNext()) {
-            IndicatorUnit unit = it.next();
-            if (!unit.isExcuted() && unit.getType() != IndicatorEnum.RangeIndicatorEnum
-                    && unit.getType() != IndicatorEnum.IQRIndicatorEnum) {
-                it.remove();
-            } else {
-                IndicatorCommonUtil.getIndicatorValue(unit);
+        // Iterator<IndicatorUnit> it = units.iterator();
+        // while (it.hasNext()) {
+        // IndicatorUnit unit = it.next();
+        // if (!unit.isExcuted() && unit.getType() != IndicatorEnum.RangeIndicatorEnum
+        // && unit.getType() != IndicatorEnum.IQRIndicatorEnum) {
+        // it.remove();
+        // } else {
+        // IndicatorCommonUtil.getIndicatorValue(unit);
+        // }
+        // }
+
+        if (units != null) {
+            this.units.addAll(check(units));
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "check".
+     * 
+     * @param units2
+     * @return
+     */
+    private Collection<? extends IndicatorUnit> check(List<IndicatorUnit> units) {
+        List<IndicatorUnit> validUnitList = new ArrayList<IndicatorUnit>();
+
+        for (IndicatorUnit unit : units) {
+            IndicatorCommonUtil.getIndicatorValue(unit);
+
+            if (unit.isExcuted()) {
+                validUnitList.add(unit);
             }
         }
 
-        if (units != null) {
-            this.units.addAll(units);
-        }
+        return validUnitList;
     }
 
     public List<JFreeChart> getChartList() {
