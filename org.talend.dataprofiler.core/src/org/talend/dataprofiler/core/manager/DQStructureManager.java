@@ -155,6 +155,7 @@ public final class DQStructureManager {
         modleElementSuffixs.add(FactoriesUtil.REP);
         modleElementSuffixs.add(FactoriesUtil.PROV);
         modleElementSuffixs.add(FactoriesUtil.SQL);
+        modleElementSuffixs.add(FactoriesUtil.UDI);
         modleElementSuffixs.add(FactoriesUtil.DQRULE);
         modleElementSuffixs.add(FactoriesUtil.PATTERN);
     }
