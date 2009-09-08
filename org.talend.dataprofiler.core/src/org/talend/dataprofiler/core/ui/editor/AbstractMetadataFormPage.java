@@ -31,6 +31,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -142,6 +143,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         authorText = createMetadataTextFiled(AUTHOR_LABEL, authorText, parent);
 
+        // MOD 2009-09-08 yyi Feature: 8870.
+        authorText.setEditable(isDefaultProject());
         // toolkit.createLabel(parent, VERSION_LABEL);
         // createVersionUI(parent);
 
@@ -210,6 +213,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         section.setClient(parent);
         return section;
+    }
+
+    /**
+     * DOC yyi Comment method "setAuthorTextEditable" Feature: 8870.
+     */
+    private boolean isDefaultProject() {
+        if (null != ReponsitoryContextBridge.getProjectName()
+                && "TOP_DEFAULT_PRJ".equals(ReponsitoryContextBridge.getProjectName())) {
+            return true;
+        }
+        return false;
     }
 
     /**

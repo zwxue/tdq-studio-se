@@ -134,6 +134,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         String author = ReponsitoryContextBridge.getAuthor();
         authorText.setText(author);
         getParameter().setAuthor(author);
+        // MOD 2009-09-08 yyi Feature: 8870.
+        authorText.setEditable(isDefaultProject());
 
         // Version
         // Label versionLab = new Label(container, SWT.NONE);
@@ -195,6 +197,17 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         addListeners();
 
         setControl(container);
+    }
+
+    /**
+     * DOC yyi Comment method "setAuthorTextEditable" Feature: 8870.
+     */
+    private boolean isDefaultProject() {
+        if (null != ReponsitoryContextBridge.getProjectName()
+                && "TOP_DEFAULT_PRJ".equals(ReponsitoryContextBridge.getProjectName())) {
+            return true;
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
