@@ -197,7 +197,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         }
         tempReloadProvider = returnProvider.getObject();
         tempReloadProvider.setComponent(oldDataProvider.getComponent());
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(tempReloadProvider, tempConnectionFile);
+        // MOD mzhao bug:9012 2009-09-08
+        ElementWriterFactory.getInstance().createDataProviderWriter().saveWithoutProperty(tempReloadProvider, tempConnectionFile);
         tempReloadProvider.setComponent(null);
         oldDataProvider.getComponent();
     }

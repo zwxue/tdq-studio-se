@@ -108,6 +108,40 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         return rc;
     }
+    
+    /**
+     * 
+     * DOC mzhao bug:9012
+     * 
+     * @param element
+     * @param file
+     * @return
+     */
+    public ReturnCode saveWithoutProperty(ModelElement element, IFile file) {
+        ReturnCode rc = new ReturnCode();
+        
+        if (!check(file)) {
+            rc.setReturnCode("Failed to element, the extent file name is wrong.", false);
+        } else {
+            String filePath = file.getFullPath().toString();
+            if (!util.addEObjectToResourceSet(filePath, element)) {
+                rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
+            } else {
+                addResourceContent(element);
+                addDependencies(element);                
+                rc.setOk(util.saveResource(element.eResource()));
+                if (rc.isOk()) {
+                    rc.setMessage("save " + element.getName() + " is OK!");
+                } else {
+                    rc.setMessage(util.getLastErrorMessage());
+                }
+                if (rc.isOk() && element instanceof RenderedObject) {
+                    ((RenderedObject) element).setFileName(file.getFullPath().toString());
+                }
+            }
+        }                             
+        return rc;
+    }
 
     /**
      * DOC bZhou Comment method "savePerperties".
