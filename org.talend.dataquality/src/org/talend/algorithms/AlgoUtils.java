@@ -54,10 +54,24 @@ public final class AlgoUtils {
      * @return
      */
     public static double getMedian(long totalCount, final TreeMap<Object, Long> valueToCount) {
+        return getQuantile(totalCount, valueToCount, 1, 2);
+    }
+
+    /**
+     * Method "getQuantile".
+     * 
+     * @param totalCount the total number of values
+     * @param valueToCount the frequency table of each value
+     * @param nthQuantile the nth q-quantile (e.g. 3 for the upper quartile)
+     * @param qQuantile the q-quantile (e.g. 4 when we compute quartile)
+     * @return the nth quantile
+     */
+    public static double getQuantile(long totalCount, final TreeMap<Object, Long> valueToCount, int nthQuantile, int qQuantile) {
+        double p = (double) nthQuantile / qQuantile;
         Set<Object> keys = valueToCount.keySet();
         Collection<Long> counts = valueToCount.values();
 
-        double kthValue = ((double) totalCount) / 2;
+        double kthValue = ((double) totalCount) * p;
 
         double localMedian = 0;
 
@@ -68,13 +82,13 @@ public final class AlgoUtils {
         for (Long curValue : counts) {
             if (sumCount >= kthValue) {
                 // compute median
-                if (totalCount % 2 != 0) { // odd number of value, take the middle
+                if (totalCount % qQuantile != 0) { // odd number of value, take the middle
                     localMedian = searchedKey.doubleValue();
                 } else { // even number of values
                     localMedian = searchedKey.doubleValue();
                     if (sumCount - kthValue < 1) { // in case there are not many identical values
                         Number nextKey = (Number) keyIterator.next(); // CAST here
-                        localMedian = (localMedian + nextKey.doubleValue()) / 2;
+                        localMedian = (localMedian + nextKey.doubleValue()) / 2; // with averaging
                     }
                 }
                 break; // we got it.

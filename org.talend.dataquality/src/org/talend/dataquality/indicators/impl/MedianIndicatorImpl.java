@@ -487,7 +487,9 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
     @Override
     public boolean reset() {
         this.median = MEDIAN_EDEFAULT;
-        this.frequenceTable.clear();
+        if (frequenceTable != null) {
+            this.frequenceTable.clear();
+        }
         this.computed = false;
         this.medianComputed = false;
         return super.reset();

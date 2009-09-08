@@ -1,9 +1,11 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.util.List;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
+import org.talend.algorithms.AlgoUtils;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 
@@ -19,6 +21,8 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
 
     private static Logger log = Logger.getLogger(LowerQuartileIndicatorImpl.class);
 
+    private TreeMap<Object, Long> frequenceTable = new TreeMap<Object, Long>();
+    
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
@@ -34,6 +38,37 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
     @Override
     protected EClass eStaticClass() {
         return IndicatorsPackage.Literals.LOWER_QUARTILE_INDICATOR;
+    }
+
+    @Override
+    public boolean handle(Object data) {
+        this.setComputed(COMPUTED_EDEFAULT); // tells that quartile should be recomputed.
+        boolean ok = super.handle(data);
+        // TODO scorreia handle null values (handle case when null is replaced by a default value.
+        if (data == null) {
+            return ok;
+        }
+        return ok && AlgoUtils.incrementValueCounts(data, this.frequenceTable);
+    }
+
+    @Override
+    public boolean reset() {
+        this.setValue(VALUE_EDEFAULT);
+        this.frequenceTable.clear();
+        return super.reset();
+    }
+
+    @Override
+    public boolean finalizeComputation() {
+        if (!isComputed()) {
+            long total = this.getCount().longValue() - this.getNullCount().longValue();
+            final double quantile = AlgoUtils.getQuantile(total, frequenceTable, 1, 4);
+            this.setValue(String.valueOf(quantile));
+            // get the correct type of result from the analyzed element
+            int javaType = this.getColumnType();
+            this.setDatatype(javaType);
+        }
+        return super.finalizeComputation();
     }
 
     /*

@@ -233,11 +233,7 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
             }
             this.setValue(med);
             // set datatype here
-            ModelElement elt = this.getAnalyzedElement();
-            if (elt != null) {
-                TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
-                this.setDatatype(column.getJavaType());
-            }
+            this.setDatatype(this.getColumnType());
             return true;
         }
         return false;
