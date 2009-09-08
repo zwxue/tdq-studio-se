@@ -127,34 +127,7 @@ public final class AnalysisHelper {
      * @return the data filter as a string or null if none.
      */
     public static String getStringDataFilter(Analysis analysis) {
-        AnalysisParameters parameters = analysis.getParameters();
-        if (parameters == null) {
-            return null;
-        }
-        EList<Domain> dataFilters = parameters.getDataFilter();
-        // remove existing filters
-        if (dataFilters.isEmpty()) {
-            return null;
-        }
-
-        for (Domain domain : dataFilters) {
-            if (domain == null) {
-                continue;
-            }
-            EList<RangeRestriction> ranges = domain.getRanges();
-            for (RangeRestriction rangeRestriction : ranges) {
-                BooleanExpressionNode expressions = rangeRestriction.getExpressions();
-                if (expressions == null) {
-                    continue;
-                }
-                Expression expression = expressions.getExpression();
-                if (expression == null) {
-                    continue;
-                }
-                return expression.getBody();
-            }
-        }
-        return null;
+        return getStringDataFilter(analysis, 0);
     }
 
     /**
