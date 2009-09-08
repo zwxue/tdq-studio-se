@@ -229,8 +229,8 @@ public class ChartTableProviderClassSet {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;
 
             String currentText = getColumnText(element, columnIndex);
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getNumNoMatch())
-                    || currentText.equals(entity.getPerMatch()) || currentText.equals(entity.getPerNoMatch());
+            // MOD mzhao bug 8838 2009-09-08
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
             if (isCurrentCol && entity.isOutOfRange(currentText)) {
                 return ImageLib.getImage(ImageLib.LEVEL_WARNING);
             }
@@ -243,8 +243,8 @@ public class ChartTableProviderClassSet {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;
 
             String currentText = getColumnText(element, columnIndex);
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getNumNoMatch())
-                    || currentText.equals(entity.getPerMatch()) || currentText.equals(entity.getPerNoMatch());
+         // MOD mzhao bug 8838 2009-09-08
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
             if (isCurrentCol && entity.isOutOfRange(currentText)) {
                 return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
