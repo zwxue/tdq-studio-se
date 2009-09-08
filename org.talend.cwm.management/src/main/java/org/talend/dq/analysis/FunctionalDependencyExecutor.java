@@ -14,7 +14,7 @@ package org.talend.dq.analysis;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,6 +24,7 @@ import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -111,23 +112,21 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
         return true;
     }
 
-
-
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
-        
+
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            instantiateQuery(indicator,dbmsLanguage);
+            instantiateQuery(indicator, dbmsLanguage);
         }
 
         // no query to return, here we only instantiate several SQL queries
         return ""; //$NON-NLS-1$
     }
 
-    private boolean instantiateQuery(Indicator indicator,DbmsLanguage dbmsLanguage) {
+    private boolean instantiateQuery(Indicator indicator, DbmsLanguage dbmsLanguage) {
         // (but is not need, hence we keep it commented)
 
         if (ColumnsetPackage.eINSTANCE.getColumnDependencyIndicator().equals(indicator.eClass())) {
@@ -138,9 +137,8 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
             Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
-       
-            
-            Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnA, columnB,dbmsLanguage);
+            Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnA, columnB,
+                    dbmsLanguage);
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
@@ -153,27 +151,36 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
      * @param sqlGenericExpression
      * @param columnA
      * @param columnB
-     * @param dbmsLanguage 
+     * @param dbmsLanguage
      * @param useNulls
      * @return
      */
-    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, Column columnA, Column columnB, DbmsLanguage dbmsLanguage) {
+    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, Column columnA, Column columnB,
+            DbmsLanguage dbmsLanguage) {
         assert columnA != null;
         assert columnB != null;
 
         String genericSQL = sqlGenericExpression.getBody();
         GenericSQLHandler sqlHandler = new GenericSQLHandler(genericSQL);
-       
-        sqlHandler.replaceColumnA(dbmsLanguage.quote(columnA.getName())).replaceColumnB(dbmsLanguage.quote(columnB.getName())).replaceTable(
-                dbmsLanguage.quote(getTableNameFromColumn(columnA)));
-        
+
+        sqlHandler.replaceColumnA(dbmsLanguage.quote(columnA.getName())).replaceColumnB(dbmsLanguage.quote(columnB.getName()))
+                .replaceTable(dbmsLanguage.quote(getTableNameFromColumn(columnA)));
+
         String instantiatedSQL = sqlHandler.getSqlString();
 
-        // FIXME scorreia get the where clause when the UI gives the ability to set it
-        // bug 8946 add an empty where clause
-        List<String> whereClauses = Collections.emptyList();
+        List<String> whereClauses = new ArrayList<String>();
+
+        String dataFilterA = AnalysisHelper.getStringDataFilter(cachedAnalysis, 0);
+        if (dataFilterA != null && !dataFilterA.equals("")) {
+            whereClauses.add(dataFilterA);
+        }
+        String dataFilterB = AnalysisHelper.getStringDataFilter(cachedAnalysis, 1);
+        if (dataFilterB != null && !dataFilterB.equals("")) {
+            whereClauses.add(dataFilterB);
+        }
+
         instantiatedSQL = dbms().addWhereToSqlStringStatement(instantiatedSQL, whereClauses);
-        
+
         Expression instantiatedExpression = CoreFactory.eINSTANCE.createExpression();
         instantiatedExpression.setLanguage(sqlGenericExpression.getLanguage());
         instantiatedExpression.setBody(instantiatedSQL);

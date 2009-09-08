@@ -87,6 +87,20 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#initialize(org.eclipse.ui.forms.editor.FormEditor
+     * )
+     */
+    @Override
+    public void initialize(FormEditor editor) {
+        super.initialize(editor);
+        stringDataFilterA = AnalysisHelper.getStringDataFilter(analysis, 0);
+        stringDataFilterB = AnalysisHelper.getStringDataFilter(analysis, 1);
+    }
+
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
