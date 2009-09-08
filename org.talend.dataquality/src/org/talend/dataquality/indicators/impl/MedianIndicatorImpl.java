@@ -356,7 +356,7 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
             tt.start("searching median");
         }
 
-        long totalCount = super.getCount().longValue();
+        long totalCount = super.getCount().longValue() - super.getNullCount().longValue();
         double localMedian = AlgoUtils.getMedian(totalCount, this.getFrequenceTable());
 
         if (trace) {
@@ -484,4 +484,14 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
         return IndicatorValueType.REAL_VALUE;
     }
 
+    @Override
+    public boolean reset() {
+        this.median = MEDIAN_EDEFAULT;
+        this.frequenceTable.clear();
+        this.computed = false;
+        this.medianComputed = false;
+        return super.reset();
+    }
+
+    
 } // MedianIndicatorImpl
