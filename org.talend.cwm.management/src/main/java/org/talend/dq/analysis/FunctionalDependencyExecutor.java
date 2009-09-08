@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -170,13 +171,9 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
 
         List<String> whereClauses = new ArrayList<String>();
 
-        String dataFilterA = AnalysisHelper.getStringDataFilter(cachedAnalysis, 0);
-        if (dataFilterA != null && !dataFilterA.equals("")) {
-            whereClauses.add(dataFilterA);
-        }
-        String dataFilterB = AnalysisHelper.getStringDataFilter(cachedAnalysis, 1);
-        if (dataFilterB != null && !dataFilterB.equals("")) {
-            whereClauses.add(dataFilterB);
+        String dataFilter = AnalysisHelper.getStringDataFilter(cachedAnalysis);
+        if (!StringUtils.isEmpty(dataFilter)) {
+            whereClauses.add(dataFilter);
         }
 
         instantiatedSQL = dbms().addWhereToSqlStringStatement(instantiatedSQL, whereClauses);
