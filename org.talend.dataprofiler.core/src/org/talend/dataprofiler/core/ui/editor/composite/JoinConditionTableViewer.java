@@ -183,6 +183,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "createMenus".
+     * 
      * @param table
      * @return
      */
@@ -290,6 +291,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 join = this.addJoinElement();
             }
             if (join != null) {
+                boolean dirty = false;
                 for (Column column : columns) {
                     if (column != null) {
                         if (!updateColumnSetPackage(column)) {
@@ -299,15 +301,19 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                             join.setColA(column);
                             join.setColumnAliasA(column.getName());
                             join.setTableAliasA(ColumnHelper.getColumnSetFullName(column));
+                            dirty = true;
                         } else {
                             join.setColB(column);
                             join.setColumnAliasB(column.getName());
                             join.setTableAliasB(ColumnHelper.getColumnSetFullName(column));
+                            dirty = true;
                         }
                     }
                 }
-                this.masterPage.setDirty(true);
-                this.myTableViewer.update(join, null);
+                if (dirty) {
+                    this.masterPage.setDirty(true);
+                    this.myTableViewer.update(join, null);
+                }
             }
         }
     }
@@ -316,6 +322,9 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     public void updateModelViewer() {
         this.myJoinElement = this.masterPage.getTempJoinElements();
         this.myTableViewer.setInput(this.myJoinElement);
+        if (this.myJoinElement.size() == 0) {
+            this.columnSetPackage = null;
+        }
     }
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
