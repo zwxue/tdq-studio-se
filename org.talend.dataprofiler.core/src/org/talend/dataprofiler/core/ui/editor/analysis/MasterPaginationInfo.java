@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -73,19 +74,14 @@ public class MasterPaginationInfo extends PaginationInfo {
             for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
                 List<IndicatorUnit> units = indicatorComposite.get(chartType);
                 if (!units.isEmpty()) {
-                    final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
-                    JFreeChart chart = chartTypeState.getChart();
-                    ChartDecorator.decorate(chart);
-
-                    if (chart != null) {
-                        final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
-
-                        GridData gd = new GridData();
-                        gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-                        gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-                        chartComp.setLayoutData(gd);
-
-                        addListenerToChartComp(chartComp, chartTypeState);
+                    if (chartType == EIndicatorChartType.UDI_FREQUENCY) {
+                        for (IndicatorUnit unit : units) {
+                            List<IndicatorUnit> specialUnit = new ArrayList<IndicatorUnit>();
+                            specialUnit.add(unit);
+                            createChart(comp, chartType, specialUnit);
+                        }
+                    } else {
+                        createChart(comp, chartType, units);
                     }
                 }
             }
@@ -103,6 +99,30 @@ public class MasterPaginationInfo extends PaginationInfo {
             exComp.setClient(comp);
         }
 
+    }
+
+    /**
+     * DOC bZhou Comment method "createChart".
+     * 
+     * @param comp
+     * @param chartType
+     * @param units
+     */
+    private void createChart(Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
+        final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+        JFreeChart chart = chartTypeState.getChart();
+        ChartDecorator.decorate(chart);
+
+        if (chart != null) {
+            final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
+
+            GridData gd = new GridData();
+            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+            chartComp.setLayoutData(gd);
+
+            addListenerToChartComp(chartComp, chartTypeState);
+        }
     }
 
 }

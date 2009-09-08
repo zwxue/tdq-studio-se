@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -91,7 +92,7 @@ public class ResultPaginationInfo extends PaginationInfo {
                     "ColumnAnalysisResultPage.Column", columnIndicator.getTdColumn().getName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-            
+
             // MOD xqliu 2009-06-23 bug 7481
             exComp.setExpanded(EditorPreferencePage.isCurrentAnalyzedElements());
             // ~
@@ -123,59 +124,77 @@ public class ResultPaginationInfo extends PaginationInfo {
             for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
                 List<IndicatorUnit> units = indicatorComposite.get(chartType);
                 if (!units.isEmpty()) {
-                    IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
-                    ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(), chartTypeState
-                            .getDataEntity());
-
-                    // create UI
-                    ExpandableComposite subComp = uiPagination.getToolkit().createExpandableComposite(comp,
-                            ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-                    subComp.setText(chartData.getChartType().getLiteral());
-                    subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-                    
-                    // MOD xqliu 2009-06-23 bug 7481
-                    subComp.setExpanded(EditorPreferencePage.isCurrentIndicators());
-                    // ~
-
-                    final Composite composite = uiPagination.getToolkit().createComposite(subComp, SWT.NULL);
-                    composite.setLayout(new GridLayout(2, false));
-                    composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-                    Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
-
-                    // create table
-                    TableViewer tableviewer = chartTypeState.getTableForm(composite);
-                    tableviewer.setInput(chartData);
-                    DataExplorer dataExplorer = chartTypeState.getDataExplorer();
-                    ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
-
-                    // create chart
-
-                    JFreeChart chart = chartTypeState.getChart();
-                    ChartDecorator.decorate(chart);
-                    if (chart != null) {
-                        ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
-
-                        GridData gd = new GridData();
-                        gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-                        gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-                        cc.setLayoutData(gd);
-
-                        addMouseListenerForChart(cc, dataExplorer, analysis);
-                    }
-
-                    subComp.setClient(composite);
-                    subComp.addExpansionListener(new ExpansionAdapter() {
-
-                        @Override
-                        public void expansionStateChanged(ExpansionEvent e) {
-                            form.reflow(true);
+                    if (chartType == EIndicatorChartType.UDI_FREQUENCY) {
+                        for (IndicatorUnit unit : units) {
+                            List<IndicatorUnit> specialUnit = new ArrayList<IndicatorUnit>();
+                            specialUnit.add(unit);
+                            createChart(comp, chartType, specialUnit);
                         }
-
-                    });
+                    } else {
+                        createChart(comp, chartType, units);
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "createChart".
+     * 
+     * @param comp
+     * @param chartType
+     * @param units
+     */
+    private void createChart(final Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
+        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+        ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(), chartTypeState.getDataEntity());
+
+        // create UI
+        ExpandableComposite subComp = uiPagination.getToolkit().createExpandableComposite(comp,
+                ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
+        subComp.setText(chartData.getChartType().getLiteral());
+        subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        // MOD xqliu 2009-06-23 bug 7481
+        subComp.setExpanded(EditorPreferencePage.isCurrentIndicators());
+        // ~
+
+        final Composite composite = uiPagination.getToolkit().createComposite(subComp, SWT.NULL);
+        composite.setLayout(new GridLayout(2, false));
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
+
+        // create table
+        TableViewer tableviewer = chartTypeState.getTableForm(composite);
+        tableviewer.setInput(chartData);
+        DataExplorer dataExplorer = chartTypeState.getDataExplorer();
+        ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
+
+        // create chart
+
+        JFreeChart chart = chartTypeState.getChart();
+        ChartDecorator.decorate(chart);
+        if (chart != null) {
+            ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+
+            GridData gd = new GridData();
+            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+            cc.setLayoutData(gd);
+
+            addMouseListenerForChart(cc, dataExplorer, analysis);
+        }
+
+        subComp.setClient(composite);
+        subComp.addExpansionListener(new ExpansionAdapter() {
+
+            @Override
+            public void expansionStateChanged(ExpansionEvent e) {
+                form.reflow(true);
+            }
+
+        });
     }
 
     private void addMouseListenerForChart(final ChartComposite chartComp, final IDataExplorer explorer, final Analysis analysis) {
