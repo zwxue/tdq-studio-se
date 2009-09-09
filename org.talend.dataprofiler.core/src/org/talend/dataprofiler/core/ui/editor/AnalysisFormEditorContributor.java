@@ -25,6 +25,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
+import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 
 /**
@@ -52,7 +53,6 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
         public GlobalAction(String id) {
             this.id = id;
         }
-
         public void run() {
             fEditor.performGlobalAction(id);
         }
@@ -60,6 +60,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
 
     private void addGlobalAction(String id) {
         GlobalAction action = new GlobalAction(id);
+        action.setActionDefinitionId(id);
         addGlobalAction(id, action);
     }
 
@@ -94,6 +95,8 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
 
     protected void makeActions() {
         addGlobalAction(ActionFactory.DELETE.getId());
+        // MOD mzhao bug 8710
+        addGlobalAction(RunAnalysisAction.ID);
     }
 
     public void setActiveEditor(IEditorPart targetEditor) {
@@ -103,6 +106,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
 
         fEditor = (AnalysisEditor) targetEditor;
         setActivePage(fEditor.getActiveEditor());
+
     }
 
     public void setActivePage(IEditorPart newEditor) {

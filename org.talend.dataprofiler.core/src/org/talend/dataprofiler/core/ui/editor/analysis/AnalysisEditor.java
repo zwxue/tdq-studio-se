@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -261,6 +262,10 @@ public class AnalysisEditor extends CommonFormEditor {
     }
 
     public void performGlobalAction(String id) {
+        if (id.equals(RunAnalysisAction.ID)) {
+            runAction.run();
+            return;
+        }
         if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
             ((ColumnMasterDetailsPage) masterPage).performGlobalAction(id);
         }
@@ -292,5 +297,15 @@ public class AnalysisEditor extends CommonFormEditor {
         if (saveAction != null) {
             saveAction.setEnabled(state);
         }
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "getRunAnalysisAction".
+     * 
+     * @return
+     */
+    public Action getRunAnalysisAction() {
+        return runAction;
     }
 }
