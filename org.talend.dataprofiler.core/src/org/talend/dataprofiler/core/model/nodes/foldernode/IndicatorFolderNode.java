@@ -13,12 +13,18 @@
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
@@ -28,6 +34,88 @@ import org.talend.resource.ResourceManager;
  * DOC bZhou class global comment. Detailled comment
  */
 public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenchAdapter {
+    
+    private static final String CATEGORY_OTHER = "Others";
+    
+    private static IndicatorCategory indicatorCategory;
+
+    public static IndicatorCategory getIndicatorCategory() {
+        if (indicatorCategory == null) {
+            indicatorCategory = DefinitionFactory.eINSTANCE.createIndicatorCategory();
+            indicatorCategory.setLabel(CATEGORY_OTHER);
+            indicatorCategory.setName(CATEGORY_OTHER);
+        }
+        return indicatorCategory;
+    }
+
+    private static Map<IndicatorCategory, List<IndicatorDefinition>> categoriesIDMaps;
+    
+    public static Map<IndicatorCategory, List<IndicatorDefinition>> getCategoriesIDMaps() {
+        if (categoriesIDMaps == null) {
+            categoriesIDMaps = buildCategories();
+        }
+        return categoriesIDMaps;
+    }
+
+    public static List<IndicatorDefinition> getIndicatorDefinitionList(IndicatorCategory category) {
+        if (category != null && getCategoriesIDMaps() != null) {
+            return getCategoriesIDMaps().get(category);
+        }
+        return null;
+    }
+
+    private static List<String> shouldNotIncludeIndicatorDefinitionUuidList;
+    
+    public static List<String> getShouldNotIncludeIndicatorDefinitionUuidList() {
+        if (shouldNotIncludeIndicatorDefinitionUuidList == null) {
+            shouldNotIncludeIndicatorDefinitionUuidList = new ArrayList<String>();
+            // Overview \/
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_nZEo8MYSEd27NP4lvE0A4w"); // Connection Overview
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_QwDiwMYUEd27NP4lvE0A4w"); // Catalog Overview
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_V4SA0MYUEd27NP4lvE0A4w"); // Schema Overview
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_hgO7YMYUEd27NP4lvE0A4w"); // Table Overview
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_lNIE0MbNEd2d_JPxxDRSfQ"); // View Overview
+            // composite \/
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1BF2Ed2PKb6nEJEvhw"); // Minimal Length
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1RF2Ed2PKb6nEJEvhw"); // Maximal Length
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccIR4BF2Ed2PKb6nEJEvhw"); // Average Length
+
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccJgAhF2Ed2PKb6nEJEvhw"); // SUM
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_vf0k4PkbEd2z55b7dTkWFw"); // Multiple Column Correlation
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_UUIyoCOMEd6YB57jaCfKaA"); // DQ Rule
+            // Summary Statistics \/
+            // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI48RF2Ed2PKb6nEJEvhw"); // Mean
+            // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI48hF2Ed2PKb6nEJEvhw"); // Median
+            // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI48xF2Ed2PKb6nEJEvhw"); // Inter Quartile Range
+            // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI49BF2Ed2PKb6nEJEvhw"); // Lower Quartile
+            // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI49RF2Ed2PKb6nEJEvhw"); // Upper Quartile
+            // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI49hF2Ed2PKb6nEJEvhw"); // Range
+            // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccJgABF2Ed2PKb6nEJEvhw"); // Minimum
+            // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccJgARF2Ed2PKb6nEJEvhw"); // Maximum
+        }
+        return shouldNotIncludeIndicatorDefinitionUuidList;
+    }
+
+    private static List<IndicatorDefinition> showIndicatorDefinitions;
+
+    public static List<IndicatorDefinition> getShowIndicatorsDefinitions() {
+        if (showIndicatorDefinitions == null) {
+            showIndicatorDefinitions = new ArrayList<IndicatorDefinition>();
+
+            EList<IndicatorDefinition> indicatorDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions()
+                    .getIndicatorDefinitions();
+
+            for (IndicatorDefinition indicatorDefinition : indicatorDefinitions) {
+                if (!indicatorDefinition.getSqlGenericExpression().isEmpty()
+                        && !getShouldNotIncludeIndicatorDefinitionUuidList()
+                                .contains(ResourceHelper.getUUID(indicatorDefinition))) {
+                    showIndicatorDefinitions.add(indicatorDefinition);
+                }
+            }
+
+        }
+        return showIndicatorDefinitions;
+    }
 
     /**
      * DOC bZhou IndicatorFolderNode constructor comment.
@@ -47,18 +135,36 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
      */
     @Override
     public void loadChildren() {
-        EList<IndicatorDefinition> indicatorDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions()
-                .getIndicatorDefinitions();
+        if (getCategoriesIDMaps() != null) {
+            setChildren(getCategoriesIDMaps().keySet().toArray(new IndicatorCategory[getCategoriesIDMaps().keySet().size()]));
+        }
+    }
 
-        List<IndicatorDefinition> tempList = new ArrayList<IndicatorDefinition>();
+    /**
+     * DOC xqliu Comment method "buildCategories".
+     * @return
+     */
+    private static Map<IndicatorCategory, List<IndicatorDefinition>> buildCategories() {
+        Map<IndicatorCategory, List<IndicatorDefinition>> categories = new HashMap<IndicatorCategory, List<IndicatorDefinition>>();
 
-        for (IndicatorDefinition definition : indicatorDefinitions) {
-            if (!definition.getSqlGenericExpression().isEmpty()) {
-                tempList.add(definition);
+        for (IndicatorDefinition indicatorDefinition : getShowIndicatorsDefinitions()) {
+            IndicatorCategory category = IndicatorCategoryHelper.getCategory(indicatorDefinition);
+            if (category == null) {
+                category = getIndicatorCategory();
+            }
+            if (category != null) {
+                List<IndicatorDefinition> list = categories.get(category);
+                if (list == null) {
+                    List<IndicatorDefinition> tempList = new ArrayList<IndicatorDefinition>();
+                    tempList.add(indicatorDefinition);
+                    categories.put(category, tempList);
+                } else {
+                    list.add(indicatorDefinition);
+                }
             }
         }
 
-        setChildren(tempList.toArray(new IndicatorDefinition[tempList.size()]));
+        return categories;
     }
 
     /*

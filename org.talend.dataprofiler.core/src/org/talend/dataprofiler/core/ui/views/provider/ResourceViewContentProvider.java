@@ -37,6 +37,8 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.ResourceManager;
 
@@ -123,11 +125,27 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             }
         } else if (element instanceof IEcosCategory) {
             return ((IEcosCategory) element).getComponent().toArray();
+        } else if (element instanceof IndicatorCategory) {
+            return getIndicatorsChildren((IndicatorCategory) element);
         }
         if (needSortContainers.contains(element)) {
             return sort(super.getChildren(element));
         }
         return super.getChildren(element);
+    }
+
+    /**
+     * DOC xqliu Comment method "getIndicatorsChildren".
+     * 
+     * @param category
+     * @return
+     */
+    private Object[] getIndicatorsChildren(IndicatorCategory category) {
+        List<IndicatorDefinition> indicatorDefinitionList = IndicatorFolderNode.getIndicatorDefinitionList(category);
+        if (indicatorDefinitionList == null) {
+            indicatorDefinitionList = new ArrayList<IndicatorDefinition>();
+        }
+        return indicatorDefinitionList.toArray();
     }
 
     /**

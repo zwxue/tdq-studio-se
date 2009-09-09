@@ -21,6 +21,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -67,9 +68,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ((IEcosComponent) element).getName();
         } else if(element instanceof IEcosCategory){
         	return ((IEcosCategory) element).getName();
-        }
-        else if (element instanceof IndicatorDefinition) {
+        } else if (element instanceof IndicatorDefinition) {
             return ((IndicatorDefinition) element).getName();
+        } else if (element instanceof IndicatorCategory) {
+            return ((IndicatorCategory) element).getName();
         }
 
         // PTODO qzhang fixed bug 4176: Display expressions as children of the
