@@ -133,29 +133,24 @@ public enum FormEnum {
         case LowFrequencyIndicatorEnum:
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
-        case UserDefinedIndicatorEnum:
-            if (UDIHelper.isFrequency((indicatorUnit.getIndicator()))) {
-                forms = new FormEnum[] { NumbericNominalForm };
-            } else {
-                if (dataminingType == DataminingType.INTERVAL) {
-                    if (Java2SqlType.isNumbericInSQL(sqlType)) {
+            if (dataminingType == DataminingType.INTERVAL) {
+                if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                        forms = new FormEnum[] { FreqBinsDesignerForm };
-                    }
+                    forms = new FormEnum[] { FreqBinsDesignerForm };
+                }
 
-                    if (Java2SqlType.isDateInSQL(sqlType)) {
+                if (Java2SqlType.isDateInSQL(sqlType)) {
 
-                        forms = new FormEnum[] { FreqTimeSliceForm };
-                    }
-                } else if (Java2SqlType.isTextInSQL(sqlType)) {
+                    forms = new FormEnum[] { FreqTimeSliceForm };
+                }
+            } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
-                } else if (dataminingType == DataminingType.NOMINAL) {
+                forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
+            } else if (dataminingType == DataminingType.NOMINAL) {
 
-                    if (Java2SqlType.isNumbericInSQL(sqlType)) {
+                if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                        forms = new FormEnum[] { NumbericNominalForm };
-                    }
+                    forms = new FormEnum[] { NumbericNominalForm };
                 }
             }
 
@@ -194,6 +189,13 @@ public enum FormEnum {
         case SoundexIndicatorEnum:
         case SoundexLowIndicatorEnum:
             forms = new FormEnum[] { NumbericNominalForm };
+
+            break;
+
+        case UserDefinedIndicatorEnum:
+            if (UDIHelper.isFrequency((indicatorUnit.getIndicator()))) {
+                forms = new FormEnum[] { NumbericNominalForm };
+            }
 
             break;
 
