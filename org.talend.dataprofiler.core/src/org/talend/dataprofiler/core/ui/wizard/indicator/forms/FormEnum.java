@@ -21,7 +21,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -134,7 +134,7 @@ public enum FormEnum {
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
         case UserDefinedIndicatorEnum:
-            if (indicatorUnit.getIndicator() instanceof UserDefIndicator) {
+            if (UDIHelper.isFrequency((indicatorUnit.getIndicator()))) {
                 forms = new FormEnum[] { NumbericNominalForm };
             } else {
                 if (dataminingType == DataminingType.INTERVAL) {
