@@ -85,7 +85,6 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
 
     @Override
     public boolean handle(Object data) {
-        this.setComputed(COMPUTED_EDEFAULT); // tells that quartile should be recomputed.
         boolean ok = super.handle(data);
         // TODO scorreia handle null values (handle case when null is replaced by a default value.
         if (data == null) {
@@ -96,6 +95,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
 
     @Override
     public boolean reset() {
+        this.computed = COMPUTED_EDEFAULT; 
         this.setValue(VALUE_EDEFAULT);
         this.frequenceTable.clear();
         return super.reset();

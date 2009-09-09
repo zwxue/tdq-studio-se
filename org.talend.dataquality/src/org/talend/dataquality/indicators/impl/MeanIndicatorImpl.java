@@ -39,7 +39,7 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
      * @generated NOT
      */
     public Double getMean() {
-        Long c = getCount();
+        Long c = getCount() - getNullCount();
         // if (super.genericSum == null) {// TODO scorreia check that this work
         if (c.compareTo(0L) == 0) {
             // FIXME scorreia this error should send a warning to the user that he does not have a mean instead of
@@ -51,21 +51,14 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
         try {
             sum = Double.valueOf(getSumStr());
         } catch (Exception e) {
-            sum = Double.valueOf(0);
+            // do not return 0 otherwise the user will believe that the mean is 0
+            return Double.NaN; 
         }
         // ~
         if (sum == null) {
             throw new RuntimeException("Invalid sum in mean computation!!");
         }
         return sum / c;
-        // throw new RuntimeException("Problem when computing mean!!");
-        // }
-        //
-        // Double mean = super.genericSum.getMean(c);
-        // if (mean == null) {
-        // throw new RuntimeException("Invalid mean!!");
-        // }
-        // return mean;
     }
 
     /*
@@ -121,4 +114,7 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
     public String toString() {
         return "Mean = " + getMean();
     }
+    
+    
+    
 } // MeanIndicatorImpl

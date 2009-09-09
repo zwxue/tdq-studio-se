@@ -347,6 +347,10 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
             return false;
         }
         this.sumStr = genericSum.getAsString();
+        // get the correct type of result from the analyzed element
+        int javaType = this.getColumnType();
+        this.setDatatype(javaType);
+
         return ok;
     }
 
@@ -378,4 +382,15 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
         return IndicatorValueType.REAL_VALUE;
     }
 
+    @Override
+    public boolean reset() {
+        if (genericSum != null) {
+            this.genericSum.reset();
+        }
+        this.sumStr = SUM_STR_EDEFAULT;
+        this.computed = COMPUTED_EDEFAULT; 
+        return super.reset();
+    }
+
+    
 } // SumIndicatorImpl

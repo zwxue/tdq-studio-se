@@ -131,19 +131,9 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
-     * @generated NOT
-     */
-    public Double getMedian() {
-        if (!medianComputed) {
-            computeMedian();
-        }
-        return getMedianGen();
-    }
-
-    /**
      * @generated
      */
-    public Double getMedianGen() {
+    public Double getMedian() {
         return median;
     }
 
@@ -237,9 +227,8 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
      * @generated NOT
      */
     public boolean computeMedian() {
-        medianComputed = computeNumericMedian();
-
-        return medianComputed;
+        // scorreia keep private method "computeNumericMedian" as we may have a computeDateMedian later
+        return computeNumericMedian();
     }
 
     /**
@@ -344,9 +333,7 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
      * @return true if ok.
      */
     private boolean computeNumericMedian() {
-        // TODO scorreia replace null by log!
-
-        if (getCount() == null || getCount() == 0) { // TODO scorreia log something ?
+        if (getCount() == null || getCount() == 0) {
             return false;
         }
 
@@ -381,7 +368,6 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
      */
     @Override
     public boolean handle(Object data) {
-        medianComputed = false; // tells that median should be recomputed.
         boolean ok = super.handle(data);
         // TODO scorreia handle null values (handle case when null is replaced by a default value.
         if (data == null) {
@@ -422,7 +408,7 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
                 return false;
             }
             this.setMedian((r1 + r2) / 2);
-            this.medianComputed = true; // fix bug 4936
+            // this.medianComputed = true; // fix bug 4936
             return true;
         }
         return false;
@@ -490,10 +476,18 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
         if (frequenceTable != null) {
             this.frequenceTable.clear();
         }
-        this.computed = false;
-        this.medianComputed = false;
+        this.computed = COMPUTED_EDEFAULT; 
         return super.reset();
     }
 
+    @Override
+    public boolean finalizeComputation() {
+        if (!isComputed()) {
+            computeMedian();
+        }
+        return super.finalizeComputation();
+    }
+
+    
     
 } // MedianIndicatorImpl
