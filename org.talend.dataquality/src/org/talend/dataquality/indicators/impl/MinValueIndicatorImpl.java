@@ -15,13 +15,14 @@ import org.talend.dataquality.indicators.MinValueIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValueIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MinValueIndicatorImpl() {
@@ -30,6 +31,7 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -57,7 +59,7 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
     @Override
     public boolean handle(Object data) {
         boolean ok = super.handle(data);
-        if (isLess(data)) {
+        if (isLess(data) || null == this.value) {
             this.value = String.valueOf(data);
         }
         return ok;
@@ -85,6 +87,5 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
         this.value = VALUE_EDEFAULT;
         return super.reset();
     }
-    
-    
+
 } // MinValueIndicatorImpl

@@ -15,13 +15,14 @@ import org.talend.dataquality.indicators.MaxValueIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValueIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MaxValueIndicatorImpl() {
@@ -30,6 +31,7 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -55,7 +57,7 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
     @Override
     public boolean handle(Object data) {
         boolean ok = super.handle(data);
-        if (isGreater(data)) {
+        if (isGreater(data) || null == this.value) {
             this.value = String.valueOf(data);
         }
         return ok;
@@ -78,5 +80,4 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
         }
     }
 
-    
 } // MaxValueIndicatorImpl
