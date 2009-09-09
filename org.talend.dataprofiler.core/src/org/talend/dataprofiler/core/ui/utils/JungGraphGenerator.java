@@ -98,12 +98,20 @@ public class JungGraphGenerator {
 
     private VisualizationViewer vv;
 
+    private boolean isPreview = false;
+
     /**
      * DOC bzhou JungGraphGenerator constructor comment.
      */
     public JungGraphGenerator(GraphBuilder graphbuilder, List<Object[]> listRows) {
         this.graphbuilder = graphbuilder;
         graph = graphbuilder.createMultiGraph(listRows);
+    }
+
+    // ADD yyi 2009-09-09 feature 8834
+    public Composite generate(Composite parent, boolean isWithHelp, boolean isPreview) {
+        this.isPreview = isPreview;
+        return generate(parent, isWithHelp);
     }
 
     public Composite generate(Composite parent, boolean isWithHelp) {
@@ -122,6 +130,10 @@ public class JungGraphGenerator {
 
         // create a form to hold the graph
         JPanel controllers = createToolControllers(vv);
+
+        // MOD yyi 2009-09-09 feature 8834
+        if (this.isPreview)
+            controllers.setVisible(false);
 
         JPanel panel = null;
         if (isWithHelp) {

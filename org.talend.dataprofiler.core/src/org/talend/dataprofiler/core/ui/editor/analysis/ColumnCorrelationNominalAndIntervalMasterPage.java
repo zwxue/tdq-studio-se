@@ -350,7 +350,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             List<Object[]> listRows = columnSetMultiIndicator.getListRows();
             if (listRows != null) {
                 JungGraphGenerator generator = new JungGraphGenerator(gBuilder, listRows);
-                generator.generate(composite, false);
+                // MOD yyi 2009-09-09 feature 8834
+                generator.generate(composite, false, true);
             }
         } else {
 
