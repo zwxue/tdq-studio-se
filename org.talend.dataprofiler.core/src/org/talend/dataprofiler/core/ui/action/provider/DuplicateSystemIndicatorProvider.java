@@ -31,7 +31,9 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -81,8 +83,11 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
                         IFile newFile = getNewFile(definition);
                         newObject.setName("copy of " + newObject.getName()); //$NON-NLS-1$
 
-                        EMFSharedResources.getInstance().addEObjectToResourceSet(newFile.getFullPath().toString(), newObject);
-                        EMFSharedResources.getInstance().saveLastResource();
+                        // MOD yyi 2009-09-09 feature: 8882 add .properties file for duplicate indicator.
+                        AElementPersistance elementPersistance = ElementWriterFactory.getInstance().create(
+                                newFile.getFileExtension());
+
+                        elementPersistance.save(newObject, newFile);
 
                         selectAndReveal(newFile);
                     }
