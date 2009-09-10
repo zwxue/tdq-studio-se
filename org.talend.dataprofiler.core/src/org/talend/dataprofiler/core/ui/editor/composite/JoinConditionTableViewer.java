@@ -271,6 +271,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     public void removeJoinElement(JoinElement join) {
         this.myTableViewer.remove(join);
         this.myJoinElement.remove(join);
+        this.masterPage.getTempJoinElements().remove(join);
         this.masterPage.setDirty(true);
         if (this.myJoinElement.size() == 0) {
             this.columnSetPackage = null;
