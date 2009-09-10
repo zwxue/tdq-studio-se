@@ -20,8 +20,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -75,15 +73,11 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     List<Column> columnListB = null;
 
-    DataFilterComp dataFilterCompA;
-
-    DataFilterComp dataFilterCompB;
+    DataFilterComp dataFilterComp;
 
     private Section dataFilterSection = null;
 
-    private String stringDataFilterA;
-
-    private String stringDataFilterB;
+    private String stringDataFilter;
 
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
 
@@ -97,8 +91,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        stringDataFilterA = AnalysisHelper.getStringDataFilter(analysis, 0);
-        stringDataFilterB = AnalysisHelper.getStringDataFilter(analysis, 1);
+        stringDataFilter = AnalysisHelper.getStringDataFilter(analysis);
     }
 
     @Override
@@ -130,6 +123,12 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         currentEditor.registerSections(new Section[] { columnsComparisonSection, dataFilterSection });
     }
 
+    /**
+     * DOC bZhou Comment method "createDataFilterSection".
+     * 
+     * @param form
+     * @param anasisDataComp
+     */
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
         dataFilterSection = createSection(
                 form,
@@ -139,30 +138,12 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionClient.setLayout(new GridLayout());
 
-        SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
-        sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        Composite leftComp = toolkit.createComposite(sashForm);
-        leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        leftComp.setLayout(new GridLayout());
-        dataFilterCompA = new DataFilterComp(leftComp, stringDataFilterA);
-        dataFilterCompA.addPropertyChangeListener(this);
-        dataFilterCompA.addModifyListener(new ModifyListener() {
+        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
+        dataFilterComp.addPropertyChangeListener(this);
+        dataFilterComp.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                AnalysisHelper.setStringDataFilter(analysis, dataFilterCompA.getDataFilterString(), 0);
-            }
-        });
-
-        Composite rightComp = toolkit.createComposite(sashForm);
-        rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        rightComp.setLayout(new GridLayout());
-        dataFilterCompB = new DataFilterComp(rightComp, stringDataFilterB);
-        dataFilterCompB.addPropertyChangeListener(this);
-        dataFilterCompB.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                AnalysisHelper.setStringDataFilter(analysis, dataFilterCompB.getDataFilterString(), 1);
+                AnalysisHelper.setStringDataFilter(analysis, dataFilterComp.getDataFilterString());
             }
         });
 
