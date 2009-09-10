@@ -83,6 +83,8 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
             shouldNotIncludeIndicatorDefinitionUuidList.add("_ccJgAhF2Ed2PKb6nEJEvhw"); // SUM
             shouldNotIncludeIndicatorDefinitionUuidList.add("_vf0k4PkbEd2z55b7dTkWFw"); // Multiple Column Correlation
             shouldNotIncludeIndicatorDefinitionUuidList.add("_UUIyoCOMEd6YB57jaCfKaA"); // DQ Rule
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_10gx4JxcEd2YicTszQEJLA"); // Multiple Column Frequency
+                                                                                        // Table
             // Summary Statistics \/
             // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI48RF2Ed2PKb6nEJEvhw"); // Mean
             // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI48hF2Ed2PKb6nEJEvhw"); // Median
