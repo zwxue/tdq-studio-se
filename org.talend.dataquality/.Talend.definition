@@ -28,7 +28,7 @@
     <sqlGenericExpression xmi:id="_H3q6QMtNEd2CMtoJzSqU8Q" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount > 1) AS myquery" language="Teradata"/>
     <sqlGenericExpression xmi:id="_Oid8IBILEd6Zsu-w7oQdJw" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) myquery" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
-  <indicatorDefinitions xmi:id="_YqcX0XHpEd6udst2R2sgpA" name="Functional Dependency" label="Functional Dependency">
+  <indicatorDefinitions xmi:id="_YqcX0XHpEd6udst2R2sgpA" name="Functional Dependency" categories="_ARDkwJ4gEd6f9IaQrCGYNQ" label="Functional Dependency">
     <taggedValue xmi:id="_Yqc-4HHpEd6udst2R2sgpA" tag="Description" value="Reports the extent to which the values in one column (the dependent column) depend on the values in another column or set of columns (the determinant column)"/>
     <taggedValue xmi:id="_Yqc-4XHpEd6udst2R2sgpA" tag="Purpose" value=""/>
     <sqlGenericExpression xmi:id="_Yqc-4nHpEd6udst2R2sgpA" body="SELECT COUNT(*) AS NB, COUNT(DISTINCT A) AS NBDISTINCT FROM (SELECT DISTINCT &lt;%=__COLUMN_NAME_A__%> AS A , &lt;%=__COLUMN_NAME_B__%> AS B FROM  &lt;%=__TABLE_NAME__%> C  &lt;%=__WHERE_CLAUSE__%>) T" language="SQL"/>
@@ -224,7 +224,7 @@
     <charactersMapping xmi:id="_AmRw0JPuEd6udoWhiRnx0g" name="Characters mapping on Microsoft SQL Server" language="Microsoft SQL Server" charactersToReplace="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" replacementCharacters="aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999"/>
     <charactersMapping xmi:id="_7Tnu8JPuEd6udoWhiRnx0g" name="Characters mapping on DB2" language="DB2" charactersToReplace="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" replacementCharacters="aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999"/>
   </indicatorDefinitions>
-  <indicatorDefinitions xmi:id="_OCTbwJR_Ed2XO-JvLwVAwg" name="Pattern Low Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Pattern Low Frequency Table">
+  <indicatorDefinitions xmi:id="_OCTbwJR_Ed2XO-JvLwVAwg" name="Pattern Low Frequency Table" categories="_0n3BsJR-Ed2XO-JvLwVAwg" label="Pattern Low Frequency Table">
     <taggedValue xmi:id="_OCTbwZR_Ed2XO-JvLwVAwg" tag="Description" value="counts the number of patterns for each distinct pattern"/>
     <taggedValue xmi:id="_OCTbwpR_Ed2XO-JvLwVAwg" tag="Purpose" value="evaluates the less frequent patterns"/>
     <sqlGenericExpression xmi:id="_OCTbxJR_Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c ASC" language="MySQL"/>
@@ -353,6 +353,10 @@
   <categories xmi:id="_8i9eQBI5Ed6TWL6NwMMHzQ" name="DQ Rule" label="DQ Rule">
     <taggedValue xmi:id="_ghhXUBI6Ed6TWL6NwMMHzQ" tag="Description" value="contains user defined DQ rules in SQL"/>
     <taggedValue xmi:id="_kkFN0BI6Ed6TWL6NwMMHzQ" tag="Purpose" value="evaluates number of records for the given rules"/>
+  </categories>
+  <categories xmi:id="_ARDkwJ4gEd6f9IaQrCGYNQ" name="Functional Dependency" label="Functional Dependency">
+    <taggedValue xmi:id="_Pb3iEJ4gEd6f9IaQrCGYNQ" tag="Description" value="contains indicators of functional dependency analyses"/>
+    <taggedValue xmi:id="_Pb3iEZ4gEd6f9IaQrCGYNQ" tag="Purpose" value="evaluates the strength of the functional dependencies "/>
   </categories>
   <categories xmi:id="_b5F7QHqTEd67hM2eKD3QgQ" name="User Defined Count" label="User Defined Count">
     <taggedValue xmi:id="_chxE0HqTEd67hM2eKD3QgQ" tag="Description" value="contains user defined count indicators"/>
