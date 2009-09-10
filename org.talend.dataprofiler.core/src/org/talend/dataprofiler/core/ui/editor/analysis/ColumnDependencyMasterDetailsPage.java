@@ -130,10 +130,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      * @param anasisDataComp
      */
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        dataFilterSection = createSection(
-                form,
-                anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.dataFilter"), false, DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
+        dataFilterSection = createSection(form, anasisDataComp, "Data Filter", false, "Edit the data filter:");
         Composite sectionClient = toolkit.createComposite(dataFilterSection);
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionClient.setLayout(new GridLayout());
