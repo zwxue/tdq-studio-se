@@ -82,10 +82,4 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
         }
     }
 
-    @Override
-    public boolean reset() {
-        this.value = VALUE_EDEFAULT;
-        return super.reset();
-    }
-
 } // MinValueIndicatorImpl
