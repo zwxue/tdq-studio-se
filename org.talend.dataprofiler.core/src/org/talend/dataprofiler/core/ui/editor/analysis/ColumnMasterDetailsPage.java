@@ -273,7 +273,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, true);
                 packOtherColumns();
-
             }
         });
 
@@ -297,6 +296,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         for (TreeColumn column : columns) {
             column.pack();
         }
+        treeViewer.getTree().pack();
+        treeViewer.getTree().getParent().layout();
     }
 
     /**
