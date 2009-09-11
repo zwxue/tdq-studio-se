@@ -69,8 +69,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 }
                 // no break
             case YEAR:
-                clause = concatWhereClause(clause, dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.equal()
-                        + getYearCharacters(entity.getLabel()));
+                clause = concatWhereClause(clause, buildWhereClause());
                 break;
             case NONE:
             default:
@@ -106,6 +105,19 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
         return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$
                 + andDataFilterClause();
+    }
+
+    /**
+     * DOC bZhou Comment method "buildWhereClause".
+     * 
+     * @return
+     */
+    private String buildWhereClause() {
+        String yearCharacters = getYearCharacters(entity.getLabel());
+        if (yearCharacters == null || "null".equalsIgnoreCase(yearCharacters)) {
+            return dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.isNull();
+        }
+        return dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.equal() + yearCharacters;
     }
 
     /**
