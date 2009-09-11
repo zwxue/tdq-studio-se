@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
@@ -58,6 +59,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
+import org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
@@ -127,13 +129,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private Section charactersMappingSection;
 
     private Composite charactersMappingComp;
-    
+
     private Composite charactersMappingLineComp;
 
     private Map<String, CharactersMapping> charactersMappingMap, charactersMappingMapTemp;
 
     private List<String> remainDBTypeListCM;
-    
+
     private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789";
 
     private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
@@ -168,7 +170,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         remainDBTypeListAF = new ArrayList<String>();
         remainDBTypeListAF.addAll(allDBTypeList);
-        
+
         remainDBTypeListCM = new ArrayList<String>();
         remainDBTypeListCM.addAll(allDBTypeList);
 
@@ -197,7 +199,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         afExpressionMap = new HashMap<String, AggregateDateExpression>();
         afExpressionMapTemp = new HashMap<String, AggregateDateExpression>();
-        
+
         charactersMappingMap = new HashMap<String, CharactersMapping>();
         charactersMappingMapTemp = new HashMap<String, CharactersMapping>();
     }
@@ -248,6 +250,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createCharactersMappingComp".
+     * 
      * @param charactersMappingSection
      * @return
      */
@@ -803,7 +806,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createNewExpressLine(final Expression expression) {
         final Composite expressComp = new Composite(expressionComp, SWT.NONE);
-        expressComp.setLayout(new GridLayout(2, false));
+        expressComp.setLayout(new GridLayout(3, false));
         final CCombo combo = new CCombo(expressComp, SWT.BORDER);
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
@@ -841,7 +844,37 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         });
 
+        createExpressionEditButton(expressComp, patternText);
+
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
+    }
+
+    /**
+     * DOC yyi 2009-09-11 Feature:9030
+     * 
+     * @param expressComp
+     * @param patternText
+     * 
+     * @return
+     */
+    private void createExpressionEditButton(Composite expressComp, final Text patternText) {
+        Button editButton = new Button(expressComp, SWT.PUSH);
+        editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression"));
+        editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression"));
+        editButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                String[] templates = new String[] { "<%=__TABLE_NAME__%>", "<%=__COLUMN_NAMES__%>", "<%=__WHERE_CLAUSE__%>",
+                        "<%=__GROUP_BY_ALIAS__%>" };
+                ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(), templates);
+                editDialog.open();
+                if (Dialog.OK == editDialog.getReturnCode()) {
+                    patternText.setText(editDialog.getResult());
+                }
+            }
+        });
+
     }
 
     private void createAddButton(final Composite parent) {
@@ -953,7 +986,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
-        
+
         if (hasCharactersMapping) {
             EList<CharactersMapping> charactersMappings = definition.getCharactersMapping();
             charactersMappings.clear();
