@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="org.talend.top.repository" name="org.talend.top.repository" schema="schema/org.talend.top.repository.exsd"/>
+
+</plugin>

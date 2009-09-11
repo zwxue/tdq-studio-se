@@ -19,6 +19,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -39,6 +40,7 @@ public class CreateConnectionAnalysisAction extends Action implements ICheatShee
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);
 
-        dialog.open();
+        if (WizardDialog.OK == dialog.open())
+            ProxyRepositoryManager.getInstance().save();
     }
 }

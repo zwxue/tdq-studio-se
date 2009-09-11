@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -67,6 +68,7 @@ public class DeleteDQRuleAction extends Action {
 			}
 		}
 		try {
+		    ProxyRepositoryManager.getInstance().save();
 			sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
 			log.error(e, e);

@@ -22,6 +22,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -50,6 +51,7 @@ public class CreateDQRulesAction extends Action {
         NewDQRulesWizard fileWizard = WizardFactory.createNewDQRuleWizard(parameter);
         fileWizard.setWindowTitle(getText());
         WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), fileWizard);
-        dialog.open();
+        if (WizardDialog.OK == dialog.open())
+            ProxyRepositoryManager.getInstance().save();
     }
 }

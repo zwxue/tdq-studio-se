@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * This provider for creating a user folder.
@@ -93,7 +94,8 @@ public class CreateUserFolderProvider extends CommonActionProvider {
             WizardDialog dialog = new WizardDialog(activeShell, processWizard);
             dialog.setPageSize(400, 60);
             dialog.create();
-            dialog.open();
+            if (WizardDialog.OK == dialog.open())
+                ProxyRepositoryManager.getInstance().save();
             // if (dialog.open() == Window.OK)
             // {
             // try {

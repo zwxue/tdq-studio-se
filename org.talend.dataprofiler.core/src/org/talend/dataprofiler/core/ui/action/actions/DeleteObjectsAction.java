@@ -20,10 +20,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourceFileActionProvider;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -47,7 +47,7 @@ public class DeleteObjectsAction extends Action {
         removeSQLFile();
         removeAnalysis();
         removeCWMResource();
-
+        ProxyRepositoryManager.getInstance().save();
     }
 
     private void removeAnalysis() {

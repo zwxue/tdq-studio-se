@@ -40,6 +40,7 @@ import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC rli RemoveAnalysisActionProvider class global comment. Detailled comment
@@ -123,6 +124,7 @@ public class RemoveAnalysisAction extends Action {
 			IFolder reportsFolder = ResourceManager.getDataProfilingFolder()
 					.getFolder(DQStructureManager.REPORTS);
 			try {
+                ProxyRepositoryManager.getInstance().save();
 				reportsFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
 			} catch (CoreException e) {
 				log.error(e, e);

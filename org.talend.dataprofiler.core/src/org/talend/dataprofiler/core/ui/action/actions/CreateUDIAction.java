@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -64,7 +65,8 @@ public class CreateUDIAction extends Action implements ICheatSheetAction {
         IHelpResource[] relatedTopics = context.getRelatedTopics();
         String href = relatedTopics[0].getHref();
         WizardDialog dialog = new OpeningHelpWizardDialog(null, fileWizard, href);
-        dialog.open();
+        if (WizardDialog.OK == dialog.open())
+            ProxyRepositoryManager.getInstance().save();
     }
 
     public void run(String[] params, ICheatSheetManager manager) {

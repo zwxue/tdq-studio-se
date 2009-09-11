@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -64,6 +65,7 @@ public class DeleteFolderAction extends Action {
         try {
             IFolder folder = parent.getFolder(obj.getName());
             folder.delete(true, null);
+            ProxyRepositoryManager.getInstance().save();
             parent.refreshLocal(IResource.DEPTH_INFINITE, null);
         } catch (CoreException e) {
             log.error(e, e);

@@ -21,6 +21,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.ImportUDIWizard;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -44,6 +45,7 @@ public class ImportUDIAction extends Action {
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
             try {
+                ProxyRepositoryManager.getInstance().save();
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {
                 log.error(e, e);

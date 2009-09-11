@@ -55,6 +55,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -107,6 +108,7 @@ public class RenameSqlFileAction extends Action {
 				new File(folder.getLocation().toPortableString())
 						.renameTo(new File(newPath));
 			}
+			ProxyRepositoryManager.getInstance().save();
 			folder.getParent().refreshLocal(IResource.DEPTH_ONE, null);
 			sourceFiles.refreshLocal(IResource.DEPTH_ONE, null);
 		} catch (CoreException e) {

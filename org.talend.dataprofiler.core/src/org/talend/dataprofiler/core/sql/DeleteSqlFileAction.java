@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -75,6 +76,7 @@ public class DeleteSqlFileAction extends Action {
 			}
 		}
 		try {
+		    ProxyRepositoryManager.getInstance().save();
 			sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
 			log.error(e, e);

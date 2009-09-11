@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -63,7 +64,8 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new OpeningHelpWizardDialog(null, wizard, null);
         wizard.setContainer(dialog);
-        dialog.open();
+        if (WizardDialog.OK == dialog.open())
+            ProxyRepositoryManager.getInstance().save();
     }
 
     /*
@@ -129,6 +131,7 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);
 
-        dialog.open();
+        if (WizardDialog.OK == dialog.open())
+            ProxyRepositoryManager.getInstance().save();
     }
 }

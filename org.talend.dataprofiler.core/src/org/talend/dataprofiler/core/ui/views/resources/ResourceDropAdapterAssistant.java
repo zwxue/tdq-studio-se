@@ -49,6 +49,7 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -145,6 +146,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 movedIFile = folder.getFile(name);
             }
         }
+        ProxyRepositoryManager.getInstance().save();
         ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         return null;
     }

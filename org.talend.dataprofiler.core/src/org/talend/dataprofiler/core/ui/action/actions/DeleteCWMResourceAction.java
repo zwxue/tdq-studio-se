@@ -50,6 +50,7 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -77,6 +78,7 @@ public class DeleteCWMResourceAction extends Action {
      */
     public void run() {
         deleteResource();
+        ProxyRepositoryManager.getInstance().save();
     }
 
     public void deleteResource() {

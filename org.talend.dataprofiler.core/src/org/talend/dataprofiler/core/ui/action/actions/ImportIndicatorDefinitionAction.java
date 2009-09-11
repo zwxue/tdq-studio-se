@@ -16,6 +16,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.wizard.indicator.ImportIndicatorDefinitionWizard;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -32,6 +33,7 @@ public class ImportIndicatorDefinitionAction extends Action {
         ImportIndicatorDefinitionWizard wizard = new ImportIndicatorDefinitionWizard();
         WizardDialog dialog = new WizardDialog(null, wizard);
         wizard.setWindowTitle(getText());
-        dialog.open();
+        if (WizardDialog.OK == dialog.open())
+            ProxyRepositoryManager.getInstance().save();
     }
 }

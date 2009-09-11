@@ -89,6 +89,7 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
 /**
@@ -502,5 +503,13 @@ public class DQRespositoryView extends CommonNavigator {
             super(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
             setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_SPACE));
         }
+        
+        @Override
+        public void run() {
+            ProxyRepositoryManager.getInstance().refresh();
+            super.run();
+        }
     }
+    
+    
 }

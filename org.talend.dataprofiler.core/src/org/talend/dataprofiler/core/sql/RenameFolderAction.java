@@ -22,6 +22,7 @@ import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -66,6 +67,7 @@ public class RenameFolderAction extends Action {
             IFolder folder = obj.getParent().getFolder(new Path(value2));
             try {
                 obj.move(folder.getFullPath(), true, null);
+                ProxyRepositoryManager.getInstance().save();
             } catch (CoreException e) {
                 log.error(e, e);
             }

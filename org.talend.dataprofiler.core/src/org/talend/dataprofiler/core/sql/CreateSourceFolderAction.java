@@ -20,6 +20,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -53,6 +54,8 @@ public class CreateSourceFolderAction extends Action {
         NewFolderDialog dialog = new NewFolderDialog(Display.getDefault().getActiveShell(), obj);
         if (dialog.open() == NewFolderDialog.OK) {
             Object[] res = dialog.getResult();
+            ProxyRepositoryManager.getInstance().save();
+
             // IFolder resl = (IFolder) res[0];
             // IFolder folder = obj.getFolder(resl);
             // try {

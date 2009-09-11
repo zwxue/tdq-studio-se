@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.PatternParameter;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -102,7 +103,8 @@ public class CreatePatternAction extends Action {
             }
             WizardDialog dialog = new OpeningHelpWizardDialog(Display.getDefault().getActiveShell(), fileWizard, href);
             fileWizard.setWindowTitle(getText());
-            dialog.open();
+            if (WizardDialog.OK == dialog.open())
+                ProxyRepositoryManager.getInstance().save();
         }
     }
 }

@@ -36,6 +36,7 @@ import org.talend.core.model.properties.User;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
@@ -183,6 +184,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         if (rc.isOk()) {
             rc.setMessage("save " + element.getName() + " is OK!");
+            ProxyRepositoryManager.getInstance().save();
         } else {
             rc.setMessage(util.getLastErrorMessage());
         }
@@ -323,4 +325,8 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @return
      */
     protected abstract String getFileExtension();
+
+    public static ResourceSet getResourceSet() {
+        return resourceSet;
+    }
 }

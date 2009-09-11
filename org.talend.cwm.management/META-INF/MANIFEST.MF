@@ -28,7 +28,8 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.talend.libraries.jdbc.informix;resolution:=optional,
  org.talend.libraries.jdbc.sqlite3;resolution:=optional,
  org.talend.libraries.jdbc.teradata;resolution:=optional,
- org.talend.libraries.jdbc.as400;resolution:=optional
+ org.talend.libraries.jdbc.as400;resolution:=optional,
+ org.talend.top.repository
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.db.connection,
  org.talend.cwm.dburl,
