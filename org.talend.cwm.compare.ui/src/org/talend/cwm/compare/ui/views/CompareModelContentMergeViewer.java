@@ -69,6 +69,7 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -122,7 +123,13 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                         manager.add(subEleCompTableAction);
                         manager.add(subEleCompViewAction);
                     } else if (selectedElement instanceof ColumnSet) {
-                        addMenuForColumnset(manager, selectedElement);
+                        addRenameMenuAction(manager, selectedElement);
+                        SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(
+                                "compare the list of columns", diffTabLeft, selectedOjbect,
+                                SubelementCompareAction.COLUMN_COMPARE);
+                        manager.add(subEleCompColumnAction);
+                    } else if (selectedElement instanceof Column) {
+                        addRenameMenuAction(manager, selectedElement);
                     }
 
                 }
@@ -150,22 +157,22 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         return diffElementList;
     }
 
-    private List<ColumnSet> getChangedColumnSetList() {
-        List<ColumnSet> changedColumnSetList = new ArrayList<ColumnSet>();
+    private List<ModelElement> getChangedList() {
+        List<ModelElement> changedLists = new ArrayList<ModelElement>();
         List<DiffElement> diffElementList = getDiffElementList();
         for (DiffElement diffEle : diffElementList) {
             if (diffEle instanceof AddModelElement) {
-                changedColumnSetList.add((ColumnSet) ((AddModelElement) diffEle).getRightElement());
+                changedLists.add((ModelElement) ((AddModelElement) diffEle).getRightElement());
             } else if (diffEle instanceof UpdateAttribute) {
-                changedColumnSetList.add((ColumnSet) ((UpdateAttribute) diffEle).getRightElement());
+                changedLists.add((ModelElement) ((UpdateAttribute) diffEle).getRightElement());
             }
         }
-        return changedColumnSetList;
+        return changedLists;
     }
 
-    private void addMenuForColumnset(IMenuManager manager, EObject selectedElement) {
+    private void addRenameMenuAction(IMenuManager manager, EObject selectedElement) {
 
-        List<ColumnSet> changedColumnSetList = getChangedColumnSetList();
+        List<ModelElement> changedList = getChangedList();
         List<DiffElement> diffElementList = getDiffElementList();
         // Add rename element action.
         for (DiffElement diffEle : diffElementList) {
@@ -173,7 +180,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 if (((UpdateAttribute) diffEle).getLeftElement() == selectedElement) {
                     // Add action menu
                     RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
-                            (IFolderNode) selectedOjbect, (ColumnSet) selectedElement, changedColumnSetList);
+                            (IFolderNode) selectedOjbect, (ModelElement) selectedElement, changedList);
                     manager.add(renameComparedElementAction);
                     return;
                 }
@@ -181,17 +188,12 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
                     // Add action menu
                     RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
-                            (IFolderNode) selectedOjbect, (ColumnSet) selectedElement, changedColumnSetList);
+                            (IFolderNode) selectedOjbect, (ModelElement) selectedElement, changedList);
                     manager.add(renameComparedElementAction);
                     return;
                 }
             }
         }
-
-        SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction("compare the list of columns", diffTabLeft,
-                selectedOjbect, SubelementCompareAction.COLUMN_COMPARE);
-        manager.add(subEleCompColumnAction);
-
     }
 
     /**

@@ -65,7 +65,9 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -79,20 +81,20 @@ public class RenameComparedElementAction extends Action {
 
     private static Logger log = Logger.getLogger(RenameComparedElementAction.class);
 
-    private ColumnSet theSelectedElement = null;
+    private ModelElement theSelectedElement = null;
 
-    private Package originCompareElement = null;
+    private Namespace originCompareElement = null;
 
     private IFolderNode selectedFolderNode = null;
 
     private Map<String, Object> options = null;
 
-    private List<ColumnSet> newAddedColumnSet = null;
+    private List<ModelElement> newAddedColumnSet = null;
 
-    public RenameComparedElementAction(IFolderNode selectedFolderNode, ColumnSet theSelectedElement,
-            List<ColumnSet> addElementList) {
+    public RenameComparedElementAction(IFolderNode selectedFolderNode, ModelElement theSelectedElement,
+            List<ModelElement> addElementList) {
         this.selectedFolderNode = selectedFolderNode;
-        this.originCompareElement = (Package) selectedFolderNode.getParent();
+        this.originCompareElement = (Namespace) selectedFolderNode.getParent();
         this.theSelectedElement = theSelectedElement;
 
         this.newAddedColumnSet = addElementList;
@@ -119,25 +121,29 @@ public class RenameComparedElementAction extends Action {
             return;
         }
         // Propagate the changes
-
-        theSelectedElement.setNamespace(originCompareElement);
-        ColumnSet checkedColumnSet = addedEleDialog.getCheckedColumnSet();
-        checkedColumnSet.setNamespace(originCompareElement);
-
-        // Check if the sub structure is the same.
-        List<DiffElement> diffElementList = checkSubStructure(checkedColumnSet);
-        originCompareElement.getOwnedElement().remove(theSelectedElement);
-        originCompareElement.getOwnedElement().remove(checkedColumnSet);
-
-        if (diffElementList != null && diffElementList.size() != 0) {
-            if (!MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "",
-                    "The substructure changed, Propagate or not?")) {
-                refreshEditor();
-                return;
-            }
+        ModelElement checkedElement = addedEleDialog.getCheckedColumnSet();
+        if (originCompareElement instanceof Package) {
+            theSelectedElement.setNamespace(originCompareElement);
+            checkedElement.setNamespace(originCompareElement);
         }
+        // Check if the sub structure is the same.
+        // MOD mzhao Do not need to check substructure.
+        // if (theSelectedElement instanceof ColumnSet) {
+        // List<DiffElement> diffElementList = checkSubStructure((ColumnSet) checkedElement);
+        // if (diffElementList != null && diffElementList.size() != 0) {
+        // if (!MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "",
+        // "The substructure changed, Propagate or not?")) {
+        // refreshEditor();
+        // return;
+        // }
+        // }
+        // }
+        if (originCompareElement instanceof Package) {
+            originCompareElement.getOwnedElement().remove(theSelectedElement);
+            originCompareElement.getOwnedElement().remove(checkedElement);
+        } 
         // Save to the copied resource.
-        refreshReposigoryTree(checkedColumnSet);
+        refreshReposigoryTree(checkedElement);
         refreshEditor();
     }
 
@@ -147,24 +153,43 @@ public class RenameComparedElementAction extends Action {
         new PopComparisonUIAction(selectedFolderNode, "Compare").run();
     }
 
-    private void refreshReposigoryTree(ColumnSet checkedColumnSet) {
+    private void refreshReposigoryTree(ModelElement checkedColumnSet) {
         // ~ Save to the original resource.
 
         // Remove theSelectedElement by iteratively comparing its name.
         // Because theSelectedElement in compare editor is not the same
         // instance with that of in repository tree.
-        for (Iterator<ModelElement> it = originCompareElement.getOwnedElement().iterator(); it.hasNext();) {
-            if (it.next().getName().equalsIgnoreCase(theSelectedElement.getName())) {
-                it.remove();
-                break;
+        if (originCompareElement instanceof Package) {
+            // ColumnSet
+            for (Iterator<ModelElement> it = originCompareElement.getOwnedElement().iterator(); it.hasNext();) {
+                if (it.next().getName().equalsIgnoreCase(theSelectedElement.getName())) {
+                    it.remove();
+                    break;
+                }
             }
-
+            originCompareElement.getOwnedElement().add(checkedColumnSet);
+        } else {
+            // Column
+            for (Iterator<Feature> it = ((ColumnSet) originCompareElement).getFeature().iterator(); it.hasNext();) {
+                if (it.next().getName().equalsIgnoreCase(theSelectedElement.getName())) {
+                    it.remove();
+                    break;
+                }
+            }
+            ((ColumnSet) originCompareElement).getFeature().add((Feature) checkedColumnSet);
         }
-        originCompareElement.getOwnedElement().add(checkedColumnSet);
+        
         EMFSharedResources.getInstance().saveResource(originCompareElement.eResource());
         // ~
     }
 
+    /**
+     * DOC zhao Comment method "checkSubStructure".
+     * 
+     * @deprecated
+     * @param checkedColumnSet
+     * @return
+     */
     private List<DiffElement> checkSubStructure(ColumnSet checkedColumnSet) {
         MatchModel match = null;
 
@@ -197,7 +222,7 @@ public class RenameComparedElementAction extends Action {
     }
 
     private Resource getLeftResource() throws ReloadCompareException {
-        ColumnSet selectedColumnSet = theSelectedElement;
+        ColumnSet selectedColumnSet = (ColumnSet) theSelectedElement;
         TdDataProvider copyedDataProvider = createCopyedProvider();
         ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
         List<TdColumn> columnList = new ArrayList<TdColumn>();
@@ -227,7 +252,7 @@ public class RenameComparedElementAction extends Action {
         Package catalogOrSchema = getTopLevelPackage();
         IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
                 (TdDataProvider) catalogOrSchema.getDataManager().get(0));
-        IFile createNeedReloadElementsFile = DQStructureComparer.getFirstComparisonLocalFile();
+        IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
         TypedReturnCode<TdDataProvider> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
         return returnValue.getObject();
@@ -235,7 +260,7 @@ public class RenameComparedElementAction extends Action {
     }
 
     private Package getTopLevelPackage() {
-        Package catalogOrSchema = originCompareElement;
+        Package catalogOrSchema = (Package) originCompareElement;
         if (originCompareElement instanceof Schema) {
             if (originCompareElement.eContainer() != null && originCompareElement.eContainer() instanceof Catalog) {
                 catalogOrSchema = (Package) originCompareElement.eContainer();
@@ -246,7 +271,7 @@ public class RenameComparedElementAction extends Action {
 
     private Resource getRightResource(ColumnSet selectedColumnSet) throws ReloadCompareException {
         TdDataProvider tempReloadProvider = createTempConnectionFile();
-        Package matchedPackage = DQStructureComparer.findMatchedPackage(originCompareElement, tempReloadProvider);
+        Package matchedPackage = DQStructureComparer.findMatchedPackage((Package) originCompareElement, tempReloadProvider);
         IFolderNode columnSetFolderNode = FolderNodeHelper.getFolderNode(matchedPackage, selectedColumnSet);
         columnSetFolderNode.loadChildren();
 
@@ -299,17 +324,17 @@ public class RenameComparedElementAction extends Action {
 
         private CheckboxTableViewer tableViewer = null;
 
-        private List<ColumnSet> newAddedColumnSet;
+        private List<ModelElement> newAddedColumnSet;
 
-        private ColumnSet checkedColumnSet = null;
+        private ModelElement checkedElement = null;
 
-        protected RightPanelAddedElementsDialog(Shell parentShell, List<ColumnSet> newAddedColumnSet) {
+        protected RightPanelAddedElementsDialog(Shell parentShell, List<ModelElement> newAddedColumnSet) {
             super(parentShell);
             this.newAddedColumnSet = newAddedColumnSet;
         }
 
-        public ColumnSet getCheckedColumnSet() {
-            return checkedColumnSet;
+        public ModelElement getCheckedColumnSet() {
+            return checkedElement;
         }
 
         @Override
@@ -340,7 +365,7 @@ public class RenameComparedElementAction extends Action {
         @Override
         protected void okPressed() {
             if (tableViewer.getCheckedElements().length > 0) {
-                checkedColumnSet = (ColumnSet) tableViewer.getCheckedElements()[0];
+                checkedElement = (ModelElement) tableViewer.getCheckedElements()[0];
             }
 
             super.okPressed();
@@ -375,8 +400,8 @@ public class RenameComparedElementAction extends Action {
                 }
 
                 public String getText(Object element) {
-                    ColumnSet columnSet = (ColumnSet) element;
-                    return columnSet.getName();
+                    ModelElement me = (ModelElement) element;
+                    return me.getName();
                 }
 
                 public void addListener(ILabelProviderListener listener) {
