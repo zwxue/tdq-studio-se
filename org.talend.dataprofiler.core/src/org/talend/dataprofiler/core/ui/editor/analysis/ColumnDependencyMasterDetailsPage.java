@@ -295,7 +295,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             if (ownerA != ownerB) {
                 // must come from one table
                 return new ReturnCode(
-                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage"), false); //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.tableMessage"), false); //$NON-NLS-1$
             }
         }
 
