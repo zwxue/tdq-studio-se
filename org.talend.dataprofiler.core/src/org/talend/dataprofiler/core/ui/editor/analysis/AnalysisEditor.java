@@ -75,6 +75,14 @@ public class AnalysisEditor extends CommonFormEditor {
 
     protected void addPages() {
 
+        TdEditorToolBar toolbar = getToolBar();
+        if (toolbar != null) {
+            saveAction = new DefaultSaveAction(this);
+            runAction = new RunAnalysisAction();
+            refreshAction = new RefreshChartAction();
+            toolbar.addActions(saveAction, runAction, refreshAction);
+        }
+
         switch (analysisType) {
 
         case COLUMN_CORRELATION:
@@ -101,6 +109,7 @@ public class AnalysisEditor extends CommonFormEditor {
             masterPage = new ConnectionMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             try {
                 addPage(masterPage);
+                setRefreshActionButtonState(false);
             } catch (PartInitException e) {
                 ExceptionHandler.process(e, Level.ERROR);
             }
@@ -144,11 +153,11 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case TABLE_FUNCTIONAL_DEPENDENCY:
             masterPage = new ColumnDependencyMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            //            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.ColumnDependencyAnalysisEditor")); //$NON-NLS-1$
             resultPage = new ColumnDependencyResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
                 addPage(resultPage);
+                setRefreshActionButtonState(false);
             } catch (PartInitException e) {
                 ExceptionHandler.process(e, Level.ERROR);
             }
@@ -157,15 +166,6 @@ public class AnalysisEditor extends CommonFormEditor {
 
         }
 
-        TdEditorToolBar toolbar = getToolBar();
-        if (toolbar != null && masterPage != null) {
-            // MOD xqliu 2009-07-02 bug 7687
-            saveAction = new DefaultSaveAction(this);
-            runAction = new RunAnalysisAction();
-            refreshAction = new RefreshChartAction();
-            toolbar.addActions(saveAction, runAction, refreshAction);
-            // ~
-        }
         if (masterPage.getAnalysis() != null) {
             setPartName(masterPage.getIntactElemenetName());
         } else {
@@ -282,6 +282,11 @@ public class AnalysisEditor extends CommonFormEditor {
         return analysisType;
     }
 
+    /**
+     * DOC bZhou Comment method "setRunActionButtonState".
+     * 
+     * @param state
+     */
     public void setRunActionButtonState(boolean state) {
         if (runAction != null) {
             runAction.setEnabled(state);
@@ -289,13 +294,24 @@ public class AnalysisEditor extends CommonFormEditor {
     }
 
     /**
-     * DOC xqliu 2009-07-02 bug 7687.
+     * DOC bZhou Comment method "setSaveActionButtonState".
      * 
      * @param state
      */
     public void setSaveActionButtonState(boolean state) {
         if (saveAction != null) {
             saveAction.setEnabled(state);
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "setRefreshActionButtonState".
+     * 
+     * @param state
+     */
+    public void setRefreshActionButtonState(boolean state) {
+        if (refreshAction != null) {
+            refreshAction.setEnabled(state);
         }
     }
 
