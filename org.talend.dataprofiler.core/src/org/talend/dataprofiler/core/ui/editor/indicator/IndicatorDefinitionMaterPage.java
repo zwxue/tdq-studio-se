@@ -869,7 +869,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                         "<%=__GROUP_BY_ALIAS__%>" };
                 ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(), templates);
                 editDialog.open();
-                if (Dialog.OK == editDialog.getReturnCode()) {
+                if (Dialog.OK == editDialog.getReturnCode() && !patternText.getText().equals(editDialog.getResult())) {
                     patternText.setText(editDialog.getResult());
                 }
             }
