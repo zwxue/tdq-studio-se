@@ -167,7 +167,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                // saveTextChange();
+                saveTextChange();
             }
 
         };
@@ -204,6 +204,19 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             ExceptionHandler.process(e, Level.ERROR);
             log.error(e, e);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#saveTextChange()
+     */
+    @Override
+    protected void saveTextChange() {
+        super.saveTextChange();
+        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+        DataProviderHelper.setUser(loginText.getText(), connection);
+        DataProviderHelper.encryptAndSetPassword(connection, passwordText.getText());
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
