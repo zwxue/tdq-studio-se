@@ -14,18 +14,18 @@ package org.talend.top.repository;
 
 /***/
 public class ProxyRepositoryManager {
-    
+
     private static ProxyRepositoryManager instance = new ProxyRepositoryManager();
 
     public static ProxyRepositoryManager getInstance() {
         return instance;
     }
-    
+
     public void save() {
-        ImplementationHelper.getRepositoryManager().save();
+        // ImplementationHelper.getRepositoryManager().save();
     }
 
     public void refresh() {
-        ImplementationHelper.getRepositoryManager().refresh();
+        // ImplementationHelper.getRepositoryManager().refresh();
     }
 }
