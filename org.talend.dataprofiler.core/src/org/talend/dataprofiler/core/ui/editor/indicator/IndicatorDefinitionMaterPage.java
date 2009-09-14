@@ -867,9 +867,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
                 String[] templates = new String[] { "<%=__TABLE_NAME__%>", "<%=__COLUMN_NAMES__%>", "<%=__WHERE_CLAUSE__%>",
                         "<%=__GROUP_BY_ALIAS__%>" };
-                ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(), templates);
-                editDialog.open();
-                if (Dialog.OK == editDialog.getReturnCode() && !patternText.getText().equals(editDialog.getResult())) {
+                final ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(), templates);
+
+                if (Dialog.OK == editDialog.open() && !patternText.getText().equals(editDialog.getResult())) {
                     patternText.setText(editDialog.getResult());
                 }
             }

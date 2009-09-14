@@ -23,6 +23,10 @@
             file="HelpUserDefineIndicatorContext.xml"
             plugin="org.talend.dataprofiler.help">
       </contexts>
+       <contexts
+             file="HelpExpressionEditContext.xml"
+             plugin="org.talend.dataprofiler.help">
+       </contexts>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">

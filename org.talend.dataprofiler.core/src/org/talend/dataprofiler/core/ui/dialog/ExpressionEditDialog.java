@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.dialog;
 
+import org.eclipse.help.HelpSystem;
+import org.eclipse.help.IContext;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -27,7 +31,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
  * DOC yyi 2009-09-11 Feature:9030
@@ -47,13 +54,18 @@ public class ExpressionEditDialog extends TrayDialog {
 
         this.expression = expression;
         this.templates = templates;
-
+        int shellStyle = getShellStyle();
+        setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
     }
 
     protected Control createDialogArea(Composite parent) {
 
         Composite comp = (Composite) super.createDialogArea(parent);
         GridData data = new GridData();
+        data.horizontalAlignment = GridData.FILL;
+        data.verticalAlignment = GridData.FILL;
+        data.grabExcessHorizontalSpace = true;
+        data.grabExcessVerticalSpace = true;
         data.widthHint = 650;
         data.heightHint = 380;
         comp.setLayoutData(data);
@@ -111,13 +123,36 @@ public class ExpressionEditDialog extends TrayDialog {
         templatesTable.getColumn(0).pack();
 
         sform.setWeights(new int[] { 2, 1 });
+        comp.layout();
         return comp;
+    }
+
+    @Override
+    public void create() {
+        super.create();
+        getShell().addShellListener(new ShellAdapter() {
+
+            public void shellActivated(ShellEvent e) {
+                showHelp();
+            }
+        });
+    }
+
+    /**
+     * DOC yyi Comment method "showHelp".
+     */
+    protected void showHelp() {
+        getShell().setFocus();
+
+        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getExpressionEditContextID());
+        IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+        helpSystem.displayHelp(context);
+
     }
 
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
         shell.setText(TITLE);
-        setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE);
     }
 
     public String getResult() {
@@ -129,4 +164,5 @@ public class ExpressionEditDialog extends TrayDialog {
         expression = editText.getText();
         super.okPressed();
     }
+
 }
