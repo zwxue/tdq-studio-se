@@ -110,8 +110,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private boolean checkComputButton = false;
 
+    private boolean allowColumnDupcation = false;
     public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, List<Column> columnSetA,
-            List<Column> columnSetB, String mainTitle, String description, boolean showCheckButton) {
+            List<Column> columnSetB, String mainTitle, String description, boolean showCheckButton, boolean allowColumnDupcation) {
         this.masterPage = masterPage;
         form = masterPage.getScrolledForm();
         toolkit = masterPage.getEditor().getToolkit();
@@ -125,14 +126,18 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         columnListB.addAll(columnSetB);
 
         this.showCheckButton = showCheckButton;
+        this.allowColumnDupcation = allowColumnDupcation;
         createAnalyzedColumnSetsSection(mainTitle, description);
+        
+        
     }
 
-    public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, Analysis analysis) {
+    public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, Analysis analysis,
+            boolean allowColumnDupcation) {
 
         this(masterPage, topComp, new ArrayList<Column>(), new ArrayList<Column>(), DefaultMessagesImpl
                 .getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), DefaultMessagesImpl //$NON-NLS-1$
-                .getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare"), true); //$NON-NLS-1$
+                .getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare"), true, allowColumnDupcation); //$NON-NLS-1$
 
         if (analysis.getResults().getIndicators().size() > 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
@@ -214,7 +219,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         leftTable.refresh();
     }
 
-    private TableViewer createSectionPart(Composite parentComp, final List<Column> columnList, String title, String hyperlinkText) {
+    private TableViewer createSectionPart(Composite parentComp, final List<Column> columnList, String title,
+            String hyperlinkText) {
         Section columnSetElementSection = masterPage.createSection(form, parentComp, title, true, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
         sectionComp.setLayout(new GridLayout());
@@ -231,7 +237,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         // ~
         // DragAndDropDecorate decorate = new DragAndDropDecorate();
         // decorate.toDecorateDragAndDrop(columnsElementViewer);
-        TableViewerDNDDecorate dndDecorate = new TableViewerDNDDecorate();
+        TableViewerDNDDecorate dndDecorate = new TableViewerDNDDecorate(allowColumnDupcation);
         dndDecorate.installDND(columnsElementViewer, true, TableViewerDNDDecorate.COLUMN_VALIDATETYPE);
 
         Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);

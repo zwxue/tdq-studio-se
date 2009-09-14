@@ -51,9 +51,11 @@ public class TableViewerDNDDecorate {
 
     private Object dragSelectedElement;
 
-    public TableViewerDNDDecorate() {
+    private boolean allowDuplication = false;
+    public TableViewerDNDDecorate(boolean allowDuplication) {
         final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
         transferTypes = new Transfer[] { transfer, TextTransfer.getInstance() };
+        this.allowDuplication = allowDuplication;
     }
 
     /**
@@ -151,15 +153,18 @@ public class TableViewerDNDDecorate {
         });
     }
 
+    // MOD mzhao 2009-09-14 Bug 8839.
     @SuppressWarnings("unchecked")
-    private static boolean validateColumnType(StructuredSelection selection, TableViewer targetViewer) {
+    private boolean validateColumnType(StructuredSelection selection, TableViewer targetViewer) {
         boolean isValidation = true;
         List selectionList = selection.toList();
-        List elements = (List) targetViewer.getInput();
-        for (Object element : elements) {
-            if (selectionList.contains(element)) {
-                isValidation = false;
-                break;
+        if (!allowDuplication) {
+            List elements = (List) targetViewer.getInput();
+            for (Object element : elements) {
+                if (selectionList.contains(element)) {
+                    isValidation = false;
+                    break;
+                }
             }
         }
         for (Object obj : selectionList) {

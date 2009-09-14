@@ -173,7 +173,7 @@ public class ColumnsComparisonMasterDetailsPage extends
 						.getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
 		// MOD mzhao 2009-06-17 feature 5887.
 		anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer(this,
-				topComp, (Analysis) this.currentModelElement);
+				topComp, (Analysis) this.currentModelElement, false);
 		columnsComparisonSection = anaColumnCompareViewer
 				.getColumnsComparisonSection();
 		
