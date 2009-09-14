@@ -157,11 +157,11 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      * @return
      */
     private String getYearCharacters(String label) {
-        if (label.equals("0")) {
-            return null;
-        } else {
+        if (label != null && label.length() >= 4) {
             return label.substring(0, 4);
         }
+
+        return null;
     }
 
     /**
