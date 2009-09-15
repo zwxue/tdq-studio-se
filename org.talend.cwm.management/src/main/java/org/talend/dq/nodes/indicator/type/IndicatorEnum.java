@@ -14,6 +14,7 @@ package org.talend.dq.nodes.indicator.type;
 
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 
 /**
@@ -144,7 +145,12 @@ public enum IndicatorEnum {
                              IndicatorSqlPackage.USER_DEF_INDICATOR,
                              IndicatorSqlPackage.Literals.USER_DEF_INDICATOR,
                              "User Defined Indicator", //$NON-NLS-1$
-                             null);
+                             null),
+    ColumnDependencyIndicatorEnum(
+                                  ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR,
+                                  ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR,
+                                  "Column Dependency Indicator", //$NON-NLS-1$
+                                  null);
 
     private EClass indicatorType;
 
@@ -296,6 +302,8 @@ public enum IndicatorEnum {
             returnEnum = DefValueCountIndicatorEnum;
         } else if (indicatorType == UserDefinedIndicatorEnum.getIndicatorType()) {
             returnEnum = UserDefinedIndicatorEnum;
+        } else if (indicatorType == ColumnDependencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = ColumnDependencyIndicatorEnum;
         }
 
         return returnEnum;
