@@ -128,6 +128,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private Section charactersMappingSection;
 
+    private Section categorySection;
+
     private Composite charactersMappingComp;
 
     private Composite charactersMappingLineComp;
@@ -233,6 +235,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             createCategorySection(topComp);
         }
+        // MOD yyi 2009-09-16 bug 8884
+        foldingSections(new Section[] { metadataSection, additionalFunctionsSection, definitionSection, charactersMappingSection,
+                categorySection });
+        // ~
     }
 
     /**
@@ -718,7 +724,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createCategorySection(Composite topComp) {
-        Section categorySection = createSection(form, topComp, "Indicator Category", false, null);
+        categorySection = createSection(form, topComp, "Indicator Category", false, null);
 
         Label label = new Label(categorySection, SWT.WRAP);
         label.setText("This section is for indicator category.");
