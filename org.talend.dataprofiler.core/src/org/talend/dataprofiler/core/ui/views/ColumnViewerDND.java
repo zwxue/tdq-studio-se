@@ -51,6 +51,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import orgomg.cwm.resource.relational.Column;
@@ -291,7 +292,9 @@ public class ColumnViewerDND {
                 IFile fe = (IFile) firstElement;
                 if (FactoriesUtil.UDI.equals(fe.getFileExtension())) {
                     IndicatorDefinition udi = UDIResourceFileHelper.getInstance().findUDI(fe);
-                    if (udi != null) {
+                    // MOD yyi 2009-09-16
+                    // Feature :8866
+                    if (udi != null && UDIHelper.verifyExpression(udi)) {
                         is = false;
                     }
                 }
@@ -378,7 +381,7 @@ public class ColumnViewerDND {
             public void dragOver(DropTargetEvent event) {
                 if (receiver == null)
                     return;
-                
+
                 super.dragOver(event);
                 receiver.doDropValidation(event, commonViewer);
             }
@@ -388,7 +391,7 @@ public class ColumnViewerDND {
             public void drop(DropTargetEvent event) {
                 if (receiver == null)
                     return;
-                
+
                 int index = targetControl.getItemCount();
                 super.drop(event);
                 if (event.item == null) {

@@ -32,6 +32,8 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -72,6 +74,22 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 return imageDescriptor;
             } else if (FactoriesUtil.REP.equalsIgnoreCase(file.getFileExtension())) {
                 return ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
+            } else if (FactoriesUtil.UDI.equalsIgnoreCase(file.getFileExtension())) {
+                // MOD yyi 2009-09-15, add warning icon for imported indicators
+                // Feature 8866
+                IndicatorDefinition findUDI = UDIResourceFileHelper.getInstance().findUDI(file);
+                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
+                if (findUDI != null) {
+                    boolean validStatus = UDIHelper.verifyExpression(findUDI);
+                    if (!validStatus) {
+                        ImageDescriptor warnImg = ImageLib.getImageDescriptor(ImageLib.WARN_OVR);
+                        PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_WARN_TSK);
+                        DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
+                                IDecoration.BOTTOM_RIGHT);
+                        imageDescriptor = icon;
+                    }
+                }
+                return imageDescriptor;
             }
         }
         // MOD mzhao 2009-03-20,Move tdq/top top folders into one project.

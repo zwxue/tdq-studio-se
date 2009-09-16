@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -160,6 +161,26 @@ public final class UDIHelper {
 
     public static boolean isUDI(Indicator indicator) {
         return indicator instanceof UserDefIndicator;
+    }
+
+    /**
+     * yyi 2009-09-16 To check the expression is null, empty or less than 16 characters Feature : 8866
+     */
+    public static boolean verifyExpression(IndicatorDefinition indicatorDefinition) {
+
+        if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
+            return false;
+        }
+
+        for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
+            if (null == exp.getBody()) {
+                return false;
+            } else if (16 > exp.getBody().length()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
