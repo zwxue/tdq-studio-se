@@ -14,13 +14,13 @@ package org.talend.dataprofiler.core.ui.dialog;
 
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
+import org.eclipse.help.ui.internal.views.HelpTray;
+import org.eclipse.help.ui.internal.views.ReusableHelpPart;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.help.HelpPlugin;
 
@@ -69,6 +68,8 @@ public class ExpressionEditDialog extends TrayDialog {
         data.widthHint = 650;
         data.heightHint = 380;
         comp.setLayoutData(data);
+
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(comp, HelpPlugin.getDefault().getExpressionEditContextID());
 
         SashForm sform = new SashForm(comp, SWT.VERTICAL | SWT.SMOOTH | SWT.FILL);
         data = new GridData();
@@ -130,29 +131,21 @@ public class ExpressionEditDialog extends TrayDialog {
     @Override
     public void create() {
         super.create();
-        getShell().addShellListener(new ShellAdapter() {
-
-            public void shellActivated(ShellEvent e) {
-                showHelp();
-            }
-        });
+        getShell().setText(TITLE);
+        showHelp();
     }
 
     /**
      * DOC yyi Comment method "showHelp".
      */
     protected void showHelp() {
-        getShell().setFocus();
 
         IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getExpressionEditContextID());
-        IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-        helpSystem.displayHelp(context);
-
-    }
-
-    protected void configureShell(Shell shell) {
-        super.configureShell(shell);
-        shell.setText(TITLE);
+        if (null != context && 0 < context.getRelatedTopics().length) {
+            openTray(new HelpTray());
+            ReusableHelpPart helpPart = ((HelpTray) getTray()).getHelpPart();
+            helpPart.showURL(context.getRelatedTopics()[0].getHref());
+        }
     }
 
     public String getResult() {
