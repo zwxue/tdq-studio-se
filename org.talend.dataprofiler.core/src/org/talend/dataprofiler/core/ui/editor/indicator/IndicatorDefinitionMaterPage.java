@@ -239,6 +239,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         foldingSections(new Section[] { metadataSection, additionalFunctionsSection, definitionSection, charactersMappingSection,
                 categorySection });
         // ~
+        // MOD yyi 2009-09-18 bug 9148
+        currentEditor.registerSections(new Section[] { metadataSection, additionalFunctionsSection, definitionSection,
+                charactersMappingSection, categorySection });
+        // ~
     }
 
     /**
