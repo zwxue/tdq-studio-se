@@ -121,6 +121,10 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
         currentEditor.registerSections(new Section[] { columnsComparisonSection, dataFilterSection });
+
+        // MOD yyi 2009-09-17 bug 8884
+        foldingSections(new Section[] { metadataSection, columnsComparisonSection, dataFilterSection });
+        // ~
     }
 
     /**
@@ -294,8 +298,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
             if (ownerA != ownerB) {
                 // must come from one table
-                return new ReturnCode(
-                        DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.tableMessage"), false); //$NON-NLS-1$
+                return new ReturnCode(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.tableMessage"), false); //$NON-NLS-1$
             }
         }
 
