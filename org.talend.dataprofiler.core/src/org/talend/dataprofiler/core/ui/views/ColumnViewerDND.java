@@ -122,7 +122,10 @@ public class ColumnViewerDND {
             @Override
             public void dragOver(DropTargetEvent event) {
                 super.dragOver(event);
-                receiver.doDropValidation(event, commonViewer);
+                // MOD yyi 2009-09-18 bug: 9044
+                if (null != receiver) {
+                    receiver.doDropValidation(event, commonViewer);
+                }
             }
 
             /*
