@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.top.repository;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -21,12 +22,14 @@ import org.eclipse.core.runtime.Platform;
 /***/
 public class ImplementationHelper {
 
+    protected static Logger log = Logger.getLogger(ImplementationHelper.class);
+
     private static final String EXTENSION_NAME = "org.talend.top.repository";
 
     private static final String REPOSITORY_MANAGER = "repositoryManager";
 
     private static RepositoryManager instance = null;
-
+    
     public static synchronized RepositoryManager getRepositoryManager() {
         if (instance == null)
             instance = (RepositoryManager) getInstance(REPOSITORY_MANAGER);
@@ -44,12 +47,15 @@ public class ImplementationHelper {
         return null;
     }
     
-    private static Object getInstance(String propertyName) {
+    private static synchronized Object getInstance(String propertyName) {
         try {
-            return getConfigurationElement().createExecutableExtension(propertyName);
+            IConfigurationElement configurationElement = getConfigurationElement();
+            if (configurationElement != null)
+                return configurationElement.createExecutableExtension(propertyName);
         } catch (CoreException e) {
-            return new RepositoryManager();
+            log.error(e, e);
         }
+        return new RepositoryManager();
     }
 
 }
