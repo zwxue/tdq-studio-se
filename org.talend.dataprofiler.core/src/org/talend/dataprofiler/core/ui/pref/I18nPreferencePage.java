@@ -101,9 +101,10 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
         execCombo = new Combo(mainComposite, SWT.READ_ONLY);
         for (LocalToLanguageEnum oneEnum : LocalToLanguageEnum.values()) {
             execCombo.add(oneEnum.getLocale());
-            String language = getPreferenceStore().getString(header.getText());
-            execCombo.setText(language == null ? LocalToLanguageEnum.ENGLISH.getLocale() : language);
         }
+        String language = getPreferenceStore().getString(PluginConstant.LANGUAGE_SELECTOR);
+        LocalToLanguageEnum languageType = LocalToLanguageEnum.findLocalByShort(language);
+        execCombo.setText(language == null ? LocalToLanguageEnum.ENGLISH.getLocale() : languageType.getLocale());
         GridData d = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         execCombo.setLayoutData(d);
 
@@ -153,7 +154,8 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
     @Override
     protected void performDefaults() {
         execCombo.deselectAll();
-        getPreferenceStore().setValue(header.getText(), execCombo.getText());
+        getPreferenceStore().setValue(PluginConstant.LANGUAGE_SELECTOR, LocalToLanguageEnum.ENGLISH.getShortOfLocale());
+        execCombo.setText(LocalToLanguageEnum.ENGLISH.getLocale());
         super.performDefaults();
     }
 
@@ -223,20 +225,11 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
     @Override
     public boolean performOk() {
         boolean ok = super.performOk();
-        saveLanguageType();
-        getPreferenceStore().setValue(header.getText(), execCombo.getText());
-        return ok;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.preference.PreferencePage#performApply()
-     */
-    @Override
-    protected void performApply() {
-        saveLanguageType();
+        LocalToLanguageEnum language = LocalToLanguageEnum.findLocal(execCombo.getText());
+        getPreferenceStore().setValue(PluginConstant.LANGUAGE_SELECTOR, language.getShortOfLocale());
         CorePlugin.getDefault().savePluginPreferences();
+        saveLanguageType();
+        return ok;
     }
 
     /**
@@ -254,7 +247,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
             File iniFile = new File(url.getFile(), "config.ini"); //$NON-NLS-1$
             fin = new FileInputStream(iniFile);
             p.load(fin);
-            String languageType = PluginConstant.LANGUAGE_SELECTOR;
+            String languageType = CorePlugin.getDefault().getPluginPreferences().getString(PluginConstant.LANGUAGE_SELECTOR);
             if (languageType.equals(p.getProperty(EclipseStarter.PROP_NL))) {
                 return;
             }
@@ -364,6 +357,26 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
             }
 
             return "";
+        }
+
+        static LocalToLanguageEnum findLocal(String locale) {
+            for (LocalToLanguageEnum oneEnum : values()) {
+                if (oneEnum.getLocale().equals(locale)) {
+                    return oneEnum;
+                }
+            }
+            return LocalToLanguageEnum.ENGLISH;
+
+        }
+
+        static LocalToLanguageEnum findLocalByShort(String shortOfLocale) {
+            for (LocalToLanguageEnum oneEnum : values()) {
+                if (oneEnum.getShortOfLocale().equals(shortOfLocale)) {
+                    return oneEnum;
+                }
+            }
+            return LocalToLanguageEnum.ENGLISH;
+
         }
 
         public String getLocale() {
