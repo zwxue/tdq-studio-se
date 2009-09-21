@@ -118,6 +118,7 @@ public class AnalysisEditor extends CommonFormEditor {
             masterPage = new CatalogMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             try {
                 addPage(masterPage);
+                setRefreshActionButtonState(false);
             } catch (PartInitException e) {
                 ExceptionHandler.process(e, Level.ERROR);
             }
@@ -126,6 +127,7 @@ public class AnalysisEditor extends CommonFormEditor {
             masterPage = new SchemaAnalysisMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             try {
                 addPage(masterPage);
+                setRefreshActionButtonState(false);
             } catch (PartInitException e) {
                 ExceptionHandler.process(e, Level.ERROR);
             }
