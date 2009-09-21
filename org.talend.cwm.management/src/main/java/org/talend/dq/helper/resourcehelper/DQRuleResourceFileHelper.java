@@ -161,4 +161,16 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
         DQRuleWriter writer = ElementWriterFactory.getInstance().createdRuleWriter();
         return writer.save(dqrule);
     }
+    
+    @Override
+    public void remove(IFile file) {
+        super.remove(file);
+        whereRulesMap.remove(file);
+    }
+    
+    @Override
+    public void clear() {
+        super.clear();
+        whereRulesMap.clear();
+    }
 }

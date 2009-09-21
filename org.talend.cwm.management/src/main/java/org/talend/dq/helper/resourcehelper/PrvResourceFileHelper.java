@@ -146,6 +146,12 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         this.providerMap.remove(file);
     }
 
+    @Override
+    public void clear() {
+        super.clear();
+        providerMap.clear();
+    }
+    
     public ReturnCode save(TdDataProvider dataProvider) {
         DataProviderWriter writer = ElementWriterFactory.getInstance().createDataProviderWriter();
         // ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);

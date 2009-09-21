@@ -148,4 +148,16 @@ public class UDIResourceFileHelper extends ResourceFileMap {
         ReturnCode saved = writer.save(indicator);
         return saved;
     }
+
+    @Override
+    public void remove(IFile file) {
+        super.remove(file);
+        idsMap.remove(file);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        idsMap.clear();
+    }
 }
