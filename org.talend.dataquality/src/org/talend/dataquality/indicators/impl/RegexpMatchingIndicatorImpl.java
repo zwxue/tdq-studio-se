@@ -77,7 +77,11 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                 for (Pattern p : patterns) {
                     if (p != null) {
                         final String r = DomainHelper.getSQLRegexp(p);
-                        return r.substring(1, r.length() - 2);
+                        if (r != null) {
+                            int startIdx = ('\'' == r.charAt(0)) ? 1 : 0;
+                            int endIdx = ('\'' == r.charAt(r.length() - 1)) ? r.length() - 1 : r.length();
+                            return r.substring(startIdx, endIdx);
+                        }
                     }
                 }
             }
