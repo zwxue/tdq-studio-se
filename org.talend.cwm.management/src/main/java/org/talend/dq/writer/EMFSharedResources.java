@@ -146,6 +146,17 @@ public final class EMFSharedResources {
     }
 
     /**
+     * 
+     * DOC mzhao Comment method "createResource".
+     * 
+     * @param uri
+     * @return
+     */
+    public Resource createResource(URI uri) {
+        return resourceSet.createResource(uri);
+    }
+
+    /**
      * Method "saveAll" saves all the resources of the resourceSet.
      * 
      * @return true when ok

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.writer;
 
+import java.io.File;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -20,12 +21,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.ItemState;
@@ -52,7 +49,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
     protected EMFSharedResources util = EMFSharedResources.getInstance();
 
-    protected static ResourceSet resourceSet = new ResourceSetImpl();
 
     /*
      * (non-Javadoc)
@@ -109,7 +105,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         return rc;
     }
-    
+
     /**
      * 
      * DOC mzhao bug:9012
@@ -120,7 +116,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      */
     public ReturnCode saveWithoutProperty(ModelElement element, IFile file) {
         ReturnCode rc = new ReturnCode();
-        
+
         if (!check(file)) {
             rc.setReturnCode("Failed to element, the extent file name is wrong.", false);
         } else {
@@ -129,7 +125,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
                 rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
             } else {
                 addResourceContent(element);
-                addDependencies(element);                
+                addDependencies(element);
                 rc.setOk(util.saveResource(element.eResource()));
                 if (rc.isOk()) {
                     rc.setMessage("save " + element.getName() + " is OK!");
@@ -140,7 +136,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
                     ((RenderedObject) element).setFileName(file.getFullPath().toString());
                 }
             }
-        }                             
+        }
         return rc;
     }
 
@@ -155,11 +151,13 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         String fileName = resource.getURI().lastSegment();
 
         Property property = initProperty(element);
-        ((TDQItem) property.getItem()).setFilename(fileName);
-
+        TDQItem item = initItem(element, property);
+        // Save item
+        item.setFilename(fileName);
         URI uri = element.eResource().getURI();
+         serialize(item, uri);
+        // Save property
         serialize(property, uri);
-
         return property;
     }
 
@@ -221,9 +219,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         computePropertyMaxInformationLevel(property);
 
-        TDQItem item = initItem(element, property);
-        property.setItem(item);
-
         return property;
     }
 
@@ -240,9 +235,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         itemState.setDeleted(false);
         itemState.setPath("");
         item.setState(itemState);
-
         item.setProperty(property);
-
         return item;
     }
 
@@ -254,27 +247,38 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      */
     public ReturnCode serialize(Property property, URI uri) {
         ReturnCode rc = new ReturnCode();
+        // Save property
 
         URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        Resource propertyResource = resourceSet.createResource(propertiesURI);
+        Resource propertyResource = util.createResource(propertiesURI);
 
         // Create tagged value.
         TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TDQ_ELEMENT_FILE, uri
                 .toPlatformString(true));
         propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getAuthor());
-        propertyResource.getContents().add(property.getItem().getState());
-        propertyResource.getContents().add(property.getItem());
         propertyResource.getContents().add(taggedValue);
+        propertyResource.getContents().add(property.getItem());
+        propertyResource.getContents().add(property.getItem().getState());
 
-        try {
-            EmfHelper.saveResource(propertyResource);
-            rc.setOk(true);
-        } catch (PersistenceException e) {
-            rc.setMessage(e.getMessage());
-            log.error(e.getMessage(), e);
-        }
+        util.saveResource(propertyResource);
+        rc.setOk(true);
+        return rc;
+    }
 
+    public ReturnCode serialize(TDQItem item, URI uri) {
+        ReturnCode rc = new ReturnCode();
+        // Save item
+        URI itemURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.ITEM_EXTENSION);
+        Resource itemResource = util.createResource(itemURI);
+        // item folder.
+        String itemPath = itemURI.trimSegments(1).toPlatformString(true);
+        itemPath = itemPath.substring(itemPath.indexOf(File.separatorChar, 2) + 1);
+        item.getState().setPath(itemPath);
+        // itemResource.getContents().add(item);
+        // itemResource.getContents().add(item.getState());
+        util.saveResource(itemResource);
+        rc.setOk(true);
         return rc;
     }
 
@@ -326,7 +330,5 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      */
     protected abstract String getFileExtension();
 
-    public static ResourceSet getResourceSet() {
-        return resourceSet;
-    }
+
 }
