@@ -530,6 +530,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
         execCombo.setText(executionLanguage.getLiteral());
+        execLang = executionLanguage.getLiteral();
         // ADD xqliu 2009-08-24 bug 8776
         treeViewer.setLanguage(ExecutionLanguage.get(executionLanguage.getLiteral()));
         // ~
