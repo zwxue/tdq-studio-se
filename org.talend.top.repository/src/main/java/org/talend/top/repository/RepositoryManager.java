@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.top.repository;
 
+
 /***/
 public class RepositoryManager {
     public void save() {
