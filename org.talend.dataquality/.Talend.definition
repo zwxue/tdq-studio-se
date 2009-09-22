@@ -359,16 +359,20 @@
     <taggedValue xmi:id="_Pb3iEZ4gEd6f9IaQrCGYNQ" tag="Purpose" value="evaluates the strength of the functional dependencies "/>
   </categories>
   <categories xmi:id="_b5F7QHqTEd67hM2eKD3QgQ" name="User Defined Count" label="User Defined Count">
-    <taggedValue xmi:id="_chxE0HqTEd67hM2eKD3QgQ" tag="Description" value="contains user defined count indicators"/>
+    <taggedValue xmi:id="_chxE0HqTEd67hM2eKD3QgQ" tag="Description" value="contains user defined indicators which return a row count"/>
     <taggedValue xmi:id="_iPcZUHqTEd67hM2eKD3QgQ" tag="Purpose" value="analyze the quantity of records"/>
+  </categories>
+  <categories xmi:id="_wxkncJ6tEd6t2KtWPIcDmg" name="User Defined Real Value" label="User Defined Real Value">
+    <taggedValue xmi:id="_Be9KwJ6uEd6t2KtWPIcDmg" tag="Description" value="contains user defined indicators which return real values"/>
+    <taggedValue xmi:id="_Be9KwZ6uEd6t2KtWPIcDmg" tag="Purpose" value="analyze any real function of the data"/>
   </categories>
   <categories xmi:id="_Ba7OYXsXEd63r-VLO3_0OQ" name="User Defined Match" label="User Defined Match">
     <taggedValue xmi:id="_C-wYoHsXEd63r-VLO3_0OQ" tag="Description" value="contains user defined indicators for pattern matching"/>
     <taggedValue xmi:id="_Ddm30HsXEd63r-VLO3_0OQ" tag="Purpose" value="evaluate the number of data matching a pattern (regular expression or SQL like expression) "/>
   </categories>
   <categories xmi:id="_Frd2gHsXEd63r-VLO3_0OQ" name="User Defined Frequency" label="User Defined Frequency">
-    <taggedValue xmi:id="_GzSaMHsXEd63r-VLO3_0OQ" tag="Description" value="user defined indicators for each distinct record, counts the number of records."/>
-    <taggedValue xmi:id="_H4bdUHsXEd63r-VLO3_0OQ" tag="Purpose" value="evaluate the most frequent records"/>
+    <taggedValue xmi:id="_GzSaMHsXEd63r-VLO3_0OQ" tag="Description" value="contains user defined indicators for each distinct record, counts the number of records."/>
+    <taggedValue xmi:id="_H4bdUHsXEd63r-VLO3_0OQ" tag="Purpose" value="evaluate the frequency of records"/>
   </categories>
   <categories xmi:id="_yQJQ0HsXEd63r-VLO3_0OQ" name="User Defined Comparison" label="User Defined Comparison">
     <taggedValue xmi:id="_zQEcwHsXEd63r-VLO3_0OQ" tag="Description" value="counts the number of records identical to a set of records"/>
