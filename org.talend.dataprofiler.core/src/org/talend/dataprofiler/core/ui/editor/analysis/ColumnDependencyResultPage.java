@@ -166,7 +166,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
         createTable(sectionClient);
 
-        creatChart(sectionClient, analysis);
+        createChart(sectionClient, analysis);
 
         resultSection.layout();
     }
@@ -179,11 +179,11 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
      * @param sectionClient
      * @param analysis
      */
-    private void creatChart(Composite sectionClient, Analysis analysis) {
+    private void createChart(Composite sectionClient, Analysis analysis) {
         CustomerDefaultCategoryDataset dataset = initCustomerDataset();
 
         JFreeChart createChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("ColumnDependencyResultPage.dependencyStrength"), dataset, PlotOrientation.HORIZONTAL, false);
+                .getString("ColumnDependencyResultPage.dependencyStrength"), dataset, PlotOrientation.HORIZONTAL, true);
         ChartDecorator.decorateColumnDependency(createChart);
 
         GridData gd = new GridData();
@@ -367,8 +367,8 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
             if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
                 Long matchCount = indicator.getDistinctACount() == null ? 0 : indicator.getDistinctACount();
                 Long notMatchCount = indicator.getACount() == null ? 0 : indicator.getACount() - matchCount;
-                dataset.addValue(matchCount, "Dependency Strength", label);
-                dataset.addValue(notMatchCount, "", label);
+                dataset.addValue(matchCount, "matching", label);
+                dataset.addValue(notMatchCount, "not matching", label);
 
                 PatternChartDataEntity dataEntity = new PatternChartDataEntity();
                 dataEntity.setLabel(label);
