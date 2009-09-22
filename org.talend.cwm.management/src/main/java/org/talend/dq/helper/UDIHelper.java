@@ -164,7 +164,7 @@ public final class UDIHelper {
     }
 
     /**
-     * yyi 2009-09-16 To check the expression is null, empty or less than 16 characters Feature : 8866
+     * yyi 2009-09-22 To check the expression is null, empty or less than 16 characters Feature : 8866
      */
     public static boolean verifyExpression(IndicatorDefinition indicatorDefinition) {
 
@@ -175,7 +175,7 @@ public final class UDIHelper {
         for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
             if (null == exp.getBody()) {
                 return false;
-            } else if (16 > exp.getBody().length()) {
+            } else if (16 > exp.getBody().length() && !"''".equals(exp.getBody())) {
                 return false;
             }
         }
