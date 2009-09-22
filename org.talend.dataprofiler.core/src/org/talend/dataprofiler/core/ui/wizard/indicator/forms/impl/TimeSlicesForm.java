@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -91,6 +92,7 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
                         dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
                     }
                     dateParameters.setDateAggregationType(dateGrain);
+                    updateStatus(IStatus.OK, MSG_OK);
                 }
 
             });
