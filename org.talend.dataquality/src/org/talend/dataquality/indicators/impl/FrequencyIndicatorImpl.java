@@ -552,34 +552,52 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
         if (nbFields == 3) { // year and quarter
             Object year = value2freq[0];
-            buf.append(format4digit(year));
             Object quarter = value2freq[1];
+            if (year == null && quarter == null) {
+                return null;
+            }
+            // else at least one is not null
+            buf.append(format4digit(year));
             buf.append(String.valueOf(quarter));
             return buf.toString();
         }
 
         if (nbFields == 4) { // year, quarter and month
-            buf.append(format4digit(value2freq[0]));
-            buf.append(format2digit(value2freq[2]));
+            Object year = value2freq[0];
+            Object month = value2freq[2];
+            if (year == null && month == null) {
+                return null;
+            }
+            // else at least one is not null
+            buf.append(format4digit(year));
+            buf.append(format2digit(month));
             return buf.toString();
         }
 
         if (nbFields == 5) { // year, quarter, month, week
             Object year = value2freq[0];
+            Object month = value2freq[2];
+            Object week = value2freq[3];
+            if (year == null && month == null && week == null) {
+                return null;
+            }
+            // else at least one is not null
             buf.append(format4digit(year));
-            Object month = String.valueOf(value2freq[2]);
             buf.append(format2digit(month));
-            String week = String.valueOf(value2freq[3]);
             buf.append(format2digit(week));
             return buf.toString();
         }
 
         if (nbFields == 6) { // year, quarter, month, week and day
             Object year = value2freq[0];
+            Object month = value2freq[2];
+            Object day = value2freq[4];
+            if (year == null && month == null && day == null) {
+                return null;
+            }
+            // else at least one is not null
             buf.append(format4digit(year));
-            Object month = String.valueOf(value2freq[2]);
             buf.append(format2digit(month));
-            String day = String.valueOf(value2freq[4]);
             buf.append(format2digit(day));
             return buf.toString();
         }

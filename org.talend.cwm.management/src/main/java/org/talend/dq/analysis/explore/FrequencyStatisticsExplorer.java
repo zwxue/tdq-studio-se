@@ -34,7 +34,6 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     private static final String REGEX = "SELECT (.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
-    @SuppressWarnings("fallthrough")
     protected String getFreqRowsStatement() {
 
         String clause = ""; //$NON-NLS-1$
@@ -45,37 +44,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         if (Java2SqlType.isTextInSQL(javaType)) {
             clause = getInstantiatedClause();
         } else if (Java2SqlType.isDateInSQL(javaType)) {
-            IndicatorParameters parameters = indicator.getParameters();
-            DateGrain dateGrain = parameters.getDateParameters().getDateAggregationType();
-
-            switch (dateGrain) {
-            case DAY:
-                clause = dbmsLanguage.extractDay(this.columnName) + dbmsLanguage.equal() + getDayCharacters(entity.getLabel());
-                // no break
-            case WEEK:
-                if (clause.length() == 0) { // needs week to identify the row
-                    clause = concatWhereClause(clause, dbmsLanguage.extractWeek(this.columnName) + dbmsLanguage.equal()
-                            + getWeekCharacters(entity.getLabel()));
-                }
-                // no break
-            case MONTH:
-                clause = concatWhereClause(clause, dbmsLanguage.extractMonth(this.columnName) + dbmsLanguage.equal()
-                        + getMonthCharacters(dateGrain, entity.getLabel()));
-                // no break
-            case QUARTER:
-                if (clause.length() == 0) { // need quarter to identify the row
-                    clause = concatWhereClause(clause, dbmsLanguage.extractQuarter(this.columnName) + dbmsLanguage.equal()
-                            + getQuarterCharacters(entity.getLabel()));
-                }
-                // no break
-            case YEAR:
-                clause = concatWhereClause(clause, buildWhereClause());
-                break;
-            case NONE:
-            default:
-                clause = getDefaultQuotedStatement("'"); //$NON-NLS-1$
-                break;
-            }
+            // MOD scorreia 2009-09-22 first check whether the value is null
+            clause = entity.isLabelNull() ? getInstantiatedClause() : getClauseWithDate(clause);
 
         } else if (Java2SqlType.isNumbericInSQL(javaType)) {
             IndicatorParameters parameters = indicator.getParameters();
@@ -107,17 +77,41 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 + andDataFilterClause();
     }
 
-    /**
-     * DOC bZhou Comment method "buildWhereClause".
-     * 
-     * @return
-     */
-    private String buildWhereClause() {
-        String yearCharacters = getYearCharacters(entity.getLabel());
-        if (yearCharacters == null || "null".equalsIgnoreCase(yearCharacters)) {
-            return dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.isNull();
+    @SuppressWarnings("fallthrough")
+    private String getClauseWithDate(String clause) {
+        IndicatorParameters parameters = indicator.getParameters();
+        DateGrain dateGrain = parameters.getDateParameters().getDateAggregationType();
+
+        switch (dateGrain) {
+        case DAY:
+            clause = dbmsLanguage.extractDay(this.columnName) + dbmsLanguage.equal() + getDayCharacters(entity.getLabel());
+            // no break
+        case WEEK:
+            if (clause.length() == 0) { // needs week to identify the row
+                clause = concatWhereClause(clause, dbmsLanguage.extractWeek(this.columnName) + dbmsLanguage.equal()
+                        + getWeekCharacters(entity.getLabel()));
+            }
+            // no break
+        case MONTH:
+            clause = concatWhereClause(clause, dbmsLanguage.extractMonth(this.columnName) + dbmsLanguage.equal()
+                    + getMonthCharacters(dateGrain, entity.getLabel()));
+            // no break
+        case QUARTER:
+            if (clause.length() == 0) { // need quarter to identify the row
+                clause = concatWhereClause(clause, dbmsLanguage.extractQuarter(this.columnName) + dbmsLanguage.equal()
+                        + getQuarterCharacters(entity.getLabel()));
+            }
+            // no break
+        case YEAR:
+            clause = concatWhereClause(clause, dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.equal()
+                    + getYearCharacters(entity.getLabel()));
+            break;
+        case NONE:
+        default:
+            clause = getDefaultQuotedStatement("'"); //$NON-NLS-1$
+            break;
         }
-        return dbmsLanguage.extractYear(this.columnName) + dbmsLanguage.equal() + yearCharacters;
+        return clause;
     }
 
     /**
