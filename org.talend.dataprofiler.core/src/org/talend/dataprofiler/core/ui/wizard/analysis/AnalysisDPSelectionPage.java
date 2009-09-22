@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -31,94 +32,104 @@ import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.resource.ResourceManager;
 
 /**
- * DOC mzhao class global comment. This class provide abstract methods for
- * client to add different filter and listener.
+ * DOC mzhao class global comment. This class provide abstract methods for client to add different filter and listener.
  */
-public abstract class AnalysisDPSelectionPage extends
-		AbstractAnalysisWizardPage {
+public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage {
 
-	private TreeViewer fViewer;
+    private TreeViewer fViewer;
 
-	protected ILabelProvider fLabelProvider;
+    protected ILabelProvider fLabelProvider;
 
-	protected ITreeContentProvider fContentProvider;
+    protected ITreeContentProvider fContentProvider;
 
-	private String nameLabTxt = null;
+    private String nameLabTxt = null;
 
-	private boolean multiSelect;
+    private boolean multiSelect;
 
-	private IFolder metadataFolder = ResourceManager.getMetadataFolder();
+    private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
-	public AnalysisDPSelectionPage(String labText,
-			AdapterFactoryContentProvider contentProvider) {
-		init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$
-	}
+    public AnalysisDPSelectionPage(String labText, AdapterFactoryContentProvider contentProvider) {
+        init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
-	public AnalysisDPSelectionPage(String title, String message,
-			String labText, AdapterFactoryContentProvider contentProvider) {
-		init(title, message, contentProvider, labText);
-	}
+    public AnalysisDPSelectionPage(String title, String message, String labText, AdapterFactoryContentProvider contentProvider) {
+        init(title, message, contentProvider, labText);
+    }
 
-	public AnalysisDPSelectionPage(String title, String message,
-			String labText, AdapterFactoryContentProvider contentProvider,
-			boolean multiSelect) {
-		init(title, message, contentProvider, labText);
-		this.multiSelect = multiSelect;
-	}
+    public AnalysisDPSelectionPage(String title, String message, String labText, AdapterFactoryContentProvider contentProvider,
+            boolean multiSelect) {
+        init(title, message, contentProvider, labText);
+        this.multiSelect = multiSelect;
+    }
 
-	private void init(String title, String message,
-			AdapterFactoryContentProvider contentProvider, String labText) {
-		setTitle(title); //$NON-NLS-1$
-		setMessage(message); //$NON-NLS-1$
-		setPageComplete(false);
-		nameLabTxt = labText;
-		fLabelProvider = new DBTablesViewLabelProvider();
-		fContentProvider = contentProvider;
-	}
+    private void init(String title, String message, AdapterFactoryContentProvider contentProvider, String labText) {
+        setTitle(title); //$NON-NLS-1$
+        setMessage(message); //$NON-NLS-1$
+        setPageComplete(false);
+        nameLabTxt = labText;
+        fLabelProvider = new DBTablesViewLabelProvider();
+        fContentProvider = contentProvider;
+    }
 
-	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		container.setLayout(layout);
+    public void createControl(Composite parent) {
+        Composite container = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        container.setLayout(layout);
 
-		Label nameLabel = new Label(container, SWT.NONE);
-		nameLabel.setText(nameLabTxt); //$NON-NLS-1$
+        Label nameLabel = new Label(container, SWT.NONE);
+        nameLabel.setText(nameLabTxt); //$NON-NLS-1$
 
-		createMetaDataTree(container);
-		setControl(container);
-		addFilters(new EMFObjFilter());
-		addListeners();
+        createMetaDataTree(container);
+        setControl(container);
+        addFilters(new EMFObjFilter());
+        addListeners();
 
-	}
+    }
 
-	private void createMetaDataTree(Composite parent) {
+    private void createMetaDataTree(Composite parent) {
 
-		Composite treeContainer = new Composite(parent, SWT.NONE);
-		treeContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
-		treeContainer.setLayout(new FillLayout());
-		int style = this.multiSelect ? SWT.BORDER | SWT.MULTI : SWT.BORDER;
-		fViewer = new TreeViewer(treeContainer, style);
-		fViewer.setContentProvider(fContentProvider);
-		fViewer.setLabelProvider(fLabelProvider);
-		fViewer.setInput(metadataFolder);
-		// fViewer.expandAll();
-	}
+        Composite treeContainer = new Composite(parent, SWT.NONE);
+        treeContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+        treeContainer.setLayout(new FillLayout());
+        int style = this.multiSelect ? SWT.BORDER | SWT.MULTI : SWT.BORDER;
+        fViewer = new TreeViewer(treeContainer, style);
+        fViewer.setContentProvider(fContentProvider);
+        fViewer.setLabelProvider(fLabelProvider);
+        fViewer.setInput(metadataFolder);
+        fViewer.addFilter(new ViewerFilter() {
 
-	protected abstract void addListeners();
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+             * java.lang.Object)
+             */
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof IFolder) {
+                    IFolder folder = (IFolder) element;
+                    return !folder.getName().endsWith(".svn");
+                }
+                return true;
+            }
+        });
+        // fViewer.expandAll();
+    }
 
-	protected void addFilters(ViewerFilter... filters) {
-		for (ViewerFilter filter : filters) {
-			fViewer.addFilter(filter);
-		}
-	}
+    protected abstract void addListeners();
 
-	protected void addListener(IDoubleClickListener doubleClickListener) {
-		fViewer.addDoubleClickListener(doubleClickListener);
-	}
+    protected void addFilters(ViewerFilter... filters) {
+        for (ViewerFilter filter : filters) {
+            fViewer.addFilter(filter);
+        }
+    }
 
-	protected void addListener(
-			ISelectionChangedListener selectionChangedListener) {
-		fViewer.addSelectionChangedListener(selectionChangedListener);
-	}
+    protected void addListener(IDoubleClickListener doubleClickListener) {
+        fViewer.addDoubleClickListener(doubleClickListener);
+    }
+
+    protected void addListener(ISelectionChangedListener selectionChangedListener) {
+        fViewer.addSelectionChangedListener(selectionChangedListener);
+    }
 
 }
