@@ -963,13 +963,14 @@ public class DbmsLanguage {
 
     private void buildJoinClause(StringBuilder builder, String tableA, String tableAliasA, String columnAName,
             boolean hasTableAliasA, String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
+        boolean hasAlreadyOneJoin = builder.toString().contains(this.join());
         // begin of query is built ouside this method and should be:
         // SELECT count(*) FROM leftTableName
         // tableAliasA JOIN
-        if (hasTableAliasA) {
+        if (hasTableAliasA && !hasAlreadyOneJoin) {
             builder.append(surroundWithSpaces(tableAliasA));
         }
-        builder.append(" JOIN ");
+        builder.append(join());
 
         // tableB tableAliasB ON
         builder.append(surroundWithSpaces(quote(tableB)));
@@ -982,9 +983,15 @@ public class DbmsLanguage {
         String tB = hasTableAliasB ? tableAliasB : quote(tableB);
         String cA = quote(columnAName);
         String cB = quote(columnBName);
+        
+        
         createJoinClause(builder, tA, cA, tB, cB, operator);
     }
 
+    public String join() {
+        return " JOIN ";
+    }
+    
     /**
      * DOC scorreia Comment method "joinClauseStartsWithWrongTable".
      * 
@@ -1005,23 +1012,21 @@ public class DbmsLanguage {
      * @param tableB the name of the second table or null
      * @param columnBName the column name (or an alias)
      * @param operator the operator used in the join
-     * 
-     * When using a column alias instead of a name, the table name must be set to null (because it's not required)
      */
     private void createJoinClause(StringBuilder builder, String tableA, String columnAName, String tableB, String columnBName,
             String operator) {
         // (tablealiasA.colA = tablealiasB.colB)
         builder.append('(');
         if (tableA != null) {
-            builder.append(surroundWithSpaces(tableA + "."));
+            builder.append(tableA + ".");
         }
-        builder.append(surroundWithSpaces(columnAName));
+        builder.append(columnAName);
 
         builder.append(operator);
         if (tableB != null) {
-            builder.append(surroundWithSpaces(tableB + "."));
+            builder.append(tableB + ".");
         }
-        builder.append(surroundWithSpaces(columnBName));
+        builder.append(columnBName);
         builder.append(')');
     }
     
