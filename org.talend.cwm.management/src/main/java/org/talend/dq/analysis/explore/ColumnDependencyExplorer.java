@@ -27,20 +27,19 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.resource.relational.Column;
 
-
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class ColumnDependencyExplorer extends DataExplorer {
-    
+
     private static final String INVALID_GENERIC_SQL = "SELECT DISTINCT A , COUNT(*) FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM <%=__TABLE_NAME__%> C ) T GROUP BY A HAVING COUNT(*) > 1";
 
     private static final String VALID_GENERIC_SQL = "SELECT DISTINCT A , COUNT(*) FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM <%=__TABLE_NAME__%> C ) T GROUP BY A HAVING COUNT(*) = 1";
 
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        map.put(Messages.getString("ColumnDependencyExplorer.browseValidRows"), getValidRowsStatement()); //$NON-NLS-1$
-        map.put(Messages.getString("ColumnDependencyExplorer.browseInvalidRows"), getInvalidRowsStatement()); //$NON-NLS-1$
+        map.put(Messages.getString("ColumnDependencyExplorer.viewValidRows"), getValidRowsStatement()); //$NON-NLS-1$
+        map.put(Messages.getString("ColumnDependencyExplorer.viewInvalidRows"), getInvalidRowsStatement()); //$NON-NLS-1$
         return map;
     }
 

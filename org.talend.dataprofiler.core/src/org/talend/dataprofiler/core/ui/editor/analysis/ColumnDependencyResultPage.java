@@ -165,7 +165,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         }
 
         createTable(sectionClient);
-        
+
         creatChart(sectionClient, analysis);
 
         resultSection.layout();
@@ -281,9 +281,10 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
      * @param composite
      */
     private void createTable(Composite composite) {
-        final TableViewer tableViewer = new TableViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        final TableViewer tableViewer = new TableViewer(composite, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL
+                | SWT.BORDER);
         Table resultTable = tableViewer.getTable();
-        
+
         resultTable.setLinesVisible(true);
         resultTable.setHeaderVisible(true);
         // create table headers
@@ -311,7 +312,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
             item.setText(2, StringFormatUtil.format(String.valueOf(match.doubleValue() / row.doubleValue()),
                     StringFormatUtil.PERCENT).toString());
             item.setText(3, String.valueOf(row));
-            
+
             item.setData(dataEntity);
             i++;
         }
@@ -321,7 +322,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         gd.widthHint = 450;
 
         resultTable.setLayoutData(gd);
-        
+
         // add menus
         ChartTableFactory.addMenuAndTip(tableViewer, new ColumnDependencyExplorer(), this.masterPage.analysis);
     }
