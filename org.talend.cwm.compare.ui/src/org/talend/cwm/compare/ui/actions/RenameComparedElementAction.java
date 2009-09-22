@@ -104,7 +104,7 @@ public class RenameComparedElementAction extends Action {
 
     @Override
     public String getText() {
-        return "Renamed element";
+        return "Choose corresponding element";
     }
 
     @Override
