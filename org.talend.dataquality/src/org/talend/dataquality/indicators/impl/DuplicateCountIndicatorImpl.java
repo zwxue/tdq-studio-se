@@ -205,11 +205,10 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     @Override
     public boolean handle(Object data) {
         super.handle(data);
-        if (data != null) {
-            if (!this.uniqueObjects.add(data)) {
-                // store duplicate objects
-                duplicateObjects.add(data);
-            }
+        // MOD yyi 2009-09-22 8769
+        if (!this.uniqueObjects.add(data)) {
+            // store duplicate objects
+            duplicateObjects.add(data);
         }
         return true;
     }
