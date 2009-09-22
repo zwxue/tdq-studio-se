@@ -27,8 +27,6 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import orgomg.cwm.objectmodel.core.CoreFactory;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -43,10 +41,6 @@ public final class EMFSharedResources {
 
     private Resource softwareDeploymentResource = null;
 
-    private final static String SOFTWARE_DEP_EXT = "softwaredeployment";
-
-    private final static String SOFTWARE_DEP = ".softwaresystem." + SOFTWARE_DEP_EXT;
-
     /**
      * Getter for softwareDeploymentResource.
      * 
@@ -60,46 +54,12 @@ public final class EMFSharedResources {
     }
 
     public boolean saveSoftwareDeploymentResource(TdSoftwareSystem softwareSystem) {
-        if (softwareDeploymentResource == null) {
-            getSoftwareDeploymentResource().getContents().add(softwareSystem);
-            // MOD mzhao feature 7488 .
-            // Create a mock ModelElement to add dependency.
-            saveSoftwareDeploymentProperties();
-        } else {
-            getSoftwareDeploymentResource().getContents().add(softwareSystem);
-        }
+        getSoftwareDeploymentResource().getContents().add(softwareSystem);
         return saveSoftwareDeploymentResource();
     }
 
     public boolean saveSoftwareDeploymentResource() {
         return (softwareDeploymentResource != null) ? EMFUtil.saveSingleResource(softwareDeploymentResource) : false;
-    }
-
-    private void saveSoftwareDeploymentProperties() {
-        // ~MOD mzhao feature 7488 2009-08-21.
-        AElementPersistance elePersistance = new AElementPersistance() {
-
-            @Override
-            protected void addDependencies(ModelElement element) {
-
-            }
-
-            @Override
-            protected void addResourceContent(ModelElement element) {
-
-            }
-
-            @Override
-            protected String getFileExtension() {
-                return SOFTWARE_DEP_EXT;
-            }
-
-        };
-        ModelElement mockedModelElement = CoreFactory.eINSTANCE.createModel();
-        mockedModelElement.setName("softwareSystem");
-        softwareDeploymentResource.getContents().add(mockedModelElement);
-        elePersistance.savePerperties(mockedModelElement);
-        // ~
     }
 
     /**

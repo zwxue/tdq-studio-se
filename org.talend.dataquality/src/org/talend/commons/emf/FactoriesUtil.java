@@ -86,6 +86,16 @@ public final class FactoriesUtil {
     public static final String ITEM_EXTENSION = "item"; //$NON-NLS-1$
 
     /**
+     * Extension used for the files used for software deployment.
+     */
+    public static final String SOFTWARE_SYSTEM = SoftwaredeploymentPackage.eNAME;
+
+    /**
+     * Extension used for the files in which the System Indicators are serialized.
+     */
+    public static final String TALEND_DEFINITION = DefinitionPackage.eNAME;
+
+    /**
      * Extension used for the files in which the pattern are serialized.
      */
     public static final String PATTERN = PatternPackage.eNAME;

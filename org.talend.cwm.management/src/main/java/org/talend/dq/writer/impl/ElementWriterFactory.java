@@ -92,6 +92,24 @@ public class ElementWriterFactory {
     }
 
     /**
+     * DOC bZhou Comment method "createSoftwareSystemWriter".
+     * 
+     * @return
+     */
+    public SoftwareSystemWriter createSoftwareSystemWriter() {
+        return new SoftwareSystemWriter();
+    }
+
+    /**
+     * DOC bZhou Comment method "createSYSIndicatorWriter".
+     * 
+     * @return
+     */
+    public SYSIndicatorWriter createSYSIndicatorWriter() {
+        return new SYSIndicatorWriter();
+    }
+
+    /**
      * DOC bZhou Comment method "create".
      * 
      * @param fileExtension
@@ -111,6 +129,10 @@ public class ElementWriterFactory {
             return createUDIndicatorWriter();
         } else if (FactoriesUtil.DQRULE.equals(fileExtension)) {
             return createdRuleWriter();
+        } else if (FactoriesUtil.SOFTWARE_SYSTEM.equals(fileExtension)) {
+            return createSoftwareSystemWriter();
+        } else if (FactoriesUtil.TALEND_DEFINITION.equals(fileExtension)) {
+            return createSYSIndicatorWriter();
         }
 
         return null;

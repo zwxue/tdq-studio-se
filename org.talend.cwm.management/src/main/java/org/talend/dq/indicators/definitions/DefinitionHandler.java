@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
@@ -87,11 +88,11 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.writer.AElementPersistance;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.dq.writer.impl.SYSIndicatorWriter;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
@@ -138,12 +139,10 @@ public final class DefinitionHandler {
      */
     private boolean needCopy = false;
 
-    private static final String DEFINITION_EXT = "definition"; //$NON-NLS-1$
     /**
      * plugin relative path to the default file.
      */
-    private static final String FILENAME = ".Talend." + DEFINITION_EXT; //$NON-NLS-1$
-    
+    private static final String FILENAME = ".Talend." + FactoriesUtil.TALEND_DEFINITION; //$NON-NLS-1$
 
     private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME; //$NON-NLS-1$
 
@@ -282,33 +281,13 @@ public final class DefinitionHandler {
     public Resource copyDefinitionsIntoFolder(URI destinationUri) {
         Resource resource = getIndicatorsDefinitions().eResource();
         URI newURI = EMFUtil.changeUri(resource, destinationUri);
-        // MOD mzhao feature 7488 Add TDQ Elements property and item. 2009-08-21
-        // Create properties.
-        AElementPersistance elePersistance = new AElementPersistance() {
-
-            @Override
-            protected void addDependencies(ModelElement element) {
-
-            }
-
-            @Override
-            protected void addResourceContent(ModelElement element) {
-
-            }
-
-            @Override
-            protected String getFileExtension() {
-                return DEFINITION_EXT;
-            }
-
-        };
 
         String platformString = newURI.toPlatformString(true);
         String platformStringPath = platformString.substring(0, platformString.lastIndexOf(FILENAME));
         IFolder fileFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot().findMember(platformStringPath);
-        
-        ReturnCode retCode = elePersistance.save(getIndicatorsDefinitions(), fileFolder.getFile(FILENAME));
 
+        SYSIndicatorWriter sysIndicatorWriter = ElementWriterFactory.getInstance().createSYSIndicatorWriter();
+        ReturnCode retCode = sysIndicatorWriter.saveWithoutProperty(getIndicatorsDefinitions(), fileFolder.getFile(FILENAME));
 
         if (retCode.isOk()) {
             if (log.isInfoEnabled()) {
