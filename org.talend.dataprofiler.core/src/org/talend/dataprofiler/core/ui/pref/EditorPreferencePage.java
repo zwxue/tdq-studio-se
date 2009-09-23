@@ -60,7 +60,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     private Text pageSizeText;
 
     // default folding setting.
-    private static int currentFolding = FOLDING_1;
+    private static int currentFolding;
 
     private static boolean currentAnalyzedElements;
 
@@ -81,7 +81,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     private Button button5 = null;
 
     public static int getCurrentFolding() {
-        return currentFolding;
+        return currentFolding == 0 ? FOLDING_1 : currentFolding;
     }
 
     public static void setCurrentFolding(int currentFolding) {
@@ -229,7 +229,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         button1.setSelection(false);
         button2.setSelection(false);
         button3.setSelection(true);
-        setCurrentFolding(FOLDING_3);
+        setCurrentFolding(FOLDING_1);
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
 
         button4.setSelection(true);

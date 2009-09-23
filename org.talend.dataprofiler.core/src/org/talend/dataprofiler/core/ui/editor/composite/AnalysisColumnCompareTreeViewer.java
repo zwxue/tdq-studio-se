@@ -154,7 +154,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     private void createAnalyzedColumnSetsSection(String mainTitle, String description) {
-        columnsComparisonSection = masterPage.createSection(form, parentComp, mainTitle, false, description); //$NON-NLS-1$ //$NON-NLS-2$
+        columnsComparisonSection = masterPage.createSection(form, parentComp, mainTitle, description); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(columnsComparisonSection);
         sectionClient.setLayout(new GridLayout());
         // sectionClient.setLayout(new GridLayout(2, true));
@@ -221,7 +221,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private TableViewer createSectionPart(Composite parentComp, final List<Column> columnList, String title,
             String hyperlinkText) {
-        Section columnSetElementSection = masterPage.createSection(form, parentComp, title, true, null);
+        Section columnSetElementSection = masterPage.createSection(form, parentComp, title, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
         sectionComp.setLayout(new GridLayout());
 

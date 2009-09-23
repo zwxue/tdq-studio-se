@@ -117,13 +117,6 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         graphicsAndTableComp.setLayout(new GridLayout());
         createResultSection(graphicsAndTableComp);
         form.reflow(true);
-
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { summarySection, graphicsAndTableSection });
-        // ~
-
-        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
-        currentEditor.registerSections(new Section[] { graphicsAndTableSection });
     }
 
     @Override
@@ -134,7 +127,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     protected void createResultSection(Composite parent) {
         executeData = getAnalysisHandler().getExecuteData();
         graphicsAndTableSection = this.createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnCorrelationNominalIntervalResultPage.AnalysisResult"), false, null); //$NON-NLS-1$
+                .getString("ColumnCorrelationNominalIntervalResultPage.AnalysisResult"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -172,7 +165,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     private Section createGraphicsSectionPart(Composite parentComp) {
         Section section = createSection(form, parentComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), //$NON-NLS-1$
-                true, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ 
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ 
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -278,8 +271,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     private Section createSimpleStatisticsPart(Composite parentComp, String title,
             ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
-        Section section = createSection(form, parentComp, title, true, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
+        Section section = createSection(form, parentComp, title, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -382,7 +374,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     private Section createTableSectionPart(Composite parentComp, String title,
             ColumnSetMultiValueIndicator columnSetMultiIndicator) {
-        Section columnSetElementSection = this.createSection(form, parentComp, title, true, null);
+        Section columnSetElementSection = this.createSection(form, parentComp, title, null);
         Composite sectionTableComp = toolkit.createComposite(columnSetElementSection);
         sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionTableComp.setLayout(new GridLayout());

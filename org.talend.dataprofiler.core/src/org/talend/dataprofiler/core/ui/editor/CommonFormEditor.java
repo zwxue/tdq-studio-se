@@ -33,7 +33,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
@@ -230,7 +230,7 @@ public abstract class CommonFormEditor extends FormEditor {
      * @param parent
      */
     protected void createToolbar(final Composite parent) {
-        editorBarWrap = new TdEditorBarWrapper();
+        editorBarWrap = new TdEditorBarWrapper(this);
         toolBar = new TdEditorToolBar(parent, editorBarWrap);
 
         FormData data = new FormData();
@@ -261,13 +261,12 @@ public abstract class CommonFormEditor extends FormEditor {
     }
 
     /**
+     * DOC bZhou Comment method "registerSection".
      * 
-     * DOC mzhao Comment method
-     * "register each page sections to CommonFormEditor,that could contribute to Editor actions like collapse or expand all."
-     * .
+     * @param composite
      */
-    public void registerSections(Section[] sections) {
-        editorBarWrap.setSections(sections);
+    public void registerSection(ExpandableComposite composite) {
+        editorBarWrap.addExpandableComposite(composite);
     }
 
 }

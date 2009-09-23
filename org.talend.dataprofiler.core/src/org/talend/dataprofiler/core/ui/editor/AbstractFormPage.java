@@ -32,25 +32,60 @@ public abstract class AbstractFormPage extends FormPage {
 
     protected FormToolkit toolkit;
 
+    protected CommonFormEditor currentEditor;
+
+    protected Boolean foldingState;
+
+    private static int sectionCount = 0;
+
     public AbstractFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         this.toolkit = this.getEditor().getToolkit();
+        this.currentEditor = (CommonFormEditor) editor;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.forms.editor.FormPage#initialize(org.eclipse.ui.forms.editor.FormEditor)
+     */
+    @Override
+    public void initialize(FormEditor editor) {
+        super.initialize(editor);
+
+        initFoldingState();
+
+        sectionCount = 0;
     }
 
     /**
-     * MOD mzhao 2009-06-17 feature 5887
+     * DOC bZhou Comment method "createSection".
      * 
      * @param form
-     * @param toolkit
-     * @param anasisDataComp
+     * @param parent
      * @param title
-     * @param expanded
-     * @param discription
      * @return
      */
-    public Section createSection(final ScrolledForm form, Composite parent, String title, boolean expanded, String description) {
-        final int style = (description == null) ? (Section.TWISTIE | Section.TITLE_BAR)
-                : (Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR);
+    public Section createSection(final ScrolledForm form, Composite parent, String title) {
+        return createSection(form, parent, title, null);
+    }
+
+    /**
+     * DOC bZhou Comment method "createSection".
+     * 
+     * @param form
+     * @param parent
+     * @param title
+     * @param description
+     * @return
+     */
+    public Section createSection(final ScrolledForm form, Composite parent, String title, String description) {
+        int style = Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR;
+
+        if (description == null) {
+            style = Section.TWISTIE | Section.TITLE_BAR;
+        }
+
         Section section = toolkit.createSection(parent, style);
 
         section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
@@ -65,42 +100,47 @@ public abstract class AbstractFormPage extends FormPage {
 
         section.setText(title);
         section.setDescription(description);
-        section.setExpanded(expanded);
+
+        if (foldingState == null) {
+            section.setExpanded(sectionCount == 0);
+        } else {
+            section.setExpanded(foldingState);
+        }
+
+        currentEditor.registerSection(section);
+
+        sectionCount++;
+
         return section;
     }
 
-    public abstract void setDirty(boolean isDirty);
+    /**
+     * DOC bZhou Comment method "initFoldingState".
+     */
+    private void initFoldingState() {
+        int foldType = EditorPreferencePage.getCurrentFolding();
+
+        switch (foldType) {
+        case EditorPreferencePage.FOLDING_1:
+            foldingState = true;
+            break;
+        case EditorPreferencePage.FOLDING_2:
+            foldingState = false;
+            break;
+        default:
+        }
+    }
 
     @Override
     public boolean isDirty() {
         return super.isDirty() || isDirty;
     }
 
-    protected int foldingSections(Section[] sections) {
-        int foldType = EditorPreferencePage.getCurrentFolding();
-        if (sections != null && sections.length > 0) {
-            for (int i = 0; i < sections.length; ++i) {
-                if (null != sections[i]) {
-
-                    switch (foldType) {
-                    case EditorPreferencePage.FOLDING_1:
-                        sections[i].setExpanded(true);
-                        break;
-                    case EditorPreferencePage.FOLDING_2:
-                        sections[i].setExpanded(false);
-                        break;
-                    default: // EditorPreferencePage.FOLDING_3
-                        if (i == 0) {
-                            sections[i].setExpanded(true);
-                        } else {
-                            sections[i].setExpanded(false);
-                        }
-                    }
-                }
-            }
-            return foldType;
-        }
-        return 0;
-    }
+    /**
+     * DOC bZhou Comment method "setDirty".
+     * 
+     * @param isDirty
+     */
+    public abstract void setDirty(boolean isDirty);
 
 }

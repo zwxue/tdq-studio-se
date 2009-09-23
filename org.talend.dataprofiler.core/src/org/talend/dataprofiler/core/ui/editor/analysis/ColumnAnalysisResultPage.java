@@ -65,14 +65,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         resultComp.setLayout(new GridLayout());
         createResultSection(resultComp);
-
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { summarySection, resultSection });
-        // ~
-
-        // MOD 2009-01-10 mzhao, for register sections that would be collapse or
-        // expand later.
-        currentEditor.registerSections(new Section[] { resultSection });
         form.reflow(true);
     }
 
@@ -83,7 +75,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     protected void createResultSection(Composite parent) {
         resultSection = createSection(form, parent,
-                DefaultMessagesImpl.getString("ColumnAnalysisResultPage.analysisResult"), true, null); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnAnalysisResultPage.analysisResult"), null); //$NON-NLS-1$
         final Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));

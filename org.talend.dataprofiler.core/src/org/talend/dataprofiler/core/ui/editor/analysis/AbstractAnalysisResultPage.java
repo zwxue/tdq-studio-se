@@ -58,16 +58,13 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         summaryComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         summaryComp.setLayout(new GridLayout());
         createSummarySection(form, summaryComp, getAnalysisHandler());
-        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
-        currentEditor.registerSections(new Section[] { summarySection });
-
     }
 
     protected abstract AnalysisHandler getAnalysisHandler();
 
     protected void createSummarySection(ScrolledForm form, Composite parent, AnalysisHandler analysisHandler) {
         summarySection = createSection(form, parent,
-                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.analysisSummary"), true, null); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.analysisSummary"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(summarySection);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

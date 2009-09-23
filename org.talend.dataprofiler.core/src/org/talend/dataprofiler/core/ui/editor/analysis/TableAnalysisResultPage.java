@@ -105,12 +105,6 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         resultComp.setLayout(new GridLayout());
         createResultSection(resultComp);
-
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { summarySection, resultSection });
-        // ~
-
-        currentEditor.registerSections(new Section[] { resultSection });
         form.reflow(true);
     }
 
@@ -120,8 +114,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
     }
 
     protected void createResultSection(Composite parent) {
-        resultSection = createSection(form, parent,
-                DefaultMessagesImpl.getString("TableAnalysisResultPage.analysisResult"), true, null); //$NON-NLS-1$
+        resultSection = createSection(form, parent, DefaultMessagesImpl.getString("TableAnalysisResultPage.analysisResult"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));

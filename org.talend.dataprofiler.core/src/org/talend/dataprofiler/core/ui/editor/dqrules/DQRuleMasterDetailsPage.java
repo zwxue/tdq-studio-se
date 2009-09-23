@@ -101,7 +101,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     }
 
     private Composite joinElementComp;
-    
+
     private JoinConditionTableViewer joinConditionTableViewer;
 
     public Text getCriticalityLevelText() {
@@ -160,13 +160,6 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         createDQRuleDefinitionSection(topComp);
         createJoinConditionSection(topComp);
-
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { metadataSection, dqRuleDefinitionSection, joinConditionSection });
-        // ~
-
-        currentEditor.registerSections(new Section[] { dqRuleDefinitionSection, joinConditionSection });
-
     }
 
     /**
@@ -176,7 +169,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
      */
     private void createDQRuleDefinitionSection(Composite comp) {
         dqRuleDefinitionSection = createSection(form, comp, DefaultMessagesImpl
-                .getString("DQRuleMasterDetailsPage.dqRuleDefinition"), false, null); //$NON-NLS-1$
+                .getString("DQRuleMasterDetailsPage.dqRuleDefinition"), null); //$NON-NLS-1$
 
         Label label = new Label(dqRuleDefinitionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.text")); //$NON-NLS-1$
@@ -382,7 +375,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
      */
     private void createJoinConditionSection(Composite comp) {
         joinConditionSection = createSection(form, comp,
-                DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.joinCondition"), false, null); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.joinCondition"), null); //$NON-NLS-1$
 
         Label label = new Label(joinConditionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.textJoinCondition")); //$NON-NLS-1$

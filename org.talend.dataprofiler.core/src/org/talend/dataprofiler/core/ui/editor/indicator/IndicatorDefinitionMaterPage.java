@@ -241,14 +241,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             createCategorySection(topComp);
         }
-        // MOD yyi 2009-09-16 bug 8884
-        foldingSections(new Section[] { metadataSection, additionalFunctionsSection, definitionSection, charactersMappingSection,
-                categorySection });
-        // ~
-        // MOD yyi 2009-09-18 bug 9148
-        currentEditor.registerSections(new Section[] { metadataSection, additionalFunctionsSection, definitionSection,
-                charactersMappingSection, categorySection });
-        // ~
     }
 
     /**
@@ -257,7 +249,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createCharactersMappingSection(Composite topComp) {
-        charactersMappingSection = createSection(form, topComp, "Character mapping", false, null);
+        charactersMappingSection = createSection(form, topComp, "Character mapping", null);
 
         charactersMappingComp = createCharactersMappingComp(charactersMappingSection);
 
@@ -473,7 +465,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createAdditionalFunctionsSection(Composite topComp) {
-        additionalFunctionsSection = createSection(form, topComp, "Additional Functions", false, null);
+        additionalFunctionsSection = createSection(form, topComp, "Additional Functions", null);
 
         additionalFunctionsComp = createAdditionalFunctionsComp(additionalFunctionsSection);
 
@@ -734,7 +726,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createCategorySection(Composite topComp) {
-        categorySection = createSection(form, topComp, "Indicator Category", false, null);
+        categorySection = createSection(form, topComp, "Indicator Category", null);
 
         Label label = new Label(categorySection, SWT.WRAP);
         label.setText("This section is for indicator category.");
@@ -829,7 +821,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private void createDefinitionSection(Composite topCmp) {
         definitionSection = createSection(form, topCmp,
-                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definition"), false, null); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definition"), null); //$NON-NLS-1$
 
         Label label = new Label(definitionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definitionDecription")); //$NON-NLS-1$

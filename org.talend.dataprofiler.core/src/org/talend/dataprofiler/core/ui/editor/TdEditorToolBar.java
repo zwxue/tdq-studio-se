@@ -24,7 +24,9 @@ import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.editor.IFormPage;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
@@ -108,16 +110,7 @@ public class TdEditorToolBar {
 
         @Override
         public void run() {
-            Iterator<Section> it = editorBarWrap.getSections().iterator();
-
-            while (it.hasNext()) {
-                Section section = it.next();
-                if (section == null || section.isDisposed()) {
-                    it.remove();
-                    continue;
-                }
-                section.setExpanded(true);
-            }
+            expandSwitcher(true);
         }
 
     }
@@ -135,17 +128,32 @@ public class TdEditorToolBar {
 
         @Override
         public void run() {
-            Iterator<Section> it = editorBarWrap.getSections().iterator();
-
-            while (it.hasNext()) {
-                Section section = it.next();
-                if (section == null || section.isDisposed()) {
-                    it.remove();
-                    continue;
-                }
-                section.setExpanded(false);
-            }
+            expandSwitcher(false);
         }
 
+    }
+
+    /**
+     * DOC bZhou Comment method "expandSwitcher".
+     * 
+     * @param expanded
+     */
+    private void expandSwitcher(boolean expanded) {
+        Iterator<ExpandableComposite> it = editorBarWrap.getExpandableComposites().iterator();
+
+        while (it.hasNext()) {
+            ExpandableComposite composite = it.next();
+            if (composite == null || composite.isDisposed()) {
+                it.remove();
+                continue;
+            }
+            composite.setExpanded(expanded);
+        }
+
+        FormEditor editor = editorBarWrap.getEditor();
+        IFormPage formPage = editor.getActivePageInstance();
+        if (formPage != null) {
+            formPage.getManagedForm().getForm().reflow(true);
+        }
     }
 }

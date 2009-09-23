@@ -79,8 +79,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected ModelElement currentModelElement;
 
-    protected CommonFormEditor currentEditor = null;
-
     protected ScrolledForm form;
 
     private String formTitle;
@@ -89,7 +87,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
-        currentEditor = (CommonFormEditor) editor;
     }
 
     public void initialize(FormEditor editor) {
@@ -112,8 +109,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         topComp.setLayoutData(anasisData);
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
-        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
-        currentEditor.registerSections(new Section[] { metadataSection });
     }
 
     /**
@@ -131,7 +126,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {
-        Section section = createSection(form, topComp, getMetadataTitle(), true, ""); //$NON-NLS-1$ //$NON-NLS-2$
+        Section section = createSection(form, topComp, getMetadataTitle(), ""); //$NON-NLS-1$ //$NON-NLS-2$
         Composite parent = toolkit.createComposite(section);
         parent.setLayout(new GridLayout(2, false));
 

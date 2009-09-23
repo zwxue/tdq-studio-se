@@ -311,20 +311,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         createAnalysisParamSection(topComp);
         createAnalysisSummarySection(topComp);
         createStatisticalSection(topComp);
-
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { metadataSection, analysisParamSection, statisticalSection, summarySection });
-        // ~
-
-        // MOD 2009-01-10 mzhao, for register sections that would be collapse or
-        // expand later.
-        currentEditor
-                .registerSections(new Section[] { analysisParamSection, statisticalSection, metadataSection, summarySection });
     }
 
     private void createAnalysisParamSection(Composite topComp) {
-        analysisParamSection = this.createSection(form, topComp, DefaultMessagesImpl
-                .getString("ConnectionMasterDetailsPage.analysisParameter"), false, null); //$NON-NLS-1$
+        analysisParamSection = createSection(form, topComp, DefaultMessagesImpl
+                .getString("ConnectionMasterDetailsPage.analysisParameter")); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(2, false));
         Label tableFilterLabel = new Label(sectionClient, SWT.None);
@@ -365,7 +356,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private void createAnalysisSummarySection(Composite topComp) {
         summarySection = this.createSection(form, topComp, DefaultMessagesImpl
-                .getString("ConnectionMasterDetailsPage.analysisSummary"), false, null); //$NON-NLS-1$
+                .getString("ConnectionMasterDetailsPage.analysisSummary")); //$NON-NLS-1$
         sumSectionClient = toolkit.createComposite(summarySection);
         sumSectionClient.setLayout(new GridLayout(2, false));
         refreshSumSection();
@@ -476,7 +467,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private void createStatisticalSection(Composite topComp) {
         statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
-                .getString("ConnectionMasterDetailsPage.statisticalinformations"), false, null); //$NON-NLS-1$
+                .getString("ConnectionMasterDetailsPage.statisticalinformations"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
         sectionClient.setLayout(new GridLayout());
 

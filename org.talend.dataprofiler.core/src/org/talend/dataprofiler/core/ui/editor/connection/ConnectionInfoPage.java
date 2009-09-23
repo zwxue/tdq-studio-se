@@ -114,10 +114,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
 
         });
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { metadataSection, infomatioinSection });
-        // ~
-        currentEditor.registerSections(new Section[] { infomatioinSection });
+
     }
 
     /**
@@ -129,7 +126,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         infomatioinSection = createSection(
                 form,
                 topComp,
-                DefaultMessagesImpl.getString("ConnectionInfoPage.connectionInformations"), false, DefaultMessagesImpl.getString("ConnectionInfoPage.informationsOfConnection")); //$NON-NLS-1$ //$NON-NLS-2$
+                DefaultMessagesImpl.getString("ConnectionInfoPage.connectionInformations"), DefaultMessagesImpl.getString("ConnectionInfoPage.informationsOfConnection")); //$NON-NLS-1$ //$NON-NLS-2$
 
         Composite sectionClient = toolkit.createComposite(infomatioinSection);
         sectionClient.setLayout(new GridLayout(2, false));

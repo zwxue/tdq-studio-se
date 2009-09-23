@@ -16,7 +16,8 @@ package org.talend.dataprofiler.core.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
  * 
@@ -24,22 +25,55 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class TdEditorBarWrapper {
 
-    private List<Section> sectionLs = null;
+    private List<ExpandableComposite> compositeList = null;
 
-    public void setSections(Section[] sections) {
-        for (Section section : sections) {
-            if (!sectionLs.contains(section)) {
-                this.sectionLs.add(section);
-            }
+    private FormEditor editor;
 
+    /**
+     * DOC bZhou TdEditorBarWrapper constructor comment.
+     */
+    public TdEditorBarWrapper(FormEditor editor) {
+        compositeList = new ArrayList<ExpandableComposite>();
+        this.editor = editor;
+    }
+
+    /**
+     * DOC bZhou Comment method "addExpandableComposite".
+     * 
+     * @param composite
+     */
+    public void addExpandableComposite(ExpandableComposite composite) {
+        if (!compositeList.contains(composite)) {
+            this.compositeList.add(composite);
         }
     }
 
-    public TdEditorBarWrapper() {
-        sectionLs = new ArrayList<Section>();
+    /**
+     * DOC bZhou Comment method "setExpandableComposites".
+     * 
+     * @param composites
+     */
+    public void setExpandableComposites(ExpandableComposite[] composites) {
+        for (ExpandableComposite composite : composites) {
+            addExpandableComposite(composite);
+        }
     }
 
-    public List<Section> getSections() {
-        return sectionLs;
+    /**
+     * DOC bZhou Comment method "getExpandableComposites".
+     * 
+     * @return
+     */
+    public List<ExpandableComposite> getExpandableComposites() {
+        return compositeList;
+    }
+
+    /**
+     * Getter for editor.
+     * 
+     * @return the editor
+     */
+    public FormEditor getEditor() {
+        return editor;
     }
 }

@@ -138,13 +138,6 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         // createResultSection(resultComp);
 
         form.reflow(true);
-
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { summarySection, columnSetSection, resultSection });
-        // ~
-
-        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
-        currentEditor.registerSections(new Section[] { resultSection, columnSetSection });
     }
 
     @Override
@@ -155,7 +148,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     private void createAnalyzedColumnSetsSection(Composite parent) {
         columnSetSection = createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.analyzedColumnSets"), true, null); //$NON-NLS-1$
+                .getString("ColumnsComparisonAnalysisResultPage.analyzedColumnSets"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(columnSetSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -201,7 +194,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     @Override
     protected void createResultSection(Composite parent) {
         resultSection = createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), true, ""); //$NON-NLS-1$ //$NON-NLS-2$
+                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), ""); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

@@ -202,23 +202,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 form.reflow(true);
             }
         });
-        // ~
+
         createPreviewSection(form, previewComp);
-
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { metadataSection, analysisColumnSection, dataFilterSection, analysisParamSection,
-                previewSection });
-        // ~
-
-        // MOD 2009-01-10 mzhao, for register sections that would be collapse or
-        // expand later.
-        currentEditor.registerSections(new Section[] { analysisColumnSection, metadataSection, dataFilterSection,
-                analysisParamSection, previewSection });
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
         analysisColumnSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.analyzeColumn"), false, null); //$NON-NLS-1$
+                .getString("ColumnMasterDetailsPage.analyzeColumn"), null); //$NON-NLS-1$
 
         Composite topComp = toolkit.createComposite(analysisColumnSection);
         topComp.setLayout(new GridLayout());
@@ -339,8 +329,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
-        previewSection = createSection(form, parent, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true, //$NON-NLS-1$
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
+        previewSection = createSection(
+                form,
+                parent,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
         previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
         Composite sectionClient = toolkit.createComposite(previewSection);
         sectionClient.setLayout(new GridLayout());
@@ -361,9 +353,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     for (ExpandableComposite comp : previewChartList) {
                         comp.setExpanded(false);
                         comp.getParent().pack();
-                        // for (Object composite : comp.getChildren()) {
-                        // ((Composite) composite).pack();
-                        // }
                     }
                 }
             }
@@ -379,9 +368,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     for (ExpandableComposite comp : previewChartList) {
                         comp.setExpanded(true);
                         comp.getParent().pack();
-                        // for (Object composite : comp.getChildren()) {
-                        // ((Composite) composite).pack();
-                        // }
                     }
                 }
 
@@ -471,6 +457,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         uiPagination.init();
         // ~
 
+        for (ExpandableComposite comp : previewChartList) {
+            currentEditor.registerSection(comp);
+        }
+
         composite.layout();
         composite.pack();
         form.reflow(true);
@@ -502,7 +492,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         dataFilterSection = createSection(
                 form,
                 anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), false, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
 
         Composite sectionClient = toolkit.createComposite(dataFilterSection);
         dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
@@ -518,7 +508,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      */
     void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
         analysisParamSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.AnalysisParameter"), false, null); //$NON-NLS-1$
+                .getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(2, false));
         toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$

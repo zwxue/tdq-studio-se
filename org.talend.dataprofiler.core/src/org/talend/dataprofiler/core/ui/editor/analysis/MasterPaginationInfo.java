@@ -125,4 +125,12 @@ public class MasterPaginationInfo extends PaginationInfo {
         }
     }
 
+    /**
+     * Getter for previewChartList.
+     * 
+     * @return the previewChartList
+     */
+    public List<ExpandableComposite> getPreviewChartList() {
+        return previewChartList;
+    }
 }

@@ -229,20 +229,13 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 form.reflow(true);
             }
         });
-        // ~
+
         createPreviewSection(form, previewComp);
-
-        // MOD xqliu 2009-06-23 bug 7481
-        foldingSections(new Section[] { metadataSection, analysisTableSection, dataFilterSection });
-        // ~
-
-        currentEditor
-                .registerSections(new Section[] { analysisTableSection, metadataSection, dataFilterSection, previewSection });
     }
 
     void createAnalysisTablesSection(final ScrolledForm form, Composite anasisDataComp) {
         analysisTableSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("TableMasterDetailsPage.analyzeTable"), false, null); //$NON-NLS-1$
+                .getString("TableMasterDetailsPage.analyzeTable"), null); //$NON-NLS-1$
 
         Composite topComp = toolkit.createComposite(analysisTableSection);
         topComp.setLayout(new GridLayout());
@@ -355,7 +348,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         dataFilterSection = createSection(
                 form,
                 anasisDataComp,
-                DefaultMessagesImpl.getString("TableMasterDetailsPage.dataFilter"), false, DefaultMessagesImpl.getString("TableMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
+                DefaultMessagesImpl.getString("TableMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("TableMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
 
         Composite sectionClient = toolkit.createComposite(dataFilterSection);
         dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
@@ -364,8 +357,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
-        previewSection = createSection(form, parent, DefaultMessagesImpl.getString("TableMasterDetailsPage.graphics"), true, //$NON-NLS-1$
-                DefaultMessagesImpl.getString("TableMasterDetailsPage.space")); //$NON-NLS-1$
+        previewSection = createSection(
+                form,
+                parent,
+                DefaultMessagesImpl.getString("TableMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("TableMasterDetailsPage.space")); //$NON-NLS-1$
         previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
         Composite sectionClient = toolkit.createComposite(previewSection);
         sectionClient.setLayout(new GridLayout());

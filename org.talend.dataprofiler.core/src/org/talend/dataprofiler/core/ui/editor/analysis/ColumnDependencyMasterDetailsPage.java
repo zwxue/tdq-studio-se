@@ -119,12 +119,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
         columnsComparisonSection = anaColumnCompareViewer.getColumnsComparisonSection();
         anaColumnCompareViewer.addPropertyChangeListener(this);
-
-        currentEditor.registerSections(new Section[] { columnsComparisonSection, dataFilterSection });
-
-        // MOD yyi 2009-09-17 bug 8884
-        foldingSections(new Section[] { metadataSection, columnsComparisonSection, dataFilterSection });
-        // ~
     }
 
     /**
@@ -134,7 +128,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      * @param anasisDataComp
      */
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        dataFilterSection = createSection(form, anasisDataComp, "Data Filter", false, "Edit the data filter:");
+        dataFilterSection = createSection(form, anasisDataComp, "Data Filter", "Edit the data filter:");
         Composite sectionClient = toolkit.createComposite(dataFilterSection);
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionClient.setLayout(new GridLayout());

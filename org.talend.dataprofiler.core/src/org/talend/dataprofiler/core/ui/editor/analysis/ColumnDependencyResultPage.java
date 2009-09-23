@@ -144,15 +144,12 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         createResultSection(analysisResultsComp);
 
         form.reflow(true);
-
-        foldingSections(new Section[] { summarySection });
-
     }
 
     @Override
     protected void createResultSection(Composite parent) {
         resultSection = createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), true, ""); //$NON-NLS-1$ //$NON-NLS-2$
+                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), ""); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
