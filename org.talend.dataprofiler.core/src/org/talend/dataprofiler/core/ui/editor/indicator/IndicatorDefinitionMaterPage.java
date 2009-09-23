@@ -793,7 +793,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 if ("Purpose".equals(value.getTag())) {
                     labelPurpose.setText("Purpose: " + value.getValue());
                 } else if ("Description".equals(value.getTag())) {
-                    labelDescription.setText("Description: " + value.getValue() + value.getValue());
+                    labelDescription.setText("Description: " + value.getValue());
                 }
             }
             labelPurpose.getParent().layout();
