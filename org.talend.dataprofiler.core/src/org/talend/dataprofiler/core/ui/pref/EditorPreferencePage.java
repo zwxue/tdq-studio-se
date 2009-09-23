@@ -59,7 +59,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private Text pageSizeText;
 
-    private static int currentFolding;
+    // default folding setting.
+    private static int currentFolding = FOLDING_1;
 
     private static boolean currentAnalyzedElements;
 
@@ -68,11 +69,17 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS = true;
 
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_INDICATORS = false;
-	private Button button1 = null;
-	private Button button2 = null;
-	private Button button3 = null;
-	private Button button4 = null;
-	private Button button5 = null;
+
+    private Button button1 = null;
+
+    private Button button2 = null;
+
+    private Button button3 = null;
+
+    private Button button4 = null;
+
+    private Button button5 = null;
+
     public static int getCurrentFolding() {
         return currentFolding;
     }
@@ -158,7 +165,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             button3.setSelection(true);
             break;
         default:
-            button3.setSelection(true);
+            button1.setSelection(true);
         }
 
         Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
@@ -218,34 +225,30 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     // MOD mzhao bug 8318 2009-07-30
     @Override
-	protected void performDefaults() {
-    	button1.setSelection(false);
-		button2.setSelection(false);
-		button3.setSelection(true);
-		setCurrentFolding(FOLDING_3);
-		ResourcesPlugin.getPlugin().getPluginPreferences().setValue(
-				EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
+    protected void performDefaults() {
+        button1.setSelection(false);
+        button2.setSelection(false);
+        button3.setSelection(true);
+        setCurrentFolding(FOLDING_3);
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_MASTER_PAGE_FOLDING, getCurrentFolding());
 
-		button4.setSelection(true);
-		setCurrentAnalyzedElements(button4.getSelection());
-		ResourcesPlugin.getPlugin().getPluginPreferences().setValue(
-				EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
-				isCurrentAnalyzedElements() ? 0 : 1);
+        button4.setSelection(true);
+        setCurrentAnalyzedElements(button4.getSelection());
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
+                isCurrentAnalyzedElements() ? 0 : 1);
 
-		button5.setSelection(false);
-		setCurrentIndicators(button5.getSelection());
-		ResourcesPlugin.getPlugin().getPluginPreferences().setValue(
-				EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators());
+        button5.setSelection(false);
+        setCurrentIndicators(button5.getSelection());
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators());
 
-		// Analyzed Items Per Page
-		pageSizeText.setText(DEFAULT_PAGE_SIZE);
-		ResourcesPlugin.getPlugin().getPluginPreferences().setValue(
-				ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
-		ResourcesPlugin.getPlugin().savePluginPreferences();
-		super.performDefaults();
-	}
+        // Analyzed Items Per Page
+        pageSizeText.setText(DEFAULT_PAGE_SIZE);
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
+        ResourcesPlugin.getPlugin().savePluginPreferences();
+        super.performDefaults();
+    }
 
-	public void init(IWorkbench workbench) {
+    public void init(IWorkbench workbench) {
 
     }
 
