@@ -40,6 +40,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -790,9 +791,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             IndicatorCategory ic = UDIHelper.getUDICategory(definition);
             for (TaggedValue value : ic.getTaggedValue()) {
                 if ("Purpose".equals(value.getTag())) {
-                    labelPurpose.setText(value.getValue());
+                    labelPurpose.setText("Purpose: " + value.getValue());
                 } else if ("Description".equals(value.getTag())) {
-                    labelDescription.setText(value.getValue());
+                    labelDescription.setText("Description: " + value.getValue() + value.getValue());
                 }
             }
             labelPurpose.getParent().layout();
@@ -806,28 +807,24 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createDetailList(Composite composite) {
         Composite compoDetail = new Composite(composite, SWT.NONE);
-        GridData data = new GridData(GridData.FILL_BOTH);
+        compoDetail.setLayout(new GridLayout(1, false));
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
         data.heightHint = 100;
         data.horizontalIndent = 20;
         compoDetail.setLayoutData(data);
-        compoDetail.setLayout(new GridLayout(2, false));
 
-        data = new GridData(GridData.FILL_HORIZONTAL);
-
-        Label label0 = new Label(compoDetail, SWT.NONE);
-        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(label0);
-        label0.setText("Purpose:");
+        Font font0 = new Font(null, "Arial", 9, SWT.BOLD);
+        data = new GridData();
+        data.horizontalAlignment = GridData.FILL;
+        data.grabExcessHorizontalSpace = true;
 
         labelPurpose = new Label(compoDetail, SWT.WRAP | SWT.HORIZONTAL);
         labelPurpose.setLayoutData(data);
-
-        Label label1 = new Label(compoDetail, SWT.NONE);
-        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(label1);
-        label1.setText("Description:");
+        labelPurpose.setFont(font0);
 
         labelDescription = new Label(compoDetail, SWT.WRAP | SWT.HORIZONTAL);
         labelDescription.setLayoutData(data);
-
+        labelDescription.setFont(font0);
     }
 
     private void createDefinitionSection(Composite topCmp) {
