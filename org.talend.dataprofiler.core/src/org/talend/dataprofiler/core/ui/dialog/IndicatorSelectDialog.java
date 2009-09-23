@@ -23,6 +23,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -363,12 +364,15 @@ public class IndicatorSelectDialog extends TrayDialog {
 
         });
         tree.pack();
-        purposeLabel = new Label(comp, SWT.NULL);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(purposeLabel);
-        descriptionLabel = new Label(comp, SWT.NULL);
+
+        Composite buttomComp = new Composite(comp, SWT.NONE);
+        buttomComp.setLayout(new GridLayout());
+        buttomComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        purposeLabel = new Label(buttomComp, SWT.NULL);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(purposeLabel);
+        descriptionLabel = new Label(buttomComp, SWT.NULL);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(descriptionLabel);
-        ((GridData) descriptionLabel.getLayoutData()).heightHint = 40;
-        comp.layout();
 
         return comp;
     }
