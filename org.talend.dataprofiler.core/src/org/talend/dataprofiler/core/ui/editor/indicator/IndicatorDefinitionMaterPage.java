@@ -72,6 +72,7 @@ import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -95,6 +96,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private Composite expressionComp;
 
     private Combo comboCategory;
+
+    private Label labelDescription;
+
+    private Label labelPurpose;
 
     private IndicatorDefinition definition;
 
@@ -747,10 +752,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private Composite createCategoryComp(Section categorySection) {
         Composite composite = toolkit.createComposite(categorySection);
-        composite.setLayout(new GridLayout());
+        composite.setLayout(new GridLayout(2, false));
 
         Collection<String> categories = DefinitionHandler.getInstance().getUserDefinedIndicatorCategoryLabels();
         comboCategory = new Combo(composite, SWT.READ_ONLY);
+        GridData data = new GridData();
+        data.verticalAlignment = GridData.BEGINNING;
+        comboCategory.setLayoutData(data);
         comboCategory.setItems(categories.toArray(new String[categories.size()]));
         if (categories.size() > 0 && category == null) {
             category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
@@ -761,11 +769,65 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
                 UDIHelper.setUDICategory(definition, comboCategory.getText());
+                updateDetailList();
             }
 
         });
 
+        // ADD yyi 2009-09-23 Feature 9059
+        createDetailList(composite);
+        updateDetailList();
         return composite;
+    }
+
+    /**
+     * DOC yyi 2009-09-23 Feature 9059
+     * 
+     * @param composite
+     */
+    protected void updateDetailList() {
+        if (!"".equals(comboCategory.getText())) {
+            IndicatorCategory ic = UDIHelper.getUDICategory(definition);
+            for (TaggedValue value : ic.getTaggedValue()) {
+                if ("Purpose".equals(value.getTag())) {
+                    labelPurpose.setText(value.getValue());
+                } else if ("Description".equals(value.getTag())) {
+                    labelDescription.setText(value.getValue());
+                }
+            }
+            labelPurpose.getParent().layout();
+        }
+    }
+
+    /**
+     * DOC yyi 2009-09-23 Feature 9059
+     * 
+     * @param composite
+     */
+    private void createDetailList(Composite composite) {
+        Composite compoDetail = new Composite(composite, SWT.NONE);
+        GridData data = new GridData(GridData.FILL_BOTH);
+        data.heightHint = 100;
+        data.horizontalIndent = 20;
+        compoDetail.setLayoutData(data);
+        compoDetail.setLayout(new GridLayout(2, false));
+
+        data = new GridData(GridData.FILL_HORIZONTAL);
+
+        Label label0 = new Label(compoDetail, SWT.NONE);
+        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(label0);
+        label0.setText("Pursose:");
+
+        labelPurpose = new Label(compoDetail, SWT.WRAP | SWT.HORIZONTAL);
+        labelPurpose.setLayoutData(data);
+
+        Label label1 = new Label(compoDetail, SWT.NONE);
+        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(label1);
+        label1.setText("Description:");
+
+        labelDescription = new Label(compoDetail, SWT.WRAP | SWT.HORIZONTAL);
+        labelDescription.setLayoutData(data);
+
     }
 
     private void createDefinitionSection(Composite topCmp) {
