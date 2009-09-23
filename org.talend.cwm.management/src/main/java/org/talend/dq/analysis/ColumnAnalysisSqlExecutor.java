@@ -1014,10 +1014,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             Collection<Indicator> indicators) throws SQLException {
         boolean ok = true;
         List<Thread> runners = new ArrayList<Thread>();
+        List<ColumnAnalysisSqlParallelExecutor> columnSqlExecutor = new ArrayList<ColumnAnalysisSqlParallelExecutor>();
         try {
             for (Indicator indicator : indicators) {
                 ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(this,
                         connection, elementToIndicator, indicator);
+                columnSqlExecutor.add(columnSqlParallel);
                 Thread thread = new Thread(columnSqlParallel);
                 runners.add(thread);
                 thread.start();
@@ -1034,10 +1036,20 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     break;
                 }
             }
+            
         } catch (InterruptedException e) {
             log.error(e, e);
         }
         runners = null;
+        // ADD xqliu 2009-09-23 bug 9058
+        for (ColumnAnalysisSqlParallelExecutor executor : columnSqlExecutor) {
+            if (executor.getException() != null) {
+                columnSqlExecutor = null;
+                throw new SQLException(executor.getException().toString());
+            }
+        }
+        columnSqlExecutor = null;
+        // ~
         return ok;
     }
 
@@ -1159,7 +1171,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
 
         // give result to indicator so that it handles the results
-        return indicator.storeSqlResults(myResultSet);
+        boolean ret = false;
+        try {
+            ret = indicator.storeSqlResults(myResultSet);
+        } catch (Exception e) {
+            throw new SQLException(e.toString());
+        }
+        return ret;
     }
 
     /**

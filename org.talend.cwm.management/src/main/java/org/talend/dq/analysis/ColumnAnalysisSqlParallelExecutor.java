@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.utils.collections.MultiMapHelper;
@@ -29,8 +28,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor implements Runnable {
 
-    private static Logger log = Logger.getLogger(ColumnAnalysisSqlParallelExecutor.class);
-
     protected Connection connection;
 
     protected Map<ModelElement, List<Indicator>> elementToIndicator;
@@ -38,6 +35,16 @@ public class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor
     protected Indicator indicator;
 
     protected boolean ok = true;
+    
+    private Exception exception;
+
+    public Exception getException() {
+        return exception;
+    }
+
+    public void setException(Exception exception) {
+        this.exception = exception;
+    }
 
     private ColumnAnalysisSqlParallelExecutor() {
         super();
@@ -101,7 +108,7 @@ public class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor
                 MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
             }
         } catch (SQLException e) {
-            log.error(e, e);
+            this.setException(e);
         }
     }
 
