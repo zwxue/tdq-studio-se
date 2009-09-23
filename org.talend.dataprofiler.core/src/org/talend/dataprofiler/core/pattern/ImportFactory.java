@@ -49,6 +49,7 @@ import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.xml.TdqPropertieManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
 import com.csvreader.CsvReader;
@@ -229,7 +230,10 @@ public final class ImportFactory {
                 if (!folder.exists()) {
                     folder.create(false, true, null);
                 }
-                folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, DQStructureManager.PATTERNS_FOLDER_PROPERTY);
+                // folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+                // DQStructureManager.PATTERNS_FOLDER_PROPERTY);
+                TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.FOLDER_CLASSIFY_KEY,
+                        DQStructureManager.PATTERNS_FOLDER_PROPERTY);
                 selectionFolder = folder;
             }
         } catch (CoreException e) {
@@ -471,8 +475,10 @@ public final class ImportFactory {
                 if (!folder.exists()) {
                     folder.create(false, true, null);
                 }
-
-                folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, DQStructureManager.UDI_FOLDER_PROPERTY);
+                TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.FOLDER_CLASSIFY_KEY,
+                        DQStructureManager.UDI_FOLDER_PROPERTY);
+                // folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+                // DQStructureManager.UDI_FOLDER_PROPERTY);
                 selectionFolder = folder;
             }
         } catch (CoreException e) {

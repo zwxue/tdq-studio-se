@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * 
@@ -48,15 +49,20 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
                     libraryFolder.getFolder(DQStructureManager.PATTERNS), DQStructureManager.REGEX);
             libraryFolder.getFolder(DQStructureManager.PATTERNS).setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
                     null);
-            regexFolder
-                    .setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, DQStructureManager.PATTERNS_FOLDER_PROPERTY);
+            // regexFolder
+            // .setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // DQStructureManager.PATTERNS_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(regexFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
+                    DQStructureManager.PATTERNS_FOLDER_PROPERTY);
             IFolder patternFolder = libraryFolder.getFolder(DQStructureManager.PATTERNS);
             for (IResource resource : patternFolder.members()) {
                 if (regexFolder.getName().equals(resource.getName())) {
                     continue;
                 }
                 resource.copy(regexFolder.getFolder(resource.getName()).getFullPath(), true, null);
-                resource.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+                // resource.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+                // DQStructureManager.PATTERNS_FOLDER_PROPERTY);
+                TdqPropertieManager.getInstance().addFolderProperties(resource, DQStructureManager.FOLDER_CLASSIFY_KEY,
                         DQStructureManager.PATTERNS_FOLDER_PROPERTY);
                 resource.delete(true, null);
             }
@@ -64,27 +70,35 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
             IFolder sqlFolder = DQStructureManager.getInstance().createNewFoler(
                     libraryFolder.getFolder(DQStructureManager.PATTERNS), DQStructureManager.SQL);
 
-            sqlFolder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // sqlFolder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(sqlFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY);
-
             IFolder sqlPatternsFolder = libraryFolder.getFolder(DQStructureManager.SQL_PATTERNS);
             for (IResource resource : sqlPatternsFolder.members()) {
                 resource.copy(sqlFolder.getFolder(resource.getName()).getFullPath(), true, null);
-                resource.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+                // resource.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+                // DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY);
+
+                TdqPropertieManager.getInstance().addFolderProperties(resource, DQStructureManager.FOLDER_CLASSIFY_KEY,
                         DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY);
             }
             sqlPatternsFolder.delete(true, null);
 
             IFolder rulesFolder = DQStructureManager.getInstance().createNewFoler(libraryFolder, DQStructureManager.RULES);
             IFolder rulesSQLFolder = DQStructureManager.getInstance().createNewFoler(rulesFolder, DQStructureManager.SQL);
-            rulesSQLFolder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // rulesSQLFolder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // DQStructureManager.DQRULES_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(rulesSQLFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.DQRULES_FOLDER_PROPERTY);
-
             IFolder dqRulesFolder = libraryFolder.getFolder(DQStructureManager.DQ_RULES);
             for (IResource resource : dqRulesFolder.members()) {
                 resource.copy(rulesSQLFolder.getFolder(resource.getName()).getFullPath(), true, null);
-                resource
-                        .setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, DQStructureManager.DQRULES_FOLDER_PROPERTY);
+                // resource
+                // .setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+                // DQStructureManager.DQRULES_FOLDER_PROPERTY);
+                TdqPropertieManager.getInstance().addFolderProperties(resource,
+                        DQStructureManager.FOLDER_CLASSIFY_KEY, DQStructureManager.DQRULES_FOLDER_PROPERTY);
             }
             dqRulesFolder.delete(true, null);
 

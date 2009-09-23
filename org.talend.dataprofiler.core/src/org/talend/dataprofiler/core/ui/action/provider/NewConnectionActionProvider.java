@@ -14,12 +14,12 @@ package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * @author rli
@@ -43,15 +43,14 @@ public class NewConnectionActionProvider extends CommonActionProvider {
 
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
-            try {
-                if (DQStructureManager.DBCONNECTION_FOLDER_PROPERTY.equals(folder
-                        .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
-                    CreateConnectionAction createConnectionAction = new CreateConnectionAction(folder);
-                    menu.add(createConnectionAction);
-                    // menu.insertBefore("group.edit", createConnectionAction);
-                }
-            } catch (CoreException e) {
-                log.error(e, e);
+            // ~ MOD mzhao featur 9178,2009-09-23
+            Object folderPropertyValue = TdqPropertieManager.getInstance().getFolderPropertyValue(
+                    folder, DQStructureManager.FOLDER_CLASSIFY_KEY);
+            if (folderPropertyValue != null
+                    && DQStructureManager.DBCONNECTION_FOLDER_PROPERTY.equals(folderPropertyValue.toString())) {
+                CreateConnectionAction createConnectionAction = new CreateConnectionAction(folder);
+                menu.add(createConnectionAction);
+                // menu.insertBefore("group.edit", createConnectionAction);
             }
         }
     }

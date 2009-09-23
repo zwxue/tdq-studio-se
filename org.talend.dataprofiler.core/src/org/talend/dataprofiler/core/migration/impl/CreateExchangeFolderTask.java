@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -40,9 +41,11 @@ public class CreateExchangeFolderTask extends AbstractMigrationTask {
 			DQStructureManager manager = DQStructureManager.getInstance();
 			IFolder createNewFoler = manager.createNewFoler(ResourceManager
 					.getLibrariesFolder(), DQStructureManager.EXCHANGE);
-			createNewFoler.setPersistentProperty(
-					DQStructureManager.FOLDER_CLASSIFY_KEY,
-					DQStructureManager.EXCHANGE_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(
+            // DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // DQStructureManager.EXCHANGE_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
+                    DQStructureManager.EXCHANGE_FOLDER_PROPERTY);
 		} catch (Exception e) {
 			log.error(e, e);
 			return false;

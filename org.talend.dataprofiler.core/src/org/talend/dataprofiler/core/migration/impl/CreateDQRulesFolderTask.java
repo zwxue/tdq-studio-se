@@ -21,6 +21,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -41,9 +42,11 @@ public class CreateDQRulesFolderTask extends AbstractMigrationTask {
 			DQStructureManager manager = DQStructureManager.getInstance();
 			IFolder createNewFoler = manager.createNewFoler(ResourceManager
 					.getLibrariesFolder(), DQStructureManager.DQ_RULES);
-			createNewFoler.setPersistentProperty(
-					DQStructureManager.FOLDER_CLASSIFY_KEY,
-					DQStructureManager.DQRULES_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(
+            // DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // DQStructureManager.DQRULES_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
+                    DQStructureManager.DQRULES_FOLDER_PROPERTY);
 			manager.copyFilesToFolder(CorePlugin.getDefault(),
 					DQStructureManager.DQ_RULES_PATH, true, createNewFoler,
 					null);

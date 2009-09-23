@@ -21,6 +21,7 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -57,12 +58,17 @@ public class UpdateProjectPersistentPropertyTask extends AbstractMigrationTask {
 		IFolder folder;
 		for (String folderName : folderNames) {
 			folder = ResourceManager.getRootProject().getFolder(folderName);
-			if (folder != null
-					&& folder
-							.getPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY) == null) {
-				folder.setPersistentProperty(
-						DQStructureManager.PROJECT_TDQ_KEY,
-						DQStructureManager.PROJECT_TDQ_PROPERTY);
+			Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
+                    DQStructureManager.PROJECT_TDQ_KEY);
+            if (folder != null
+					&& (persistentProperty == null || persistentProperty.toString().trim().equals(""))) {
+                
+                TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.PROJECT_TDQ_KEY,
+                        DQStructureManager.PROJECT_TDQ_PROPERTY);
+
+                // folder.setPersistentProperty(
+                // DQStructureManager.PROJECT_TDQ_KEY,
+                // DQStructureManager.PROJECT_TDQ_PROPERTY);
 			}
 		}
 	}

@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -22,10 +21,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
+import org.talend.resource.xml.TdqPropertieManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -61,12 +60,10 @@ public class CreateUserFolderProvider extends CommonActionProvider {
                 return;
             }
             currentSelection = (IFolder) obj;
-            try {
-                if (currentSelection.getPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY) != null) {
-                    return;
-                }
-            } catch (CoreException e) {
-                ExceptionHandler.process(e);
+            Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(currentSelection,
+                    DQStructureManager.NO_SUBFOLDER_KEY);
+            if (persistentProperty != null && !persistentProperty.toString().trim().equals("")) {
+                return;
             }
         }
         CreateUserFolderAction createSubFolderAction = new CreateUserFolderAction();

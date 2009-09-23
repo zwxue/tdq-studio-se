@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.pattern.actions.ExportPatternsAction;
 import org.talend.dataprofiler.core.pattern.actions.ImportPatternsAction;
 import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -54,8 +55,10 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
                 try {
                     IFolder folder = (IFolder) obj;
                     ExpressionType type = null;
-                    String persistentProperty = folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY);
-                    if (DQStructureManager.PATTERNS_FOLDER_PROPERTY.equals(persistentProperty)) {
+                    Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
+                            DQStructureManager.FOLDER_CLASSIFY_KEY);
+                    if (persistentProperty != null
+                            && DQStructureManager.PATTERNS_FOLDER_PROPERTY.equals(persistentProperty.toString())) {
                         type = ExpressionType.REGEXP;
                     } else if (DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY.equals(persistentProperty)) {
                         type = ExpressionType.SQL_LIKE;

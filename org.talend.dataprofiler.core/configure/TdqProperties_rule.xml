@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+ <!DOCTYPE digester-rules 
+  PUBLIC "-//Jakarta Apache //DTD digester-rules XML V1.0//EN" 
+    "http://jakarta.apache.org/commons/digester/dtds/digester-rules.dtd">
+<digester-rules>
+	<pattern value="TdqProperties">
+		<pattern value="TdqFolderProperties">
+			<object-create-rule classname="org.talend.resource.xml.TdqFolderProperties"/>
+			<set-next-rule methodname="add"/>
+			<pattern value="folder">
+				<call-method-rule methodname="setFolder" paramcount="0"/>
+			</pattern>
+			<pattern value="properties">
+				<pattern value="entry">
+					<call-method-rule methodname="setProperties" paramcount="2"/>
+					<pattern value="key">
+						<call-param-rule paramnumber="0"/>
+					</pattern>
+					<pattern value="value">
+						<call-param-rule paramnumber="1"/>
+					</pattern>					
+				</pattern>
+			</pattern>
+		</pattern>
+
+		<pattern value="TdqDatabaseProperties">
+			<object-create-rule classname="org.talend.resource.xml.TdqDatabaseProperties"/>
+			<set-next-rule methodname="add"/>
+			<pattern value="properties">
+				<pattern value="entry">
+					<call-method-rule methodname="setProperties" paramcount="2"/>
+					<pattern value="key">
+						<call-param-rule paramnumber="0"/>
+					</pattern>
+					<pattern value="value">
+						<call-param-rule paramnumber="1"/>
+					</pattern>					
+				</pattern>
+			</pattern>
+		</pattern>		
+	</pattern>
+
+</digester-rules>

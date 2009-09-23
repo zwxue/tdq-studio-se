@@ -14,12 +14,12 @@ package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * @author rli
@@ -39,14 +39,11 @@ public class NewAnalysisActionProvider extends CommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
-            try {
-                if (DQStructureManager.ANALYSIS_FOLDER_PROPERTY.equals(folder
-                        .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
-                    CreateNewAnalysisAction createAnalysisAction = new CreateNewAnalysisAction(folder);
-                    menu.add(createAnalysisAction);
-                }
-            } catch (CoreException e) {
-                log.error(e, e);
+            Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
+                    DQStructureManager.FOLDER_CLASSIFY_KEY);
+            if (persistentProperty != null && DQStructureManager.ANALYSIS_FOLDER_PROPERTY.equals(persistentProperty.toString())) {
+                CreateNewAnalysisAction createAnalysisAction = new CreateNewAnalysisAction(folder);
+                menu.add(createAnalysisAction);
             }
         }
     }

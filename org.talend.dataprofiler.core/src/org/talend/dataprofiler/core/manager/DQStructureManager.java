@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IContainer;
@@ -50,6 +51,7 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataquality.PluginConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * Create the folder structure for the DQ Reponsitory view.
@@ -69,6 +71,7 @@ public final class DQStructureManager {
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
     private static final String EXCHANGE_PATH = "/exchange";//$NON-NLS-1$
+    private static final String CONFIG_PATH = "/configure";//$NON-NLS-1$
 
     public static final String JRXML_REPORT_FOLDER = "JRXML Template";//$NON-NLS-1$
 
@@ -166,6 +169,7 @@ public final class DQStructureManager {
 
     public boolean createDQStructure() {
 
+        
         Plugin plugin = CorePlugin.getDefault();
         try {
 
@@ -174,12 +178,18 @@ public final class DQStructureManager {
                 rootProject = createNewProject(ResourceManager.getRootProjectName());
             }
 
+            //MOD mzhao feature 9178, copy propreties file to workspace root.
+            copyConfigFiles(rootProject, plugin);
+            
+            
             // create "Data Profiling" project
             IFolder dataProfilingFolder = this.createNewFoler(rootProject, ResourceManager.DATA_PROFILING_FOLDER_NAME);
             IFolder createNewFoler = this.createNewFoler(dataProfilingFolder, ANALYSIS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, ANALYSIS_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, ANALYSIS_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY, ANALYSIS_FOLDER_PROPERTY);
             createNewFoler = this.createNewFoler(dataProfilingFolder, REPORTS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, REPORT_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, REPORT_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY, REPORT_FOLDER_PROPERTY);
 
             // create "Libraries" project
             IFolder librariesFoler = this.createNewFoler(rootProject, ResourceManager.LIBRARIES_FOLDER_NAME);
@@ -187,7 +197,8 @@ public final class DQStructureManager {
             IFolder patternFoler = this.createNewFoler(librariesFoler, PATTERNS);
             createNewFoler = this.createNewFoler(patternFoler, REGEX);
 
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, PATTERNS_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, PATTERNS_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY, PATTERNS_FOLDER_PROPERTY);
             // check version File
             WorkspaceVersionHelper.storeVersion();
             // Copy the .pattern files from
@@ -197,15 +208,17 @@ public final class DQStructureManager {
             // ~ MOD mzhao 2009-07-01 feature 7482.
             createNewFoler = this.createNewFoler(patternFoler, SQL);
             // ~
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SQLPATTERNS_FOLDER_PROPERTY);
-
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SQLPATTERNS_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY,
+                    SQLPATTERNS_FOLDER_PROPERTY);
             // Copy the internet folder from
             // 'org.talend.dataprofiler.core/sql_like' to folder
             // "Libraries/SQL Patterns".
             this.copyFilesToFolder(plugin, SQL_LIKE_PATH, true, createNewFoler, null);
             createNewFoler = this.createNewFoler(librariesFoler, SOURCE_FILES);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SOURCEFILES_FOLDER_PROPERTY);
-
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SOURCEFILES_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY,
+                    SOURCEFILES_FOLDER_PROPERTY);
             // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to
             // folder "Libraries/Source Files".
             this.copyFilesToFolder(plugin, DEMO_PATH, true, createNewFoler, null);
@@ -213,7 +226,8 @@ public final class DQStructureManager {
             createNewFoler = this.createNewFoler(librariesFoler, RULES);
 
             createNewFoler = this.createNewFoler(createNewFoler, SQL);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DQRULES_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DQRULES_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY, DQRULES_FOLDER_PROPERTY);
             // Copy the .sql files from 'org.talend.dataprofiler.core/dqrules'
             // to folder "Libraries/DQ Rules".
             this.copyFilesToFolder(plugin, DQ_RULES_PATH, true, createNewFoler, null);
@@ -221,24 +235,42 @@ public final class DQStructureManager {
 
             // create exchange folder
             createNewFoler = this.createNewFoler(librariesFoler, EXCHANGE);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, EXCHANGE_FOLDER_PROPERTY);
-            createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY, DQStructureManager.NO_SUBFOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, NO_SUBFOLDER_KEY, NO_SUBFOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY, EXCHANGE_FOLDER_PROPERTY);
+            // TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY,
+            // EXCHANGE_FOLDER_PROPERTY);
+            // TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, NO_SUBFOLDER_KEY,
+            // NO_SUBFOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, EXCHANGE_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY,
+            // DQStructureManager.NO_SUBFOLDER_PROPERTY);
 
             // create indicators folder
             createNewFoler = this.createNewFoler(librariesFoler, INDICATORS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, INDICATORS_FOLDER_PROPERTY);
-            createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY, DQStructureManager.NO_SUBFOLDER_PROPERTY);
+            TdqPropertieManager.getInstance()
+                    .addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY, INDICATORS_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, NO_SUBFOLDER_KEY, NO_SUBFOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, INDICATORS_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY,
+            // DQStructureManager.NO_SUBFOLDER_PROPERTY);
 
             // create user defined indicators folder
             createNewFoler = this.createNewFoler(librariesFoler.getFolder(INDICATORS), USER_DEFINED_INDICATORS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, UDI_FOLDER_PROPERTY);
+            
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY, UDI_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, UDI_FOLDER_PROPERTY);
 
             // MOD mzhao 2009-04-07, create jrxml folder.
             checkJRXMLFolderExist();
             // create "Metadata" project
             IFolder metadataFolder = this.createNewFoler(rootProject, ResourceManager.METADATA_FOLDER_NAME);
             createNewFoler = this.createNewFoler(metadataFolder, PluginConstant.DB_CONNECTIONS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DBCONNECTION_FOLDER_PROPERTY);
+            // ~ MOD mzhao featur 9178,2009-09-23
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY,
+                    DBCONNECTION_FOLDER_PROPERTY);
+            
+            // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DBCONNECTION_FOLDER_PROPERTY);
+            
             // ~
         } catch (Exception ex) {
             ExceptionHandler.process(ex);
@@ -256,8 +288,14 @@ public final class DQStructureManager {
                 folder.create(false, true, null);
             }
             folder.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
-            folder.setPersistentProperty(DQStructureManager.FOLDER_READONLY_KEY, DQStructureManager.FOLDER_READONLY_PROPERTY);
-            folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, JRXML_FOLDER_PROPERTY);
+            // folder.setPersistentProperty(DQStructureManager.FOLDER_READONLY_KEY,
+            // DQStructureManager.FOLDER_READONLY_PROPERTY);
+            // folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, JRXML_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.FOLDER_READONLY_KEY,
+                    DQStructureManager.FOLDER_READONLY_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.FOLDER_CLASSIFY_KEY,
+                    DQStructureManager.JRXML_FOLDER_PROPERTY);            
+            
         } catch (CoreException coreExp) {
             ExceptionHandler.process(coreExp);
         }
@@ -334,6 +372,7 @@ public final class DQStructureManager {
             desFolder.create(false, true, null);
         }
         desFolder.setPersistentProperty(FOLDER_READONLY_KEY, FOLDER_READONLY_PROPERTY);
+        TdqPropertieManager.getInstance().addFolderProperties(desFolder, FOLDER_READONLY_KEY, FOLDER_READONLY_PROPERTY);
         return desFolder;
     }
 
@@ -381,7 +420,10 @@ public final class DQStructureManager {
                 if (!folder.exists()) {
                     folder.create(true, true, null);
                 }
-                folder.setPersistentProperty(FOLDER_CLASSIFY_KEY, desFolder.getPersistentProperty(FOLDER_CLASSIFY_KEY));
+                // folder.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+                // desFolder.getPersistentProperty(FOLDER_CLASSIFY_KEY));
+                TdqPropertieManager.getInstance().addFolderProperties(folder, FOLDER_CLASSIFY_KEY,
+                        TdqPropertieManager.getInstance().getFolderPropertyValue(desFolder, FOLDER_CLASSIFY_KEY).toString());
                 copyFilesToFolder(plugin, currentPath, recurse, folder, suffix);
                 continue;
             }
@@ -409,6 +451,31 @@ public final class DQStructureManager {
         file.create(inputStream, false, null);
     }
 
+    private void copyConfigFiles(IProject project, Plugin plugin) {
+        Enumeration paths = null;
+        paths = plugin.getBundle().getEntryPaths(CONFIG_PATH);
+        if (paths == null) {
+            return;
+        }
+        while (paths.hasMoreElements()) {
+            String nextElement = (String) paths.nextElement();
+            String currentPath = "/" + nextElement; //$NON-NLS-1$
+            URL resourceURL = plugin.getBundle().getEntry(currentPath);
+            URL fileURL = null;
+            File srcFile = null;
+            File destFile = null;
+            try {
+                fileURL = FileLocator.toFileURL(resourceURL);
+                srcFile = new File(fileURL.getFile());
+                destFile = new File(project.getLocation().toOSString() + File.separator + srcFile.getName());
+                FileUtils.copyFile(srcFile, destFile);
+            } catch (IOException e) {
+                log.error(e, e);
+            }
+            
+
+        }
+    }
     public boolean isPathValid(IPath path, String label) {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
         IFolder newFolder = folder.getFolder(label);

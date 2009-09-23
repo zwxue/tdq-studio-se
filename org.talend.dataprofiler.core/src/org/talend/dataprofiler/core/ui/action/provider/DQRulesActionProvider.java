@@ -26,6 +26,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteDQRuleAction;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -49,8 +50,11 @@ public class DQRulesActionProvider extends CommonActionProvider {
             if (obj instanceof IFolder) {
                 try {
                     IFolder folder = (IFolder) obj;
-                    String persistentProperty = folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY);
-                    if (DQStructureManager.DQRULES_FOLDER_PROPERTY.equals(persistentProperty)) {
+                    
+                    Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
+                            DQStructureManager.FOLDER_CLASSIFY_KEY);
+                    if (persistentProperty != null
+                            && DQStructureManager.DQRULES_FOLDER_PROPERTY.equals(persistentProperty.toString())) {
                         menu.add(new CreateDQRulesAction(folder));
                     }
                 } catch (Exception e) {

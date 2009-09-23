@@ -15,10 +15,9 @@ package org.talend.dataprofiler.core.ui.views.filters;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -57,12 +56,9 @@ public class FolderObjFilter extends AbstractViewerFilter {
                     return false;
                 }
             } else if (IResource.PROJECT == res.getType()) {
-                try {
-                    String persistentProperty = res.getPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY);
-                    return persistentProperty != null;
-                } catch (CoreException e) {
-                    ExceptionHandler.process(e);
-                }
+                    Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(res,
+                            DQStructureManager.PROJECT_TDQ_KEY);
+                    return persistentProperty != null && !persistentProperty.toString().trim().equals("");
             } else {
                 return true;
             }

@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -34,12 +35,20 @@ public class CreateUserDefIndicatorFolderTask extends AbstractMigrationTask {
             
             // creator Indicators
             IFolder createNewFoler = manager.createNewFoler(ResourceManager.getLibrariesFolder(), DQStructureManager.INDICATORS);
-            createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // DQStructureManager.INDICATORS_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.INDICATORS_FOLDER_PROPERTY);
-            createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY, DQStructureManager.NO_SUBFOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.NO_SUBFOLDER_KEY,
+                    DQStructureManager.NO_SUBFOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY,
+            // DQStructureManager.NO_SUBFOLDER_PROPERTY);
             // create User Defined Indicators
             createNewFoler = manager.createNewFoler(createNewFoler, DQStructureManager.USER_DEFINED_INDICATORS);
-            createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, DQStructureManager.UDI_FOLDER_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
+                    DQStructureManager.UDI_FOLDER_PROPERTY);
+            // createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
+            // DQStructureManager.UDI_FOLDER_PROPERTY);
 
         } catch (Exception e) {
             log.error(e, e);
