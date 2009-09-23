@@ -816,7 +816,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         Label label0 = new Label(compoDetail, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(label0);
-        label0.setText("Pursose:");
+        label0.setText("Purpose:");
 
         labelPurpose = new Label(compoDetail, SWT.WRAP | SWT.HORIZONTAL);
         labelPurpose.setLayoutData(data);
