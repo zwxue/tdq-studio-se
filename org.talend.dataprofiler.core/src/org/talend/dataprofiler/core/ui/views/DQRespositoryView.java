@@ -109,7 +109,7 @@ public class DQRespositoryView extends CommonNavigator {
     private TreeViewer commonViewer = null;
 
     private ITreeContentProvider provider = null;
-
+    
     public DQRespositoryView() {
         super();
 
@@ -181,8 +181,8 @@ public class DQRespositoryView extends CommonNavigator {
         if (memento == null) {
             setLinkingEnabled(false);
         }
-
-        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
+        
+        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction(this));
     }
 
     /**
@@ -498,18 +498,21 @@ public class DQRespositoryView extends CommonNavigator {
      * DOC bZhou DQRespositoryView class global comment. Detailled comment
      */
     class RefreshDQReponsitoryViewAction extends RefreshAction {
-
-        public RefreshDQReponsitoryViewAction() {
+        
+        private DQRespositoryView dqRespositoryView;
+        
+        public RefreshDQReponsitoryViewAction(DQRespositoryView dqRespositoryView) {
             super(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
             setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_SPACE));
+            this.dqRespositoryView = dqRespositoryView;
         }
         
         @Override
         public void run() {
             ProxyRepositoryManager.getInstance().refresh();
+            dqRespositoryView.getCommonViewer().refresh();
             super.run();
         }
     }
-    
     
 }
