@@ -80,7 +80,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 IndicatorDefinition findUDI = UDIResourceFileHelper.getInstance().findUDI(file);
                 ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
                 if (findUDI != null) {
-                    boolean validStatus = UDIHelper.verifyExpression(findUDI);
+                    boolean validStatus = TaggedValueHelper.getValidStatus(findUDI) | UDIHelper.verifyExpression(findUDI);
                     if (!validStatus) {
                         ImageDescriptor warnImg = ImageLib.getImageDescriptor(ImageLib.WARN_OVR);
                         PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_WARN_TSK);
