@@ -114,9 +114,8 @@ public abstract class DataExplorer implements IDataExplorer {
      * @return
      */
     protected String getFromClause() {
-        String lang = dbmsLanguage.getDbmsName();
-        Expression instantiatedExpression = this.indicator.getInstantiatedExpressions(lang);
-        String instantiatedSQL = instantiatedExpression.getBody();
+        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
+        String instantiatedSQL = instantiatedExpression == null ? null : instantiatedExpression.getBody();
         if (instantiatedSQL == null) {
             log.error("No instantiated SQL expression found for " + indicator.getName() + " in analysis " + analysis.getName());
             return null;

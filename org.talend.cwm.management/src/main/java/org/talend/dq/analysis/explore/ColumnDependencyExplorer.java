@@ -32,12 +32,13 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnDependencyExplorer extends DataExplorer {
 
-    private static final String INVALID_GENERIC_SQL = "SELECT DISTINCT A , COUNT(*) FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM <%=__TABLE_NAME__%> C ) T GROUP BY A HAVING COUNT(*) > 1";
-
-    private static final String VALID_GENERIC_SQL = "SELECT DISTINCT A , COUNT(*) FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM <%=__TABLE_NAME__%> C ) T GROUP BY A HAVING COUNT(*) = 1";
 
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
+        map.put("View valid values", this.getValidValuesStatement());
+        map.put("View invalid values", this.getInvalidValuesStatement());
+        map.put("View detailed invalid values", this.getDetailedInvalidValuesStatement());
+        map.put("View detailed valid values", this.getDetailedValidValuesStatement());
         map.put(Messages.getString("ColumnDependencyExplorer.viewValidRows"), getValidRowsStatement()); //$NON-NLS-1$
         map.put(Messages.getString("ColumnDependencyExplorer.viewInvalidRows"), getInvalidRowsStatement()); //$NON-NLS-1$
         return map;
@@ -49,16 +50,33 @@ public class ColumnDependencyExplorer extends DataExplorer {
      * @return
      */
     private String getInvalidRowsStatement() {
-        return getStatement(INVALID_GENERIC_SQL);
+        return getStatement(dbmsLanguage.getFDGenericInvalidRows());
     }
 
+    private String getDetailedInvalidValuesStatement() {
+        return getStatement(dbmsLanguage.getFDGenericInvalidDetailedValues());
+    }
+
+    private String getDetailedValidValuesStatement() {
+        return getStatement(dbmsLanguage.getFDGenericValidDetailedValues());
+    }
+    
+    private String getInvalidValuesStatement() {
+        return getStatement(dbmsLanguage.getFDGenericInvalidValues());
+    }
+
+    private String getValidValuesStatement() {
+        return getStatement(dbmsLanguage.getFDGenericValidValues());
+    }
+
+    
     /**
      * DOC xqliu Comment method "getValidRowsStatement".
      * 
      * @return
      */
     private String getValidRowsStatement() {
-        return getStatement(VALID_GENERIC_SQL);
+        return getStatement(dbmsLanguage.getFDGenericValidRows());
     }
 
     /**
