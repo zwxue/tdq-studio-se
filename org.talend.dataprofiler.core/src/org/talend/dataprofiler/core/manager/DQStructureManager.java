@@ -467,6 +467,9 @@ public final class DQStructureManager {
             try {
                 fileURL = FileLocator.toFileURL(resourceURL);
                 srcFile = new File(fileURL.getFile());
+                if (!srcFile.getName().endsWith("xml")) {
+                    continue;
+                }
                 destFile = new File(project.getLocation().toOSString() + File.separator + srcFile.getName());
                 FileUtils.copyFile(srcFile, destFile);
             } catch (IOException e) {
