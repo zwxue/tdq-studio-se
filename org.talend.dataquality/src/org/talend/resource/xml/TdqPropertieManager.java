@@ -246,7 +246,7 @@ public final class TdqPropertieManager {
         return file.getLocationURI().toURL();
     }
 
-    private static final String PROPERTIES_FILE = "TdqProperties.xml";
+    public static final String PROPERTIES_FILE = ".TdqProperties.xml";
 
-    private static final String PROPERTIES_RULE_FILE = "TdqProperties_rule.xml";
+    public static final String PROPERTIES_RULE_FILE = ".TdqProperties_rule.xml";
 }
