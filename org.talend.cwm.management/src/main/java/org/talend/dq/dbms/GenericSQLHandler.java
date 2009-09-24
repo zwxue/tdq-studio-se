@@ -39,9 +39,9 @@ public class GenericSQLHandler {
 
     private static final String LIMIT_ROW_PLUS_OFFSET = "<%=__LIMIT_ROW_PLUS_OFFSET__%>"; //$NON-NLS-1$
    
-    private static final String COLUMN_NAMES_A = "<%=__COLUMN_NAME_A__%>";
+    public static final String COLUMN_NAMES_A = "<%=__COLUMN_NAME_A__%>";
 
-    private static final String COLUMN_NAMES_B = "<%=__COLUMN_NAME_B__%>";
+    public static final String COLUMN_NAMES_B = "<%=__COLUMN_NAME_B__%>";
  
     private final String originalSQL;
 

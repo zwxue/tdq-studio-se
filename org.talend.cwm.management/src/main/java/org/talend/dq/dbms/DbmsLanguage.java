@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -440,6 +441,10 @@ public class DbmsLanguage {
         return " SELECT * FROM " + table + where() + column + in() + "( SELECT " + column + from() + "(" + subquery //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 + ") AS mysubquery )"; //$NON-NLS-1$
     }
+    
+    public String selectColumnsFromTable(List<String> columns, String table) {
+        return " SELECT " + StringUtils.join(columns.iterator(), ',') + from() + table;
+    }
 
     public String in() {
         return " IN "; //$NON-NLS-1$
@@ -831,6 +836,88 @@ public class DbmsLanguage {
     }
 
     /**
+     * Method "getSelectOrderedAggregate".
+     * 
+     * @param distinct whether to add distinct keyword in select statement
+     * @param columns the list of columns to select
+     * @param table the table
+     * @param whereClause the where clause
+     * @param groupByIndexes the indexes of the columns on which the aggregation is done
+     * @param orderByIndexes the indexes of the columns on which the order is computed
+     * @return the SQL statement
+     */
+    public String getSelectOrderedAggregate(boolean distinct, List<String> columns, String table, String whereClause,
+            List<Integer> groupByIndexes, String havingClause, List<Integer> orderByIndexes) { 
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT ");
+        builder.append(StringUtils.join(columns.iterator(), ','));
+        builder.append(", COUNT(*) ");
+        builder.append(from());
+        builder.append(table);
+        
+        if (whereClause != null) {
+            builder.append(whereClause);
+        }
+
+        List<String> groupByColumns = new ArrayList<String>();
+        for (int i = 0; i < groupByIndexes.size(); i++) {
+            groupByColumns.add(columns.get(i));
+        }
+        if (!groupByColumns.isEmpty()) {
+            builder.append(" GROUP BY ");
+            builder.append(StringUtils.join(groupByColumns.iterator(), ','));
+        }
+
+        if (havingClause != null) {
+            builder.append(havingClause);
+        }
+        
+        List<String> orderByColumns = new ArrayList<String>();
+        for (int i = 0; i < orderByIndexes.size(); i++) {
+            orderByColumns.add(columns.get(i));
+        }
+        if (!orderByColumns.isEmpty()) {
+            builder.append(" ORDER BY ");
+            builder.append(StringUtils.join(orderByColumns.iterator(), ','));
+        }
+        
+        return builder.toString();
+    }
+    
+    public String orderBy(List<String> columns, boolean ascending) {
+        return orderBy() + StringUtils.join(columns.iterator(), ',') + (ascending ? " ASC " : " DESC ");
+    }
+
+    /**
+     * Method "getGenericInvalidDetailedValues".
+     * 
+     * @return the generic query to get the invalid detailed values in the functional dependency analysis
+     */
+    public String getFDGenericInvalidDetailedValues() {
+        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+    }
+
+    public String getFDGenericValidDetailedValues() {
+        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+    }
+
+    public String getFDGenericInvalidValues() {
+        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+    }
+
+    public String getFDGenericValidValues() {
+        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+    }
+
+    public String getFDGenericValidRows() {
+        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+    }
+
+    public String getFDGenericInvalidRows() {
+        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+    }
+
+    /**
      * Method "getInstantiatedExpression".
      * 
      * @param indicator
@@ -970,22 +1057,53 @@ public class DbmsLanguage {
         if (hasTableAliasA && !hasAlreadyOneJoin) {
             builder.append(surroundWithSpaces(tableAliasA));
         }
+        
+        join(builder, quote(tableA), tableAliasA, quote(columnAName), hasTableAliasA, quote(tableB), tableAliasB,
+                quote(columnBName), hasTableAliasB, operator);
+    }
+
+    /**
+     * Method "innerJoin".
+     * 
+     * @param tableA
+     * @param tableAliasA
+     * @param columnAName
+     * @param hasTableAliasA
+     * @param tableB
+     * @param tableAliasB
+     * @param columnBName
+     * @param hasTableAliasB
+     * @return "JOIN tableB tableAliasB ON (tableAliasA.columnAName = tableAliasB.columnBName)
+     */
+    public String innerJoin(String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA, String tableB,
+            String tableAliasB, String columnBName, boolean hasTableAliasB) {
+        StringBuilder builder = new StringBuilder();
+        return this.join(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName,
+                hasTableAliasB, this
+                .equal());
+    }
+
+    private String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
+            String tableB,
+            String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
+
         builder.append(join());
 
         // tableB tableAliasB ON
-        builder.append(surroundWithSpaces(quote(tableB)));
+        builder.append(surroundWithSpaces(tableB));
         if (hasTableAliasB) {
             builder.append(surroundWithSpaces(tableAliasB));
         }
         builder.append(" ON ");
 
-        String tA = hasTableAliasA ? tableAliasA : quote(tableA);
-        String tB = hasTableAliasB ? tableAliasB : quote(tableB);
-        String cA = quote(columnAName);
-        String cB = quote(columnBName);
+        String tA = hasTableAliasA ? tableAliasA : tableA;
+        String tB = hasTableAliasB ? tableAliasB : tableB;
+        String cA = columnAName;
+        String cB = columnBName;
         
         
         createJoinClause(builder, tA, cA, tB, cB, operator);
+        return builder.toString();
     }
 
     public String join() {
