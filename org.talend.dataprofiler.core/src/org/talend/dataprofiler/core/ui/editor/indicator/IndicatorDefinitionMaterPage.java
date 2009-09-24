@@ -805,7 +805,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         data.horizontalIndent = 20;
         compoDetail.setLayoutData(data);
 
-        Font font0 = new Font(null, "Arial", 9, SWT.BOLD);
+        Font font0 = new Font(null, "Arial", 9, SWT.None);
         data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.grabExcessHorizontalSpace = true;
