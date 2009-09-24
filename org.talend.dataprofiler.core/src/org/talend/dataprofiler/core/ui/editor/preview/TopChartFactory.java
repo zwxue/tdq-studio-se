@@ -31,6 +31,7 @@ import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CrosshairState;
@@ -66,6 +67,11 @@ import orgomg.cwm.resource.relational.Column;
  * Chart factory adapted for TOP.
  */
 public final class TopChartFactory {
+
+    /**
+     * New format string. ADD yyi 2009-09-24 9243
+     * */
+    public static final String NEW_TOOL_TIP_FORMAT_STRING = "{0} = {2}";
 
     private TopChartFactory() {
     }
@@ -351,13 +357,16 @@ public final class TopChartFactory {
         plot.setRangeGridlinesVisible(true);
 
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
-
         renderer.setBaseItemLabelsVisible(true);
         renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer.setItemMargin(0.2);
         renderer.setBase(0.04);
+        // ADD yyi 2009-09-24 9243
+        renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat
+                .getInstance()));
+
         // plot.setForegroundAlpha(0.50f);
 
         // CategoryAxis domainAxis = plot.getDomainAxis();
