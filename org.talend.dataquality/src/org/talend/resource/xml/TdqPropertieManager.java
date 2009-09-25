@@ -30,6 +30,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.QualifiedName;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.resource.ResourceManager;
@@ -217,6 +219,17 @@ public final class TdqPropertieManager {
         // This example will do no more writing so close the writer now.
         outputWriter.close();
 
+        refreshFile(PROPERTIES_FILE);
+        refreshFile(PROPERTIES_RULE_FILE);
+    }
+
+    private void refreshFile(String fileName) {
+        try {
+            IFile iFile = WorkspaceUtils.fileToIFile(getPropertiesFile(fileName));
+            iFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+        } catch (CoreException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private void parse(Object parseObj) throws Exception {
