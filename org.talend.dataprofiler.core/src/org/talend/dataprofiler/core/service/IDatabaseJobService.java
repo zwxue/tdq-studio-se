@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.service;
 
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import orgomg.cwm.resource.relational.Column;
 
@@ -33,4 +34,11 @@ public interface IDatabaseJobService extends IJobService {
      * @param column
      */
     public void setSelectedColumn(Column column);
+
+    /**
+     * DOC bZhou Comment method "setAnalysis".
+     * 
+     * @param analysis
+     */
+    public void setAnalysis(Analysis analysis);
 }

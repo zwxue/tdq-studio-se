@@ -158,6 +158,7 @@ public final class ChartTableFactory {
                                                 DBConnectionParameter parameter = buildParameter(dataManager);
                                                 service.setConnectionParameter(parameter);
                                                 service.setSelectedColumn(column);
+                                                service.setAnalysis(analysis);
                                                 service.executeJob();
                                             }
                                         } catch (Exception e2) {
