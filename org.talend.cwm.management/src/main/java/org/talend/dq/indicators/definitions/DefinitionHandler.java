@@ -926,4 +926,8 @@ public final class DefinitionHandler {
     public IFile getTalendDefinitionFile() {
         return ResourceManager.getLibrariesFolder().getFile(FILENAME);
     }
+
+    public void reload() {
+        instance = null;
+    }
 }

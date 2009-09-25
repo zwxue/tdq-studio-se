@@ -86,6 +86,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
@@ -293,6 +294,9 @@ public class DQRespositoryView extends CommonNavigator {
                     // with a double-click.
                     if (obj instanceof IndicatorDefinition) {
                         IndicatorDefinition indicatorDefinition = (IndicatorDefinition) obj;
+                        // reload object
+                        indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(
+                                indicatorDefinition.getLabel());
                         IndicatorEditorInput input = new IndicatorEditorInput(indicatorDefinition);
                         try {
                             CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,

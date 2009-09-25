@@ -50,7 +50,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
 
     private static Map<IndicatorCategory, List<IndicatorDefinition>> categoriesIDMaps;
     
-    public static Map<IndicatorCategory, List<IndicatorDefinition>> getCategoriesIDMaps() {
+    private static Map<IndicatorCategory, List<IndicatorDefinition>> getCategoriesIDMaps() {
         if (categoriesIDMaps == null) {
             categoriesIDMaps = buildCategories();
         }
@@ -98,11 +98,11 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
         return shouldNotIncludeIndicatorDefinitionUuidList;
     }
 
-    private static List<IndicatorDefinition> showIndicatorDefinitions;
+    // private static List<IndicatorDefinition> showIndicatorDefinitions;
 
-    public static List<IndicatorDefinition> getShowIndicatorsDefinitions() {
-        if (showIndicatorDefinitions == null) {
-            showIndicatorDefinitions = new ArrayList<IndicatorDefinition>();
+    private static List<IndicatorDefinition> getShowIndicatorsDefinitions() {
+        // if (showIndicatorDefinitions == null) {
+        ArrayList<IndicatorDefinition> showIndicatorDefinitions = new ArrayList<IndicatorDefinition>();
 
             EList<IndicatorDefinition> indicatorDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions()
                     .getIndicatorDefinitions();
@@ -115,7 +115,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
                 }
             }
 
-        }
+        // }
         return showIndicatorDefinitions;
     }
 
