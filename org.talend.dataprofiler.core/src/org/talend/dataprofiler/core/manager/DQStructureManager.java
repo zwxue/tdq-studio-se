@@ -347,7 +347,8 @@ public final class DQStructureManager {
         if (!newProjectHandle.exists()) {
             ProgressUI.popProgressDialog(op);
         }
-        newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
+        // newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
+        TdqPropertieManager.getInstance().addFolderProperties(newProjectHandle, PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
         return newProjectHandle;
     }
 
@@ -371,7 +372,7 @@ public final class DQStructureManager {
         if (!desFolder.exists()) {
             desFolder.create(false, true, null);
         }
-        desFolder.setPersistentProperty(FOLDER_READONLY_KEY, FOLDER_READONLY_PROPERTY);
+        // desFolder.setPersistentProperty(FOLDER_READONLY_KEY, FOLDER_READONLY_PROPERTY);
         TdqPropertieManager.getInstance().addFolderProperties(desFolder, FOLDER_READONLY_KEY, FOLDER_READONLY_PROPERTY);
         return desFolder;
     }

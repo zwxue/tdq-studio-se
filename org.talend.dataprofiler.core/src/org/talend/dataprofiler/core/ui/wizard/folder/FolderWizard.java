@@ -78,7 +78,8 @@ public class FolderWizard extends Wizard {
                 Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(newFolder,
                         DQStructureManager.FOLDER_CLASSIFY_KEY);
                 if (persistentProperty != null) {
-                    newFolder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, persistentProperty.toString());
+                    TdqPropertieManager.getInstance().addFolderProperties(newFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
+                            persistentProperty.toString());
                 }
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);

@@ -49,6 +49,7 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.resource.xml.TdqPropertieManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -207,13 +208,13 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 if ((targetRes.getType() == IResource.FOLDER)) {
                     IFolder targetFolder = (IFolder) targetRes;
                     IFolder sourceFolder = (IFolder) res.getParent();
-                    try {
-                        if (sourceFolder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
-                                targetFolder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
-                            return Status.OK_STATUS;
-                        }
-                    } catch (CoreException e) {
-                        log.error(e, e);
+                    Object srcPersistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(sourceFolder,
+                            DQStructureManager.FOLDER_CLASSIFY_KEY);
+                    Object destPersistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(targetFolder,
+                            DQStructureManager.FOLDER_CLASSIFY_KEY);
+                    if (srcPersistentProperty != null && destPersistentProperty != null
+                            && srcPersistentProperty.toString().equals(destPersistentProperty.toString())) {
+                        return Status.OK_STATUS;
                     }
                 } else if (res.getName().endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)
                         && (targetRes.getType() == IResource.FILE)) {

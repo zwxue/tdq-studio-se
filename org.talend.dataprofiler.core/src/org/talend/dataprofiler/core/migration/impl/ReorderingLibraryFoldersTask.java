@@ -47,8 +47,11 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
 
             IFolder regexFolder = DQStructureManager.getInstance().createNewFoler(
                     libraryFolder.getFolder(DQStructureManager.PATTERNS), DQStructureManager.REGEX);
-            libraryFolder.getFolder(DQStructureManager.PATTERNS).setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
-                    null);
+            // libraryFolder.getFolder(DQStructureManager.PATTERNS).setPersistentProperty(DQStructureManager.
+            // FOLDER_CLASSIFY_KEY,
+            // null);
+            TdqPropertieManager.getInstance().addFolderProperties(libraryFolder.getFolder(DQStructureManager.PATTERNS),
+                    DQStructureManager.FOLDER_CLASSIFY_KEY, null);
             // regexFolder
             // .setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
             // DQStructureManager.PATTERNS_FOLDER_PROPERTY);
