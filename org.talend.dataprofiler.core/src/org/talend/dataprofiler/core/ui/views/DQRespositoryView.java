@@ -120,6 +120,8 @@ public class DQRespositoryView extends CommonNavigator {
             DQStructureManager manager = DQStructureManager.getInstance();
             if (!manager.createDQStructure()) {
                 log.error("Failed to create structure of TDQ!");
+            } else {
+                ProxyRepositoryManager.getInstance().save();
             }
         }
 
