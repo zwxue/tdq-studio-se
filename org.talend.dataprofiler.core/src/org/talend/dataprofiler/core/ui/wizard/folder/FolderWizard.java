@@ -75,7 +75,7 @@ public class FolderWizard extends Wizard {
             IFolder newFolder = folder.getFolder(folderName);
             try {
                 newFolder.create(false, true, null);
-                Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(newFolder,
+                Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
                         DQStructureManager.FOLDER_CLASSIFY_KEY);
                 if (persistentProperty != null) {
                     TdqPropertieManager.getInstance().addFolderProperties(newFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
