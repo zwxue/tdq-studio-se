@@ -64,6 +64,10 @@ public final class TdqPropertieManager {
         return instance;
     }
 
+    public static void reload() {
+        instance = null;
+    }
+    
     /**
      * 
      * DOC mzhao TdqPropertieManager class global comment. Detailled comment
@@ -246,7 +250,7 @@ public final class TdqPropertieManager {
         return file.getLocationURI().toURL();
     }
 
-    private static final String PROPERTIES_FILE = "TdqProperties.xml";
+    public static final String PROPERTIES_FILE = "TdqProperties.xml";
 
-    private static final String PROPERTIES_RULE_FILE = "TdqProperties_rule.xml";
+    public static final String PROPERTIES_RULE_FILE = "TdqProperties_rule.xml";
 }
