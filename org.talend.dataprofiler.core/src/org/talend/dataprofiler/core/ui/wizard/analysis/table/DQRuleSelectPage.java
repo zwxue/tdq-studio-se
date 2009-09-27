@@ -77,7 +77,7 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
 				} else if (element instanceof IFolder) {
 					IFolder folder = (IFolder) element;
 					return DQRuleUtilities.isLibraiesSubfolder(folder,
-							DQStructureManager.DQ_RULES);
+							DQStructureManager.RULES);
 				}
 				return false;
 			}

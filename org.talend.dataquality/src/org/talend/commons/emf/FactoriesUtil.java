@@ -104,7 +104,12 @@ public final class FactoriesUtil {
      * Extension used for the files in which the DQRule are serialized.
      */
     public static final String DQRULE = RulesPackage.eNAME;
-
+    
+    /**
+     * 
+     * Extension used for xml configuration file
+     */
+    public static final String XML = "xml";
     private FactoriesUtil() {
     }
 

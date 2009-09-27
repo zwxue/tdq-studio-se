@@ -50,11 +50,11 @@ public final class TdqPropertieManager {
     
     private static Logger log = Logger.getLogger(TdqPropertieManager.class);
 
-    private List<TdqProperties> propetiesCache = null;
+    private List<TdqProperties> propertiesCache = null;
     
     private Map<String, TdqFolderProperties> folderMapProperty = new HashMap<String, TdqFolderProperties>();
     private TdqPropertieManager() {
-        propetiesCache = retrieve();
+        propertiesCache = retrieve();
     }
     
     
@@ -66,8 +66,8 @@ public final class TdqPropertieManager {
         return instance;
     }
 
-    public static void reload() {
-        instance = null;
+    public void reload() {
+        propertiesCache = retrieve();
     }
     
     /**
@@ -115,8 +115,8 @@ public final class TdqPropertieManager {
     
     // Add a property to cache
     private void add(TdqProperties property) {
-        if (!propetiesCache.contains(property)) {
-            propetiesCache.add(property);
+        if (!propertiesCache.contains(property)) {
+            propertiesCache.add(property);
         }
         persist();
     }
@@ -128,7 +128,7 @@ public final class TdqPropertieManager {
 
     //Get database value for the specified key.
     public Object getDatabasePropertyValue(String key) {
-        for(TdqProperties prop:propetiesCache){
+        for(TdqProperties prop:propertiesCache){
             if (prop instanceof TdqDatabaseProperties) {
                 return prop.getProperties(key);
             }
@@ -137,7 +137,11 @@ public final class TdqPropertieManager {
     }
     // Get folder value for the specified key.
     public Object getFolderPropertyValue(String folderName, String key) {
-        for (TdqProperties prop : propetiesCache) {
+        // If the cache if empty, try to reload.
+        if (propertiesCache == null && propertiesCache.size() == 0) {
+            propertiesCache = retrieve();
+        }
+        for (TdqProperties prop : propertiesCache) {
             if (prop instanceof TdqFolderProperties) {
                 if (((TdqFolderProperties) prop).getFolder().trim().equals(folderName)) {
                     return prop.getProperties(key);
@@ -161,7 +165,7 @@ public final class TdqPropertieManager {
     public ReturnCode persist() {
         ReturnCode rc = new ReturnCode();
         try {
-            write(propetiesCache);
+            write(propertiesCache);
         } catch (IOException e) {
             log.error(e, e);
             rc.setReturnCode(e.getMessage(), Boolean.FALSE);
@@ -246,7 +250,7 @@ public final class TdqPropertieManager {
             URL parseXmlUrl = getPropertiesURL(PROPERTIES_FILE);
             d.parse(parseXmlUrl.openStream());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex);
         }
     }
     

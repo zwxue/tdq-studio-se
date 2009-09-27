@@ -98,7 +98,6 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
-
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Table;
@@ -453,7 +452,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 				} else if (element instanceof IFolder) {
 					IFolder folder = (IFolder) element;
 					return DQRuleUtilities.isLibraiesSubfolder(folder,
-							DQStructureManager.DQ_RULES);
+							DQStructureManager.RULES);
 				}
 				return false;
 			}
@@ -467,7 +466,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 		dialog.create();
 		// MOD xqliu 2009-04-30 bug 6808
 		IFolder whereRuleFolder = ResourceManager.getLibrariesFolder()
-				.getFolder(DQStructureManager.DQ_RULES);
+				.getFolder(DQStructureManager.RULES);
 		Object[] ownedWhereRuleFiles = getOwnedWhereRuleFiles(tableIndicator,
 				whereRuleFolder);
 		dialog.setCheckedElements(ownedWhereRuleFiles);
@@ -1268,7 +1267,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 				// MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
 				// project.
 				IFolder whereRuleFolder = ResourceManager.getLibrariesFolder()
-						.getFolder(DQStructureManager.DQ_RULES);
+						.getFolder(DQStructureManager.RULES);
 				IFile file = DQRuleResourceFileHelper.getInstance()
 						.getWhereRuleFile(whereRule,
 								new IFolder[] { whereRuleFolder });

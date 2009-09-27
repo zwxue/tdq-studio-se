@@ -48,7 +48,7 @@ public class DeleteDQRuleAction extends Action {
 	@Override
 	public void run() {
 		IFolder sourceFiles = ResourceManager.getLibrariesFolder().getFolder(
-				DQStructureManager.DQ_RULES);
+				DQStructureManager.RULES);
 		for (IFile file : folder) {
 			WhereRule wr = DQRuleResourceFileHelper.getInstance()
 					.findWhereRule(file);

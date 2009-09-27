@@ -71,6 +71,7 @@ public final class DQStructureManager {
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
     private static final String EXCHANGE_PATH = "/exchange";//$NON-NLS-1$
+
     private static final String CONFIG_PATH = "/configure";//$NON-NLS-1$
 
     public static final String JRXML_REPORT_FOLDER = "JRXML Template";//$NON-NLS-1$
@@ -169,7 +170,6 @@ public final class DQStructureManager {
 
     public boolean createDQStructure() {
 
-        
         Plugin plugin = CorePlugin.getDefault();
         try {
 
@@ -178,10 +178,9 @@ public final class DQStructureManager {
                 rootProject = createNewProject(ResourceManager.getRootProjectName());
             }
 
-            //MOD mzhao feature 9178, copy propreties file to workspace root.
+            // MOD mzhao feature 9178, copy propreties file to workspace root.
             copyConfigFiles(rootProject, plugin);
-            
-            
+
             // create "Data Profiling" project
             IFolder dataProfilingFolder = this.createNewFoler(rootProject, ResourceManager.DATA_PROFILING_FOLDER_NAME);
             IFolder createNewFoler = this.createNewFoler(dataProfilingFolder, ANALYSIS);
@@ -256,7 +255,7 @@ public final class DQStructureManager {
 
             // create user defined indicators folder
             createNewFoler = this.createNewFoler(librariesFoler.getFolder(INDICATORS), USER_DEFINED_INDICATORS);
-            
+
             TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY, UDI_FOLDER_PROPERTY);
             // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, UDI_FOLDER_PROPERTY);
 
@@ -268,9 +267,9 @@ public final class DQStructureManager {
             // ~ MOD mzhao featur 9178,2009-09-23
             TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, FOLDER_CLASSIFY_KEY,
                     DBCONNECTION_FOLDER_PROPERTY);
-            
+
             // createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DBCONNECTION_FOLDER_PROPERTY);
-            
+
             // ~
         } catch (Exception ex) {
             ExceptionHandler.process(ex);
@@ -294,8 +293,8 @@ public final class DQStructureManager {
             TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.FOLDER_READONLY_KEY,
                     DQStructureManager.FOLDER_READONLY_PROPERTY);
             TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.FOLDER_CLASSIFY_KEY,
-                    DQStructureManager.JRXML_FOLDER_PROPERTY);            
-            
+                    DQStructureManager.JRXML_FOLDER_PROPERTY);
+
         } catch (CoreException coreExp) {
             ExceptionHandler.process(coreExp);
         }
@@ -452,7 +451,7 @@ public final class DQStructureManager {
         file.create(inputStream, false, null);
     }
 
-    private void copyConfigFiles(IProject project, Plugin plugin) {
+    public static void copyConfigFiles(IProject project, Plugin plugin) {
         Enumeration paths = null;
         paths = plugin.getBundle().getEntryPaths(CONFIG_PATH);
         if (paths == null) {
@@ -468,7 +467,7 @@ public final class DQStructureManager {
             try {
                 fileURL = FileLocator.toFileURL(resourceURL);
                 srcFile = new File(fileURL.getFile());
-                if (!srcFile.getName().endsWith("xml")) {
+                if (!srcFile.getName().endsWith(FactoriesUtil.XML)) {
                     continue;
                 }
                 destFile = new File(project.getLocation().toOSString() + File.separator + srcFile.getName());
@@ -476,10 +475,10 @@ public final class DQStructureManager {
             } catch (IOException e) {
                 log.error(e, e);
             }
-            
 
         }
     }
+
     public boolean isPathValid(IPath path, String label) {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
         IFolder newFolder = folder.getFolder(label);
