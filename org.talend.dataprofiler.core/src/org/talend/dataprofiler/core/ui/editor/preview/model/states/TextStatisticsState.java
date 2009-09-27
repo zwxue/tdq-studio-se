@@ -54,7 +54,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
             double value = Double.parseDouble(unit.getValue().toString());
             String label = unit.getIndicatorName();
 
-            customerdataset.addValue(value, label, ""); //$NON-NLS-1$
+            customerdataset.addValue(value, label, label); //$NON-NLS-1$
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());

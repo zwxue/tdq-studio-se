@@ -40,7 +40,7 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
 
     public JFreeChart getChart() {
         return TopChartFactory.createBarChart(
-                DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), getDataset(), true); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), getDataset(), false); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -50,7 +50,7 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
             double value = unitValue != null ? Double.parseDouble(unitValue.toString()) : Double.NaN;
             String label = unit.getIndicatorName();
 
-            customerdataset.addValue(value, label, ""); //$NON-NLS-1$
+            customerdataset.addValue(value, label, label); //$NON-NLS-1$
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
