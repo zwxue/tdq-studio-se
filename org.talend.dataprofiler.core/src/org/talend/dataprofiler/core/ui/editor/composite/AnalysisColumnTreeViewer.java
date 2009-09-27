@@ -1156,7 +1156,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 UserDefIndicator indicator = (UserDefIndicator) indicatorUnit.getIndicator();
 
-                IFolder userFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.USER_DEFINED_INDICATORS);
+                IFolder userFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.INDICATORS).getFolder(
+                        DQStructureManager.USER_DEFINED_INDICATORS);
                 IFile file = UDIResourceFileHelper.getInstance().getUDIFile(indicator.getIndicatorDefinition(),
                         new IFolder[] { userFolder });
 

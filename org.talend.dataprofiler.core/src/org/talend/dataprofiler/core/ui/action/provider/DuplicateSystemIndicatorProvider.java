@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -30,7 +32,10 @@ import org.eclipse.ui.part.ISetSelectionTarget;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -82,6 +87,11 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
 
                         IFile newFile = getNewFile(definition);
                         newObject.setName("copy of " + newObject.getName()); //$NON-NLS-1$
+                        
+                        // ADD xqliu 2009-09-27 bug 9200
+                        ((IndicatorDefinition) newObject).setLabel(""); // clear the label of indicator definition
+                        setUDICategory((IndicatorDefinition) newObject, (IndicatorDefinition) oldObject);
+                        // ~
 
                         // MOD yyi 2009-09-09 feature: 8882 add .properties file for duplicate indicator.
                         AElementPersistance elementPersistance = ElementWriterFactory.getInstance().create(
@@ -94,6 +104,24 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
                 }
             }
         } // end of run
+
+        /**
+         * DOC xqliu Comment method "setUDICategory". bug 9200
+         * 
+         * @param newID
+         * @param oldID
+         */
+        private void setUDICategory(IndicatorDefinition newID, IndicatorDefinition oldID) {
+            // TODO FIXME
+            Collection<IndicatorCategory> userDefinedIndicatorCategoryList = DefinitionHandler.getInstance()
+                    .getUserDefinedIndicatorCategoryList();
+            IndicatorCategory category = UDIHelper.getUDICategory(oldID);
+            if (userDefinedIndicatorCategoryList.contains(category)) {
+                UDIHelper.setUDICategory(newID, category);
+            } else {
+                UDIHelper.setUDICategory(newID, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
+            }
+        }
 
         /**
          * DOC yyi Comment method "getNewFile".
