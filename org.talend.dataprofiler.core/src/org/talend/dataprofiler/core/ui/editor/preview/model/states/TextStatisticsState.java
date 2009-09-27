@@ -41,7 +41,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
 
     public JFreeChart getChart() {
         return TopChartFactory.createBarChart(
-                DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics"), getDataset(), true); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics"), getDataset(), false); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
