@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorLauncher;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -37,120 +38,109 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ModelElementCompareEditorLauncher implements IEditorLauncher {
 
-	private String connectionName = "";
+    private String connectionName = ""; //$NON-NLS-1$
 
-	private Object selectedObject = null;
-	
-	private boolean compareEachOther;
+    private Object selectedObject = null;
 
-	public ModelElementCompareEditorLauncher(String connName, Object selObj,
-			boolean ce) {
-		connectionName = connName;
-		selectedObject = selObj;
-		compareEachOther = ce;
-	}
+    private boolean compareEachOther;
 
-	public void open(IPath file) {
-		try {
-			final EObject snapshot = ModelUtils.load(file.toFile(),
-					new ResourceSetImpl());
-			if (snapshot instanceof ModelInputSnapshot) {
-				CompareConfiguration comapreConfiguration = new CompareConfiguration();
-				comapreConfiguration
-						.setDefaultLabelProvider(new ICompareInputLabelProvider() {
+    public ModelElementCompareEditorLauncher(String connName, Object selObj, boolean ce) {
+        connectionName = connName;
+        selectedObject = selObj;
+        compareEachOther = ce;
+    }
 
-							public Image getAncestorImage(Object input) {
-								return null;
-							}
+    public void open(IPath file) {
+        try {
+            final EObject snapshot = ModelUtils.load(file.toFile(), new ResourceSetImpl());
+            if (snapshot instanceof ModelInputSnapshot) {
+                CompareConfiguration comapreConfiguration = new CompareConfiguration();
+                comapreConfiguration.setDefaultLabelProvider(new ICompareInputLabelProvider() {
 
-							public String getAncestorLabel(Object input) {
-								return "";
-							}
+                    public Image getAncestorImage(Object input) {
+                        return null;
+                    }
 
-							public Image getLeftImage(Object input) {
-								// TODO Auto-generated method stub
-								return null;
-							}
+                    public String getAncestorLabel(Object input) {
+                        return ""; //$NON-NLS-1$
+                    }
 
-							public String getLeftLabel(Object input) {
-								String showLabel = "Local Structure: \""
-										+ connectionName + "\"";
-								if (compareEachOther) {
-									showLabel = "First element";
-								}
-								return showLabel;
-							}
+                    public Image getLeftImage(Object input) {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
 
-							public Image getRightImage(Object input) {
-								return null;
-							}
+                    public String getLeftLabel(Object input) {
+                        String showLabel = Messages.getString("ModelElementCompareEditorLauncher.LocalStructure", connectionName); //$NON-NLS-1$
+                        if (compareEachOther) {
+                            showLabel = Messages.getString("ModelElementCompareEditorLauncher.FirstElement"); //$NON-NLS-1$
+                        }
+                        return showLabel;
+                    }
 
-							public String getRightLabel(Object input) {
-								String showLabel = "Distant Structure";
-								if (compareEachOther) {
-									showLabel = "Second element";
-								}
-								return showLabel;
-							}
+                    public Image getRightImage(Object input) {
+                        return null;
+                    }
 
-							public Image getImage(Object element) {
-								return null;
-							}
+                    public String getRightLabel(Object input) {
+                        String showLabel = Messages.getString("ModelElementCompareEditorLauncher.DistantStructure"); //$NON-NLS-1$
+                        if (compareEachOther) {
+                            showLabel = Messages.getString("ModelElementCompareEditorLauncher.SecondElement"); //$NON-NLS-1$
+                        }
+                        return showLabel;
+                    }
 
-							public String getText(Object element) {
-								return "Text label";
-							}
+                    public Image getImage(Object element) {
+                        return null;
+                    }
 
-							public void addListener(
-									ILabelProviderListener listener) {
+                    public String getText(Object element) {
+                        return Messages.getString("ModelElementCompareEditorLauncher.TextLabel"); //$NON-NLS-1$
+                    }
 
-							}
+                    public void addListener(ILabelProviderListener listener) {
 
-							public void dispose() {
+                    }
 
-							}
+                    public void dispose() {
 
-							public boolean isLabelProperty(Object element,
-									String property) {
-								return false;
-							}
+                    }
 
-							public void removeListener(
-									ILabelProviderListener listener) {
-								// TODO Auto-generated method stub
+                    public boolean isLabelProperty(Object element, String property) {
+                        return false;
+                    }
 
-							}
+                    public void removeListener(ILabelProviderListener listener) {
+                        // TODO Auto-generated method stub
 
-						});
-				ModelElementCompareEditorInput compEditorInput = new ModelElementCompareEditorInput(
-						(ModelInputSnapshot) snapshot, comapreConfiguration,
-						selectedObject);
-				// MOD mzhao bug 8581 Add the specific title for comparison
-				// editor.
-				String editorTitle = "Compare";
-				if (selectedObject instanceof IFile) {
-					editorTitle = PrvResourceFileHelper.getInstance()
-							.findProvider((IFile) selectedObject).getObject()
-							.getName();
-				} else if (selectedObject instanceof IFolderNode) {
-					editorTitle = ((ModelElement) ((IFolderNode) selectedObject)
-							.getParent()).getName();
-				} else if (selectedObject instanceof TdCatalog) {
-					editorTitle = ((TdCatalog) selectedObject).getName();
-				}
+                    }
 
-				compEditorInput.setTitle(editorTitle);
-				CompareUI.openCompareEditor(compEditorInput);
-				// MOD mzhao feature 8227
-				if (!compareEachOther) {
-					compEditorInput.hookLeftPanelContextMenu();
-				}
+                });
+                ModelElementCompareEditorInput compEditorInput = new ModelElementCompareEditorInput(
+                        (ModelInputSnapshot) snapshot, comapreConfiguration, selectedObject);
+                // MOD mzhao bug 8581 Add the specific title for comparison
+                // editor.
+                String editorTitle = Messages.getString("ModelElementCompareEditorLauncher.Compare"); //$NON-NLS-1$
+                if (selectedObject instanceof IFile) {
+                    editorTitle = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObject).getObject().getName();
+                } else if (selectedObject instanceof IFolderNode) {
+                    editorTitle = ((ModelElement) ((IFolderNode) selectedObject).getParent()).getName();
+                } else if (selectedObject instanceof TdCatalog) {
+                    editorTitle = ((TdCatalog) selectedObject).getName();
+                }
 
-			}
-		} catch (IOException e) {
-			// Fichier non lisible
-			assert false;
-		}
-	}
+                compEditorInput.setTitle(editorTitle);
+                CompareUI.openCompareEditor(compEditorInput);
+                // MOD mzhao feature 8227
+                if (!compareEachOther) {
+                    compEditorInput.hookLeftPanelContextMenu();
+                }
+
+            }
+        } catch (IOException e) {
+            // Fichier non lisible
+            assert false;
+        }
+    }
 
 }

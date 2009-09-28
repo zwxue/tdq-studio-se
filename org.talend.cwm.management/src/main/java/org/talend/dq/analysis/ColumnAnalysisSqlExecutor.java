@@ -173,7 +173,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         IndicatorDefinition indicatorDefinition;
         String label = indicator.getIndicatorDefinition().getLabel();
-        if (label == null || "".equals(label)) {
+        if (label == null || "".equals(label)) { //$NON-NLS-1$
             indicatorDefinition = indicator.getIndicatorDefinition();
         } else {
             indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
@@ -573,7 +573,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (dbms().supportAliasesInGroupBy()) {
             // return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
             // MOD by hcheng for 7338 SQL syntax error if the name of column has invalid char.
-            return " TDAL_" + dateAggregationType.getName() + " ";
+            return " TDAL_" + dateAggregationType.getName() + " "; //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             return ""; //$NON-NLS-1$
         }

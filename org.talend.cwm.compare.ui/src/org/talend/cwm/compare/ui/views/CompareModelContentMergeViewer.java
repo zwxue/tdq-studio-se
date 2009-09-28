@@ -54,6 +54,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
 import org.talend.cwm.compare.ui.actions.SubelementCompareAction;
@@ -116,16 +117,16 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 if (selection.toList().size() == 1) {
                     selectedElement = (EObject) selection.getFirstElement();
                     if (selectedElement instanceof Package) {
-                        SubelementCompareAction subEleCompTableAction = new SubelementCompareAction("compare the list of tables",
+                        SubelementCompareAction subEleCompTableAction = new SubelementCompareAction(Messages.getString("CompareModelContentMergeViewer.CompareListOfTables"), //$NON-NLS-1$
                                 diffTabLeft, selectedOjbect, SubelementCompareAction.TABLE_COMPARE);
-                        SubelementCompareAction subEleCompViewAction = new SubelementCompareAction("compare the list of views",
+                        SubelementCompareAction subEleCompViewAction = new SubelementCompareAction(Messages.getString("CompareModelContentMergeViewer.CompareListOfViews"), //$NON-NLS-1$
                                 diffTabLeft, selectedOjbect, SubelementCompareAction.VIEW_COMPARE);
                         manager.add(subEleCompTableAction);
                         manager.add(subEleCompViewAction);
                     } else if (selectedElement instanceof ColumnSet) {
                         addRenameMenuAction(manager, selectedElement);
                         SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(
-                                "compare the list of columns", diffTabLeft, selectedOjbect,
+                                Messages.getString("CompareModelContentMergeViewer.CompareListOfColumns"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
                                 SubelementCompareAction.COLUMN_COMPARE);
                         manager.add(subEleCompColumnAction);
                     } else if (selectedElement instanceof Column) {
@@ -282,10 +283,10 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         SubelementCompareAction subEleCompColumnAction = null;
         if (selectedElement instanceof Package) {
             subEleCompColumnAction = new SubelementCompareAction(
-                    tableOrViewCompare == SubelementCompareAction.TABLE_COMPARE ? "compare the list of tables"
-                            : "compare the list of views", diffTabLeft, selectedOjbect, tableOrViewCompare);
+                    tableOrViewCompare == SubelementCompareAction.TABLE_COMPARE ? Messages.getString("CompareModelContentMergeViewer.CompareListOfTable") //$NON-NLS-1$
+                            : Messages.getString("CompareModelContentMergeViewer.CompareListOfVeiw"), diffTabLeft, selectedOjbect, tableOrViewCompare); //$NON-NLS-1$
         } else if (selectedElement instanceof ColumnSet) {
-            subEleCompColumnAction = new SubelementCompareAction("compare the list of columns", diffTabLeft, selectedOjbect,
+            subEleCompColumnAction = new SubelementCompareAction(Messages.getString("CompareModelContentMergeViewer.CompareListOfColumn"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
                     SubelementCompareAction.COLUMN_COMPARE);
         }
         if (subEleCompColumnAction != null) {
@@ -387,7 +388,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
             }
         }
         if (modelElement != null && resourceFile != null) {
-            String titleMessage = DefaultMessagesImpl.getString("CompareModelContentMergeViewer.ImpactAnalyses");
+            String titleMessage = DefaultMessagesImpl.getString("CompareModelContentMergeViewer.ImpactAnalyses"); //$NON-NLS-1$
 
             int showDialog = DeleteModelElementConfirmDialog.showElementImpactDialog(null, new ModelElement[] { modelElement },
                     titleMessage, titleMessage);
@@ -412,5 +413,5 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
     }
 
-    private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight";
+    private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight"; //$NON-NLS-1$
 }

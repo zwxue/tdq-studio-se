@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.talend.cwm.compare.i18n.Messages;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -90,7 +91,7 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
                 if (object instanceof DiffGroup) {
                     DiffGroup diffGroup = (DiffGroup) object;
                     int subChanges = diffGroup.getSubchanges();
-                    text = subChanges + " change(s) in model";
+                    text = Messages.getString("CompareModelStructureLabelProvider.ChangeInModel", subChanges); //$NON-NLS-1$
                     if (diffGroup.getLeftParent() != null && diffGroup.getLeftParent() instanceof ModelElement) {
                         text += ":\"" + ((ModelElement) diffGroup.getLeftParent()).getName() + "\"";
                     }
@@ -98,16 +99,16 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
 
                     AddModelElement addModelElement = (AddModelElement) object;
 
-                    String modelName = "";
+                    String modelName = ""; //$NON-NLS-1$
                     EObject leftElement = addModelElement.getRightElement();
                     if (leftElement != null && leftElement instanceof ModelElement) {
                         modelName = ((ModelElement) leftElement).getName();
                     }
-                    text = "model \"" + modelName + "\" has been added";
+                    text = Messages.getString("CompareModelStructureLabelProvider.ModelAdded", modelName); //$NON-NLS-1$
 
                 } else if (object instanceof RemoveModelElement) {
                     RemoveModelElement removeModelElement = (RemoveModelElement) object;
-                    String modelName = "";
+                    String modelName = ""; //$NON-NLS-1$
                     EObject leftElement = removeModelElement.getLeftElement();
                     if (leftElement != null && leftElement instanceof ModelElement) {
                         modelName = ((ModelElement) leftElement).getName();
@@ -116,7 +117,7 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
                     if (rightElement != null && rightElement instanceof ModelElement) {
                         modelName = ((ModelElement) rightElement).getName();
                     }
-                    text = "model \"" + modelName + "\" has been removed";
+                    text = Messages.getString("CompareModelStructureLabelProvider.ModelRemoved", modelName); //$NON-NLS-1$
                 } else {
                     text = adapterProvider.getText(object);
                 }

@@ -24,7 +24,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
-    private static final String REGEX = "SELECT MAX\\((.*)\\)\\s*, SOUNDEX\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM";
+    private static final String REGEX = "SELECT MAX\\((.*)\\)\\s*, SOUNDEX\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
     @Override
     protected String getFreqRowsStatement() {

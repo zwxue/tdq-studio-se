@@ -247,7 +247,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         return builder.toString();
     }
 
-    private static final String COMMA = ",";
+    private static final String COMMA = ","; //$NON-NLS-1$
 
     /**
      * DOC scorreia Comment method "createSelect".

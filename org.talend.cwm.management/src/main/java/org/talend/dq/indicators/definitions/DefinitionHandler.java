@@ -110,7 +110,7 @@ public final class DefinitionHandler {
 
     private static DefinitionHandler instance;
 
-    private static final String DQ_RULE_CATEGORY = "_8i9eQBI5Ed6TWL6NwMMHzQ";
+    private static final String DQ_RULE_CATEGORY = "_8i9eQBI5Ed6TWL6NwMMHzQ"; //$NON-NLS-1$
 
     private static final String USER_DEFINED_COUNT_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_COUNT_CATEGORY;
 
@@ -126,9 +126,9 @@ public final class DefinitionHandler {
 
     private static final String USER_DEFINED_TIME_CORRELATION_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_TIME_CORRELATION_CATEGORY;
 
-    private static final String DQ_RULE_DEFINITION = "_UUIyoCOMEd6YB57jaCfKaA";
+    private static final String DQ_RULE_DEFINITION = "_UUIyoCOMEd6YB57jaCfKaA"; //$NON-NLS-1$
 
-    private static final String FD_RULE_DEFINITION = "_YqcX0XHpEd6udst2R2sgpA";
+    private static final String FD_RULE_DEFINITION = "_YqcX0XHpEd6udst2R2sgpA"; //$NON-NLS-1$
 
     private static Map<String, IndicatorCategory> userDefinedIndicatorCategoryMap;
 

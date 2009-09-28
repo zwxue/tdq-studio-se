@@ -67,7 +67,7 @@ public class PopComparisonUIAction extends Action {
                     creatComparisonLevel.popComparisonUI(new UiHandler());
                 } catch (ReloadCompareException e) {
                 	MessageDialog.openError(shell,
-							"Error occured during comparison", e.getMessage()
+							Messages.getString("PopComparisonUIAction.ErrorDuringComparison"), e.getMessage() //$NON-NLS-1$
 									);
                     log.error(e, e);
                 }

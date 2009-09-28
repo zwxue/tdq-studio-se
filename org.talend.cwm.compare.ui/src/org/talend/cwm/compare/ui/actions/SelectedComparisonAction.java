@@ -78,7 +78,7 @@ public class SelectedComparisonAction extends Action {
         try {
             ProgressUI.popProgressDialog(op);
         } catch (InvocationTargetException e) {
-            MessageUI.openError(Messages.getString("PopComparisonUIAction.checkConnectionFailure", e.getCause().getMessage()));
+            MessageUI.openError(Messages.getString("PopComparisonUIAction.checkConnectionFailure", e.getCause().getMessage())); //$NON-NLS-1$
             log.error(e, e);
         } catch (InterruptedException e) {
             log.error(e, e);

@@ -61,7 +61,7 @@ public class UiHandler implements IUIHandler {
 
 			public void run() {
 				String titleMessage = DefaultMessagesImpl
-						.getString("DeleteModelElementConfirmDialog.confirmElementDelete");
+						.getString("DeleteModelElementConfirmDialog.confirmElementDelete"); //$NON-NLS-1$
 				DeleteModelElementConfirmDialog
 						.showElementImpactDialog(
 								new Shell(display),

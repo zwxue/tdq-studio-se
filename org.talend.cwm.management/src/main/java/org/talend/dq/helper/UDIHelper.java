@@ -127,7 +127,7 @@ public final class UDIHelper {
 
     public static String getMatchingIndicatorName(IndicatorDefinition indicatorDefinition, Pattern pattern) {
         if (indicatorDefinition != null) {
-            return pattern.getName() + "(" + indicatorDefinition.getName() + ")";
+            return pattern.getName() + "(" + indicatorDefinition.getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             return pattern.getName();
         }
@@ -175,7 +175,7 @@ public final class UDIHelper {
         for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
             if (null == exp.getBody()) {
                 return false;
-            } else if (16 > exp.getBody().length() && !"''".equals(exp.getBody())) {
+            } else if (16 > exp.getBody().length() && !"''".equals(exp.getBody())) { //$NON-NLS-1$
                 return false;
             }
         }

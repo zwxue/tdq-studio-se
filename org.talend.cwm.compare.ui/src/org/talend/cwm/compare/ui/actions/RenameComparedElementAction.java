@@ -54,6 +54,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -104,7 +105,7 @@ public class RenameComparedElementAction extends Action {
 
     @Override
     public String getText() {
-        return "Choose corresponding element";
+        return Messages.getString("RenameComparedElementAction.ChooseCorrespondElement"); //$NON-NLS-1$
     }
 
     @Override
@@ -112,7 +113,7 @@ public class RenameComparedElementAction extends Action {
         // Open the add element model dialog
 
         if (newAddedColumnSet == null || newAddedColumnSet.size() == 0) {
-            MessageDialog.openConfirm(null, "", "There is no newly added element on right side to be propagated!");
+            MessageDialog.openConfirm(null, "", Messages.getString("RenameComparedElementAction.NoNewElement")); //$NON-NLS-1$ //$NON-NLS-2$
             return;
         }
 
@@ -150,7 +151,7 @@ public class RenameComparedElementAction extends Action {
     public void refreshEditor() {
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         activePage.closeEditor(activePage.getActiveEditor(), false);
-        new PopComparisonUIAction(selectedFolderNode, "Compare").run();
+        new PopComparisonUIAction(selectedFolderNode, Messages.getString("RenameComparedElementAction.Compare")).run(); //$NON-NLS-1$
     }
 
     private void refreshReposigoryTree(ModelElement checkedColumnSet) {
@@ -355,7 +356,7 @@ public class RenameComparedElementAction extends Action {
          */
         protected void configureShell(Shell newShell) {
             super.configureShell(newShell);
-            newShell.setText("New name of the element");
+            newShell.setText(Messages.getString("RenameComparedElementAction.NewNameOfElement")); //$NON-NLS-1$
         }
 
         protected Point getInitialSize() {

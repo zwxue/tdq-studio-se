@@ -23,7 +23,7 @@ import org.talend.utils.ProductVersion;
  * DOC scorreia class global comment. Detailled comment
  */
 public class MSSqlDbmsLanguage extends DbmsLanguage {
-    private static final Pattern selectPattern = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE);
+    private static final Pattern selectPattern = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
     /**
      * DOC scorreia MSSqlDbmsLanguage constructor comment.
@@ -128,7 +128,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     @Override
     public String getTopNQuery(String query, int n) {
         Matcher m = selectPattern.matcher(query);
-        return m.replaceFirst("SELECT TOP " + n + " ");
+        return m.replaceFirst("SELECT TOP " + n + " "); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*

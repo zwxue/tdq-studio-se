@@ -114,8 +114,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             EList<Column> columnSetB, boolean useNulls) {
         // MOD scorreia 2009-05-25 allow to compare elements from the same table
         // aliases of tables
-        String aliasA = "A";
-        String aliasB = "B";
+        String aliasA = "A"; //$NON-NLS-1$
+        String aliasB = "B"; //$NON-NLS-1$
 
         // MOD xqliu 2009-06-16 bug 7334
         boolean reversion = STATIC_COUNT % 2 == 0 ? true : false;
@@ -126,8 +126,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             dataFilterA = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
             dataFilterB = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
         }
-        String tableNameA = addDataFilterWithTableName(getTableName(columnSetA), dataFilterA) + " " + aliasA;
-        String tableNameB = addDataFilterWithTableName(getTableName(columnSetB), dataFilterB) + " " + aliasB;
+        String tableNameA = addDataFilterWithTableName(getTableName(columnSetA), dataFilterA) + " " + aliasA; //$NON-NLS-1$
+        String tableNameB = addDataFilterWithTableName(getTableName(columnSetB), dataFilterB) + " " + aliasB; //$NON-NLS-1$
         // ~
 
         // Generic SQL expression is something like:
@@ -150,10 +150,10 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     }
 
     private String addDataFilterWithTableName(String tableName, String dataFilter) {
-        if (dataFilter == null || dataFilter.trim().equals("")) {
+        if (dataFilter == null || dataFilter.trim().equals("")) { //$NON-NLS-1$
             return tableName;
         }
-        return "(SELECT * FROM " + tableName + " WHERE ( " + dataFilter + " ))";
+        return "(SELECT * FROM " + tableName + " WHERE ( " + dataFilter + " ))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**
@@ -212,11 +212,11 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         for (int i = 0; i < size; i++) {
             String colA = tableNameA + '.' + getQuotedColumnName(columnSetA.get(i));
             String colB = tableNameB + '.' + getQuotedColumnName(columnSetB.get(i));
-            builder.append(" (").append(colA).append(dbms().equal()).append(colB);
+            builder.append(" (").append(colA).append(dbms().equal()).append(colB); //$NON-NLS-1$
             if (useNulls) { // allow to identify rows like ('a', null) = ('a', null)
                 builder.append(dbms().or()).append(bothNull(colA, colB));
             }
-            builder.append(") ");
+            builder.append(") "); //$NON-NLS-1$
             if (i != size - 1) {
                 builder.append(dbms().and());
             }
@@ -234,8 +234,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      */
     private String bothNull(String colA, String colB) {
         StringBuilder builder = new StringBuilder();
-        builder.append(" (").append(colA).append(dbms().isNull()).append(dbms().and()).append(colB).append(dbms().isNull())
-                .append(") ");
+        builder.append(" (").append(colA).append(dbms().isNull()).append(dbms().and()).append(colB).append(dbms().isNull()) //$NON-NLS-1$
+                .append(") "); //$NON-NLS-1$
         return builder.toString();
     }
 
@@ -340,7 +340,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     AnalysisHelper.DATA_FILTER_B) : AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
                     AnalysisHelper.DATA_FILTER_A);
             List<String> whereClauses = new ArrayList<String>();
-            if (stringDataFilter != null && !stringDataFilter.trim().equals("")) {
+            if (stringDataFilter != null && !stringDataFilter.trim().equals("")) { //$NON-NLS-1$
                 whereClauses.add(stringDataFilter);
             }
             // ~

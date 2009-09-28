@@ -62,7 +62,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class ReloadDatabaseAction extends Action {
 
     private static Logger log = Logger.getLogger(ReloadDatabaseAction.class);
-    private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor";
+    private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
     private Object selectedObject;
 
     public ReloadDatabaseAction(Object selectedNode, String menuText) {
@@ -110,7 +110,7 @@ public class ReloadDatabaseAction extends Action {
             ProgressUI.popProgressDialog(op);
             ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         } catch (InvocationTargetException e) {
-            MessageUI.openError(Messages.getString("ReloadDatabaseAction.checkConnectionFailured", e.getCause().getMessage()));
+            MessageUI.openError(Messages.getString("ReloadDatabaseAction.checkConnectionFailured", e.getCause().getMessage())); //$NON-NLS-1$
             log.error(e, e);
         } catch (InterruptedException e) {
             log.error(e, e);
@@ -176,8 +176,8 @@ public class ReloadDatabaseAction extends Action {
 				if (editorRef.getId().equals(ANALYSIS_EDITOR_ID)) {
 					boolean isConfirm = MessageDialog.openConfirm(PlatformUI
 							.getWorkbench().getActiveWorkbenchWindow()
-							.getShell(), "Analyzed element changed",
-							"Refresh the current editor status?");
+							.getShell(), Messages.getString("ReloadDatabaseAction.ElementChange"), //$NON-NLS-1$
+							Messages.getString("ReloadDatabaseAction.RefreshCurrentEditor")); //$NON-NLS-1$
 					if (!isConfirm) {
 						return;
 					}

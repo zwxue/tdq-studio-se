@@ -45,9 +45,9 @@ public class DQRuleExplorer extends DataExplorer {
      * @return
      */
     private String getRowsStatement(boolean valid) {
-        String non = valid ? "" : "!";
+        String non = valid ? "" : "!"; //$NON-NLS-1$ //$NON-NLS-2$
         Table table = (Table) indicator.getAnalyzedElement();
         String whereClause = ((WhereRule) ((WhereRuleIndicator) indicator).getIndicatorDefinition()).getWhereExpression();
-        return "SELECT * FROM " + getFullyQualifiedTableName(table) + dbmsLanguage.where() + non + "(" + whereClause + ")";
+        return "SELECT * FROM " + getFullyQualifiedTableName(table) + dbmsLanguage.where() + non + "(" + whereClause + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 }

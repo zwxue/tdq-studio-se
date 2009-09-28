@@ -22,7 +22,7 @@ public class FuncationDependencyParameter extends AnalysisParameter {
 
     @Override
     public String getName() {
-       return StringUtils.isBlank(super.getName())?"":super.getName();
+       return StringUtils.isBlank(super.getName())?"":super.getName(); //$NON-NLS-1$
     }
 
     

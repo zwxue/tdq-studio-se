@@ -31,6 +31,6 @@ public final class ColumnDependencyHelper {
         assert cdIndicator.getColumnA() != null;
         assert cdIndicator.getColumnB() != null;
 
-        return cdIndicator.getColumnA().getName() + "-->" + cdIndicator.getColumnB().getName();
+        return cdIndicator.getColumnA().getName() + "-->" + cdIndicator.getColumnB().getName(); //$NON-NLS-1$
     }
 }

@@ -171,7 +171,7 @@ public final class DbmsLanguageFactory {
         String databaseProductName = null;
         try {
             databaseProductName = ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductName();
-            databaseProductName = databaseProductName == null ? "" : databaseProductName;
+            databaseProductName = databaseProductName == null ? "" : databaseProductName; //$NON-NLS-1$
             String databaseProductVersion = null;
             try {
                 databaseProductVersion = ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductVersion();

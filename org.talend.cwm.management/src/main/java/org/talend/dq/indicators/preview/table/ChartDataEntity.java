@@ -121,10 +121,10 @@ public class ChartDataEntity {
 
     public String getPersent() {
         if (percent != null) {
-            if (percent.matches("-?\\d+(\\.\\d+)?")) {
+            if (percent.matches("-?\\d+(\\.\\d+)?")) { //$NON-NLS-1$
                 return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
             } else {
-                return "N/A";
+                return "N/A"; //$NON-NLS-1$
             }
         } else {
             return null;
