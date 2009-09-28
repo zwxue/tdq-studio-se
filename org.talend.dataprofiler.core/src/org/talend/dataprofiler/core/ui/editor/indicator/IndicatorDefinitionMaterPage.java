@@ -847,12 +847,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         expressionComp.setLayout(new GridLayout());
         expressionComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (definition != null) {
-            EList<Expression> expressions = definition.getSqlGenericExpression();
-            for (Expression expression : expressions) {
-                tempExpression.add(expression);
-                createNewExpressLine(expression);
+        if (tempExpression.size() == 0) {
+            if (definition != null) {
+                tempExpression.addAll(definition.getSqlGenericExpression());
             }
+        }
+
+        for (Expression expression : tempExpression) {
+            createNewExpressLine(expression);
         }
 
         createAddButton(composite);
@@ -867,7 +869,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createNewExpressLine(final Expression expression) {
         final Composite expressComp = new Composite(expressionComp, SWT.NONE);
-        expressComp.setLayout(new GridLayout(3, false));
+        expressComp.setLayout(new GridLayout(4, false));
         final CCombo combo = new CCombo(expressComp, SWT.BORDER);
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
@@ -904,10 +906,40 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
 
         });
-
+        
         createExpressionEditButton(expressComp, patternText);
 
+        createExpressionDelButton(expressComp, expression);
+        
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
+    }
+
+    /**
+     * DOC xqliu Comment method "createExpressionDelButton".
+     * 
+     * @param expressComp
+     * @param expression
+     */
+    private void createExpressionDelButton(final Composite expressComp, final Expression expression) {
+        Button delButton = new Button(expressComp, SWT.PUSH);
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        delButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.deleteExpression"));
+        GridData labelGd = new GridData();
+        labelGd.horizontalAlignment = SWT.LEFT;
+        labelGd.widthHint = 30;
+        delButton.setLayoutData(labelGd);
+        delButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                setDirty(true);
+                tempExpression.remove(expression);
+                expressComp.dispose();
+                definitionSection.setExpanded(false);
+                definitionSection.setExpanded(true);
+            }
+        });
+
     }
 
     /**
@@ -949,21 +981,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                remainDBTypeList.clear();
-                remainDBTypeList.addAll(allDBTypeList);
-                for (Expression expression : tempExpression) {
-                    String language = expression.getLanguage();
-                    String languageName = PatternLanguageType.findNameByLanguage(language);
-                    remainDBTypeList.remove(languageName);
-                }
-                if (remainDBTypeList.size() == 0) {
-                    MessageDialog
-                            .openWarning(
-                                    null,
-                                    DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
-                    return;
-                }
-
+                rebuildRemainDBTypeList();
                 String language = PatternLanguageType.findLanguageByName(remainDBTypeList.get(0));
                 Expression expression = BooleanExpressionHelper.createExpression(language, null);
                 createNewExpressLine(expression);
@@ -974,6 +992,26 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         });
     }
 
+    /**
+     * DOC xqliu Comment method "rebuildRemainDBTypeList".
+     */
+    private void rebuildRemainDBTypeList() {
+        remainDBTypeList.clear();
+        remainDBTypeList.addAll(allDBTypeList);
+        for (Expression expression : tempExpression) {
+            String language = expression.getLanguage();
+            String languageName = PatternLanguageType.findNameByLanguage(language);
+            remainDBTypeList.remove(languageName);
+        }
+        if (remainDBTypeList.size() == 0) {
+            MessageDialog
+                    .openWarning(
+                            null,
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
+            return;
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 
