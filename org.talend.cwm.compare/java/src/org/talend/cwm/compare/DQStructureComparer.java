@@ -68,9 +68,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public final class DQStructureComparer {
 
-    public static final String COMPARE_FILE_EXTENSION = "comp";
+    public static final String COMPARE_FILE_EXTENSION = "comp"; //$NON-NLS-1$
 
-    public static final String RESULT_EMFDIFF_FILE_EXTENSION = "emfdiff";
+    public static final String RESULT_EMFDIFF_FILE_EXTENSION = "emfdiff"; //$NON-NLS-1$
 
     private static final String NEED_RELOAD_ELEMENTS_PRV = ".needReloadElements.comp"; //$NON-NLS-1$
 
@@ -133,8 +133,8 @@ public final class DQStructureComparer {
     private static IFile iterateGetNotExistFile(String fileName) {
         IFile file = getFile(fileName);
         if (file.exists()) {
-            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + "c"
-                    + fileName.substring(fileName.lastIndexOf(".")));
+            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + "c" //$NON-NLS-1$ //$NON-NLS-2$
+                    + fileName.substring(fileName.lastIndexOf("."))); //$NON-NLS-1$
         } else {
             return file;
         }
@@ -201,7 +201,7 @@ public final class DQStructureComparer {
     public static IFile getDiffResourceFile() {
         IFile file = iterateGetNotExistFile(RESULT_EMFDIFF_FILE);
 		 try {
-			InputStream inputStream = new ByteArrayInputStream("".getBytes());
+			InputStream inputStream = new ByteArrayInputStream("".getBytes()); //$NON-NLS-1$
 			file.create(inputStream, true, new NullProgressMonitor());
 			inputStream.close();
 		} catch (CoreException e) {
