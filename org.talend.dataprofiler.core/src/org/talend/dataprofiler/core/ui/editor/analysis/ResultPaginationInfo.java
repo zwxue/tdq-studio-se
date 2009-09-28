@@ -43,7 +43,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
@@ -76,13 +75,10 @@ public class ResultPaginationInfo extends PaginationInfo {
 
     private ColumnMasterDetailsPage masterPage;
 
-    private CommonFormEditor editor;
-
     public ResultPaginationInfo(ScrolledForm form, List<ColumnIndicator> columnIndicatores, ColumnMasterDetailsPage masterPage,
             UIPagination uiPagination) {
         super(form, columnIndicatores, uiPagination);
         this.masterPage = masterPage;
-        this.editor = (CommonFormEditor) masterPage.getEditor();
     }
 
     @Override
@@ -117,7 +113,7 @@ public class ResultPaginationInfo extends PaginationInfo {
 
             });
 
-            editor.registerSection(exComp);
+            masterPage.registerSection(exComp);
 
         }
     }
@@ -202,7 +198,7 @@ public class ResultPaginationInfo extends PaginationInfo {
 
         });
 
-        editor.registerSection(subComp);
+        masterPage.registerSection(subComp);
     }
 
     private void addMouseListenerForChart(final ChartComposite chartComp, final IDataExplorer explorer, final Analysis analysis) {

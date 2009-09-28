@@ -60,12 +60,30 @@ public class TdEditorBarWrapper {
     }
 
     /**
+     * DOC bZhou Comment method "setExpandableComposites".
+     * 
+     * @param composites
+     */
+    public void setExpandableComposites(List<ExpandableComposite> composites) {
+        for (ExpandableComposite composite : composites) {
+            addExpandableComposite(composite);
+        }
+    }
+
+    /**
      * DOC bZhou Comment method "getExpandableComposites".
      * 
      * @return
      */
     public List<ExpandableComposite> getExpandableComposites() {
         return compositeList;
+    }
+
+    /**
+     * DOC bZhou Comment method "clearRegisterComposite".
+     */
+    public void clearRegisterComposite() {
+        getExpandableComposites().clear();
     }
 
     /**

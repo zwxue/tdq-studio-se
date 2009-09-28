@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
@@ -28,18 +27,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -180,33 +173,34 @@ public abstract class CommonFormEditor extends FormEditor {
         });
     }
 
-    /**
-     * DOC qzhang Comment method "refreshDQView".
-     */
-    protected void refreshDQView() {
-        IEditorInput editorInput = getEditorInput();
-        if (editorInput instanceof FileEditorInput) {
-            IFile node = ((FileEditorInput) editorInput).getFile();
-            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            IViewPart findView = activePage.findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
-            DQRespositoryView view = (DQRespositoryView) findView;
-            view.getCommonViewer().refresh(node);
-        }
-    }
-
     public void doSaveAs() {
         doSave(null);
     }
 
     public void doSave(IProgressMonitor monitor) {
-        refreshDQView();
         this.isDirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
+        CorePlugin.getDefault().refreshDQView();
         CorePlugin.getDefault().refreshWorkSpace();
     }
 
     public boolean isSaveAsAllowed() {
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.forms.editor.FormEditor#pageChange(int)
+     */
+    @Override
+    protected void pageChange(int newPageIndex) {
+        super.pageChange(newPageIndex);
+        if (getActivePageInstance() instanceof AbstractFormPage) {
+            AbstractFormPage page = (AbstractFormPage) getActivePageInstance();
+            editorBarWrap.clearRegisterComposite();
+            editorBarWrap.setExpandableComposites(page.getExpandCompositeList());
+        }
     }
 
     /*
@@ -259,14 +253,4 @@ public abstract class CommonFormEditor extends FormEditor {
     public TdEditorToolBar getToolBar() {
         return toolBar;
     }
-
-    /**
-     * DOC bZhou Comment method "registerSection".
-     * 
-     * @param composite
-     */
-    public void registerSection(ExpandableComposite composite) {
-        editorBarWrap.addExpandableComposite(composite);
-    }
-
 }

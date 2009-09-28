@@ -12,12 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -36,12 +40,15 @@ public abstract class AbstractFormPage extends FormPage {
 
     protected Boolean foldingState;
 
-    private static int sectionCount = 0;
+    private int sectionCount = 0;
+
+    private List<ExpandableComposite> expandCompositeList;
 
     public AbstractFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         this.toolkit = this.getEditor().getToolkit();
         this.currentEditor = (CommonFormEditor) editor;
+        this.expandCompositeList = new ArrayList<ExpandableComposite>();
     }
 
     /*
@@ -54,8 +61,6 @@ public abstract class AbstractFormPage extends FormPage {
         super.initialize(editor);
 
         initFoldingState();
-
-        sectionCount = 0;
     }
 
     /**
@@ -107,7 +112,7 @@ public abstract class AbstractFormPage extends FormPage {
             section.setExpanded(foldingState);
         }
 
-        currentEditor.registerSection(section);
+        registerSection(section);
 
         sectionCount++;
 
@@ -129,6 +134,24 @@ public abstract class AbstractFormPage extends FormPage {
             break;
         default:
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "registerSection".
+     * 
+     * @param composite
+     */
+    public void registerSection(ExpandableComposite composite) {
+        expandCompositeList.add(composite);
+    }
+
+    /**
+     * Getter for expandCompositeList.
+     * 
+     * @return the expandCompositeList
+     */
+    public List<ExpandableComposite> getExpandCompositeList() {
+        return expandCompositeList;
     }
 
     @Override

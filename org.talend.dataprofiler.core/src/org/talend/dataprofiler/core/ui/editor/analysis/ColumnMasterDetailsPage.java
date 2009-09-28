@@ -458,7 +458,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // ~
 
         for (ExpandableComposite comp : previewChartList) {
-            currentEditor.registerSection(comp);
+            registerSection(comp);
         }
 
         composite.layout();
