@@ -35,9 +35,9 @@ import org.talend.top.repository.ProxyRepositoryManager;
  */
 public class CreateConnectionAction extends Action implements ICheatSheetAction {
 
-    private static final int WIDTH = 600;
+    private static final int WIDTH = 400;
 
-    private static final int HEIGHT = 450;
+    private static final int HEIGHT = 350;
 
     private IFolder folder;
 
@@ -70,6 +70,7 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
 
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
+        wizard.setContainer(dialog);
         if (WizardDialog.OK == dialog.open())
             ProxyRepositoryManager.getInstance().save();
     }
