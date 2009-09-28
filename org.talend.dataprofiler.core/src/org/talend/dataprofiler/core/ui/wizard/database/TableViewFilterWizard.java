@@ -85,7 +85,7 @@ public class TableViewFilterWizard extends AbstractWizard {
 
     @Override
     protected String getEditorName() {
-        return "Table/View Filter";
+        return DefaultMessagesImpl.getString("TableViewFilterWizard.Table/ViewFilter"); //$NON-NLS-1$
     }
 
     @Override

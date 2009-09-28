@@ -58,7 +58,7 @@ public class FolderObjFilter extends AbstractViewerFilter {
             } else if (IResource.PROJECT == res.getType()) {
                     Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(res,
                             DQStructureManager.PROJECT_TDQ_KEY);
-                    return persistentProperty != null && !persistentProperty.toString().trim().equals("");
+                    return persistentProperty != null && !persistentProperty.toString().trim().equals(""); //$NON-NLS-1$
             } else {
                 return true;
             }

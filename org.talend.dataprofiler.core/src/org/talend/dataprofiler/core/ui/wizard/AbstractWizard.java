@@ -76,7 +76,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
         String elementName = getParameter().getName();
         IFolder folderResource = getParameter().getFolderProvider().getFolderResource();
         if (elementName == null || folderResource == null) {
-            return new ReturnCode("", false);
+            return new ReturnCode("", false); //$NON-NLS-1$
         } else {
 
             Collection<ModelElement> modelElements = new ArrayList<ModelElement>();
@@ -108,7 +108,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                 for (ModelElement element : modelElements) {
                     if (element.getName().equals(elementName)) {
                         if (!MessageUI.openConfirm(UIMessages.MSG_ANALYSIS_SAME_NAME)) {
-                            getParameter().setName(elementName + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+                            getParameter().setName(elementName + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
                         }
 
                         break;

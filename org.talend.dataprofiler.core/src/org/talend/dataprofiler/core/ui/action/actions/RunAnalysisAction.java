@@ -130,8 +130,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
 
         if (AnalysisType.COLUMNS_COMPARISON.equals(analysis.getParameters().getAnalysisType())) {
-            if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"),
-                    DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) {
+            if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
                 return;
             }
         }

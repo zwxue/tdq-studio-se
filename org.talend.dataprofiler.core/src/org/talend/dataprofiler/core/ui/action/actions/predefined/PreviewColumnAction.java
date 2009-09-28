@@ -59,7 +59,7 @@ public class PreviewColumnAction extends Action {
 				columnClause += language.quote(column.getName()) + ","; //$NON-NLS-1$
 			}
 			columnClause = columnClause.substring(0, columnClause.length() - 1);
-			String query = "select " + tableName + "." + columnClause + " from " + tableName; //$NON-NLS-1$ //$NON-NLS-2$
+			String query = "select " + tableName + "." + columnClause + " from " + tableName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			CorePlugin.getDefault().runInDQViewer(dataprovider, query,
 					tableName);
 		} else {

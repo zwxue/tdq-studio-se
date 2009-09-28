@@ -46,7 +46,7 @@ public class SoundexFrequencyTableState extends FrequencyTypeStates {
 
     @Override
     protected String getTitle() {
-        return DefaultMessagesImpl.getString("FrequencyTypeStates.SoundexFreqyebctStatistics");
+        return DefaultMessagesImpl.getString("FrequencyTypeStates.SoundexFreqyebctStatistics"); //$NON-NLS-1$
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SoundexFrequencyTableState extends FrequencyTypeStates {
         TableStructureEntity entity = new TableStructureEntity();
         entity
                 .setFieldNames(new String[] {
-                        DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.distinctCount"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.distinctCount"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         entity.setFieldWidths(new Integer[] { 180, 120, 100, 100 });
         return entity;
     }

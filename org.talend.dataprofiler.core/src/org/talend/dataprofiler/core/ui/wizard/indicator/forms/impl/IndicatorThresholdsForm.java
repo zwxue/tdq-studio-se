@@ -127,10 +127,10 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         if (isRangeForDate) {
             lowerBTN = new Button(group, SWT.PUSH);
             lowerBTN.setText("..."); //$NON-NLS-1$
-            lowerBTN.setToolTipText("Select lower threshold.");
+            lowerBTN.setToolTipText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.SelectLowerThreshold")); //$NON-NLS-1$
             lowerDelBTN = new Button(group, SWT.PUSH);
             lowerDelBTN.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            lowerDelBTN.setToolTipText("Remove lower threshold.");
+            lowerDelBTN.setToolTipText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.RemoveLowerThreshold")); //$NON-NLS-1$
 
             lowerText.setEditable(false);
             lowerText.setEnabled(false);
@@ -143,10 +143,10 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         if (isRangeForDate) {
             higherBTN = new Button(group, SWT.PUSH);
             higherBTN.setText("..."); //$NON-NLS-1$
-            higherBTN.setToolTipText("Select higher threshold.");
+            higherBTN.setToolTipText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.SelectHigherThreshold")); //$NON-NLS-1$
             higherDelBTN = new Button(group, SWT.PUSH);
             higherDelBTN.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            higherDelBTN.setToolTipText("Remove higher threshold.");
+            higherDelBTN.setToolTipText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.RemoveHigherThreshold")); //$NON-NLS-1$
 
             higherText.setEditable(false);
             higherText.setEnabled(false);

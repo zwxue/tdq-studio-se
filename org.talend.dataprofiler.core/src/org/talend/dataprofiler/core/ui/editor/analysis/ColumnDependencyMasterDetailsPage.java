@@ -107,8 +107,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
         anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer((AbstractAnalysisMetadataPage) this, topComp,
                 getColumnLeftSet(), getColumnRightSet(), DefaultMessagesImpl
-                        .getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl
-                        .getString("FunctionalDependencyMasterDetailsPage.Description"), false, true);
+                        .getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$
+                        .getString(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.1")), false, true); //$NON-NLS-1$
 
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
@@ -128,7 +128,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      * @param anasisDataComp
      */
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        dataFilterSection = createSection(form, anasisDataComp, "Data Filter", "Edit the data filter:");
+        dataFilterSection = createSection(form, anasisDataComp, DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.DataFilter"), DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.EditorFilter")); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(dataFilterSection);
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionClient.setLayout(new GridLayout());
@@ -273,11 +273,11 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     private ReturnCode validator(List<Column> columnASet, List<Column> columnBSet) {
 
         if (columnASet.size() == 0 || columnBSet.size() == 0) {
-            return new ReturnCode(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.columnsBlankMessag"), false);
+            return new ReturnCode(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.columnsBlankMessag"), false); //$NON-NLS-1$
         }
         if (columnASet.size() != columnBSet.size()) {
             // two set must have equal number.
-            return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage"), false);
+            return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage"), false); //$NON-NLS-1$
         }
 
         for (int i = 0; i < columnASet.size(); i++) {

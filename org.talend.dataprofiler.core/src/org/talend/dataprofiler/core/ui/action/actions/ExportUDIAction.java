@@ -35,7 +35,7 @@ public class ExportUDIAction extends Action {
 
     public ExportUDIAction(IFolder folder, boolean isForExchange) {
         if (isForExchange) {
-            setText("Export for Talend Exchange");
+            setText(DefaultMessagesImpl.getString("ExportUDIAction.ExportExchange")); //$NON-NLS-1$
         } else {
             setText(DefaultMessagesImpl.getString("UserDefinedIndicatorsActionProvider.exportUDI")); //$NON-NLS-1$
         }

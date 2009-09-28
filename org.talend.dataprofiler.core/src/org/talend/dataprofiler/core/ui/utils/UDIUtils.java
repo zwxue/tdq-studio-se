@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -64,8 +65,8 @@ public final class UDIUtils {
         // can't add the same user defined indicator
         for (Indicator indicator : columnIndicator.getIndicators()) {
             if (udid.getName().equals(indicator.getName())) {
-                MessageUI.openWarning("User Defined Indicator: " + udid.getName()
-                        + "\n\nThis indicator is already selected for this column.");
+                MessageUI.openWarning(DefaultMessagesImpl.getString("UDIUtils.UDISelected") //$NON-NLS-1$
+                        + udid.getName());
                 return null;
             }
         }
@@ -86,8 +87,8 @@ public final class UDIUtils {
                                 udid);
                         if (addIndicatorUnit == null) {
                             Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                            MessageUI.openError("Pattern: " + pattern.getName()
-                                    + "\n\nThis indicator is already selected for this column.");
+                            MessageUI.openError(DefaultMessagesImpl.getString("UDIUtils.PatternSelected") //$NON-NLS-1$
+                                    + pattern.getName());
                         } else {
                             addIndicatorUnits.add(addIndicatorUnit);
                         }

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.DataBaseVersionHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
@@ -177,7 +178,7 @@ public final class MigrationTaskManager {
                  * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
                  */
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask("Migration Task Job", tasks.size());
+                    monitor.beginTask(DefaultMessagesImpl.getString("MigrationTaskManager.MigrationTaskJob"), tasks.size()); //$NON-NLS-1$
 
                     for (IWorkspaceMigrationTask task : tasks) {
 

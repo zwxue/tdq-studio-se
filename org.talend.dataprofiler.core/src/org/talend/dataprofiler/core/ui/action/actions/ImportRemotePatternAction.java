@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
 import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
@@ -56,7 +57,7 @@ public class ImportRemotePatternAction extends Action {
     private List<IEcosComponent> fInstalledComponents;
 
     public ImportRemotePatternAction(IEcosComponent[] components) {
-        super("Import in DQ Repository");
+        super(DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportDqRepository")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IMPORT));
 
         this.components = components;
@@ -111,17 +112,17 @@ public class ImportRemotePatternAction extends Action {
                 ExpressionType type = ExpressionType.REGEXP;
                 IFolder folder = getFolder(DQStructureManager.PATTERNS);
 
-                if ("regex".equalsIgnoreCase(componet.getCategry().getName())) {
+                if ("regex".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
                     type = ExpressionType.REGEXP;
                     folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.REGEX);
-                } else if ("pattern".equalsIgnoreCase(componet.getCategry().getName())) {
+                } else if ("pattern".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
                     type = ExpressionType.REGEXP;
                     folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.REGEX);
-                } else if ("SQL".equalsIgnoreCase(componet.getCategry().getName())) {
+                } else if ("SQL".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
                     // MOD yyi 8960: Patterns imported from Exchange/SQL can not be put in "Patterns/SQL" folder
                     type = ExpressionType.SQL_LIKE;
                     folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.SQL);
-                } else if ("indicator".equalsIgnoreCase(componet.getCategry().getName())) {
+                } else if ("indicator".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
                     type = null;
                 }
 
@@ -141,7 +142,7 @@ public class ImportRemotePatternAction extends Action {
 
                 public void run() {
 
-                    ImportInfoDialog.openImportInformation(null, "Import finish.", (String[]) information.toArray(new String[0]));
+                    ImportInfoDialog.openImportInformation(null, DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (String[]) information.toArray(new String[0])); //$NON-NLS-1$
                 }
             });
 
@@ -232,7 +233,7 @@ public class ImportRemotePatternAction extends Action {
                             Display.getDefault().asyncExec(new Runnable() {
 
                                 public void run() {
-                                    MessageDialogWithToggle.openInformation(null, "Information", "File has existed.");
+                                    MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("ImportRemotePatternAction.Infor"), DefaultMessagesImpl.getString("ImportRemotePatternAction.FileExist")); //$NON-NLS-1$ //$NON-NLS-2$
                                 }
                             });
 
@@ -304,9 +305,9 @@ public class ImportRemotePatternAction extends Action {
         }
 
         public void downloadStart(int totalSize) {
-            fProgressLabel = "/" + toKbFormat(totalSize);
+            fProgressLabel = "/" + toKbFormat(totalSize); //$NON-NLS-1$
             fBytesDownloaded = 0;
-            fMonitor.beginTask("0 KB" + fProgressLabel, totalSize);
+            fMonitor.beginTask("0 KB" + fProgressLabel, totalSize); //$NON-NLS-1$
         }
 
         private String toKbFormat(int size) {

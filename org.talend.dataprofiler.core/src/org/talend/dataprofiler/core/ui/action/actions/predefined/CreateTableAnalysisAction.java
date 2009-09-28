@@ -24,7 +24,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 public class CreateTableAnalysisAction extends AbstractPredefinedTableAnalysisAction {
 
     public CreateTableAnalysisAction() {
-        super(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis"), null);
+        super(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis"), null); //$NON-NLS-1$
     }
 
     @Override

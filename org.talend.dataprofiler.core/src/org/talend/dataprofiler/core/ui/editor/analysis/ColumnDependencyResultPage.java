@@ -180,7 +180,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         CustomerDefaultCategoryDataset dataset = initCustomerDataset();
 
         JFreeChart createChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("ColumnDependencyResultPage.dependencyStrength"), dataset, PlotOrientation.HORIZONTAL, true);
+                .getString("ColumnDependencyResultPage.dependencyStrength"), dataset, PlotOrientation.HORIZONTAL, true); //$NON-NLS-1$
         ChartDecorator.decorateColumnDependency(createChart);
 
         GridData gd = new GridData();
@@ -341,7 +341,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
             String label = getRowLabel(indicator);
             if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
                 dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
-                dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label);
+                dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label); //$NON-NLS-1$
             }
         }
         return dataset;
@@ -364,8 +364,8 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
             if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
                 Long matchCount = indicator.getDistinctACount() == null ? 0 : indicator.getDistinctACount();
                 Long notMatchCount = indicator.getACount() == null ? 0 : indicator.getACount() - matchCount;
-                dataset.addValue(matchCount, "matching", label);
-                dataset.addValue(notMatchCount, "not matching", label);
+                dataset.addValue(matchCount, DefaultMessagesImpl.getString("ColumnDependencyResultPage.Match"), label); //$NON-NLS-1$
+                dataset.addValue(notMatchCount, DefaultMessagesImpl.getString("ColumnDependencyResultPage.NotMatch"), label); //$NON-NLS-1$
 
                 PatternChartDataEntity dataEntity = new PatternChartDataEntity();
                 dataEntity.setLabel(label);
@@ -394,7 +394,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         assert indicator.getColumnA() != null;
         assert indicator.getColumnB() != null;
 
-        return indicator.getColumnA().getName() + "-->" + indicator.getColumnB().getName();
+        return indicator.getColumnA().getName() + "-->" + indicator.getColumnB().getName(); //$NON-NLS-1$
     }
 
     private TableStructureEntity getTableStructure() {

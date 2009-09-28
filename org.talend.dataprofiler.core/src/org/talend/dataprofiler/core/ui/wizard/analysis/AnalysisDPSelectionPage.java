@@ -108,7 +108,7 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    return !folder.getName().endsWith(".svn");
+                    return !folder.getName().endsWith(".svn"); //$NON-NLS-1$
                 }
                 return true;
             }

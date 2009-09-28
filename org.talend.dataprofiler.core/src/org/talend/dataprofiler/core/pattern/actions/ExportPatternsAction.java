@@ -43,7 +43,7 @@ public class ExportPatternsAction extends Action {
      */
     public ExportPatternsAction(IFolder folder, boolean isForExchange) {
         if (isForExchange) {
-            setText("Export for Talend Exchange");
+            setText(DefaultMessagesImpl.getString("ExportPatternsAction.ExportForExchange")); //$NON-NLS-1$
         } else {
             setText(DefaultMessagesImpl.getString("ExportPatternsAction.exportPattern")); //$NON-NLS-1$
         }

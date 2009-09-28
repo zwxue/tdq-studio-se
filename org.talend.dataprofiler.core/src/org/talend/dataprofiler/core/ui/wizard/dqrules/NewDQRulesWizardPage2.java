@@ -41,7 +41,7 @@ public class NewDQRulesWizardPage2 extends AbstractWizardPage {
         container.setLayout(gdLayout);
 
         Label label = new Label(container, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("NewDQRulesWizard.whereClause"));
+        label.setText(DefaultMessagesImpl.getString("NewDQRulesWizard.whereClause")); //$NON-NLS-1$
         label.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
         whereText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -62,7 +62,7 @@ public class NewDQRulesWizardPage2 extends AbstractWizardPage {
             public void modifyText(ModifyEvent e) {
                 String whereExpression = whereText.getText();
 
-                if (whereExpression != null && !"".equals(whereExpression)) {
+                if (whereExpression != null && !"".equals(whereExpression)) { //$NON-NLS-1$
                     ((DQRulesParameter) getParameter()).setWhereClause(whereExpression);
                     setPageComplete(checkFieldsValue());
                 }

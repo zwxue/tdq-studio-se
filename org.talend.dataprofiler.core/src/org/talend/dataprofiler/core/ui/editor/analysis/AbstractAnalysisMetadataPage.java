@@ -169,7 +169,7 @@ public abstract class AbstractAnalysisMetadataPage extends
 			String prvFileName = PrvResourceFileHelper.getInstance()
 					.findCorrespondingFile(prov).getName();
 			connCombo.setData(prvFileName, index);
-			connCombo.setData(index + "", prov);
+			connCombo.setData(index + "", prov); //$NON-NLS-1$
 			index++;
 		}
 		if (index > 0) {

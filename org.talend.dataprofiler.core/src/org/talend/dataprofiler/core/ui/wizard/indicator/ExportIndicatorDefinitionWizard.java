@@ -18,6 +18,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ExportFactory;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
@@ -35,8 +36,8 @@ public class ExportIndicatorDefinitionWizard extends Wizard {
     public boolean performFinish() {
         String targetFile = page.getTargetFile();
 
-        if ("".equals(targetFile)) {
-            MessageDialog.openError(getShell(), "Error", "Please specify a valid resource!");
+        if ("".equals(targetFile)) { //$NON-NLS-1$
+            MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizard.Error"), DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         } else {
             try {

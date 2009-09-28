@@ -125,8 +125,8 @@ public class JavaOptionsForm extends AbstractIndicatorForm {
 
     @Override
     protected void initialize() {
-        String s1 = this.parameters.getTextParameter() == null ? "" : this.parameters.getTextParameter().getCharactersToReplace();
-        String s2 = this.parameters.getTextParameter() == null ? "" : this.parameters.getTextParameter()
+        String s1 = this.parameters.getTextParameter() == null ? "" : this.parameters.getTextParameter().getCharactersToReplace(); //$NON-NLS-1$
+        String s2 = this.parameters.getTextParameter() == null ? "" : this.parameters.getTextParameter() //$NON-NLS-1$
                 .getReplacementCharacters();
         characters2ReplaceText.setText(s1);
         replacementCharactersText.setText(s2);

@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -74,7 +75,7 @@ public class ImportInfoDialog extends MessageDialog {
      */
     public static void openImportInformation(Shell parent, String message, String[] information) {
 
-        ImportInfoDialog dialog = new ImportInfoDialog(parent, "Information", null, message, INFORMATION,
+        ImportInfoDialog dialog = new ImportInfoDialog(parent, DefaultMessagesImpl.getString("ImportInfoDialog.Information"), null, message, INFORMATION, //$NON-NLS-1$
                 new String[] { IDialogConstants.OK_LABEL }, 0, information);
         dialog.setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE);
         dialog.open();

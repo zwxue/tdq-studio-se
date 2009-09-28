@@ -54,7 +54,7 @@ public class IndicatorEditorInput implements IEditorInput {
      * @see org.eclipse.ui.IEditorInput#getName()
      */
     public String getName() {
-        return this.indicatorDefinition == null ? "" : this.indicatorDefinition.getName();
+        return this.indicatorDefinition == null ? "" : this.indicatorDefinition.getName(); //$NON-NLS-1$
     }
 
     /*
@@ -73,7 +73,7 @@ public class IndicatorEditorInput implements IEditorInput {
      * @see org.eclipse.ui.IEditorInput#getToolTipText()
      */
     public String getToolTipText() {
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /*

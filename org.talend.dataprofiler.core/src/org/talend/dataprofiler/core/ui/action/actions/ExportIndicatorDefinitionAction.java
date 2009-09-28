@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.ExportIndicatorDefinitionWizard;
 
 /**
@@ -26,7 +27,7 @@ public class ExportIndicatorDefinitionAction extends Action {
     protected static Logger log = Logger.getLogger(ExportIndicatorDefinitionAction.class);
 
     public ExportIndicatorDefinitionAction() {
-        super("Export Indicators");
+        super(DefaultMessagesImpl.getString("ExportIndicatorDefinitionAction.ExportIndicators")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPORT));
     }
 

@@ -143,7 +143,7 @@ public final class ChartTableFactory {
                             if (indicator instanceof DuplicateCountIndicator || indicator instanceof UniqueCountIndicator
                                     || indicator instanceof DistinctCountIndicator) {
                                 MenuItem rmDuplicated = new MenuItem(menu, SWT.PUSH);
-                                rmDuplicated.setText("Remove duplicates");
+                                rmDuplicated.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
                                 rmDuplicated.addSelectionListener(new SelectionAdapter() {
 
                                     @Override

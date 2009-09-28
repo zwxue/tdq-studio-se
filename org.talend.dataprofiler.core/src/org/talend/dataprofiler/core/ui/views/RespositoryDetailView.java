@@ -139,8 +139,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         // DefaultMessagesImpl
         //						.getString("RespositoryDetailView.group.FilePath"), fe.eResource() //$NON-NLS-1$
         // .getURI().toPlatformString(false));
-        newLabelAndText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"),
-                fe.eResource() == null ? "" : fe.eResource().getURI().toPlatformString(false));
+        newLabelAndText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"), //$NON-NLS-1$
+                fe.eResource() == null ? "" : fe.eResource().getURI().toPlatformString(false)); //$NON-NLS-1$
         // ~
     }
 
@@ -246,15 +246,15 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * @param component
      */
     private void createEcosComponent(IEcosComponent component) {
-        newLabelAndText(gContainer, "Name:", component.getName());
-        newLabelAndText(gContainer, "Author:", component.getAuthor());
-        newLabelAndText(gContainer, "Description:", component.getDescription());
-        newLabelAndText(gContainer, "Type:", component.getCategry().getName());
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Name"), component.getName()); //$NON-NLS-1$
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Author"), component.getAuthor()); //$NON-NLS-1$
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Description"), component.getDescription()); //$NON-NLS-1$
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Type"), component.getCategry().getName()); //$NON-NLS-1$
 
     }
 
     private void createRegularExpression(RegularExpression regularExpression) {
-        newLabelAndText(gContainer, "Expression:", regularExpression.getExpression().getBody());
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Expression"), regularExpression.getExpression().getBody()); //$NON-NLS-1$
     }
 
     private void createTableDetail(Table table) {

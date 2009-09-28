@@ -120,11 +120,11 @@ public final class ImageLib {
 
     public static final String ADD_PATTERN = "add_pattern.png"; //$NON-NLS-1$
 
-    public static final String SAVE = "save.gif";
+    public static final String SAVE = "save.gif"; //$NON-NLS-1$
 
-    public static final String IMPORT = "import.gif";
+    public static final String IMPORT = "import.gif"; //$NON-NLS-1$
 
-    public static final String EXPORT = "export.gif";
+    public static final String EXPORT = "export.gif"; //$NON-NLS-1$
 
     /** PK icon from SQL Explorer. */
     public static final String PK_DECORATE = "pk_decorate.gif"; //$NON-NLS-1$
@@ -147,21 +147,21 @@ public final class ImageLib {
     public static final String REFRESH_SPACE = "refresh.gif"; //$NON-NLS-1$
 
     /** Icon for Talend Exchange folder. */
-    public static final String EXCHANGE = "ecosystem_view.gif";
+    public static final String EXCHANGE = "ecosystem_view.gif"; //$NON-NLS-1$
 
     /** Icon of indicator's definition. */
-    public static final String IND_DEFINITION = "IndicatorDefinition.gif";
+    public static final String IND_DEFINITION = "IndicatorDefinition.gif"; //$NON-NLS-1$
 
     /** Icon for Pagination. */
-    public static final String ICON_PAGE_LAST_LNK = "bottomb.gif";
+    public static final String ICON_PAGE_LAST_LNK = "bottomb.gif"; //$NON-NLS-1$
 
-    public static final String ICON_PAGE_FIRST_LNK = "topb.gif";
+    public static final String ICON_PAGE_FIRST_LNK = "topb.gif"; //$NON-NLS-1$
 
-    public static final String ICON_PAGE_PREV_LNK = "prevb.gif";
+    public static final String ICON_PAGE_PREV_LNK = "prevb.gif"; //$NON-NLS-1$
 
-    public static final String ICON_PAGE_NEXT_LNK = "nextb.gif";
+    public static final String ICON_PAGE_NEXT_LNK = "nextb.gif"; //$NON-NLS-1$
 
-    public static final String ICON_INFO = "info.gif";
+    public static final String ICON_INFO = "info.gif"; //$NON-NLS-1$
 
     /**
      * DOC bzhou ImageLib constructor comment.

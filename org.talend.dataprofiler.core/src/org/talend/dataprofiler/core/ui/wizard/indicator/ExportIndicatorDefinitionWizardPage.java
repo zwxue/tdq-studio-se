@@ -40,10 +40,10 @@ public class ExportIndicatorDefinitionWizardPage extends WizardPage {
     private ProgressBar progressBar;
 
     public ExportIndicatorDefinitionWizardPage() {
-        super("Export System Indicators");
+        super(DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizardPage.ExportSystemIndicator")); //$NON-NLS-1$
 
-        setTitle("Export System Indicators");
-        setDescription("Choose a file where to export the system indicators.");
+        setTitle(DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizardPage.ExportSystemIndicators")); //$NON-NLS-1$
+        setDescription(DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizardPage.ChooseFile")); //$NON-NLS-1$
     }
 
     public void createControl(Composite parent) {
@@ -59,7 +59,7 @@ public class ExportIndicatorDefinitionWizardPage extends WizardPage {
         fileComp.setLayout(layout);
         fileComp.setLayoutData(gridData);
         Label label = new Label(fileComp, SWT.NONE);
-        label.setText("Select a file (definition):");
+        label.setText(DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizardPage.SelectFile")); //$NON-NLS-1$
 
         fileText = new Text(fileComp, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -72,7 +72,7 @@ public class ExportIndicatorDefinitionWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                String path = "";
+                String path = ""; //$NON-NLS-1$
 
                 FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
                 dialog.setFilterExtensions(new String[] { "*.definition" }); //$NON-NLS-1$

@@ -36,6 +36,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.PaginationInfo;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 
@@ -110,7 +111,7 @@ public class UIPagination {
     }
 
     public void updatePageInfoLabel() {
-        pageInfoLabel.setText(currentPage + 1 + "/" + totalPages);
+        pageInfoLabel.setText(currentPage + 1 + "/" + totalPages); //$NON-NLS-1$
     }
 
     private void createNavComposite(Composite searchMainComp) {
@@ -122,7 +123,7 @@ public class UIPagination {
         pageNavComp.setLayout(new FormLayout());
         toolkit.paintBordersFor(pageNavComp);
 
-        pageInfoLabel = toolkit.createLabel(pageNavComp, "", SWT.NONE);
+        pageInfoLabel = toolkit.createLabel(pageNavComp, "", SWT.NONE); //$NON-NLS-1$
         final FormData fdLabel = new FormData();
         fdLabel.bottom = new FormAttachment(100, 0);
         fdLabel.top = new FormAttachment(0, 5);
@@ -185,12 +186,12 @@ public class UIPagination {
         goImgFD.bottom = new FormAttachment(pageGoText, 0, SWT.BOTTOM);
         goImgFD.top = new FormAttachment(pageGoText, 0, SWT.TOP);
         goImgHypLnk.setLayoutData(goImgFD);
-        goImgHypLnk.setText("Go");
+        goImgHypLnk.setText(DefaultMessagesImpl.getString("UIPagination.Go")); //$NON-NLS-1$
     }
 
     public static boolean isNumeric(String originStr) {
         originStr = originStr.trim();
-        if (originStr.equals("")) {
+        if (originStr.equals("")) { //$NON-NLS-1$
             return false;
         }
         boolean valideChar = true;
@@ -286,21 +287,21 @@ public class UIPagination {
     private void go() {
 
         if (!isNumeric(pageGoText.getText().trim())) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error",
-                    "Page number should be a valid integer.");
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl.getString("UIPagination.Error"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("UIPagination.PageNumBeValid")); //$NON-NLS-1$
             return;
         }
         Integer goNo = null;
         try {
             goNo = Integer.parseInt(pageGoText.getText().trim());
         } catch (Exception exc) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error",
-                    "Page number not in an valid range.");
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl.getString("UIPagination.Err"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("UIPagination.NumNotInValidRange")); //$NON-NLS-1$
             return;
         }
         if (goNo < 1 || goNo > totalPages) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error",
-                    "Page number not in an valid range.");
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl.getString("UIPagination.Errors"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("UIPagination.NotInValidRange")); //$NON-NLS-1$
             return;
         }
         pageCache.get(currentPage).dispose();
@@ -361,7 +362,7 @@ public class UIPagination {
         try {
             String defaultPageSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(
                     EditorPreferencePage.ANALYZED_ITEMS_PER_PAGE);
-            if (!"".equals(defaultPageSize)) {
+            if (!"".equals(defaultPageSize)) { //$NON-NLS-1$
                 return Integer.parseInt(defaultPageSize);
             }
         } catch (NumberFormatException e) {

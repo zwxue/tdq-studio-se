@@ -371,13 +371,13 @@ public class PatternTestView extends ViewPart {
 						if ("1".equalsIgnoreCase(okString)) { //$NON-NLS-1$
 							emoticonLabel.setImage(ImageLib
 									.getImage(ImageLib.EMOTICON_SMILE));
-							resultLabel.setText("matches");
+							resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
 							return;
 						}
 					}
 					emoticonLabel.setImage(ImageLib
 							.getImage(ImageLib.EXCLAMATION));
-					resultLabel.setText("non-matches");
+					resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.nonMatch")); //$NON-NLS-1$
 					return;
 				} catch (Exception exception) {
 					log.error(exception, exception);

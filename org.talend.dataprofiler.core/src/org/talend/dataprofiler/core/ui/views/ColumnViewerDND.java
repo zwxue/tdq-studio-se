@@ -324,7 +324,7 @@ public class ColumnViewerDND {
                     AnalysisColumnTreeViewer.VIEWER_KEY);
             // ADD xqliu 2009-08-24 bug 8776
             if (ExecutionLanguage.JAVA.equals(viewer.getLanguage())) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnViewerDND.UDIWarning"));
+                MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnViewerDND.UDIWarning")); //$NON-NLS-1$
                 return;
             }
             // ~

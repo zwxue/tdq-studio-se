@@ -30,6 +30,6 @@ public class PatternLowFrequencyStatisticsState extends LowFrequencyStatisticsSt
     @Override
     protected String getTitle() {
         // MOD hcheng 2009-06-16,0007725: missed indicator name in pattern graphics.
-        return DefaultMessagesImpl.getString("FrequencyTypeStates.PatternLowFreqyebctStatistics");
+        return DefaultMessagesImpl.getString("FrequencyTypeStates.PatternLowFreqyebctStatistics"); //$NON-NLS-1$
     }
 }

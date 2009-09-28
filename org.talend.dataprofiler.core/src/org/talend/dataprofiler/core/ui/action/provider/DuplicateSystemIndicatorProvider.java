@@ -133,7 +133,7 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
             IFile newFile = null;
             int idx = 1;
             while (true) {
-                final String newFilename = "copy" + idx + definition.getName() + ".definition"; //$NON-NLS-1$
+                final String newFilename = "copy" + idx + definition.getName() + ".definition"; //$NON-NLS-1$ //$NON-NLS-2$
                 newFile = getFolder(DQStructureManager.INDICATORS).getFolder(DQStructureManager.USER_DEFINED_INDICATORS).getFile(
                         newFilename);
                 if (!newFile.exists()) {

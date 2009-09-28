@@ -61,7 +61,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
             if (FILTER_FLAG && columnSets.size() > TABLE_VIEW_MAX) {
                 columnSets.clear();
                 this.setChildren(null);
-                MessageUI.openWarning(DefaultMessagesImpl.getString("NamedColumnSetFolderNode.warnMsg", TABLE_VIEW_MAX));
+                MessageUI.openWarning(DefaultMessagesImpl.getString("NamedColumnSetFolderNode.warnMsg", TABLE_VIEW_MAX)); //$NON-NLS-1$
             } else {
                 this.setChildren(columnSets.toArray());
             }
@@ -125,7 +125,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
      */
     protected <T extends NamedColumnSet> List<T> filterColumnSets(List<T> columnSets, String columnSetPattern) {
         if (needFilter(columnSetPattern)) {
-            String[] patterns = cleanPatterns(columnSetPattern.split(","));
+            String[] patterns = cleanPatterns(columnSetPattern.split(",")); //$NON-NLS-1$
             return filterMatchingColumnSets(columnSets, patterns);
         }
         return columnSets;
@@ -144,7 +144,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         for (T t : columnSets) {
             for (String pattern : patterns) {
                 // MOD scorreia 2009-05-13 use SQL patterns for filter
-                String regex = pattern.replaceAll("%", ".*");
+                String regex = pattern.replaceAll("%", ".*"); //$NON-NLS-1$ //$NON-NLS-2$
                 if (t.getName().matches(regex)) {
                     retColumnSets.add(t);
                     size++;
@@ -167,7 +167,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
     private String[] cleanPatterns(String[] split) {
         ArrayList<String> ret = new ArrayList<String>();
         for (String s : split) {
-            if (s != null && !"".equals(s) && !ret.contains(s)) {
+            if (s != null && !"".equals(s) && !ret.contains(s)) { //$NON-NLS-1$
                 ret.add(s);
             }
         }
@@ -182,8 +182,8 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
      */
     private boolean needFilter(String columnSetPattern) {
         if (FILTER_FLAG) {
-            if (columnSetPattern != null && !columnSetPattern.equals("")) {
-                String[] patterns = cleanPatterns(columnSetPattern.split(","));
+            if (columnSetPattern != null && !columnSetPattern.equals("")) { //$NON-NLS-1$
+                String[] patterns = cleanPatterns(columnSetPattern.split(",")); //$NON-NLS-1$
                 if (patterns != null && patterns.length > 0) {
                     return true;
                 }

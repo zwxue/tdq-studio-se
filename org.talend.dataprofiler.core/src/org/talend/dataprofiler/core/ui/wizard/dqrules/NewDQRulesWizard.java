@@ -124,7 +124,7 @@ public class NewDQRulesWizard extends AbstractWizard {
     public boolean canFinish() {
         if (mPage2 != null) {
             if (getParameter().getWhereClause() != null) {
-                if (getParameter().getWhereClause() != null && !"".equals(getParameter().getWhereClause())) {
+                if (getParameter().getWhereClause() != null && !"".equals(getParameter().getWhereClause())) { //$NON-NLS-1$
                     return mPage2.isPageComplete();
                 }
             }

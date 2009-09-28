@@ -92,7 +92,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     }
 
     public void addPages() {
-        this.getParameter().setName("");
+        this.getParameter().setName(""); //$NON-NLS-1$
 
         analysisMetadataWizardPage = new TableAnalysisMetadataWizardPage();
         this.addPage(analysisMetadataWizardPage);

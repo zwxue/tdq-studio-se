@@ -183,7 +183,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         }
 
         if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
-            form.setText("Nominal Columns Correlation");
+            form.setText(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NominalCorrelation")); //$NON-NLS-1$
         }
 
         createAnalysisColumnsSection(form, topComp);

@@ -346,7 +346,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
-                rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", ""));
+                rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                 String query = rowMatchExplorer.getRowsMatchStatement();
                 CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
@@ -362,7 +362,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
-                rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", ""));
+                rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                 String query = rowMatchExplorer.getRowsNotMatchStatement();
                 CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());

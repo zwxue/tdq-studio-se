@@ -113,12 +113,12 @@ public class PartListener implements IPartListener {
         try {
             IConfigurationElement configurationElement = getConfigurationElement();
             if (configurationElement != null)
-                return (PartListener) configurationElement.createExecutableExtension("class");
+                return (PartListener) configurationElement.createExecutableExtension("class"); //$NON-NLS-1$
         } catch (CoreException e) {
             log.error(e, e);
         }
         return null;
     }
 
-    private static final String EXTENSION_NAME = "org.talend.dataprofiler.core.editorPartListener";
+    private static final String EXTENSION_NAME = "org.talend.dataprofiler.core.editorPartListener"; //$NON-NLS-1$
 }

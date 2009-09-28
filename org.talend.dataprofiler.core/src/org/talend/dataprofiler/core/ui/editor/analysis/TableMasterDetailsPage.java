@@ -360,7 +360,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         previewSection = createSection(
                 form,
                 parent,
-                DefaultMessagesImpl.getString("TableMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("TableMasterDetailsPage.space")); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("TableMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("TableMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
         previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
         Composite sectionClient = toolkit.createComposite(previewSection);
         sectionClient.setLayout(new GridLayout());

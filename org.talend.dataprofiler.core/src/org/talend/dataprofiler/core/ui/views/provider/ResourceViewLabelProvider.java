@@ -159,7 +159,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         }
 
         if (element instanceof IFolder && input.startsWith(DQStructureManager.PREFIX_TDQ)) {
-            input = input.replaceFirst(DQStructureManager.PREFIX_TDQ, "");
+            input = input.replaceFirst(DQStructureManager.PREFIX_TDQ, ""); //$NON-NLS-1$
         }
 
         return super.decorateText(input, element);

@@ -55,7 +55,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     public static final int FOLDING_3 = 3;
 
     // default element count in per page
-    public static final String DEFAULT_PAGE_SIZE = "5";
+    public static final String DEFAULT_PAGE_SIZE = "5"; //$NON-NLS-1$
 
     private Text pageSizeText;
 
@@ -112,16 +112,16 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         mainComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Group group1 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
-        group1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding"));
+        group1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding")); //$NON-NLS-1$
         GridLayout gridLayout1 = new GridLayout();
         group1.setLayout(gridLayout1);
         GridData gridData1 = new GridData(GridData.FILL_HORIZONTAL);
         group1.setLayoutData(gridData1);
 
         Label label1 = new Label(group1, SWT.NONE);
-        label1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.foldingText"));
+        label1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.foldingText")); //$NON-NLS-1$
         button1 = new Button(group1, SWT.RADIO);
-        button1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding1"));
+        button1.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding1")); //$NON-NLS-1$
         button1.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -132,7 +132,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
         button2 = new Button(group1, SWT.RADIO);
-        button2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding2"));
+        button2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding2")); //$NON-NLS-1$
         button2.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -143,7 +143,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
         button3 = new Button(group1, SWT.RADIO);
-        button3.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding3"));
+        button3.setText(DefaultMessagesImpl.getString("EditorPreferencePage.folding3")); //$NON-NLS-1$
         button3.addSelectionListener(new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -169,16 +169,16 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         }
 
         Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
-        group2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding"));
+        group2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding")); //$NON-NLS-1$
         GridLayout gridLayout2 = new GridLayout();
         group2.setLayout(gridLayout2);
         GridData gridData2 = new GridData(GridData.FILL_HORIZONTAL);
         group2.setLayoutData(gridData2);
 
         Label label2 = new Label(group2, SWT.NONE);
-        label2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFoldingText"));
+        label2.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFoldingText")); //$NON-NLS-1$
         button4 = new Button(group2, SWT.CHECK);
-        button4.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding1"));
+        button4.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding1")); //$NON-NLS-1$
         setCurrentAnalyzedElements(ResourcesPlugin.getPlugin().getPluginPreferences()
                 .getInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS) == 0 ? true : false);
         button4.setSelection(isCurrentAnalyzedElements());
@@ -192,7 +192,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
         button5 = new Button(group2, SWT.CHECK);
-        button5.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding2"));
+        button5.setText(DefaultMessagesImpl.getString("EditorPreferencePage.resultFolding2")); //$NON-NLS-1$
         setCurrentIndicators(ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_RESULT_PAGE_INDICATORS) == 0 ? true
                 : false);
         button5.setSelection(isCurrentIndicators());
@@ -210,11 +210,11 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         pageSizeComp.setLayout(new GridLayout(2, false));
 
         Label dfofLable = new Label(pageSizeComp, SWT.NONE);
-        dfofLable.setText("Analyzed Items Per Page");
+        dfofLable.setText(DefaultMessagesImpl.getString("EditorPreferencePage.AnalyzePerPage")); //$NON-NLS-1$
 
         pageSizeText = new Text(pageSizeComp, SWT.BORDER);
         String pageSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(ANALYZED_ITEMS_PER_PAGE);
-        if (pageSize == null || pageSize.equals("")) {
+        if (pageSize == null || pageSize.equals("")) { //$NON-NLS-1$
             pageSize = DEFAULT_PAGE_SIZE;
         }
         pageSizeText.setText(pageSize);

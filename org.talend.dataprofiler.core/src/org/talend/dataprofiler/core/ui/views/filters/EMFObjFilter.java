@@ -62,7 +62,7 @@ public class EMFObjFilter extends AbstractViewerFilter {
             }
         } else if (parentElement instanceof IFolder) {
             IFolder folder = (IFolder) parentElement;
-            if ("Exchange".equals(folder.getName())) {
+            if ("Exchange".equals(folder.getName())) { //$NON-NLS-1$
                 return false;
             }
         }

@@ -280,9 +280,9 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         private final String schemaName;
 
         public PackageKey(Package pckg) {
-            schemaName = SwitchHelpers.SCHEMA_SWITCH.doSwitch(pckg) == null ? "__Schema_Name__" : SwitchHelpers.SCHEMA_SWITCH
+            schemaName = SwitchHelpers.SCHEMA_SWITCH.doSwitch(pckg) == null ? "__Schema_Name__" : SwitchHelpers.SCHEMA_SWITCH //$NON-NLS-1$
                     .doSwitch(pckg).getName();
-            catalogName = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg) == null ? "__Catalog_Name__" : SwitchHelpers.CATALOG_SWITCH
+            catalogName = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg) == null ? "__Catalog_Name__" : SwitchHelpers.CATALOG_SWITCH //$NON-NLS-1$
                     .doSwitch(pckg).getName();
         }
 

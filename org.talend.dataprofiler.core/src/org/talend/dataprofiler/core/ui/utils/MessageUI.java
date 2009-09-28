@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -23,15 +24,15 @@ public final class MessageUI {
     }
 
     public static void openError(String message) {
-        MessageDialogWithToggle.openError(null, "Error", message);
+        MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("MessageUI.Error"), message); //$NON-NLS-1$
     }
 
     public static void openWarning(String message) {
-        MessageDialogWithToggle.openWarning(null, "Warning", message);
+        MessageDialogWithToggle.openWarning(null, DefaultMessagesImpl.getString("MessageUI.Warning"), message); //$NON-NLS-1$
     }
 
     public static boolean openConfirm(String message) {
-        return MessageDialogWithToggle.openConfirm(null, "Confirm", message);
+        return MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("MessageUI.Confirm"), message); //$NON-NLS-1$
     }
 
 }

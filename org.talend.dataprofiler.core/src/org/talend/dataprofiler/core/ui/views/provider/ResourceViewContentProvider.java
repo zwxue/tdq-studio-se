@@ -88,7 +88,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     if (folder instanceof IFolder && ((IFolder) folder).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
                         // ~ MOD mzhao 2009-04-13, Move reporting db folder into
                         // project folder.
-                        if (((IFolder) folder).getName().trim().equals("TDQ_reporting_db")) {
+                        if (((IFolder) folder).getName().trim().equals("TDQ_reporting_db")) { //$NON-NLS-1$
                             continue;
                         }
                         // ~

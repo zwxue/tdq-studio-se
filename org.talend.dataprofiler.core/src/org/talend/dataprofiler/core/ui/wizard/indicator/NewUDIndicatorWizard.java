@@ -58,7 +58,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
         mPage2 = new NewUDIndicatorWizardPage2();
         mPage2.setTitle(s + DefaultMessagesImpl.getString("NewUDIndicatorWizard.createPage2_2")); //$NON-NLS-1$
-        mPage2.setDescription(DefaultMessagesImpl.getString("NewUDIndicatorWizard.defineUDIndicator")); //$NON-NLS-1$
+        mPage2.setDescription(""); //$NON-NLS-1$
 
         addPage(mPage1);
         addPage(mPage2);
@@ -123,7 +123,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
     @Override
     public boolean canFinish() {
         if (mPage1 != null && mPage2 != null) {
-            if (getParameter().getExpression() != null && !"".equals(getParameter().getExpression().trim())) {
+            if (getParameter().getExpression() != null && !"".equals(getParameter().getExpression().trim())) { //$NON-NLS-1$
                 return mPage1.isPageComplete() && mPage2.isPageComplete();
             }
         }

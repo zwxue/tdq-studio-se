@@ -20,6 +20,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
@@ -67,7 +68,7 @@ public class IndicatorEditor extends CommonFormEditor {
         } else if (input instanceof FileEditorInput) {
             return UDIResourceFileHelper.getInstance().findUDI(((FileEditorInput) input).getFile()).getName();
         }
-        return "Indicator Editor";
+        return DefaultMessagesImpl.getString("IndicatorEditor.IndicatorEditor"); //$NON-NLS-1$
     }
 
     /*

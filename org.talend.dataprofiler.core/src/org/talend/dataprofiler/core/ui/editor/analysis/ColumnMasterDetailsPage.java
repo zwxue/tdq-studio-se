@@ -332,7 +332,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         previewSection = createSection(
                 form,
                 parent,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
         previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
         Composite sectionClient = toolkit.createComposite(previewSection);
         sectionClient.setLayout(new GridLayout());
@@ -530,7 +530,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 // MOD xqliu 2009-08-24 bug 8776
                 execLang = execCombo.getText();
                 if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang)) && includeUDI()) {
-                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.UDIWarning"));
+                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.UDIWarning")); //$NON-NLS-1$
                     execCombo.setText(ExecutionLanguage.SQL.getLiteral());
                     return;
                 }

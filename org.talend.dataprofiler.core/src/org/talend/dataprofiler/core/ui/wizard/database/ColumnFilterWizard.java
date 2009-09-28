@@ -89,7 +89,7 @@ public class ColumnFilterWizard extends AbstractWizard {
 
     @Override
     protected String getEditorName() {
-        return "Column Filter";
+        return DefaultMessagesImpl.getString("ColumnFilterWizard.ColumnFilter"); //$NON-NLS-1$
     }
 
     @Override

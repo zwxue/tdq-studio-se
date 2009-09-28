@@ -106,7 +106,7 @@ public class FunctionDependencyMetadataPage extends WizardPage {
         authorText.setText(ReponsitoryContextBridge.getAuthor());
         
         setControl(container);
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "org.talend.dataprofiler.help.helpDQRules");
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(container, "org.talend.dataprofiler.help.helpDQRules"); //$NON-NLS-1$
     }
 
 }

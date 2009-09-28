@@ -38,7 +38,7 @@ public class HideSeriesChartDialog extends FullScreenChartDialog {
 
     private Indicator indicator;
 
-    private static final String SERIES_KEY_ID = "SERIES_KEY";
+    private static final String SERIES_KEY_ID = "SERIES_KEY"; //$NON-NLS-1$
 
     public HideSeriesChartDialog(Shell shell, JFreeChart chart, Indicator indicator) {
         super(shell, chart);

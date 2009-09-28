@@ -59,6 +59,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
@@ -84,7 +85,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
     private boolean isNeedUtility;
 
-    private static final String SERIES_KEY_ID = "SERIES_KEY";
+    private static final String SERIES_KEY_ID = "SERIES_KEY"; //$NON-NLS-1$
 
     private Map<String, RowColumPair> hightlightSeriesMap = new HashMap<String, RowColumPair>();
 
@@ -98,7 +99,7 @@ public class HideSeriesChartComposite extends ChartComposite {
         this.column = column;
         this.isNeedUtility = isNeedUtility;
         this.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
-        this.setToolTipText("sdfsdf");
+        this.setToolTipText("sdfsdf"); //$NON-NLS-1$
 
         createHideSeriesArea();
 
@@ -122,7 +123,7 @@ public class HideSeriesChartComposite extends ChartComposite {
                 Menu menu = new Menu(getShell(), SWT.POP_UP);
                 setMenu(menu);
                 MenuItem itemShowInFullScreen = new MenuItem(menu, SWT.PUSH);
-                itemShowInFullScreen.setText("Show in full screen");
+                itemShowInFullScreen.setText(DefaultMessagesImpl.getString("HideSeriesChartComposite.ShowInFullScreen")); //$NON-NLS-1$
                 itemShowInFullScreen.addSelectionListener(new SelectionAdapter() {
 
                     @Override
@@ -170,7 +171,7 @@ public class HideSeriesChartComposite extends ChartComposite {
                                 nominalList, seriesK, seriesLabel);
 
                         MenuItem item = new MenuItem(menu, SWT.PUSH);
-                        item.setText("View rows");
+                        item.setText(DefaultMessagesImpl.getString("HideSeriesChartComposite.ViewRow")); //$NON-NLS-1$
                         item.addSelectionListener(new SelectionAdapter() {
 
                             @Override
@@ -214,7 +215,7 @@ public class HideSeriesChartComposite extends ChartComposite {
             final String sql = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis, nominalList, seriesK,
                     seriesLabel);
             MenuItem item = new MenuItem(menu, SWT.PUSH);
-            item.setText("View rows");
+            item.setText(DefaultMessagesImpl.getString("HideSeriesChartComposite.ViewRows")); //$NON-NLS-1$
             item.addSelectionListener(new SelectionAdapter() {
 
                 @Override

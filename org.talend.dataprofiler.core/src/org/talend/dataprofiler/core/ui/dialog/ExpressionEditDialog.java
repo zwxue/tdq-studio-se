@@ -80,7 +80,7 @@ public class ExpressionEditDialog extends TrayDialog {
         sform.setLayoutData(data);
 
         Group group = new Group(sform, SWT.NONE);
-        group.setText(DefaultMessagesImpl.getString("ExpressionEditDialog.groupTitle"));
+        group.setText(DefaultMessagesImpl.getString("ExpressionEditDialog.groupTitle")); //$NON-NLS-1$
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 20;
         group.setLayout(gridLayout);
@@ -114,7 +114,7 @@ public class ExpressionEditDialog extends TrayDialog {
         });
 
         TableColumn column = new TableColumn(templatesTable, SWT.NONE);
-        column.setText(DefaultMessagesImpl.getString("ExpressionEditDialog.columnTitle"));
+        column.setText(DefaultMessagesImpl.getString("ExpressionEditDialog.columnTitle")); //$NON-NLS-1$
 
         for (String template : templates) {
             TableItem item = new TableItem(templatesTable, SWT.NONE);

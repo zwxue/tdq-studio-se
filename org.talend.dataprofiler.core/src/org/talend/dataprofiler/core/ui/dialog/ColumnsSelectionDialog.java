@@ -283,7 +283,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (parent != null) {
                 this.catalogName = parent.getName();
             } else {
-                this.catalogName = "";
+                this.catalogName = ""; //$NON-NLS-1$
             }
             this.columnSetName = columnSetOwner.getName();
         }

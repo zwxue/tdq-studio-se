@@ -41,10 +41,10 @@ public class ImportIndicatorDefinitionWizardPage extends WizardPage {
     private ProgressBar progressBar;
 
     public ImportIndicatorDefinitionWizardPage() {
-        super("Import System Indicators");
+        super(DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizardPage.ImportSystemIndicator")); //$NON-NLS-1$
 
-        setTitle("Import System Indicators");
-        setDescription("Choose a file to import system indicators from.");
+        setTitle(DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizardPage.ImportSystemIndicators")); //$NON-NLS-1$
+        setDescription(DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizardPage.ChooseFile")); //$NON-NLS-1$
     }
 
     public void createControl(Composite parent) {
@@ -60,7 +60,7 @@ public class ImportIndicatorDefinitionWizardPage extends WizardPage {
         fileComp.setLayout(layout);
         fileComp.setLayoutData(gridData);
         Label label = new Label(fileComp, SWT.NONE);
-        label.setText("Select a file (definition):");
+        label.setText(DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizardPage.SelectFile")); //$NON-NLS-1$
 
         fileText = new Text(fileComp, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -73,7 +73,7 @@ public class ImportIndicatorDefinitionWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                String path = "";
+                String path = ""; //$NON-NLS-1$
 
                 FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
                 dialog.setFilterExtensions(new String[] { "*.definition" }); //$NON-NLS-1$

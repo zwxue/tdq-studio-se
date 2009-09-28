@@ -71,7 +71,7 @@ public final class TopChartFactory {
     /**
      * New format string. ADD yyi 2009-09-24 9243
      * */
-    public static final String NEW_TOOL_TIP_FORMAT_STRING = "{0} = {2}";
+    public static final String NEW_TOOL_TIP_FORMAT_STRING = "{0} = {2}"; //$NON-NLS-1$
 
     private TopChartFactory() {
     }
@@ -292,9 +292,9 @@ public final class TopChartFactory {
                 String label = valueAggregator.getLabels(seriesK).get(item);
                 final Object[] itemArray = super.createItemArray(dset, series, item);
                 itemArray[0] = label;
-                itemArray[1] = "avg=" + itemArray[1];
-                itemArray[2] = "record count=" + itemArray[2];
-                itemArray[3] = "null count=" + itemArray[3];
+                itemArray[1] = "avg=" + itemArray[1]; //$NON-NLS-1$
+                itemArray[2] = "record count=" + itemArray[2]; //$NON-NLS-1$
+                itemArray[3] = "null count=" + itemArray[3]; //$NON-NLS-1$
                 return itemArray;
             }
 
@@ -429,7 +429,7 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createStackedBarChart(String titile, CategoryDataset dataset, PlotOrientation orientation) {
-        return createStackedBarChart(null, null, DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, orientation,
+        return createStackedBarChart(null, null, DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, orientation, //$NON-NLS-1$
                 true, false, false);
     }
 
@@ -442,7 +442,7 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createStackedBarChart(String title, CategoryDataset dataset, boolean showLegend) {
-        return createStackedBarChart(null, title, DefaultMessagesImpl.getString("TopChartFactory.value"), dataset,
+        return createStackedBarChart(null, title, DefaultMessagesImpl.getString("TopChartFactory.value"), dataset, //$NON-NLS-1$
                 PlotOrientation.VERTICAL, showLegend, false, false);
     }
 

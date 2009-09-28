@@ -259,7 +259,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
             // String[] driverpaths =
             // this.connectionParam.getDriverPath().split(";");
             Driver externalDriver = null;
-            String errorMsg = "";
+            String errorMsg = ""; //$NON-NLS-1$
             try {
                 externalDriver = createGenericJDBC(this.connectionParam.getDriverPath(), this.connectionParam
                         .getDriverClassName());
@@ -274,7 +274,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                             .getJdbcUrl(), this.connectionParam.getParameters());
                     if (connection == null) {
                         rc.setOk(false);
-                        rc.setMessage(DefaultMessagesImpl.getString("DatabaseWizardPage.connIsNULL"));
+                        rc.setMessage(DefaultMessagesImpl.getString("DatabaseWizardPage.connIsNULL")); //$NON-NLS-1$
                     }
                 } catch (Exception e) {
                     rc.setOk(false);
@@ -416,14 +416,14 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         if (!SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(dbTypeName)) {
             if (SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey().equals(dbTypeName)) {
                 // deal with generic jdbc;
-                String driverName = this.connectionParam.getDriverClassName() == null ? "" : this.connectionParam
+                String driverName = this.connectionParam.getDriverClassName() == null ? "" : this.connectionParam //$NON-NLS-1$
                         .getDriverClassName();
-                String connURL = this.connectionParam.getJdbcUrl() == null ? "" : this.connectionParam.getJdbcUrl();
-                String userName = this.userid == null ? "" : this.userid;
-                if ("".equals(driverName) || "".equals(connURL)) {
+                String connURL = this.connectionParam.getJdbcUrl() == null ? "" : this.connectionParam.getJdbcUrl(); //$NON-NLS-1$
+                String userName = this.userid == null ? "" : this.userid; //$NON-NLS-1$
+                if ("".equals(driverName) || "".equals(connURL)) { //$NON-NLS-1$ //$NON-NLS-2$
                     complete = false;
                 } else {
-                    complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver().equals(driverName) ? true : !"".equals(userName);
+                    complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver().equals(driverName) ? true : !"".equals(userName); //$NON-NLS-1$
                 }
             } else if (SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbTypeName)) {
                 // deal with sqlite;

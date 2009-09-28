@@ -36,6 +36,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedColumnSetsSynDialog;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedColumnsSynDialog;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedElementSynDialog;
@@ -74,7 +75,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 	public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage,
 			TdDataProvider tdProvider) {
 		this.newDataProvider = (TdDataProvider) masterPage.getConnCombo()
-				.getData(masterPage.getConnCombo().getSelectionIndex() + "");
+				.getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
 		this.oldDataProvider = tdProvider;
 		this.synAnalysis = masterPage.getAnalysis();
 		changeActionStatus = new ReturnCode(Boolean.FALSE);
@@ -117,8 +118,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 		boolean retCode = MessageDialog
 				.openQuestion(
 						shell,
-						"Change connection ?",
-						"This action may cause asynchronization problems of analyzed elements, Do you want to continue ?");
+						DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"), //$NON-NLS-1$
+						DefaultMessagesImpl.getString("ChangeConnectionAction.MayCauseAsynProblem")); //$NON-NLS-1$
 		if (retCode) {
 
 			if (analyzedElements.get(0) instanceof Column) {
@@ -140,8 +141,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 				boolean isReload = MessageDialog
 						.openQuestion(
 								shell,
-								"Reload from database ?",
-								"It seems that there exist some analyzed element(s) are asynchronous,Do you want to reload them(it) from database ?");
+								DefaultMessagesImpl.getString("ChangeConnectionAction.ReloadFromDatabase"), //$NON-NLS-1$
+								DefaultMessagesImpl.getString("ChangeConnectionAction.ExistElementAsynchronuos")); //$NON-NLS-1$
 				if (isReload) {
 					ModelElement newDataProviderModel = treeModelLs.get(0)
 							.getNewDataProvElement();

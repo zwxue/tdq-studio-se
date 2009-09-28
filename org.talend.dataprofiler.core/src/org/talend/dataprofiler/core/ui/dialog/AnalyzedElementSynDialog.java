@@ -39,276 +39,268 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC mzhao Analyzed element synchronization dialog. ADDED 2009-06-02
- * Feature:5887
+ * DOC mzhao Analyzed element synchronization dialog. ADDED 2009-06-02 Feature:5887
  */
-public abstract class AnalyzedElementSynDialog extends SelectionStatusDialog
-		implements ISelectionChangedListener {
-	protected TreeViewer sTreeViewer;
-	protected ITreeContentProvider sContentProvider;
-	protected ILabelProvider sLabelProvider;
-	protected Analysis analysis;
-	protected List<SynTreeModel> modelInput = null;
+public abstract class AnalyzedElementSynDialog extends SelectionStatusDialog implements ISelectionChangedListener {
 
-	protected TdDataProvider newDataProvider;
+    protected TreeViewer sTreeViewer;
 
-	protected Map<ModelElement, ModelElement> synedEleMap;
+    protected ITreeContentProvider sContentProvider;
 
-	public AnalyzedElementSynDialog(Shell parent, Analysis analysis,
-			TdDataProvider newDataProvider) {
-		super(parent);
-		setTitle("Synchronization with new connection");
-		initTableProvider();
-		this.newDataProvider = newDataProvider;
-		this.analysis = analysis;
-		modelInput = new ArrayList<SynTreeModel>();
-		synedEleMap = new HashMap<ModelElement, ModelElement>();
-	}
+    protected ILabelProvider sLabelProvider;
 
-	@Override
-	protected void computeResult() {
-	}
+    protected Analysis analysis;
 
-	public void selectionChanged(SelectionChangedEvent event) {
-	}
+    protected List<SynTreeModel> modelInput = null;
 
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		Composite composite = (Composite) super.createDialogArea(parent);
-		final GridLayout gridLayout2 = new GridLayout();
-		gridLayout2.marginWidth = 0;
-		gridLayout2.horizontalSpacing = 0;
-		gridLayout2.marginHeight = 0;
-		composite.setLayout(gridLayout2);
-		Composite infoComp = new Composite(composite, SWT.NONE);
-		final GridData gdInfoComp = new GridData(SWT.FILL, SWT.CENTER, true,
-				false);
-		gdInfoComp.heightHint = 22;
-		infoComp.setLayoutData(gdInfoComp);
-		final GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
-		infoComp.setLayout(gridLayout);
+    protected TdDataProvider newDataProvider;
 
-		final Label label = new Label(infoComp, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true));
-		label.setImage(ImageLib.getImage(ImageLib.ICON_INFO));
+    protected Map<ModelElement, ModelElement> synedEleMap;
 
-		final Label label1 = new Label(infoComp, SWT.NONE);
-		label1.setRegion(null);
-		final GridData gdLabel1 = new GridData(SWT.FILL, SWT.FILL, true, true);
-		gdLabel1.verticalIndent = 1;
-		label1.setLayoutData(gdLabel1);
-		label1
-				.setText("Following analyzed element(s) will be removed,do you want to continue?");
-		// label
-		// .setText(
-		// "  Which of following analyzed element(s) do you want to keep?");
-		Composite synModelComp = new Composite(composite, SWT.NONE);
-		final GridData gdsynModelComp = new GridData(SWT.FILL, SWT.FILL, true,
-				true);
-		gdsynModelComp.heightHint = 129;
-		synModelComp.setLayoutData(gdsynModelComp);
-		final GridLayout gridLayout1 = new GridLayout();
-		gridLayout1.marginWidth = 0;
-		gridLayout1.marginHeight = 0;
-		gridLayout1.horizontalSpacing = 0;
-		synModelComp.setLayout(gridLayout1);
-		sTreeViewer = createSynTreeViewer(synModelComp);
-		createTableHeader();
-		sTreeViewer.setInput(modelInput);
-		return composite;
-	}
+    public AnalyzedElementSynDialog(Shell parent, Analysis analysis, TdDataProvider newDataProvider) {
+        super(parent);
+        setTitle(DefaultMessagesImpl.getString("AnalyzedElementSynDialog.SynWithNewConnection")); //$NON-NLS-1$
+        initTableProvider();
+        this.newDataProvider = newDataProvider;
+        this.analysis = analysis;
+        modelInput = new ArrayList<SynTreeModel>();
+        synedEleMap = new HashMap<ModelElement, ModelElement>();
+    }
 
-	private void createTableHeader() {
-		sTreeViewer.getTree().setHeaderVisible(true);
-		sTreeViewer.getTree().setLinesVisible(true);
-		TreeColumn column1 = new TreeColumn(sTreeViewer.getTree(), SWT.CENTER);
-		column1.setWidth(200);
-		column1.setText("Name");
-		TreeColumn column2 = new TreeColumn(sTreeViewer.getTree(), SWT.CENTER);
-		column2.setWidth(500);
-		column2.setText("Status");
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true,
-				true).applyTo(sTreeViewer.getTree());
-	}
+    @Override
+    protected void computeResult() {
+    }
 
-	/**
-	 * 
-	 * DOC mzhao Create synchronized analyzed table.
-	 * 
-	 * @param parent
-	 * @return
-	 */
-	protected TreeViewer createSynTreeViewer(Composite parent) {
-		TreeViewer viewer = new TreeViewer(parent, SWT.MULTI | SWT.BORDER);
-		final Tree tree = viewer.getTree();
-		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		try {
-			viewer.setLabelProvider(this.sLabelProvider);
-			viewer.setContentProvider(this.sContentProvider);
-			viewer.addSelectionChangedListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    public void selectionChanged(SelectionChangedEvent event) {
+    }
 
-		return viewer;
-	}
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        Composite composite = (Composite) super.createDialogArea(parent);
+        final GridLayout gridLayout2 = new GridLayout();
+        gridLayout2.marginWidth = 0;
+        gridLayout2.horizontalSpacing = 0;
+        gridLayout2.marginHeight = 0;
+        composite.setLayout(gridLayout2);
+        Composite infoComp = new Composite(composite, SWT.NONE);
+        final GridData gdInfoComp = new GridData(SWT.FILL, SWT.CENTER, true, false);
+        gdInfoComp.heightHint = 22;
+        infoComp.setLayoutData(gdInfoComp);
+        final GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 2;
+        gridLayout.marginWidth = 0;
+        gridLayout.marginHeight = 0;
+        gridLayout.horizontalSpacing = 0;
+        infoComp.setLayout(gridLayout);
 
-	public List<SynTreeModel> getSynInputModel() {
-		reloadInputModel();
-		return modelInput;
-	}
+        final Label label = new Label(infoComp, SWT.NONE);
+        label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true));
+        label.setImage(ImageLib.getImage(ImageLib.ICON_INFO));
 
-	public Map<ModelElement, ModelElement> getSynedEleMap() {
-		return synedEleMap;
-	}
+        final Label label1 = new Label(infoComp, SWT.NONE);
+        label1.setRegion(null);
+        final GridData gdLabel1 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gdLabel1.verticalIndent = 1;
+        label1.setLayoutData(gdLabel1);
+        label1.setText(DefaultMessagesImpl.getString("AnalyzedElementSynDialog.RemoveAnalyeElement")); //$NON-NLS-1$
+        // label
+        // .setText(
+        // "  Which of following analyzed element(s) do you want to keep?");
+        Composite synModelComp = new Composite(composite, SWT.NONE);
+        final GridData gdsynModelComp = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gdsynModelComp.heightHint = 129;
+        synModelComp.setLayoutData(gdsynModelComp);
+        final GridLayout gridLayout1 = new GridLayout();
+        gridLayout1.marginWidth = 0;
+        gridLayout1.marginHeight = 0;
+        gridLayout1.horizontalSpacing = 0;
+        synModelComp.setLayout(gridLayout1);
+        sTreeViewer = createSynTreeViewer(synModelComp);
+        createTableHeader();
+        sTreeViewer.setInput(modelInput);
+        return composite;
+    }
 
-	private void initTableProvider() {
-		sLabelProvider = new AnaColSynLabelProvider();
-		sContentProvider = new DBTreeViewContentProvider();
+    private void createTableHeader() {
+        sTreeViewer.getTree().setHeaderVisible(true);
+        sTreeViewer.getTree().setLinesVisible(true);
+        TreeColumn column1 = new TreeColumn(sTreeViewer.getTree(), SWT.CENTER);
+        column1.setWidth(200);
+        column1.setText(DefaultMessagesImpl.getString("AnalyzedElementSynDialog.Name")); //$NON-NLS-1$
+        TreeColumn column2 = new TreeColumn(sTreeViewer.getTree(), SWT.CENTER);
+        column2.setWidth(500);
+        column2.setText(DefaultMessagesImpl.getString("AnalyzedElementSynDialog.Status")); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(sTreeViewer.getTree());
+    }
 
-	}
+    /**
+     * 
+     * DOC mzhao Create synchronized analyzed table.
+     * 
+     * @param parent
+     * @return
+     */
+    protected TreeViewer createSynTreeViewer(Composite parent) {
+        TreeViewer viewer = new TreeViewer(parent, SWT.MULTI | SWT.BORDER);
+        final Tree tree = viewer.getTree();
+        tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        try {
+            viewer.setLabelProvider(this.sLabelProvider);
+            viewer.setContentProvider(this.sContentProvider);
+            viewer.addSelectionChangedListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	protected abstract void reloadInputModel();
+        return viewer;
+    }
 
-	/**
-	 * 
-	 * DOC mzhao AnalyzedElementSynDialog class global comment. Detailled
-	 * comment
-	 */
-	public class SynTreeModel {
+    public List<SynTreeModel> getSynInputModel() {
+        reloadInputModel();
+        return modelInput;
+    }
 
-		private ModelElement oldDataProvElement = null;
-		private ModelElement newDataProvElement = null;
-		private ModelElement currentAnaElement = null;
+    public Map<ModelElement, ModelElement> getSynedEleMap() {
+        return synedEleMap;
+    }
 
-		public SynTreeModel(ModelElement currentElement) {
-			this.currentAnaElement = currentElement;
-		}
+    private void initTableProvider() {
+        sLabelProvider = new AnaColSynLabelProvider();
+        sContentProvider = new DBTreeViewContentProvider();
 
-		public String getLabel() {
-			return currentAnaElement.getName();
-		}
+    }
 
-		public String getAsynDecription() {
-			return "'" + oldDataProvElement.getName()
-					+ "' dose not exist in the new connection";
-		}
+    protected abstract void reloadInputModel();
 
-		public void setNewDataProvElement(ModelElement newDataProvElement) {
-			this.newDataProvElement = newDataProvElement;
-		}
+    /**
+     * 
+     * DOC mzhao AnalyzedElementSynDialog class global comment. Detailled comment
+     */
+    public class SynTreeModel {
 
-		public ModelElement getNewDataProvElement() {
-			return newDataProvElement;
-		}
+        private ModelElement oldDataProvElement = null;
 
-		public void setOldDataProvElement(ModelElement oldDataProvElement) {
-			this.oldDataProvElement = oldDataProvElement;
-		}
+        private ModelElement newDataProvElement = null;
 
-		public ModelElement getOldDataProvElement() {
-			return oldDataProvElement;
-		}
-	}
+        private ModelElement currentAnaElement = null;
 
-	/**
-	 * 
-	 * DOC mzhao AnalyzedColumnsSynDialog class global comment. Detailled
-	 * comment
-	 */
-	class DBTreeViewContentProvider implements ITreeContentProvider {
+        public SynTreeModel(ModelElement currentElement) {
+            this.currentAnaElement = currentElement;
+        }
 
-		/**
-		 * @param adapterFactory
-		 */
-		public DBTreeViewContentProvider() {
-			super();
-		}
+        public String getLabel() {
+            return currentAnaElement.getName();
+        }
 
-		public Object[] getChildren(Object parentElement) {
-			if (parentElement != null && parentElement instanceof SynTreeModel) {
-				SynTreeModel synTreeModel = (SynTreeModel) parentElement;
-				return new Object[] { synTreeModel };
-			}
-			return null;
-		}
+        public String getAsynDecription() {
+            return DefaultMessagesImpl.getString("AnalyzedElementSynDialog.NotExistInNewConn", oldDataProvElement.getName()); //$NON-NLS-1$
+        }
 
-		public boolean hasChildren(Object element) {
-			return false;
-		}
+        public void setNewDataProvElement(ModelElement newDataProvElement) {
+            this.newDataProvElement = newDataProvElement;
+        }
 
-		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof List) {
-				return ((List<?>) inputElement).toArray();
-			}
-			return new Object[] { inputElement };
-		}
+        public ModelElement getNewDataProvElement() {
+            return newDataProvElement;
+        }
 
-		public void dispose() {
+        public void setOldDataProvElement(ModelElement oldDataProvElement) {
+            this.oldDataProvElement = oldDataProvElement;
+        }
 
-		}
+        public ModelElement getOldDataProvElement() {
+            return oldDataProvElement;
+        }
+    }
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    /**
+     * 
+     * DOC mzhao AnalyzedColumnsSynDialog class global comment. Detailled comment
+     */
+    class DBTreeViewContentProvider implements ITreeContentProvider {
 
-		}
+        /**
+         * @param adapterFactory
+         */
+        public DBTreeViewContentProvider() {
+            super();
+        }
 
-		public Object getParent(Object element) {
-			return null;
-		}
+        public Object[] getChildren(Object parentElement) {
+            if (parentElement != null && parentElement instanceof SynTreeModel) {
+                SynTreeModel synTreeModel = (SynTreeModel) parentElement;
+                return new Object[] { synTreeModel };
+            }
+            return null;
+        }
 
-	}
+        public boolean hasChildren(Object element) {
+            return false;
+        }
 
-	/**
-	 * 
-	 * DOC zhao AnalyzedColumnsSynDialog class global comment. Detailled comment
-	 */
-	private class AnaColSynLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+        public Object[] getElements(Object inputElement) {
+            if (inputElement instanceof List) {
+                return ((List<?>) inputElement).toArray();
+            }
+            return new Object[] { inputElement };
+        }
 
-		/*
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
-		 * .lang.Object, int)
-		 */
-		public Image getColumnImage(Object element, int columnIndex) {
-			if (columnIndex == 0)
-				return null;
-			return null;
-		}
+        public void dispose() {
 
-		/*
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
-		 * lang.Object, int)
-		 */
-		public String getColumnText(Object element, int columnIndex) {
-			SynTreeModel synTreeModel = (SynTreeModel) element;
-			switch (columnIndex) {
-			case 0:
-				return synTreeModel.getLabel();
-			case 1:
-				return synTreeModel.getAsynDecription();
-			default:
-				return "";
+        }
 
-			}
-		}
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
-		/*
-		 * @see
-		 * org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-		 */
-		public String getText(Object element) {
-			return getColumnText(element, 0); // needed to make the sorter work
-		}
-	}
+        }
+
+        public Object getParent(Object element) {
+            return null;
+        }
+
+    }
+
+    /**
+     * 
+     * DOC zhao AnalyzedColumnsSynDialog class global comment. Detailled comment
+     */
+    private class AnaColSynLabelProvider extends LabelProvider implements ITableLabelProvider {
+
+        /*
+         * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java .lang.Object, int)
+         */
+        public Image getColumnImage(Object element, int columnIndex) {
+            if (columnIndex == 0)
+                return null;
+            return null;
+        }
+
+        /*
+         * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java. lang.Object, int)
+         */
+        public String getColumnText(Object element, int columnIndex) {
+            SynTreeModel synTreeModel = (SynTreeModel) element;
+            switch (columnIndex) {
+            case 0:
+                return synTreeModel.getLabel();
+            case 1:
+                return synTreeModel.getAsynDecription();
+            default:
+                return ""; //$NON-NLS-1$
+
+            }
+        }
+
+        /*
+         * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+         */
+        public String getText(Object element) {
+            return getColumnText(element, 0); // needed to make the sorter work
+        }
+    }
 
 }

@@ -64,8 +64,8 @@ public class ExportUDIWizard extends Wizard {
             }
         }
 
-        if ("".equals(targetFile)) {
-            MessageDialog.openError(getShell(), "Error", "Please specify a valid resource!");
+        if ("".equals(targetFile)) { //$NON-NLS-1$
+            MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("ExportUDIWizard.Error"), DefaultMessagesImpl.getString("ExportUDIWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         } else {
             File resource = new File(targetFile);
@@ -76,10 +76,10 @@ public class ExportUDIWizard extends Wizard {
 
                 for (Iterator iterator = seletedIndicators.iterator(); iterator.hasNext();) {
                     IndicatorDefinition id = (IndicatorDefinition) iterator.next();
-                    File idFile = new File(resource, id.getName() + ".csv");
+                    File idFile = new File(resource, id.getName() + ".csv"); //$NON-NLS-1$
                     if (idFile.isFile() && idFile.exists()) {
                         try {
-                            FilesUtils.zip(idFile, idFile.getPath() + ".zip");
+                            FilesUtils.zip(idFile, idFile.getPath() + ".zip"); //$NON-NLS-1$
                             idFile.delete();
 
                         } catch (Exception e) {

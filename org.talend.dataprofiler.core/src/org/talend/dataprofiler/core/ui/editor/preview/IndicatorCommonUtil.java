@@ -165,7 +165,7 @@ public final class IndicatorCommonUtil {
 
                 }
 
-                if (tempObject == null || "null".equalsIgnoreCase(tempObject.toString())) {
+                if (tempObject == null || "null".equalsIgnoreCase(tempObject.toString())) { //$NON-NLS-1$
                     indicator.setComputed(false);
                 }
 

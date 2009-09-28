@@ -24,6 +24,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.dataprofiler.core.PluginChecker;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -34,23 +35,23 @@ public final class DataBaseVersionHelper {
 
     private static Logger log = Logger.getLogger(DataBaseVersionHelper.class);
 
-    private static String dbType = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DBTYPE");
+    private static String dbType = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DBTYPE"); //$NON-NLS-1$
 
-    private static String url = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_URL");
+    private static String url = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_URL"); //$NON-NLS-1$
 
-    private static String dbName = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DBNAME");
+    private static String dbName = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DBNAME"); //$NON-NLS-1$
 
-    private static String driver = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DRIVER");
+    private static String driver = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DRIVER"); //$NON-NLS-1$
 
-    private static String user = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_USER");
+    private static String user = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_USER"); //$NON-NLS-1$
 
-    private static String pass = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_PASSWORD");
+    private static String pass = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_PASSWORD"); //$NON-NLS-1$
 
     private static Properties props = new Properties();
 
     static {
-        props.setProperty("user", user);
-        props.setProperty("password", pass);
+        props.setProperty("user", user); //$NON-NLS-1$
+        props.setProperty("password", pass); //$NON-NLS-1$
     }
 
     private DataBaseVersionHelper() {
@@ -65,7 +66,7 @@ public final class DataBaseVersionHelper {
     public static boolean checkConnection() {
 
         int index = url.indexOf(dbName);
-        String surl = "";
+        String surl = ""; //$NON-NLS-1$
         if (index > 0) {
             surl = url.substring(0, index);
         }
@@ -100,8 +101,8 @@ public final class DataBaseVersionHelper {
 
                 if (user != null && pass != null) {
                     Properties props = new Properties();
-                    props.setProperty("user", user);
-                    props.setProperty("password", pass);
+                    props.setProperty("user", user); //$NON-NLS-1$
+                    props.setProperty("password", pass); //$NON-NLS-1$
 
                     return updateVersionInDB(url + dbName, driver, props);
                 }
@@ -127,7 +128,8 @@ public final class DataBaseVersionHelper {
             if (connection != null) {
                 Statement stat = connection.createStatement();
                 ProductVersion curVersion = WorkspaceVersionHelper.getVesion();
-                return stat.execute("update TDQ_PRODUCT set PR_VERSION = '" + curVersion.toString() + "'");
+                return stat.execute(DefaultMessagesImpl
+                        .getString("DataBaseVersionHelper.UpdateTdqVersion", curVersion.toString())); //$NON-NLS-1$
             }
         } catch (Exception e) {
             log.error(e, e);

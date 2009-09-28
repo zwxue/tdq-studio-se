@@ -68,8 +68,8 @@ public class ExportPatternsWizard extends Wizard {
             }
         }
 
-        if ("".equals(targetFile)) {
-            MessageDialog.openError(getShell(), "Error", "Please specify a valid resource!");
+        if ("".equals(targetFile)) { //$NON-NLS-1$
+            MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("ExportPatternsWizard.Error"), DefaultMessagesImpl.getString("ExportPatternsWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         } else {
             File resource = new File(targetFile);
@@ -79,10 +79,10 @@ public class ExportPatternsWizard extends Wizard {
 
                 for (Iterator iterator = seletedPatterns.iterator(); iterator.hasNext();) {
                     Pattern pattern = (Pattern) iterator.next();
-                    File patternFile = new File(resource, ExportFactory.toLocalFileName(pattern.getName() + ".csv"));
+                    File patternFile = new File(resource, ExportFactory.toLocalFileName(pattern.getName() + ".csv")); //$NON-NLS-1$
                     if (patternFile.isFile() && patternFile.exists()) {
                         try {
-                            FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
+                            FilesUtils.zip(patternFile, patternFile.getPath() + ".zip"); //$NON-NLS-1$
                             patternFile.delete();
 
                         } catch (Exception e) {

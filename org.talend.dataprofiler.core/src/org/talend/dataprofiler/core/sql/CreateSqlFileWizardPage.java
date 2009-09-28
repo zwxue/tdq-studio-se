@@ -73,7 +73,7 @@ public class CreateSqlFileWizardPage extends WizardPage {
 	 * @param folder
 	 */
 	public CreateSqlFileWizardPage(SqlFileParameter parameter) {
-		super("");
+		super(""); //$NON-NLS-1$
 
 		this.parameter = parameter;
 		metadata = new HashMap<String, String>();

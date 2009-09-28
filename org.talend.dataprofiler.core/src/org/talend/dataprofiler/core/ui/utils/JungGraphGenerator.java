@@ -49,6 +49,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.indicators.graph.EdgeDisplayPredicate;
 import org.talend.dq.indicators.graph.EdgeWeightStrokeFunction;
 import org.talend.dq.indicators.graph.GraphBuilder;
@@ -88,7 +89,7 @@ public class JungGraphGenerator {
 
     private static final int DOUBLE_CLICK_COUNT = 2;
 
-    private static final String PERSIST_LAYOUT_FILE_NAME = "persistLayout.out";
+    private static final String PERSIST_LAYOUT_FILE_NAME = "persistLayout.out"; //$NON-NLS-1$
 
     private Graph graph;
 
@@ -118,7 +119,7 @@ public class JungGraphGenerator {
 
         Composite frameComp = createAWTSWTComposite(parent);
         Frame frame = SWT_AWT.new_Frame(frameComp);
-        frame.setTitle("Nominal Analysis");
+        frame.setTitle(DefaultMessagesImpl.getString("JungGraphGenerator.NominalAnalysis")); //$NON-NLS-1$
 
         pr = new PluggableRenderer();
         configurePlugableRender(pr);
@@ -143,7 +144,7 @@ public class JungGraphGenerator {
             final JDesktopPane desktop = new JDesktopPane();
 
             JInternalFrame vvFrame = new JInternalFrame();
-            vvFrame.setTitle("Desktop");
+            vvFrame.setTitle(DefaultMessagesImpl.getString("JungGraphGenerator.Desktop")); //$NON-NLS-1$
             vvFrame.setMaximizable(true);
             vvFrame.getContentPane().add(vv);
             vvFrame.pack();
@@ -157,7 +158,7 @@ public class JungGraphGenerator {
 
             final JInternalFrame dialog = createSatelliteDialog(vv, satellite);
 
-            JButton showSatellite = new JButton("Show Satellite View");
+            JButton showSatellite = new JButton(DefaultMessagesImpl.getString("JungGraphGenerator.SatelliteView")); //$NON-NLS-1$
             showSatellite.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -200,7 +201,7 @@ public class JungGraphGenerator {
 
         JPanel pSlider = new JPanel();
         pSlider.setLayout(new BoxLayout(pSlider, BoxLayout.Y_AXIS));
-        pSlider.setBorder(new TitledBorder("Filter Edge Weight"));
+        pSlider.setBorder(new TitledBorder(DefaultMessagesImpl.getString("JungGraphGenerator.FilterEdgeWeight"))); //$NON-NLS-1$
 
         final JSlider slider = new JSlider(0, 10, 0);
         slider.setMajorTickSpacing(2);
@@ -225,7 +226,7 @@ public class JungGraphGenerator {
         });
         pSlider.add(slider);
 
-        final JCheckBox inverse = new JCheckBox("Inverse Edge Weight");
+        final JCheckBox inverse = new JCheckBox(DefaultMessagesImpl.getString("JungGraphGenerator.InverseEdgeWeight")); //$NON-NLS-1$
         inverse.addActionListener(new ActionListener() {
 
             /*
@@ -236,27 +237,27 @@ public class JungGraphGenerator {
             public void actionPerformed(ActionEvent e) {
                 graphbuilder.setProportionalWidth(inverse.isSelected());
                 vv.repaint();
-                log.info("inverse...");
+                log.info(DefaultMessagesImpl.getString("JungGraphGenerator.Inverse")); //$NON-NLS-1$
             }
         });
 
         final ScalingControl scaler = new CrossoverScalingControl();
 
-        JButton plus = new JButton("+");
+        JButton plus = new JButton("+"); //$NON-NLS-1$
         plus.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 scaler.scale(vv, 1.1f, vv.getCenter());
             }
         });
-        JButton minus = new JButton("-");
+        JButton minus = new JButton("-"); //$NON-NLS-1$
         minus.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 scaler.scale(vv, 1 / 1.1f, vv.getCenter());
             }
         });
-        JButton reset = new JButton("Reset");
+        JButton reset = new JButton(DefaultMessagesImpl.getString("JungGraphGenerator.Reset")); //$NON-NLS-1$
         reset.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -267,7 +268,7 @@ public class JungGraphGenerator {
         });
 
         // set mode seleciton box
-        final JCheckBox checkBox = new JCheckBox("Picking");
+        final JCheckBox checkBox = new JCheckBox(DefaultMessagesImpl.getString("JungGraphGenerator.Pick")); //$NON-NLS-1$
         checkBox.addActionListener(new ActionListener() {
 
             /*
@@ -285,7 +286,7 @@ public class JungGraphGenerator {
             }
         });
 
-        JButton persist = new JButton("Save Layout");
+        JButton persist = new JButton(DefaultMessagesImpl.getString("JungGraphGenerator.SaveLayout")); //$NON-NLS-1$
         persist.addActionListener(new ActionListener() {
 
             /*
@@ -312,7 +313,7 @@ public class JungGraphGenerator {
             }
         });
 
-        JButton restore = new JButton("Restore Layout");
+        JButton restore = new JButton(DefaultMessagesImpl.getString("JungGraphGenerator.RestoreLayout")); //$NON-NLS-1$
         restore.addActionListener(new ActionListener() {
 
             /*
@@ -378,7 +379,7 @@ public class JungGraphGenerator {
 
             int sheight;
 
-            String str = "";
+            String str = ""; //$NON-NLS-1$
 
             public void paint(Graphics g) {
                 Dimension d = vv.getSize();
@@ -417,37 +418,37 @@ public class JungGraphGenerator {
      */
     private JInternalFrame createSatelliteDialog(final VisualizationViewer vv, VisualizationViewer satellite) {
         final JInternalFrame dialog = new JInternalFrame();
-        dialog.setTitle("Satellite");
+        dialog.setTitle(DefaultMessagesImpl.getString("JungGraphGenerator.Satellite")); //$NON-NLS-1$
         Container content = dialog.getContentPane();
 
         final ScalingControl scaler = new CrossoverScalingControl();
 
-        JButton plus = new JButton("+");
+        JButton plus = new JButton("+"); //$NON-NLS-1$
         plus.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 scaler.scale(vv, 1.1f, vv.getCenter());
             }
         });
-        JButton minus = new JButton("-");
+        JButton minus = new JButton("-"); //$NON-NLS-1$
         minus.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 scaler.scale(vv, 1 / 1.1f, vv.getCenter());
             }
         });
-        JButton dismiss = new JButton("Dismiss");
+        JButton dismiss = new JButton(DefaultMessagesImpl.getString("JungGraphGenerator.Dismiss")); //$NON-NLS-1$
         dismiss.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 dialog.setVisible(false);
             }
         });
-        JButton help = new JButton("Help");
+        JButton help = new JButton(DefaultMessagesImpl.getString("JungGraphGenerator.Help")); //$NON-NLS-1$
         help.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showInternalMessageDialog(dialog, "Instructions", "Instructions", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showInternalMessageDialog(dialog, DefaultMessagesImpl.getString("JungGraphGenerator.Instruction"), DefaultMessagesImpl.getString("JungGraphGenerator.Instructions"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
             }
         });
         JPanel controls = new JPanel(new java.awt.GridLayout(2, 2));
@@ -577,7 +578,7 @@ public class JungGraphGenerator {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     // show menu.
                     PopupMenu menu = new PopupMenu();
-                    MenuItem item = new MenuItem("show in fullscreem");
+                    MenuItem item = new MenuItem(DefaultMessagesImpl.getString("JungGraphGenerator.ShowFullscreen")); //$NON-NLS-1$
                     menu.add(item);
                     vv.add(menu);
                     menu.show(vv, e.getX(), e.getY());

@@ -65,9 +65,9 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
 			if (resources != null && resources.length > 0) {
 				for (IResource resource : resources) {
 					// copy three folders:
-					if (resource.getName().equals("Data Profiling")
-							|| resource.getName().equals("Libraries")
-							|| resource.getName().equals("Metadata")) {
+					if (resource.getName().equals("Data Profiling") //$NON-NLS-1$
+							|| resource.getName().equals("Libraries") //$NON-NLS-1$
+							|| resource.getName().equals("Metadata")) { //$NON-NLS-1$
 						IPath destination = null;
 						IFolder prefixFolder = rootProject
 								.getFolder(DQStructureManager.PREFIX_TDQ
@@ -75,7 +75,7 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
 						prefixFolder.create(IResource.FORCE, true,
 								new NullProgressMonitor());
 						for (IResource rs : ((IProject) resource).members()) {
-							if (rs.getName().equals(".project")) {
+							if (rs.getName().equals(".project")) { //$NON-NLS-1$
 								continue;
 							}
 							destination = prefixFolder.getFolder(rs.getName())

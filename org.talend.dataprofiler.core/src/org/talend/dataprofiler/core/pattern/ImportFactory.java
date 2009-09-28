@@ -38,6 +38,7 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -99,7 +100,7 @@ public final class ImportFactory {
 
                     if (names.contains(name)) {
                         if (skip) {
-                            importInformation.add("Pattern \"" + name + "\" has already imported");
+                            importInformation.add(DefaultMessagesImpl.getString("ImportFactory.patternInported", name)); //$NON-NLS-1$
                             continue;
                         }
                         if (rename) {

@@ -22,6 +22,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -90,7 +91,7 @@ public class AnalyzeColumnCorrelationAction extends Action {
 
         checkSelectedColumn();
         if (hasNumberColumn && hasDateColumn) {
-            MessageUI.openError("invalid operation.");
+            MessageUI.openError(DefaultMessagesImpl.getString("AnalyzeColumnCorrelationAction.InvalidOperation")); //$NON-NLS-1$
             return Window.CANCEL;
         } else if (hasNumberColumn && !hasDateColumn) {
             parameter.setCategoryLabel(AnalysisLabelParameter.NUMBERIC_CORRELATION);

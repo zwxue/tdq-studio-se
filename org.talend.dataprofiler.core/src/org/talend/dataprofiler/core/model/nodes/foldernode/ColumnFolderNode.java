@@ -73,7 +73,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             if (columnList.size() > 0) {
                 if (columnList.size() > COLUMN_MAX) {
                     this.setChildren(null);
-                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", COLUMN_MAX));
+                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", COLUMN_MAX)); //$NON-NLS-1$
                 } else {
                     this.setChildren(columnList.toArray());
                 }
@@ -98,7 +98,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                 columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
                 if (columnList.size() > COLUMN_MAX) {
                     this.setChildren(null);
-                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", COLUMN_MAX));
+                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", COLUMN_MAX)); //$NON-NLS-1$
                     return;
                 }
             } catch (TalendException e) {
@@ -128,7 +128,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
      */
     private <T extends TdColumn> List<T> filterColumns(List<T> columns, String columnPattern) {
         if (needFilter(columnPattern)) {
-            String[] patterns = cleanPatterns(columnPattern.split(","));
+            String[] patterns = cleanPatterns(columnPattern.split(",")); //$NON-NLS-1$
             return filterMatchingColumns(columns, patterns);
         }
         return columns;
@@ -148,7 +148,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         for (T t : columns) {
             for (String pattern : patterns) {
                 // MOD scorreia 2009-05-13 use SQL patterns for filter
-                String regex = pattern.replaceAll("%", ".*");
+                String regex = pattern.replaceAll("%", ".*"); //$NON-NLS-1$ //$NON-NLS-2$
                 if (t.getName().matches(regex)) {
                     retColumns.add(t);
                     size++;
@@ -171,7 +171,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
     private String[] cleanPatterns(String[] split) {
         ArrayList<String> ret = new ArrayList<String>();
         for (String s : split) {
-            if (s != null && !"".equals(s) && !ret.contains(s)) {
+            if (s != null && !"".equals(s) && !ret.contains(s)) { //$NON-NLS-1$
                 ret.add(s);
             }
         }
@@ -186,8 +186,8 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
      */
     private boolean needFilter(String columnSetPattern) {
         if (FILTER_FLAG) {
-            if (columnSetPattern != null && !columnSetPattern.equals("")) {
-                String[] patterns = cleanPatterns(columnSetPattern.split(","));
+            if (columnSetPattern != null && !columnSetPattern.equals("")) { //$NON-NLS-1$
+                String[] patterns = cleanPatterns(columnSetPattern.split(",")); //$NON-NLS-1$
                 if (patterns != null && patterns.length > 0) {
                     return true;
                 }

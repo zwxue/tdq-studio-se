@@ -70,20 +70,20 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
         if (shouldNotIncludeIndicatorDefinitionUuidList == null) {
             shouldNotIncludeIndicatorDefinitionUuidList = new ArrayList<String>();
             // Overview \/
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_nZEo8MYSEd27NP4lvE0A4w"); // Connection Overview
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_QwDiwMYUEd27NP4lvE0A4w"); // Catalog Overview
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_V4SA0MYUEd27NP4lvE0A4w"); // Schema Overview
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_hgO7YMYUEd27NP4lvE0A4w"); // Table Overview
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_lNIE0MbNEd2d_JPxxDRSfQ"); // View Overview
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_nZEo8MYSEd27NP4lvE0A4w"); // Connection Overview //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_QwDiwMYUEd27NP4lvE0A4w"); // Catalog Overview //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_V4SA0MYUEd27NP4lvE0A4w"); // Schema Overview //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_hgO7YMYUEd27NP4lvE0A4w"); // Table Overview //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_lNIE0MbNEd2d_JPxxDRSfQ"); // View Overview //$NON-NLS-1$
             // composite \/
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1BF2Ed2PKb6nEJEvhw"); // Minimal Length
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1RF2Ed2PKb6nEJEvhw"); // Maximal Length
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccIR4BF2Ed2PKb6nEJEvhw"); // Average Length
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1BF2Ed2PKb6nEJEvhw"); // Minimal Length //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1RF2Ed2PKb6nEJEvhw"); // Maximal Length //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccIR4BF2Ed2PKb6nEJEvhw"); // Average Length //$NON-NLS-1$
 
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccJgAhF2Ed2PKb6nEJEvhw"); // SUM
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_vf0k4PkbEd2z55b7dTkWFw"); // Multiple Column Correlation
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_UUIyoCOMEd6YB57jaCfKaA"); // DQ Rule
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_10gx4JxcEd2YicTszQEJLA"); // Multiple Column Frequency
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccJgAhF2Ed2PKb6nEJEvhw"); // SUM //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_vf0k4PkbEd2z55b7dTkWFw"); // Multiple Column Correlation //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_UUIyoCOMEd6YB57jaCfKaA"); // DQ Rule //$NON-NLS-1$
+            shouldNotIncludeIndicatorDefinitionUuidList.add("_10gx4JxcEd2YicTszQEJLA"); // Multiple Column Frequency //$NON-NLS-1$
                                                                                         // Table
             // Summary Statistics \/
             // shouldNotIncludeIndicatorDefinitionUuidList.add("_ccI48RF2Ed2PKb6nEJEvhw"); // Mean
@@ -126,7 +126,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
      */
     public IndicatorFolderNode(String name) {
         super(name);
-        setParent(ResourceManager.getLibrariesFolder().getFolder("Indicators"));
+        setParent(ResourceManager.getLibrariesFolder().getFolder("Indicators")); //$NON-NLS-1$
         loadChildren();
     }
 

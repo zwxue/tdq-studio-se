@@ -46,8 +46,8 @@ public class DataFilterComp extends AbstractPagePart {
         parent.setLayout(new GridLayout(2, false));
         // MOD hcheng,2009-06-22,for 7803
         Label label = new Label(parent, SWT.NULL);
-        label.setText("Where");
-        Font boldFont = new Font(Display.getDefault(), "Arial", 10, SWT.BOLD);
+        label.setText("Where"); //$NON-NLS-1$
+        Font boldFont = new Font(Display.getDefault(), "Arial", 10, SWT.BOLD); //$NON-NLS-1$
         label.setFont(boldFont);
         GridData gd = new GridData();
         gd.verticalAlignment = GridData.BEGINNING;

@@ -49,17 +49,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private static final int META_FIELD_WIDTH = 200;
 
-    private static final String NAME_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.name");
+    private static final String NAME_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.name"); //$NON-NLS-1$
 
-    private static final String PURPOSE_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.purpose");
+    private static final String PURPOSE_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.purpose"); //$NON-NLS-1$
 
-    private static final String DESCRIPTION_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.description");
+    private static final String DESCRIPTION_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.description"); //$NON-NLS-1$
 
-    private static final String AUTHOR_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.author");
+    private static final String AUTHOR_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.author"); //$NON-NLS-1$
 
     private static final String VERSION_LABEL = "Version:";
 
-    private static final String STATUS_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.status");
+    private static final String STATUS_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.status"); //$NON-NLS-1$
 
     protected Text nameText;
 
@@ -215,7 +215,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      */
     private boolean isDefaultProject() {
         if (null != ReponsitoryContextBridge.getProjectName()
-                && "TOP_DEFAULT_PRJ".equals(ReponsitoryContextBridge.getProjectName())) {
+                && "TOP_DEFAULT_PRJ".equals(ReponsitoryContextBridge.getProjectName())) { //$NON-NLS-1$
             return true;
         }
         return false;
@@ -240,7 +240,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         versionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Button versionMajorBtn = new Button(versionContainer, SWT.PUSH);
-        versionMajorBtn.setText("M");
+        versionMajorBtn.setText("M"); //$NON-NLS-1$
 
         Button versionMinorBtn = new Button(versionContainer, SWT.PUSH);
         versionMinorBtn.setText("m"); //$NON-NLS-1$
@@ -374,7 +374,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * @return the formTitle
      */
     public String getFormTitle() {
-        return formTitle == null ? "" : formTitle;
+        return formTitle == null ? "" : formTitle; //$NON-NLS-1$
     }
 
     /**
@@ -392,6 +392,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * @return the metadataTitle
      */
     protected String getMetadataTitle() {
-        return metadataTitle == null ? "" : metadataTitle;
+        return metadataTitle == null ? "" : metadataTitle; //$NON-NLS-1$
     }
 }

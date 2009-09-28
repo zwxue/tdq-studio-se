@@ -49,7 +49,7 @@ public class DeleteUserFolderProvider extends CommonActionProvider {
             currentSelection = (IFolder) obj;
             Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(currentSelection,
                     DQStructureManager.FOLDER_READONLY_KEY);
-            if (persistentProperty != null && !persistentProperty.toString().trim().equals("")) {
+            if (persistentProperty != null && !persistentProperty.toString().trim().equals("")) { //$NON-NLS-1$
                 return;
             }
         }

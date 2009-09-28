@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.PartInitException;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditorInput;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -30,7 +31,7 @@ public class OpenIndicatorDefinitionAction extends Action {
     private IndicatorDefinition[] definitiones;
 
     public OpenIndicatorDefinitionAction(IndicatorDefinition[] definitiones) {
-        super("Open");
+        super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
 
         this.definitiones = definitiones;
     }

@@ -80,7 +80,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
-    private static final String ADDITIONAL_FUNCTIONS_SPLIT = ";";
+    private static final String ADDITIONAL_FUNCTIONS_SPLIT = ";"; //$NON-NLS-1$
 
     private Section definitionSection;
 
@@ -128,9 +128,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         this.systemIndicator = systemIndicator;
     }
 
-    private static final String BODY_AGGREGATE = "AVG({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)";
+    private static final String BODY_AGGREGATE = "AVG({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)"; //$NON-NLS-1$
 
-    private static final String BODY_DATE = "MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)";
+    private static final String BODY_DATE = "MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)"; //$NON-NLS-1$
 
     private Section charactersMappingSection;
 
@@ -144,9 +144,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private List<String> remainDBTypeListCM;
 
-    private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789";
+    private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789"; //$NON-NLS-1$
 
-    private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
+    private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999"; //$NON-NLS-1$
 
     /**
      * DOC bZhou IndicatorDefinitionMaterPage constructor comment.
@@ -701,7 +701,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
 
                 String language = PatternLanguageType.findLanguageByName(remainDBTypeListAF.get(0));
-                Expression expression = BooleanExpressionHelper.createExpression(language, "");
+                Expression expression = BooleanExpressionHelper.createExpression(language, ""); //$NON-NLS-1$
                 AggregateDateExpression ade = new AggregateDateExpression();
                 if (hasAggregateExpression) {
                     expression.setBody(BODY_AGGREGATE);
@@ -779,13 +779,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param composite
      */
     protected void updateDetailList() {
-        if (!"".equals(comboCategory.getText())) {
+        if (!"".equals(comboCategory.getText())) { //$NON-NLS-1$
             IndicatorCategory ic = UDIHelper.getUDICategory(definition);
             for (TaggedValue value : ic.getTaggedValue()) {
                 if ("Purpose".equals(value.getTag())) {
-                    labelPurpose.setText("Purpose: " + value.getValue());
-                } else if ("Description".equals(value.getTag())) {
-                    labelDescription.setText("Description: " + value.getValue());
+                    labelPurpose.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue()); //$NON-NLS-1$
+                } else if (DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Descript").equals(value.getTag())) { //$NON-NLS-1$
+                    labelDescription.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description") + value.getValue()); //$NON-NLS-1$
                 }
             }
             labelPurpose.getParent().layout();
@@ -805,7 +805,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         data.horizontalIndent = 20;
         compoDetail.setLayoutData(data);
 
-        Font font0 = new Font(null, "Arial", 9, SWT.None);
+        Font font0 = new Font(null, "Arial", 9, SWT.None); //$NON-NLS-1$
         data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.grabExcessHorizontalSpace = true;
@@ -952,14 +952,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createExpressionEditButton(Composite expressComp, final Text patternText) {
         Button editButton = new Button(expressComp, SWT.PUSH);
-        editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression"));
-        editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression"));
+        editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
+        editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
         editButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                String[] templates = new String[] { "<%=__TABLE_NAME__%>", "<%=__COLUMN_NAMES__%>", "<%=__WHERE_CLAUSE__%>",
-                        "<%=__GROUP_BY_ALIAS__%>" };
+                String[] templates = new String[] { "<%=__TABLE_NAME__%>", "<%=__COLUMN_NAMES__%>", "<%=__WHERE_CLAUSE__%>", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        "<%=__GROUP_BY_ALIAS__%>" }; //$NON-NLS-1$
                 final ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(), templates);
 
                 if (Dialog.OK == editDialog.open() && !patternText.getText().equals(editDialog.getResult())) {
@@ -1092,7 +1092,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             for (CharactersMapping cm : charactersMappingMapTemp.values()) {
                 String c = cm.getCharactersToReplace();
                 String r = cm.getReplacementCharacters();
-                if (c != null && !"".equals(c) && r != null && !"".equals(r)) { //$NON-NLS-1$
+                if (c != null && !"".equals(c) && r != null && !"".equals(r)) { //$NON-NLS-1$ //$NON-NLS-2$
                     charactersMappings.add(cm);
                 }
             }
@@ -1147,7 +1147,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (dateExpression != null) {
                 return dateExpression.getLanguage();
             }
-            return "";
+            return ""; //$NON-NLS-1$
         }
 
         public void setAggregateBody(String body) {
@@ -1160,7 +1160,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (aggregateExpression != null) {
                 return aggregateExpression.getBody();
             }
-            return "";
+            return ""; //$NON-NLS-1$
         }
 
         public void setDateBody(String body) {
@@ -1173,7 +1173,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (dateExpression != null) {
                 return dateExpression.getBody();
             }
-            return "";
+            return ""; //$NON-NLS-1$
         }
 
         public boolean haveAggregateExpression() {
@@ -1242,8 +1242,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         private void updateAggregateExpressionBody() {
             if (this.aggreagetExpression != null) {
-                if ("".equals(this.getHorizontalAxis()) && "".equals(this.getVerticalAxis()) && "".equals(this.getBubbleSize())) {
-                    this.aggreagetExpression.setBody("");
+                if ("".equals(this.getHorizontalAxis()) && "".equals(this.getVerticalAxis()) && "".equals(this.getBubbleSize())) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    this.aggreagetExpression.setBody(""); //$NON-NLS-1$
                 } else {
                     this.aggreagetExpression.setBody(this.getHorizontalAxis() + ADDITIONAL_FUNCTIONS_SPLIT
                             + this.getVerticalAxis() + ADDITIONAL_FUNCTIONS_SPLIT + this.getBubbleSize());
@@ -1262,21 +1262,21 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                         this.setVerticalAxis(values[1]);
                         this.setBubbleSize(values[2]);
                     } else {
-                        this.setHorizontalAxis("");
-                        this.setVerticalAxis("");
-                        this.setBubbleSize("");
+                        this.setHorizontalAxis(""); //$NON-NLS-1$
+                        this.setVerticalAxis(""); //$NON-NLS-1$
+                        this.setBubbleSize(""); //$NON-NLS-1$
                     }
                 }
             }
         }
 
         public String getBody() {
-            return this.aggreagetExpression == null ? "" : this.aggreagetExpression.getBody() == null ? ""
+            return this.aggreagetExpression == null ? "" : this.aggreagetExpression.getBody() == null ? "" //$NON-NLS-1$ //$NON-NLS-2$
                     : this.aggreagetExpression.getBody();
         }
 
         public String getLanguage() {
-            return this.aggreagetExpression == null ? "" : this.aggreagetExpression.getLanguage() == null ? ""
+            return this.aggreagetExpression == null ? "" : this.aggreagetExpression.getLanguage() == null ? "" //$NON-NLS-1$ //$NON-NLS-2$
                     : this.aggreagetExpression.getLanguage();
         }
 
@@ -1334,7 +1334,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 result = vo.getBubbleSize();
                 break;
             default:
-                result = "";
+                result = ""; //$NON-NLS-1$
             }
             return result;
         }
@@ -1393,7 +1393,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         public String getColumnText(Object element, int columnIndex) {
-            String result = "";
+            String result = ""; //$NON-NLS-1$
             AggregateVO vo = (AggregateVO) element;
             switch (columnIndex) {
             case 0:
@@ -1460,9 +1460,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         private void updateDateExpressionBody() {
             if (this.dateExpression != null) {
-                if ("".equals(this.getLowerValue()) && "".equals(this.getUpperValue()) && "".equals(this.getTotal())
-                        && "".equals(this.getHighlightedValues())) {
-                    this.dateExpression.setBody("");
+                if ("".equals(this.getLowerValue()) && "".equals(this.getUpperValue()) && "".equals(this.getTotal()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        && "".equals(this.getHighlightedValues())) { //$NON-NLS-1$
+                    this.dateExpression.setBody(""); //$NON-NLS-1$
                 } else {
                     this.dateExpression.setBody(this.getLowerValue() + ADDITIONAL_FUNCTIONS_SPLIT + this.getUpperValue()
                             + ADDITIONAL_FUNCTIONS_SPLIT + this.getTotal() + ADDITIONAL_FUNCTIONS_SPLIT
@@ -1483,21 +1483,21 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                         this.setTotal(values[2]);
                         this.setHighlightedValues(values[3]);
                     } else {
-                        this.setLowerValue("");
-                        this.setUpperValue("");
-                        this.setTotal("");
-                        this.setHighlightedValues("");
+                        this.setLowerValue(""); //$NON-NLS-1$
+                        this.setUpperValue(""); //$NON-NLS-1$
+                        this.setTotal(""); //$NON-NLS-1$
+                        this.setHighlightedValues(""); //$NON-NLS-1$
                     }
                 }
             }
         }
 
         public String getBody() {
-            return this.dateExpression == null ? "" : this.dateExpression.getBody() == null ? "" : this.dateExpression.getBody();
+            return this.dateExpression == null ? "" : this.dateExpression.getBody() == null ? "" : this.dateExpression.getBody(); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         public String getLanguage() {
-            return this.dateExpression == null ? "" : this.dateExpression.getLanguage() == null ? "" : this.dateExpression
+            return this.dateExpression == null ? "" : this.dateExpression.getLanguage() == null ? "" : this.dateExpression //$NON-NLS-1$ //$NON-NLS-2$
                     .getLanguage();
         }
 
@@ -1558,7 +1558,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 result = vo.getHighlightedValues();
                 break;
             default:
-                result = "";
+                result = ""; //$NON-NLS-1$
             }
             return result;
         }
@@ -1601,7 +1601,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         public String getColumnText(Object element, int columnIndex) {
-            String result = "";
+            String result = ""; //$NON-NLS-1$
             DateVO vo = (DateVO) element;
             switch (columnIndex) {
             case 0:
@@ -1660,7 +1660,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 result = cm.getReplacementCharacters();
                 break;
             default:
-                result = "";
+                result = ""; //$NON-NLS-1$
             }
             return result;
         }
@@ -1697,7 +1697,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         public String getColumnText(Object element, int columnIndex) {
-            String result = "";
+            String result = ""; //$NON-NLS-1$
             CharactersMapping cm = (CharactersMapping) element;
             switch (columnIndex) {
             case 0:

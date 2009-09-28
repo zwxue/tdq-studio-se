@@ -204,7 +204,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      */
     private boolean isDefaultProject() {
         if (null != ReponsitoryContextBridge.getProjectName()
-                && "TOP_DEFAULT_PRJ".equals(ReponsitoryContextBridge.getProjectName())) {
+                && "TOP_DEFAULT_PRJ".equals(ReponsitoryContextBridge.getProjectName())) { //$NON-NLS-1$
             return true;
         }
         return false;

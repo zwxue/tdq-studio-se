@@ -219,7 +219,7 @@ public abstract class AbstractPagePart {
 
             // The newest dataprovider now would be the old one for next
             // time connection changes.
-            tdProvider = (TdDataProvider) masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + "");
+            tdProvider = (TdDataProvider) masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
         } else {
             cancelSelection(masterPage, oldSelect);
         }

@@ -61,7 +61,7 @@ public class UpdateProjectPersistentPropertyTask extends AbstractMigrationTask {
 			Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
                     DQStructureManager.PROJECT_TDQ_KEY);
             if (folder != null
-					&& (persistentProperty == null || persistentProperty.toString().trim().equals(""))) {
+					&& (persistentProperty == null || persistentProperty.toString().trim().equals(""))) { //$NON-NLS-1$
                 
                 TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.PROJECT_TDQ_KEY,
                         DQStructureManager.PROJECT_TDQ_PROPERTY);

@@ -40,9 +40,9 @@ import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
  */
 public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable {
 
-    private static final String ROW_KEY_PASS = "matching";
+    private static final String ROW_KEY_PASS = DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.match"); //$NON-NLS-1$
 
-    private static final String ROW_KEY_NOT_PASS = "not matching";
+    private static final String ROW_KEY_NOT_PASS = DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.notMatch"); //$NON-NLS-1$
 
     private TableIndicator tableIndicator;
 
@@ -156,12 +156,12 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     public List<JFreeChart> getChartList() {
         List<JFreeChart> ret = new ArrayList<JFreeChart>();
         JFreeChart stackChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getDataset(), true);
+                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getDataset(), true); //$NON-NLS-1$
         ChartDecorator.decorate(stackChart);
         ret.add(stackChart); //$NON-NLS-1$
         if (false) { // show line chart only in TDQ!!!
             JFreeChart lineChart = TopChartFactory.createLineChart(DefaultMessagesImpl
-                    .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false);
+                    .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false); //$NON-NLS-1$
             ChartDecorator.decorate(lineChart);
             ret.add(lineChart); //$NON-NLS-1$
         }

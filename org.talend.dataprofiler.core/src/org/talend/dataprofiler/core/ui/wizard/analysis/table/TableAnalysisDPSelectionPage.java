@@ -70,7 +70,7 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                                 .getParentCatalogOrSchema(table));
                         oldTdDataProvider = oldTdDataProvider == null ? tdProvider : oldTdDataProvider;
                         if (oldTdDataProvider != null && !oldTdDataProvider.equals(tdProvider)) {
-                            MessageUI.openWarning("Table Select Warning:\n\nCan only select tables belong to one DataProvider!");
+                            MessageUI.openWarning(DefaultMessagesImpl.getString("TableAnalysisDPSelectionPage.TableSelectWarning")); //$NON-NLS-1$
                         } else if (tdProvider != null && tablePanameter != null) {
                             tableList.add(table);
                             tablePanameter.setTdDataProvider(oldTdDataProvider);

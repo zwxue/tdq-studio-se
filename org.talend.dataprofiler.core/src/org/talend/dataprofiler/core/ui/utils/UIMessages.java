@@ -47,7 +47,7 @@ public final class UIMessages {
     public static final String MSG_SELECT_GENERIC_JDBC = DefaultMessagesImpl.getString("UIMessages.GenericConnection") //$NON-NLS-1$
             + DefaultMessagesImpl.getString("UIMessages.CustomDriver"); //$NON-NLS-1$
 
-    public static final String MSG_ANALYSIS_SAME_NAME = "Warning! A Model with that name already exists! \n\n Do you want to keep this name (there will be two modeles with the same name) ?";
+    public static final String MSG_ANALYSIS_SAME_NAME = DefaultMessagesImpl.getString("UIMessages.WarnModelNameExist"); //$NON-NLS-1$
 
     public static final String MSG_DIFF_STRING_LENGTH = DefaultMessagesImpl.getString("UIMessages.diffStringLength"); //$NON-NLS-1$
 }

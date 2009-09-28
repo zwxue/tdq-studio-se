@@ -70,15 +70,15 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
-    private static final String WHERE = "WHERE";
+    private static final String WHERE = "WHERE"; //$NON-NLS-1$
 
     private static final int CRITICALITY_LEVEL_MIN = 1;
 
     private static final int CRITICALITY_LEVEL_MAX = 10;
 
-    private static final String DEFAULT_OPERATOR = "=";
+    private static final String DEFAULT_OPERATOR = "="; //$NON-NLS-1$
 
-    private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" };
+    private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
 
@@ -194,16 +194,16 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         container.setLayout(gdLayout);
 
         Label label1 = new Label(container, SWT.NONE);
-        label1.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevel"));
+        label1.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevel")); //$NON-NLS-1$
 
         GridData data;
         criticalityLevelText = new Text(container, SWT.BORDER);
-        criticalityLevelText.setText("" + whereRule.getCriticalityLevel());
+        criticalityLevelText.setText("" + whereRule.getCriticalityLevel()); //$NON-NLS-1$
         data = new GridData(GridData.FILL_HORIZONTAL);
         criticalityLevelText.setLayoutData(data);
 
         Label label2 = new Label(container, SWT.NONE);
-        label2.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClause"));
+        label2.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClause")); //$NON-NLS-1$
         label2.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
         whereText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -274,53 +274,53 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
      */
     private boolean checkValus() {
         boolean ret = true;
-        String msg = "";
+        String msg = ""; //$NON-NLS-1$
         String cl = getCriticalityLevelText().getText();
-        if (cl == null || "".equals(cl)) {
+        if (cl == null || "".equals(cl)) { //$NON-NLS-1$
             ret = false;
-            msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevelIsEmpty") + "\n";
+            msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevelIsEmpty") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             try {
                 int i = Integer.valueOf(cl).intValue();
                 if (!(i >= CRITICALITY_LEVEL_MIN && i <= CRITICALITY_LEVEL_MAX)) {
                     ret = false;
-                    msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevelIsInvalid") + "\n";
+                    msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevelIsInvalid") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
             } catch (NumberFormatException e) {
                 ret = false;
-                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevelIsInvalid") + "\n";
+                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.criticalityLevelIsInvalid") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         String wh = getWhereText().getText();
-        if (wh == null || "".equals(wh)) {
+        if (wh == null || "".equals(wh)) { //$NON-NLS-1$
             ret = false;
-            msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsEmpty") + "\n";
+            msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsEmpty") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             if (wh.startsWith(WHERE)) {
                 ret = false;
-                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsInvalid") + "\n";
+                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsInvalid") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         for (JoinElement join : this.tempJoinElements) {
             String tableAliasA = join.getTableAliasA();
             String tableAliasB = join.getTableAliasB();
-            if (tableAliasA == null || "".equals(tableAliasA) || tableAliasB == null || "".equals(tableAliasB)) {
+            if (tableAliasA == null || "".equals(tableAliasA) || tableAliasB == null || "".equals(tableAliasB)) { //$NON-NLS-1$ //$NON-NLS-2$
                 ret = false;
-                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.emptyTableAlias") + "\n";
+                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.emptyTableAlias") + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
                 break;
             } else if (tableAliasA.equals(tableAliasB)) {
                 ret = false;
                 String tableA = ColumnHelper.getColumnSetOwner((Column) join.getColA()).getName();
                 String tableB = ColumnHelper.getColumnSetOwner((Column) join.getColB()).getName();
-                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.sameTableAlias", tableA, tableB) + "\n";
+                msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.sameTableAlias", tableA, tableB) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
             } else {
                 if (!checkAlias(tableAliasA)) {
                     ret = false;
-                    msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.invalidAliasName", tableAliasA) + "\n";
+                    msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.invalidAliasName", tableAliasA) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 if (!checkAlias(tableAliasB)) {
                     ret = false;
-                    msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.invalidAliasName", tableAliasB) + "\n";
+                    msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.invalidAliasName", tableAliasB) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
         }
@@ -344,7 +344,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         } catch (NumberFormatException e) {
         }
 
-        String regEx = "^\\w+$";
+        String regEx = "^\\w+$"; //$NON-NLS-1$
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(alias);
         return m.find();

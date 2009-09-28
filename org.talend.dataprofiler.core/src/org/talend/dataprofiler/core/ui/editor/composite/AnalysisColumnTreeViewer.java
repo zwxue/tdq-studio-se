@@ -382,8 +382,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                                     setDirty(true);
                                 } else {
                                     Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                                    MessageUI.openError("Pattern: " + pattern.getName()
-                                            + "\n\nThis indicator is already selected for this column.");
+                                    MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
+                                            + pattern.getName());
                                 }
                             }
                         }

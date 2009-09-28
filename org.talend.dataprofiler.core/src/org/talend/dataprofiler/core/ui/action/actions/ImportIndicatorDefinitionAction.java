@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.ImportIndicatorDefinitionWizard;
 import org.talend.top.repository.ProxyRepositoryManager;
 
@@ -24,7 +25,7 @@ import org.talend.top.repository.ProxyRepositoryManager;
 public class ImportIndicatorDefinitionAction extends Action {
 
     public ImportIndicatorDefinitionAction() {
-        super("Import Indicators");
+        super(DefaultMessagesImpl.getString("ImportIndicatorDefinitionAction.ImportIndicators")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IMPORT));
     }
 

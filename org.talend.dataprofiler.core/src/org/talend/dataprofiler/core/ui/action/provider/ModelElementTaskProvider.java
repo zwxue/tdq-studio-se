@@ -56,7 +56,7 @@ public class ModelElementTaskProvider extends CommonActionProvider {
         TreePath[] treePath = currentSelection.getPaths();
         for (TreePath paths : treePath) {
             Object path = paths.getSegment(1);
-            if (path.toString().endsWith("Indicators")) {
+            if (path.toString().endsWith("Indicators")) { //$NON-NLS-1$
                 showMenu = false;
             }
         }

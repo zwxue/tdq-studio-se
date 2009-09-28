@@ -67,10 +67,10 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
                     String keyLabel = String.valueOf(freqExt.getKey());
-                    if ("null".equals(keyLabel)) {
+                    if ("null".equals(keyLabel)) { //$NON-NLS-1$
                         keyLabel = PluginConstant.NULL_FIELD;
                     }
-                    if ("".equals(keyLabel)) {
+                    if ("".equals(keyLabel)) { //$NON-NLS-1$
                         keyLabel = PluginConstant.EMPTY_FIELD;
                     }
 

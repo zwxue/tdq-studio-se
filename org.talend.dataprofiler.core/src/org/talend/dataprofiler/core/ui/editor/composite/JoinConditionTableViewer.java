@@ -68,9 +68,9 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     
     protected static Logger log = Logger.getLogger(JoinConditionTableViewer.class);
 
-    private static final String COLUMN_A = "A";
+    private static final String COLUMN_A = "A"; //$NON-NLS-1$
 
-    private static final String COLUMN_B = "B";
+    private static final String COLUMN_B = "B"; //$NON-NLS-1$
     
     private DQRuleMasterDetailsPage masterPage;
     
@@ -82,11 +82,11 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     
     private Composite parentComposite;
 
-    private static final String DEFAULT_OPERATOR = "=";
+    private static final String DEFAULT_OPERATOR = "="; //$NON-NLS-1$
 
-    private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" };
+    private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
-    private String[] headers = { "TableA", "TableAliasA", "ColumnA", "Operator", "TableB", "TableAliasB", "ColumnB" };
+    private String[] headers = { DefaultMessagesImpl.getString("JoinConditionTableViewer.TableA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.Operator"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnB") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 
     private int[] widths = { 100, 100, 100, 70, 100, 100, 100 };
     
@@ -115,7 +115,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             this.columnSetPackage = parentCatalogOrSchema;
         } else {
             if (!this.columnSetPackage.equals(parentCatalogOrSchema)) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("JoinConditionTableViewer.warning"));
+                MessageUI.openWarning(DefaultMessagesImpl.getString("JoinConditionTableViewer.warning")); //$NON-NLS-1$
                 return false;
             }
         }
@@ -363,13 +363,13 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
             switch (columnIndex) {
             case 0:
-                result = tabA == null ? "" : tabA.getName();
+                result = tabA == null ? "" : tabA.getName(); //$NON-NLS-1$
                 break;
             case 1:
-                result = join.getTableAliasA() == null ? "" : join.getTableAliasA();
+                result = join.getTableAliasA() == null ? "" : join.getTableAliasA(); //$NON-NLS-1$
                 break;
             case 2:
-                result = colA == null ? "" : colA.getName();
+                result = colA == null ? "" : colA.getName(); //$NON-NLS-1$
                 break;
             case 3:
                 String stringValue = join.getOperator();
@@ -380,16 +380,16 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 result = new Integer(i);
                 break;
             case 4:
-                result = tabB == null ? "" : tabB.getName();
+                result = tabB == null ? "" : tabB.getName(); //$NON-NLS-1$
                 break;
             case 5:
-                result = join.getTableAliasB() == null ? "" : join.getTableAliasB();
+                result = join.getTableAliasB() == null ? "" : join.getTableAliasB(); //$NON-NLS-1$
                 break;
             case 6:
-                result = colB == null ? "" : colB.getName();
+                result = colB == null ? "" : colB.getName(); //$NON-NLS-1$
                 break;
             default:
-                result = "";
+                result = ""; //$NON-NLS-1$
             }
             return result;
         }
@@ -475,7 +475,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         }
 
         public String getColumnText(Object element, int columnIndex) {
-            String result = "";
+            String result = ""; //$NON-NLS-1$
             
             JoinElement join = (JoinElement) element;
 
@@ -487,28 +487,28 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
             switch (columnIndex) {
             case 0:
-                result = tabA == null ? "" : tabA.getName();
+                result = tabA == null ? "" : tabA.getName(); //$NON-NLS-1$
                 break;
             case 1:
-                result = join.getTableAliasA() == null ? "" : join.getTableAliasA();
+                result = join.getTableAliasA() == null ? "" : join.getTableAliasA(); //$NON-NLS-1$
                 break;
             case 2:
-                result = colA == null ? "" : colA.getName();
+                result = colA == null ? "" : colA.getName(); //$NON-NLS-1$
                 break;
             case 3:
                 result = join.getOperator();
                 break;
             case 4:
-                result = tabB == null ? "" : tabB.getName();
+                result = tabB == null ? "" : tabB.getName(); //$NON-NLS-1$
                 break;
             case 5:
-                result = join.getTableAliasB() == null ? "" : join.getTableAliasB();
+                result = join.getTableAliasB() == null ? "" : join.getTableAliasB(); //$NON-NLS-1$
                 break;
             case 6:
-                result = colB == null ? "" : colB.getName();
+                result = colB == null ? "" : colB.getName(); //$NON-NLS-1$
                 break;
             default:
-                result = "";
+                result = ""; //$NON-NLS-1$
             }
             return result;
         }
@@ -550,7 +550,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             radios[0] = new Button(comp, SWT.RADIO);
             radios[0].setSelection(true);
             setAb(COLUMN_A);
-            radios[0].setText("ColumnA");
+            radios[0].setText(DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnA")); //$NON-NLS-1$
             radios[0].addSelectionListener(new SelectionListener() {
 
                 public void widgetDefaultSelected(SelectionEvent arg0) {
@@ -564,7 +564,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             });
 
             radios[1] = new Button(comp, SWT.RADIO);
-            radios[1].setText("ColumnB");
+            radios[1].setText(DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnB")); //$NON-NLS-1$
             radios[1].addSelectionListener(new SelectionListener() {
 
                 public void widgetDefaultSelected(SelectionEvent arg0) {

@@ -111,8 +111,8 @@ public final class CheckValueUtils {
             try {
 
                 String[] patterns = new String[2];
-                patterns[0] = "yyyy-MM-dd";
-                patterns[1] = "yyyy-MM-dd HH:mm:ss";
+                patterns[0] = "yyyy-MM-dd"; //$NON-NLS-1$
+                patterns[1] = "yyyy-MM-dd HH:mm:ss"; //$NON-NLS-1$
 
                 Date ad = DateUtils.parseDate(a, patterns);
                 Date bd = DateUtils.parseDate(b, patterns);

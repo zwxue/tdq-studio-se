@@ -64,8 +64,8 @@ public class ExportPatternsWizardPage extends WizardPage {
         super(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternWizardPage")); //$NON-NLS-1$
 
         if (isForExchange) {
-            setTitle("Export patterns for Talend Exchange");
-            setDescription("Choose a folder where to export the patterns.");
+            setTitle(DefaultMessagesImpl.getString("ExportPatternsWizardPage.ExportPatternForExchange")); //$NON-NLS-1$
+            setDescription(DefaultMessagesImpl.getString("ExportPatternsWizardPage.ChooseFolder")); //$NON-NLS-1$
         } else {
             setTitle(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternToFile")); //$NON-NLS-1$
             setDescription(DefaultMessagesImpl.getString("ExportPatternsWizardPage.chooseFileToExportPattern")); //$NON-NLS-1$
@@ -94,7 +94,7 @@ public class ExportPatternsWizardPage extends WizardPage {
         fileComp.setLayoutData(gridData);
         Label label = new Label(fileComp, SWT.NONE);
         if (isForExchange) {
-            label.setText("Select a folder:");
+            label.setText(DefaultMessagesImpl.getString("ExportPatternsWizardPage.SelectFolder")); //$NON-NLS-1$
         } else {
             label.setText(DefaultMessagesImpl.getString("ExportPatternsWizardPage.selectFile")); //$NON-NLS-1$
         }
@@ -114,7 +114,7 @@ public class ExportPatternsWizardPage extends WizardPage {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                String path = "";
+                String path = ""; //$NON-NLS-1$
 
                 if (isForExchange) {
                     DirectoryDialog dialog = new DirectoryDialog(Display.getDefault().getActiveShell());
@@ -198,10 +198,10 @@ public class ExportPatternsWizardPage extends WizardPage {
         composite.setData(data);
 
         Button selectButton = new Button(buttonComposite, SWT.PUSH);
-        selectButton.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.selectAll"));
+        selectButton.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.selectAll")); //$NON-NLS-1$
 
         Button deselectButton = new Button(buttonComposite, SWT.PUSH);
-        deselectButton.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.deselectAll"));
+        deselectButton.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.deselectAll")); //$NON-NLS-1$
 
         addSelectionButtonListener(selectButton, deselectButton);
         return buttonComposite;

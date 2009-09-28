@@ -81,10 +81,10 @@ public final class PluginConstant {
 
     public static final int CHART_STANDARD_HEIGHT = 275;
 
-    public static final String NULL_FIELD = "Null field";
+    public static final String NULL_FIELD = "Null field"; //$NON-NLS-1$
 
-    public static final String EMPTY_FIELD = "Empty field";
+    public static final String EMPTY_FIELD = "Empty field"; //$NON-NLS-1$
 
-    public static final String LANGUAGE_SELECTOR = "languageSelector";
+    public static final String LANGUAGE_SELECTOR = "languageSelector"; //$NON-NLS-1$
 
 }

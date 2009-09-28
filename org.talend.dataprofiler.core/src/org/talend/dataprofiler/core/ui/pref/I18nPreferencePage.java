@@ -333,8 +333,8 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
                 .getLanguage()),
         ITALIAN(Locale.ITALIAN.getDisplayLanguage(), Locale.ITALIAN.getDisplayLanguage(Locale.ENGLISH), Locale.ITALIAN
                 .getLanguage()),
-        BRASIL("Brasil", "Brasil", "pt"),
-        ESPAGNOL("Espagnol", "Espagnol", "ca");
+        BRASIL("Brasil", "Brasil", "pt"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        ESPAGNOL("Espagnol", "Espagnol", "ca"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         private String locale;
 
@@ -356,7 +356,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
                 }
             }
 
-            return "";
+            return ""; //$NON-NLS-1$
         }
 
         static LocalToLanguageEnum findLocal(String locale) {

@@ -105,9 +105,9 @@ public class TableContentProvider extends DQRepositoryViewContentProvider {
 		private final String schemaName;
 
 		public CatalogSchemaKey(ColumnSet columnSet) {
-			this.schemaName = SchemaHelper.getParentSchema(columnSet) == null ? ""
+			this.schemaName = SchemaHelper.getParentSchema(columnSet) == null ? "" //$NON-NLS-1$
 					: SchemaHelper.getParentSchema(columnSet).getName();
-			this.catalogName = CatalogHelper.getParentCatalog(columnSet) == null ? ""
+			this.catalogName = CatalogHelper.getParentCatalog(columnSet) == null ? "" //$NON-NLS-1$
 					: CatalogHelper.getParentCatalog(columnSet).getName();
 		}
 

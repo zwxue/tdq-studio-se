@@ -62,7 +62,7 @@ public final class ExportFactory {
 
         if (exportFile.isDirectory()) {
             for (Pattern pattern : patterns) {
-                File file = new File(exportFile, toLocalFileName(pattern.getName() + ".csv"));
+                File file = new File(exportFile, toLocalFileName(pattern.getName() + ".csv")); //$NON-NLS-1$
                 export(file, folder, pattern);
             }
         }
@@ -112,7 +112,7 @@ public final class ExportFactory {
 
         if (exportFile.isDirectory()) {
             for (IndicatorDefinition id : indicatorDefinitions) {
-                File file = new File(exportFile, id.getName() + ".csv");
+                File file = new File(exportFile, id.getName() + ".csv"); //$NON-NLS-1$
                 export(file, folder, id);
             }
         }
@@ -248,8 +248,8 @@ public final class ExportFactory {
         if (exportFile != null && sourceFile != null) {
             File file = new File(sourceFile.getRawLocation().toOSString());
             if (exportFile.exists()) {
-                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
-                File bakFile = new File(exportFile.getAbsolutePath() + "." + simpleDateFormat.format(new Date()) + ".bak");
+                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
+                File bakFile = new File(exportFile.getAbsolutePath() + "." + simpleDateFormat.format(new Date()) + ".bak"); //$NON-NLS-1$ //$NON-NLS-2$
                 FilesUtils.copyFile(exportFile, bakFile);
             }
             FilesUtils.copyFile(file, exportFile);
@@ -264,7 +264,7 @@ public final class ExportFactory {
      */
     public static String toLocalFileName(String src) {
 
-        if (!"Linux".equalsIgnoreCase(System.getProperty("os.name"))) {
+        if (!"Linux".equalsIgnoreCase(System.getProperty("os.name"))) { //$NON-NLS-1$ //$NON-NLS-2$
 
             int i;
             int srcLength = src.length();
@@ -275,23 +275,23 @@ public final class ExportFactory {
             for (i = 0; i < srcLength; i++) {
                 j = src.charAt(i);
                 if ('\\' == j) {
-                    tmp.append("%5c");
+                    tmp.append("%5c"); //$NON-NLS-1$
                 } else if ('/' == j) {
-                    tmp.append("%2f");
+                    tmp.append("%2f"); //$NON-NLS-1$
                 } else if (':' == j) {
-                    tmp.append("%3a");
+                    tmp.append("%3a"); //$NON-NLS-1$
                 } else if ('*' == j) {
-                    tmp.append("%2a");
+                    tmp.append("%2a"); //$NON-NLS-1$
                 } else if ('?' == j) {
-                    tmp.append("%3f");
+                    tmp.append("%3f"); //$NON-NLS-1$
                 } else if ('"' == j) {
-                    tmp.append("%22");
+                    tmp.append("%22"); //$NON-NLS-1$
                 } else if ('<' == j) {
-                    tmp.append("%3c");
+                    tmp.append("%3c"); //$NON-NLS-1$
                 } else if ('>' == j) {
-                    tmp.append("%3e");
+                    tmp.append("%3e"); //$NON-NLS-1$
                 } else if ('|' == j) {
-                    tmp.append("%7c");
+                    tmp.append("%7c"); //$NON-NLS-1$
                 } else {
                     tmp.append(j);
                 }

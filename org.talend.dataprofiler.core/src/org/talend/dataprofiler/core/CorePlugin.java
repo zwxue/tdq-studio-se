@@ -248,7 +248,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 Alias alias = new Alias(dataProvider.getName());
 
                 String clearTextUser = DataProviderHelper.getUser(providerConnection);
-                String user = "".equals(clearTextUser) ? "root" : clearTextUser;
+                String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
                 String password = DataProviderHelper.getClearTextPassword(providerConnection);
 
                 String url = providerConnection.getConnectionString();

@@ -37,6 +37,6 @@ public class FrequencyStatisticsState extends FrequencyTypeStates {
 
     @Override
     protected String getTitle() {
-        return DefaultMessagesImpl.getString("FrequencyTypeStates.FreqyebctStatistics");
+        return DefaultMessagesImpl.getString("FrequencyTypeStates.FreqyebctStatistics"); //$NON-NLS-1$
     }
 }
