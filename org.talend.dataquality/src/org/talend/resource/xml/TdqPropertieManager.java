@@ -66,8 +66,8 @@ public final class TdqPropertieManager {
         return instance;
     }
 
-    public void reload() {
-        propertiesCache = retrieve();
+    public static void reload() {
+        instance = null;
     }
     
     /**
