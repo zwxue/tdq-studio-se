@@ -141,7 +141,8 @@ public final class ChartDecorator {
 
             int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
             domainAxis.setTickLabelFont(new Font("Arial", Font.BOLD, BASE_LABEL_SIZE));
-            domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 10.0));
+            domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createDownRotationLabelPositions(Math.PI / 10.0));
+            domainAxis.setUpperMargin(0.1);
             ((BarRenderer) plot.getRenderer()).setItemMargin(-0.50 * rowCount);
         }
     }
