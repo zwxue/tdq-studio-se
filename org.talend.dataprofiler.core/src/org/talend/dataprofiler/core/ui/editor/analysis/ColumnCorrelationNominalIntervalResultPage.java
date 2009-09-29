@@ -310,22 +310,29 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
         String[] label = {
                 DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.RowCount"), DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.DistinctCount"), DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.UniqueCount"), DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.DuplicateCount") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        long[] count = { columnSetMultiValueIndicator.getCount(), columnSetMultiValueIndicator.getDistinctCount(),
-                columnSetMultiValueIndicator.getUniqueCount(), columnSetMultiValueIndicator.getDuplicateCount() };
-        double[] percent = new double[4];
-        for (int i = 0; i < count.length; i++) {
-            percent[i] = (double) count[i] / count[0];
-        }
-        for (int itemCount = 0; itemCount < 4; itemCount++) {
-            TableItem item = new TableItem(table, SWT.NONE);
-            if (count[0] == 0) {
-                item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]), "N/A" }); //$NON-NLS-1$
-                continue;
-            }
 
-            item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]),
-                    doubleFormat.format(percent[itemCount] * 100) + "%" }); //$NON-NLS-1$
+        Long countAll = columnSetMultiValueIndicator.getCount();
+        Long distinctCount = columnSetMultiValueIndicator.getDistinctCount();
+        Long uniqueCount = columnSetMultiValueIndicator.getUniqueCount();
+        Long duplicateCount = columnSetMultiValueIndicator.getDuplicateCount();
+        if (countAll != null && distinctCount != null && uniqueCount != null && duplicateCount != null) {
+            long[] count = { countAll, distinctCount, uniqueCount, duplicateCount };
+            double[] percent = new double[4];
+            for (int i = 0; i < count.length; i++) {
+                percent[i] = (double) count[i] / count[0];
+            }
+            for (int itemCount = 0; itemCount < 4; itemCount++) {
+                TableItem item = new TableItem(table, SWT.NONE);
+                if (count[0] == 0) {
+                    item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]), "N/A" }); //$NON-NLS-1$
+                    continue;
+                }
+
+                item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]),
+                        doubleFormat.format(percent[itemCount] * 100) + "%" }); //$NON-NLS-1$
+            }
         }
+
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumn(i).pack();
         }
