@@ -61,7 +61,10 @@ public class ChangePerspectiveAction extends Action {
     public ChangePerspectiveAction(String perspectiveId) {
         super(perspectiveId, AS_CHECK_BOX);
         this.perspectiveId = perspectiveId;
-        action = this;
+        // MOD mzhao bug 8896
+        if (action == null) {
+            action = this;
+        }
     }
 
     /**
