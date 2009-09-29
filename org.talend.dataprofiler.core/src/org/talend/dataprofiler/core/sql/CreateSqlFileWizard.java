@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.analysis.parameters.SqlFileParameter;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -73,6 +74,7 @@ public class CreateSqlFileWizard extends Wizard {
         sqlFile = new File(portableString);
         try {
             sqlFile.createNewFile();
+            ProxyRepositoryManager.getInstance().save();
             return true;
         } catch (IOException e) {
             log.error(e, e);
