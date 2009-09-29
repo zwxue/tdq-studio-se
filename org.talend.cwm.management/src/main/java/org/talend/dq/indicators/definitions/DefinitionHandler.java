@@ -927,7 +927,7 @@ public final class DefinitionHandler {
         return ResourceManager.getLibrariesFolder().getFile(FILENAME);
     }
 
-    public void reload() {
+    public static void reload() {
         instance = null;
     }
 }
