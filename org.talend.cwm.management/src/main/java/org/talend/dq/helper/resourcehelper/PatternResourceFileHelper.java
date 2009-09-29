@@ -14,6 +14,7 @@ package org.talend.dq.helper.resourcehelper;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -91,6 +93,36 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             resourcesNumberChanged = false;
         }
         return patternsMap.values();
+    }
+
+    /**
+     * DOC bZhou Comment method "getPatternes".
+     * 
+     * @param folder
+     * @param allPattern
+     */
+    public void getPatternes(IFolder folder, List<Pattern> allPattern) {
+
+        try {
+            for (IResource resource : folder.members()) {
+                if (resource.getType() == IResource.FOLDER) {
+                    getPatternes(folder.getFolder(resource.getName()), allPattern);
+                    continue;
+                }
+
+                IFile file = (IFile) resource;
+                if (file.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+                    Resource fileResource = getFileResource(file);
+                    Pattern pattern = retirePattern(fileResource);
+                    if (pattern != null) {
+                        allPattern.add(pattern);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
     }
 
     /**
