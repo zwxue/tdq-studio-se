@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -297,21 +298,29 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         CustomerDefaultCategoryDataset dataset = initCustomerDataset();
         ChartDataEntity[] dataEntities = dataset.getDataEntities();
         int i = 0;
-        for (ChartDataEntity dataEntity : dataEntities) {
-            TableItem item = new TableItem(resultTable, SWT.NULL);
+        if (dataEntities != null) {
+            // MOD mzhao bug 8839 There might be duplicate dependencies on left and right columnSet.
+            if (dataset.getColumnCount() < dataEntities.length) {
+                MessageDialog.openError(this.getEditor().getSite().getShell(), "Duplicate dependencies",
+                        "There might be duplicate dependencies on left and right columnSet.");
+            } else {
+                for (ChartDataEntity dataEntity : dataEntities) {
+                    TableItem item = new TableItem(resultTable, SWT.NULL);
 
-            Number match = dataset.getValue(0, i);
-            Number notMatch = dataset.getValue(1, i);
-            Number row = match.intValue() + notMatch.intValue();
+                    Number match = dataset.getValue(0, i);
+                    Number notMatch = dataset.getValue(1, i);
+                    Number row = match.intValue() + notMatch.intValue();
 
-            item.setText(0, dataset.getColumnKey(i).toString());
-            item.setText(1, String.valueOf(match.intValue()));
-            item.setText(2, StringFormatUtil.format(String.valueOf(match.doubleValue() / row.doubleValue()),
-                    StringFormatUtil.PERCENT).toString());
-            item.setText(3, String.valueOf(row));
+                    item.setText(0, dataset.getColumnKey(i).toString());
+                    item.setText(1, String.valueOf(match.intValue()));
+                    item.setText(2, StringFormatUtil.format(String.valueOf(match.doubleValue() / row.doubleValue()),
+                            StringFormatUtil.PERCENT).toString());
+                    item.setText(3, String.valueOf(row));
 
-            item.setData(dataEntity);
-            i++;
+                    item.setData(dataEntity);
+                    i++;
+                }
+            }
         }
 
         GridData gd = new GridData();
