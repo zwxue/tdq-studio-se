@@ -120,7 +120,7 @@ public final class PatternUtilities {
      * @return
      */
     public static boolean isPatternValid(Pattern pattern) {
-        boolean valid = true;
+        boolean valid = false;
         EList<PatternComponent> components = pattern.getComponents();
         for (int i = 0; i < components.size(); i++) {
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
@@ -179,7 +179,7 @@ public final class PatternUtilities {
 
         String expressionType = DomainHelper.getExpressionType(pattern);
         boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
-        
+
         if (indicatorDefinition != null) {
             patternMatchingIndicator = UDIFactory.createUserDefIndicator(indicatorDefinition, pattern);
         } else {

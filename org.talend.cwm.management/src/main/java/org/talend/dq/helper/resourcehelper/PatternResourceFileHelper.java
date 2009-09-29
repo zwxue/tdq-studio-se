@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
@@ -227,15 +228,19 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
         Set<IFile> keySet = patternsMap.keySet();
         for (IFile file2 : keySet) {
             Pattern pattern2 = patternsMap.get(file2);
-            RegularExpression e2 = (RegularExpression) pattern.getComponents().get(0);
-            RegularExpression e = (RegularExpression) pattern2.getComponents().get(0);
-            String et = e.getExpressionType();
-            String et2 = e2.getExpressionType();
-            if (pattern2.getName().equals(pattern.getName())) {
-                boolean b = et == null && et2 == null;
-                b = b || (et != null && et.equals(et2));
-                if (b) {
-                    file = file2;
+            EList<PatternComponent> components = pattern.getComponents();
+            EList<PatternComponent> components2 = pattern2.getComponents();
+            if (!components.isEmpty() && !components2.isEmpty()) {
+                RegularExpression e2 = (RegularExpression) components.get(0);
+                RegularExpression e = (RegularExpression) components2.get(0);
+                String et = e.getExpressionType();
+                String et2 = e2.getExpressionType();
+                if (pattern2.getName().equals(pattern.getName())) {
+                    boolean b = et == null && et2 == null;
+                    b = b || (et != null && et.equals(et2));
+                    if (b) {
+                        file = file2;
+                    }
                 }
             }
         }
