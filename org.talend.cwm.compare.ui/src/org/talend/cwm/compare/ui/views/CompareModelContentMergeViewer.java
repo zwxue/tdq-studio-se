@@ -117,16 +117,18 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 if (selection.toList().size() == 1) {
                     selectedElement = (EObject) selection.getFirstElement();
                     if (selectedElement instanceof Package) {
-                        SubelementCompareAction subEleCompTableAction = new SubelementCompareAction(Messages.getString("CompareModelContentMergeViewer.CompareListOfTables"), //$NON-NLS-1$
+                        SubelementCompareAction subEleCompTableAction = new SubelementCompareAction(Messages
+                                .getString("CompareModelContentMergeViewer.CompareListOfTables"), //$NON-NLS-1$
                                 diffTabLeft, selectedOjbect, SubelementCompareAction.TABLE_COMPARE);
-                        SubelementCompareAction subEleCompViewAction = new SubelementCompareAction(Messages.getString("CompareModelContentMergeViewer.CompareListOfViews"), //$NON-NLS-1$
+                        SubelementCompareAction subEleCompViewAction = new SubelementCompareAction(Messages
+                                .getString("CompareModelContentMergeViewer.CompareListOfViews"), //$NON-NLS-1$
                                 diffTabLeft, selectedOjbect, SubelementCompareAction.VIEW_COMPARE);
                         manager.add(subEleCompTableAction);
                         manager.add(subEleCompViewAction);
                     } else if (selectedElement instanceof ColumnSet) {
                         addRenameMenuAction(manager, selectedElement);
-                        SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(
-                                Messages.getString("CompareModelContentMergeViewer.CompareListOfColumns"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
+                        SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(Messages
+                                .getString("CompareModelContentMergeViewer.CompareListOfColumns"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
                                 SubelementCompareAction.COLUMN_COMPARE);
                         manager.add(subEleCompColumnAction);
                     } else if (selectedElement instanceof Column) {
@@ -283,10 +285,12 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         SubelementCompareAction subEleCompColumnAction = null;
         if (selectedElement instanceof Package) {
             subEleCompColumnAction = new SubelementCompareAction(
-                    tableOrViewCompare == SubelementCompareAction.TABLE_COMPARE ? Messages.getString("CompareModelContentMergeViewer.CompareListOfTable") //$NON-NLS-1$
+                    tableOrViewCompare == SubelementCompareAction.TABLE_COMPARE ? Messages
+                            .getString("CompareModelContentMergeViewer.CompareListOfTable") //$NON-NLS-1$
                             : Messages.getString("CompareModelContentMergeViewer.CompareListOfVeiw"), diffTabLeft, selectedOjbect, tableOrViewCompare); //$NON-NLS-1$
         } else if (selectedElement instanceof ColumnSet) {
-            subEleCompColumnAction = new SubelementCompareAction(Messages.getString("CompareModelContentMergeViewer.CompareListOfColumn"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
+            subEleCompColumnAction = new SubelementCompareAction(Messages
+                    .getString("CompareModelContentMergeViewer.CompareListOfColumn"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
                     SubelementCompareAction.COLUMN_COMPARE);
         }
         if (subEleCompColumnAction != null) {
@@ -337,16 +341,16 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
             if (conbItem instanceof ActionContributionItem) {
                 // ChangePropertyAction
-                IAction a = ((ActionContributionItem) conbItem).getAction();
-                if (a != null && a instanceof ChangePropertyAction) {
+                IAction action = ((ActionContributionItem) conbItem).getAction();
+                if (action != null && action instanceof ChangePropertyAction) {
                     tbm.remove(conbItem);
                     conbItem.dispose();
                     continue;
                 }
                 // Action
-                if (((ActionContributionItem) conbItem).getAction() != null
-                        && ((ActionContributionItem) conbItem).getAction().getActionDefinitionId() != null) {
-                    if (((ActionContributionItem) conbItem).getAction().getActionDefinitionId().equals(COPY_LEFT_TO_RIGHT_ID)) {
+                String actionId = action.getActionDefinitionId();
+                if (action != null) {
+                    if (COPY_LEFT_TO_RIGHT_ID.equals(actionId) || COPY_RIGHT_TO_LEFT_ID.equals(actionId)) {
                         tbm.remove(conbItem);
                         conbItem.dispose();
                     }
@@ -414,4 +418,6 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
     }
 
     private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight"; //$NON-NLS-1$
+
+    private static final String COPY_RIGHT_TO_LEFT_ID = "org.eclipse.compare.copyAllRightToLeft"; //$NON-NLS-1$
 }
