@@ -34,8 +34,13 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -137,6 +142,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     EMFSharedResources.getInstance().saveToUri(resource, desUri);
                 }
                 try {
+                    closeEditorIfOpened(fileRes);
                     fileRes.delete(true, null);
                     ModelElementFileFactory.getResourceFileMap(fileRes).setResourcesNumberChanged(true);
                     srcParent.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -150,6 +156,31 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
         ProxyRepositoryManager.getInstance().save();
         ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "closeEditorIfOpened".
+     * 
+     * @param fileRes
+     */
+    private void closeEditorIfOpened(IFile fileRes) {
+        IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorReference[] editorReferences = activePage.getEditorReferences();
+        for (IEditorReference reference : editorReferences) {
+            try {
+                IEditorInput editorInput = reference.getEditorInput();
+                if (editorInput instanceof FileEditorInput) {
+                    FileEditorInput fileInput = (FileEditorInput) editorInput;
+
+                    if (fileRes.getName().equals(fileInput.getFile().getName())) {
+                        activePage.closeEditor(reference.getEditor(false), false);
+                        break;
+                    }
+                }
+            } catch (PartInitException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
