@@ -11,6 +11,7 @@
 //
 // ============================================================================
 package org.talend.resource.xml;
+
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.FileWriter;
@@ -31,8 +32,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
+import org.osgi.framework.Bundle;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -43,22 +48,19 @@ import org.xml.sax.SAXException;
  * DOC mzhao class global comment. Detailled comment
  */
 public final class TdqPropertieManager {
-    
-    
 
     private static TdqPropertieManager instance = null;
-    
+
     private static Logger log = Logger.getLogger(TdqPropertieManager.class);
 
     private List<TdqProperties> propertiesCache = null;
-    
+
     private Map<String, TdqFolderProperties> folderMapProperty = new HashMap<String, TdqFolderProperties>();
+
     private TdqPropertieManager() {
         propertiesCache = retrieve();
     }
-    
-    
-    
+
     public static TdqPropertieManager getInstance() {
         if (instance == null) {
             instance = new TdqPropertieManager();
@@ -69,7 +71,7 @@ public final class TdqPropertieManager {
     public static void reload() {
         instance = null;
     }
-    
+
     /**
      * 
      * DOC mzhao TdqPropertieManager class global comment. Detailled comment
@@ -77,10 +79,11 @@ public final class TdqPropertieManager {
     public static enum TdqPropertiesType {
         FOLDER_PROPS(),
         DATABASE_PROPS();
+
         TdqPropertiesType() {
         }
     }
-    
+
     private TdqFolderProperties getFolderProperties(IResource resource) {
         TdqFolderProperties tfp = folderMapProperty.get(resource.getProjectRelativePath().toString());
         if (tfp == null) {
@@ -89,30 +92,31 @@ public final class TdqPropertieManager {
         }
         return tfp;
     }
-    
+
     public void addFolderProperties(IFolder folder, String key, String value) {
         TdqFolderProperties props = getFolderProperties(folder);
         props.setFolder(folder.getProjectRelativePath().toString());
         props.setProperties(key, value);
         add(props);
     }
+
     public void addFolderProperties(IResource res, QualifiedName key, String value) {
         TdqFolderProperties props = getFolderProperties(res);
         props.setFolder(res.getProjectRelativePath().toString());
         props.setProperties(key.getQualifier() + key.getLocalName(), value);
         add(props);
-    }    
+    }
+
     public void addFolderProperties(IFolder folder, QualifiedName key, String value) {
         addFolderProperties(folder, key.getQualifier() + key.getLocalName(), value);
     }
-    
-    
+
     public void addDatabaseProperties(String key, String value) {
         TdqDatabaseProperties props = new TdqDatabaseProperties();
         props.setProperties(key, value);
         add(props);
     }
-    
+
     // Add a property to cache
     private void add(TdqProperties property) {
         if (!propertiesCache.contains(property)) {
@@ -120,21 +124,22 @@ public final class TdqPropertieManager {
         }
         persist();
     }
-    
+
     // Remove a property from cache
     // public void remove(TdqProperties property) {
     // propetiesCache.remove(property);
     // }
 
-    //Get database value for the specified key.
+    // Get database value for the specified key.
     public Object getDatabasePropertyValue(String key) {
-        for(TdqProperties prop:propertiesCache){
+        for (TdqProperties prop : propertiesCache) {
             if (prop instanceof TdqDatabaseProperties) {
                 return prop.getProperties(key);
             }
         }
         return null;
     }
+
     // Get folder value for the specified key.
     public Object getFolderPropertyValue(String folderName, String key) {
         // If the cache if empty, try to reload.
@@ -150,18 +155,23 @@ public final class TdqPropertieManager {
         }
         return null;
     }
+
     public Object getFolderPropertyValue(IFolder folder, String key) {
         return getFolderPropertyValue(folder.getProjectRelativePath().toString(), key);
     }
+
     public Object getFolderPropertyValue(IFolder folder, QualifiedName key) {
         return getFolderPropertyValue(folder.getProjectRelativePath().toString(), key.getQualifier() + key.getLocalName());
     }
+
     public Object getFolderPropertyValue(IResource resource, QualifiedName key) {
         return getFolderPropertyValue(resource.getProjectRelativePath().toString(), key.getQualifier() + key.getLocalName());
     }
+
     public Object getFolderPropertyValue(String folderName, QualifiedName key) {
         return getFolderPropertyValue(folderName, key.getQualifier() + key.getLocalName());
-    } 
+    }
+
     public ReturnCode persist() {
         ReturnCode rc = new ReturnCode();
         try {
@@ -197,7 +207,6 @@ public final class TdqPropertieManager {
         File file = getPropertiesFile(PROPERTIES_FILE);
         FileWriter outputWriter = new FileWriter(file);
 
-        
         // Betwixt just writes out the bean as a fragment
         // So if we want well-formed xml, we need to add the prolog
         outputWriter.write("<?xml version='1.0' encoding='UTF-8'?>\n");//$NON-NLS-1$
@@ -253,18 +262,25 @@ public final class TdqPropertieManager {
             log.warn(ex);
         }
     }
-    
+
     private File getPropertiesFile(String propFileStr) {
         IProject rootProject = ResourceManager.getRootProject();
         IFile file = rootProject.getFile(propFileStr);
-       
+
         return WorkspaceUtils.ifileToFile(file);
     }
-    
+
+    /**
+     * DOC bZhou Comment method "getPropertiesURL".
+     * 
+     * @param propFileStr
+     * @return
+     * @throws MalformedURLException
+     */
     private URL getPropertiesURL(String propFileStr) throws MalformedURLException {
-        IProject rootProject = ResourceManager.getRootProject();
-        IFile file = rootProject.getFile(propFileStr);
-        return file.getLocationURI().toURL();
+        Bundle bundle = Platform.getBundle("org.talend.dataprofiler.core");
+        URL[] findEntries = FileLocator.findEntries(bundle, new Path("configure/" + propFileStr));
+        return findEntries[0];
     }
 
     public static final String PROPERTIES_FILE = "TdqProperties.xml";
