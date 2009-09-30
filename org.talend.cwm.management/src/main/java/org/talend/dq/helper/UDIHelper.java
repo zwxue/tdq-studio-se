@@ -43,6 +43,9 @@ public final class UDIHelper {
 
     private static Logger log = Logger.getLogger(UDIHelper.class);
 
+    // ("select * from *").length
+    private static int MIN_EXPRESSION_LENGTH = 16;
+
     public static IndicatorCategory getUDICategory(IndicatorDefinition indicatorDefinition) {
         if (indicatorDefinition != null) {
             EList<IndicatorCategory> categories = indicatorDefinition.getCategories();
@@ -127,7 +130,7 @@ public final class UDIHelper {
 
     public static String getMatchingIndicatorName(IndicatorDefinition indicatorDefinition, Pattern pattern) {
         if (indicatorDefinition != null) {
-            return pattern.getName() + "(" + indicatorDefinition.getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+            return pattern.getName() + "(" + indicatorDefinition.getName() + ")";
         } else {
             return pattern.getName();
         }
@@ -166,16 +169,14 @@ public final class UDIHelper {
     /**
      * yyi 2009-09-22 To check the expression is null, empty or less than 16 characters Feature : 8866
      */
-    public static boolean verifyExpression(IndicatorDefinition indicatorDefinition) {
+    public static boolean isUDIValid(IndicatorDefinition indicatorDefinition) {
 
         if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
             return false;
         }
 
         for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
-            if (null == exp.getBody()) {
-                return false;
-            } else if (16 > exp.getBody().length() && !"''".equals(exp.getBody())) { //$NON-NLS-1$
+            if (null == exp.getBody() || exp.getBody().length() + 1 < MIN_EXPRESSION_LENGTH) {
                 return false;
             }
         }

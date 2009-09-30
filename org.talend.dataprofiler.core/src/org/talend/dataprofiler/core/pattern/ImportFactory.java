@@ -465,6 +465,9 @@ public final class ImportFactory {
             id.getSqlGenericExpression().add(expression);
         }
 
+        boolean validStatus = UDIHelper.isUDIValid(id);
+        TaggedValueHelper.setValidStatus(validStatus, id);
+
         String fname = DqRepositoryViewService.createFilename(parameters.name, FactoriesUtil.UDI);
 
         try {

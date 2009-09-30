@@ -29,6 +29,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.part.ISetSelectionTarget;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -81,13 +82,15 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
             if (definitions != null && definitions.length > 0) {
                 for (IndicatorDefinition definition : definitions) {
 
+                    boolean validStatus = true;
                     ModelElement oldObject = (ModelElement) EMFSharedResources.getInstance().copyEObject(definition);
                     if (oldObject != null) {
                         ModelElement newObject = (ModelElement) EMFSharedResources.getInstance().copyEObject(oldObject);
+                        TaggedValueHelper.setValidStatus(validStatus, newObject);
 
                         IFile newFile = getNewFile(definition);
                         newObject.setName("copy of " + newObject.getName()); //$NON-NLS-1$
-                        
+
                         // ADD xqliu 2009-09-27 bug 9200
                         ((IndicatorDefinition) newObject).setLabel(""); // clear the label of indicator definition
                         setUDICategory((IndicatorDefinition) newObject, (IndicatorDefinition) oldObject);
