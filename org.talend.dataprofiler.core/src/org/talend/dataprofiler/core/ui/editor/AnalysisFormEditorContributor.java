@@ -37,6 +37,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
 
     protected IFormPage fPage;
 
+    private GlobalAction runAnalysisAction = null;
     private Hashtable<String, Action> fGlobalActions = new Hashtable<String, Action>();
 
     public AnalysisFormEditorContributor() {
@@ -120,6 +121,8 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
                 getActionBars().updateActionBars();
             }
         }
+        // MOD mzhao bug 8710
+        addGlobalAction(RunAnalysisAction.ID, fGlobalActions.get(RunAnalysisAction.ID));
     }
 
     public void init(IActionBars bars) {

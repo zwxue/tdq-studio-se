@@ -901,7 +901,7 @@
            name="%command.name.removeAnalysis">
      </command>
      <command
-           id="org.talend.dataprofiler.core.runAnalysis"
+           id="org.talend.common.runTalendElement"
            name="%command.name.runAnalysis">
      </command>
      <command
@@ -918,7 +918,7 @@
            sequence="DEL">
      </key>
      <key
-           commandId="org.talend.dataprofiler.core.runAnalysis"
+           commandId="org.talend.common.runTalendElement"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
            sequence="F6">
      </key>

@@ -53,7 +53,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private static Logger log = Logger.getLogger(RunAnalysisAction.class);
 
-    public static final String ID = "org.talend.dataprofiler.core.runAnalysis";//$NON-NLS-1$
+    public static final String ID = "org.talend.common.runTalendElement";//$NON-NLS-1$
     private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00"); //$NON-NLS-1$
 
     private Analysis analysis = null;
