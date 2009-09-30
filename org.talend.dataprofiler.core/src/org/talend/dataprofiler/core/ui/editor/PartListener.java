@@ -48,6 +48,10 @@ public class PartListener implements IPartListener {
     
     protected IFile getPropertyFile(IEditorPart editor) {
         if (isCommonFormEditor(editor)) {
+            // MOD mzhao bug 9348.
+            if (!(editor.getEditorInput() instanceof IFileEditorInput)) {
+                return null;
+            }
             IFileEditorInput fileInput = (IFileEditorInput) editor.getEditorInput();
             URI uri = URI.createPlatformResourceURI(fileInput.getFile().getFullPath().toString(), false);
             Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
