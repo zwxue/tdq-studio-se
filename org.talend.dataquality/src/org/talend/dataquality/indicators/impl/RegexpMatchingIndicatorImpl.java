@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.impl;
@@ -17,18 +16,18 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Regexp Matching Indicator</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Regexp Matching Indicator</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements RegexpMatchingIndicator {
+
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RegexpMatchingIndicatorImpl() {
@@ -36,8 +35,8 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -76,7 +75,9 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                 final EList<Pattern> patterns = dataValidDomain.getPatterns();
                 for (Pattern p : patterns) {
                     if (p != null) {
-                        final String r = DomainHelper.getSQLRegexp(p);
+                        // MOD yyi 2009-09-29 Feature: 9289
+                        final String r = null != DomainHelper.getJavaRegexp(p) ? DomainHelper.getJavaRegexp(p) : DomainHelper
+                                .getSQLRegexp(p);
                         if (r != null) {
                             int startIdx = ('\'' == r.charAt(0)) ? 1 : 0;
                             int endIdx = ('\'' == r.charAt(r.length() - 1)) ? r.length() - 1 : r.length();
@@ -118,8 +119,8 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
         }
 
         boolean ok = super.handle(data);
-        
+
         return ok;
     }
 
-} //RegexpMatchingIndicatorImpl
+} // RegexpMatchingIndicatorImpl

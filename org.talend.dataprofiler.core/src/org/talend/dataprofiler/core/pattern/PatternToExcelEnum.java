@@ -33,7 +33,8 @@ public enum PatternToExcelEnum {
     InformixRegexp(13, "Informix_Regexp"), //$NON-NLS-1$
     SQLite3Regexp(14, "SQLite3_Regexp"), //$NON-NLS-1$
     Teradata(15, "Teradata_Regexp"), //$NON-NLS-1$
-    Category(16, "Category"); //$NON-NLS-1$
+    Category(16, "Category"), //$NON-NLS-1$
+    JavaRegexp(17, "Java_Regexp"); //$NON-NLS-1$
 
     private String literal;
 

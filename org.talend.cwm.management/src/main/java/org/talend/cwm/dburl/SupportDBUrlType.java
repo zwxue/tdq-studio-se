@@ -123,7 +123,8 @@ public enum SupportDBUrlType {
                     null,
                     "com.ibm.as400.access.AS400JDBCDriver", //$NON-NLS-1$
                     null,
-                    "AS400"); //$NON-NLS-1$
+                    "AS400"), //$NON-NLS-1$
+    JAVADEFAULTURL("Java", "localhost", null, "dbname", null, null, null, "Java");
 
     private final String dbKey;
 

@@ -77,6 +77,8 @@ public class DbmsLanguage {
 
     static final String TERADATA = SupportDBUrlType.TERADATADEFAULTURL.getLanguage();
 
+    static final String JAVA = SupportDBUrlType.JAVADEFAULTURL.getLanguage();
+
     /**
      * Ansi SQL.
      */
@@ -722,6 +724,10 @@ public class DbmsLanguage {
         }
         // try generic language
         if (SQL.equals(expression.getLanguage())) {
+            return true;
+        }
+        // try Java language
+        if (JAVA.equals(expression.getLanguage())) {
             return true;
         }
         // else no correct language found

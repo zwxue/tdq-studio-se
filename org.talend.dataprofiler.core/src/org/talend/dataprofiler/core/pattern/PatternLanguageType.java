@@ -74,7 +74,12 @@ public enum PatternLanguageType {
              10,
              SupportDBUrlType.TERADATADEFAULTURL.getLanguage(),
              SupportDBUrlType.TERADATADEFAULTURL.getLanguage(),
-             PatternToExcelEnum.Teradata);
+             PatternToExcelEnum.Teradata),
+    JAVA(
+         11,
+         SupportDBUrlType.JAVADEFAULTURL.getLanguage(),
+         SupportDBUrlType.JAVADEFAULTURL.getLanguage(),
+         PatternToExcelEnum.JavaRegexp);
 
     private static Logger log = Logger.getLogger(PatternLanguageType.class);
 
@@ -136,6 +141,27 @@ public enum PatternLanguageType {
         for (PatternLanguageType oneType : values()) {
             set.add(oneType.getName());
         }
+
+        set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
+
+        return set.toArray(new String[set.size()]);
+    }
+
+    /**
+     * DOC yyi 2009-09-28 Feature: 9289
+     * 
+     * @param hasJava set contains Java or not.
+     * @return
+     */
+    public static String[] getAllLanguageTypes(boolean hasJava) {
+        Set<String> set = new HashSet<String>();
+
+        for (PatternLanguageType oneType : values()) {
+            set.add(oneType.getName());
+        }
+
+        if (!hasJava)
+            set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
 
         return set.toArray(new String[set.size()]);
     }

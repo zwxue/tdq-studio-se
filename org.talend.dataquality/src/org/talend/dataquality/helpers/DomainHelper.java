@@ -112,6 +112,25 @@ public final class DomainHelper {
     }
 
     /**
+     * DOC yyi Comment method "getJavaRegexp".
+     * 
+     * @param pattern
+     * @return
+     */
+    public static String getJavaRegexp(Pattern pattern) {
+        EList<PatternComponent> components = pattern.getComponents();
+        for (PatternComponent patternComponent : components) {
+            if (patternComponent != null) {
+                Expression expression = getExpression(patternComponent, "Java"); //$NON-NLS-1$
+                if (expression != null) {
+                    return expression.getBody();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Method "getExpression".
      * 
      * @param patternComponent
