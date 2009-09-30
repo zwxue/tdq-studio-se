@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -139,7 +140,9 @@ public class UDIResourceFileHelper extends ResourceFileMap {
                 continue;
             }
             IFile file = (IFile) resource;
-            findUDI(file);
+            if (FactoriesUtil.UDI.equals(file.getFileExtension())) {
+                findUDI(file);
+            }
         }
     }
 

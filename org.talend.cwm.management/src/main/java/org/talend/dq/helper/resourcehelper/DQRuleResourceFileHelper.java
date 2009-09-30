@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
@@ -146,8 +147,10 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
                 continue;
             }
             IFile file = (IFile) resource;
-            findWhereRule(file);
 
+            if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
+                findWhereRule(file);
+            }
         }
     }
 
@@ -161,13 +164,13 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
         DQRuleWriter writer = ElementWriterFactory.getInstance().createdRuleWriter();
         return writer.save(dqrule);
     }
-    
+
     @Override
     public void remove(IFile file) {
         super.remove(file);
         whereRulesMap.remove(file);
     }
-    
+
     @Override
     public void clear() {
         super.clear();

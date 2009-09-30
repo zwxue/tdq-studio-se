@@ -74,7 +74,9 @@ public final class RepResourceFileHelper extends ResourceFileMap {
                 searchAllReports(folder.getFolder(resource.getName()));
             }
             IFile file = (IFile) resource;
-            findReport(file);
+            if (FactoriesUtil.REP.equals(file.getFileExtension())) {
+                findReport(file);
+            }
         }
     }
 

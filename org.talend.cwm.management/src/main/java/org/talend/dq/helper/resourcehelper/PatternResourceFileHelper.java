@@ -139,8 +139,9 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
                 continue;
             }
             IFile file = (IFile) resource;
-            findPattern(file);
-
+            if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
+                findPattern(file);
+            }
         }
     }
 
