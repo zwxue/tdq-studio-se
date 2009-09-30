@@ -155,7 +155,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         // Save item
         item.setFilename(fileName);
         URI uri = element.eResource().getURI();
-         serialize(item, uri);
+        // serialize(item, uri);
         // Save property
         serialize(property, uri);
         return property;
