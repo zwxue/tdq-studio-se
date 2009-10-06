@@ -192,7 +192,9 @@ public final class MigrationTaskManager {
                             log.info("Migration - now executing " + task.getName());
                         }
 
-                        task.execute();
+                        if (!task.execute()) {
+                            log.error("Migration Task failed: " + task.getName());
+                        }
 
                         monitor.worked(1);
                     }
@@ -208,9 +210,9 @@ public final class MigrationTaskManager {
             try {
                 ProgressUI.popProgressDialog(op);
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                log.error(e, e);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

@@ -45,7 +45,7 @@ public class CopyWorkspacePropertiesFileTask extends AbstractMigrationTask {
         IProject rootProject = ResourceManager.getRootProject();
         DQStructureManager.copyConfigFiles(rootProject, plugin);
         // Reload properties.
-        TdqPropertieManager.getInstance().reload();
+        TdqPropertieManager.reload();
         return Boolean.TRUE;
     }
 
@@ -56,7 +56,7 @@ public class CopyWorkspacePropertiesFileTask extends AbstractMigrationTask {
 
     public Date getOrder() {
         Calendar calender = Calendar.getInstance();
-        calender.set(2009, 9, 27);
+        calender.set(2009, 1, 1);
         return calender.getTime();
     }
 
