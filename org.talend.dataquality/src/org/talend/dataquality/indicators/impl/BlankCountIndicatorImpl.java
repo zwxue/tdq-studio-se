@@ -168,6 +168,13 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
         return ok;
     }
 
+    
+    @Override
+    public boolean reset() {
+        this.blankCount = BLANK_COUNT_EDEFAULT;
+        return super.reset();
+    }
+
     /*
      * (non-Javadoc)
      * 
