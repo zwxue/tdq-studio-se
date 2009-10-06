@@ -70,7 +70,7 @@ public final class DQStructureManager {
 
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
-    private static final String EXCHANGE_PATH = "/exchange";//$NON-NLS-1$
+    //    private static final String EXCHANGE_PATH = "/exchange";//$NON-NLS-1$
 
     private static final String CONFIG_PATH = "/configure";//$NON-NLS-1$
 
@@ -78,25 +78,24 @@ public final class DQStructureManager {
 
     public static final String JRXML_FOLDER_PROPERTY = "JRXML_FOLDER_PROPERTY"; //$NON-NLS-1$
 
-    public static final String REPORTS = DefaultMessagesImpl.getString("DQStructureManager.reports"); //$NON-NLS-1$
+    public static final String REPORTS = "Reports"; //$NON-NLS-1$
 
-    public static final String SOURCE_FILES = DefaultMessagesImpl.getString("DQStructureManager.sourceFiles"); //$NON-NLS-1$
+    public static final String SOURCE_FILES = "Source Files"; //$NON-NLS-1$
 
-    public static final String PATTERNS = DefaultMessagesImpl.getString("DQStructureManager.patterns"); //$NON-NLS-1$
+    public static final String PATTERNS = "Patterns"; //$NON-NLS-1$
 
-    public static final String SQL_PATTERNS = DefaultMessagesImpl.getString("DQStructureManager.sqlPatterns"); //$NON-NLS-1$
+    public static final String SQL_PATTERNS = "SQL Patterns"; //$NON-NLS-1$
 
     public static final String EXCHANGE = "Exchange"; //$NON-NLS-1$
 
     public static final String INDICATORS = "Indicators"; //$NON-NLS-1$
 
-    public static final String USER_DEFINED_INDICATORS = DefaultMessagesImpl
-            .getString("DQStructureManager.userDefinedIndicators"); //$NON-NLS-1$
+    public static final String USER_DEFINED_INDICATORS = "User Defined Indicators"; //$NON-NLS-1$
 
     // MOD xqliu 2009-02-14 bug 6015
-    public static final String DQ_RULES = DefaultMessagesImpl.getString("DQStructureManager.dqRules"); //$NON-NLS-1$
+    public static final String DQ_RULES = "DQ Rules"; //$NON-NLS-1$
 
-    public static final String ANALYSIS = DefaultMessagesImpl.getString("DQStructureManager.analyses"); //$NON-NLS-1$
+    public static final String ANALYSIS = "Analyses"; //$NON-NLS-1$
 
     public static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_CLASSIFY"); //$NON-NLS-1$
 
@@ -135,11 +134,11 @@ public final class DQStructureManager {
 
     public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
 
-    public static final String RULES = DefaultMessagesImpl.getString("DQStructureManager.rules"); //$NON-NLS-1$
+    public static final String RULES = "Rules"; //$NON-NLS-1$
 
-    public static final String SQL = DefaultMessagesImpl.getString("DQStructureManager.sqls"); //$NON-NLS-1$
+    public static final String SQL = "SQL"; //$NON-NLS-1$
 
-    public static final String REGEX = DefaultMessagesImpl.getString("DQStructureManager.regex"); //$NON-NLS-1$
+    public static final String REGEX = "Regex"; //$NON-NLS-1$
 
     private List<String> modleElementSuffixs = null;
 
@@ -326,10 +325,10 @@ public final class DQStructureManager {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                CreateProjectOperation op = new CreateProjectOperation(description, DefaultMessagesImpl
+                CreateProjectOperation createProjOp = new CreateProjectOperation(description, DefaultMessagesImpl
                         .getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
                 try {
-                    PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(op, monitor,
+                    PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(createProjOp, monitor,
                             WorkspaceUndoUtil.getUIInfoAdapter(null));
                 } catch (ExecutionException e) {
                     throw new InvocationTargetException(e);
@@ -368,6 +367,8 @@ public final class DQStructureManager {
         } else if (parent instanceof IFolder) {
             desFolder = ((IFolder) parent).getFolder(folderName);
         }
+        assert desFolder != null;
+        
         if (!desFolder.exists()) {
             desFolder.create(false, true, null);
         }
@@ -409,33 +410,33 @@ public final class DQStructureManager {
             try {
                 fileURL = FileLocator.toFileURL(resourceURL);
                 file = new File(fileURL.getFile());
+                if (file.isDirectory() && recurse) {
+                    if (file.getName().startsWith(".")) { //$NON-NLS-1$
+                        continue;
+                    }
+                    IFolder folder = desFolder.getFolder(file.getName());
+                    if (!folder.exists()) {
+                        folder.create(true, true, null);
+                    }
+                    // folder.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+                    // desFolder.getPersistentProperty(FOLDER_CLASSIFY_KEY));
+                    TdqPropertieManager.getInstance().addFolderProperties(folder, FOLDER_CLASSIFY_KEY,
+                            TdqPropertieManager.getInstance().getFolderPropertyValue(desFolder, FOLDER_CLASSIFY_KEY).toString());
+                    copyFilesToFolder(plugin, currentPath, recurse, folder, suffix);
+                    continue;
+                }
+
+                if (suffix != null && !file.getName().endsWith(suffix)) {
+                    continue;
+                }
+
+                String fileName = new Path(fileURL.getPath()).lastSegment();
+                InputStream openStream = null;
+                openStream = fileURL.openStream();
+                copyFileToFolder(openStream, fileName, desFolder);
             } catch (IOException e) {
                 log.error(e, e);
             }
-            if (file.isDirectory() && recurse) {
-                if (file.getName().startsWith(".")) { //$NON-NLS-1$
-                    continue;
-                }
-                IFolder folder = desFolder.getFolder(file.getName());
-                if (!folder.exists()) {
-                    folder.create(true, true, null);
-                }
-                // folder.setPersistentProperty(FOLDER_CLASSIFY_KEY,
-                // desFolder.getPersistentProperty(FOLDER_CLASSIFY_KEY));
-                TdqPropertieManager.getInstance().addFolderProperties(folder, FOLDER_CLASSIFY_KEY,
-                        TdqPropertieManager.getInstance().getFolderPropertyValue(desFolder, FOLDER_CLASSIFY_KEY).toString());
-                copyFilesToFolder(plugin, currentPath, recurse, folder, suffix);
-                continue;
-            }
-
-            if (suffix != null && !file.getName().endsWith(suffix)) {
-                continue;
-            }
-
-            String fileName = new Path(fileURL.getPath()).lastSegment();
-            InputStream openStream = null;
-            openStream = fileURL.openStream();
-            copyFileToFolder(openStream, fileName, desFolder);
         }
 
     }
@@ -452,8 +453,7 @@ public final class DQStructureManager {
     }
 
     public static void copyConfigFiles(IProject project, Plugin plugin) {
-        Enumeration paths = null;
-        paths = plugin.getBundle().getEntryPaths(CONFIG_PATH);
+        Enumeration paths = plugin.getBundle().getEntryPaths(CONFIG_PATH);
         if (paths == null) {
             return;
         }
@@ -472,6 +472,8 @@ public final class DQStructureManager {
                 }
                 destFile = new File(project.getLocation().toOSString() + File.separator + srcFile.getName());
                 FileUtils.copyFile(srcFile, destFile);
+                // FIXME a file may already be created by another migration task. The changes will be lost! Either
+                // this migration should be done first or it should not overwrite the other migration task
             } catch (IOException e) {
                 log.error(e, e);
             }
