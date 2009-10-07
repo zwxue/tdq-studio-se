@@ -30,7 +30,6 @@ import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
-import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -307,23 +306,27 @@ public final class AnalysisHelper {
         for (Indicator indicator : indicators) {
             if (indicator instanceof PatternMatchingIndicator) {
                 rets.addAll(((PatternMatchingIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
-            } else if (indicator instanceof UserDefIndicator) {
-                if (IndicatorCategoryHelper.isUserDefMatching(getIndicatorCategory(indicator.getIndicatorDefinition()))) {
-                    rets.addAll(((UserDefIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
-                }
             }
+            // MOD scorreia 2009-10-07 User defined matching indicator is NOT a pattern matching indicator.
+            // else if (indicator instanceof UserDefIndicator) {
+            // if (IndicatorCategoryHelper.isUserDefMatching(getIndicatorCategory(indicator.getIndicatorDefinition())))
+            // {
+            // rets.addAll(((UserDefIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
+            // }
+            // }
         }
         return rets;
     }
 
-    private static IndicatorCategory getIndicatorCategory(IndicatorDefinition indicatorDefinition) {
-        IndicatorCategory category = null;
-        if (indicatorDefinition != null) {
-            EList<IndicatorCategory> categories = indicatorDefinition.getCategories();
-            if (categories != null && categories.size() > 0) {
-                category = categories.get(0);
-            }
-        }
-        return category;
-    }
+    // MOD scorreia 2009-10-07 User defined matching indicator is NOT a pattern matching indicator.
+    // private static IndicatorCategory getIndicatorCategory(IndicatorDefinition indicatorDefinition) {
+    // IndicatorCategory category = null;
+    // if (indicatorDefinition != null) {
+    // EList<IndicatorCategory> categories = indicatorDefinition.getCategories();
+    // if (categories != null && categories.size() > 0) {
+    // category = categories.get(0);
+    // }
+    // }
+    // return category;
+    // }
 }
