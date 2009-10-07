@@ -16,9 +16,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -38,13 +36,6 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
     private String[] tableType;
 
     private boolean columnsRequested = false;
-
-    /**
-     * MOD scorreia 2009-04-27 for debug purpose only.
-     */
-    private static final Map<String, Integer> catalog2NumberOfCalls = new HashMap<String, Integer>();
-
-    private static final boolean debug = false;
 
     /**
      * DOC scorreia AbstractTableBuilder constructor comment.

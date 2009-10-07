@@ -16,6 +16,9 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
 import org.osgi.framework.BundleContext;
 
+/**
+ * DOC scorreia class global comment. Detailled comment
+ */
 public class CWMPlugin extends Plugin {
 
     private static CWMPlugin self;

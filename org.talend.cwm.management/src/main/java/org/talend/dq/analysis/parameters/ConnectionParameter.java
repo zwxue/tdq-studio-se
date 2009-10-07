@@ -114,6 +114,9 @@ public class ConnectionParameter {
         this.folderProvider = folderProvider;
     }
 
+    /**
+     * Enumeration of types.
+     */
     public enum EParameterType {
         ANALYSIS,
         REPORT,

@@ -43,7 +43,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
-    private static Integer STATIC_COUNT = 1;
+    private static Integer staticCount = 1;
 
     private static Logger log = Logger.getLogger(RowMatchingAnalysisExecutor.class);
 
@@ -118,8 +118,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String aliasB = "B"; //$NON-NLS-1$
 
         // MOD xqliu 2009-06-16 bug 7334
-        boolean reversion = STATIC_COUNT % 2 == 0 ? true : false;
-        STATIC_COUNT++;
+        boolean reversion = staticCount % 2 == 0 ? true : false;
+        staticCount++;
         String dataFilterA = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
         String dataFilterB = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
         if (reversion) {
@@ -333,8 +333,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             String tableName = getAnalyzedTable(indicator);
 
             // MOD xqliu 2009-06-16 bug 7334
-            boolean reversion = STATIC_COUNT % 2 == 0 ? true : false;
-            STATIC_COUNT++;
+            boolean reversion = staticCount % 2 == 0 ? true : false;
+            staticCount++;
             // set data filter here
             final String stringDataFilter = reversion ? AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
                     AnalysisHelper.DATA_FILTER_B) : AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
