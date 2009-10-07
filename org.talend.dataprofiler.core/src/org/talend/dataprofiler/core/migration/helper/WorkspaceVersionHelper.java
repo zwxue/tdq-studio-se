@@ -79,10 +79,10 @@ public final class WorkspaceVersionHelper {
 		return new ProductVersion(0, 0, 0);
 	}
 
-	/**
-	 * 
-	 * MOD mzhao 2009-04-03
-	 */
+    /**
+     * 
+     * MOD mzhao 2009-04-03.
+     */
 	public static void storeVersion() {
 		IFile versionFile = getVersionFile();
 		Properties pros = new Properties();

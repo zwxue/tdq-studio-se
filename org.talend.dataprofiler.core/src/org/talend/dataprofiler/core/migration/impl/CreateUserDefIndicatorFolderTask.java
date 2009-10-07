@@ -17,6 +17,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
@@ -51,7 +52,7 @@ public class CreateUserDefIndicatorFolderTask extends AbstractMigrationTask {
             // DQStructureManager.UDI_FOLDER_PROPERTY);
 
         } catch (Exception e) {
-            log.error(e, e);
+            ExceptionHandler.process(e);
             return false;
         }
         return true;

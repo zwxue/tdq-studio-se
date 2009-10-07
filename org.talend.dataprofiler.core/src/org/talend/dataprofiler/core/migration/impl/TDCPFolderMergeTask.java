@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
@@ -98,23 +99,23 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
 				FileUtils.forceDelete(new File(pathName));
 			}
 			// ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
-			fileContentUpgrade(rootProject);
+            return fileContentUpgrade(rootProject);
 			// ~
 		} catch (InvocationTargetException e) {
-			logger.error(e, e);
+			ExceptionHandler.process(e);
 		} catch (InterruptedException e) {
-			logger.error(e, e);
+			ExceptionHandler.process(e);
 		} catch (CoreException e) {
-			logger.error(e, e);
+			ExceptionHandler.process(e);
 		} catch (IOException e) {
-			logger.error(e, e);
+			ExceptionHandler.process(e);
 		} catch (Throwable e) {
-			logger.error(e);
+		    ExceptionHandler.process(e);
 		}
 		return false;
 	}
 
-	private void fileContentUpgrade(IProject rootProject) throws CoreException {
+	private boolean fileContentUpgrade(IProject rootProject) throws CoreException {
 		String[] extensions = { FactoriesUtil.ANA, FactoriesUtil.PROV,
 				FactoriesUtil.REP, "softwaredeployment" };
 		boolean recursive = true;
@@ -141,12 +142,15 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
 
 					FileUtils.writeStringToFile(file, content);
 				} catch (IOException e) {
-					logger.error(e);
+				    ExceptionHandler.process(e);
+                    return false;
 				} catch (Throwable e) {
-					logger.error(e);
+                    ExceptionHandler.process(e);
+                    return false;
 				}
 			}
 		}
+		return true;
 	}
 
 	public Date getOrder() {

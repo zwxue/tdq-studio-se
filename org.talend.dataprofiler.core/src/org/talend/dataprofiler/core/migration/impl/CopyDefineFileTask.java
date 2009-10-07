@@ -18,6 +18,7 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
@@ -52,7 +53,7 @@ public class CopyDefineFileTask extends AbstractMigrationTask {
 
 				return true;
 			} catch (Exception e) {
-				log.error(e, e);
+			    ExceptionHandler.process(e);
 				return false;
 			}
 		}

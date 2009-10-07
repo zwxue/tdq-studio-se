@@ -18,6 +18,7 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
@@ -42,17 +43,14 @@ public class CreateDQRulesFolderTask extends AbstractMigrationTask {
 			DQStructureManager manager = DQStructureManager.getInstance();
 			IFolder createNewFoler = manager.createNewFoler(ResourceManager
 					.getLibrariesFolder(), DQStructureManager.DQ_RULES);
-            // createNewFoler.setPersistentProperty(
-            // DQStructureManager.FOLDER_CLASSIFY_KEY,
-            // DQStructureManager.DQRULES_FOLDER_PROPERTY);
             TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.DQRULES_FOLDER_PROPERTY);
 			manager.copyFilesToFolder(CorePlugin.getDefault(),
 					DQStructureManager.DQ_RULES_PATH, true, createNewFoler,
 					null);
 		} catch (Exception e) {
-			log.error(e, e);
-			return false;
+		    ExceptionHandler.process(e);
+            return false;
 		}
 		return true;
 	}

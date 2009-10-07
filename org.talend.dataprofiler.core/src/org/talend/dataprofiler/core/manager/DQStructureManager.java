@@ -472,8 +472,6 @@ public final class DQStructureManager {
                 }
                 destFile = new File(project.getLocation().toOSString() + File.separator + srcFile.getName());
                 FileUtils.copyFile(srcFile, destFile);
-                // FIXME a file may already be created by another migration task. The changes will be lost! Either
-                // this migration should be done first or it should not overwrite the other migration task
             } catch (IOException e) {
                 log.error(e, e);
             }

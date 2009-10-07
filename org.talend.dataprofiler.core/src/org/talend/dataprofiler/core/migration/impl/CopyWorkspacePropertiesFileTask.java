@@ -43,6 +43,13 @@ public class CopyWorkspacePropertiesFileTask extends AbstractMigrationTask {
         // Copy properties configuration file.
         Plugin plugin = CorePlugin.getDefault();
         IProject rootProject = ResourceManager.getRootProject();
+
+        // MOD scorreia - 2009-10-07
+        // a file may already be created by another migration task. The changes will be lost! Either
+        // this migration should be done first or it should not overwrite the other migration task
+        // at this time, I have reordered the migration tasks so that this task is executed before the other that create
+        // or modify the TdqProperties.xml file.
+
         DQStructureManager.copyConfigFiles(rootProject, plugin);
         // Reload properties.
         TdqPropertieManager.reload();
