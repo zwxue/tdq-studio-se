@@ -35,7 +35,7 @@ public class CreateUserDefIndicatorFolderTask extends AbstractMigrationTask {
             DQStructureManager manager = DQStructureManager.getInstance();
             
             // creator Indicators
-            IFolder createNewFoler = manager.createNewFoler(ResourceManager.getLibrariesFolder(), DQStructureManager.INDICATORS);
+            IFolder createNewFoler = manager.createNewReadOnlyFolder(ResourceManager.getLibrariesFolder(), DQStructureManager.INDICATORS);
             // createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
             // DQStructureManager.INDICATORS_FOLDER_PROPERTY);
             TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
@@ -45,7 +45,7 @@ public class CreateUserDefIndicatorFolderTask extends AbstractMigrationTask {
             // createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY,
             // DQStructureManager.NO_SUBFOLDER_PROPERTY);
             // create User Defined Indicators
-            createNewFoler = manager.createNewFoler(createNewFoler, DQStructureManager.USER_DEFINED_INDICATORS);
+            createNewFoler = manager.createNewReadOnlyFolder(createNewFoler, DQStructureManager.USER_DEFINED_INDICATORS);
             TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.UDI_FOLDER_PROPERTY);
             // createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,

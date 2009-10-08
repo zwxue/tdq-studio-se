@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -29,6 +28,7 @@ import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.resource.ResourceManager;
 
@@ -40,17 +40,14 @@ import org.talend.resource.ResourceManager;
  */
 public class UpdateDependenciesFileTask extends AbstractMigrationTask {
 
-    private static Logger log = Logger.getLogger(UpdateDependenciesFileTask.class);
-
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
      */
     public boolean execute() {
-        log.info(this.getName() + ": Recomputing all dependencies between analyses and patterns");
         try {
-            // TODO load all analyses and find those which use patterns.
+            // MOD scorreia 2009-10-07 load all analyses and find those which use patterns.
             IProject rootProject = ResourceManager.getRootProject();
             IFolder dataprofilingFolder = rootProject.getFolder(ResourceManager.DATA_PROFILING_FOLDER_NAME);
             IFolder analysesFolder = dataprofilingFolder.getFolder(DQStructureManager.ANALYSIS);
@@ -64,7 +61,8 @@ public class UpdateDependenciesFileTask extends AbstractMigrationTask {
     }
 
     /**
-     * DOC scorreia Comment method "updateDependencies".
+     * Method "updateDependencies" updates dependencies between elements in TOP.
+     * 
      * @param analysesSubFolder
      * @throws CoreException
      */
@@ -74,14 +72,20 @@ public class UpdateDependenciesFileTask extends AbstractMigrationTask {
                 IFolder folder = (IFolder) resource;
                 updateDependencies(folder);
             }
-            
+
             if (resource instanceof IFile) {
                 IFile file = (IFile) resource;
                 final Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+                // update dependency between analyses and patterns
                 final List<Pattern> patterns = AnalysisHelper.getPatterns(analysis);
                 for (Pattern pattern : patterns) {
-                    // TODO scorreia check that there is no dependency already set
                     DependenciesHandler.getInstance().setDependencyOn(analysis, pattern);
+                    AnaResourceFileHelper.getInstance().save(analysis);
+                }
+                // update dependency between analyses and dq rules
+                final List<IndicatorDefinition> userDefinedIndicators = AnalysisHelper.getUserDefinedIndicators(analysis);
+                for (IndicatorDefinition indicatorDefinition : userDefinedIndicators) {
+                    DependenciesHandler.getInstance().setDependencyOn(analysis, indicatorDefinition);
                     AnaResourceFileHelper.getInstance().save(analysis);
                 }
             }

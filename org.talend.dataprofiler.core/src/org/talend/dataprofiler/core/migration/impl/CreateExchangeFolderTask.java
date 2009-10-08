@@ -40,7 +40,7 @@ public class CreateExchangeFolderTask extends AbstractMigrationTask {
 	public boolean execute() {
 		try {
 			DQStructureManager manager = DQStructureManager.getInstance();
-			IFolder createNewFoler = manager.createNewFoler(ResourceManager
+			IFolder createNewFoler = manager.createNewReadOnlyFolder(ResourceManager
 					.getLibrariesFolder(), DQStructureManager.EXCHANGE);
             // createNewFoler.setPersistentProperty(
             // DQStructureManager.FOLDER_CLASSIFY_KEY,

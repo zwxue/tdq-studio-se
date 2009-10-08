@@ -39,7 +39,6 @@ public abstract class AbstractMigrationTask implements IWorkspaceMigrationTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getId()
      */
     public String getId() {
-        // TODO Auto-generated method stub
         return id;
     }
 
@@ -49,7 +48,6 @@ public abstract class AbstractMigrationTask implements IWorkspaceMigrationTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getName()
      */
     public String getName() {
-        // TODO Auto-generated method stub
         return name;
     }
 
@@ -59,7 +57,6 @@ public abstract class AbstractMigrationTask implements IWorkspaceMigrationTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#setId(java.lang.String)
      */
     public void setId(String id) {
-        // TODO Auto-generated method stub
         this.id = id;
     }
 
@@ -69,7 +66,6 @@ public abstract class AbstractMigrationTask implements IWorkspaceMigrationTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#setName(java.lang.String)
      */
     public void setName(String name) {
-        // TODO Auto-generated method stub
         this.name = name;
     }
 

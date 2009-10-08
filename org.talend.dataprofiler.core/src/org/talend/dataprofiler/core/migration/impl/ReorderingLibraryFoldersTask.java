@@ -54,14 +54,11 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
     }
 
     public boolean execute() {
-        if (log.isInfoEnabled()) {
-            log.info(this.getName() + ": Reordering folders in Library");
-        }
         IProject rootProject = ResourceManager.getRootProject();
         IFolder libraryFolder = rootProject.getFolder(ResourceManager.LIBRARIES_FOLDER_NAME);
         try {
 
-            // Regex Patterns
+            // Patterns -> Patterns/Regex
             IFolder oldPatternFolder = libraryFolder.getFolder(DQStructureManager.PATTERNS);
             IFolder newPatternFolder = libraryFolder.getFolder(DQStructureManager.PATTERNS); 
             String folderProperty = DQStructureManager.PATTERNS_FOLDER_PROPERTY;
@@ -69,14 +66,14 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
             movePatternsIntoPatternsRegex(oldPatternFolder, newRegexSubfolder, folderProperty);
             // oldPatternFolder.delete(true, null); // Do not delete because it's the same as before
             
-            // SQL Patterns
+            // SQL Patterns -> Patterns/SQL
             IFolder oldSqlPatternsFolder = libraryFolder.getFolder(DQStructureManager.SQL_PATTERNS);
-            IFolder newSqlSubfolder = DQStructureManager.getInstance().createNewFoler(newPatternFolder, DQStructureManager.SQL);
+            IFolder newSqlSubfolder = DQStructureManager.getInstance().createNewReadOnlyFolder(newPatternFolder, DQStructureManager.SQL);
             folderProperty = DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY;
             movePatternsIntoPatternsRegex(oldSqlPatternsFolder, newSqlSubfolder, folderProperty);
             oldSqlPatternsFolder.delete(true, null);
             
-            // DQ Rules
+            // DQ Rules -> Rules/SQL
             IFolder oldDqRulesFolder = libraryFolder.getFolder(DQStructureManager.DQ_RULES);
             IFolder newRulesFolder = createSubfolder(libraryFolder, DQStructureManager.RULES, folderProperty); 
             folderProperty = DQStructureManager.DQRULES_FOLDER_PROPERTY;
@@ -103,7 +100,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
     private IFolder createSubfolder(IFolder newPatternFolder, final String folderName, String folderProp) throws CoreException {
         TdqPropertieManager.getInstance().addFolderProperties(newPatternFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
                 folderProp);
-        return DQStructureManager.getInstance().createNewFoler(newPatternFolder, folderName);
+        return DQStructureManager.getInstance().createNewFolder(newPatternFolder, folderName);
     }
 
     private void movePatternsIntoPatternsRegex(IFolder oldSubFolder, IFolder newSubfolder, final String folderProperty)
@@ -121,7 +118,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
             if (oldResource instanceof IFolder) {
                 IFolder oldFolder = (IFolder) oldResource;
                 
-                IFolder newFolder = DQStructureManager.getInstance().createNewFoler(newSubfolder, oldFolder.getName());
+                IFolder newFolder = DQStructureManager.getInstance().createNewFolder(newSubfolder, oldFolder.getName());
                 TdqPropertieManager.getInstance().addFolderProperties(newFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
                         folderProperty);
                 

@@ -41,7 +41,7 @@ public class CreateDQRulesFolderTask extends AbstractMigrationTask {
 	public boolean execute() {
 		try {
 			DQStructureManager manager = DQStructureManager.getInstance();
-			IFolder createNewFoler = manager.createNewFoler(ResourceManager
+			IFolder createNewFoler = manager.createNewReadOnlyFolder(ResourceManager
 					.getLibrariesFolder(), DQStructureManager.DQ_RULES);
             TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.DQRULES_FOLDER_PROPERTY);
