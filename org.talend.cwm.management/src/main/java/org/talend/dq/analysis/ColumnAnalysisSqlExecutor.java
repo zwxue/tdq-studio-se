@@ -317,8 +317,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } else
 
         // --- handle case of matching pattern count
-        if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)
-                || UDIHelper.isMatching(indicator)) {
+        if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)) {
             List<String> patterns = getPatterns(indicator);
             if (patterns.isEmpty()) {
                 return traceError("No pattern found for database type: " + language + " for indicator " + indicator.getName());

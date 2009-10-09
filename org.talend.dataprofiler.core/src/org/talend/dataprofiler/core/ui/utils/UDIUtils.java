@@ -16,25 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.jface.window.Window;
-import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -75,29 +67,31 @@ public final class UDIUtils {
         udi.setIndicatorDefinition(udid);
         IndicatorEnum indicatorType = IndicatorEnum.findIndicatorEnum(udi.eClass());
 
+        // MOD xqliu 2009-10-09 bug 9304
         // create user defined matching indicator
-        if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(ic)) {
-            IFolder libProject = ResourceManager.getLibrariesFolder();
-            CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(libProject);
-            if (dialog.open() == Window.OK) {
-                for (Object obj : dialog.getResult()) {
-                    if (obj instanceof IFile) {
-                        IFile file = (IFile) obj;
-                        IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, columnIndicator, analysis,
-                                udid);
-                        if (addIndicatorUnit == null) {
-                            Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                            MessageUI.openError(DefaultMessagesImpl.getString("UDIUtils.PatternSelected") //$NON-NLS-1$
-                                    + pattern.getName());
-                        } else {
-                            addIndicatorUnits.add(addIndicatorUnit);
-                        }
-                    }
-                }
-            }
-        } else {
-            addIndicatorUnits.add(columnIndicator.addSpecialIndicator(indicatorType, udi));
-        }
+        // if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(ic)) {
+        // IFolder libProject = ResourceManager.getLibrariesFolder();
+        // CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(libProject);
+        // if (dialog.open() == Window.OK) {
+        // for (Object obj : dialog.getResult()) {
+        // if (obj instanceof IFile) {
+        // IFile file = (IFile) obj;
+        // IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, columnIndicator, analysis,
+        // udid);
+        // if (addIndicatorUnit == null) {
+        // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
+        //                            MessageUI.openError(DefaultMessagesImpl.getString("UDIUtils.PatternSelected") //$NON-NLS-1$
+        // + pattern.getName());
+        // } else {
+        // addIndicatorUnits.add(addIndicatorUnit);
+        // }
+        // }
+        // }
+        // }
+        // } else {
+        addIndicatorUnits.add(columnIndicator.addSpecialIndicator(indicatorType, udi));
+        // }
+        // ~
 
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, udid);
         return addIndicatorUnits.toArray(new IndicatorUnit[addIndicatorUnits.size()]);

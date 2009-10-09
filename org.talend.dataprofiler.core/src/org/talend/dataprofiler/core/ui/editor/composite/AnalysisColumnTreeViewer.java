@@ -82,7 +82,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
@@ -555,9 +554,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         Indicator indicator = unit.getIndicator();
         if (indicator instanceof UserDefIndicator) {
             reomveElements.add(indicator.getIndicatorDefinition());
-            if (IndicatorCategoryHelper.isUserDefMatching(UDIHelper.getUDICategory(indicator))) {
-                reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
-            }
+            // MOD xqliu 2009-10-09 bug 9304
+            // if (IndicatorCategoryHelper.isUserDefMatching(UDIHelper.getUDICategory(indicator))) {
+            // reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
+            // }
+            // ~
         } else if (indicator instanceof PatternMatchingIndicator) {
             reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
         }
