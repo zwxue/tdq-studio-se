@@ -13,10 +13,17 @@
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import java.io.File;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
+import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -40,7 +47,23 @@ public class ImportUDIWizard extends Wizard {
     @Override
     public boolean performFinish() {
         File file = new File(page.getSourceFile());
-        ImportFactory.importIndicatorToStucture(file, folder, page.getSkip(), page.getRename());
+        final List<String> information = ImportFactory.importIndicatorToStucture(file, folder, page.getSkip(), page.getRename());
+        Display.getDefault().asyncExec(new Runnable() {
+
+            public void run() {
+                Pattern p = Pattern.compile("File format of indicator \\\".*\\\" is invalid!");
+
+                for (String info : information) {
+                    Matcher m = p.matcher(info);
+                    if (m.matches())
+                        ImportInfoDialog
+                                .openImportInformation(
+                                        null,
+                                        DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinishWithWarning"), (String[]) information.toArray(new String[0]), MessageDialog.WARNING); //$NON-NLS-1$
+                    break;
+                }
+            }
+        });
         return true;
     }
 

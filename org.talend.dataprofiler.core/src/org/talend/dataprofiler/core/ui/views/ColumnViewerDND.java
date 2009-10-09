@@ -51,6 +51,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import orgomg.cwm.resource.relational.Column;
@@ -296,7 +297,7 @@ public class ColumnViewerDND {
                     IndicatorDefinition udi = UDIResourceFileHelper.getInstance().findUDI(fe);
                     // MOD yyi 2009-09-16
                     // Feature :8866
-                    if (udi != null && TaggedValueHelper.getValidStatus(udi)) {
+                    if (udi != null && (TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi))) {
                         is = false;
                     }
                 }

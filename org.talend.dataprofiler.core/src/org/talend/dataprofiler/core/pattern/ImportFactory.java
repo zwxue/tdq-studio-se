@@ -33,6 +33,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -337,46 +339,62 @@ public final class ImportFactory {
                 reader.setUseTextQualifier(USE_TEXT_QUAL);
 
                 reader.readHeaders();
+                if (checkFileHeader(reader.getHeaders())) {
 
-                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
+                    java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
 
-                while (reader.readRecord()) {
-                    name = reader.get(PatternToExcelEnum.Label.getLiteral());
+                    while (reader.readRecord()) {
+                        name = reader.get(PatternToExcelEnum.Label.getLiteral());
 
-                    if (names.contains(name)) {
-                        if (skip) {
-                            information.add("User Defined Indicator \"" + name + "\" has already imported");
-                            continue;
+                        if (names.contains(name)) {
+                            if (skip) {
+                                information.add("User Defined Indicator \"" + name + "\" has already imported");
+                                continue;
+                            }
+                            if (rename) {
+                                name = name + "(" + simpleDateFormat.format(new Date()) + Math.random() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+                            }
                         }
-                        if (rename) {
-                            name = name + "(" + simpleDateFormat.format(new Date()) + Math.random() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+
+                        UDIParameters udiParameters = new ImportFactory().new UDIParameters();
+                        udiParameters.name = name;
+                        udiParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
+                        udiParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
+                        udiParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
+                        udiParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
+                        udiParameters.category = reader.get(PatternToExcelEnum.Category.getLiteral());
+
+                        for (PatternLanguageType languagetype : PatternLanguageType.values()) {
+                            String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
+                            if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
+                                udiParameters.regex.put(languagetype.getLiteral(), cellStr);
+                            }
+                        }
+
+                        createAndStoreUDI(udiParameters, selectionFolder);
+
+                        names.add(name);
+
+                        if (UDIHelper.isUDIValid(UDIHelper.createUDI(udiParameters.name, udiParameters.auther,
+                                udiParameters.description, udiParameters.purpose, udiParameters.status, udiParameters.category))) {
+
+                            information.add("User Defined Indicator \"" + name
+                                    + "\" imported in the \"Indicators/User Defined Indicators\" folder");
+                        } else {
+                            information.add("File format of indicator \"" + name + "\" is invalid!");
+                            log.info("File format of indicator \"" + name + "\" is invalid!");
                         }
                     }
 
-                    UDIParameters udiParameters = new ImportFactory().new UDIParameters();
-                    udiParameters.name = name;
-                    udiParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
-                    udiParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
-                    udiParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
-                    udiParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
-                    udiParameters.category = reader.get(PatternToExcelEnum.Category.getLiteral());
+                    reader.close();
+                } else {
+                    Display.getDefault().asyncExec(new Runnable() {
 
-                    for (PatternLanguageType languagetype : PatternLanguageType.values()) {
-                        String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
-                        if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
-                            udiParameters.regex.put(languagetype.getLiteral(), cellStr);
+                        public void run() {
+                            MessageDialog.openError(null, "Import error", "File header must be exist!");
                         }
-                    }
-
-                    createAndStoreUDI(udiParameters, selectionFolder);
-
-                    names.add(name);
-
-                    information.add("User Defined Indicator \"" + name
-                            + "\" imported in the \"Indicators/User Defined Indicators\" folder");
+                    });
                 }
-
-                reader.close();
             } catch (Exception e) {
                 log.error(e, e);
                 information.add("User Defined Indicator \"" + name + "\" import failed");
@@ -447,6 +465,20 @@ public final class ImportFactory {
         }
 
         return information;
+    }
+
+    private static boolean checkFileHeader(String[] headers) {
+
+        List<String> patternEnum = new ArrayList<String>();
+        for (PatternToExcelEnum tmpEnum : PatternToExcelEnum.values()) {
+            patternEnum.add(tmpEnum.getLiteral());
+        }
+
+        for (String header : headers) {
+            if (!patternEnum.contains(header))
+                return false;
+        }
+        return true;
     }
 
     /**

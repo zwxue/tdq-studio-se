@@ -75,7 +75,26 @@ public class ImportInfoDialog extends MessageDialog {
      */
     public static void openImportInformation(Shell parent, String message, String[] information) {
 
-        ImportInfoDialog dialog = new ImportInfoDialog(parent, DefaultMessagesImpl.getString("ImportInfoDialog.Information"), null, message, INFORMATION, //$NON-NLS-1$
+        ImportInfoDialog dialog = new ImportInfoDialog(parent,
+                DefaultMessagesImpl.getString("ImportInfoDialog.Information"), null, message, INFORMATION, //$NON-NLS-1$
+                new String[] { IDialogConstants.OK_LABEL }, 0, information);
+        dialog.setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE);
+        dialog.open();
+        return;
+    }
+
+    /**
+     * yyi 2009-09-30 feature:9106.
+     * 
+     * @param parent
+     * @param message
+     * @param information
+     * @param dialogImageType
+     */
+    public static void openImportInformation(Shell parent, String message, String[] information, int dialogImageType) {
+
+        ImportInfoDialog dialog = new ImportInfoDialog(parent,
+                DefaultMessagesImpl.getString("ImportInfoDialog.Information"), null, message, dialogImageType, //$NON-NLS-1$
                 new String[] { IDialogConstants.OK_LABEL }, 0, information);
         dialog.setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE);
         dialog.open();

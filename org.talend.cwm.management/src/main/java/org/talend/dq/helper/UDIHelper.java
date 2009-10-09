@@ -175,6 +175,14 @@ public final class UDIHelper {
             return false;
         }
 
+        if ("".equals(indicatorDefinition.getName())) {
+            return false;
+        }
+
+        if ('\'' == indicatorDefinition.getName().charAt(0)) {
+            return false;
+        }
+
         for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
             if (null == exp.getBody() || exp.getBody().length() + 1 < MIN_EXPRESSION_LENGTH) {
                 return false;
