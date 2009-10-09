@@ -77,16 +77,18 @@ public class UpdateDependenciesFileTask extends AbstractMigrationTask {
                 IFile file = (IFile) resource;
                 final Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
                 // update dependency between analyses and patterns
-                final List<Pattern> patterns = AnalysisHelper.getPatterns(analysis);
-                for (Pattern pattern : patterns) {
-                    DependenciesHandler.getInstance().setDependencyOn(analysis, pattern);
-                    AnaResourceFileHelper.getInstance().save(analysis);
-                }
-                // update dependency between analyses and dq rules
-                final List<IndicatorDefinition> userDefinedIndicators = AnalysisHelper.getUserDefinedIndicators(analysis);
-                for (IndicatorDefinition indicatorDefinition : userDefinedIndicators) {
-                    DependenciesHandler.getInstance().setDependencyOn(analysis, indicatorDefinition);
-                    AnaResourceFileHelper.getInstance().save(analysis);
+                if (analysis != null) {
+                    final List<Pattern> patterns = AnalysisHelper.getPatterns(analysis);
+                    for (Pattern pattern : patterns) {
+                        DependenciesHandler.getInstance().setDependencyOn(analysis, pattern);
+                        AnaResourceFileHelper.getInstance().save(analysis);
+                    }
+                    // update dependency between analyses and dq rules
+                    final List<IndicatorDefinition> userDefinedIndicators = AnalysisHelper.getUserDefinedIndicators(analysis);
+                    for (IndicatorDefinition indicatorDefinition : userDefinedIndicators) {
+                        DependenciesHandler.getInstance().setDependencyOn(analysis, indicatorDefinition);
+                        AnaResourceFileHelper.getInstance().save(analysis);
+                    }
                 }
             }
         }

@@ -60,22 +60,23 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
 
             // Patterns -> Patterns/Regex
             IFolder oldPatternFolder = libraryFolder.getFolder(DQStructureManager.PATTERNS);
-            IFolder newPatternFolder = libraryFolder.getFolder(DQStructureManager.PATTERNS); 
+            IFolder newPatternFolder = libraryFolder.getFolder(DQStructureManager.PATTERNS);
             String folderProperty = DQStructureManager.PATTERNS_FOLDER_PROPERTY;
             IFolder newRegexSubfolder = createSubfolder(newPatternFolder, DQStructureManager.REGEX, folderProperty);
             movePatternsIntoPatternsRegex(oldPatternFolder, newRegexSubfolder, folderProperty);
             // oldPatternFolder.delete(true, null); // Do not delete because it's the same as before
-            
+
             // SQL Patterns -> Patterns/SQL
             IFolder oldSqlPatternsFolder = libraryFolder.getFolder(DQStructureManager.SQL_PATTERNS);
-            IFolder newSqlSubfolder = DQStructureManager.getInstance().createNewReadOnlyFolder(newPatternFolder, DQStructureManager.SQL);
+            IFolder newSqlSubfolder = DQStructureManager.getInstance().createNewReadOnlyFolder(newPatternFolder,
+                    DQStructureManager.SQL);
             folderProperty = DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY;
             movePatternsIntoPatternsRegex(oldSqlPatternsFolder, newSqlSubfolder, folderProperty);
             oldSqlPatternsFolder.delete(true, null);
-            
+
             // DQ Rules -> Rules/SQL
             IFolder oldDqRulesFolder = libraryFolder.getFolder(DQStructureManager.DQ_RULES);
-            IFolder newRulesFolder = createSubfolder(libraryFolder, DQStructureManager.RULES, folderProperty); 
+            IFolder newRulesFolder = createSubfolder(libraryFolder, DQStructureManager.RULES, folderProperty);
             folderProperty = DQStructureManager.DQRULES_FOLDER_PROPERTY;
             IFolder newRulesSQLSubfolder = createSubfolder(newRulesFolder, DQStructureManager.SQL, folderProperty);
             movePatternsIntoPatternsRegex(oldDqRulesFolder, newRulesSQLSubfolder, folderProperty);
@@ -93,6 +94,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
 
     /**
      * DOC scorreia Comment method "createSubfolder".
+     * 
      * @param newPatternFolder
      * @return
      * @throws CoreException
@@ -105,23 +107,26 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
 
     private void movePatternsIntoPatternsRegex(IFolder oldSubFolder, IFolder newSubfolder, final String folderProperty)
             throws CoreException {
-        
+
+        if (!oldSubFolder.exists())
+            return;
+
         TdqPropertieManager.getInstance().addFolderProperties(newSubfolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
                 folderProperty);
-        
+
         for (IResource oldResource : oldSubFolder.members()) {
             if (newSubfolder.getName().equals(oldResource.getName())) {
                 continue;
             }
-            
+
             // cannot simply copy EMF files: need to keep the links between files when moving them. See bug 9461
             if (oldResource instanceof IFolder) {
                 IFolder oldFolder = (IFolder) oldResource;
-                
+
                 IFolder newFolder = DQStructureManager.getInstance().createNewFolder(newSubfolder, oldFolder.getName());
                 TdqPropertieManager.getInstance().addFolderProperties(newFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
                         folderProperty);
-                
+
                 movePatternsIntoPatternsRegex(oldFolder, newFolder, folderProperty);
                 // delete folder
                 oldFolder.delete(true, null);
@@ -150,7 +155,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
                     }
                 }
                 oldResource.delete(true, null);
-            }  
+            }
         }
     }
 
@@ -170,7 +175,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
         }
         log.error("Unhandled folder property " + folderProperty);
         return null;
-        
+
     }
 
     public MigrationTaskType getMigrationTaskType() {
