@@ -1,60 +1,115 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- By Talend -->
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<title>Welcome to Talend Open Profiler</title>
-<link rel="stylesheet" href="root.css" type="text/css" />
-</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>default.html</title>
+<style type="text/css">
+<!--
+body,td,th {
+	font-size: 12px;
+	color: #404040;
+	line-height:23px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+body {
+	background-color: #FFFFFF;
+	margin: 0px;
+}
+.left a:hover{
+	text-decoration:underline;
+}
+.left a:link {
+	color: #404040;
+	text-decoration: none;
+}
+.left a:visited {
+	color: #404040;
+	text-decoration: none;
+}
 
-<body style="height:100%;">
-<div id="page"><!-- BEGIN DIV MAIN -->
-	<div id="header"><!-- BEGIN HEADER SITE -->
-		<div id="logoTalend">
-			<table border="0" cellpadding="0" cellspacing="0"><tr><td>
-				<a href="http://www.talend.com/products-data-quality/talend-open-profiler.php" title="Talend Open Profiler"><img src="imgs/logo_talend-open-profiler.jpg" alt="Talend - open data solutions - Talend is the first provider of open source data integration software"/></a>
-			</td><td>
-				<h1>Welcome to Talend Open Profiler</h1>
-			</td></tr></table>
-		</div>
-	</div><!-- END div#header -->
-	
-	<div id="contenu" style="height:100%;"><!-- BEGIN DIV#CONTENU "CENTER" -->
-	
-    	<p align="center"><a href="http://org.eclipse.ui.intro/runAction?class=org.talend.dataprofiler.rcp.intro.ShowCheatSheetsAction&amp;pluginId=org.talend.dataprofiler.rcp&amp;id=org.talend.dataprofiler.core.talenddataprofiler"><img src="imgs/startButton.png"/></a></p>
-		<!-- 
-		<p align="center"><a href="http://org.eclipse.ui.intro/showStandby?partId=org.talend.dataprofiler.rcp.StandbyContentPart&amp;input=org.talend.dataprofiler.core.talenddataprofiler">Getting Start</a></p>
-		 -->
-		<h2>And don't forget:</h2>
-		<div class="textBox">
-			<div class="title_welcome">Documentation &amp; support</div><br />
-			<div class="doc-section">
-			<br/>
-			<ul>
-			 <li><a href="http://talendforge.org/wiki/doku.php?id=doc:top_installation_guide">Installation guide</a></li><br/>
-			 <li><a href="http://www.talend.com/resources/documentation.php">Talend Open Profiler user guide</a></li>
-			</ul>
-			</div>
-			
-			<br />
-			<div class="title_welcome">Community</div><br />
-			<div class="community-section">
-			<br/>
-		   	<ul>
-			  <li><a href="http://www.talendforge.org/bugs">Use Talend BugTracker to report any bugs, issues, abnormal behaviour</a></li><br/>
-			  <li><a href="http://www.talendforge.org/forum/">Connect to the Forum and get in touch with the Talend community</a></li>
-			</ul>
-			</div>
-			
-		</div>
-				
-	</div><!-- END div#contenu -->
-	
-	<div id="footer1"><!-- BEGIN FOOTER WEBSITE-->
-		<div id="footer2">Copyright - 2006-2009 Talend. All right reserved</div>
-	</div>
+a:link.xh{color: #404040;text-decoration: none;}a:hover.xh{text-decoration:underline;}a:visited.xh{text-decoration: none;color: #404040;}
+img{border:0px;}
+li{ list-style-type:none; padding-left:6px;}
+.style_1{font-size:16px;}
+.style_2{color:#676767;}
+.style_3{font-weight:bold;}
+.cf{clear:both;}
+div#header {height: 150px; margin-left: auto; margin-right: auto; }
+.bodyclass{vertical-align:middle; background:#AAAAAA;}
+.main{width:800px;  border:#000000 1px solid; margin:auto; background:#FFFFFF; margin-top:50px; margin-bottom:50px;	}
+.left{width:330px; float:left;padding-left:15px; vertical-align:top; }
+.right{width:330px; padding-left:25px;}
+.right a{color:#0000ff;}
+.bottom {width:800px; height:24px; text-align:right; margin-top: 20px; padding-right:15px; margin-bottom:5px; color:#000000;}	
 
-</div><!-- END DIV PAGE -->
+-->
+</style></head>
+
+<body class="bodyclass">
+
+
+<div class="main">
+	<table border="0" cellpadding="0" cellspacing="0" align="center">
+		<tr  align="left"><!--header over-->
+			<td colspan="3" valign="top">
+			 <div id="header">
+				<img src="imgs/welcome_logo.png" width="800px"/>
+			 </div>
+			</td>
+		</tr>
+		<tr  align="left" valign="top">
+			<td>
+			<div class="left">
+			  <span class="style_1 style_2 style_3">Latest items</span><br />
+			  <img style="padding-top:10px;" src="imgs/img_process.jpg" /> <span class="style_3">&nbsp;&nbsp;Job</span><br />
+			   <!-- latest modified process -->
+			   <blockquote>
+				  <contentProvider id="PROCESS" class="org.talend.rcp.intro.contentProvider.DynamicContentProvider" pluginId="org.talend.rcp"> 
+				  </contentProvider>
+			   </blockquote>
+				 <img style="padding-top:15px;" src="imgs/img_businessProcess.jpg" /> <span class="style_3">&nbsp;&nbsp;Business Model</span><br />
+			  	<!-- latest modified business process -->
+			    <blockquote>
+				 <contentProvider id="BUSINESS_PROCESS" class="org.talend.rcp.intro.contentProvider.DynamicContentProvider" pluginId="org.talend.rcp"> 
+				  </contentProvider>
+			  	</blockquote>
+			</div><!--left over-->
+			</td>
+			<td bgcolor="#676767">
+				<div>
+			    </div>
+			</td>
+			<td>
+			 <div class="right">
+			   <span class="style_1 style_2 style_3">Create a new</span><br />
+			   <blockquote><img style="padding-top:10px;" src="imgs/img_process.jpg" /> <span class="style_3">Job</span>:
+			   <a  class="xh" title="Create a data integration process" href="http://org.eclipse.ui.intro/runAction?pluginId=org.talend.designer.core&amp;class=org.talend.designer.core.ui.action.CreateProcess&amp;id=org.talend.designer.core.actions.createprocess&amp;type=PROCESS">
+			   Data integration process
+			   </a>
+			   <br />
+			   <img style="padding-top:15px;" src="imgs/img_businessProcess.jpg" /> <span class="style_3">Business Model</span>:
+			    <a class="xh"  title="Create a business model" href="http://org.eclipse.ui.intro/runAction?pluginId=org.talend.designer.business.diagram&amp;class=org.talend.designer.business.diagram.custom.actions.CreateDiagramAction&amp;id=org.talend.designer.business.diagram.Action1&amp;type=BUSINESS_PROCESS">
+			  Business Process modeling
+			   </a></blockquote><br />
+			   <p class="style_1 style_2 style_3" style="padding-top:10px;">Documentation</p>
+			   <blockquote><p><a href="http://www.talend.com/resources/documentation.php">User Guide</a><BR/>
+			   <a href="http://talendforge.org/wiki/doku.php?id=doc:installation_guide">Reference Guide</a></p></blockquote>
+			   <p class="style_1 style_2 style_3" style="padding-top:10px;">Getting Started</p>
+			   <blockquote><p><a href="http://www.talendforge.org/tutorials">Tutorials</a>:self-train at a glance<BR/>
+			   <a href="http://www.talendforge.org/forum">Forums</a>:share with Talend community!<BR/> 
+			   <a href="http://www.talendforge.org/exchange">Exchange</a>:download more components</p></blockquote> 
+			  </div>
+			</td>
+		</tr>
+		<tr  align="left" valign="top">
+			<td colspan="3">
+				<div class="bottom"><contentProvider id="ALWAYS_WELCOME" class="org.talend.rcp.intro.contentProvider.DynamicContentProvider" pluginId="org.talend.rcp"></contentProvider></div>
+			</td>
+		</tr>
+		<tr><td colspan="3" valign="top"><img src="imgs/bottom.jpg" width="800px"/></td></tr>
+	</table>
+</div><!--page over-->
+	
 
 </body>
 </html>
