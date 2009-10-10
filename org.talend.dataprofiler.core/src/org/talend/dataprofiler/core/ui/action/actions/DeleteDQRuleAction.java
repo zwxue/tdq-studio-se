@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -20,59 +21,91 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.jface.window.Window;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class DeleteDQRuleAction extends Action {
 
-	protected static Logger log = Logger.getLogger(DeleteDQRuleAction.class);
+    protected static Logger log = Logger.getLogger(DeleteDQRuleAction.class);
 
-	private List<IFile> folder;
+    private List<IFile> folder;
 
-	public DeleteDQRuleAction(List<IFile> selectedFiles) {
-		setText(DefaultMessagesImpl.getString("DeleteDQRuleAction.delete")); //$NON-NLS-1$
-		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
-		this.folder = selectedFiles;
-	}
+    private boolean isDeleteContent = false;
 
-	@Override
-	public void run() {
-		IFolder sourceFiles = ResourceManager.getLibrariesFolder().getFolder(
-				DQStructureManager.RULES);
-		for (IFile file : folder) {
-			WhereRule wr = DQRuleResourceFileHelper.getInstance()
-					.findWhereRule(file);
-			String fileName = wr == null ? file.getName() : wr.getName();
-			if (MessageDialog
-					.openConfirm(
-							new Shell(),
-							DefaultMessagesImpl
-									.getString("DeleteDQRuleAction.deleteDQRule"), DefaultMessagesImpl.getString("DeleteDQRuleAction.areYouDeleteDQRule", fileName))) { //$NON-NLS-1$ //$NON-NLS-2$
-				try {
-					if (file.exists()) {
-						file.delete(true, null);
-					}
-				} catch (CoreException e) {
-					log.error(e, e);
-				}
-			}
-		}
-		try {
-		    ProxyRepositoryManager.getInstance().save();
-			sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e) {
-			log.error(e, e);
-		}
-	}
+    private List<ModelElement> modelElementList;
 
+    public DeleteDQRuleAction(List<IFile> selectedFiles) {
+        setText(DefaultMessagesImpl.getString("DeleteDQRuleAction.delete")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
+        this.folder = selectedFiles;
+    }
+
+    @Override
+    public void run() {
+        IFolder sourceFiles = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.RULES);
+
+        // ADD yyi 2009-10-10 feature: 9501
+        final IResource[] resources = folder.toArray(new IResource[folder.size()]);
+        if (!checkDeleteContent(resources)) {
+            return;
+        }
+        // ~
+        for (IFile file : folder) {
+
+            try {
+                if (file.exists()) {
+                    file.delete(true, null);
+                }
+            } catch (CoreException e) {
+                log.error(e, e);
+            }
+        }
+        try {
+            ProxyRepositoryManager.getInstance().save();
+            sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+    }
+
+    private boolean checkDeleteContent(IResource[] selectedResources) {
+        modelElementList = new ArrayList<ModelElement>();
+        IFile file = null;
+        ModelElement modelElement;
+        boolean otherFilesExistFlag = false;
+        String dialogMessage;
+        for (IResource res : selectedResources) {
+            if (!(res instanceof IFile)) {
+                return false;
+            } else {
+                file = (IFile) res;
+            }
+            if (FactoriesUtil.DQRULE.equalsIgnoreCase(file.getFileExtension())) {
+                modelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+                modelElementList.add(modelElement);
+            }
+        }
+        if (modelElementList.size() > 0 && !otherFilesExistFlag) {
+
+            WhereRule wr = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+            dialogMessage = wr == null ? file.getName() : wr.getName();
+
+            int showDialog = DeleteModelElementConfirmDialog.showDialog(null, modelElementList
+                    .toArray(new ModelElement[modelElementList.size()]), dialogMessage);
+            isDeleteContent = showDialog == Window.OK;
+        }
+        return isDeleteContent;
+    }
 }
