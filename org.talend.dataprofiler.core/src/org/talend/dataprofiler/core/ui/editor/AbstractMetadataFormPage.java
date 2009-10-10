@@ -139,7 +139,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         authorText = createMetadataTextFiled(AUTHOR_LABEL, authorText, parent);
 
         // MOD 2009-09-08 yyi Feature: 8870.
-        authorText.setEditable(isDefaultProject());
+        if (!isDefaultProject()) {
+            authorText.setEnabled(false);
+            authorText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        }
         // toolkit.createLabel(parent, VERSION_LABEL);
         // createVersionUI(parent);
 

@@ -135,8 +135,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         authorText.setText(author);
         getParameter().setAuthor(author);
         // MOD 2009-09-08 yyi Feature: 8870.
-        authorText.setEditable(isDefaultProject());
-
+        authorText.setEnabled(isDefaultProject());
         // Version
         // Label versionLab = new Label(container, SWT.NONE);
         // versionLab.setText("Version");
