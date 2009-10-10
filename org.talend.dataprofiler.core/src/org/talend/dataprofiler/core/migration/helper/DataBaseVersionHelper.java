@@ -24,7 +24,6 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.dataprofiler.core.PluginChecker;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -128,8 +127,7 @@ public final class DataBaseVersionHelper {
             if (connection != null) {
                 Statement stat = connection.createStatement();
                 ProductVersion curVersion = WorkspaceVersionHelper.getVesion();
-                return stat.execute(DefaultMessagesImpl
-                        .getString("DataBaseVersionHelper.UpdateTdqVersion", curVersion.toString())); //$NON-NLS-1$
+                return stat.execute("update TDQ_PRODUCT set PR_VERSION = '" + curVersion + "'"); //$NON-NLS-1$
             }
         } catch (Exception e) {
             log.error(e, e);
