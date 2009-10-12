@@ -62,9 +62,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // default folding setting.
     private static int currentFolding;
 
-    private static boolean currentAnalyzedElements;
+    private static Boolean currentAnalyzedElements;
 
-    private static boolean currentIndicators;
+    private static Boolean currentIndicators;
 
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS = true;
 
@@ -81,26 +81,34 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     private Button button5 = null;
 
     public static int getCurrentFolding() {
-        return currentFolding == 0 ? FOLDING_1 : currentFolding;
+        int sectionFoldState = ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_MASTER_PAGE_FOLDING);
+        if (currentFolding == 0 && sectionFoldState != 0) {
+            currentFolding = sectionFoldState;
+        }
+
+        if (currentFolding == 0 && sectionFoldState == 0) {
+            currentFolding = FOLDING_1;
+        }
+        return currentFolding;
     }
 
     public static void setCurrentFolding(int currentFolding) {
         EditorPreferencePage.currentFolding = currentFolding;
     }
 
-    public static boolean isCurrentAnalyzedElements() {
-        return currentAnalyzedElements;
+    public static Boolean isCurrentAnalyzedElements() {
+        return currentAnalyzedElements == null ? true : currentAnalyzedElements;
     }
 
-    public static void setCurrentAnalyzedElements(boolean currentAnalyzedElements) {
+    public static void setCurrentAnalyzedElements(Boolean currentAnalyzedElements) {
         EditorPreferencePage.currentAnalyzedElements = currentAnalyzedElements;
     }
 
-    public static boolean isCurrentIndicators() {
-        return currentIndicators;
+    public static Boolean isCurrentIndicators() {
+        return currentIndicators == null ? true : currentIndicators;
     }
 
-    public static void setCurrentIndicators(boolean currentIndicators) {
+    public static void setCurrentIndicators(Boolean currentIndicators) {
         EditorPreferencePage.currentIndicators = currentIndicators;
     }
 
@@ -153,7 +161,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
                 setCurrentFolding(FOLDING_3);
             }
         });
-        setCurrentFolding(ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_MASTER_PAGE_FOLDING));
+
         switch (getCurrentFolding()) {
         case FOLDING_1:
             button1.setSelection(true);
