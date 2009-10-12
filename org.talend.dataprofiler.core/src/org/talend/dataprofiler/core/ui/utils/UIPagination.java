@@ -97,7 +97,7 @@ public class UIPagination {
 
     public void pack() {
         composite.layout();
-        composite.pack();
+        // composite.pack();
         pageNavComp.layout();
         // pageNavComp.pack();
     }
@@ -287,7 +287,8 @@ public class UIPagination {
     private void go() {
 
         if (!isNumeric(pageGoText.getText().trim())) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl.getString("UIPagination.Error"), //$NON-NLS-1$
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
+                    .getString("UIPagination.Error"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("UIPagination.PageNumBeValid")); //$NON-NLS-1$
             return;
         }
@@ -295,12 +296,14 @@ public class UIPagination {
         try {
             goNo = Integer.parseInt(pageGoText.getText().trim());
         } catch (Exception exc) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl.getString("UIPagination.Err"), //$NON-NLS-1$
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
+                    .getString("UIPagination.Err"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("UIPagination.NumNotInValidRange")); //$NON-NLS-1$
             return;
         }
         if (goNo < 1 || goNo > totalPages) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl.getString("UIPagination.Errors"), //$NON-NLS-1$
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
+                    .getString("UIPagination.Errors"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("UIPagination.NotInValidRange")); //$NON-NLS-1$
             return;
         }
