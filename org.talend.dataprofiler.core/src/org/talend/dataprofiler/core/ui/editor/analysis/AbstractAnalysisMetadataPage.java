@@ -45,135 +45,123 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public abstract class AbstractAnalysisMetadataPage extends
-		AbstractMetadataFormPage implements IRuningStatusListener {
+public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormPage implements IRuningStatusListener {
 
-    protected static Logger log = Logger
-			.getLogger(AbstractAnalysisMetadataPage.class);
+    private static Logger log = Logger.getLogger(AbstractAnalysisMetadataPage.class);
 
-	protected Analysis analysis;
+    protected Analysis analysis;
 
-	protected AnalysisEditor currentEditor = null;
-	protected CCombo connCombo;
+    protected AnalysisEditor currentEditor = null;
 
-	public CCombo getConnCombo() {
-		return connCombo;
-	}
+    protected CCombo connCombo;
 
-	public Analysis getAnalysis() {
-		return analysis;
-	}
+    public CCombo getConnCombo() {
+        return connCombo;
+    }
 
-	public AbstractAnalysisMetadataPage(FormEditor editor, String id,
-			String title) {
-		super(editor, id, title);
-		currentEditor = (AnalysisEditor) editor;
-	}
+    public Analysis getAnalysis() {
+        return analysis;
+    }
 
-	@Override
-	protected ModelElement getCurrentModelElement(FormEditor editor) {
-		FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-		
-		currentModelElement = AnaResourceFileHelper.getInstance().findAnalysis(
-				input.getFile());
-		analysis = (Analysis) currentModelElement;
-		
-		return analysis;
-	}
+    public AbstractAnalysisMetadataPage(FormEditor editor, String id, String title) {
+        super(editor, id, title);
+        currentEditor = (AnalysisEditor) editor;
+    }
 
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		ReturnCode rc = canSave();
-		if (!rc.isOk()) {
-			MessageDialogWithToggle
-					.openError(
-							null,
-							DefaultMessagesImpl
-									.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
-		} else {
-			super.doSave(monitor);
-			try {
-				saveAnalysis();
-				this.isDirty = false;
-			} catch (DataprofilerCoreException e) {
-				ExceptionHandler.process(e, Level.ERROR);
-				log.error(e, e);
-			}
-		}
-	}
-	
-	public ScrolledForm getScrolledForm(){
-	    return null;
-	}
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
+        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
 
-	protected abstract ReturnCode canSave();
+        currentModelElement = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
+        analysis = (Analysis) currentModelElement;
 
-	protected abstract ReturnCode canRun();
+        return analysis;
+    }
 
-	public abstract void refresh();
+    @Override
+    public void doSave(IProgressMonitor monitor) {
+        ReturnCode rc = canSave();
+        if (!rc.isOk()) {
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
+        } else {
+            super.doSave(monitor);
+            try {
+                saveAnalysis();
+                this.isDirty = false;
+            } catch (DataprofilerCoreException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+                log.error(e, e);
+            }
+        }
+    }
 
-	protected abstract void saveAnalysis() throws DataprofilerCoreException;
+    public ScrolledForm getScrolledForm() {
+        return null;
+    }
 
-	public void setDirty(boolean isDirty) {
-		if (this.isDirty != isDirty) {
-			this.isDirty = isDirty;
-			((AnalysisEditor) this.getEditor())
-					.firePropertyChange(IEditorPart.PROP_DIRTY);
-		}
-	}
+    protected abstract ReturnCode canSave();
 
-	public void fireRuningItemChanged(boolean status) {
-		currentEditor.setRunActionButtonState(status);
-		currentEditor.setRefreshResultPage(status);
+    protected abstract ReturnCode canRun();
 
-		if (status) {
-			refresh();
-		}
-	}
+    public abstract void refresh();
 
-	/**
-	 * 
-	 * MOD mzhao 2009-06-17 feature 5887
-	 * 
-	 * @param parentComp
-	 */
-	public void createConnBindWidget(Composite parentComp) {
-		// ~ MOD mzhao 2009-05-05,Bug 6587.
-		Composite labelButtonClient = toolkit.createComposite(parentComp);
-		GridLayout labelButtonClientLayout = new GridLayout();
-		labelButtonClientLayout.numColumns = 2;
-		labelButtonClient.setLayout(labelButtonClientLayout);
+    protected abstract void saveAnalysis() throws DataprofilerCoreException;
 
-		toolkit.createLabel(labelButtonClient, DefaultMessagesImpl
-				.getString("AbstractMetadataFormPage.connBind")); //$NON-NLS-1$
-		connCombo = new CCombo(labelButtonClient, SWT.BORDER);
-		connCombo.setEditable(false);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(
-				labelButtonClient);
-		reloadDataproviderAndFillConnCombo();
-		// ~
+    public void setDirty(boolean isDirty) {
+        if (this.isDirty != isDirty) {
+            this.isDirty = isDirty;
+            ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+        }
+    }
 
-	}
+    public void fireRuningItemChanged(boolean status) {
+        currentEditor.setRunActionButtonState(status);
+        currentEditor.setRefreshResultPage(status);
 
-	// MOD mzhao 2009-05-05, bug 6587.
-	protected void reloadDataproviderAndFillConnCombo() {
-		IFolder connFolder = ResourceManager.getMetadataFolder().getFolder(
-				PluginConstant.DB_CONNECTIONS);
-		List<TdDataProvider> dataProviders = PrvResourceFileHelper
-				.getInstance().getAllDataProviders(connFolder);
+        if (status) {
+            refresh();
+        }
+    }
 
-		int index = 0;
-		connCombo.removeAll();
-		for (TdDataProvider prov : dataProviders) {
-			connCombo.add(prov.getName(), index);
-			String prvFileName = PrvResourceFileHelper.getInstance()
-					.findCorrespondingFile(prov).getName();
-			connCombo.setData(prvFileName, index);
-			connCombo.setData(index + "", prov); //$NON-NLS-1$
-			index++;
-		}
-		if (index > 0) {
-			connCombo.select(0);
-		}
-	}
+    /**
+     * 
+     * MOD mzhao 2009-06-17 feature 5887.
+     * 
+     * @param parentComp
+     */
+    public void createConnBindWidget(Composite parentComp) {
+        // ~ MOD mzhao 2009-05-05,Bug 6587.
+        Composite labelButtonClient = toolkit.createComposite(parentComp);
+        GridLayout labelButtonClientLayout = new GridLayout();
+        labelButtonClientLayout.numColumns = 2;
+        labelButtonClient.setLayout(labelButtonClientLayout);
+
+        toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.connBind")); //$NON-NLS-1$
+        connCombo = new CCombo(labelButtonClient, SWT.BORDER);
+        connCombo.setEditable(false);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(labelButtonClient);
+        reloadDataproviderAndFillConnCombo();
+        // ~
+
+    }
+
+    // MOD mzhao 2009-05-05, bug 6587.
+    protected void reloadDataproviderAndFillConnCombo() {
+        IFolder connFolder = ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS);
+        List<TdDataProvider> dataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(connFolder);
+
+        int index = 0;
+        connCombo.removeAll();
+        for (TdDataProvider prov : dataProviders) {
+            connCombo.add(prov.getName(), index);
+            String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
+            connCombo.setData(prvFileName, index);
+            connCombo.setData(index + "", prov); //$NON-NLS-1$
+            index++;
+        }
+        if (index > 0) {
+            connCombo.select(0);
+        }
+    }
 }

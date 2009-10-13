@@ -129,8 +129,8 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     protected String decorateText(String input, Object element) {
         if (element instanceof IFile) {
             IFile file = (IFile) element;
-            if (log.isInfoEnabled()) {
-                log.info("Loading file " + file.getLocation());
+            if (log.isDebugEnabled()) {
+                log.debug("Loading file " + file.getLocation());
             }
 
             ModelElement mElement = null;
