@@ -22,6 +22,9 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.ModeStatistic
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.TextStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIFrequencyStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIMatchStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDISimpleStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.LowFrequencyStatisticsState;
@@ -45,8 +48,10 @@ public final class ChartTypeStatesOperator {
     public static IChartTypeStates getChartState(EIndicatorChartType type, List<IndicatorUnit> units) {
         switch (type) {
         case SIMPLE_STATISTICS:
-        case UDI_COUNT:
             return new SimpleStatisticsState(units);
+
+        case UDI_COUNT:
+            return new UDISimpleStatisticsState(units);
 
         case TEXT_STATISTICS:
             return new TextStatisticsState(units);
@@ -55,8 +60,10 @@ public final class ChartTypeStatesOperator {
             return new ModeStatisticsState(units);
 
         case FREQUENCE_STATISTICS:
-        case UDI_FREQUENCY:
             return new FrequencyStatisticsState(units);
+
+        case UDI_FREQUENCY:
+            return new UDIFrequencyStatisticsState(units);
 
         case LOW_FREQUENCE_STATISTICS:
             return new LowFrequencyStatisticsState(units);
@@ -68,8 +75,10 @@ public final class ChartTypeStatesOperator {
             return new PatternLowFrequencyStatisticsState(units);
 
         case PATTERN_MATCHING:
-        case UDI_MATCHING:
             return new REGEXPatternStatisticsState(units);
+
+        case UDI_MATCHING:
+            return new UDIMatchStatisticsState(units);
 
         case SQL_PATTERN_MATCHING:
             return new SQLPatternStatisticsState(units);
