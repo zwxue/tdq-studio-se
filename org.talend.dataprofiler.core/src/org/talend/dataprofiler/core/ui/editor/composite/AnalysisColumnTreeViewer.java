@@ -381,7 +381,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                                     setDirty(true);
                                 } else {
                                     Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                                    MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
+                                    MessageUI.openError(DefaultMessagesImpl
+                                            .getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
                                             + pattern.getName());
                                 }
                             }
@@ -475,7 +476,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         indicatorItem.setImage(0, getIndicatorIamge(unit));
 
-        String label = indicatorUnit.getIndicatorName();
+        String indicatorName = indicatorUnit.getIndicatorName();
+        String label = indicatorName == null ? "unknown indicator" : indicatorName;
         indicatorItem.setText(0, label);
 
         TreeEditor optionEditor;
