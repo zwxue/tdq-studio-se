@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.talend.cwm.compare.ui.actions.provider.CompareModelStructureLabelProvider;
 import org.talend.cwm.compare.ui.views.CompareModelContentMergeViewer;
+import org.talend.cwm.compare.ui.views.CompareModelStructureMergeViewer;
 
 /**
  * 
@@ -84,9 +85,10 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
             }
         };
     }
+
     public void hookLeftPanelContextMenu() {
-    	contentMergeViewer.hookContextMenu();
-	}
+        contentMergeViewer.hookContextMenu();
+    }
 
     /**
      * {@inheritDoc}
@@ -101,8 +103,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
         final CompareViewerPane pane = new CompareViewerPane(fComposite, SWT.NONE);
 
-        contentMergeViewer = new CompareModelContentMergeViewer(pane,
-				getCompareConfiguration(), selectedObject);
+        contentMergeViewer = new CompareModelContentMergeViewer(pane, getCompareConfiguration(), selectedObject);
         pane.setContent(contentMergeViewer.getControl());
 
         contentMergeViewer.setInput(inputSnapshot);
@@ -125,7 +126,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
         final CompareViewerPane pane = new CompareViewerPane(splitter, SWT.NONE);
 
-        structureMergeViewer = new ModelStructureMergeViewer(pane, getCompareConfiguration());
+        structureMergeViewer = new CompareModelStructureMergeViewer(pane, getCompareConfiguration());
         structureMergeViewer.setLabelProvider(new CompareModelStructureLabelProvider());
         pane.setContent(structureMergeViewer.getTree());
 
