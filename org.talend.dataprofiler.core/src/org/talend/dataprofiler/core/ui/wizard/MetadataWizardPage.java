@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -52,8 +53,16 @@ import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
+import org.talend.dataprofiler.core.ui.utils.UIMessages;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author zqin
@@ -79,16 +88,18 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     protected CCombo statusText;
 
     protected Text pathText;
-    
+
     private final static String PROJECT_FILE = "talend.project";
 
     // private members
     private Button versionMajorBtn;
 
     private Button versionMinorBtn;
+
     public MetadataWizardPage() {
         this.setPageComplete(false);
     }
+
     private List<Status> getTechnicalStatus() {
         org.talend.core.model.properties.Project loadProject = null;
         try {
@@ -100,9 +111,10 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         if (loadProject == null) {
             return null;
         }
-            
+
         return copyList(loadProject.getTechnicalStatus());
     }
+
     private Project loadProject() throws PersistenceException {
         IProject rootProject = ResourceManager.getRootProject();
         IFile talendProjectFile = rootProject.getFile(PROJECT_FILE);
@@ -112,10 +124,10 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         URI uri = URI.createPlatformResourceURI(talendProjectFile.getFullPath().toString(), false);
         EMFSharedResources.getInstance().unloadResource(uri.toString());
         Resource rs = EMFSharedResources.getInstance().getResource(uri, true);
-        Project emfProject = (Project) EcoreUtil
-                .getObjectByType(rs.getContents(), PropertiesPackage.eINSTANCE.getProject());
+        Project emfProject = (Project) EcoreUtil.getObjectByType(rs.getContents(), PropertiesPackage.eINSTANCE.getProject());
         return emfProject;
     }
+
     private List<Status> copyList(List<Status> listOfStatus) {
         List<Status> result = new ArrayList<Status>();
         for (Object obj : listOfStatus) {
@@ -123,6 +135,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         }
         return result;
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -205,8 +218,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         // Status
         Label statusLab = new Label(container, SWT.NONE);
         statusLab.setText("Status"); //$NON-NLS-1$
-        
-        
+
         statusText = new CCombo(container, SWT.BORDER);
         // statusText.setText(DevelopmentStatus.DRAFT.getLiteral());
         statusText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -246,7 +258,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         setControl(container);
     }
-    
+
     private String[] toArray(List<org.talend.core.model.properties.Status> status) {
         String[] res = new String[status.size()];
         int i = 0;
@@ -255,6 +267,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         }
         return res;
     }
+
     /**
      * DOC yyi Comment method "setAuthorTextEditable" Feature: 8870.
      */
@@ -335,7 +348,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
             public void modifyText(ModifyEvent e) {
                 getParameter().setName(nameText.getText());
-                setPageComplete(true);
+                fireEvent();
             }
         });
 
@@ -405,6 +418,10 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             return false;
         }
 
+        if (!checkDuplicateModelName()) {
+            return false;
+        }
+
         updateStatus(IStatus.OK, MSG_OK);
         return super.checkFieldsValue();
     }
@@ -412,4 +429,59 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     protected abstract void createExtendedControl(Composite container);
 
     protected abstract IFolder getStoredFolder();
+
+    protected void fireEvent() {
+        setPageComplete(checkFieldsValue());
+    }
+
+    /**
+     * DOC yyi Comment method "checkDuplicateModelName".
+     * 
+     * @return
+     */
+    public boolean checkDuplicateModelName() {
+        String elementName = getParameter().getName();
+        IFolder folderResource = getParameter().getFolderProvider().getFolderResource();
+        if (elementName == null || folderResource == null) {
+            // updateStatus(IStatus.ERROR, MSG_EMPTY);
+            //            return false; //$NON-NLS-1$
+        } else {
+
+            Collection<ModelElement> modelElements = new ArrayList<ModelElement>();
+
+            switch (getParameter().getParamType()) {
+            case ANALYSIS:
+                modelElements.addAll(AnaResourceFileHelper.getInstance().getAllAnalysis(folderResource));
+                break;
+            case REPORT:
+                modelElements.addAll(RepResourceFileHelper.getInstance().getAllReports(folderResource));
+                break;
+            case PATTERN:
+                modelElements.addAll(PatternResourceFileHelper.getInstance().getAllPatternes(folderResource));
+                break;
+            case DBCONNECTON:
+                modelElements.addAll(PrvResourceFileHelper.getInstance().getAllDataProviders(folderResource));
+                break;
+            case DQRULE:
+                modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules(folderResource));
+                break;
+            case UDINDICATOR:
+                modelElements.addAll(UDIResourceFileHelper.getInstance().getAllUDIs(folderResource));
+                break;
+            default:
+                break;
+            }
+
+            if (!modelElements.isEmpty()) {
+                for (ModelElement element : modelElements) {
+                    if (element.getName().equals(elementName)) {
+                        updateStatus(IStatus.ERROR, UIMessages.MSG_ANALYSIS_SAME_NAME);
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 }
