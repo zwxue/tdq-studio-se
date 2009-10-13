@@ -1010,6 +1010,12 @@
            id="org.talend.dataprofiler.core.updateDependencies"
            name="Update Dependencies between patterns and analyses"
            version="3.2.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.CreateElementPropertiesTask"
+           id="org.talend.dataprofiler.core.migration.impl.CreateElementPropertiesTask"
+           name="Create Element Properties"
+           version="3.2.0">
      </workspacetask>     
   </extension>
   <extension

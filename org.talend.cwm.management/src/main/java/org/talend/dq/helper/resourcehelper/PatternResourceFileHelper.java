@@ -36,6 +36,7 @@ import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.PatternWriter;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -94,6 +95,11 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             resourcesNumberChanged = false;
         }
         return patternsMap.values();
+    }
+
+    public Collection<Pattern> getAllPatternes() {
+        IFolder patternFolder = ResourceManager.getLibrariesFolder().getFolder("Patterns");
+        return getAllPatternes(patternFolder);
     }
 
     /**

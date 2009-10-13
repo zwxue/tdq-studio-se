@@ -30,6 +30,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.UDIndicatorWriter;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -101,6 +102,11 @@ public class UDIResourceFileHelper extends ResourceFileMap {
             resourcesNumberChanged = false;
         }
         return idsMap.values();
+    }
+
+    public Collection<IndicatorDefinition> getAllUDIs() {
+        IFolder udiFolder = ResourceManager.getLibrariesFolder().getFolder("Indicators");
+        return getAllUDIs(udiFolder);
     }
 
     public IFile getUDIFile(IndicatorDefinition id, IFolder[] folders) {

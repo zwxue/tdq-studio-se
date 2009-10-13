@@ -13,7 +13,6 @@
 package org.talend.dq.helper.resourcehelper;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +31,7 @@ import org.talend.dataquality.rules.WhereRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
 import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -107,7 +107,21 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
     }
 
     public Collection<WhereRule> getAllDQRules(IFolder patternFodler) {
-        return Collections.EMPTY_LIST;
+        if (resourcesNumberChanged) {
+            try {
+                whereRulesMap.clear();
+                searchAllWhereRules(patternFodler);
+            } catch (CoreException e) {
+                log.error(e, e);
+            }
+            resourcesNumberChanged = false;
+        }
+        return whereRulesMap.values();
+    }
+
+    public Collection<WhereRule> getAllDQRules() {
+        IFolder rulesFolder = ResourceManager.getLibrariesFolder().getFolder("Rules");
+        return getAllDQRules(rulesFolder);
     }
 
     public IFile getWhereRuleFile(WhereRule whereRule, IFolder[] folders) {

@@ -30,6 +30,7 @@ import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.reports.util.ReportsSwitch;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.ReportWriter;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -61,6 +62,11 @@ public final class RepResourceFileHelper extends ResourceFileMap {
             log.error(e, e);
         }
         return allRepMap.values();
+    }
+
+    public Collection<TdReport> getAllReports() {
+        IFolder reportFolder = ResourceManager.getDataProfilingFolder().getFolder("Reports");
+        return getAllReports(reportFolder);
     }
 
     private void searchAllReports(IFolder folder) throws CoreException {

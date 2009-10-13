@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.ColumnHelper;
@@ -211,5 +212,28 @@ public final class MetadataHelper {
             return VersionUtils.DEFAULT_VERSION;
         }
         return tv.getValue();
+    }
+
+    /**
+     * DOC bZhou Comment method "getPropertyPath".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getPropertyPath(ModelElement element) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PROPERTY_FILE, element.getTaggedValue());
+        return taggedValue == null ? null : taggedValue.getValue();
+    }
+
+    /**
+     * DOC bZhou Comment method "setPropertyPath".
+     * 
+     * @param path
+     * @param element
+     */
+    public static void setPropertyPath(String path, ModelElement element) {
+        if (path != null && path.endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
+            TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PROPERTY_FILE, path);
+        }
     }
 }

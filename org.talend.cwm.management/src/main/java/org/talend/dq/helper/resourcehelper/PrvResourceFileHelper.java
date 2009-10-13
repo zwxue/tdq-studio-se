@@ -32,6 +32,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.writer.impl.DataProviderWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -151,7 +152,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         super.clear();
         providerMap.clear();
     }
-    
+
     public ReturnCode save(TdDataProvider dataProvider) {
         DataProviderWriter writer = ElementWriterFactory.getInstance().createDataProviderWriter();
         // ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
@@ -175,6 +176,10 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         }
 
         return allDataProviders;
+    }
+
+    public List<TdDataProvider> getAllDataProviders() {
+        return getAllDataProviders(ResourceManager.getMetadataFolder());
     }
 
     private List<IFile> searchAllDataProvider(IFolder folder, List<IFile> allPRVFiles) {

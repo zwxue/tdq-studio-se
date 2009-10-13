@@ -33,6 +33,7 @@ import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
@@ -69,6 +70,11 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
             resourcesNumberChanged = false;
         }
         return allAnalysisMap.values();
+    }
+
+    public Collection<Analysis> getAllAnalysis() {
+        IFolder analysisFolder = ResourceManager.getDataProfilingFolder().getFolder("Analyses");
+        return getAllAnalysis(analysisFolder);
     }
 
     private void searchAllAnalysis(IFolder folder) throws CoreException {

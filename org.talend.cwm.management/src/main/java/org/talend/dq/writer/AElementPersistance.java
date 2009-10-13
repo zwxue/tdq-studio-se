@@ -49,7 +49,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
     protected EMFSharedResources util = EMFSharedResources.getInstance();
 
-
     /*
      * (non-Javadoc)
      * 
@@ -64,7 +63,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             log.error("Get file extension error");
         } else {
 
-            String fname = DqRepositoryViewService.createLogicalFileNmae(element, getFileExtension());
+            String fname = DqRepositoryViewService.createLogicalFileName(element, getFileExtension());
             IFile file = folder.getFile(fname);
 
             if (file.exists()) {
@@ -144,9 +143,8 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * DOC bZhou Comment method "savePerperties".
      * 
      * @param element
-     * @return
      */
-    public Property savePerperties(ModelElement element) {
+    public void savePerperties(ModelElement element) {
         Resource resource = element.eResource();
         String fileName = resource.getURI().lastSegment();
 
@@ -158,7 +156,9 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         // serialize(item, uri);
         // Save property
         serialize(property, uri);
-        return property;
+
+        String propertyPath = property.eResource().getURI().toPlatformString(true);
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PROPERTY_FILE, propertyPath);
     }
 
     /*
@@ -173,10 +173,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         addDependencies(element);
 
-        Property property = savePerperties(element);
-
-        String propertyPath = property.eResource().getURI().toPlatformString(true);
-        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PROPERTY_FILE, propertyPath);
+        savePerperties(element);
 
         rc.setOk(util.saveResource(element.eResource()));
 
@@ -329,6 +326,5 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @return
      */
     protected abstract String getFileExtension();
-
 
 }
