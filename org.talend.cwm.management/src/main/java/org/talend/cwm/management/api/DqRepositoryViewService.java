@@ -398,8 +398,8 @@ public final class DqRepositoryViewService {
      * @param extension
      * @return
      */
-    public static String createLogicalFileNmae(ModelElement element, String extension) {
-        return element.getName() + "_" + MetadataHelper.getVersion(element) + "." + extension;
+    public static String createLogicalFileName(ModelElement element, String extension) {
+        return createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element) + "." + extension;
     }
 
     /**
