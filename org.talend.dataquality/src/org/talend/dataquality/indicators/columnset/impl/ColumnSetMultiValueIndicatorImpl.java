@@ -231,6 +231,16 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         if (analyzedColumns != null) {
             for (Column column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
+                if (column != null && tdColumn == null) {
+                    log.error("Analyzed element should be a TdColumn instead of a Column. Analyzed element is "
+                            + column.getName());
+                }
+                if (tdColumn == null) {
+                    if (column == null) {
+                        log.error("The list of analyzed column contains a null column");
+                    }
+                    continue;
+                }
                 final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
                 if (DataminingType.NOMINAL.equals(dmType)) {
                     nominalColumns.add(column);
