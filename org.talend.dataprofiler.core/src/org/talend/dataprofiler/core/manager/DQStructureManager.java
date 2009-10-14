@@ -175,10 +175,13 @@ public final class DQStructureManager {
             IProject rootProject = ResourceManager.getRootProject();
             if (!rootProject.exists()) {
                 rootProject = createNewProject(ResourceManager.getRootProjectName());
+
             }
 
             // MOD mzhao feature 9178, copy propreties file to workspace root.
             copyConfigFiles(rootProject, plugin);
+            // newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
+            TdqPropertieManager.getInstance().addFolderProperties(rootProject, PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
 
             // create "Data Profiling" project
             IFolder dataProfilingFolder = this.createNewReadOnlyFolder(rootProject, ResourceManager.DATA_PROFILING_FOLDER_NAME);
@@ -346,7 +349,8 @@ public final class DQStructureManager {
             ProgressUI.popProgressDialog(op);
         }
         // newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
-        TdqPropertieManager.getInstance().addFolderProperties(newProjectHandle, PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
+        // TdqPropertieManager.getInstance().addFolderProperties(newProjectHandle, PROJECT_TDQ_KEY,
+        // PROJECT_TDQ_PROPERTY);
         return newProjectHandle;
     }
 
@@ -389,7 +393,6 @@ public final class DQStructureManager {
         return desFolder;
     }
 
-    
     /**
      * Copy the files from srcPath to destination folder.
      * 

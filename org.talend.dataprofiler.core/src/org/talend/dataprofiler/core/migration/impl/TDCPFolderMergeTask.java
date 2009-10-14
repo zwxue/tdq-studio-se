@@ -31,142 +31,127 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * 
- * DOC mzhao 2009-03-18 Migration task for merge tdq/top system to tos. All
- * folders existing in tdq/tos before must all be moved to one project, default
- * project name is {@link org.talend.dataquality.PluginConstant#rootProjectName}
+ * DOC mzhao 2009-03-18 Migration task for merge tdq/top system to tos. All folders existing in tdq/tos before must all
+ * be moved to one project, default project name is {@link org.talend.dataquality.PluginConstant#rootProjectName}
  */
 public class TDCPFolderMergeTask extends AbstractMigrationTask {
 
-	Logger logger = Logger.getLogger(TDCPFolderMergeTask.class);
+    Logger logger = Logger.getLogger(TDCPFolderMergeTask.class);
 
-	public TDCPFolderMergeTask() {
-	}
+    public TDCPFolderMergeTask() {
+    }
 
-	public boolean execute() {
-		try {
-			// Create one project.
-			IProject rootProject = ResourceManager.getRootProject();
-			if (!rootProject.exists()) {
-				rootProject = DQStructureManager.getInstance()
-						.createNewProject(ResourceManager.getRootProjectName());
-			}
+    public boolean execute() {
+        try {
+            // Create one project.
+            IProject rootProject = ResourceManager.getRootProject();
+            if (!rootProject.exists()) {
+                rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.getRootProjectName());
+            }
+            DQStructureManager.copyConfigFiles(rootProject, CorePlugin.getDefault());
+            TdqPropertieManager.getInstance().addFolderProperties(rootProject, DQStructureManager.PROJECT_TDQ_KEY,
+                    DQStructureManager.PROJECT_TDQ_PROPERTY);
 
-			// Copy "top level" folders already as projects in TOP/TDQ into this
-			// project.
-			IResource[] resources = ResourcesPlugin.getWorkspace().getRoot()
-					.members();
+            // Copy "top level" folders already as projects in TOP/TDQ into this
+            // project.
+            IResource[] resources = ResourcesPlugin.getWorkspace().getRoot().members();
 
-			if (resources != null && resources.length > 0) {
-				for (IResource resource : resources) {
-					// copy three folders:
-					if (resource.getName().equals("Data Profiling") //$NON-NLS-1$
-							|| resource.getName().equals("Libraries") //$NON-NLS-1$
-							|| resource.getName().equals("Metadata")) { //$NON-NLS-1$
-						IPath destination = null;
-						IFolder prefixFolder = rootProject
-								.getFolder(DQStructureManager.PREFIX_TDQ
-										+ resource.getName());
-						prefixFolder.create(IResource.FORCE, true,
-								new NullProgressMonitor());
-						for (IResource rs : ((IProject) resource).members()) {
-							if (rs.getName().equals(".project")) { //$NON-NLS-1$
-								continue;
-							}
-							destination = prefixFolder.getFolder(rs.getName())
-									.getFullPath();
-							rs.copy(destination, IResource.FORCE,
-									new NullProgressMonitor());
-						}
-						resource.delete(true, new NullProgressMonitor());
-					}
-				}
-			}
-			// Reporting_db
-			String pathName = ResourcesPlugin.getWorkspace().getRoot()
-					.getLocation().toOSString()
-					+ "/reporting_db/";
-			File repFolder = new File(pathName);
-			if (repFolder.exists()) {
-				FileUtils.copyDirectory(repFolder, ResourceManager
-						.getReportingDBFolder().getLocation().toFile());
-				FileUtils.forceDelete(new File(pathName));
-			}
-			// ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
+            if (resources != null && resources.length > 0) {
+                for (IResource resource : resources) {
+                    // copy three folders:
+                    if (resource.getName().equals("Data Profiling") //$NON-NLS-1$
+                            || resource.getName().equals("Libraries") //$NON-NLS-1$
+                            || resource.getName().equals("Metadata")) { //$NON-NLS-1$
+                        IPath destination = null;
+                        IFolder prefixFolder = rootProject.getFolder(DQStructureManager.PREFIX_TDQ + resource.getName());
+                        prefixFolder.create(IResource.FORCE, true, new NullProgressMonitor());
+                        for (IResource rs : ((IProject) resource).members()) {
+                            if (rs.getName().equals(".project")) { //$NON-NLS-1$
+                                continue;
+                            }
+                            destination = prefixFolder.getFolder(rs.getName()).getFullPath();
+                            rs.copy(destination, IResource.FORCE, new NullProgressMonitor());
+                        }
+                        resource.delete(true, new NullProgressMonitor());
+                    }
+                }
+            }
+            // Reporting_db
+            String pathName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/";
+            File repFolder = new File(pathName);
+            if (repFolder.exists()) {
+                FileUtils.copyDirectory(repFolder, ResourceManager.getReportingDBFolder().getLocation().toFile());
+                FileUtils.forceDelete(new File(pathName));
+            }
+            // ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
             return fileContentUpgrade(rootProject);
-			// ~
-		} catch (InvocationTargetException e) {
-			ExceptionHandler.process(e);
-		} catch (InterruptedException e) {
-			ExceptionHandler.process(e);
-		} catch (CoreException e) {
-			ExceptionHandler.process(e);
-		} catch (IOException e) {
-			ExceptionHandler.process(e);
-		} catch (Throwable e) {
-		    ExceptionHandler.process(e);
-		}
-		return false;
-	}
+            // ~
+        } catch (InvocationTargetException e) {
+            ExceptionHandler.process(e);
+        } catch (InterruptedException e) {
+            ExceptionHandler.process(e);
+        } catch (CoreException e) {
+            ExceptionHandler.process(e);
+        } catch (IOException e) {
+            ExceptionHandler.process(e);
+        } catch (Throwable e) {
+            ExceptionHandler.process(e);
+        }
+        return false;
+    }
 
-	private boolean fileContentUpgrade(IProject rootProject) throws CoreException {
-		String[] extensions = { FactoriesUtil.ANA, FactoriesUtil.PROV,
-				FactoriesUtil.REP, "softwaredeployment" };
-		boolean recursive = true;
-		Collection<?> files = FileUtils.listFiles(new File(rootProject
-				.getLocation().toOSString()), extensions, recursive);
-		for (Iterator<?> iterator = files.iterator(); iterator.hasNext();) {
-			File file = (File) iterator.next();
-			if (file != null) {
-				try {
-					String content = FileUtils.readFileToString(file);
-					content = StringUtils.replace(content, "/Metadata/", "/"
-							+ ResourceManager.METADATA_FOLDER_NAME + "/");
-					content = StringUtils.replace(content, "/Libraries/", "/"
-							+ ResourceManager.LIBRARIES_FOLDER_NAME + "/");
-					content = StringUtils.replace(content, "/resource/"
-							+ ResourceManager.LIBRARIES_FOLDER_NAME + "/",
-							"/resource/" + ResourceManager.getRootProjectName()
-									+ "/"
-									+ ResourceManager.LIBRARIES_FOLDER_NAME
-									+ "/");
-					content = StringUtils.replace(content, "/Data Profiling/",
-							"/" + ResourceManager.DATA_PROFILING_FOLDER_NAME
-									+ "/");
+    private boolean fileContentUpgrade(IProject rootProject) throws CoreException {
+        String[] extensions = { FactoriesUtil.ANA, FactoriesUtil.PROV, FactoriesUtil.REP, "softwaredeployment" };
+        boolean recursive = true;
+        Collection<?> files = FileUtils.listFiles(new File(rootProject.getLocation().toOSString()), extensions, recursive);
+        for (Iterator<?> iterator = files.iterator(); iterator.hasNext();) {
+            File file = (File) iterator.next();
+            if (file != null) {
+                try {
+                    String content = FileUtils.readFileToString(file);
+                    content = StringUtils.replace(content, "/Metadata/", "/" + ResourceManager.METADATA_FOLDER_NAME + "/");
+                    content = StringUtils.replace(content, "/Libraries/", "/" + ResourceManager.LIBRARIES_FOLDER_NAME + "/");
+                    content = StringUtils.replace(content, "/resource/" + ResourceManager.LIBRARIES_FOLDER_NAME + "/",
+                            "/resource/" + ResourceManager.getRootProjectName() + "/" + ResourceManager.LIBRARIES_FOLDER_NAME
+                                    + "/");
+                    content = StringUtils.replace(content, "/Data Profiling/", "/" + ResourceManager.DATA_PROFILING_FOLDER_NAME
+                            + "/");
 
-					FileUtils.writeStringToFile(file, content);
-				} catch (IOException e) {
-				    ExceptionHandler.process(e);
-                    return false;
-				} catch (Throwable e) {
+                    FileUtils.writeStringToFile(file, content);
+                } catch (IOException e) {
                     ExceptionHandler.process(e);
                     return false;
-				}
-			}
-		}
-		return true;
-	}
+                } catch (Throwable e) {
+                    ExceptionHandler.process(e);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
-	public Date getOrder() {
-		Calendar calender = Calendar.getInstance();
-		calender.set(1949, 10, 1);
-		return calender.getTime();
-	}
+    public Date getOrder() {
+        Calendar calender = Calendar.getInstance();
+        calender.set(1949, 10, 1);
+        return calender.getTime();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#
-	 * getMigrationTaskType()
-	 */
-	public MigrationTaskType getMigrationTaskType() {
-		return MigrationTaskType.STUCTRUE;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.talend.dataprofiler.core.migration.IWorkspaceMigrationTask# getMigrationTaskType()
+     */
+    public MigrationTaskType getMigrationTaskType() {
+        return MigrationTaskType.STUCTRUE;
+    }
 
 }
