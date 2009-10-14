@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -63,7 +65,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
             IFolder newPatternFolder = libraryFolder.getFolder(DQStructureManager.PATTERNS);
             String folderProperty = DQStructureManager.PATTERNS_FOLDER_PROPERTY;
             IFolder newRegexSubfolder = createSubfolder(newPatternFolder, DQStructureManager.REGEX, folderProperty);
-            movePatternsIntoPatternsRegex(oldPatternFolder, newRegexSubfolder, folderProperty);
+            moveItems(oldPatternFolder, newRegexSubfolder, folderProperty);
             // oldPatternFolder.delete(true, null); // Do not delete because it's the same as before
 
             // SQL Patterns -> Patterns/SQL
@@ -71,7 +73,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
             IFolder newSqlSubfolder = DQStructureManager.getInstance().createNewReadOnlyFolder(newPatternFolder,
                     DQStructureManager.SQL);
             folderProperty = DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY;
-            movePatternsIntoPatternsRegex(oldSqlPatternsFolder, newSqlSubfolder, folderProperty);
+            moveItems(oldSqlPatternsFolder, newSqlSubfolder, folderProperty);
             oldSqlPatternsFolder.delete(true, null);
 
             // DQ Rules -> Rules/SQL
@@ -79,7 +81,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
             IFolder newRulesFolder = createSubfolder(libraryFolder, DQStructureManager.RULES, folderProperty);
             folderProperty = DQStructureManager.DQRULES_FOLDER_PROPERTY;
             IFolder newRulesSQLSubfolder = createSubfolder(newRulesFolder, DQStructureManager.SQL, folderProperty);
-            movePatternsIntoPatternsRegex(oldDqRulesFolder, newRulesSQLSubfolder, folderProperty);
+            moveItems(oldDqRulesFolder, newRulesSQLSubfolder, folderProperty);
             oldDqRulesFolder.delete(true, null);
 
             // Refresh project
@@ -105,7 +107,7 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
         return DQStructureManager.getInstance().createNewFolder(newPatternFolder, folderName);
     }
 
-    private void movePatternsIntoPatternsRegex(IFolder oldSubFolder, IFolder newSubfolder, final String folderProperty)
+    private void moveItems(IFolder oldSubFolder, IFolder newSubfolder, final String folderProperty)
             throws CoreException {
 
         if (!oldSubFolder.exists())
@@ -127,31 +129,47 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
                 TdqPropertieManager.getInstance().addFolderProperties(newFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
                         folderProperty);
 
-                movePatternsIntoPatternsRegex(oldFolder, newFolder, folderProperty);
+                moveItems(oldFolder, newFolder, folderProperty);
                 // delete folder
                 oldFolder.delete(true, null);
             }
 
             if (oldResource instanceof IFile) {
                 IFile file = (IFile) oldResource;
-                final ModelElement pattern = getModelElement(file, folderProperty);
-                final EList<Dependency> supplierDependency = pattern.getSupplierDependency();
+                final ModelElement eltFromLibraryFolder = getModelElement(file, folderProperty);
+                final EList<Dependency> supplierDependency = eltFromLibraryFolder.getSupplierDependency();
                 if (supplierDependency.isEmpty()) {
                     // simple copy of file is enough
                     oldResource.copy(newSubfolder.getFolder(oldResource.getName()).getFullPath(), true, null);
                 } else {
                     // handle dependent analyses
+                    List<Analysis> analyses = new ArrayList<Analysis>();
                     for (Dependency dependency : supplierDependency) {
                         URI newUri = URI.createPlatformResourceURI(newSubfolder.getFullPath().toOSString(), true);
                         // move pattern
-                        EMFUtil.changeUri(pattern.eResource(), newUri);
+                        EMFUtil.changeUri(eltFromLibraryFolder.eResource(), newUri);
                         final EList<ModelElement> clientAnalyses = dependency.getClient();
                         for (ModelElement modelElement : clientAnalyses) {
                             Analysis analysis = DataqualitySwitchHelper.ANALYSIS_SWITCH.doSwitch(modelElement);
+                            
                             if (analysis != null) {
-                                AnaResourceFileHelper.getInstance().save(analysis);
+                                analyses.add(analysis);
                             }
                         }
+                    }
+
+                    // clean the dependencies that do not refer to an existing object.
+                    for (Analysis analysis : analyses) {
+                        final EList<Dependency> clientDependency = analysis.getClientDependency();
+                        List<Dependency> newClientDeps = new ArrayList<Dependency>();
+                        for (Dependency dependency : clientDependency) {
+                            if (!dependency.eIsProxy()) {
+                                newClientDeps.add(dependency);
+                            }
+                        }
+                        clientDependency.clear();
+                        clientDependency.addAll(newClientDeps);
+                        AnaResourceFileHelper.getInstance().save(analysis);
                     }
                 }
                 oldResource.delete(true, null);
