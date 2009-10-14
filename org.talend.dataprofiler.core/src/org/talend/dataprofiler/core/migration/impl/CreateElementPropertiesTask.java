@@ -65,7 +65,7 @@ public class CreateElementPropertiesTask extends AbstractMigrationTask {
         List<ModelElement> allElement = new ArrayList<ModelElement>();
         allElement.addAll(allAnalysis);
         allElement.addAll(allDQRules);
-        // allElement.addAll(allPatternes);
+        allElement.addAll(allPatternes);
         allElement.addAll(allDataProviders);
         allElement.addAll(allReports);
         allElement.addAll(allUDIs);
