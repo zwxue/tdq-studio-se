@@ -23,7 +23,7 @@ import org.talend.dq.writer.EMFSharedResources;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class ResourceFileMap {
+public abstract class ResourceFileMap {
 
     protected Map<IFile, Resource> registedResourceMap = new HashMap<IFile, Resource>();
 
@@ -52,6 +52,7 @@ public class ResourceFileMap {
      * @return
      */
     public Resource getFileResource(IFile file) {
+
         Resource res = registedResourceMap.get(file);
         if (res != null) {
             return res;
@@ -79,5 +80,7 @@ public class ResourceFileMap {
     public void setResourcesNumberChanged(boolean resourceChanged) {
         this.resourcesNumberChanged = resourceChanged;
     }
+
+    protected abstract boolean checkFile(IFile file);
 
 }

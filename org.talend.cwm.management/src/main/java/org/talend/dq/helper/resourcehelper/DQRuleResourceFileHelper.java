@@ -65,16 +65,18 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
      * @return
      */
     public WhereRule findWhereRule(IFile file) {
-        WhereRule whereRule = whereRulesMap.get(file);
-        if (whereRule != null) {
+        if (checkFile(file)) {
+            WhereRule whereRule = whereRulesMap.get(file);
+            if (whereRule == null) {
+                whereRule = retireDQRule(getFileResource(file));
+            }
+
+            whereRulesMap.put(file, whereRule);
+
             return whereRule;
         }
-        Resource fileResource = getFileResource(file);
-        whereRule = retireDQRule(fileResource);
-        if (whereRule != null) {
-            whereRulesMap.put(file, whereRule);
-        }
-        return whereRule;
+
+        return null;
     }
 
     /**
@@ -162,7 +164,7 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
             }
             IFile file = (IFile) resource;
 
-            if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
+            if (checkFile(file)) {
                 findWhereRule(file);
             }
         }
@@ -189,5 +191,15 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
     public void clear() {
         super.clear();
         whereRulesMap.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#checkFile(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected boolean checkFile(IFile file) {
+        return file != null && FactoriesUtil.DQRULE.equalsIgnoreCase(file.getFileExtension());
     }
 }

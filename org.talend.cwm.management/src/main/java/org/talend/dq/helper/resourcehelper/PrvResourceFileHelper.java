@@ -66,12 +66,16 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      * @return the Data provider if found.
      */
     public TypedReturnCode<TdDataProvider> findProvider(IFile file) {
-        TypedReturnCode<TdDataProvider> rc = providerMap.get(file);
-        if (rc != null) {
-            return rc;
+        if (checkFile(file)) {
+            TypedReturnCode<TdDataProvider> rc = providerMap.get(file);
+            if (rc == null) {
+                rc = readFromFile(file);
 
+            }
+
+            return rc;
         }
-        return readFromFile(file);
+        return null;
     }
 
     public IFile findCorrespondingFile(TdDataProvider provider) {
@@ -191,7 +195,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
                     continue;
                 }
                 IFile file = (IFile) resource;
-                if (FactoriesUtil.PROV.equals(file.getFileExtension())) {
+                if (checkFile(file)) {
                     allPRVFiles.add(file);
                 }
             }
@@ -200,5 +204,15 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         }
 
         return allPRVFiles;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#checkFile(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected boolean checkFile(IFile file) {
+        return file != null && FactoriesUtil.PROV.equalsIgnoreCase(file.getFileExtension());
     }
 }

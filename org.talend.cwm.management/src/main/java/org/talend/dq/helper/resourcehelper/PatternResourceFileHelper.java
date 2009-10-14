@@ -68,16 +68,17 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
      * @return
      */
     public Pattern findPattern(IFile file) {
-        Pattern pattern = patternsMap.get(file);
-        if (pattern != null) {
+        if (checkFile(file)) {
+            Pattern pattern = patternsMap.get(file);
+            if (pattern == null) {
+                pattern = retirePattern(getFileResource(file));
+            }
+
+            patternsMap.put(file, pattern);
+
             return pattern;
         }
-        Resource fileResource = getFileResource(file);
-        pattern = retirePattern(fileResource);
-        if (pattern != null) {
-            patternsMap.put(file, pattern);
-        }
-        return pattern;
+        return null;
     }
 
     /**
@@ -145,7 +146,7 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
                 continue;
             }
             IFile file = (IFile) resource;
-            if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
+            if (checkFile(file)) {
                 findPattern(file);
             }
         }
@@ -252,5 +253,15 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             }
         }
         return file;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#checkFile(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected boolean checkFile(IFile file) {
+        return file != null && FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension());
     }
 }

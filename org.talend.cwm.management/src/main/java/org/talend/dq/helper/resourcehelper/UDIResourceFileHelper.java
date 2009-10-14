@@ -57,16 +57,18 @@ public class UDIResourceFileHelper extends ResourceFileMap {
     }
 
     public IndicatorDefinition findUDI(IFile file) {
-        IndicatorDefinition id = idsMap.get(file);
-        if (id != null) {
+        if (checkFile(file)) {
+            IndicatorDefinition id = idsMap.get(file);
+            if (id == null) {
+                id = retireUDI(getFileResource(file));
+            }
+
+            idsMap.put(file, id);
+
             return id;
         }
-        Resource fileResource = getFileResource(file);
-        id = retireUDI(fileResource);
-        if (id != null) {
-            idsMap.put(file, id);
-        }
-        return id;
+
+        return null;
     }
 
     private IndicatorDefinition retireUDI(Resource fileResource) {
@@ -146,7 +148,7 @@ public class UDIResourceFileHelper extends ResourceFileMap {
                 continue;
             }
             IFile file = (IFile) resource;
-            if (FactoriesUtil.UDI.equals(file.getFileExtension())) {
+            if (checkFile(file)) {
                 findUDI(file);
             }
         }
@@ -168,5 +170,15 @@ public class UDIResourceFileHelper extends ResourceFileMap {
     public void clear() {
         super.clear();
         idsMap.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#checkFile(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected boolean checkFile(IFile file) {
+        return file != null && FactoriesUtil.UDI.equalsIgnoreCase(file.getFileExtension());
     }
 }

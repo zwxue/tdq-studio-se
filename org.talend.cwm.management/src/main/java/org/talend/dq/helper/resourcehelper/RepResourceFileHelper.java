@@ -80,19 +80,20 @@ public final class RepResourceFileHelper extends ResourceFileMap {
                 searchAllReports(folder.getFolder(resource.getName()));
             }
             IFile file = (IFile) resource;
-            if (FactoriesUtil.REP.equals(file.getFileExtension())) {
+            if (checkFile(file)) {
                 findReport(file);
             }
         }
     }
 
     public TdReport findReport(IFile file) {
-        if (file != null && FactoriesUtil.REP.equals(file.getFileExtension())) {
+        if (checkFile(file)) {
             TdReport report = allRepMap.get(file);
-            if (report != null) {
-                return report;
+            if (report == null) {
+                report = readFromFile(file);
             }
-            return readFromFile(file);
+
+            return report;
         }
 
         return null;
@@ -162,4 +163,13 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         return saved;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#checkFile(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected boolean checkFile(IFile file) {
+        return file != null && FactoriesUtil.REP.equalsIgnoreCase(file.getFileExtension());
+    }
 }

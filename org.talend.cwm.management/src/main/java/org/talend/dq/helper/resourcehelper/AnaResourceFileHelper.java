@@ -85,7 +85,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
                 continue;
             }
             IFile file = (IFile) resource;
-            if (FactoriesUtil.ANA.equals(file.getFileExtension())) {
+            if (checkFile(file)) {
                 findAnalysis(file);
             }
         }
@@ -98,11 +98,15 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
      * @return
      */
     public Analysis findAnalysis(IFile file) {
-        Analysis analysisEntity = allAnalysisMap.get(file);
-        if (analysisEntity != null) {
+        if (checkFile(file)) {
+            Analysis analysisEntity = allAnalysisMap.get(file);
+            if (analysisEntity == null) {
+                analysisEntity = readFromFile(file);
+            }
             return analysisEntity;
         }
-        return readFromFile(file);
+
+        return null;
     }
 
     public Analysis readFromFile(IFile file) {
@@ -189,5 +193,15 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
         ReturnCode saved = writer.save(analysis);
         return saved;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#checkFile(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected boolean checkFile(IFile file) {
+        return file != null && FactoriesUtil.ANA.equalsIgnoreCase(file.getFileExtension());
     }
 }
