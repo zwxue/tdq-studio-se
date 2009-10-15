@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -97,8 +98,8 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     protected Resource getLeftResource() throws ReloadCompareException {
         DQStructureComparer.clearSubNode(copyedDataProvider);
         List<Package> packages = new ArrayList<Package>();
-		packages.addAll(DataProviderHelper.getTdCatalogs(copyedDataProvider));
-		packages.addAll(DataProviderHelper.getTdSchema(copyedDataProvider));
+        packages.addAll(DataProviderHelper.getTdCatalogs(copyedDataProvider));
+        packages.addAll(DataProviderHelper.getTdSchema(copyedDataProvider));
         // URI uri =
         // URI.createPlatformResourceURI(copyedFile.getFullPath().toString(),
         // false);
@@ -127,8 +128,8 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected Resource getRightResource() throws ReloadCompareException {
         List<Package> packages = new ArrayList<Package>();
-		packages.addAll(DataProviderHelper.getTdCatalogs(tempReloadProvider));
-		packages.addAll(DataProviderHelper.getTdSchema(tempReloadProvider));
+        packages.addAll(DataProviderHelper.getTdCatalogs(tempReloadProvider));
+        packages.addAll(DataProviderHelper.getTdSchema(tempReloadProvider));
         // URI uri = tempReloadProvider.eResource().getURI();
         Resource reloadResource = null;
         reloadResource = tempReloadProvider.eResource();
@@ -158,6 +159,19 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
      */
     @Override
     protected void handleUpdateElement(UpdateAttribute updateAttribute) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#handleRemoveRefElement(org.eclipse.emf
+     * .compare.diff.metamodel.RemoveReferenceValue)
+     */
+    @Override
+    protected void handleRemoveRefElement(RemoveReferenceValue removeElement) {
         // TODO Auto-generated method stub
 
     }

@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -44,10 +45,11 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
-
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.PrimaryKey;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -64,14 +66,13 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     public TableViewComparisonLevel(AbstractDatabaseFolderNode dbFolderNode) {
         super(dbFolderNode);
     }
-    
+
     public TableViewComparisonLevel(ColumnSet columnSet) {
-		super(null);
-		selectedObj = columnSet;
+        super(null);
+        selectedObj = columnSet;
 
-	}
+    }
 
-    
     protected void createTempConnectionFile() throws ReloadCompareException {
         IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
         if (findCorrespondingFile == null) {
@@ -168,6 +169,31 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         }
         popRemoveElementConfirm();
         ColumnSetHelper.removeColumn(removeColumn, (ColumnSet) selectedObj);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#handleRemoveRefElement(org.eclipse.emf
+     * .compare.diff.metamodel.RemoveReferenceValue)
+     */
+    @Override
+    protected void handleRemoveRefElement(RemoveReferenceValue removeElement) {
+        PrimaryKey primaryKey = SwitchHelpers.PRIMARY_KEY_SWITCH.doSwitch(removeElement.getLeftElement());
+        ForeignKey forignKey = SwitchHelpers.FOREIGN_KEY_SWITCH.doSwitch(removeElement.getLeftElement());
+
+        Object obj = primaryKey;
+        if (primaryKey == null) {
+            obj = forignKey;
+        }
+
+        if (obj != null) {
+            ColumnSet columnSet = (ColumnSet) selectedObj;
+            if (columnSet.getOwnedElement().contains(obj)) {
+                columnSet.getOwnedElement().remove(obj);
+            }
+        }
     }
 
     @Override

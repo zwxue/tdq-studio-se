@@ -283,7 +283,14 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 // MOD mzhao bug 9605 If a column is removed out of tdq studio, here column would be a proxy. see {@link
                 // ReloadDatabaseAction#impactExistingAnalyses(DataProvider)
                 // impactExistingAnalyses}
+                if (column != null && tdColumn == null) {
+                    log.error("Analyzed element should be a TdColumn instead of a Column. Analyzed element is "
+                            + column.getName());
+                }
                 if (tdColumn == null) {
+                    if (column == null) {
+                        log.error("The list of analyzed column contains a null column");
+                    }
                     continue;
                 }
                 final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);

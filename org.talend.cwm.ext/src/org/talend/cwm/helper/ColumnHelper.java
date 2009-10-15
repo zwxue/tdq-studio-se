@@ -176,7 +176,7 @@ public final class ColumnHelper {
      * @return true if the given column is a primary key
      */
     public static boolean isPrimaryKey(Column column) {
-        return getPrimaryKey(column) != null;
+        return column != null && getPrimaryKey(column) != null;
     }
 
     /**
@@ -206,7 +206,7 @@ public final class ColumnHelper {
      * @return
      */
     public static boolean isForeignKey(Column column) {
-        return getForeignKey(column) != null;
+        return column != null && getForeignKey(column) != null;
     }
 
     /**

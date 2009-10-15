@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
@@ -58,6 +59,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected DiffSwitch<UpdateModelElement> updateModelSwitch;
 
     protected DiffSwitch<RemoveModelElement> removeModelSwitch;
+
+    protected DiffSwitch<RemoveReferenceValue> removeReferenceValue;
 
     protected RelationalSwitch<Package> packageSwitch;
 
@@ -120,6 +123,13 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
             }
         };
 
+        removeReferenceValue = new DiffSwitch<RemoveReferenceValue>() {
+
+            public RemoveReferenceValue caseRemoveReferenceValue(RemoveReferenceValue object) {
+                return object;
+            }
+        };
+
         packageSwitch = new RelationalSwitch<Package>() {
 
             public Package casePackage(Package object) {
@@ -166,8 +176,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
         Object needReloadObject = dbFolderNode == null ? selectedObj : dbFolderNode;
         DQStructureComparer.openDiffCompareEditor(getLeftResource(), getRightResource(), options, guiHandler, DQStructureComparer
-                .getDiffResourceFile(), oldDataProvider.getName(),
-				needReloadObject, false);
+                .getDiffResourceFile(), oldDataProvider.getName(), needReloadObject, false);
 
         // testInit();
 
@@ -281,6 +290,10 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         if (removeElement != null) {
             handleRemoveElement(removeElement);
         }
+        RemoveReferenceValue refValue = removeReferenceValue.doSwitch(difElement);
+        if (refValue != null) {
+            handleRemoveRefElement(refValue);
+        }
         // If attribute changes. MOD hcheng 2009-06-26,for 7772,error reload
         // column list.
         if (difElement instanceof UpdateAttribute) {
@@ -291,6 +304,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     }
 
     protected abstract void handleRemoveElement(RemoveModelElement removeElement);
+
+    protected abstract void handleRemoveRefElement(RemoveReferenceValue removeElement);
 
     protected abstract void handleAddElement(AddModelElement addElement);
 
