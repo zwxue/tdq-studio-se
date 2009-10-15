@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
@@ -172,8 +173,26 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
                         AnaResourceFileHelper.getInstance().save(analysis);
                     }
                 }
-                oldResource.delete(true, null);
+
+                remove(file);
             }
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "remove".
+     * 
+     * @param file
+     */
+    private void remove(IFile file) throws CoreException {
+        file.delete(true, null);
+        String fileExt = file.getFileExtension();
+        if (StringUtils.equals(fileExt, FactoriesUtil.PATTERN)) {
+            PatternResourceFileHelper.getInstance().remove(file);
+        }
+
+        if (StringUtils.equals(fileExt, FactoriesUtil.DQRULE)) {
+            DQRuleResourceFileHelper.getInstance().remove(file);
         }
     }
 
