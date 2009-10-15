@@ -418,9 +418,9 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             return false;
         }
 
-        if (!checkDuplicateModelName()) {
-            return false;
-        }
+        // if (!checkDuplicateModelName()) {
+        // return false;
+        // }
 
         updateStatus(IStatus.OK, MSG_OK);
         return super.checkFieldsValue();

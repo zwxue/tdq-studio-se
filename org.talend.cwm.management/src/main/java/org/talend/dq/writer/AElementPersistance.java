@@ -15,6 +15,7 @@ package org.talend.dq.writer;
 import java.io.File;
 import java.util.Date;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -67,7 +68,17 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             IFile file = folder.getFile(fname);
 
             if (file.exists()) {
-                trc.setReturnCode("Can't create resource file, file is existed.", false);
+                // MOD yyi 2009-10-15 Feature: 9524
+                String oriName = element.getName();
+                element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+                fname = DqRepositoryViewService.createLogicalFileName(element, getFileExtension());
+                file = folder.getFile(fname);
+
+                element.setName(oriName);
+                ReturnCode rc = save(element, file);
+                trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
+
+                // trc.setReturnCode("Can't create resource file, file is existed.", false);
             } else {
                 ReturnCode rc = save(element, file);
                 trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
