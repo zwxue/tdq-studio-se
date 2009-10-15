@@ -324,7 +324,11 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         // dialog.setValidator(validator);
         dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
-        dialog.setInput(ResourceManager.getRootProject());
+        if (projectName != null) {
+            dialog.setInput(ResourceManager.getRootProject().getFolder(projectName));
+        } else {
+            dialog.setInput(ResourceManager.getRootProject());
+        }
         dialog.addFilter(filter);
         dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
