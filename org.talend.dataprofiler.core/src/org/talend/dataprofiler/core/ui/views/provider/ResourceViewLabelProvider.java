@@ -31,6 +31,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.manager.DQStructureMessage;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
@@ -157,7 +158,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 return DqRepositoryViewService.buildElementName(mElement);
             }
         }
-
+        input = DQStructureMessage.getString(super.decorateText(input, element));
         if (element instanceof IFolder && input.startsWith(DQStructureManager.PREFIX_TDQ)) {
             input = input.replaceFirst(DQStructureManager.PREFIX_TDQ, ""); //$NON-NLS-1$
         }
