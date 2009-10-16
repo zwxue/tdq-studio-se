@@ -155,9 +155,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         statusCombo.setEditable(false);
 
         // MOD mzhao feature 7479 2009-10-16
+        String statusValue = DevelopmentStatus.DRAFT.getLiteral();
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DEV_STATUS, getCurrentModelElement(
                 this.getEditor()).getTaggedValue());
-        String statusValue = taggedValue.getValue();
+        if (taggedValue != null) {
+            statusValue = taggedValue.getValue();
+        }
 
         List<org.talend.core.model.properties.Status> statusList = MetadataHelper.getTechnicalStatus();
         if (statusList != null && statusList.size() > 0) {
