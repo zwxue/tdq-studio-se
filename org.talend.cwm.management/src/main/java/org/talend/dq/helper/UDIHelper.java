@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -100,7 +99,8 @@ public final class UDIHelper {
         MetadataHelper.setAuthor(id, author == null ? "" : author); //$NON-NLS-1$
         MetadataHelper.setDescription(description == null ? "" : description, id); //$NON-NLS-1$
         MetadataHelper.setPurpose(purpose == null ? "" : purpose, id); //$NON-NLS-1$
-        MetadataHelper.setDevStatus(id, DevelopmentStatus.get(status == null ? "" : status)); //$NON-NLS-1$
+        // MOD mzhao feature 7479 2009-10-16
+        MetadataHelper.setDevStatus(id, status == null ? "" : status); //$NON-NLS-1$
         setUDICategory(id, category);
         return id;
     }

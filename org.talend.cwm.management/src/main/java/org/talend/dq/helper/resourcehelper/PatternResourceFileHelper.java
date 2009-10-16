@@ -27,7 +27,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -205,8 +204,8 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
         MetadataHelper.setAuthor(pattern, author == null ? "" : author); //$NON-NLS-1$
         MetadataHelper.setDescription(description == null ? "" : description, pattern); //$NON-NLS-1$
         MetadataHelper.setPurpose(purpose == null ? "" : purpose, pattern); //$NON-NLS-1$
-        MetadataHelper.setDevStatus(pattern, DevelopmentStatus.get(status == null ? "" : status)); //$NON-NLS-1$
-
+        // MOD mzhao feature 7479 2009-10-16
+        MetadataHelper.setDevStatus(pattern, status == null ? "" : status); //$NON-NLS-1$
         return pattern;
     }
 

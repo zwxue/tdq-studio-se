@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -34,11 +36,13 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -149,8 +153,27 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         toolkit.createLabel(parent, STATUS_LABEL); //$NON-NLS-1$
         statusCombo = new CCombo(parent, SWT.BORDER);
         statusCombo.setEditable(false);
-        for (DevelopmentStatus status : DevelopmentStatus.values()) {
-            statusCombo.add(status.getLiteral());
+
+        // MOD mzhao feature 7479 2009-10-16
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DEV_STATUS, getCurrentModelElement(
+                this.getEditor()).getTaggedValue());
+        String statusValue = taggedValue.getValue();
+
+        List<org.talend.core.model.properties.Status> statusList = MetadataHelper.getTechnicalStatus();
+        if (statusList != null && statusList.size() > 0) {
+            List<String> statusArray = MetadataHelper.toArray(statusList);
+            String[] tempString = new String[statusList.size()];
+            statusCombo.setItems(statusArray.toArray(tempString));
+            if (statusArray.contains(statusValue)) {
+                statusCombo.remove(statusValue);
+                statusCombo.add(statusValue, 0);
+            }
+        } else {
+            for (DevelopmentStatus status : DevelopmentStatus.values()) {
+                statusCombo.add(status.getLiteral());
+            }
+            statusCombo.remove(statusValue);
+            statusCombo.add(statusValue, 0);
         }
 
         initMetaTextFied();
@@ -291,14 +314,14 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         String description = MetadataHelper.getDescription(currentModelElement);
         String author = MetadataHelper.getAuthor(currentModelElement);
         String version = MetadataHelper.getVersion(currentModelElement);
-        DevelopmentStatus devStatus = MetadataHelper.getDevStatus(currentModelElement);
+        String devStatus = MetadataHelper.getDevStatus(currentModelElement);
 
         nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
         purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
         descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
         authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
         // versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
-        statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus.getLiteral());
+        statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus);
     }
 
     public void doSave(IProgressMonitor monitor) {
@@ -312,7 +335,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         MetadataHelper.setDescription(descriptionText.getText(), currentModelElement);
         MetadataHelper.setAuthor(currentModelElement, authorText.getText());
         // MetadataHelper.setVersion(versionText.getText(), currentModelElement);
-        MetadataHelper.setDevStatus(currentModelElement, DevelopmentStatus.get(statusCombo.getText()));
+        MetadataHelper.setDevStatus(currentModelElement, statusCombo.getText());
     }
 
     public boolean performGlobalAction(String actionId) {

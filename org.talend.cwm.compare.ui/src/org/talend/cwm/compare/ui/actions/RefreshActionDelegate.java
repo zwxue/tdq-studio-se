@@ -171,7 +171,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 dbcp.setAuthor(MetadataHelper.getAuthor(pc));
                 dbcp.setDescription(MetadataHelper.getDescription(pc));
                 dbcp.setPurpose(MetadataHelper.getPurpose(pc));
-                dbcp.setStatus(MetadataHelper.getDevStatus(pc).getLiteral());
+                dbcp.setStatus(MetadataHelper.getDevStatus(pc));
 
                 dbcp.setDriverClassName(driverClassName);
                 dbcp.setJdbcUrl(dbUrl);

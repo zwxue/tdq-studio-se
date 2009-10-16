@@ -210,7 +210,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         String purpose = MetadataHelper.getPurpose(element);
         String description = MetadataHelper.getDescription(element);
         String version = MetadataHelper.getVersion(element);
-        String status = MetadataHelper.getDevStatus(element).getLiteral();
+        String status = MetadataHelper.getDevStatus(element);
 
         property.setId(EcoreUtil.generateUUID());
 

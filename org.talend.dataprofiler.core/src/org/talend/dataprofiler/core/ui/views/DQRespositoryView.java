@@ -121,8 +121,7 @@ public class DQRespositoryView extends CommonNavigator {
             if (!manager.createDQStructure()) {
                 log.error("Failed to create structure of TDQ!");
             } else {
-                // TODO TDQ do not need to save.
-                // ProxyRepositoryManager.getInstance().save();
+                ProxyRepositoryManager.getInstance().save();
             }
         }
 

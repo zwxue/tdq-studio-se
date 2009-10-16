@@ -17,15 +17,11 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -44,23 +40,19 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.properties.Project;
-import org.talend.core.model.properties.PropertiesPackage;
-import org.talend.core.model.properties.Status;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
-import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -89,8 +81,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     protected Text pathText;
 
-    private final static String PROJECT_FILE = "talend.project";
-
     // private members
     private Button versionMajorBtn;
 
@@ -98,42 +88,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     public MetadataWizardPage() {
         this.setPageComplete(false);
-    }
-
-    private List<Status> getTechnicalStatus() {
-        org.talend.core.model.properties.Project loadProject = null;
-        try {
-            loadProject = loadProject();
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            return null;
-        }
-        if (loadProject == null) {
-            return null;
-        }
-
-        return copyList(loadProject.getTechnicalStatus());
-    }
-
-    private Project loadProject() throws PersistenceException {
-        IProject rootProject = ResourceManager.getRootProject();
-        IFile talendProjectFile = rootProject.getFile(PROJECT_FILE);
-        if (!talendProjectFile.exists()) {
-            return null;
-        }
-        URI uri = URI.createPlatformResourceURI(talendProjectFile.getFullPath().toString(), false);
-        EMFSharedResources.getInstance().unloadResource(uri.toString());
-        Resource rs = EMFSharedResources.getInstance().getResource(uri, true);
-        Project emfProject = (Project) EcoreUtil.getObjectByType(rs.getContents(), PropertiesPackage.eINSTANCE.getProject());
-        return emfProject;
-    }
-
-    private List<Status> copyList(List<Status> listOfStatus) {
-        List<Status> result = new ArrayList<Status>();
-        for (Object obj : listOfStatus) {
-            result.add((Status) obj);
-        }
-        return result;
     }
 
     /*
@@ -224,16 +178,18 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         statusText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         statusText.setEditable(false);
         // MOD mzhao feature 7479 2009-10-12
-        List<org.talend.core.model.properties.Status> statusList;
-        statusList = getTechnicalStatus();
+        List<org.talend.core.model.properties.Status> statusList = MetadataHelper.getTechnicalStatus();
+
         if (statusList != null && statusList.size() > 0) {
-            statusText.setItems(toArray(statusList));
+            String[] tempString = new String[statusList.size()];
+            statusText.setItems(MetadataHelper.toArray(statusList).toArray(tempString));
         } else {
             for (DevelopmentStatus status : DevelopmentStatus.values()) {
                 statusText.add(status.getLiteral());
             }
         }
         statusText.select(0);
+        getParameter().setStatus(statusText.getText());
         // Path:
         Label pathLab = new Label(container, SWT.NONE);
         pathLab.setText("Path"); //$NON-NLS-1$
@@ -257,15 +213,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         addListeners();
 
         setControl(container);
-    }
-
-    private String[] toArray(List<org.talend.core.model.properties.Status> status) {
-        String[] res = new String[status.size()];
-        int i = 0;
-        for (org.talend.core.model.properties.Status s : status) {
-            res[i++] = s.getLabel();
-        }
-        return res;
     }
 
     /**

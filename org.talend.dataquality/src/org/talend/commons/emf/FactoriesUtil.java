@@ -66,6 +66,11 @@ public final class FactoriesUtil {
     public static final String REP = "rep"; //$NON-NLS-1$
 
     /**
+     * Extension used for the files of jrxml report. MOD mzhao 2009-05-11, feature:6894
+     */
+    public static final String JRXML = "jrxml"; //$NON-NLS-1$
+
+    /**
      * Extension used for the files in which the sql are serialized.
      */
     public static final String SQL = "sql"; //$NON-NLS-1$

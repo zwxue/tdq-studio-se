@@ -200,15 +200,15 @@ public final class DQStructureComparer {
 
     public static IFile getDiffResourceFile() {
         IFile file = iterateGetNotExistFile(RESULT_EMFDIFF_FILE);
-		 try {
-			InputStream inputStream = new ByteArrayInputStream("".getBytes()); //$NON-NLS-1$
-			file.create(inputStream, true, new NullProgressMonitor());
-			inputStream.close();
-		} catch (CoreException e) {
-			log.error(e, e);
-		} catch (IOException e) {
-			log.error(e, e);
-		}
+        try {
+            InputStream inputStream = new ByteArrayInputStream("".getBytes()); //$NON-NLS-1$
+            file.create(inputStream, true, new NullProgressMonitor());
+            inputStream.close();
+        } catch (CoreException e) {
+            log.error(e, e);
+        } catch (IOException e) {
+            log.error(e, e);
+        }
         return file;
     }
 
@@ -273,7 +273,7 @@ public final class DQStructureComparer {
         connectionParameters.setAuthor(MetadataHelper.getAuthor(prevDataProvider));
         connectionParameters.setDescription(MetadataHelper.getDescription(prevDataProvider));
         connectionParameters.setPurpose(MetadataHelper.getPurpose(prevDataProvider));
-        connectionParameters.setStatus(MetadataHelper.getDevStatus(prevDataProvider).getLiteral());
+        connectionParameters.setStatus(MetadataHelper.getDevStatus(prevDataProvider));
 
         connectionParameters.setJdbcUrl(urlString);
         connectionParameters.setDriverClassName(driverClassName);
@@ -482,9 +482,8 @@ public final class DQStructureComparer {
      * @throws ReloadCompareException
      */
     public static DiffModel openDiffCompareEditor(Resource leftResource, Resource rightResource, Map<String, Object> opt,
-            IUIHandler guiHandler, IFile efmDiffResultFile, String dbName,
-			Object selectedObject, boolean compareEachOther)
-			throws ReloadCompareException {
+            IUIHandler guiHandler, IFile efmDiffResultFile, String dbName, Object selectedObject, boolean compareEachOther)
+            throws ReloadCompareException {
 
         MatchModel match = null;
         try {
@@ -507,8 +506,7 @@ public final class DQStructureComparer {
             throw new ReloadCompareException(e);
         }
         if (guiHandler != null) {
-            guiHandler.popComparisonUI(createDiffResourceFile.getLocation(),
-					dbName, selectedObject, compareEachOther);
+            guiHandler.popComparisonUI(createDiffResourceFile.getLocation(), dbName, selectedObject, compareEachOther);
         }
         return diff;
     }

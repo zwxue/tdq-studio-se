@@ -20,7 +20,6 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
-import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
@@ -120,7 +119,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
     }
 
     public void fillMetadataToCWMResource(ModelElement cwmElement) {
-        MetadataHelper.setDevStatus(cwmElement, DevelopmentStatus.get(getParameter().getStatus()));
+        MetadataHelper.setDevStatus(cwmElement, getParameter().getStatus());
         MetadataHelper.setAuthor(cwmElement, getParameter().getAuthor());
         MetadataHelper.setPurpose(getParameter().getPurpose(), cwmElement);
         MetadataHelper.setDescription(getParameter().getDescription(), cwmElement);

@@ -12,14 +12,29 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.core.model.properties.Project;
+import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.core.model.properties.Status;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -30,6 +45,10 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * This class is a helper for handling data quality metadata.
  */
 public final class MetadataHelper {
+
+    private static Logger log = Logger.getLogger(MetadataHelper.class);
+
+    private final static String PROJECT_FILE = "talend.project";
 
     private MetadataHelper() {
     }
@@ -143,25 +162,31 @@ public final class MetadataHelper {
      * @param status the state to set.
      * @return
      */
-    public static boolean setDevStatus(ModelElement element, DevelopmentStatus status) {
-        if (status == null) {
+    public static boolean setDevStatus(ModelElement element, String statusLabel) {
+        // MOD mzhao feature 7479 2009-10-16
+        if (statusLabel == null) {
             return false;
         }
-        return TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.DEV_STATUS, status.getLiteral());
+        return TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.DEV_STATUS, statusLabel);
     }
 
     /**
-     * Method "getDevStatus".
+     * Method "getDevStatus". MOD mzhao feature 7479
      * 
      * @param element such as Analysis, DataProvider...
      * @return the development status of the element
      */
-    public static DevelopmentStatus getDevStatus(ModelElement element) {
+    public static String getDevStatus(ModelElement element) {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DEV_STATUS, element.getTaggedValue());
         if (taggedValue == null) {
-            return DevelopmentStatus.DRAFT;
+            List<org.talend.core.model.properties.Status> statusList = MetadataHelper.getTechnicalStatus();
+            if (statusList != null && statusList.size() > 0) {
+                return statusList.get(0).getLabel();
+            } else
+                return DevelopmentStatus.DRAFT.getLiteral();
         }
-        return DevelopmentStatus.get(taggedValue.getValue());
+        String statusValueString = taggedValue.getValue();
+        return statusValueString;
     }
 
     /**
@@ -235,5 +260,50 @@ public final class MetadataHelper {
         if (path != null && path.endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
             TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PROPERTY_FILE, path);
         }
+    }
+
+    public static List<Status> getTechnicalStatus() {
+        org.talend.core.model.properties.Project loadProject = null;
+        try {
+            loadProject = loadProject();
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            return null;
+        }
+        if (loadProject == null) {
+            return null;
+        }
+
+        return copyList(loadProject.getTechnicalStatus());
+    }
+
+    public static List<String> toArray(List<org.talend.core.model.properties.Status> status) {
+        List<String> res = new ArrayList<String>();
+        int i = 0;
+        for (org.talend.core.model.properties.Status s : status) {
+            res.add(s.getLabel());
+        }
+        return res;
+    }
+
+    private static Project loadProject() throws PersistenceException {
+        IProject rootProject = ResourceManager.getRootProject();
+        IFile talendProjectFile = rootProject.getFile(PROJECT_FILE);
+        if (!talendProjectFile.exists()) {
+            return null;
+        }
+        URI uri = URI.createPlatformResourceURI(talendProjectFile.getFullPath().toString(), false);
+        // EMFSharedResources.getInstance().unloadResource(uri.toString());
+        Resource rs = new EMFUtil().getResourceSet().getResource(uri, true);
+        Project emfProject = (Project) EcoreUtil.getObjectByType(rs.getContents(), PropertiesPackage.eINSTANCE.getProject());
+        return emfProject;
+    }
+
+    private static List<Status> copyList(List<Status> listOfStatus) {
+        List<Status> result = new ArrayList<Status>();
+        for (Object obj : listOfStatus) {
+            result.add((Status) obj);
+        }
+        return result;
     }
 }

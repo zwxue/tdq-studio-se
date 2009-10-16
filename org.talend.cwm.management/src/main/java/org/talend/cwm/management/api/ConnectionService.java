@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
@@ -91,7 +90,7 @@ public final class ConnectionService {
             dataProvider.setName(connectionName);
             MetadataHelper.setDescription(connectionParameters.getDescription(), dataProvider);
             MetadataHelper.setPurpose(connectionParameters.getPurpose(), dataProvider);
-            MetadataHelper.setDevStatus(dataProvider, DevelopmentStatus.get(connectionParameters.getStatus()));
+            MetadataHelper.setDevStatus(dataProvider, connectionParameters.getStatus());
             MetadataHelper.setAuthor(dataProvider, connectionParameters.getAuthor());
             rc.setObject(dataProvider);
             return rc;
