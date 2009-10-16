@@ -370,6 +370,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      */
     private void refreshSumSection() {
         fillDataProvider();
+
+        if (tdDataProvider == null) {
+            return;
+        }
+
         if (sumSectionClient != null && !sumSectionClient.isDisposed()) {
             Control[] children = sumSectionClient.getChildren();
             for (Control control : children) {
