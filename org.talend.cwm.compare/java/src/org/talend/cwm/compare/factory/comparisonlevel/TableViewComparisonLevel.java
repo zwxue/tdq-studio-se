@@ -35,7 +35,6 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.exception.TalendException;
-import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -45,7 +44,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
-import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -157,6 +155,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
             ColumnSet columnSet = (ColumnSet) selectedObj;
             ColumnSetHelper.removeColumn(columnSetSwitchLeft, columnSet);
             ColumnSetHelper.addColumn(columnSetSwitchRight, columnSet);
+            // TODO 2009-10-16 examine whether we need to set the PK and FK here.
         }
     }
 
@@ -170,19 +169,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         ColumnSet columnSet = (ColumnSet) selectedObj;
         ColumnSetHelper.removeColumn(removeColumn, columnSet);
 
-        if (ColumnHelper.isPrimaryKey(removeColumn)) {
-
-            EList<UniqueKey> uniqueKeys = removeColumn.getUniqueKey();
-            if (!uniqueKeys.isEmpty()) {
-                UniqueKey pk = uniqueKeys.get(0);
-
-                if (columnSet.getOwnedElement().contains(pk)) {
-                    columnSet.getOwnedElement().remove(pk);
-                }
-
-                uniqueKeys.clear();
-            }
-        }
     }
 
     @Override

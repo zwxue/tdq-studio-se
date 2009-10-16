@@ -93,12 +93,7 @@ public final class DQStructureComparer {
 
     private static DQStructureComparer comparer = new DQStructureComparer();
 
-    public static DQStructureComparer getInstance() {
-        return comparer;
-    }
-
     private DQStructureComparer() {
-
     }
 
     /**

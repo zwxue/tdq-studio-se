@@ -114,6 +114,32 @@ public final class TableHelper {
     }
 
     /**
+     * Method "removePrimaryKey".
+     * 
+     * @param table
+     * @param primaryKey
+     * @return true if the PK existed in the table
+     */
+    public static boolean removePrimaryKey(ColumnSet table, PrimaryKey primaryKey) {
+        assert table != null;
+        assert primaryKey != null;
+        return table.getOwnedElement().remove(primaryKey);
+    }
+
+    /**
+     * Method "removeForeignKey".
+     * 
+     * @param table
+     * @param foreignKey
+     * @return true if the FK existed in the table
+     */
+    public static boolean removeForeignKey(ColumnSet table, ForeignKey foreignKey) {
+        assert table != null;
+        assert foreignKey != null;
+        return table.getOwnedElement().remove(foreignKey);
+    }
+
+    /**
      * Method "addAllPrimaryKeys".
      * 
      * @param table

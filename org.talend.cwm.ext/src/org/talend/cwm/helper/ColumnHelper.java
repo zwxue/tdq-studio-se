@@ -198,6 +198,24 @@ public final class ColumnHelper {
         return null;
     }
 
+
+    /**
+     * Method "removePrimaryKey".
+     * 
+     * @param column
+     * @return the primary key object or null
+     */
+    public static PrimaryKey removePrimaryKey(Column column) {
+        assert column != null;
+        PrimaryKey primaryKey = getPrimaryKey(column);
+        if (primaryKey != null) {
+            column.getUniqueKey().remove(primaryKey);
+            return primaryKey;
+        }
+        // else
+        return null;
+    }
+    
     /**
      * 
      * DOC mzhao Comment method "isForeignKey",Feature 8690.
@@ -229,6 +247,24 @@ public final class ColumnHelper {
         return null;
     }
 
+    /**
+     * Method "removeForeignKey".
+     * 
+     * @param column
+     * @return the removed Foreign key or null
+     */
+    public static ForeignKey removeForeignKey(Column column) {
+        assert column != null;
+        ForeignKey foreignKey = getForeignKey(column);
+        if (foreignKey != null) {
+            column.getKeyRelationship().remove(foreignKey);
+            return foreignKey;
+        }
+        // else
+        return null;
+    }
+    
+    
     /**
      * DOC bZhou Comment method "isFromSameConnection".
      * 

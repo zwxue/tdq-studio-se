@@ -33,6 +33,8 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.QueryColumnSet;
 import orgomg.cwm.resource.relational.Table;
 import orgomg.cwm.resource.relational.View;
@@ -59,6 +61,21 @@ public final class ColumnSetHelper {
     }
 
     public static boolean removeColumn(Column column, ColumnSet columnSet) {
+        // first remove PK if it exists
+        if (ColumnHelper.isPrimaryKey(column)) {
+            PrimaryKey primaryKey = ColumnHelper.removePrimaryKey(column);
+            if (primaryKey != null) {
+                TableHelper.removePrimaryKey(columnSet, primaryKey);
+            }
+        }
+
+        // remove foreign key if it exists
+        if (ColumnHelper.isForeignKey(column)) {
+            ForeignKey foreignKey = ColumnHelper.removeForeignKey(column);
+            if (foreignKey != null) {
+                TableHelper.removeForeignKey(columnSet, foreignKey);
+            }
+        }
         return columnSet.getFeature().remove(column);
     }
 
