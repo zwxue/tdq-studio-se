@@ -24,8 +24,21 @@ public class DQStructureMessage {
 
     private static final HashMap<String, String> MESSAGEMAP = new HashMap<String, String>();
 
+    private static final String KEY_NOT_FOUND_PREFIX = "!!!"; //$NON-NLS-1$
+
+    private static final String KEY_NOT_FOUND_SUFFIX = "!!!"; //$NON-NLS-1$
+
     public static String getString(String key) {
-        return null == MESSAGEMAP.get(key) ? key : DefaultMessagesImpl.getString(MESSAGEMAP.get(key));
+
+        String message = key;
+        String messageKey = MESSAGEMAP.get(key);
+
+        if (null != messageKey && !DefaultMessagesImpl.getString(messageKey).startsWith(KEY_NOT_FOUND_PREFIX)
+                && !DefaultMessagesImpl.getString(messageKey).endsWith(KEY_NOT_FOUND_SUFFIX)) {
+
+            message = DefaultMessagesImpl.getString(messageKey);
+        }
+        return message;
     }
 
     static {
