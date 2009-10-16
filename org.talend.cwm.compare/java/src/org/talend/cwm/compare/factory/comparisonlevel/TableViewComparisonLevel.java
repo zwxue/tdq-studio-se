@@ -36,6 +36,7 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.exception.TalendException;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -168,7 +169,12 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
             return;
         }
         popRemoveElementConfirm();
-        ColumnSetHelper.removeColumn(removeColumn, (ColumnSet) selectedObj);
+        ColumnSet columnSet = (ColumnSet) selectedObj;
+        ColumnSetHelper.removeColumn(removeColumn, columnSet);
+
+        if (ColumnHelper.isPrimaryKey(removeColumn)) {
+            removeColumn.getUniqueKey().clear();
+        }
     }
 
     /*

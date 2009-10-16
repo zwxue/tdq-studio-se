@@ -292,7 +292,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         }
         RemoveReferenceValue refValue = removeReferenceValue.doSwitch(difElement);
         if (refValue != null) {
-            handleRemoveRefElement(refValue);
+            // handleRemoveRefElement(refValue);
         }
         // If attribute changes. MOD hcheng 2009-06-26,for 7772,error reload
         // column list.
