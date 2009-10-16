@@ -45,6 +45,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
+import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -170,7 +171,17 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         ColumnSetHelper.removeColumn(removeColumn, columnSet);
 
         if (ColumnHelper.isPrimaryKey(removeColumn)) {
-            removeColumn.getUniqueKey().clear();
+
+            EList<UniqueKey> uniqueKeys = removeColumn.getUniqueKey();
+            if (!uniqueKeys.isEmpty()) {
+                UniqueKey pk = uniqueKeys.get(0);
+
+                if (columnSet.getOwnedElement().contains(pk)) {
+                    columnSet.getOwnedElement().remove(pk);
+                }
+
+                uniqueKeys.clear();
+            }
         }
     }
 
