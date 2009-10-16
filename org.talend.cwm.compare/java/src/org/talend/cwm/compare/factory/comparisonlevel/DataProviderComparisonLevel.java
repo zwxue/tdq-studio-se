@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
@@ -39,7 +38,7 @@ import orgomg.cwm.objectmodel.core.Package;
  * DOC rli class global comment. Detailled comment
  */
 public class DataProviderComparisonLevel extends AbstractComparisonLevel {
-
+    
     public DataProviderComparisonLevel(Object selectedObj) {
         super(selectedObj);
     }
@@ -149,16 +148,4 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         return reloadResource;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#handleUpdateElement(org.eclipse.emf.compare
-     * .diff.metamodel.UpdateAttribute)
-     */
-    @Override
-    protected void handleUpdateElement(UpdateAttribute updateAttribute) {
-        // TODO Auto-generated method stub
-
-    }
 }

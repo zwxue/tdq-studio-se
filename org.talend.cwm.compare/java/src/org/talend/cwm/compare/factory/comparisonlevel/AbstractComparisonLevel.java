@@ -35,6 +35,7 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
+import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.util.RelationalSwitch;
@@ -60,6 +61,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected DiffSwitch<RemoveModelElement> removeModelSwitch;
 
     protected RelationalSwitch<Package> packageSwitch;
+    
+    protected UpdateTdRelationalSwitch updateRelationalStructSwitch = new UpdateTdRelationalSwitch();
 
     private boolean removeElementConfirm = false;
 
@@ -286,14 +289,22 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
             handleUpdateElement((UpdateAttribute) difElement);
             return;
         }
-
+        
     }
 
     protected abstract void handleRemoveElement(RemoveModelElement removeElement);
 
     protected abstract void handleAddElement(AddModelElement addElement);
 
-    protected abstract void handleUpdateElement(UpdateAttribute updateAttribute);
+    protected void handleUpdateElement(UpdateAttribute updateAttribute) {
+        EObject leftElement = updateAttribute.getLeftElement();
+        EObject rightElement = updateAttribute.getRightElement();
+        this.updateRelationalStructSwitch.setRightElement(rightElement);
+        final Boolean updated = updateRelationalStructSwitch.doSwitch(leftElement);
+        if (!Boolean.TRUE.equals(updated)) {
+            log.warn("Element not updated: " + leftElement);
+        }
+    }
 
     protected void popRemoveElementConfirm() {
         if (!removeElementConfirm) {

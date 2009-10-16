@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.compare.DQStructureComparer;
@@ -36,7 +35,7 @@ import orgomg.cwm.objectmodel.core.Package;
  * DOC mzhao class global comment. Detailled comment
  */
 public class CatalogComparisonLevel extends AbstractComparisonLevel {
-
+    
     public CatalogComparisonLevel(TdCatalog selObj) {
         super(selObj);
     }
@@ -116,26 +115,4 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
         // CatalogHelper.(removedSchema, (Package) selectedObj);
     }
 
-    @Override
-    protected void handleUpdateElement(UpdateAttribute updateAttribute) {
-        // MOD mzhao 2009-07-28 bug 8225
-        EObject leftElement = updateAttribute.getLeftElement();
-        // If columnSet name change.
-        TdSchema schemaLeft = SwitchHelpers.SCHEMA_SWITCH.doSwitch(leftElement);
-        // If columnSet attribute change.
-        if (schemaLeft == null) {
-            schemaLeft = (TdSchema) leftElement.eContainer();
-        }
-        EObject rightElement = updateAttribute.getRightElement();
-        TdSchema schemaRight = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
-        if (schemaRight == null) {
-            schemaRight = (TdSchema) rightElement.eContainer();
-        }
-        if (schemaLeft != null && schemaRight != null) {
-            Package pack = (Package) selectedObj;
-            pack.getOwnedElement().remove(schemaLeft);
-            pack.getOwnedElement().add(schemaRight);
-        }
-
-    }
 }

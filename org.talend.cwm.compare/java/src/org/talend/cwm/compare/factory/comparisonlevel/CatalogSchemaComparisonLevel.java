@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
@@ -250,33 +249,4 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#handleUpdateElement(org.eclipse.emf.compare
-     * .diff.metamodel.UpdateModelElement)
-     */
-    @Override
-    protected void handleUpdateElement(UpdateAttribute updateAttribute) {
-        // MOD mzhao 2009-07-28 bug 8225
-        EObject leftElement = updateAttribute.getLeftElement();
-        // If columnSet name change.
-        ColumnSet columnSetSwitchLeft = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(leftElement);
-        // If columnSet attribute change.
-        if (columnSetSwitchLeft == null) {
-            columnSetSwitchLeft = (ColumnSet) leftElement.eContainer();
-        }
-        EObject rightElement = updateAttribute.getRightElement();
-        ColumnSet columnSetSwitchRight = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
-        if (columnSetSwitchRight == null) {
-            columnSetSwitchRight = (ColumnSet) rightElement.eContainer();
-        }
-        if (columnSetSwitchLeft != null && columnSetSwitchRight != null) {
-            Package pack = (Package) selectedObj;
-            PackageHelper.removeColumnSet(columnSetSwitchLeft, pack);
-            PackageHelper.addColumnSet(columnSetSwitchRight, pack);
-        }
-
-    }
 }
