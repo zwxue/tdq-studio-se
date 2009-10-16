@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -280,18 +279,4 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         }
 
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#handleRemoveRefElement(org.eclipse.emf
-     * .compare.diff.metamodel.RemoveReferenceValue)
-     */
-    @Override
-    protected void handleRemoveRefElement(RemoveReferenceValue removeElement) {
-        // TODO Auto-generated method stub
-
-    }
-
 }
