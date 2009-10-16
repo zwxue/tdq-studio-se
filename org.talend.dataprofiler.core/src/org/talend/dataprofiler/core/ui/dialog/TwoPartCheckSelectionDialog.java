@@ -57,7 +57,7 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
-import org.talend.dataprofiler.core.ui.views.filters.AbstractViewerFilter;
+import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
 
 /**
  * A class to select elements out of a tree structure.

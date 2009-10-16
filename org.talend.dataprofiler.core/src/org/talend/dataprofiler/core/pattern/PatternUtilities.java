@@ -57,6 +57,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.UDIFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -375,6 +376,7 @@ public final class PatternUtilities {
             }
 
         });
+        dialog.addFilter(new DQFolderFliter(true));
         dialog.addFilter(new ViewerFilter() {
 
             @Override

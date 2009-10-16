@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.dialog.filter;
+package org.talend.dataprofiler.core.ui.filters;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.Viewer;
@@ -21,16 +21,16 @@ import org.eclipse.jface.viewers.ViewerFilter;
  */
 public class TypedViewerFilter extends ViewerFilter {
 
-    private Class[] fAcceptedTypes;
+    private Class<Object>[] acceptedTypes;
 
-    private Object[] fRejectedElements;
+    private Object[] rejectedElements;
 
     /**
      * Creates a filter that only allows elements of gives types.
      * 
      * @param acceptedTypes The types of accepted elements
      */
-    public TypedViewerFilter(Class[] acceptedTypes) {
+    public TypedViewerFilter(Class<Object>[] acceptedTypes) {
         this(acceptedTypes, null);
     }
 
@@ -40,25 +40,25 @@ public class TypedViewerFilter extends ViewerFilter {
      * @param acceptedTypes Accepted elements must be of this types
      * @param rejectedElements Element equals to the rejected elements are filtered out
      */
-    public TypedViewerFilter(Class[] acceptedTypes, Object[] rejectedElements) {
+    public TypedViewerFilter(Class<Object>[] acceptedTypes, Object[] rejectedElements) {
         Assert.isNotNull(acceptedTypes);
-        fAcceptedTypes = acceptedTypes;
-        fRejectedElements = rejectedElements;
+        this.acceptedTypes = acceptedTypes;
+        this.rejectedElements = rejectedElements;
     }
 
     /**
      * @see ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        if (fRejectedElements != null) {
-            for (int i = 0; i < fRejectedElements.length; i++) {
-                if (element.equals(fRejectedElements[i])) {
+        if (rejectedElements != null) {
+            for (int i = 0; i < rejectedElements.length; i++) {
+                if (element.equals(rejectedElements[i])) {
                     return false;
                 }
             }
         }
-        for (int i = 0; i < fAcceptedTypes.length; i++) {
-            if (fAcceptedTypes[i].isInstance(element)) {
+        for (int i = 0; i < acceptedTypes.length; i++) {
+            if (acceptedTypes[i].isInstance(element)) {
                 return true;
             }
         }

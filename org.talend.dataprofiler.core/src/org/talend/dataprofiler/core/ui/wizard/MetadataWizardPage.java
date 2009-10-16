@@ -20,11 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -36,15 +32,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
-import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -228,56 +221,14 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     @SuppressWarnings("unchecked")
     protected void openFolderSelectionDialog(String projectName, String folderName) {
+        IProject rootProject = ResourceManager.getRootProject();
+        IFolder inputFolder = rootProject.getFolder(projectName).getFolder(folderName);
 
-        final Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
-        ArrayList rejectedElements = new ArrayList();
-
-        if (projectName != null) {
-            // MOD mzhao 2009-03-13 Move all folders into one single project
-            // {@link CorePlugin#ROOTPROJECTNAME}
-            IFolder theFolder = ResourceManager.getRootProject().getFolder(projectName);
-            IResource[] allFolders = null;
-            try {
-                allFolders = ResourceManager.getRootProject().members();
-            } catch (CoreException e) {
-                log.error(e, e);
-            }
-            for (int i = 0; i < allFolders.length; i++) {
-                if (!allFolders[i].equals(theFolder)) {
-                    rejectedElements.add(allFolders[i]);
-                }
-            }
-
-            if (folderName != null) {
-                try {
-                    IResource[] resourse = theFolder.members();
-                    for (IResource one : resourse) {
-                        if (one.getType() == IResource.FOLDER && !one.getName().equals(folderName)) {
-                            rejectedElements.add(one);
-                        }
-                    }
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
-            }
-        }
-
-        ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
-
-        ILabelProvider lp = new WorkbenchLabelProvider();
-        ITreeContentProvider cp = new WorkbenchContentProvider();
-
-        FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(), lp, cp);
-        // dialog.setValidator(validator);
+        FolderSelectionDialog dialog = new FolderSelectionDialog(getShell());
         dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
-        if (projectName != null) {
-            dialog.setInput(ResourceManager.getRootProject().getFolder(projectName));
-        } else {
-            dialog.setInput(ResourceManager.getRootProject());
-        }
-        dialog.addFilter(filter);
-        dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
+        dialog.setInput(inputFolder);
+        dialog.addFilter(new DQFolderFliter());
 
         if (dialog.open() == Window.OK) {
             if (dialog.getResult() == null || dialog.getResult().length == 0) {

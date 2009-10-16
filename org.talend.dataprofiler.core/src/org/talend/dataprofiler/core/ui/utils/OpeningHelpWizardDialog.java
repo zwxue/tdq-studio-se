@@ -108,7 +108,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
             IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorHelpContextID());
             IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
 
-            if (href.endsWith(HelpPlugin.HELP_FILE_SUFFIX)) {
+            if (href.endsWith(HelpPlugin.HELP_FILE_SUFFIX) && context != null) {
                 helpSystem.displayHelp(context);
 
                 ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();

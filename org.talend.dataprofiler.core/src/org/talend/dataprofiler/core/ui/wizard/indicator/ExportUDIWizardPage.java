@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -35,10 +34,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
-import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider;
+import org.talend.dataprofiler.core.ui.utils.DQCheckedTreeViewer;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -135,23 +132,10 @@ public class ExportUDIWizardPage extends WizardPage {
         group.setLayout(new GridLayout());
         group.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        selectedTree = new ContainerCheckedTreeViewer(group);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedTree.getTree());
-
-        selectedTree.setLabelProvider(new ResourceViewLabelProvider());
-        selectedTree.setContentProvider(new WorkbenchContentProvider() {
-
-            @Override
-            public boolean hasChildren(Object element) {
-                if (element instanceof IFile) {
-                    return false;
-                }
-                return super.hasChildren(element);
-            }
-
-        });
-
+        selectedTree = new DQCheckedTreeViewer(group);
         selectedTree.setInput(this.folder);
+
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedTree.getTree());
 
         try {
             selectedTree.setCheckedElements(folder.members());

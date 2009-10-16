@@ -59,8 +59,9 @@ import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -88,11 +89,14 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
             List<Column> columnList, String message) {
         super(metadataFormPage, parent, message);
-        this.addFilter(new EMFObjFilter());
-        this.setInput(metadataFolder);
         columnSetCheckedMap = new HashMap<ColumnSetKey, ColumnCheckedMap>();
         initCheckedColumn(columnList);
-        this.setTitle(title);
+
+        addFilter(new EMFObjFilter());
+        addFilter(new DQFolderFliter(true));
+
+        setInput(metadataFolder);
+        setTitle(title);
     }
 
     private void initCheckedColumn(List<Column> columnList) {

@@ -20,15 +20,33 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
 /**
  */
 public class FolderSelectionDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 
+    /**
+     * DOC bZhou FolderSelectionDialog constructor comment.
+     * 
+     * @param parent
+     * @param labelProvider
+     * @param contentProvider
+     */
     public FolderSelectionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
         super(parent, labelProvider, contentProvider);
         setComparator(new ResourceComparator(ResourceComparator.NAME));
+    }
+
+    /**
+     * DOC bZhou FolderSelectionDialog constructor comment.
+     * 
+     * @param parent
+     */
+    public FolderSelectionDialog(Shell parent) {
+        this(parent, new WorkbenchLabelProvider(), new WorkbenchContentProvider());
     }
 
     /*
@@ -48,7 +66,9 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+     * @see
+     * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent
+     * )
      */
     public void selectionChanged(SelectionChangedEvent event) {
     }

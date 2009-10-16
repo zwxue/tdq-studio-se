@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -28,7 +27,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
-import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -81,13 +81,12 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
 
         createMetaDataTree(container);
         setControl(container);
-        addFilters(new EMFObjFilter());
+        addFilters(new EMFObjFilter(), new DQFolderFliter(true));
         addListeners();
 
     }
 
     private void createMetaDataTree(Composite parent) {
-
         Composite treeContainer = new Composite(parent, SWT.NONE);
         treeContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         treeContainer.setLayout(new FillLayout());
@@ -96,24 +95,6 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         fViewer.setContentProvider(fContentProvider);
         fViewer.setLabelProvider(fLabelProvider);
         fViewer.setInput(metadataFolder);
-        fViewer.addFilter(new ViewerFilter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-             * java.lang.Object)
-             */
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    return !folder.getName().endsWith(".svn"); //$NON-NLS-1$
-                }
-                return true;
-            }
-        });
-        // fViewer.expandAll();
     }
 
     protected abstract void addListeners();
