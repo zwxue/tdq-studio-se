@@ -20,12 +20,11 @@ import orgomg.cwm.objectmodel.core.DataType;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
-    
+
     private UpdateRelationalSwitch updateRelationalSwitch = new UpdateRelationalSwitch();
 
     private EObject recentElement;
@@ -41,7 +40,6 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
         return super.caseDataType(object);
     }
 
-
     @Override
     public Boolean casePackage(Package object) {
         if (recentElement instanceof Package) {
@@ -52,8 +50,6 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
         return false;
     }
 
-
-    
     @Override
     public Boolean caseNamedColumnSet(NamedColumnSet object) {
         Boolean updated = false;
@@ -65,7 +61,6 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
         return updated;
     }
 
-
     @Override
     public Boolean caseTdSqlDataType(TdSqlDataType object) {
         if (recentElement instanceof TdSqlDataType) {
@@ -73,7 +68,7 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
             object.setName(datatype.getName());
             object.setNumericPrecision(datatype.getNumericPrecision());
             object.setJavaDataType(datatype.getJavaDataType());
-            return true;           
+            return true;
         }
         return false;
     }
@@ -95,5 +90,4 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
         return false;
     }
 
-    
 }

@@ -34,9 +34,11 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.exception.TalendException;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -46,6 +48,9 @@ import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.PrimaryKey;
+import orgomg.cwm.resource.relational.Table;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -132,6 +137,18 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         if (columnSetSwitch != null) {
             ColumnSet columnSet = (ColumnSet) selectedObj;
             ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
+            // Case of pk
+            PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
+            if (primaryKey != null) {
+                TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
+                columnSetSwitch.getUniqueKey().add(primaryKey);
+            }
+            // Case of fk
+            ForeignKey foreignKey = ColumnHelper.getForeignKey(columnSetSwitch);
+            if (foreignKey != null) {
+                TableHelper.addForeignKey((Table) columnSet, foreignKey);
+                columnSetSwitch.getKeyRelationship().add(foreignKey);
+            }
         }
     }
 
@@ -143,8 +160,22 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         }
         popRemoveElementConfirm();
         ColumnSet columnSet = (ColumnSet) selectedObj;
-        ColumnSetHelper.removeColumn(removeColumn, columnSet);
 
+        // Case of pk
+        PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(removeColumn);
+        if (primaryKey != null) {
+            columnSet.getOwnedElement().remove(primaryKey);
+            removeColumn.getUniqueKey().remove(primaryKey);
+        }
+
+        // Case of fk
+        ForeignKey foreingKey = ColumnHelper.getForeignKey(removeColumn);
+        if (foreingKey != null) {
+            columnSet.getOwnedElement().remove(foreingKey);
+            removeColumn.getKeyRelationship().remove(foreingKey);
+        }
+        // Remove column
+        ColumnSetHelper.removeColumn(removeColumn, columnSet);
     }
 
     @Override

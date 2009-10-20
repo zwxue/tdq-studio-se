@@ -19,9 +19,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
@@ -35,6 +37,8 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
+import org.talend.cwm.compare.factory.update.AddTdRelationalSwitch;
+import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -60,9 +64,17 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     protected DiffSwitch<RemoveModelElement> removeModelSwitch;
 
+    protected DiffSwitch<AddReferenceValue> removeReferenceValueSwitch;
+
+    protected DiffSwitch<RemoveReferenceValue> addReferenceValueSwitch;
+
     protected RelationalSwitch<Package> packageSwitch;
-    
+
     protected UpdateTdRelationalSwitch updateRelationalStructSwitch = new UpdateTdRelationalSwitch();
+
+    protected RemoveTdRelationalSwitch removeRelationalSwitch = new RemoveTdRelationalSwitch();
+
+    protected AddTdRelationalSwitch addRelationalSwitch = new AddTdRelationalSwitch();
 
     private boolean removeElementConfirm = false;
 
@@ -279,17 +291,42 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
             handleAddElement(addElement);
             return;
         }
-        RemoveModelElement removeElement = removeModelSwitch.doSwitch(difElement);
-        if (removeElement != null) {
-            handleRemoveElement(removeElement);
-        }
+
         // If attribute changes. MOD hcheng 2009-06-26,for 7772,error reload
         // column list.
         if (difElement instanceof UpdateAttribute) {
             handleUpdateElement((UpdateAttribute) difElement);
             return;
         }
-        
+        if (difElement instanceof AddReferenceValue) {
+            handleReferenceValuesChange((AddReferenceValue) difElement);
+            return;
+        }
+
+        if (difElement instanceof RemoveReferenceValue) {
+            handleReferenceValuesChange((RemoveReferenceValue) difElement);
+            return;
+        }
+        RemoveModelElement removeElement = removeModelSwitch.doSwitch(difElement);
+        if (removeElement != null) {
+            handleRemoveElement(removeElement);
+        }
+    }
+
+    private void handleReferenceValuesChange(RemoveReferenceValue difElement) {
+        removeRelationalSwitch.setLeftElement(difElement.getLeftElement());
+        final Boolean updated = removeRelationalSwitch.doSwitch(difElement.getLeftRemovedTarget());
+        if (!Boolean.TRUE.equals(updated)) {
+            log.warn("Element not updated: " + difElement.getLeftElement());
+        }
+    }
+
+    private void handleReferenceValuesChange(AddReferenceValue difElement) {
+        addRelationalSwitch.setLeftElement(difElement.getLeftElement());
+        final Boolean updated = addRelationalSwitch.doSwitch(difElement.getRightAddedTarget());
+        if (!Boolean.TRUE.equals(updated)) {
+            log.warn("Element not updated: " + difElement.getLeftElement());
+        }
     }
 
     protected abstract void handleRemoveElement(RemoveModelElement removeElement);
