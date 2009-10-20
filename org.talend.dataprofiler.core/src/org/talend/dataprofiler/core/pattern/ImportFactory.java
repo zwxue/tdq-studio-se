@@ -95,43 +95,60 @@ public final class ImportFactory {
                 reader.setUseTextQualifier(USE_TEXT_QUAL);
 
                 reader.readHeaders();
+                if (checkFileHeader(reader.getHeaders())) {
 
-                while (reader.readRecord()) {
+                    while (reader.readRecord()) {
 
-                    String name = reader.get(PatternToExcelEnum.Label.getLiteral());
+                        String name = reader.get(PatternToExcelEnum.Label.getLiteral());
+                        if (name.matches("\".*\"") || (!name.startsWith("\"") && !name.endsWith("\""))) {
 
-                    if (names.contains(name)) {
-                        if (skip) {
-                            importInformation.add(DefaultMessagesImpl.getString("ImportFactory.patternInported", name)); //$NON-NLS-1$
-                            continue;
-                        }
-                        if (rename) {
-                            name = name + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+                            if (names.contains(name)) {
+                                if (skip) {
+                                    importInformation.add(DefaultMessagesImpl.getString("ImportFactory.patternInported", name)); //$NON-NLS-1$
+                                    continue;
+                                }
+                                if (rename) {
+                                    name = name + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+                                }
+                            }
+
+                            PatternParameters patternParameters = new ImportFactory().new PatternParameters();
+                            patternParameters.name = name;
+                            patternParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
+                            patternParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
+                            patternParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
+                            patternParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
+
+                            for (PatternLanguageType languagetype : PatternLanguageType.values()) {
+                                String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
+                                if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
+                                    patternParameters.regex.put(languagetype.getLiteral(), cellStr);
+                                }
+                            }
+
+                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
+                            names.add(name);
+                            importInformation.add("Pattern \"" + name + "\" imported in the \"" + relativePath + "\" folder");
+
+                        } else {
+                            Display.getDefault().asyncExec(new Runnable() {
+
+                                public void run() {
+                                    MessageDialog.openError(null, "Import error", "Label name of the pattern is invalid!");
+                                }
+                            });
                         }
                     }
 
-                    PatternParameters patternParameters = new ImportFactory().new PatternParameters();
-                    patternParameters.name = name;
-                    patternParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
-                    patternParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
-                    patternParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
-                    patternParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
+                    reader.close();
+                } else {
+                    Display.getDefault().asyncExec(new Runnable() {
 
-                    for (PatternLanguageType languagetype : PatternLanguageType.values()) {
-                        String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
-                        if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
-                            patternParameters.regex.put(languagetype.getLiteral(), cellStr);
+                        public void run() {
+                            MessageDialog.openError(null, "Import error", "File header must be exist!");
                         }
-                    }
-
-                    String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
-                    names.add(name);
-
-                    importInformation.add("Pattern \"" + name + "\" imported in the \"" + relativePath + "\" folder");
+                    });
                 }
-
-                reader.close();
-
             } catch (Exception e) {
                 log.error(e, e);
                 importInformation.add("Import failed");

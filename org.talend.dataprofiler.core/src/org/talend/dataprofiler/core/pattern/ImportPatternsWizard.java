@@ -69,14 +69,17 @@ public class ImportPatternsWizard extends Wizard {
         File file = new File(page.getSourceFile());
 
         final List<String> information = ImportFactory.importToStucture(file, folder, type, page.getSkip(), page.getRename());
+        if (0 < information.size()) {
 
-        Display.getDefault().asyncExec(new Runnable() {
+            Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
+                public void run() {
 
-                ImportInfoDialog.openImportInformation(null, DefaultMessagesImpl.getString("ImportPatternsWizard.ImportFinish"), (String[]) information.toArray(new String[0])); //$NON-NLS-1$
-            }
-        });
+                    ImportInfoDialog.openImportInformation(null, DefaultMessagesImpl
+                            .getString("ImportPatternsWizard.ImportFinish"), (String[]) information.toArray(new String[0])); //$NON-NLS-1$
+                }
+            });
+        }
 
         return true;
     }
