@@ -13,7 +13,6 @@
 
 package org.talend.dataquality;
 
-import org.talend.i18n.Messages;
 
 /**
  * 
@@ -32,7 +31,7 @@ public final class PluginConstant {
     /**
      * String for the DB connections folder.
      */
-    public static final String DB_CONNECTIONS = Messages.getString("DQStructureManager.dbConnections"); //$NON-NLS-1$
+    public static final String DB_CONNECTIONS = "DB Connections"; //$NON-NLS-1$
 
     private PluginConstant() {
 
