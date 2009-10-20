@@ -42,6 +42,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -104,49 +105,76 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         diffTabRight.setComparator(new ViewerComparator());
     }
 
-    public void hookContextMenu() {
+    public void hookContextMenu(boolean compareEachOther) {
 
-        MenuManager menuMgr = new MenuManager("#PopupMenu", "contextMenu");
-        menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
+        if (!compareEachOther) {
+            MenuManager menuMgr = new MenuManager("#PopupMenu", "contextMenu");
+            menuMgr.setRemoveAllWhenShown(true);
+            menuMgr.addMenuListener(new IMenuListener() {
 
-            public void menuAboutToShow(IMenuManager manager) {
-                manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-                IStructuredSelection selection = (IStructuredSelection) diffTabLeft.getSelection();
-                EObject selectedElement = null;
-                if (selection.toList().size() == 1) {
-                    selectedElement = (EObject) selection.getFirstElement();
-                    if (selectedElement instanceof Package) {
-                        SubelementCompareAction subEleCompTableAction = new SubelementCompareAction(Messages
-                                .getString("CompareModelContentMergeViewer.CompareListOfTables"), //$NON-NLS-1$
-                                diffTabLeft, selectedOjbect, SubelementCompareAction.TABLE_COMPARE);
-                        SubelementCompareAction subEleCompViewAction = new SubelementCompareAction(Messages
-                                .getString("CompareModelContentMergeViewer.CompareListOfViews"), //$NON-NLS-1$
-                                diffTabLeft, selectedOjbect, SubelementCompareAction.VIEW_COMPARE);
-                        manager.add(subEleCompTableAction);
-                        manager.add(subEleCompViewAction);
-                    } else if (selectedElement instanceof ColumnSet) {
-                        addRenameMenuAction(manager, selectedElement);
-                        SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(Messages
-                                .getString("CompareModelContentMergeViewer.CompareListOfColumns"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
-                                SubelementCompareAction.COLUMN_COMPARE);
-                        manager.add(subEleCompColumnAction);
-                    } else if (selectedElement instanceof Column) {
-                        addRenameMenuAction(manager, selectedElement);
+                public void menuAboutToShow(IMenuManager manager) {
+                    manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+                    IStructuredSelection selection = (IStructuredSelection) diffTabLeft.getSelection();
+                    EObject selectedElement = null;
+                    if (selection.toList().size() == 1) {
+                        selectedElement = (EObject) selection.getFirstElement();
+                        if (selectedElement instanceof Package) {
+                            SubelementCompareAction subEleCompTableAction = new SubelementCompareAction(Messages
+                                    .getString("CompareModelContentMergeViewer.CompareListOfTables"), //$NON-NLS-1$
+                                    diffTabLeft, selectedOjbect, SubelementCompareAction.TABLE_COMPARE);
+                            SubelementCompareAction subEleCompViewAction = new SubelementCompareAction(Messages
+                                    .getString("CompareModelContentMergeViewer.CompareListOfViews"), //$NON-NLS-1$
+                                    diffTabLeft, selectedOjbect, SubelementCompareAction.VIEW_COMPARE);
+                            manager.add(subEleCompTableAction);
+                            manager.add(subEleCompViewAction);
+                        } else if (selectedElement instanceof ColumnSet) {
+                            addRenameMenuAction(manager, selectedElement);
+                            SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(
+                                    Messages.getString("CompareModelContentMergeViewer.CompareListOfColumns"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
+                                    SubelementCompareAction.COLUMN_COMPARE);
+                            manager.add(subEleCompColumnAction);
+                        } else if (selectedElement instanceof Column) {
+                            addRenameMenuAction(manager, selectedElement);
+                        }
+
                     }
 
                 }
+            });
 
+            Menu menu = menuMgr.createContextMenu(diffTabLeft.getControl());
+            diffTabLeft.getControl().setMenu(menu);
+            CompareUIPlugin.getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite().registerContextMenu(menuMgr,
+                    diffTabLeft);
+            // Add key shortcut
+            diffTabLeft.getTree().addKeyListener(new CompareKeyListener());
+            diffTabLeft.getTree().addMouseListener(new CompareMouseListener());
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "hookToolBar".
+     * 
+     * @param compareEachOther
+     */
+    public void hookToolBar(boolean compareEachOther) {
+        IToolBarManager tbm = getToolBarManager(getControl().getParent());
+        IContributionItem[] icItems = tbm.getItems();
+        for (IContributionItem conbItem : icItems) {
+            if (conbItem instanceof ActionContributionItem) {
+                IAction action = ((ActionContributionItem) conbItem).getAction();
+
+                if (action != null) {
+                    String actionId = action.getActionDefinitionId();
+                    if (compareEachOther && COPY_RIGHT_TO_LEFT_ID.equals(actionId)) {
+                        tbm.remove(conbItem);
+                        conbItem.dispose();
+                    }
+                }
             }
-        });
+        }
 
-        Menu menu = menuMgr.createContextMenu(diffTabLeft.getControl());
-        diffTabLeft.getControl().setMenu(menu);
-        CompareUIPlugin.getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite().registerContextMenu(menuMgr,
-                diffTabLeft);
-        // Add key shortcut
-        diffTabLeft.getTree().addKeyListener(new CompareKeyListener());
-        diffTabLeft.getTree().addMouseListener(new CompareMouseListener());
+        tbm.update(true);
     }
 
     private List<DiffElement> getDiffElementList() {
@@ -335,22 +363,21 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         previousDiffContribution.setVisible(true);
         tbm.appendToGroup("navigation", previousDiffContribution); //$NON-NLS-1$
 
-        // ~ MOD mzhao 2009-03-09 remove no necessity actions.
         IContributionItem[] icItems = tbm.getItems();
         for (IContributionItem conbItem : icItems) {
 
             if (conbItem instanceof ActionContributionItem) {
-                // ChangePropertyAction
+
                 IAction action = ((ActionContributionItem) conbItem).getAction();
-                if (action != null && action instanceof ChangePropertyAction) {
-                    tbm.remove(conbItem);
-                    conbItem.dispose();
-                    continue;
-                }
-                // Action
-                String actionId = action.getActionDefinitionId();
                 if (action != null) {
-                    if (COPY_LEFT_TO_RIGHT_ID.equals(actionId) || COPY_RIGHT_TO_LEFT_ID.equals(actionId)) {
+                    String actionId = action.getActionDefinitionId();
+
+                    if (action instanceof ChangePropertyAction) {
+                        tbm.remove(conbItem);
+                        conbItem.dispose();
+                    }
+
+                    if (COPY_LEFT_TO_RIGHT_ID.equals(actionId)) {
                         tbm.remove(conbItem);
                         conbItem.dispose();
                     }

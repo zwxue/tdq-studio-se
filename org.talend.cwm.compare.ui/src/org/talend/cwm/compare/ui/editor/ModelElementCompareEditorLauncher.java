@@ -131,11 +131,9 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
 
                 compEditorInput.setTitle(editorTitle);
                 CompareUI.openCompareEditor(compEditorInput);
-                // MOD mzhao feature 8227
-                if (!compareEachOther) {
-                    compEditorInput.hookLeftPanelContextMenu();
-                }
 
+                compEditorInput.hookLeftPanelContextMenu(compareEachOther);
+                compEditorInput.hookToolBar(compareEachOther);
             }
         } catch (IOException e) {
             // Fichier non lisible

@@ -86,8 +86,12 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
         };
     }
 
-    public void hookLeftPanelContextMenu() {
-        contentMergeViewer.hookContextMenu();
+    public void hookLeftPanelContextMenu(boolean compareEachOther) {
+        contentMergeViewer.hookContextMenu(compareEachOther);
+    }
+
+    public void hookToolBar(boolean compareEachOther) {
+        contentMergeViewer.hookToolBar(compareEachOther);
     }
 
     /**

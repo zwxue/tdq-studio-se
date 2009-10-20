@@ -14,10 +14,12 @@ package org.talend.cwm.compare.ui.views;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerPane;
+import org.eclipse.emf.compare.ui.export.ExportMenu;
 import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -33,20 +35,20 @@ public class CompareModelStructureMergeViewer extends ModelStructureMergeViewer 
      */
     public CompareModelStructureMergeViewer(Composite parent, CompareConfiguration compareConfiguration) {
         super(parent, compareConfiguration);
-        // TODO Auto-generated constructor stub
-    }
-
-    protected void createToolItems() {
         final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
-        tbm.add(new Separator("IO")); //$NON-NLS-1$
+        IContributionItem[] items = tbm.getItems();
+        for (IContributionItem item : items) {
+            if (item instanceof ActionContributionItem) {
+                IAction action = ((ActionContributionItem) item).getAction();
+                if (action instanceof ExportMenu) {
+                    tbm.remove(item);
+                    item.dispose();
+                }
+            }
+        }
+
         tbm.update(true);
+        // exportMenu.setEnabled(false);
     }
 
-    protected void handleDispose(DisposeEvent event) {
-        super.handleDispose(event);
-    }
-
-    protected void updateToolItems() {
-        CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
-    }
 }
