@@ -139,8 +139,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
     @Override
     protected void handleDispose(DisposeEvent event) {
         super.handleDispose(event);
-        if (exportMenu != null)
-            exportMenu.dispose();
+        exportMenu.dispose();
     }
 
     /**
