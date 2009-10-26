@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.matching.date.pattern;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.io.*;
 /**
  * 
  * @author Hallam Mohamed Amine
@@ -47,6 +51,7 @@ public class DatePatternRetriever {
 	        		modelMatchers.add(new ModelMatcher(key, val));
 	        	}           
 	         }
+	         // TODO should be closed even when an exception appears (use finally close)
 	        br.close();
 	    }
 	    catch(FileNotFoundException e){
