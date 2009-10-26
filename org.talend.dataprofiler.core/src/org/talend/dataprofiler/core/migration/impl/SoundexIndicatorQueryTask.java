@@ -22,9 +22,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.commons.utils.StringUtils;
-import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
