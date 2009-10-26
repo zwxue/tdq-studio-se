@@ -105,6 +105,8 @@ public class SQLTextEditor extends TextEditor {
 
     private IPreferenceStore store;
 
+    private static final String SVN_FOLDER_NAME = ".svn";
+
     public SQLTextEditor(SQLEditor editor) {
         super();
         this.editor = editor;
@@ -182,7 +184,8 @@ public class SQLTextEditor extends TextEditor {
                     if ("Source Files".equals(folder.getName()) || "TDQ_Libraries".equals(folder.getName())) {
                         return true;
                     } else {
-                        return defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath());
+                        return defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath())
+                                && !folder.getName().endsWith(SVN_FOLDER_NAME);
                     }
                 }
                 return false;
