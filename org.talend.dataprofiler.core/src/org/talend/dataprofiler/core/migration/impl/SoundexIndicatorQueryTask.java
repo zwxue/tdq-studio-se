@@ -37,6 +37,10 @@ public class SoundexIndicatorQueryTask extends AbstractMigrationTask {
 
     private final String newSoundexQuery = "ORDER BY d DESC,c DESC";
 
+    private final String oldPSoundexQuery = "ORDER BY COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) , COUNT(*) DESC";
+
+    private final String newPSoundexQuery = "ORDER BY COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) DESC , COUNT(*) DESC";
+
     private final String talendDefinitionFileName = ".Talend.definition";
 
     /*
@@ -62,6 +66,7 @@ public class SoundexIndicatorQueryTask extends AbstractMigrationTask {
             try {
                 String content = FileUtils.readFileToString(file);
                 content = StringUtils.replace(content, oldSoundexQuery, newSoundexQuery);
+                content = StringUtils.replace(content, oldPSoundexQuery, newPSoundexQuery);
                 FileUtils.writeStringToFile(file, content);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
