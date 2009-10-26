@@ -33,8 +33,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -53,6 +51,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.xml.TdqPropertieManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
 import com.csvreader.CsvReader;
@@ -76,10 +75,10 @@ public final class ImportFactory {
 
     }
 
-    public static List<String> importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
+    public static List<ReturnCode> importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
             boolean rename) {
 
-        List<String> importInformation = new ArrayList<String>();
+        List<ReturnCode> importEvent = new ArrayList<ReturnCode>();
 
         Set<String> names = PatternUtilities.getAllPatternNames(selectionFolder);
 
@@ -100,58 +99,53 @@ public final class ImportFactory {
                     while (reader.readRecord()) {
 
                         String name = reader.get(PatternToExcelEnum.Label.getLiteral());
-                        if (name.matches("\".*\"") || (!name.startsWith("\"") && !name.endsWith("\""))) {
 
-                            if (names.contains(name)) {
-                                if (skip) {
-                                    importInformation.add(DefaultMessagesImpl.getString("ImportFactory.patternInported", name)); //$NON-NLS-1$
-                                    continue;
-                                }
-                                if (rename) {
-                                    name = name + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-                                }
+                        if (names.contains(name)) {
+                            if (skip) {
+                                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString(
+                                        "ImportFactory.patternInported", name), false)); //$NON-NLS-1$
+                                continue;
                             }
-
-                            PatternParameters patternParameters = new ImportFactory().new PatternParameters();
-                            patternParameters.name = name;
-                            patternParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
-                            patternParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
-                            patternParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
-                            patternParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
-
-                            for (PatternLanguageType languagetype : PatternLanguageType.values()) {
-                                String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
-                                if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
-                                    patternParameters.regex.put(languagetype.getLiteral(), cellStr);
-                                }
+                            if (rename) {
+                                name = name + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                             }
-
-                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
-                            names.add(name);
-                            importInformation.add("Pattern \"" + name + "\" imported in the \"" + relativePath + "\" folder");
-
-                        } else {
-                            Display.getDefault().asyncExec(new Runnable() {
-
-                                public void run() {
-                                    MessageDialog.openError(null, "Import error", "Label name of the pattern is invalid!");
-                                }
-                            });
                         }
+
+                        PatternParameters patternParameters = new ImportFactory().new PatternParameters();
+                        patternParameters.name = name;
+                        patternParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
+                        patternParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
+                        patternParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
+                        patternParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
+
+                        if (!patternParameters.validate()) {
+                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.invalidFormat", name),
+                                    false));
+                            continue;
+                        }
+
+                        for (PatternLanguageType languagetype : PatternLanguageType.values()) {
+                            String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
+                            if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
+                                patternParameters.regex.put(languagetype.getLiteral(), cellStr);
+                            }
+                        }
+
+                        String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
+                        names.add(name);
+
+                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name,
+                                relativePath), true));
+
                     }
 
                     reader.close();
                 } else {
-                    Display.getDefault().asyncExec(new Runnable() {
-
-                        public void run() {
-                            MessageDialog.openError(null, "Import error", "File header must be exist!");
-                        }
-                    });
+                    importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.noHeader"), false));
                 }
             } catch (Exception e) {
                 log.error(e, e);
-                importInformation.add("Import failed");
+                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false));
             }
         }
 
@@ -180,7 +174,8 @@ public final class ImportFactory {
                             String contents = cell.getContents();
                             if (names.contains(contents)) {
                                 if (skip) {
-                                    importInformation.add("Pattern \"" + contents + "\" has already imported");
+                                    importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.patternInported",
+                                            contents), false));
                                     continue;
                                 }
                                 if (rename) {
@@ -206,8 +201,8 @@ public final class ImportFactory {
                             String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
 
                             names.add(contents);
-
-                            importInformation.add("Pattern \"" + contents + "\" imported in the \"" + relativePath + "\" folder");
+                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", contents,
+                                    relativePath), true));
                         }
                     }
                 }
@@ -215,14 +210,14 @@ public final class ImportFactory {
                 rwb.close();
             } catch (BiffException e) {
                 log.error(e, e);
-                importInformation.add("Import failed");
+                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false));
             } catch (IOException e) {
                 log.error(e, e);
-                importInformation.add("Import failed");
+                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false));
             }
         }
 
-        return importInformation;
+        return importEvent;
     }
 
     private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
@@ -312,6 +307,12 @@ public final class ImportFactory {
             relativePath = ""; //$NON-NLS-1$
             regex = new HashMap<String, String>();
         }
+
+        public boolean validate() {
+
+            return checkQuotationMarks(name) && checkQuotationMarks(auther) && checkQuotationMarks(description)
+                    && checkQuotationMarks(purpose) && checkQuotationMarks(status) && checkQuotationMarks(relativePath);
+        }
     }
 
     /**
@@ -326,6 +327,10 @@ public final class ImportFactory {
             category = "";
         }
 
+        public boolean validate() {
+
+            return super.validate() && checkQuotationMarks(category);
+        }
     }
 
     /**
@@ -337,9 +342,10 @@ public final class ImportFactory {
      * @param rename
      * @return
      */
-    public static List<String> importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip, boolean rename) {
+    public static List<ReturnCode> importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip,
+            boolean rename) {
 
-        List<String> information = new ArrayList<String>();
+        List<ReturnCode> information = new ArrayList<ReturnCode>();
 
         Set<String> names = UDIHelper.getAllIndicatorNames(selectionFolder);
 
@@ -365,7 +371,8 @@ public final class ImportFactory {
 
                         if (names.contains(name)) {
                             if (skip) {
-                                information.add("User Defined Indicator \"" + name + "\" has already imported");
+                                information.add(new ReturnCode("User Defined Indicator \"" + name + "\" has already imported",
+                                        false));
                                 continue;
                             }
                             if (rename) {
@@ -381,6 +388,12 @@ public final class ImportFactory {
                         udiParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
                         udiParameters.category = reader.get(PatternToExcelEnum.Category.getLiteral());
 
+                        if (!udiParameters.validate()) {
+                            information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.invalidFormat", name),
+                                    false));
+                            continue;
+                        }
+
                         for (PatternLanguageType languagetype : PatternLanguageType.values()) {
                             String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
                             if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
@@ -392,29 +405,18 @@ public final class ImportFactory {
 
                         names.add(name);
 
-                        if (UDIHelper.isUDIValid(UDIHelper.createUDI(udiParameters.name, udiParameters.auther,
-                                udiParameters.description, udiParameters.purpose, udiParameters.status, udiParameters.category))) {
+                        information.add(new ReturnCode("User Defined Indicator \"" + name
+                                + "\" imported in the \"Indicators/User Defined Indicators\" folder", true));
 
-                            information.add("User Defined Indicator \"" + name
-                                    + "\" imported in the \"Indicators/User Defined Indicators\" folder");
-                        } else {
-                            information.add("File format of indicator \"" + name + "\" is invalid!");
-                            log.info("File format of indicator \"" + name + "\" is invalid!");
-                        }
                     }
 
                     reader.close();
                 } else {
-                    Display.getDefault().asyncExec(new Runnable() {
-
-                        public void run() {
-                            MessageDialog.openError(null, "Import error", "File header must be exist!");
-                        }
-                    });
+                    information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.noHeader"), false));
                 }
             } catch (Exception e) {
                 log.error(e, e);
-                information.add("User Defined Indicator \"" + name + "\" import failed");
+                information.add(new ReturnCode("User Defined Indicator \"" + name + "\" import failed", false));
             }
         }
 
@@ -496,6 +498,23 @@ public final class ImportFactory {
                 return false;
         }
         return true;
+    }
+
+    private static boolean checkQuotationMarks(String text) {
+        if (0 == text.length())
+            return true;
+
+        int beginLen = 0;
+        int endLen = text.length();
+
+        while ('\"' == text.charAt(beginLen)) {
+            beginLen++;
+        }
+        while ('\"' == text.charAt(endLen - 1)) {
+            endLen--;
+        }
+        // System.out.println(text + "|" + beginLen + "|" + (text.length() - endLen));
+        return beginLen == text.length() - endLen;
     }
 
     /**

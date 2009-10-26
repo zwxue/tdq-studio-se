@@ -44,6 +44,7 @@ import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataprofiler.ecos.service.JobService;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -97,7 +98,7 @@ public class ImportRemotePatternAction extends Action {
 
     private void updateUI(IJobChangeEvent event) {
 
-        final List<String> information = new ArrayList<String>();
+        final List<ReturnCode> information = new ArrayList<ReturnCode>();
 
         setEnabled(true);
         if (fExtensionDownloaded > 0) {
@@ -142,7 +143,10 @@ public class ImportRemotePatternAction extends Action {
 
                 public void run() {
 
-                    ImportInfoDialog.openImportInformation(null, DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (String[]) information.toArray(new String[0])); //$NON-NLS-1$
+                    ImportInfoDialog
+                            .openImportInformation(
+                                    null,
+                                    DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
                 }
             });
 
@@ -233,7 +237,10 @@ public class ImportRemotePatternAction extends Action {
                             Display.getDefault().asyncExec(new Runnable() {
 
                                 public void run() {
-                                    MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("ImportRemotePatternAction.Infor"), DefaultMessagesImpl.getString("ImportRemotePatternAction.FileExist")); //$NON-NLS-1$ //$NON-NLS-2$
+                                    MessageDialogWithToggle
+                                            .openInformation(
+                                                    null,
+                                                    DefaultMessagesImpl.getString("ImportRemotePatternAction.Infor"), DefaultMessagesImpl.getString("ImportRemotePatternAction.FileExist")); //$NON-NLS-1$ //$NON-NLS-2$
                                 }
                             });
 

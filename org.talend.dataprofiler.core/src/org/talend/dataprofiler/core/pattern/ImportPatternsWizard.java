@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
 import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -68,15 +69,17 @@ public class ImportPatternsWizard extends Wizard {
 
         File file = new File(page.getSourceFile());
 
-        final List<String> information = ImportFactory.importToStucture(file, folder, type, page.getSkip(), page.getRename());
+        final List<ReturnCode> information = ImportFactory.importToStucture(file, folder, type, page.getSkip(), page.getRename());
         if (0 < information.size()) {
 
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
 
-                    ImportInfoDialog.openImportInformation(null, DefaultMessagesImpl
-                            .getString("ImportPatternsWizard.ImportFinish"), (String[]) information.toArray(new String[0])); //$NON-NLS-1$
+                    ImportInfoDialog
+                            .openImportInformation(
+                                    null,
+                                    DefaultMessagesImpl.getString("ImportInfoDialog.INFO_TSK"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
                 }
             });
         }
