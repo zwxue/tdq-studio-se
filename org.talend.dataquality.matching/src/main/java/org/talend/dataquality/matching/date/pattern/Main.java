@@ -14,7 +14,7 @@ package org.talend.dataquality.matching.date.pattern;
 
 /**
  * 
- * @author mhallam
+ * @author Hallam mohamed amine
  * @date 17/08/2009
  */
 public final class Main {
