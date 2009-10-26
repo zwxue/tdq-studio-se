@@ -62,6 +62,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
@@ -144,9 +145,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private List<String> remainDBTypeListCM;
 
-    private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789"; //$NON-NLS-1$
+    private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDE"
+            + "FGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789"; //$NON-NLS-1$
 
-    private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999"; //$NON-NLS-1$
+    private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAA"
+            + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999"; //$NON-NLS-1$
 
     /**
      * DOC bZhou IndicatorDefinitionMaterPage constructor comment.
@@ -783,9 +786,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             IndicatorCategory ic = UDIHelper.getUDICategory(definition);
             for (TaggedValue value : ic.getTaggedValue()) {
                 if ("Purpose".equals(value.getTag())) {
-                    labelPurpose.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue()); //$NON-NLS-1$
+                    labelPurpose
+                            .setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue()); //$NON-NLS-1$
                 } else if (DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Descript").equals(value.getTag())) { //$NON-NLS-1$
-                    labelDescription.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description") + value.getValue()); //$NON-NLS-1$
+                    labelDescription
+                            .setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description") + value.getValue()); //$NON-NLS-1$
                 }
             }
             labelPurpose.getParent().layout();
@@ -906,11 +911,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
 
         });
-        
+
         createExpressionEditButton(expressComp, patternText);
 
         createExpressionDelButton(expressComp, expression);
-        
+
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
     }
 
@@ -1011,7 +1016,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return;
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -1092,15 +1097,29 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             for (CharactersMapping cm : charactersMappingMapTemp.values()) {
                 String c = cm.getCharactersToReplace();
                 String r = cm.getReplacementCharacters();
-                if (c != null && !"".equals(c) && r != null && !"".equals(r)) { //$NON-NLS-1$ //$NON-NLS-2$
+                if (checkMappingString(c, r)) {
                     charactersMappings.add(cm);
+                } else {
+                    MessageUI.openError("[" + cm.getLanguage()
+                            + "] INPUT ERROR:\nThe length of two inputed strings are not equal.");
+                    return;
                 }
             }
         }
 
-        // EMFUtil.saveSingleResource(definition.eResource());
         UDIResourceFileHelper.getInstance().save(definition);
         this.isDirty = false;
+    }
+
+    /**
+     * DOC bZhou Comment method "checkMappingString".
+     * 
+     * @param c
+     * @param r
+     * @return
+     */
+    private boolean checkMappingString(String c, String r) {
+        return !"".equals(c) && !"".equals(r) && c.length() == r.length(); //$NON-NLS-1$
     }
 
     /**
