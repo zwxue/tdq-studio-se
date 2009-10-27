@@ -111,6 +111,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     private boolean checkComputButton = false;
 
     private boolean allowColumnDupcation = false;
+
     public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, List<Column> columnSetA,
             List<Column> columnSetB, String mainTitle, String description, boolean showCheckButton, boolean allowColumnDupcation) {
         this.masterPage = masterPage;
@@ -128,8 +129,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         this.showCheckButton = showCheckButton;
         this.allowColumnDupcation = allowColumnDupcation;
         createAnalyzedColumnSetsSection(mainTitle, description);
-        
-        
+
     }
 
     public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, Analysis analysis,
@@ -219,8 +219,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         leftTable.refresh();
     }
 
-    private TableViewer createSectionPart(Composite parentComp, final List<Column> columnList, String title,
-            String hyperlinkText) {
+    private TableViewer createSectionPart(Composite parentComp, final List<Column> columnList, String title, String hyperlinkText) {
         Section columnSetElementSection = masterPage.createSection(form, parentComp, title, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
         sectionComp.setLayout(new GridLayout());
@@ -457,13 +456,15 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         menuItem.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement());
-                columnsElementViewer.setInput(columnList);
-                enabledButtons(buttons, false);
-                // MOD mzhao 2009-05-05 bug:6587.
-                // MOD mzhao 2009-06-17 remove the connection bind here feature
-                // 5887
-                // updateBindConnection();
+                if (columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement())) {
+                    columnsElementViewer.setInput(columnList);
+                    enabledButtons(buttons, false);
+                    masterPage.setDirty(true);
+                    // MOD mzhao 2009-05-05 bug:6587.
+                    // MOD mzhao 2009-06-17 remove the connection bind here feature
+                    // 5887
+                    // updateBindConnection();
+                }
             }
         });
 
