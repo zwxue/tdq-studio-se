@@ -10,8 +10,7 @@
      <layout class="org.apache.log4j.SimpleLayout"/>
 	</appender>
 
-	<logger name="DatePatternRetriever" additivity="true"> <appender-ref ref="console"/><level value="info" /> </logger>
-	
+
 	<root>
 		<priority value="info" />
 		<!-- Put here your appenders -->

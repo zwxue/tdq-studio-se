@@ -34,7 +34,7 @@ public class DatePatternRetriever {
     // TODO put these mappings in a file so that it can be easily enriched
     private List<ModelMatcher> modelMatchers = new ArrayList<ModelMatcher>();
 
-    private static final Logger logger = Logger.getLogger(DatePatternRetriever.class);
+    private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
 
     // constructor
     public DatePatternRetriever() {
@@ -83,7 +83,9 @@ public class DatePatternRetriever {
     public void showResults() {
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.getScore() > 0) {
-                System.out.print(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");
+                if (logger.isInfoEnabled()) {
+                    logger.info(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");
+                }
             }
         }
     }
