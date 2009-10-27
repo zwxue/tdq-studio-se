@@ -216,34 +216,41 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
         rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
-        String tableNameA = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetA().get(0)).getName();
-        String tableNameB = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetB().get(0)).getName();
-        // ~
-        columnHeader1.setText(tableNameA);
-        // columnHeader1.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetA")); // TODO scorreia put here table name instead //$NON-NLS-1$
-        if (!isHasDeactivatedIndicator) {
-            final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
-            columnHeader2.setWidth(120);
-            columnHeader2.setAlignment(SWT.CENTER);
-            columnHeader2.setText(tableNameB);
-            //  columnHeader2.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetB")); // TODO scorreia put here table name instead //$NON-NLS-1$
-        }
-        createTableItems(resultTable);
 
-        creatChart(sectionClient, tableNameA, tableNameB);
-        StringBuilder description = new StringBuilder();
-        description.append(setAMatchPercent);
-        description.append(DefaultMessagesImpl.getString(
-                "ColumnsComparisonAnalysisResultPage.ASetFoundInB", tableNameA, tableNameB)); //$NON-NLS-1$
-        if (!isHasDeactivatedIndicator) {
-            description.append("\n"); //$NON-NLS-1$
-            description.append(setBMatchPercent);
+        // MOD yyi 2009-10-27 9100: not save when remove element in comparison analysis
+        int sizeA = rowMatchingIndicatorA.getColumnSetA().size();
+        int sizeB = rowMatchingIndicatorA.getColumnSetB().size();
+        if (sizeA > 0 && sizeB > 0) {
+
+            String tableNameA = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetA().get(0)).getName();
+            String tableNameB = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetB().get(0)).getName();
+            // ~
+            columnHeader1.setText(tableNameA);
+            // columnHeader1.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetA")); // TODO scorreia put here table name instead //$NON-NLS-1$
+            if (!isHasDeactivatedIndicator) {
+                final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
+                columnHeader2.setWidth(120);
+                columnHeader2.setAlignment(SWT.CENTER);
+                columnHeader2.setText(tableNameB);
+                //  columnHeader2.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetB")); // TODO scorreia put here table name instead //$NON-NLS-1$
+            }
+            createTableItems(resultTable);
+
+            creatChart(sectionClient, tableNameA, tableNameB);
+            StringBuilder description = new StringBuilder();
+            description.append(setAMatchPercent);
             description.append(DefaultMessagesImpl.getString(
-                    "ColumnsComparisonAnalysisResultPage.BSetFoundInA", tableNameB, tableNameA)); //$NON-NLS-1$
-        } else {
-            description.append("."); //$NON-NLS-1$
+                    "ColumnsComparisonAnalysisResultPage.ASetFoundInB", tableNameA, tableNameB)); //$NON-NLS-1$
+            if (!isHasDeactivatedIndicator) {
+                description.append("\n"); //$NON-NLS-1$
+                description.append(setBMatchPercent);
+                description.append(DefaultMessagesImpl.getString(
+                        "ColumnsComparisonAnalysisResultPage.BSetFoundInA", tableNameB, tableNameA)); //$NON-NLS-1$
+            } else {
+                description.append("."); //$NON-NLS-1$
+            }
+            resultSection.setDescription(description.toString());
         }
-        resultSection.setDescription(description.toString());
         resultSection.layout();
     }
 
