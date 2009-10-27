@@ -16,6 +16,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
@@ -48,10 +49,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             }
         } else if (element instanceof IEcosComponent) {
             return ImageLib.getImage(ImageLib.EXCHANGE);
-        }else if(element instanceof IEcosCategory){
-        	 return ImageLib.getImage(ImageLib.EXCHANGE);
-        }else if (element instanceof IndicatorDefinition) {
+        } else if (element instanceof IEcosCategory) {
+            return ImageLib.getImage(ImageLib.EXCHANGE);
+        } else if (element instanceof IndicatorDefinition) {
             return ImageLib.getImage(ImageLib.IND_DEFINITION);
+        } else if (element instanceof TdView) {
+            return ImageLib.getImage(ImageLib.VIEW);
         }
         return super.getImage(element);
     }
@@ -66,8 +69,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ((IFolderNode) element).getName();
         } else if (element instanceof IEcosComponent) {
             return ((IEcosComponent) element).getName();
-        } else if(element instanceof IEcosCategory){
-        	return ((IEcosCategory) element).getName();
+        } else if (element instanceof IEcosCategory) {
+            return ((IEcosCategory) element).getName();
         } else if (element instanceof IndicatorDefinition) {
             return ((IndicatorDefinition) element).getName();
         } else if (element instanceof IndicatorCategory) {
