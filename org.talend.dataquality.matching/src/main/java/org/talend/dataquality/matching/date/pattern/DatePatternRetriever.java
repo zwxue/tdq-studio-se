@@ -81,6 +81,8 @@ public class DatePatternRetriever {
     }
 
     public void showResults() {
+        // TODO show the results in descending order by calling the getOrderedModelMatchers method
+        
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.getScore() > 0) {
                 if (logger.isInfoEnabled()) {
@@ -90,4 +92,12 @@ public class DatePatternRetriever {
         }
     }
 
+    
+    // TODO create a method getOrderedModelMatchers. This method returns the list of ModelMatcher (class must be made
+    // public) in descending order accorgind to their score.
+    // add a boolean attribute "ordered" which is reset to false each time the "handle" method is called
+    // the first time the method "getOrderedModelMatchers" is called, the list of matchers is sorted then the boolean is
+    // set to true so that the next time we call this method, it won't be sorted again except if the boolean is false.
+    
+    
 }
