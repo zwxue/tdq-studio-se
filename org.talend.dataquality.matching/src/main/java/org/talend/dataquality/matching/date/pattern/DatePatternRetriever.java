@@ -63,9 +63,9 @@ public class DatePatternRetriever {
                 br.close();
             }
         } catch (FileNotFoundException e) {
-            logger.info("File not found");
+            System.out.print("File not found");
         } catch (IOException e) {
-            logger.info("Problem when reading");
+            System.out.print("Problem when reading");
         }
     }
 
@@ -83,10 +83,7 @@ public class DatePatternRetriever {
     public void showResults() {
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.getScore() > 0) {
-                logger.info(patternMatcher.getModel());
-                // System.out.print("  :  ");
-                // System.out.println(patternMatcher.getScore());
-                // System.out.print("\n");
+                System.out.print(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");
             }
         }
     }
