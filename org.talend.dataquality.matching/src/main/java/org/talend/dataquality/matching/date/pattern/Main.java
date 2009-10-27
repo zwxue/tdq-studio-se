@@ -12,26 +12,32 @@
 // ============================================================================
 package org.talend.dataquality.matching.date.pattern;
 
+import java.io.File;
+
 /**
  * 
  * @author Hallam mohamed amine
  * @date 17/08/2009
  */
 public final class Main {
-    
+
     private Main() {
     }
 
-    // here we show results
     public static void main(String[] args) {
         DatePatternRetriever patt = new DatePatternRetriever();
-        patt.toPattern("2001-31-01 12:21:22");
-        patt.toPattern("12 03 2001");
-        patt.toPattern("Mon, 17 August 2009 2:22:12 GMT");
-        patt.toPattern("08/17/2009 05:19:46");
-        patt.toPattern("08/17/2009 5:19 AM");
-        patt.toPattern("January 17");
-        patt.toPattern("January 17 1998");
-        patt.toPattern("1998 January");
+        File file = new File("PatternsNameAndRegularExpressions.txt");
+        patt.initModel2Regex(file);
+        patt.handle("2001-31-01 12:21:22");
+        patt.handle("12 03 2001");
+        patt.handle("12 03 2001");
+        patt.handle("12 03 2001");
+        patt.handle("Mon, 17 August 2009 2:22:12 GMT");
+        patt.handle("08/17/2009 05:19:46");
+        patt.handle("08/17/2009 5:19 AM");
+        patt.handle("January 17");
+        patt.handle("January 17 1998");
+        patt.handle("1998 January");
+        patt.showResults();
     }
 }

@@ -23,24 +23,31 @@ class ModelMatcher {
 
     // model is the pattern like "MM DD YY"
     private String model;
-
+    private int score ;
     private String regex;
 
     public ModelMatcher(String model, String regex) {
         this.model = model;
         this.regex = regex;
+        this.score = 0;
     }
 
     public String getRegex() {
         return this.regex;
     }
 
-    // get pattern's name
     public String getModel() {
         return this.model;
     }
-
+    
     public boolean matches(String expression) {
         return Pattern.matches(this.getRegex(), expression);
+    }
+    
+    public int getScore(){
+    	return this.score ;
+    }
+    public void increment(){
+    	this.score++;
     }
 }
