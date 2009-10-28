@@ -27,17 +27,9 @@ public final class Main {
     public static void main(String[] args) {
         DatePatternRetriever patt = new DatePatternRetriever();
         File file = new File("PatternsNameAndRegularExpressions.txt");
+        File filedates = new File("dates.txt");
         patt.initModel2Regex(file);
-        patt.handle("2001-31-01 12:21:22");
-        patt.handle("12 03 2001");
-        patt.handle("12 03 2001");
-        patt.handle("12 03 2001");
-        patt.handle("Mon, 17 August 2009 2:22:12 GMT");
-        patt.handle("08/17/2009 05:19:46");
-        patt.handle("08/17/2009 5:19 AM");
-        patt.handle("January 17");
-        patt.handle("January 17 1998");
-        patt.handle("1998 January");
+        patt.parseFile(filedates);
         patt.showResults();
     }
 }

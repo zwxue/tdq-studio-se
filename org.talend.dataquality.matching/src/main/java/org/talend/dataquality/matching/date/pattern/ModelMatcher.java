@@ -11,6 +11,7 @@
 //
 // ============================================================================
 package org.talend.dataquality.matching.date.pattern;
+
 import java.util.regex.Pattern;
 
 /**
@@ -19,11 +20,13 @@ import java.util.regex.Pattern;
  * @date 11/08/2009
  */
 
-class ModelMatcher {
+class ModelMatcher implements java.lang.Comparable {
 
     // model is the pattern like "MM DD YY"
     private String model;
-    private int score ;
+
+    private int score;
+
     private String regex;
 
     public ModelMatcher(String model, String regex) {
@@ -39,15 +42,26 @@ class ModelMatcher {
     public String getModel() {
         return this.model;
     }
-    
+
     public boolean matches(String expression) {
         return Pattern.matches(this.getRegex(), expression);
     }
-    
-    public int getScore(){
-    	return this.score ;
+
+    public int getScore() {
+        return this.score;
     }
-    public void increment(){
-    	this.score++;
+
+    public void increment() {
+        this.score++;
+    }
+
+    // comparison method used to sort modelMatchers
+    public int compareTo(Object other) {
+        if (this.getScore() > ((ModelMatcher) other).getScore())
+            return -1;
+        else if (this.getScore() == ((ModelMatcher) other).getScore())
+            return 0;
+        else
+            return 1;
     }
 }

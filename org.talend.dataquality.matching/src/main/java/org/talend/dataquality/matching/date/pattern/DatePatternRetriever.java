@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -31,18 +32,27 @@ import org.apache.log4j.Logger;
 
 public class DatePatternRetriever {
 
-    // TODO put these mappings in a file so that it can be easily enriched
     private List<ModelMatcher> modelMatchers = new ArrayList<ModelMatcher>();
+
+    private boolean ordered;
 
     private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
 
     // constructor
     public DatePatternRetriever() {
-        // TODO initialization should be done in a method
     }
 
-    // initialization method of modelMatchers from external file with loading all patterns names and their regular
-    // expressions
+    // setter
+    public void setOrdered(boolean value) {
+        this.ordered = value;
+    }
+
+    // getter
+    public boolean getOrdered(boolean value) {
+        return this.ordered;
+    }
+
+    // initialization method of modelMatchers
     public void initModel2Regex(File PatternFile) {
         try {
             FileReader fr = new FileReader(PatternFile);
@@ -59,7 +69,6 @@ public class DatePatternRetriever {
                     }
                 }
             } finally {
-                // TODO should be closed even when an exception appears (use finally close)
                 br.close();
             }
         } catch (FileNotFoundException e) {
@@ -69,10 +78,9 @@ public class DatePatternRetriever {
         }
     }
 
-    // this method returns patterns
+    // this method returns an ordered list of patterns
     public void handle(String expression) {
-        // TODO this method should return an ordered list of objects which contain the model and the score
-
+        this.setOrdered(false);
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.matches(expression)) {
                 patternMatcher.increment();
@@ -81,8 +89,7 @@ public class DatePatternRetriever {
     }
 
     public void showResults() {
-        // TODO show the results in descending order by calling the getOrderedModelMatchers method
-        
+        this.getOrderedModelMatchers();
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.getScore() > 0) {
                 if (logger.isInfoEnabled()) {
@@ -92,12 +99,30 @@ public class DatePatternRetriever {
         }
     }
 
-    
-    // TODO create a method getOrderedModelMatchers. This method returns the list of ModelMatcher (class must be made
-    // public) in descending order accorgind to their score.
-    // add a boolean attribute "ordered" which is reset to false each time the "handle" method is called
-    // the first time the method "getOrderedModelMatchers" is called, the list of matchers is sorted then the boolean is
-    // set to true so that the next time we call this method, it won't be sorted again except if the boolean is false.
-    
-    
+    // method contains dates to be analyzed from external file
+    public void parseFile(File fileDates) {
+        try {
+            FileReader fr = new FileReader(fileDates);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            try {
+                while ((line = br.readLine()) != null) {
+                    this.handle(line.replace("\"", ""));
+                }
+            } finally {
+                br.close();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.print("File not found");
+        } catch (IOException e) {
+            System.out.print("Problem when reading");
+        }
+    }
+
+    // method witch sort ModelMatchers according their scores
+    @SuppressWarnings("unchecked")
+    public void getOrderedModelMatchers() {
+        Collections.sort(this.modelMatchers);
+        this.setOrdered(true);
+    }
 }
