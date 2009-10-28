@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -121,6 +122,19 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
         if (status) {
             refresh();
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "switchToResultPage".
+     */
+    protected void switchToResultPage() {
+        IFormPage resultPage = currentEditor.findPage(AnalysisEditor.RESULT_PAGE);
+        if (resultPage != null && !resultPage.isActive()) {
+            IFormPage activePageInstance = currentEditor.getActivePageInstance();
+            if (activePageInstance.canLeaveThePage()) {
+                currentEditor.setActivePage(AnalysisEditor.RESULT_PAGE);
+            }
         }
     }
 

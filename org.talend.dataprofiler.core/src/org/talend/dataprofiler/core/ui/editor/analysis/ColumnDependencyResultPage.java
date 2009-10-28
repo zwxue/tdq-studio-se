@@ -113,9 +113,18 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
 
         this.masterPage = (ColumnDependencyMasterDetailsPage) masterPage;
-        this.summaryComp.dispose();
-        this.analyzedColumnSetsComp.dispose();
-        this.analysisResultsComp.dispose();
+        if (summaryComp != null && !summaryComp.isDisposed()) {
+            summaryComp.dispose();
+        }
+
+        if (analyzedColumnSetsComp != null && !analyzedColumnSetsComp.isDisposed()) {
+            analyzedColumnSetsComp.dispose();
+        }
+
+        if (analysisResultsComp != null && !analysisResultsComp.isDisposed()) {
+            analysisResultsComp.dispose();
+        }
+
         createFormContent(getManagedForm());
     }
 

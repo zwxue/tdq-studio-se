@@ -128,7 +128,10 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      * @param anasisDataComp
      */
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        dataFilterSection = createSection(form, anasisDataComp, DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.DataFilter"), DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.EditorFilter")); //$NON-NLS-1$ //$NON-NLS-2$
+        dataFilterSection = createSection(
+                form,
+                anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.DataFilter"), DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.EditorFilter")); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(dataFilterSection);
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionClient.setLayout(new GridLayout());
@@ -187,7 +190,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      */
     @Override
     public void refresh() {
-
+        switchToResultPage();
     }
 
     public AnalysisHandler getAnalysisHandler() {

@@ -525,9 +525,17 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
         this.masterPage = (ColumnsComparisonMasterDetailsPage) masterPage;
-        this.summaryComp.dispose();
-        this.analyzedColumnSetsComp.dispose();
-        this.analysisResultsComp.dispose();
+        if (summaryComp != null && !summaryComp.isDisposed()) {
+            summaryComp.dispose();
+        }
+
+        if (analyzedColumnSetsComp != null && !analyzedColumnSetsComp.isDisposed()) {
+            analyzedColumnSetsComp.dispose();
+        }
+
+        if (analysisResultsComp != null && !analysisResultsComp.isDisposed()) {
+            analysisResultsComp.dispose();
+        }
         createFormContent(getManagedForm());
     }
 

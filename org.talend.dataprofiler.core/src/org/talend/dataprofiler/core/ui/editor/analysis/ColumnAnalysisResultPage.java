@@ -142,8 +142,14 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
         this.masterPage = (ColumnMasterDetailsPage) masterPage;
-        this.summaryComp.dispose();
-        this.resultComp.dispose();
+
+        if (summaryComp != null && !summaryComp.isDisposed()) {
+            summaryComp.dispose();
+        }
+
+        if (resultComp != null && !resultComp.isDisposed()) {
+            resultComp.dispose();
+        }
 
         createFormContent(getManagedForm());
     }

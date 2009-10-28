@@ -269,8 +269,14 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
         this.masterPage = (TableMasterDetailsPage) masterPage;
-        this.summaryComp.dispose();
-        this.resultComp.dispose();
+
+        if (summaryComp != null && !summaryComp.isDisposed()) {
+            summaryComp.dispose();
+        }
+
+        if (resultComp != null && !resultComp.isDisposed()) {
+            resultComp.dispose();
+        }
 
         createFormContent(getManagedForm());
     }

@@ -530,8 +530,15 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
         this.masterPage = (ColumnCorrelationNominalAndIntervalMasterPage) masterPage;
-        this.summaryComp.dispose();
-        this.graphicsAndTableComp.dispose();
+
+        if (summaryComp != null && !summaryComp.isDisposed()) {
+            summaryComp.dispose();
+        }
+
+        if (graphicsAndTableComp != null && !graphicsAndTableComp.isDisposed()) {
+            graphicsAndTableComp.dispose();
+        }
+
         createFormContent(getManagedForm());
     }
 

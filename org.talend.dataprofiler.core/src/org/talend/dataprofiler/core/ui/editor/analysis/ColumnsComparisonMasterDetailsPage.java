@@ -277,8 +277,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     @Override
     public void refresh() {
-        // TODO Auto-generated method stub
-
+        switchToResultPage();
     }
 
     @Override
