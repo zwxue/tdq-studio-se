@@ -52,6 +52,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -262,66 +263,106 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     }
 
+    /**
+     * yyi 2009-10-29 validate lowerText higherText pLowerText pHigherText. feature:9340: Set indicator thresholds.
+     */
+    protected boolean checkFields() {
+
+        ReturnCode rc0 = checkIndicatorFields();
+        ReturnCode rc1 = checkIndicatorInPrecentFields();
+
+        if (rc0.isOk() && rc1.isOk()) {
+            updateStatus(IStatus.OK, MSG_OK);
+            return true;
+        } else {
+            updateStatus(IStatus.ERROR, rc0.getMessage() + rc1.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * DOC yyi Comment method "checkIndicatorFields".
+     * 
+     * @return
+     */
+    protected ReturnCode checkIndicatorFields() {
+
+        String min = lowerText.getText().trim();
+        String max = higherText.getText().trim();
+
+        ReturnCode rc = new ReturnCode(true);
+        String statusLabelText = "";
+
+        if (isRangeForDate) {
+            if ((!CheckValueUtils.isDateValue(min) && !CheckValueUtils.isEmpty(min))
+                    || (!CheckValueUtils.isDateValue(max) && !CheckValueUtils.isEmpty(max))) {
+
+                rc.setOk(false);
+                statusLabelText += MSG_ONLY_DATE + System.getProperty("line.separator");
+            }
+        } else {
+            if ((!CheckValueUtils.isNumberValue(min) && !CheckValueUtils.isEmpty(min))
+                    || (!CheckValueUtils.isNumberValue(max) && !CheckValueUtils.isEmpty(max))) {
+
+                rc.setOk(false);
+                statusLabelText += MSG_ONLY_NUMBER + System.getProperty("line.separator");
+            }
+        }
+
+        if (CheckValueUtils.isAoverB(min, max)) {
+            rc.setOk(false);
+            statusLabelText += UIMessages.MSG_LOWER_LESS_HIGHER + System.getProperty("line.separator");
+        }
+
+        rc.setMessage(statusLabelText);
+        return rc;
+    }
+
+    /**
+     * DOC yyi Comment method "checkIndicatorInPrecentFields".
+     * 
+     * @return
+     */
+    protected ReturnCode checkIndicatorInPrecentFields() {
+
+        String pmin = pLowerText.getText();
+        String pmax = pHigherText.getText();
+
+        ReturnCode rc = new ReturnCode(true);
+        String statusLabelText = "";
+
+        if ((!CheckValueUtils.isEmpty(pmin) && !CheckValueUtils.isRealNumberValue(pmin))
+                || (!CheckValueUtils.isEmpty(pmax) && !CheckValueUtils.isRealNumberValue(pmax))) {
+
+            rc.setOk(false);
+            statusLabelText += MSG_ONLY_REAL_NUMBER + System.getProperty("line.separator");
+        }
+        if (CheckValueUtils.isOutRange(MIN, MAX, pmin) || CheckValueUtils.isOutRange(MIN, MAX, pmax)) {
+            rc.setOk(false);
+            statusLabelText += UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE + System.getProperty("line.separator");
+        }
+        if (CheckValueUtils.isAoverB(pmin, pmax)) {
+            rc.setOk(false);
+            statusLabelText += UIMessages.MSG_LOWER_LESS_HIGHER + System.getProperty("line.separator");
+        }
+
+        rc.setMessage(statusLabelText);
+        return rc;
+    }
+
     @Override
     protected void addFieldsListeners() {
         lowerText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String min = lowerText.getText();
-                String max = higherText.getText();
-
-                if (!CheckValueUtils.isEmpty(min)) {
-                    if (isRangeForDate) {
-                        if (!CheckValueUtils.isDateValue(min)) {
-                            updateStatus(IStatus.ERROR, MSG_ONLY_DATE);
-                        } else if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
-                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
-                        } else {
-                            updateStatus(IStatus.OK, MSG_OK);
-                        }
-                    } else {
-                        if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
-                            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                        } else if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
-                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
-                        } else {
-                            updateStatus(IStatus.OK, MSG_OK);
-                        }
-                    }
-                } else {
-                    updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
-                }
+                checkFields();
             }
-
         });
 
         higherText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String min = lowerText.getText();
-                String max = higherText.getText();
-
-                if (!CheckValueUtils.isEmpty(max)) {
-                    if (isRangeForDate) {
-                        if (!CheckValueUtils.isDateValue(max)) {
-                            updateStatus(IStatus.ERROR, MSG_ONLY_DATE);
-                        } else if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
-                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
-                        } else {
-                            updateStatus(IStatus.OK, MSG_OK);
-                        }
-                    } else {
-                        if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
-                            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                        } else if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
-                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
-                        } else {
-                            updateStatus(IStatus.OK, MSG_OK);
-                        }
-                    }
-                } else {
-                    updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
-                }
+                checkFields();
             }
 
         });
@@ -330,45 +371,14 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             pLowerText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
-                    String pmin = pLowerText.getText();
-                    String pmax = pHigherText.getText();
-
-                    if (!CheckValueUtils.isEmpty(pmin)) {
-                        if (!CheckValueUtils.isRealNumberValue(pmin)) {
-                            updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
-                        } else if (CheckValueUtils.isOutRange(MIN, MAX, pmin)) {
-                            updateStatus(IStatus.ERROR, UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE);
-                        } else if (!CheckValueUtils.isEmpty(pmax) && CheckValueUtils.isAoverB(pmin, pmax)) {
-                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
-                        } else {
-                            updateStatus(IStatus.OK, MSG_OK);
-                        }
-                    } else {
-                        updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
-                    }
+                    checkFields();
                 }
             });
 
             pHigherText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
-                    String pmin = pLowerText.getText();
-                    String pmax = pHigherText.getText();
-
-                    if (!CheckValueUtils.isEmpty(pmax)) {
-                        if (!CheckValueUtils.isRealNumberValue(pmax)) {
-                            updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
-                        } else if (CheckValueUtils.isOutRange(MIN, MAX, pmax)) {
-                            updateStatus(IStatus.ERROR, UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE);
-                        } else if (!CheckValueUtils.isEmpty(pmin) && CheckValueUtils.isAoverB(pmin, pmax)) {
-                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
-                        } else {
-                            updateStatus(IStatus.OK, MSG_OK);
-                        }
-                    } else {
-                        updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
-                    }
-
+                    checkFields();
                 }
             });
         }
