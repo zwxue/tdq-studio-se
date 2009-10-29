@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mssql Plug-in
+Bundle-SymbolicName: org.talend.libraries.jdbc.mssql
+Bundle-Version: 1.0.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/sqljdbc4.jar,
+ .
+Export-Package: com.microsoft.sqlserver.jdbc
