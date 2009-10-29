@@ -287,8 +287,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
      */
     protected ReturnCode checkIndicatorFields() {
 
-        String min = lowerText.getText().trim();
-        String max = higherText.getText().trim();
+        String min = null != lowerText ? lowerText.getText().trim() : "";
+        String max = null != higherText ? higherText.getText().trim() : "";
 
         ReturnCode rc = new ReturnCode(true);
         String statusLabelText = "";
@@ -325,8 +325,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
      */
     protected ReturnCode checkIndicatorInPrecentFields() {
 
-        String pmin = pLowerText.getText();
-        String pmax = pHigherText.getText();
+        String pmin = null != pLowerText ? pLowerText.getText().trim() : "";
+        String pmax = null != pHigherText ? pHigherText.getText().trim() : "";
 
         ReturnCode rc = new ReturnCode(true);
         String statusLabelText = "";
