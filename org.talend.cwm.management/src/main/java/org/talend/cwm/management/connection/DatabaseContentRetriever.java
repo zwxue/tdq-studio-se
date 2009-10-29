@@ -100,6 +100,34 @@ public final class DatabaseContentRetriever {
     }
 
     /**
+     * DOC mzhao bug 8502 2009-10-29.
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static Map<String, List<TdSchema>> getMSSQLSchemas(Connection connection) throws SQLException {
+        Map<String, List<TdSchema>> catalogName2schemas = new HashMap<String, List<TdSchema>>();
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        ResultSet rsc = connectionMetadata.getCatalogs();
+        while (rsc.next()) {
+            String cl = rsc.getString(MetaDataConstants.TABLE_CAT.name());
+            ResultSet schemaRs = getConnectionMetadata(connection).getSchemas(cl, null);
+            while (schemaRs.next()) {
+                String schemaName = schemaRs.getString(MetaDataConstants.TABLE_CATALOG.name());
+                if (schemaName == null) {
+                    continue;
+                }
+                TdSchema schema = createSchema(schemaName);
+                MultiMapHelper.addUniqueObjectToListMap(cl, schema, catalogName2schemas);
+            }
+            schemaRs.close();
+        }
+        rsc.close();
+        return catalogName2schemas;
+    }
+
+    /**
      * Method "getSchemas" returns a map of catalogs to schemas. Warning: if no catalog is found, catalog name (i.e. key
      * of the map) can be null.
      * 

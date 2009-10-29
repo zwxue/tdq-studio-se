@@ -49,6 +49,9 @@ public enum EDriverName {
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
                     "net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
                     "-11", "lib/jtds-1.2.jar"), //$NON-NLS-1$
+    MSSQL2008URL("MSSQL2008", //$NON-NLS-1$
+                 "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
+                 "-52", "lib/sqljdbc4.jar"), //$NON-NLS-1$
     DB2DEFAULTURL("DB2", //$NON-NLS-1$
                   "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
                   "-24",
@@ -136,6 +139,9 @@ public enum EDriverName {
             break;
         case MSSQLDEFAULTURL:
             plugins = "org.talend.libraries.jdbc.jtds";
+            break;
+        case MSSQL2008URL:
+            plugins = "org.talend.libraries.jdbc.mssql";
             break;
         case MYSQLDEFAULTURL:
             plugins = "org.talend.libraries.jdbc.mysql";

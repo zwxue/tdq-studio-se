@@ -57,6 +57,14 @@ public enum SupportDBUrlType {
                     "net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
                     null,
                     "Microsoft SQL Server"), //$NON-NLS-1$
+    MSSQL2008URL("Microsoft SQL Server 2008", //$NON-NLS-1$
+                 "localhost", //$NON-NLS-1$
+                 "1433", //$NON-NLS-1$
+                 "dbname", //$NON-NLS-1$
+                 ";", //$NON-NLS-1$
+                 "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
+                 null,
+                 "Microsoft SQL Server 2008"), //$NON-NLS-1$
     DB2DEFAULTURL("DB2", //$NON-NLS-1$
                   "localhost", //$NON-NLS-1$
                   "50000", //$NON-NLS-1$

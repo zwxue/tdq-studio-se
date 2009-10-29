@@ -40,6 +40,8 @@ public class CatalogBuilder extends CwmBuilder {
 
     private static Logger log = Logger.getLogger(CatalogBuilder.class);
 
+    private static final String MSSQL_JDBC2_0 = "Microsoft SQL Server JDBC Driver 2.0";
+
     private final Map<String, TdCatalog> name2catalog = new HashMap<String, TdCatalog>();
 
     private final Set<TdSchema> schemata = new HashSet<TdSchema>();
@@ -228,8 +230,13 @@ public class CatalogBuilder extends CwmBuilder {
         if (!catalogsInitialized) {
             initializeCatalog();
         }
-
-        Map<String, List<TdSchema>> catalog2schemas = DatabaseContentRetriever.getSchemas(connection);
+        // MOD mzhao bug 8502 2009-10-29
+        Map<String, List<TdSchema>> catalog2schemas = null;
+        if (connection.getMetaData().getDriverName().equals(MSSQL_JDBC2_0)) {
+            catalog2schemas = DatabaseContentRetriever.getMSSQLSchemas(connection);
+        } else {
+            catalog2schemas = DatabaseContentRetriever.getSchemas(connection);
+        }
 
         // store schemas in catalogs
         Set<String> catNames = catalog2schemas.keySet();
@@ -237,7 +244,10 @@ public class CatalogBuilder extends CwmBuilder {
             List<TdSchema> schemas = catalog2schemas.get(catName);
             if (catName != null) { // a mapping between catalog and schema exist
                 TdCatalog catalog = name2catalog.get(catName);
-                CatalogHelper.addSchemas(schemas, catalog);
+                // MOD mzhao bug 8502 2009-10-28, filter user for MSSQL 2005 and 2008.
+                if (catalog != null && schemas != null) {
+                    CatalogHelper.addSchemas(schemas, catalog);
+                }
             } else {
                 this.schemata.addAll(schemas);
                 // handle case when one catalog exist but no mapping between catalog and schemas exist (PostgreSQL)
