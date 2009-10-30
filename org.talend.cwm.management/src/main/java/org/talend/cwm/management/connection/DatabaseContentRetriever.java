@@ -320,7 +320,13 @@ public final class DatabaseContentRetriever {
 
         // print driver properties
         // TODO scorreia adapt this code in order to store information in CWM ????
-        DriverPropertyInfo[] driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
+        // MOD xqliu 2009-10-30 bug 5327
+        // DriverPropertyInfo[] driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
+        DriverPropertyInfo[] driverProps = null;
+        if (!databaseUrl.toLowerCase().startsWith("jdbc:odbc:")) {
+            driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
+        }
+        // ~
         if (driverProps != null) {
             for (int i = 0; i < driverProps.length; i++) {
                 DriverPropertyInfo prop = driverProps[i];
