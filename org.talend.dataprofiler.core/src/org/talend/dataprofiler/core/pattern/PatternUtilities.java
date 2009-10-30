@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,9 +25,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
@@ -54,7 +51,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
@@ -91,27 +87,6 @@ public final class PatternUtilities {
     private static Logger log = Logger.getLogger(PatternUtilities.class);
 
     private PatternUtilities() {
-    }
-
-    /**
-     * DOC qzhang Comment method "isLibraiesSubfolder".
-     * 
-     * @param folder
-     * @param subs
-     * @return
-     */
-    public static boolean isLibraiesSubfolder(IFolder folder, String... subs) {
-        for (String sub : subs) {
-            // MOD mzhao 2009-04-02,DQ repository structure changed.
-            IPath path = new Path(ResourceManager.getRootProjectName() + File.separator + ResourceManager.LIBRARIES_FOLDER_NAME);
-            path = path.append(sub);
-            IPath fullPath = folder.getFullPath();
-            boolean prefixOf = path.isPrefixOf(fullPath);
-            if (prefixOf) {
-                return prefixOf;
-            }
-        }
-        return false;
     }
 
     /**
@@ -335,8 +310,8 @@ public final class PatternUtilities {
     private static List<IFile> getAllPatternFiles() {
         List<IFile> patternFiles = new ArrayList<IFile>();
 
-        IFolder pfolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.PATTERNS);
-        IFolder sfolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.SQL_PATTERNS);
+        IFolder pfolder = ResourceManager.getPatternFolder();
+        IFolder sfolder = ResourceManager.getPatternSQLFolder();
 
         Set<IFile> list = new HashSet<IFile>();
         patternFiles.addAll(getNestedPatternFiles(list, pfolder));
@@ -388,8 +363,7 @@ public final class PatternUtilities {
                     }
                 } else if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    return PatternUtilities.isLibraiesSubfolder(folder, DQStructureManager.PATTERNS,
-                            DQStructureManager.SQL_PATTERNS);
+                    return ResourceManager.isSubFolder(ResourceManager.getPatternFolder(), folder);
                 }
                 return false;
             }

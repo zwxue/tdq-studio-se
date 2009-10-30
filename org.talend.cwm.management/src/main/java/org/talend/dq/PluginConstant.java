@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq;
 
-import org.talend.commons.emf.FactoriesUtil;
 
 /**
  * This class store all the constant of current plugin.
@@ -33,14 +32,6 @@ public final class PluginConstant {
 
     // MOD mzhao 2009-05-11 bug:7280, Default charset UTF-8
     public static final String DEFAULT_PARAMETERS = "zeroDateTimeBehavior=convertToNull&noDatetimeStringSync=true&characterEncoding=UTF-8"; //$NON-NLS-1$
-
-    public static final String PRV_SUFFIX = "." + FactoriesUtil.PROV; //$NON-NLS-1$
-
-    public static final String ANA_SUFFIX = "." + FactoriesUtil.ANA; //$NON-NLS-1$
-
-    public static final String REP_SUFFIX = "." + FactoriesUtil.REP; //$NON-NLS-1$
-
-    public static final String PATTERN_SUFFIX = "*.pattern"; //$NON-NLS-1$
 
     public static final String CONNECTION_TIMEOUT = "CONNECTION_TIMEOUT"; //$NON-NLS-1$
 

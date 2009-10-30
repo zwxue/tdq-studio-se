@@ -23,10 +23,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteDQRuleAction;
-import org.talend.resource.xml.TdqPropertieManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -50,11 +49,8 @@ public class DQRulesActionProvider extends CommonActionProvider {
             if (obj instanceof IFolder) {
                 try {
                     IFolder folder = (IFolder) obj;
-                    
-                    Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
-                            DQStructureManager.FOLDER_CLASSIFY_KEY);
-                    if (persistentProperty != null
-                            && DQStructureManager.DQRULES_FOLDER_PROPERTY.equals(persistentProperty.toString())) {
+
+                    if (ResourceManager.isRulesSQLFolder(folder)) {
                         menu.add(new CreateDQRulesAction(folder));
                     }
                 } catch (Exception e) {

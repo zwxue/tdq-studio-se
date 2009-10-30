@@ -34,7 +34,6 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -162,7 +161,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     // MOD mzhao 2009-05-05, bug 6587.
     protected void reloadDataproviderAndFillConnCombo() {
-        IFolder connFolder = ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS);
+        IFolder connFolder = ResourceManager.getConnectionFolder();
         List<TdDataProvider> dataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(connFolder);
 
         int index = 0;

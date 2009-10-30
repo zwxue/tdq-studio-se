@@ -18,12 +18,10 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -48,10 +46,7 @@ public class UpdateDependenciesFileTask extends AbstractMigrationTask {
     public boolean execute() {
         try {
             // MOD scorreia 2009-10-07 load all analyses and find those which use patterns.
-            IProject rootProject = ResourceManager.getRootProject();
-            IFolder dataprofilingFolder = rootProject.getFolder(ResourceManager.DATA_PROFILING_FOLDER_NAME);
-            IFolder analysesFolder = dataprofilingFolder.getFolder(DQStructureManager.ANALYSIS);
-            updateDependencies(analysesFolder);
+            updateDependencies(ResourceManager.getAnalysisFolder());
             return true;
         } catch (CoreException e) {
             ExceptionHandler.process(e);

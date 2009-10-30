@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
 import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
@@ -38,68 +37,62 @@ import org.talend.resource.ResourceManager;
  */
 public class NewSourceFileActionProvider extends CommonActionProvider {
 
-	public NewSourceFileActionProvider() {
-	}
+    public NewSourceFileActionProvider() {
+    }
 
-	public void fillContextMenu(IMenuManager menu) {
-		TreeSelection treeSelection = ((TreeSelection) this.getContext()
-				.getSelection());
-		List<IFile> selectedFiles = new ArrayList<IFile>();
-		if (treeSelection.size() == 1) {
-			Object obj = treeSelection.getFirstElement();
-			if (obj instanceof IFolder) {
-				IPath fullPath = ((IFolder) obj).getFullPath();
-				IPath sourceFileFolderPath = ResourceManager
-						.getLibrariesFolder().getFolder(
-								DQStructureManager.SOURCE_FILES).getFullPath();
-				if (fullPath.equals(sourceFileFolderPath)) {
-					menu.add(new AddSqlFileAction((IFolder) obj));
-					// rli Modification: 2008-7-16. for the feature 0004366
-					// menu.add(new CreateSourceFolderAction((IFolder) obj));
-					if (fullPath.segmentCount() > sourceFileFolderPath
-							.segmentCount()) {
-						// menu.add(new DeleteFolderAction((IFolder) obj));
-						menu.add(new RenameFolderAction((IFolder) obj));
-					}
-				}
-			} else if (obj instanceof IFile) {
-				IFile file = (IFile) obj;
-				if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$
-					menu.add(new RenameSqlFileAction((IFile) obj));
-				}
-			}
-		}
-		boolean isSelectFile = computeSelectedFiles(treeSelection,
-				selectedFiles);
-		if (!isSelectFile && !selectedFiles.isEmpty()) {
-			menu.add(new OpenSqlFileAction(selectedFiles));
-			menu.add(new DeleteSqlFileAction(selectedFiles));
-		}
-	}
+    public void fillContextMenu(IMenuManager menu) {
+        TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
+        List<IFile> selectedFiles = new ArrayList<IFile>();
+        if (treeSelection.size() == 1) {
+            Object obj = treeSelection.getFirstElement();
+            if (obj instanceof IFolder) {
+                IPath fullPath = ((IFolder) obj).getFullPath();
+                IPath sourceFileFolderPath = ResourceManager.getSourceFileFolder().getFullPath();
+                if (fullPath.equals(sourceFileFolderPath)) {
+                    menu.add(new AddSqlFileAction((IFolder) obj));
+                    // rli Modification: 2008-7-16. for the feature 0004366
+                    // menu.add(new CreateSourceFolderAction((IFolder) obj));
+                    if (fullPath.segmentCount() > sourceFileFolderPath.segmentCount()) {
+                        // menu.add(new DeleteFolderAction((IFolder) obj));
+                        menu.add(new RenameFolderAction((IFolder) obj));
+                    }
+                }
+            } else if (obj instanceof IFile) {
+                IFile file = (IFile) obj;
+                if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$
+                    menu.add(new RenameSqlFileAction((IFile) obj));
+                }
+            }
+        }
+        boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
+        if (!isSelectFile && !selectedFiles.isEmpty()) {
+            menu.add(new OpenSqlFileAction(selectedFiles));
+            menu.add(new DeleteSqlFileAction(selectedFiles));
+        }
+    }
 
-	/**
-	 * DOC qzhang Comment method "computeSelectedFiles".
-	 * 
-	 * @param treeSelection
-	 * @param selectedFiles
-	 * @return
-	 */
-	public static boolean computeSelectedFiles(TreeSelection treeSelection,
-			List<IFile> selectedFiles) {
-		boolean isSelectFile = false;
-		Iterator iterator = treeSelection.iterator();
-		while (iterator.hasNext()) {
-			Object obj = iterator.next();
-			if (obj instanceof IFile) {
-				IFile file = (IFile) obj;
-				if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$
-					selectedFiles.add(file);
-				}
-			} else {
-				isSelectFile = true;
-				break;
-			}
-		}
-		return isSelectFile;
-	}
+    /**
+     * DOC qzhang Comment method "computeSelectedFiles".
+     * 
+     * @param treeSelection
+     * @param selectedFiles
+     * @return
+     */
+    public static boolean computeSelectedFiles(TreeSelection treeSelection, List<IFile> selectedFiles) {
+        boolean isSelectFile = false;
+        Iterator iterator = treeSelection.iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            if (obj instanceof IFile) {
+                IFile file = (IFile) obj;
+                if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$
+                    selectedFiles.add(file);
+                }
+            } else {
+                isSelectFile = true;
+                break;
+            }
+        }
+        return isSelectFile;
+    }
 }

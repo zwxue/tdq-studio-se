@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.Window;
@@ -46,7 +45,6 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
-import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -219,10 +217,12 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    protected void openFolderSelectionDialog(String projectName, String folderName) {
-        IProject rootProject = ResourceManager.getRootProject();
-        IFolder inputFolder = rootProject.getFolder(projectName).getFolder(folderName);
+    /**
+     * DOC bZhou Comment method "openFolderSelectionDialog".
+     * 
+     * @param inputFolder
+     */
+    protected void openFolderSelectionDialog(IFolder inputFolder) {
 
         FolderSelectionDialog dialog = new FolderSelectionDialog(getShell());
         dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$

@@ -122,18 +122,6 @@
 <!-- Resource Content--> 
    <extension  
          point="org.eclipse.ui.navigator.navigatorContent">
-      <actionProvider
-            	class="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"
-            	id="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"> 
-        	<enablement> 
-        			<or>
-						<adapt type="org.eclipse.core.resources.IResource" />	 
-						<adapt type="java.util.Collection"> 
-							<count value="0" />
-						</adapt>
-					</or>
-	         </enablement>
-		</actionProvider>
 		<commonFilter
             id="org.eclipse.ui.navigator.resources.filters.htmlFolder"
             name="%commonFilter.name.htmlFolder"
@@ -218,6 +206,18 @@
            </possibleDropTargets>
         </dropAssistant>   
      </navigatorContent>
+      <actionProvider
+            	class="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"
+            	id="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"> 
+        	<enablement> 
+        			<or>
+						<adapt type="org.eclipse.core.resources.IResource" />	 
+						<adapt type="java.util.Collection"> 
+							<count value="0" />
+						</adapt>
+					</or>
+	         </enablement>
+		</actionProvider>
       <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.NewAnalysisActionProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.NewAnalysisActionProvider">

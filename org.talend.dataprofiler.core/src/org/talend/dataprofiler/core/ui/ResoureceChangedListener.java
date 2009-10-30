@@ -35,7 +35,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -63,14 +62,14 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
             public boolean visit(IResourceDelta delta) {
                 if (delta.getKind() == IResourceDelta.ADDED) {
                     IResource resource = delta.getResource();
-                    if (resource.getType() == IResource.FILE && isModelElementFile((IFile) resource)) {
+                    if (resource.getType() == IResource.FILE && FactoriesUtil.isEmfFile((IFile) resource)) {
                         added.add((IFile) resource);
                     }
                 }
 
                 if (delta.getKind() == IResourceDelta.REMOVED) {
                     IResource resource = delta.getResource();
-                    if (resource.getType() == IResource.FILE && isModelElementFile((IFile) resource)) {
+                    if (resource.getType() == IResource.FILE && FactoriesUtil.isEmfFile((IFile) resource)) {
                         removed.add((IFile) resource);
                     }
                 }
@@ -274,13 +273,4 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
         return toDelFile;
 
     }
-
-    private boolean isModelElementFile(IFile file) {
-
-        if (DQStructureManager.getInstance().getModelElementSuffixs().contains(file.getFileExtension())) {
-            return true;
-        }
-        return false;
-    }
-
 }

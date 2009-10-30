@@ -15,8 +15,7 @@ package org.talend.dataprofiler.core.ui.filters;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.Viewer;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.resource.xml.TdqPropertieManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -37,12 +36,8 @@ public class ReportingFilter extends AbstractViewerFilter {
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
-            // MOD mzhao 2009-04-07, Add filter for JRXML Report folder.
-            Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
-                    DQStructureManager.FOLDER_CLASSIFY_KEY);
-            if (persistentProperty != null
-                    && (DQStructureManager.REPORT_FOLDER_PROPERTY.equals(persistentProperty.toString()) || DQStructureManager.JRXML_FOLDER_PROPERTY
-                            .equals(persistentProperty.toString()))) {
+
+            if (ResourceManager.isReportsFolder(folder) || ResourceManager.isJRXMLFolder(folder)) {
                 return false;
             }
         }

@@ -60,7 +60,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
@@ -1133,8 +1132,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit.getIndicator();
                 Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
-                IFolder patternFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.PATTERNS);
-                IFolder sqlPatternFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.SQL_PATTERNS);
+                IFolder patternFolder = ResourceManager.getPatternFolder();
+                IFolder sqlPatternFolder = ResourceManager.getPatternSQLFolder();
                 IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
                         new IFolder[] { patternFolder, sqlPatternFolder });
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -1159,8 +1158,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 UserDefIndicator indicator = (UserDefIndicator) indicatorUnit.getIndicator();
 
-                IFolder userFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.INDICATORS).getFolder(
-                        DQStructureManager.USER_DEFINED_INDICATORS);
+                IFolder userFolder = ResourceManager.getUDIFolder();
                 IFile file = UDIResourceFileHelper.getInstance().getUDIFile(indicator.getIndicatorDefinition(),
                         new IFolder[] { userFolder });
 

@@ -17,9 +17,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction;
-import org.talend.resource.xml.TdqPropertieManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * @author rli
@@ -43,11 +42,8 @@ public class NewConnectionActionProvider extends CommonActionProvider {
 
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
-            // ~ MOD mzhao featur 9178,2009-09-23
-            Object folderPropertyValue = TdqPropertieManager.getInstance().getFolderPropertyValue(
-                    folder, DQStructureManager.FOLDER_CLASSIFY_KEY);
-            if (folderPropertyValue != null
-                    && DQStructureManager.DBCONNECTION_FOLDER_PROPERTY.equals(folderPropertyValue.toString())) {
+
+            if (ResourceManager.isConnectionFolder(folder)) {
                 CreateConnectionAction createConnectionAction = new CreateConnectionAction(folder);
                 menu.add(createConnectionAction);
                 // menu.insertBefore("group.edit", createConnectionAction);

@@ -25,7 +25,6 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * This class is a wizard to create a folder on workspace.
@@ -75,12 +74,6 @@ public class FolderWizard extends Wizard {
             IFolder newFolder = folder.getFolder(folderName);
             try {
                 newFolder.create(false, true, null);
-                Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
-                        DQStructureManager.FOLDER_CLASSIFY_KEY);
-                if (persistentProperty != null) {
-                    TdqPropertieManager.getInstance().addFolderProperties(newFolder, DQStructureManager.FOLDER_CLASSIFY_KEY,
-                            persistentProperty.toString());
-                }
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
                 findView.getCommonViewer().refresh();

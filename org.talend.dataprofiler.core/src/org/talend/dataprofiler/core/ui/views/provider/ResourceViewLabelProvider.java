@@ -96,16 +96,16 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         // MOD mzhao 2009-03-20,Move tdq/top top folders into one project.
         // Feature 6066.
         if (element instanceof IFolder) {
-            String folderName = ((IFolder) element).getName();
-            if (ResourceManager.METADATA_FOLDER_NAME.equals(folderName)) {
+            IFolder folder = (IFolder) element;
+            if (ResourceManager.isMetadataFolder(folder)) {
                 return ImageLib.getImageDescriptor(ImageLib.METADATA);
-            } else if (ResourceManager.LIBRARIES_FOLDER_NAME.equals(folderName)) {
+            } else if (ResourceManager.isLibrariesFolder(folder)) {
                 return ImageLib.getImageDescriptor(ImageLib.LIBRARIES);
-            } else if (ResourceManager.DATA_PROFILING_FOLDER_NAME.equals(folderName)) {
+            } else if (ResourceManager.isDataProfilingFolder(folder)) {
                 return ImageLib.getImageDescriptor(ImageLib.DATA_PROFILING);
-            } else if (org.talend.dataquality.PluginConstant.DB_CONNECTIONS.equals(folderName)) {
+            } else if (ResourceManager.isConnectionFolder(folder)) {
                 return ImageLib.getImageDescriptor(ImageLib.CONNECTION);
-            } else if (DQStructureManager.EXCHANGE.equals(folderName)) {
+            } else if (ResourceManager.isExchangeFolder(folder)) {
                 return ImageLib.getImageDescriptor(ImageLib.EXCHANGE);
             }
         }

@@ -33,7 +33,6 @@ import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionPro
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -57,9 +56,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     public ResourceViewContentProvider() {
         super();
         needSortContainers = new ArrayList<IContainer>();
-        needSortContainers.add(ResourceManager.getDataProfilingFolder().getFolder(DQStructureManager.ANALYSIS));
-        needSortContainers.add(ResourceManager.getDataProfilingFolder().getFolder(DQStructureManager.REPORTS));
-        needSortContainers.add(ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS));
+        needSortContainers.add(ResourceManager.getAnalysisFolder());
+        needSortContainers.add(ResourceManager.getReportsFolder());
+        needSortContainers.add(ResourceManager.getConnectionFolder());
     }
 
     /*
@@ -113,13 +112,12 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 return regularExp;
             }
         } else if (element instanceof IFolder) {
-            //
             IFolder folder = (IFolder) element;
-            if (folder.getName().equals(DQStructureManager.EXCHANGE)) {
+            if (ResourceManager.isExchangeFolder(folder)) {
                 // Mod gyichao 2009-07-07, feature 8109
                 return ComponentSearcher.getAvailableCategory(CorePlugin.getDefault().getProductVersion().toString()).toArray();
 
-            } else if (folder.getName().equals(DQStructureManager.INDICATORS)) {
+            } else if (ResourceManager.isIndicatorFolder(folder)) {
                 // MOD xqliu 2009-07-27 bug 7810
                 return getIndicatorsChildren(folder);
             }

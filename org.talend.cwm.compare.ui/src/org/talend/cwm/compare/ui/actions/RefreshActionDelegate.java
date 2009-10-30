@@ -59,7 +59,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.writer.EMFSharedResources;
@@ -179,7 +178,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 rc = ConnectionService.createConnection(dbcp);
             }
             System.out.println(alreadySavedModel.toString());
-            IFolder folder = ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS);
+            IFolder folder = ResourceManager.getConnectionFolder();
             FolderProvider fp = new FolderProvider();
             fp.setFolderResource(folder);
             IFile file2 = loadDataProviderAndStructureInMemory(rc.getObject(), fp);

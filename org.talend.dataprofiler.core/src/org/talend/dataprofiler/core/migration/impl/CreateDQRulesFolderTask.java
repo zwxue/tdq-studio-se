@@ -22,58 +22,52 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class CreateDQRulesFolderTask extends AbstractMigrationTask {
 
-	protected static Logger log = Logger
-			.getLogger(CreateDQRulesFolderTask.class);
+    protected static Logger log = Logger.getLogger(CreateDQRulesFolderTask.class);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
-	 */
-	public boolean execute() {
-		try {
-			DQStructureManager manager = DQStructureManager.getInstance();
-			IFolder createNewFoler = manager.createNewReadOnlyFolder(ResourceManager
-					.getLibrariesFolder(), DQStructureManager.DQ_RULES);
-            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
-                    DQStructureManager.DQRULES_FOLDER_PROPERTY);
-			manager.copyFilesToFolder(CorePlugin.getDefault(),
-					DQStructureManager.DQ_RULES_PATH, true, createNewFoler,
-					null);
-		} catch (Exception e) {
-		    ExceptionHandler.process(e);
+    private static final String DQ_RULES = "DQ Rules"; //$NON-NLS-1$
+
+    private static final String RULES_PATH = "/dqrules"; //$NON-NLS-1$
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
+     */
+    public boolean execute() {
+        try {
+            DQStructureManager manager = DQStructureManager.getInstance();
+            IFolder createNewFoler = manager.createNewReadOnlyFolder(ResourceManager.getLibrariesFolder(), DQ_RULES);
+            manager.copyFilesToFolder(CorePlugin.getDefault(), RULES_PATH, true, createNewFoler, null);
+        } catch (Exception e) {
+            ExceptionHandler.process(e);
             return false;
-		}
-		return true;
-	}
+        }
+        return true;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
-	 */
-	public Date getOrder() {
-		Calendar calender = Calendar.getInstance();
-		calender.set(2009, 2, 13);
-		return calender.getTime();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
+     */
+    public Date getOrder() {
+        Calendar calender = Calendar.getInstance();
+        calender.set(2009, 2, 13);
+        return calender.getTime();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#
-	 * getMigrationTaskType()
-	 */
-	public MigrationTaskType getMigrationTaskType() {
-		return MigrationTaskType.STUCTRUE;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.talend.dataprofiler.core.migration.IWorkspaceMigrationTask# getMigrationTaskType()
+     */
+    public MigrationTaskType getMigrationTaskType() {
+        return MigrationTaskType.STUCTRUE;
+    }
 }

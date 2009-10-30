@@ -21,7 +21,6 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.resource.ResourceManager;
 
@@ -48,7 +47,7 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                openFolderSelectionDialog(ResourceManager.LIBRARIES_FOLDER_NAME, DQStructureManager.INDICATORS);
+                openFolderSelectionDialog(ResourceManager.getIndicatorFolder());
             }
         });
     }
@@ -59,7 +58,7 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
 
     @Override
     protected IFolder getStoredFolder() {
-        return ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.INDICATORS);
+        return ResourceManager.getIndicatorFolder();
     }
 
     @Override

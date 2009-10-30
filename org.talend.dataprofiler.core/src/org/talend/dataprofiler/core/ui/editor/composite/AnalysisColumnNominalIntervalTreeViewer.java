@@ -54,7 +54,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -76,601 +75,541 @@ import orgomg.cwm.resource.relational.Column;
  * 
  * DOC zhaoxinyi class global comment. Detailled comment
  */
-public class AnalysisColumnNominalIntervalTreeViewer extends
-		AbstractColumnDropTree {
+public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropTree {
 
-	protected static Logger log = Logger
-			.getLogger(AnalysisColumnNominalIntervalTreeViewer.class);
-
-	private static final String DATA_PARAM = "DATA_PARAM"; //$NON-NLS-1$
+    protected static Logger log = Logger.getLogger(AnalysisColumnNominalIntervalTreeViewer.class);
 
-	public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY"; //$NON-NLS-1$
-
-	public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY"; //$NON-NLS-1$
-
-	public static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY"; //$NON-NLS-1$
-
-	public static final String VIEWER_KEY = "org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer"; //$NON-NLS-1$
-
-	private static final int WIDTH1_CELL = 75;
-
-	private Composite parentComp;
-
-	private Tree tree;
-
-	private List<Column> columnSetMultiValueList;
-
-	// private final List<String> comboTextList = new ArrayList<String>();
-
-	private ColumnCorrelationNominalAndIntervalMasterPage masterPage;
-
-	private Menu menu;
-
-	private MenuItem editPatternMenuItem;
-
-	public AnalysisColumnNominalIntervalTreeViewer(Composite parent) {
-		parentComp = parent;
-		tree = createTree(parent);
-		tree.setData(this);
-		columnSetMultiValueList = new ArrayList<Column>();
-	}
-
-	public AnalysisColumnNominalIntervalTreeViewer(Composite parent,
-			ColumnCorrelationNominalAndIntervalMasterPage masterPage) {
-		this(parent);
-		this.masterPage = masterPage;
-		// this.setElements(masterPage.getColumnSetMultiValueIndicator().
-		// getAnalyzedColumns());
-		this.setDirty(false);
-	}
-
-	/**
-	 * @param parent
-	 */
-	private Tree createTree(Composite parent) {
-		final Tree newTree = new Tree(parent, SWT.MULTI | SWT.BORDER);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true,
-				true).applyTo(newTree);
-
-		newTree.setHeaderVisible(true);
-		TreeColumn column1 = new TreeColumn(newTree, SWT.CENTER);
-		column1.setWidth(190);
-		column1.setText(DefaultMessagesImpl
-				.getString("AnalysisColumnTreeViewer.analyzedColumns")); //$NON-NLS-1$
-		TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
-		column2.setWidth(120);
-		column2.setText(DefaultMessagesImpl
-				.getString("AnalysisColumnTreeViewer.dataminingType")); //$NON-NLS-1$
-		column2.setToolTipText(DefaultMessagesImpl
-				.getString("AnalysisColumnTreeViewer.columnTip")); //$NON-NLS-1$
-		TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
-		column4.setWidth(80);
-		column4.setText(DefaultMessagesImpl
-				.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
-
-		parent.layout();
-		createTreeMenu(newTree, false);
-
-		AbstractAnalysisActionHandler actionHandler = new AbstractAnalysisActionHandler(
-				parent) {
-
-			@Override
-			protected void handleRemove() {
-				removeSelectedElements(newTree);
-				// MOD mzhao 2005-05-05 bug 6587.
-				// MOD mzhao 2009-06-8, bug 5887.
-				// updateBindConnection(masterPage, tree);
-			}
-
-		};
-
-		parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
-
-		addSourceDND(newTree);
-		addTargetDND(newTree);
-
-		addTreeListener(newTree);
-		return newTree;
-	}
-
-	/**
-	 * DOC bZhou Comment method "addTargetDND".
-	 * 
-	 * @param newTree
-	 */
-	private void addTargetDND(final Tree newTree) {
-		ColumnViewerDND.installDND(newTree);
-	}
-
-	/**
-	 * DOC bZhou Comment method "addSourceDND".
-	 * 
-	 * @param newTree
-	 */
-	private void addSourceDND(final Tree newTree) {
-		final LocalSelectionTransfer transfer = LocalSelectionTransfer
-				.getTransfer();
-		Transfer[] types = new Transfer[] { transfer };
-		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		final DragSource source = new DragSource(newTree, operations);
-		source.setTransfer(types);
-		final TreeItem[] dragSourceItem = new TreeItem[1];
-		source.addDragListener(new DragSourceListener() {
-
-			public void dragStart(DragSourceEvent event) {
-				TreeItem[] selection = newTree.getSelection();
-				dragSourceItem[0] = selection[0];
-				if (selection.length > 0) {
-					event.doit = true;
-					transfer.setSelection(new StructuredSelection(selection[0]
-							.getData(COLUMN_INDICATOR_KEY)));
-					getColumnSetMultiValueList().remove(
-							selection[0].getData(COLUMN_INDICATOR_KEY));
-				} else {
-					event.doit = false;
-				}
-			};
-
-			public void dragSetData(DragSourceEvent event) {
-				event.data = dragSourceItem[0];
-			}
-
-			public void dragFinished(DragSourceEvent event) {
-				if (event.detail == DND.DROP_MOVE) {
-					removeItemBranch(dragSourceItem[0]);
-					tree.forceFocus();
-				}
-				dragSourceItem[0] = null;
-
-			}
-		});
-	}
-
-	/**
-	 * DOC xzhao Comment method "createTreeMenu".
-	 * 
-	 * @param newTree
-	 * @param containEdit
-	 */
-	private void createTreeMenu(final Tree newTree, boolean containEdit) {
-		Menu oldMenu = newTree.getMenu();
-		if (oldMenu != null && !oldMenu.isDisposed()) {
-			oldMenu.dispose();
-		}
-		menu = new Menu(newTree);
-		MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
-		deleteMenuItem.setText(DefaultMessagesImpl
-				.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
-		deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-		deleteMenuItem.addSelectionListener(new SelectionAdapter() {
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
-			 * .swt.events.SelectionEvent)
-			 */
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				removeSelectedElements(newTree);
-				// MOD mzhao 2005-05-05 bug 6587.
-				// MOD mzhao 2009-06-8, bug 5887.
-				// updateBindConnection(masterPage, tree);
-			}
-
-		});
-
-		// ADD 2009-01-07 mzhao for feature:0005664
-		MenuItem showMenuItem = new MenuItem(menu, SWT.CASCADE);
-		showMenuItem.setText(DefaultMessagesImpl
-				.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
-		showMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-		showMenuItem.addSelectionListener(new SelectionAdapter() {
-
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
-			 * .swt.events.SelectionEvent)
-			 */
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				TreeItem[] selection = newTree.getSelection();
-
-				if (selection.length == 1) {
-					DQRespositoryView dqview = (DQRespositoryView) CorePlugin
-							.getDefault().findView(DQRespositoryView.ID);
-					try {
-						TdColumn tdColumn = (TdColumn) selection[0]
-								.getData(COLUMN_INDICATOR_KEY);
-						dqview.showSelectedElements(tdColumn);
-					} catch (Exception ex) {
-						log.error(ex, ex);
-					}
-				}
-			}
-
-		});
-
-		if (containEdit) {
-			editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
-			editPatternMenuItem.setText(DefaultMessagesImpl
-					.getString("AnalysisColumnTreeViewer.editPattern")); //$NON-NLS-1$
-			editPatternMenuItem.setImage(ImageLib
-					.getImage(ImageLib.PATTERN_REG));
-			editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
-
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see
-				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
-				 * .eclipse.swt.events.SelectionEvent)
-				 */
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					TreeItem[] selection = tree.getSelection();
-					if (selection.length > 0) {
-						TreeItem treeItem = selection[0];
-						IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem
-								.getData(INDICATOR_UNIT_KEY);
-						PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit
-								.getIndicator();
-						Pattern pattern = indicator.getParameters()
-								.getDataValidDomain().getPatterns().get(0);
-						// MOD mzhao 2009-03-13 Feature 6066 Move all folders
-						// into one project.
-						IFolder patternFolder = ResourceManager
-								.getLibrariesFolder().getFolder(
-										DQStructureManager.PATTERNS);
-						IFolder sqlPatternFolder = ResourceManager
-								.getLibrariesFolder().getFolder(
-										DQStructureManager.SQL_PATTERNS);
-						IFile file = PatternResourceFileHelper.getInstance()
-								.getPatternFile(
-										pattern,
-										new IFolder[] { patternFolder,
-												sqlPatternFolder });
-						IWorkbenchPage activePage = PlatformUI.getWorkbench()
-								.getActiveWorkbenchWindow().getActivePage();
-						try {
-							activePage
-									.openEditor(new FileEditorInput(file),
-											"org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"); //$NON-NLS-1$
-						} catch (PartInitException e1) {
-							log.error(e1, e1);
-						}
-					}
-				}
-
-			});
-		}
-		newTree.setMenu(menu);
-	}
-
-	public void setInput(Object[] objs) {
-		if (objs != null && objs.length != 0) {
-			if (!(objs[0] instanceof TdColumn)) {
-				return;
-			}
-		}
-		List<Column> columnList = new ArrayList<Column>();
-		for (Object obj : objs) {
-			columnList.add((TdColumn) obj);
-		}
-		this.setElements(columnList);
-	}
-
-	public void setElements(final Object columns) {
-		this.tree.dispose();
-		this.tree = createTree(this.parentComp);
-		tree.setData(this);
-		// MOD mzhao bug 8282 2009-7-31 Clear column cache.
-		columnSetMultiValueList.clear();
-		addItemElements((List<Column>) columns, 0);
-		// addItemElements(columns);
-		// MOD mzhao 2009-05-05 bug 6587.
-		updateBindConnection(masterPage, tree);
-	}
-
-	private void addItemElements(final List<Column> columns, int index) {
-		for (int i = 0; i < columns.size(); i++) {
-			final TdColumn column = (TdColumn) columns.get(i);
-			final TreeItem treeItem = new TreeItem(tree, SWT.NONE, index);
-
-			columnSetMultiValueList.add(index, column);
-
-			String columnName = column.getName();
-			treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
-
-			treeItem.setText(0, columnName != null ? columnName
-					+ PluginConstant.SPACE_STRING
-					+ PluginConstant.PARENTHESIS_LEFT
-					+ column.getSqlDataType().getName()
-					+ PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
-			treeItem.setData(COLUMN_INDICATOR_KEY, column);
-
-			TreeEditor comboEditor = new TreeEditor(tree);
-			tree
-					.setData(
-							DefaultMessagesImpl
-									.getString("AnalysisColumnNominalIntervalTreeViewer.TreeEditor"), comboEditor); //$NON-NLS-1$
-
-			final CCombo combo = new CCombo(tree, SWT.BORDER);
-			for (DataminingType type : DataminingType.values()) {
-				combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
-				// for presentation
-			}
-			DataminingType dataminingType = MetadataHelper
-					.getDataminingType(column);
-			if (dataminingType == null) {
-				dataminingType = MetadataHelper.getDefaultDataminingType(column
-						.getJavaType());
-			}
-
-			if (dataminingType == null) {
-				combo.select(0);
-			} else {
-				combo.setText(dataminingType.getLiteral());
-			}
-			MetadataHelper.setDataminingType(DataminingType
-					.get(combo.getText()), column);
-			/**
-			 * 
-			 * DOC zhaoxinyi AnalysisColumnNominalIntervalTreeViewer class
-			 * global comment. Detailled comment
-			 */
-			class Selection extends SelectionAdapter {
-
-				public void widgetSelected(SelectionEvent e) {
-					MetadataHelper.setDataminingType(DataminingType.get(combo
-							.getText()), column);
-					setDirty(true);
-				}
-			}
-			combo.addSelectionListener(new Selection());
-			// comboTextList.add(combo.getText().trim());
-			combo.setEditable(false);
-			comboEditor.minimumWidth = WIDTH1_CELL;
-			comboEditor.setEditor(combo, treeItem, 1);
-
-			TreeEditor delLabelEditor = new TreeEditor(tree);
-			Label delLabel = new Label(tree, SWT.NONE);
-			delLabel.setBackground(Display.getDefault().getSystemColor(
-					SWT.COLOR_WHITE));
-			delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-			delLabel.setToolTipText(DefaultMessagesImpl
-					.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
-			delLabel.pack();
-			delLabel.addMouseListener(new MouseAdapter() {
-
-				@Override
-				public void mouseDown(MouseEvent e) {
-					deleteColumnItems(column);
-					removeItemBranch(treeItem);
-					// MOD mzhao 2005-05-05 bug 6587.
-					// MOD mzhao 2009-06-8, bug 5887.
-					// updateBindConnection(masterPage, tree);
-				}
-
-			});
-
-			delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
-			delLabelEditor.horizontalAlignment = SWT.CENTER;
-			delLabelEditor.setEditor(delLabel, treeItem, 2);
-			treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor,
-					delLabelEditor });
-			/*
-			 * if (columnIndicator.hasIndicators()) {
-			 * createIndicatorItems(treeItem,
-			 * columnIndicator.getIndicatorUnits()); }
-			 */
-			delLabelEditor.layout();
-			treeItem.setExpanded(true);
-		}
-
-		tree.layout();
-		tree.redraw();
-		this.setDirty(true);
-		tree.forceFocus();
-	}
-
-	public void addElements(final List<Column> columns, int index) {
-		this.addItemElements(columns, index);
-	}
-
-	/**
-	 * DOC xzhao Comment method "deleteTreeElements".
-	 * 
-	 * @param columnIndicators
-	 * @param deleteColumnIndiciators
-	 */
-	private void deleteColumnItems(TdColumn deleteColumn) {
-		List<Column> remainColumns = columnSetMultiValueList;
-		for (int j = 0; j < columnSetMultiValueList.size(); j++) {
-			TdColumn column = (TdColumn) columnSetMultiValueList.get(j);
-			if (deleteColumn.equals(column)) {
-				remainColumns.remove(j);
-			}
-		}
-		this.columnSetMultiValueList = remainColumns;
-		// setElements(columnSetMultiValueList);
-	}
-
-	public List<Column> getColumnSetMultiValueList() {
-		return this.columnSetMultiValueList;
-	}
-
-	/**
-	 * Remove the selected elements(eg:TdColumn or Indicator) from tree.
-	 * 
-	 * @param newTree
-	 */
-	private void removeSelectedElements(final Tree newTree) {
-		TreeItem[] selection = newTree.getSelection();
-		for (TreeItem item : selection) {
-			TdColumn tdColumn = (TdColumn) item.getData(COLUMN_INDICATOR_KEY);
-			deleteColumnItems(tdColumn);
-			removeItemBranch(item);
-		}
-	}
-
-	private void removeItemBranch(TreeItem item) {
-		TreeEditor[] editors = (TreeEditor[]) item.getData(ITEM_EDITOR_KEY);
-		if (editors != null) {
-			for (int j = 0; j < editors.length; j++) {
-				editors[j].getEditor().dispose();
-				editors[j].dispose();
-			}
-		}
-
-		if (item.getItemCount() == 0) {
-			item.dispose();
-			this.setDirty(true);
-			return;
-		}
-		TreeItem[] items = item.getItems();
-		for (int i = 0; i < items.length; i++) {
-			removeItemBranch(items[i]);
-		}
-		item.dispose();
-		this.setDirty(true);
-	}
-
-	private void addTreeListener(final Tree tree) {
-		tree.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				boolean con = false;
-
-				if (e.item instanceof TreeItem) {
-					TreeItem item = (TreeItem) e.item;
-					if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
-						tree.setMenu(null);
-						return;
-					} else if (item.getData(INDICATOR_UNIT_KEY) != null) {
-						IndicatorUnit indicatorUnit = (IndicatorUnit) item
-								.getData(INDICATOR_UNIT_KEY);
-						IndicatorEnum type = indicatorUnit.getType();
-						con = IndicatorEnum.RegexpMatchingIndicatorEnum
-								.compareTo(type) == 0
-								|| IndicatorEnum.SqlPatternMatchingIndicatorEnum
-										.compareTo(type) == 0;
-					}
-				}
-				createTreeMenu(tree, con);
-			}
-
-		});
-
-		tree.addTreeListener(new TreeAdapter() {
-
-			@Override
-			public void treeCollapsed(TreeEvent e) {
-
-				ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-				ScrolledForm form = masterPage.getForm();
-				Composite comp = masterPage.getChartComposite();
-
-				if (theSuitedComposite != null
-						&& theSuitedComposite.isExpanded()) {
-					getTheSuitedComposite(e).setExpanded(false);
-				}
-
-				comp.layout();
-				form.reflow(true);
-			}
-
-			@Override
-			public void treeExpanded(TreeEvent e) {
-				ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-				ScrolledForm form = masterPage.getForm();
-				Composite comp = masterPage.getChartComposite();
-
-				if (theSuitedComposite != null
-						&& !theSuitedComposite.isExpanded()) {
-					theSuitedComposite.setExpanded(true);
-				}
-
-				comp.layout();
-				form.reflow(true);
-			}
-
-		});
-	}
-
-	private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
-		Composite[] previewChartCompsites = masterPage
-				.getPreviewChartCompsites();
-		if (previewChartCompsites == null) {
-			return null;
-		}
-
-		Object obj = e.item.getData(COLUMN_INDICATOR_KEY);
-		if (obj instanceof ColumnIndicator) {
-			ColumnIndicator columnIndicator = (ColumnIndicator) obj;
-			for (Composite comp : previewChartCompsites) {
-				if (comp.getData() == columnIndicator) {
-					return (ExpandableComposite) comp;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Getter for analysis.
-	 * 
-	 * @return the analysis
-	 */
-	public Analysis getAnalysis() {
-		return this.masterPage.getColumnCorrelationAnalysisHandler()
-				.getAnalysis();
-	}
-
-	// public List<String> getComboString() {
-	// return comboTextList;
-	// }
-
-	public Tree getTree() {
-		return tree;
-	}
-
-	@Override
-	public boolean canDrop(Column column) {
-		List<TdColumn> existColumns = new ArrayList<TdColumn>();
-		for (Column columnFromMultiValueList : this
-				.getColumnSetMultiValueList()) {
-			existColumns.add((TdColumn) columnFromMultiValueList);
-		}
-
-		if (existColumns.contains(column)) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public void dropColumns(List<Column> columns, int index) {
-		this.addElements(columns, index);
-		// this.setElements(columnSetMultiValueList);
-	}
-
-	@Override
-	public void updateModelViewer() {
-		masterPage.recomputeIndicators();
-		// columnSetMultiValueList =
-		// masterPage.getColumnSetMultiValueIndicator()
-		// .getAnalyzedColumns().subList(
-		// 0,
-		// masterPage.getColumnSetMultiValueIndicator()
-		// .getAnalyzedColumns().size());
-		columnSetMultiValueList.clear();
-		this.setElements(masterPage.getColumnSetMultiValueIndicator()
-				.getAnalyzedColumns());
-	}
+    private static final String DATA_PARAM = "DATA_PARAM"; //$NON-NLS-1$
+
+    public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY"; //$NON-NLS-1$
+
+    public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY"; //$NON-NLS-1$
+
+    public static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY"; //$NON-NLS-1$
+
+    public static final String VIEWER_KEY = "org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer"; //$NON-NLS-1$
+
+    private static final int WIDTH1_CELL = 75;
+
+    private Composite parentComp;
+
+    private Tree tree;
+
+    private List<Column> columnSetMultiValueList;
+
+    // private final List<String> comboTextList = new ArrayList<String>();
+
+    private ColumnCorrelationNominalAndIntervalMasterPage masterPage;
+
+    private Menu menu;
+
+    private MenuItem editPatternMenuItem;
+
+    public AnalysisColumnNominalIntervalTreeViewer(Composite parent) {
+        parentComp = parent;
+        tree = createTree(parent);
+        tree.setData(this);
+        columnSetMultiValueList = new ArrayList<Column>();
+    }
+
+    public AnalysisColumnNominalIntervalTreeViewer(Composite parent, ColumnCorrelationNominalAndIntervalMasterPage masterPage) {
+        this(parent);
+        this.masterPage = masterPage;
+        // this.setElements(masterPage.getColumnSetMultiValueIndicator().
+        // getAnalyzedColumns());
+        this.setDirty(false);
+    }
+
+    /**
+     * @param parent
+     */
+    private Tree createTree(Composite parent) {
+        final Tree newTree = new Tree(parent, SWT.MULTI | SWT.BORDER);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newTree);
+
+        newTree.setHeaderVisible(true);
+        TreeColumn column1 = new TreeColumn(newTree, SWT.CENTER);
+        column1.setWidth(190);
+        column1.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.analyzedColumns")); //$NON-NLS-1$
+        TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
+        column2.setWidth(120);
+        column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dataminingType")); //$NON-NLS-1$
+        column2.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.columnTip")); //$NON-NLS-1$
+        TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
+        column4.setWidth(80);
+        column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
+
+        parent.layout();
+        createTreeMenu(newTree, false);
+
+        AbstractAnalysisActionHandler actionHandler = new AbstractAnalysisActionHandler(parent) {
+
+            @Override
+            protected void handleRemove() {
+                removeSelectedElements(newTree);
+                // MOD mzhao 2005-05-05 bug 6587.
+                // MOD mzhao 2009-06-8, bug 5887.
+                // updateBindConnection(masterPage, tree);
+            }
+
+        };
+
+        parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
+
+        addSourceDND(newTree);
+        addTargetDND(newTree);
+
+        addTreeListener(newTree);
+        return newTree;
+    }
+
+    /**
+     * DOC bZhou Comment method "addTargetDND".
+     * 
+     * @param newTree
+     */
+    private void addTargetDND(final Tree newTree) {
+        ColumnViewerDND.installDND(newTree);
+    }
+
+    /**
+     * DOC bZhou Comment method "addSourceDND".
+     * 
+     * @param newTree
+     */
+    private void addSourceDND(final Tree newTree) {
+        final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
+        Transfer[] types = new Transfer[] { transfer };
+        int operations = DND.DROP_COPY | DND.DROP_MOVE;
+        final DragSource source = new DragSource(newTree, operations);
+        source.setTransfer(types);
+        final TreeItem[] dragSourceItem = new TreeItem[1];
+        source.addDragListener(new DragSourceListener() {
+
+            public void dragStart(DragSourceEvent event) {
+                TreeItem[] selection = newTree.getSelection();
+                dragSourceItem[0] = selection[0];
+                if (selection.length > 0) {
+                    event.doit = true;
+                    transfer.setSelection(new StructuredSelection(selection[0].getData(COLUMN_INDICATOR_KEY)));
+                    getColumnSetMultiValueList().remove(selection[0].getData(COLUMN_INDICATOR_KEY));
+                } else {
+                    event.doit = false;
+                }
+            };
+
+            public void dragSetData(DragSourceEvent event) {
+                event.data = dragSourceItem[0];
+            }
+
+            public void dragFinished(DragSourceEvent event) {
+                if (event.detail == DND.DROP_MOVE) {
+                    removeItemBranch(dragSourceItem[0]);
+                    tree.forceFocus();
+                }
+                dragSourceItem[0] = null;
+
+            }
+        });
+    }
+
+    /**
+     * DOC xzhao Comment method "createTreeMenu".
+     * 
+     * @param newTree
+     * @param containEdit
+     */
+    private void createTreeMenu(final Tree newTree, boolean containEdit) {
+        Menu oldMenu = newTree.getMenu();
+        if (oldMenu != null && !oldMenu.isDisposed()) {
+            oldMenu.dispose();
+        }
+        menu = new Menu(newTree);
+        MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
+        deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
+        deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        deleteMenuItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                removeSelectedElements(newTree);
+                // MOD mzhao 2005-05-05 bug 6587.
+                // MOD mzhao 2009-06-8, bug 5887.
+                // updateBindConnection(masterPage, tree);
+            }
+
+        });
+
+        // ADD 2009-01-07 mzhao for feature:0005664
+        MenuItem showMenuItem = new MenuItem(menu, SWT.CASCADE);
+        showMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
+        showMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        showMenuItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TreeItem[] selection = newTree.getSelection();
+
+                if (selection.length == 1) {
+                    DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+                    try {
+                        TdColumn tdColumn = (TdColumn) selection[0].getData(COLUMN_INDICATOR_KEY);
+                        dqview.showSelectedElements(tdColumn);
+                    } catch (Exception ex) {
+                        log.error(ex, ex);
+                    }
+                }
+            }
+
+        });
+
+        if (containEdit) {
+            editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
+            editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.editPattern")); //$NON-NLS-1$
+            editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
+            editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org .eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    TreeItem[] selection = tree.getSelection();
+                    if (selection.length > 0) {
+                        TreeItem treeItem = selection[0];
+                        IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
+                        PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit.getIndicator();
+                        Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
+                        // MOD mzhao 2009-03-13 Feature 6066 Move all folders
+                        // into one project.
+                        IFolder patternFolder = ResourceManager.getPatternFolder();
+                        IFolder sqlPatternFolder = ResourceManager.getPatternSQLFolder();
+                        IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
+                                new IFolder[] { patternFolder, sqlPatternFolder });
+                        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                        try {
+                            activePage.openEditor(new FileEditorInput(file),
+                                    "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"); //$NON-NLS-1$
+                        } catch (PartInitException e1) {
+                            log.error(e1, e1);
+                        }
+                    }
+                }
+
+            });
+        }
+        newTree.setMenu(menu);
+    }
+
+    public void setInput(Object[] objs) {
+        if (objs != null && objs.length != 0) {
+            if (!(objs[0] instanceof TdColumn)) {
+                return;
+            }
+        }
+        List<Column> columnList = new ArrayList<Column>();
+        for (Object obj : objs) {
+            columnList.add((TdColumn) obj);
+        }
+        this.setElements(columnList);
+    }
+
+    public void setElements(final Object columns) {
+        this.tree.dispose();
+        this.tree = createTree(this.parentComp);
+        tree.setData(this);
+        // MOD mzhao bug 8282 2009-7-31 Clear column cache.
+        columnSetMultiValueList.clear();
+        addItemElements((List<Column>) columns, 0);
+        // addItemElements(columns);
+        // MOD mzhao 2009-05-05 bug 6587.
+        updateBindConnection(masterPage, tree);
+    }
+
+    private void addItemElements(final List<Column> columns, int index) {
+        for (int i = 0; i < columns.size(); i++) {
+            final TdColumn column = (TdColumn) columns.get(i);
+            final TreeItem treeItem = new TreeItem(tree, SWT.NONE, index);
+
+            columnSetMultiValueList.add(index, column);
+
+            String columnName = column.getName();
+            treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
+
+            treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
+                    + column.getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
+            treeItem.setData(COLUMN_INDICATOR_KEY, column);
+
+            TreeEditor comboEditor = new TreeEditor(tree);
+            tree.setData(DefaultMessagesImpl.getString("AnalysisColumnNominalIntervalTreeViewer.TreeEditor"), comboEditor); //$NON-NLS-1$
+
+            final CCombo combo = new CCombo(tree, SWT.BORDER);
+            for (DataminingType type : DataminingType.values()) {
+                combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
+                // for presentation
+            }
+            DataminingType dataminingType = MetadataHelper.getDataminingType(column);
+            if (dataminingType == null) {
+                dataminingType = MetadataHelper.getDefaultDataminingType(column.getJavaType());
+            }
+
+            if (dataminingType == null) {
+                combo.select(0);
+            } else {
+                combo.setText(dataminingType.getLiteral());
+            }
+            MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), column);
+            /**
+             * 
+             * DOC zhaoxinyi AnalysisColumnNominalIntervalTreeViewer class global comment. Detailled comment
+             */
+            class Selection extends SelectionAdapter {
+
+                public void widgetSelected(SelectionEvent e) {
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), column);
+                    setDirty(true);
+                }
+            }
+            combo.addSelectionListener(new Selection());
+            // comboTextList.add(combo.getText().trim());
+            combo.setEditable(false);
+            comboEditor.minimumWidth = WIDTH1_CELL;
+            comboEditor.setEditor(combo, treeItem, 1);
+
+            TreeEditor delLabelEditor = new TreeEditor(tree);
+            Label delLabel = new Label(tree, SWT.NONE);
+            delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+            delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
+            delLabel.pack();
+            delLabel.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mouseDown(MouseEvent e) {
+                    deleteColumnItems(column);
+                    removeItemBranch(treeItem);
+                    // MOD mzhao 2005-05-05 bug 6587.
+                    // MOD mzhao 2009-06-8, bug 5887.
+                    // updateBindConnection(masterPage, tree);
+                }
+
+            });
+
+            delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
+            delLabelEditor.horizontalAlignment = SWT.CENTER;
+            delLabelEditor.setEditor(delLabel, treeItem, 2);
+            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor });
+            /*
+             * if (columnIndicator.hasIndicators()) { createIndicatorItems(treeItem,
+             * columnIndicator.getIndicatorUnits()); }
+             */
+            delLabelEditor.layout();
+            treeItem.setExpanded(true);
+        }
+
+        tree.layout();
+        tree.redraw();
+        this.setDirty(true);
+        tree.forceFocus();
+    }
+
+    public void addElements(final List<Column> columns, int index) {
+        this.addItemElements(columns, index);
+    }
+
+    /**
+     * DOC xzhao Comment method "deleteTreeElements".
+     * 
+     * @param columnIndicators
+     * @param deleteColumnIndiciators
+     */
+    private void deleteColumnItems(TdColumn deleteColumn) {
+        List<Column> remainColumns = columnSetMultiValueList;
+        for (int j = 0; j < columnSetMultiValueList.size(); j++) {
+            TdColumn column = (TdColumn) columnSetMultiValueList.get(j);
+            if (deleteColumn.equals(column)) {
+                remainColumns.remove(j);
+            }
+        }
+        this.columnSetMultiValueList = remainColumns;
+        // setElements(columnSetMultiValueList);
+    }
+
+    public List<Column> getColumnSetMultiValueList() {
+        return this.columnSetMultiValueList;
+    }
+
+    /**
+     * Remove the selected elements(eg:TdColumn or Indicator) from tree.
+     * 
+     * @param newTree
+     */
+    private void removeSelectedElements(final Tree newTree) {
+        TreeItem[] selection = newTree.getSelection();
+        for (TreeItem item : selection) {
+            TdColumn tdColumn = (TdColumn) item.getData(COLUMN_INDICATOR_KEY);
+            deleteColumnItems(tdColumn);
+            removeItemBranch(item);
+        }
+    }
+
+    private void removeItemBranch(TreeItem item) {
+        TreeEditor[] editors = (TreeEditor[]) item.getData(ITEM_EDITOR_KEY);
+        if (editors != null) {
+            for (int j = 0; j < editors.length; j++) {
+                editors[j].getEditor().dispose();
+                editors[j].dispose();
+            }
+        }
+
+        if (item.getItemCount() == 0) {
+            item.dispose();
+            this.setDirty(true);
+            return;
+        }
+        TreeItem[] items = item.getItems();
+        for (int i = 0; i < items.length; i++) {
+            removeItemBranch(items[i]);
+        }
+        item.dispose();
+        this.setDirty(true);
+    }
+
+    private void addTreeListener(final Tree tree) {
+        tree.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                boolean con = false;
+
+                if (e.item instanceof TreeItem) {
+                    TreeItem item = (TreeItem) e.item;
+                    if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
+                        tree.setMenu(null);
+                        return;
+                    } else if (item.getData(INDICATOR_UNIT_KEY) != null) {
+                        IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                        IndicatorEnum type = indicatorUnit.getType();
+                        con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
+                                || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0;
+                    }
+                }
+                createTreeMenu(tree, con);
+            }
+
+        });
+
+        tree.addTreeListener(new TreeAdapter() {
+
+            @Override
+            public void treeCollapsed(TreeEvent e) {
+
+                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
+                ScrolledForm form = masterPage.getForm();
+                Composite comp = masterPage.getChartComposite();
+
+                if (theSuitedComposite != null && theSuitedComposite.isExpanded()) {
+                    getTheSuitedComposite(e).setExpanded(false);
+                }
+
+                comp.layout();
+                form.reflow(true);
+            }
+
+            @Override
+            public void treeExpanded(TreeEvent e) {
+                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
+                ScrolledForm form = masterPage.getForm();
+                Composite comp = masterPage.getChartComposite();
+
+                if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
+                    theSuitedComposite.setExpanded(true);
+                }
+
+                comp.layout();
+                form.reflow(true);
+            }
+
+        });
+    }
+
+    private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
+        Composite[] previewChartCompsites = masterPage.getPreviewChartCompsites();
+        if (previewChartCompsites == null) {
+            return null;
+        }
+
+        Object obj = e.item.getData(COLUMN_INDICATOR_KEY);
+        if (obj instanceof ColumnIndicator) {
+            ColumnIndicator columnIndicator = (ColumnIndicator) obj;
+            for (Composite comp : previewChartCompsites) {
+                if (comp.getData() == columnIndicator) {
+                    return (ExpandableComposite) comp;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Getter for analysis.
+     * 
+     * @return the analysis
+     */
+    public Analysis getAnalysis() {
+        return this.masterPage.getColumnCorrelationAnalysisHandler().getAnalysis();
+    }
+
+    // public List<String> getComboString() {
+    // return comboTextList;
+    // }
+
+    public Tree getTree() {
+        return tree;
+    }
+
+    @Override
+    public boolean canDrop(Column column) {
+        List<TdColumn> existColumns = new ArrayList<TdColumn>();
+        for (Column columnFromMultiValueList : this.getColumnSetMultiValueList()) {
+            existColumns.add((TdColumn) columnFromMultiValueList);
+        }
+
+        if (existColumns.contains(column)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void dropColumns(List<Column> columns, int index) {
+        this.addElements(columns, index);
+        // this.setElements(columnSetMultiValueList);
+    }
+
+    @Override
+    public void updateModelViewer() {
+        masterPage.recomputeIndicators();
+        // columnSetMultiValueList =
+        // masterPage.getColumnSetMultiValueIndicator()
+        // .getAnalyzedColumns().subList(
+        // 0,
+        // masterPage.getColumnSetMultiValueIndicator()
+        // .getAnalyzedColumns().size());
+        columnSetMultiValueList.clear();
+        this.setElements(masterPage.getColumnSetMultiValueIndicator().getAnalyzedColumns());
+    }
 }

@@ -52,7 +52,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.writer.EMFSharedResources;
@@ -250,7 +249,7 @@ public final class DQStructureComparer {
      * @return IFile
      */
     private static IFile getFile(String fileName) {
-        IFolder folder = ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS);
+        IFolder folder = ResourceManager.getConnectionFolder();
         IFile file = folder.getFile(fileName);
         return file;
     }

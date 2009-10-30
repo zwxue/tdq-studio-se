@@ -35,8 +35,8 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * 
@@ -58,8 +58,6 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
                 rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.getRootProjectName());
             }
             DQStructureManager.copyConfigFiles(rootProject, CorePlugin.getDefault());
-            TdqPropertieManager.getInstance().addFolderProperties(rootProject, DQStructureManager.PROJECT_TDQ_KEY,
-                    DQStructureManager.PROJECT_TDQ_PROPERTY);
 
             // Copy "top level" folders already as projects in TOP/TDQ into this
             // project.
@@ -89,7 +87,7 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             String pathName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/";
             File repFolder = new File(pathName);
             if (repFolder.exists()) {
-                FileUtils.copyDirectory(repFolder, ResourceManager.getReportingDBFolder().getLocation().toFile());
+                FileUtils.copyDirectory(repFolder, ResourceManager.getReportDBFolder().getLocation().toFile());
                 FileUtils.forceDelete(new File(pathName));
             }
             // ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
@@ -118,12 +116,12 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             if (file != null) {
                 try {
                     String content = FileUtils.readFileToString(file);
-                    content = StringUtils.replace(content, "/Metadata/", "/" + ResourceManager.METADATA_FOLDER_NAME + "/");
-                    content = StringUtils.replace(content, "/Libraries/", "/" + ResourceManager.LIBRARIES_FOLDER_NAME + "/");
-                    content = StringUtils.replace(content, "/resource/" + ResourceManager.LIBRARIES_FOLDER_NAME + "/",
-                            "/resource/" + ResourceManager.getRootProjectName() + "/" + ResourceManager.LIBRARIES_FOLDER_NAME
+                    content = StringUtils.replace(content, "/Metadata/", "/" + EResourceConstant.METADATA.getName() + "/");
+                    content = StringUtils.replace(content, "/Libraries/", "/" + EResourceConstant.LIBRARIES.getName() + "/");
+                    content = StringUtils.replace(content, "/resource/" + EResourceConstant.LIBRARIES.getName() + "/",
+                            "/resource/" + ResourceManager.getRootProjectName() + "/" + EResourceConstant.LIBRARIES.getName()
                                     + "/");
-                    content = StringUtils.replace(content, "/Data Profiling/", "/" + ResourceManager.DATA_PROFILING_FOLDER_NAME
+                    content = StringUtils.replace(content, "/Data Profiling/", "/" + EResourceConstant.DATA_PROFILING.getName()
                             + "/");
 
                     FileUtils.writeStringToFile(file, content);

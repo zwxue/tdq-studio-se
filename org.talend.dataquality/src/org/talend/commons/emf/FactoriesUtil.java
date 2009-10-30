@@ -15,6 +15,7 @@ package org.talend.commons.emf;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.talend.cwm.constants.ConstantsFactory;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.RelationalPackage;
@@ -109,12 +110,12 @@ public final class FactoriesUtil {
      * Extension used for the files in which the DQRule are serialized.
      */
     public static final String DQRULE = RulesPackage.eNAME;
-    
+
     /**
-     * 
      * Extension used for xml configuration file
      */
     public static final String XML = "xml";
+
     private FactoriesUtil() {
     }
 
@@ -180,6 +181,7 @@ public final class FactoriesUtil {
         extensions.add(REP);
         extensions.add(PATTERN);
         extensions.add(DQRULE);
+        extensions.add(UDI);
 
         // --- CWM generated packages
         extensions.add(CorePackage.eNAME);
@@ -218,5 +220,84 @@ public final class FactoriesUtil {
         orgomg.cwm.objectmodel.core.CorePackage.eINSTANCE.getEFactoryInstance();
         orgomg.cwm.objectmodel.relationships.RelationshipsPackage.eINSTANCE.getEFactoryInstance();
         orgomg.cwm.foundation.typemapping.TypemappingPackage.eINSTANCE.getEFactoryInstance();
+    }
+
+    /**
+     * DOC bZhou Comment method "isAnalysisFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static boolean isAnalysisFile(IFile file) {
+        return ANA.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /**
+     * DOC bZhou Comment method "isReportFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static boolean isReportFile(IFile file) {
+        return REP.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /**
+     * DOC bZhou Comment method "isProvFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static boolean isProvFile(IFile file) {
+        return PROV.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /**
+     * DOC bZhou Comment method "isPatternFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static boolean isPatternFile(IFile file) {
+        return PATTERN.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /**
+     * DOC bZhou Comment method "isDQRuleFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static boolean isDQRuleFile(IFile file) {
+        return DQRULE.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /**
+     * DOC bZhou Comment method "isUDIFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static boolean isUDIFile(IFile file) {
+        return UDI.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /**
+     * DOC bZhou Comment method "isEmfFile".
+     * 
+     * @return
+     */
+    public static boolean isEmfFile(String fileExt) {
+        return getExtensions().contains(fileExt);
+    }
+
+    /**
+     * DOC bZhou Comment method "isEmfFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static boolean isEmfFile(IFile file) {
+        return isEmfFile(file.getFileExtension());
     }
 }

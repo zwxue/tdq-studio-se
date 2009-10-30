@@ -39,7 +39,6 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -50,7 +49,6 @@ import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.xml.TdqPropertieManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -245,10 +243,7 @@ public final class ImportFactory {
                 if (!folder.exists()) {
                     folder.create(false, true, null);
                 }
-                // folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
-                // DQStructureManager.PATTERNS_FOLDER_PROPERTY);
-                TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.FOLDER_CLASSIFY_KEY,
-                        DQStructureManager.PATTERNS_FOLDER_PROPERTY);
+
                 selectionFolder = folder;
             }
         } catch (CoreException e) {
@@ -260,8 +255,7 @@ public final class ImportFactory {
         EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), pattern);
         EMFSharedResources.getInstance().saveLastResource();
 
-        return ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.PATTERNS).getLocationURI().relativize(
-                selectionFolder.getLocationURI()).toString();
+        return ResourceManager.getPatternFolder().getLocationURI().relativize(selectionFolder.getLocationURI()).toString();
     }
 
     private static String getFileExtName(File file) {
@@ -547,10 +541,7 @@ public final class ImportFactory {
                 if (!folder.exists()) {
                     folder.create(false, true, null);
                 }
-                TdqPropertieManager.getInstance().addFolderProperties(folder, DQStructureManager.FOLDER_CLASSIFY_KEY,
-                        DQStructureManager.UDI_FOLDER_PROPERTY);
-                // folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
-                // DQStructureManager.UDI_FOLDER_PROPERTY);
+
                 selectionFolder = folder;
             }
         } catch (CoreException e) {

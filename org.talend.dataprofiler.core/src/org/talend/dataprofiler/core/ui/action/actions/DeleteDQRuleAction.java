@@ -25,7 +25,6 @@ import org.eclipse.jface.window.Window;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
@@ -54,7 +53,7 @@ public class DeleteDQRuleAction extends Action {
 
     @Override
     public void run() {
-        IFolder sourceFiles = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.RULES);
+        IFolder sourceFiles = ResourceManager.getRulesFolder();
 
         // ADD yyi 2009-10-10 feature: 9501
         final IResource[] resources = folder.toArray(new IResource[folder.size()]);

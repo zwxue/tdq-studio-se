@@ -17,13 +17,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -46,7 +46,7 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof IFile) {
             IFile file = (IFile) parentElement;
-            if (file.getName().endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)) {
+            if (FactoriesUtil.isAnalysisFile(file)) {
                 Analysis analysis = (Analysis) AnaResourceFileHelper.getInstance().findAnalysis(file);
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 AnaElementFolderNode folderNode = new AnaElementFolderNode(analysedElements);
@@ -71,7 +71,7 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
                 return FolderNodeHelper.getFolderNodes((EObject) parentElement);
             }
 
-        }else {
+        } else {
             return FolderNodeHelper.getFolderNodes((EObject) parentElement);
         }
         return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);

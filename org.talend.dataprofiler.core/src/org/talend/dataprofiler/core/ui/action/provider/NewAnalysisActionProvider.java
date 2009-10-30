@@ -17,9 +17,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction;
-import org.talend.resource.xml.TdqPropertieManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * @author rli
@@ -39,9 +38,8 @@ public class NewAnalysisActionProvider extends CommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
-            Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(folder,
-                    DQStructureManager.FOLDER_CLASSIFY_KEY);
-            if (persistentProperty != null && DQStructureManager.ANALYSIS_FOLDER_PROPERTY.equals(persistentProperty.toString())) {
+
+            if (ResourceManager.isAnalysisFolder(folder)) {
                 CreateNewAnalysisAction createAnalysisAction = new CreateNewAnalysisAction(folder);
                 menu.add(createAnalysisAction);
             }

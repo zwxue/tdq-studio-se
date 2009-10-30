@@ -24,7 +24,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
@@ -36,51 +35,49 @@ import org.talend.top.repository.ProxyRepositoryManager;
  */
 public class DeleteSqlFileAction extends Action {
 
-	protected static Logger log = Logger.getLogger(DeleteSqlFileAction.class);
+    protected static Logger log = Logger.getLogger(DeleteSqlFileAction.class);
 
-	private List<IFile> folder;
+    private List<IFile> folder;
 
-	/**
-	 * DOC qzhang AddSqlFileAction constructor comment.
-	 * 
-	 * @param selectedFiles
-	 */
-	public DeleteSqlFileAction(List<IFile> selectedFiles) {
-		setText(DefaultMessagesImpl.getString("DeleteSqlFileAction.delete")); //$NON-NLS-1$
-		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
-		this.folder = selectedFiles;
-	}
+    /**
+     * DOC qzhang AddSqlFileAction constructor comment.
+     * 
+     * @param selectedFiles
+     */
+    public DeleteSqlFileAction(List<IFile> selectedFiles) {
+        setText(DefaultMessagesImpl.getString("DeleteSqlFileAction.delete")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
+        this.folder = selectedFiles;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		IFolder sourceFiles = ResourceManager.getLibrariesFolder().getFolder(
-				DQStructureManager.SOURCE_FILES);
-		for (IFile file : folder) {
-			if (MessageDialog
-					.openConfirm(
-							new Shell(),
-							DefaultMessagesImpl
-									.getString("DeleteSqlFileAction.deleteSqlFile"), DefaultMessagesImpl.getString("DeleteSqlFileAction.areYouDeleteSqlFile", file.getName()))) { //$NON-NLS-1$ //$NON-NLS-2$
-				try {
-					if (file.exists()) {
-						file.delete(true, null);
-					}
-				} catch (CoreException e) {
-					log.error(e, e);
-				}
-			}
-		}
-		try {
-		    ProxyRepositoryManager.getInstance().save();
-			sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e) {
-			log.error(e, e);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        IFolder sourceFiles = ResourceManager.getSourceFileFolder();
+        for (IFile file : folder) {
+            if (MessageDialog
+                    .openConfirm(
+                            new Shell(),
+                            DefaultMessagesImpl.getString("DeleteSqlFileAction.deleteSqlFile"), DefaultMessagesImpl.getString("DeleteSqlFileAction.areYouDeleteSqlFile", file.getName()))) { //$NON-NLS-1$ //$NON-NLS-2$
+                try {
+                    if (file.exists()) {
+                        file.delete(true, null);
+                    }
+                } catch (CoreException e) {
+                    log.error(e, e);
+                }
+            }
+        }
+        try {
+            ProxyRepositoryManager.getInstance().save();
+            sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+    }
 
 }

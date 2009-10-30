@@ -537,7 +537,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     log.error("Can't get the children of container:" + container.getLocation());
                 }
 
-                if (container.equals(metadataFolder.getFolder(org.talend.dataquality.PluginConstant.DB_CONNECTIONS))) {
+                if (container.equals(ResourceManager.getConnectionFolder())) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
                 return members;

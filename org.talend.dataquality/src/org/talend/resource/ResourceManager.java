@@ -12,18 +12,15 @@
 // ============================================================================
 package org.talend.resource;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Properties;
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
-import org.talend.utils.sugars.ReturnCode;
+import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -32,32 +29,7 @@ public final class ResourceManager {
 
     private static Logger log = Logger.getLogger(ResourceManager.class);
 
-    public static final String DATA_PROFILING_FOLDER_NAME = "TDQ_Data Profiling";
-
-    public static final String LIBRARIES_FOLDER_NAME = "TDQ_Libraries";
-
-    public static final String METADATA_FOLDER_NAME = "TDQ_Metadata";
-
-    public static final String REPORTING_DB_FOLDER_NAME = "TDQ_reporting_db";
-
-    public static final String DQ_RULES = "DQ Rules";
-
-    public static final String ANALYSIS = "Analyses";
-
-    private static final String RESOURCE_PROPERTIES_FILE = "ResourceProperties";
-
-    private static ResourceManager instance = null;
-
-    private Properties properties = new Properties();
-
     private ResourceManager() {
-    }
-
-    public static ResourceManager getInstance() {
-        if (instance == null) {
-            instance = new ResourceManager();
-        }
-        return instance;
     }
 
     /**
@@ -85,7 +57,7 @@ public final class ResourceManager {
      * @return
      */
     public static IFolder getDataProfilingFolder() {
-        return getRootProject().getFolder(DATA_PROFILING_FOLDER_NAME);
+        return getOneFolder(EResourceConstant.DATA_PROFILING);
     }
 
     /**
@@ -94,7 +66,7 @@ public final class ResourceManager {
      * @return
      */
     public static IFolder getLibrariesFolder() {
-        return getRootProject().getFolder(LIBRARIES_FOLDER_NAME);
+        return getOneFolder(EResourceConstant.LIBRARIES);
     }
 
     /**
@@ -103,7 +75,25 @@ public final class ResourceManager {
      * @return
      */
     public static IFolder getMetadataFolder() {
-        return getRootProject().getFolder(METADATA_FOLDER_NAME);
+        return getOneFolder(EResourceConstant.METADATA);
+    }
+
+    /**
+     * DOC bZhou Comment method "getAnalysisFolder".
+     * 
+     * @return
+     */
+    public static IFolder getAnalysisFolder() {
+        return getOneFolder(EResourceConstant.ANALYSIS);
+    }
+
+    /**
+     * DOC bZhou Comment method "getReportsFolder".
+     * 
+     * @return
+     */
+    public static IFolder getReportsFolder() {
+        return getOneFolder(EResourceConstant.REPORTS);
     }
 
     /**
@@ -111,48 +101,415 @@ public final class ResourceManager {
      * 
      * @return
      */
-    public static IFolder getReportingDBFolder() {
-        return ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(REPORTING_DB_FOLDER_NAME));
+    public static IFolder getReportDBFolder() {
+        return getOneFolder(EResourceConstant.REPORTING_DB);
     }
 
     /**
-     * DOC bZhou Comment method "getDQRuleFolder".
+     * DOC bZhou Comment method "getRulesFolder".
      * 
      * @return
      */
-    public static IFolder getDQRuleFolder() {
-        return getLibrariesFolder().getFolder(DQ_RULES);
+    public static IFolder getRulesFolder() {
+        return getOneFolder(EResourceConstant.RULES);
     }
 
     /**
-     * DOC bZhou Comment method "addResourceProperty".
-     * 
-     * @param key
-     * @param resourcePath
-     */
-    public void addResourceProperty(String key, String resourcePath) {
-        properties.put(key, resourcePath);
-    }
-
-    /**
-     * DOC bZhou Comment method "storeResourceProperties".
+     * DOC bZhou Comment method "getRulesSQLFolder".
      * 
      * @return
      */
-    public ReturnCode storeResourceProperties() {
-        ReturnCode rc = new ReturnCode();
+    public static IFolder getRulesSQLFolder() {
+        return getRulesFolder().getFolder(EResourceConstant.RULES_SQL.getName());
+    }
 
-        IFile file = getRootProject().getFile(RESOURCE_PROPERTIES_FILE);
-        String filePath = file.getLocation().toOSString();
+    /**
+     * DOC bZhou Comment method "getPatternFolder".
+     * 
+     * @return
+     */
+    public static IFolder getPatternFolder() {
+        return getOneFolder(EResourceConstant.PATTERNS);
+    }
 
+    /**
+     * DOC bZhou Comment method "getPatternSQLFolder".
+     * 
+     * @return
+     */
+    public static IFolder getPatternSQLFolder() {
+        return getPatternFolder().getFolder(EResourceConstant.PATTERN_SQL.getName());
+    }
+
+    /**
+     * DOC bZhou Comment method "getPatternRegexFolder".
+     * 
+     * @return
+     */
+    public static IFolder getPatternRegexFolder() {
+        return getOneFolder(EResourceConstant.PATTERN_REGEX);
+    }
+
+    /**
+     * DOC bZhou Comment method "getIndicatorFolder".
+     * 
+     * @return
+     */
+    public static IFolder getIndicatorFolder() {
+        return getOneFolder(EResourceConstant.INDICATORS);
+    }
+
+    /**
+     * DOC bZhou Comment method "getUDIFolder".
+     * 
+     * @return
+     */
+    public static IFolder getUDIFolder() {
+        return getOneFolder(EResourceConstant.USER_DEFINED_INDICATORS);
+    }
+
+    /**
+     * DOC bZhou Comment method "getJRXMLFolder".
+     * 
+     * @return
+     */
+    public static IFolder getJRXMLFolder() {
+        return getOneFolder(EResourceConstant.JRXML_TEMPLATE);
+    }
+
+    /**
+     * DOC bZhou Comment method "getConnectionFolder".
+     * 
+     * @return
+     */
+    public static IFolder getConnectionFolder() {
+        return getOneFolder(EResourceConstant.DB_CONNECTIONS);
+    }
+
+    /**
+     * DOC bZhou Comment method "getExchangeFolder".
+     * 
+     * @return
+     */
+    public static IFolder getExchangeFolder() {
+        return getOneFolder(EResourceConstant.EXCHANGE);
+    }
+
+    /**
+     * DOC bZhou Comment method "getSourceFileFolder".
+     * 
+     * @return
+     */
+    public static IFolder getSourceFileFolder() {
+        return getOneFolder(EResourceConstant.SOURCE_FILES);
+    }
+
+    /**
+     * DOC bZhou Comment method "isDataProfilingFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isDataProfilingFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.DATA_PROFILING);
+    }
+
+    /**
+     * DOC bZhou Comment method "isLibrariesFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isLibrariesFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.LIBRARIES);
+    }
+
+    /**
+     * DOC bZhou Comment method "isMetadataFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isMetadataFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.METADATA);
+    }
+
+    /**
+     * DOC bZhou Comment method "isAnalysisFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isAnalysisFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.ANALYSIS);
+    }
+
+    /**
+     * DOC bZhou Comment method "isReportsFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isReportsFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.REPORTS);
+    }
+
+    /**
+     * DOC bZhou Comment method "isReportDBFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isReportDBFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.REPORTING_DB);
+    }
+
+    /**
+     * DOC bZhou Comment method "isRulesFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isRulesFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.RULES);
+    }
+
+    /**
+     * DOC bZhou Comment method "isRulesSQLFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isRulesSQLFolder(IResource resource) {
+        return getRulesSQLFolder().getProjectRelativePath().equals(resource.getProjectRelativePath());
+    }
+
+    /**
+     * DOC bZhou Comment method "isPatternFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isPatternFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.PATTERNS);
+    }
+
+    /**
+     * DOC bZhou Comment method "isPatternSQLFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isPatternSQLFolder(IResource resource) {
+        return getPatternSQLFolder().getProjectRelativePath().equals(resource.getProjectRelativePath());
+    }
+
+    /**
+     * DOC bZhou Comment method "isPatternRegex".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isPatternRegex(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.PATTERN_REGEX);
+    }
+
+    /**
+     * DOC bZhou Comment method "isIndicatorFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isIndicatorFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.INDICATORS);
+    }
+
+    /**
+     * DOC bZhou Comment method "isUDIFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isUDIFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.USER_DEFINED_INDICATORS);
+    }
+
+    /**
+     * DOC bZhou Comment method "isJRXMLFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isJRXMLFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.JRXML_TEMPLATE);
+    }
+
+    /**
+     * DOC bZhou Comment method "isConnectionFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isConnectionFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.DB_CONNECTIONS);
+    }
+
+    /**
+     * DOC bZhou Comment method "isExchangeFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isExchangeFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.EXCHANGE);
+    }
+
+    /**
+     * DOC bZhou Comment method "isSourceFileFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isSourceFileFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.SOURCE_FILES);
+    }
+
+    /**
+     * DOC bZhou Comment method "isFolder".
+     * 
+     * @param resource
+     * @param constant
+     * @return
+     */
+    public static boolean isOneFolder(IResource resource, EResourceConstant constant) {
+        assert resource != null;
+
+        String path = resource.getProjectRelativePath().toString();
+        String compPath = getOneFolder(constant).getProjectRelativePath().toString();
+
+        return path.equalsIgnoreCase(compPath);
+    }
+
+    /**
+     * DOC bZhou Comment method "getFolder".
+     * 
+     * @param name
+     * @return
+     */
+    public static IFolder getOneFolder(EResourceConstant constant) {
+        Object value = TdqPropertieManager.getInstance().getFolderPropertyValue(constant.getName(),
+                ResourceConstant.FOLDER_CLASSIFY_KEY);
+        if (value == null) {
+            return getRootProject().getFolder(constant.getName());
+        }
+        return getRootProject().getFolder(new Path(value.toString()));
+    }
+
+    /**
+     * DOC bZhou Comment method "setClassifyProperty".
+     * 
+     * @param resource
+     */
+    public static void setClassifyProperty(IResource resource) {
+        assert resource != null;
+
+        String relativePath = resource.getProjectRelativePath().toString();
+        TdqPropertieManager.getInstance().addFolderProperties(resource, ResourceConstant.FOLDER_CLASSIFY_KEY, relativePath);
+    }
+
+    /**
+     * DOC bZhou Comment method "setReadOnlyProperty".
+     * 
+     * @param resource
+     */
+    public static void setReadOnlyProperty(IResource resource) {
+        assert resource != null;
+
+        TdqPropertieManager.getInstance().addFolderProperties(resource, ResourceConstant.FOLDER_READONLY_KEY,
+                ResourceConstant.FOLDER_READONLY_PROPERTY);
+    }
+
+    /**
+     * DOC bZhou Comment method "isReadOnlyFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isReadOnlyFolder(IResource resource) {
+        assert resource != null;
+
+        Object property = TdqPropertieManager.getInstance()
+                .getFolderPropertyValue(resource, ResourceConstant.FOLDER_READONLY_KEY);
+        return property != null && !StringUtils.isEmpty(property.toString());
+    }
+
+    /**
+     * DOC bZhou Comment method "setNoSubFolderProperty".
+     * 
+     * @param resource
+     */
+    public static void setNoSubFolderProperty(IResource resource) {
+        assert resource != null;
+
+        TdqPropertieManager.getInstance().addFolderProperties(resource, ResourceConstant.NO_SUBFOLDER_KEY,
+                ResourceConstant.NO_SUBFOLDER_PROPERTY);
+    }
+
+    /**
+     * DOC bZhou Comment method "isNoSubFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isNoSubFolder(IResource resource) {
+        assert resource != null;
+
+        Object property = TdqPropertieManager.getInstance().getFolderPropertyValue(resource, ResourceConstant.NO_SUBFOLDER_KEY);
+        return property != null && !StringUtils.isEmpty(property.toString());
+    }
+
+    /**
+     * DOC bZhou Comment method "refreshStructure".
+     */
+    public static void refreshStructure() {
         try {
-            FileOutputStream fos = new FileOutputStream(new File(filePath));
-            properties.store(fos, null);
-            rc.setOk(true);
-        } catch (Exception e) {
-            rc.setMessage(e.getMessage());
+            getRootProject().refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "isSubFolder".
+     * 
+     * @param parentFolder
+     * @param subFolder
+     * @return
+     */
+    public static boolean isSubFolder(IFolder parentFolder, IFolder subFolder) {
+        assert parentFolder != null;
+        assert subFolder != null;
+
+        return parentFolder.getFullPath().isPrefixOf(subFolder.getFullPath());
+    }
+
+    /**
+     * DOC bZhou Comment method "isSubFolder".
+     * 
+     * @param parentFolder
+     * @param subFolders
+     * @return
+     */
+    public static boolean isSubFolder(IFolder parentFolder, IFolder... subFolders) {
+        assert parentFolder != null;
+        assert subFolders != null;
+
+        for (IFolder subFolder : subFolders) {
+            if (!isSubFolder(parentFolder, subFolder)) {
+                return false;
+            }
         }
 
-        return rc;
+        return true;
     }
 }

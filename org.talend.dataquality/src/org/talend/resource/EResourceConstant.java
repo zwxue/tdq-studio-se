@@ -17,78 +17,80 @@ package org.talend.resource;
  */
 public enum EResourceConstant {
 
-    TDQ_DATA_PROFILING("TDQ_Data Profiling", "", "", ""),
-    TDQ_LIBRARIES("TDQ_Libraries", "", "", ""),
-    TDQ_METADATA("TDQ_Metadata", "", "", ""),
-    TDQ_REPORTING_DB("TDQ_reporting_db", "", "", ""),
+    DATA_PROFILING(0, "TDQ_Data Profiling"),
+    LIBRARIES(1, "TDQ_Libraries"),
+    METADATA(2, "TDQ_Metadata"),
+    ANALYSIS(3, "Analyses"),
+    REPORTS(4, "Reports"),
+    EXCHANGE(5, "Exchange"),
+    INDICATORS(6, "Indicators"),
+    JRXML_TEMPLATE(7, "JRXML Template"),
+    PATTERNS(8, "Patterns"),
+    RULES(9, "Rules"),
+    SOURCE_FILES(10, "Source Files"),
+    USER_DEFINED_INDICATORS(11, "User Defined Indicators"),
+    PATTERN_REGEX(12, "Regex"),
+    PATTERN_SQL(13, "SQL"),
+    RULES_SQL(14, "SQL"),
+    DB_CONNECTIONS(15, "DB Connections"),
+    REPORTING_DB(16, "TDQ_reporting_db");
 
-    // Folder in data profiling
-    ANALYSES("Analyses", "FOLDER_ANALYSIS_PROPERTY", "TDQ_Data Profiling", ""),
-    REPORTS("Reports", "FOLDER_REPORT_PROPERTY", "TDQ_Data Profiling", ""),
+    private int index;
 
-    // Folder in libraries
-    DQ_RULES("DQ Rules", "DQRULES_FOLDER_PROPERTY", "TDQ_Libraries", "/dqrules"),
-    EXCHANGE("Exchange", "FOLDER_EXCHANGE_PROPERTY", "TDQ_Libraries", ""),
-    JRXML_REPORTS("JRXML Template", "JRXML_FOLDER_PROPERTY", "TDQ_Libraries", ""),
-    PATTERNS("Patterns", "FOLDER_PATTERNS_PROPERTY", "TDQ_Libraries", "/patterns"),
-    SOURCE_FILES("Source Files", "SOURCEFILES_FOLDER_PROPERTY", "TDQ_Libraries", "/demo"),
-    SQL_PATTERNS("SQL Patterns", "SQLPATTERNS_FOLDER_PROPERTY", "TDQ_Libraries", "/sql_like"),
+    private String name;
 
-    // Folder in metadata
-    DB_CONNECTIONS("DB Connections", "DBCONNECTION_FOLDER_PROPERTY", "TDQ_Metadata", "");
-
-    private String folderName;
-
-    private String folderProperty;
-
-    private String parentFolderName;
-
-    private String dataSourcePath;
-
-    private EResourceConstant(String folderName, String folderProperty, String parentFolderName, String dataSourcePath) {
-        this.folderName = folderName;
-        this.folderProperty = folderProperty;
-        this.parentFolderName = parentFolderName;
-        this.dataSourcePath = dataSourcePath;
+    EResourceConstant(int index, String name) {
+        this.index = index;
+        this.name = name;
     }
 
     /**
-     * Getter for dataSourcePath.
+     * Getter for index.
      * 
-     * @return the dataSourcePath
+     * @return the index
      */
-    public String getDataSourcePath() {
-        return dataSourcePath;
+    public int getIndex() {
+        return index;
     }
 
     /**
-     * Getter for folderName.
+     * Getter for name.
      * 
-     * @return the folderName
+     * @return the name
      */
-    public String getFolderName() {
-        return folderName;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Getter for folderProperty.
+     * DOC bZhou Comment method "getNameByIndex".
      * 
-     * @return the folderProperty
+     * @param index
+     * @return
      */
-    public String getFolderProperty() {
-        return folderProperty;
-    }
-
-    /**
-     * Getter for parentFolderName.
-     * 
-     * @return the parentFolderName
-     */
-    public String getParentFolderName() {
-        if (parentFolderName == null || "".equals(parentFolderName)) {
-            return ResourceManager.getRootProjectName();
+    public String getNameByIndex(int index) {
+        for (EResourceConstant constant : values()) {
+            if (constant.getIndex() == index) {
+                return constant.getName();
+            }
         }
 
-        return parentFolderName;
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getIndexByName".
+     * 
+     * @param name
+     * @return
+     */
+    public Integer getIndexByName(String name) {
+        for (EResourceConstant constant : values()) {
+            if (constant.getName().equals(name)) {
+                return constant.getIndex();
+            }
+        }
+
+        return null;
     }
 }

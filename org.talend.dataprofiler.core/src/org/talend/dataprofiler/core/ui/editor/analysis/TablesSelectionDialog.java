@@ -62,7 +62,6 @@ import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
@@ -441,9 +440,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 } catch (CoreException e) {
                     log.error(DefaultMessagesImpl.getString("TablesSelectionDialog.cannotGetChildren") + container.getLocation()); //$NON-NLS-1$
                 }
-                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-                // project.
-                if (container.equals(ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS))) {
+
+                if (container.equals(ResourceManager.getConnectionFolder())) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
                 return members;
@@ -496,7 +494,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             if (inputElement instanceof Package) {
                 EObject eObj = (EObject) inputElement;
                 Package pckg = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObj);
-                
+
                 if (pckg != null) {
                     Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg);
                     Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(pckg);
@@ -516,7 +514,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                                 tableList = DqRepositoryViewService.getTables(provider, schema, null, true);
                             }
                             tables = tableList.toArray(new TdTable[tableList.size()]);
-                            //save the Table from db into EMF Object.
+                            // save the Table from db into EMF Object.
                             pckg.getOwnedElement().addAll(tableList);
                         } catch (TalendException e) {
                             MessageBoxExceptionHandler.process(e);

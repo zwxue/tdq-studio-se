@@ -44,7 +44,6 @@ import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
@@ -296,7 +295,7 @@ public final class ChartTableFactory {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
         String query = itemEntity.getQuery();
         String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
-        IFolder folder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.PATTERNS);
+        IFolder folder = ResourceManager.getPatternFolder();
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 

@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.markers.MarkerViewUtil;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.model.TdResourceModel;
@@ -57,28 +58,28 @@ public class TdAddTaskAction extends Action {
             TdTaskPropertiesDialog dialog = new TdTaskPropertiesDialog(shell);
             // TaskPropertiesDialog dialog = new TaskPropertiesDialog(newTree.getShell());
             ModelElement modelElement = null;
-            IFile fileResource = null;
+            IFile file = null;
             if (navObj instanceof IFile) {
-                fileResource = (IFile) navObj;
-                if (fileResource.getName().endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)) {
-                    modelElement = AnaResourceFileHelper.getInstance().findAnalysis(fileResource);
-                } else if (fileResource.getName().endsWith(org.talend.dq.PluginConstant.REP_SUFFIX)) {
-                    modelElement = RepResourceFileHelper.getInstance().findReport(fileResource);
+                file = (IFile) navObj;
+                if (FactoriesUtil.isAnalysisFile(file)) {
+                    modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
+                } else if (FactoriesUtil.isReportFile(file)) {
+                    modelElement = RepResourceFileHelper.getInstance().findReport(file);
                 }
 
             } else if (navObj instanceof ModelElement) {
                 modelElement = (ModelElement) navObj;
-                fileResource = WorkspaceResourceHelper.getModelElementResource(modelElement);
+                file = WorkspaceResourceHelper.getModelElementResource(modelElement);
 
             }
             if (modelElement != null) {
-                TdResourceModel tdResModel = new TdResourceModel(fileResource.getFullPath(), (Workspace) fileResource
-                        .getWorkspace(), modelElement);
+                TdResourceModel tdResModel = new TdResourceModel(file.getFullPath(), (Workspace) file.getWorkspace(),
+                        modelElement);
                 dialog.setResource(tdResModel);
                 Map<String, Object> attMap = new HashMap<String, Object>();
                 attMap.put(MarkerViewUtil.NAME_ATTRIBUTE, modelElement.getName());
-                attMap.put(IMarker.LOCATION, fileResource.getRawLocation().toString());
-                attMap.put(IMarker.LINE_NUMBER, fileResource.getRawLocation().toString());
+                attMap.put(IMarker.LOCATION, file.getRawLocation().toString());
+                attMap.put(IMarker.LINE_NUMBER, file.getRawLocation().toString());
                 dialog.setInitialAttributes(attMap);
                 dialog.open();
             }

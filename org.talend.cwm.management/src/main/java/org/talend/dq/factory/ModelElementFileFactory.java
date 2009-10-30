@@ -16,12 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -38,28 +41,38 @@ public final class ModelElementFileFactory {
 
     public static ModelElement getModelElement(IFile file) {
         ModelElement modelElement = null;
-        if (file.getName().endsWith(PluginConstant.PRV_SUFFIX)) {
+        if (FactoriesUtil.isProvFile(file)) {
             TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
             modelElement = returnValue.getObject();
-        } else if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+        } else if (FactoriesUtil.isAnalysisFile(file)) {
             modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
-        } else if (file.getName().endsWith(PluginConstant.REP_SUFFIX)) {
+        } else if (FactoriesUtil.isReportFile(file)) {
             modelElement = RepResourceFileHelper.getInstance().findReport(file);
-        } else {
-            return modelElement;
-            // log.info("The file \"" + file.getFullPath() + "\" has no corresponding ModelElement!");
+        } else if (FactoriesUtil.isDQRuleFile(file)) {
+            modelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+        } else if (FactoriesUtil.isPatternFile(file)) {
+            modelElement = PatternResourceFileHelper.getInstance().findPattern(file);
+        } else if (FactoriesUtil.isUDIFile(file)) {
+            modelElement = UDIResourceFileHelper.getInstance().findUDI(file);
         }
+
         return modelElement;
     }
 
     public static ResourceFileMap getResourceFileMap(IFile file) {
         ResourceFileMap modelElement = null;
-        if (file.getName().endsWith(PluginConstant.PRV_SUFFIX)) {
+        if (FactoriesUtil.isProvFile(file)) {
             modelElement = PrvResourceFileHelper.getInstance();
-        } else if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+        } else if (FactoriesUtil.isAnalysisFile(file)) {
             modelElement = AnaResourceFileHelper.getInstance();
-        } else if (file.getName().endsWith(PluginConstant.REP_SUFFIX)) {
+        } else if (FactoriesUtil.isReportFile(file)) {
             modelElement = RepResourceFileHelper.getInstance();
+        } else if (FactoriesUtil.isDQRuleFile(file)) {
+            modelElement = DQRuleResourceFileHelper.getInstance();
+        } else if (FactoriesUtil.isPatternFile(file)) {
+            modelElement = PatternResourceFileHelper.getInstance();
+        } else if (FactoriesUtil.isUDIFile(file)) {
+            modelElement = UDIResourceFileHelper.getInstance();
         }
         return modelElement;
     }

@@ -18,10 +18,10 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 
 /**
@@ -51,7 +51,7 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
             }
         } else if (parentElement instanceof IFile) {
             IFile prvFile = (IFile) parentElement;
-            if (prvFile.getName().endsWith(PluginConstant.PRV_SUFFIX)) {
+            if (FactoriesUtil.isProvFile(prvFile)) {
                 parentElement = PrvResourceFileHelper.getInstance().getFileResource((IFile) parentElement);
                 return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             }

@@ -22,9 +22,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
-import org.talend.resource.xml.TdqPropertieManager;
+import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -42,32 +41,21 @@ public class CreateUserFolderProvider extends CommonActionProvider {
 
     private IFolder currentSelection;
 
-    // public void init(ICommonActionExtensionSite anExtensionSite) {
-    //
-    // if (anExtensionSite.getViewSite() instanceof ICommonViewerWorkbenchSite) {
-    //           
-    // }
-    // }
-
     /**
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
-            // MOD mzhao 2009-03-23, Feature 6066
-            if (((IFolder) obj).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
-                return;
-            }
+
             currentSelection = (IFolder) obj;
-            Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(currentSelection,
-                    DQStructureManager.NO_SUBFOLDER_KEY);
-            if (persistentProperty != null && !persistentProperty.toString().trim().equals("")) { //$NON-NLS-1$
-                return;
+
+            if (!ResourceManager.isNoSubFolder(currentSelection)) {
+                CreateUserFolderAction createSubFolderAction = new CreateUserFolderAction();
+                menu.add(createSubFolderAction);
             }
         }
-        CreateUserFolderAction createSubFolderAction = new CreateUserFolderAction();
-        menu.add(createSubFolderAction);
+
     }
 
     /**

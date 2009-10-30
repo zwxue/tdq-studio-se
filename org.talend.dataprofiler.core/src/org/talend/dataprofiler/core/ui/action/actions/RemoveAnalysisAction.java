@@ -32,7 +32,6 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -47,89 +46,78 @@ import org.talend.top.repository.ProxyRepositoryManager;
  */
 public class RemoveAnalysisAction extends Action {
 
-	protected static Logger log = Logger.getLogger(RemoveAnalysisAction.class);
+    protected static Logger log = Logger.getLogger(RemoveAnalysisAction.class);
 
-	public RemoveAnalysisAction() {
-		super(DefaultMessagesImpl
-				.getString("RemoveAnalysisAction.removeAnalysis")); //$NON-NLS-1$
-		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
-	}
+    public RemoveAnalysisAction() {
+        super(DefaultMessagesImpl.getString("RemoveAnalysisAction.removeAnalysis")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		DQRespositoryView findView = (DQRespositoryView) CorePlugin
-				.getDefault().findView(DQRespositoryView.ID);
-		TreeSelection treeSelection = (TreeSelection) findView
-				.getCommonViewer().getSelection();
-		TreePath[] paths = treeSelection.getPaths();
-		TdReport parentReport;
-		List<Analysis> analysisList;
-		Analysis analysisObj = null;
-		Map<TdReport, List<Analysis>> removeMap = new HashMap<TdReport, List<Analysis>>();
-		for (int i = 0; i < paths.length; i++) {
-			Object lastSegment = paths[i].getLastSegment();
-			if (!(lastSegment instanceof Analysis)) {
-				return;
-			}
-			analysisObj = (Analysis) lastSegment;
-			IFolderNode folderNode = (IFolderNode) paths[i].getSegment(paths[i]
-					.getSegmentCount() - 2);
-			parentReport = (TdReport) folderNode.getParent();
-			analysisList = removeMap.get(parentReport);
-			if (analysisList == null) {
-				analysisList = new ArrayList<Analysis>();
-				analysisList.add(analysisObj);
-				removeMap.put(parentReport, analysisList);
-			} else {
-				analysisList.add(analysisObj);
-			}
-		}
-		if (analysisObj == null) {
-			return;
-		}
-		String message = paths.length > 1 ? DefaultMessagesImpl.getString(
-				"RemoveAnalysisAction.areYouDeleteElement0", paths.length) //$NON-NLS-1$ //$NON-NLS-2$
-				: DefaultMessagesImpl
-						.getString(
-								"RemoveAnalysisAction.areYouDeleteElement2", analysisObj.getName()); //$NON-NLS-1$ //$NON-NLS-2$
-		boolean openConfirm = MessageDialog
-				.openConfirm(
-						null,
-						DefaultMessagesImpl
-								.getString("RemoveAnalysisAction.confirmResourceDelete"), message); //$NON-NLS-1$
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
+        TreePath[] paths = treeSelection.getPaths();
+        TdReport parentReport;
+        List<Analysis> analysisList;
+        Analysis analysisObj = null;
+        Map<TdReport, List<Analysis>> removeMap = new HashMap<TdReport, List<Analysis>>();
+        for (int i = 0; i < paths.length; i++) {
+            Object lastSegment = paths[i].getLastSegment();
+            if (!(lastSegment instanceof Analysis)) {
+                return;
+            }
+            analysisObj = (Analysis) lastSegment;
+            IFolderNode folderNode = (IFolderNode) paths[i].getSegment(paths[i].getSegmentCount() - 2);
+            parentReport = (TdReport) folderNode.getParent();
+            analysisList = removeMap.get(parentReport);
+            if (analysisList == null) {
+                analysisList = new ArrayList<Analysis>();
+                analysisList.add(analysisObj);
+                removeMap.put(parentReport, analysisList);
+            } else {
+                analysisList.add(analysisObj);
+            }
+        }
+        if (analysisObj == null) {
+            return;
+        }
+        String message = paths.length > 1 ? DefaultMessagesImpl.getString(
+                "RemoveAnalysisAction.areYouDeleteElement0", paths.length) //$NON-NLS-1$ //$NON-NLS-2$
+                : DefaultMessagesImpl.getString("RemoveAnalysisAction.areYouDeleteElement2", analysisObj.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+        boolean openConfirm = MessageDialog.openConfirm(null, DefaultMessagesImpl
+                .getString("RemoveAnalysisAction.confirmResourceDelete"), message); //$NON-NLS-1$
 
-		if (openConfirm) {
-			Iterator<TdReport> iterator = removeMap.keySet().iterator();
-			while (iterator.hasNext()) {
-				TdReport report = iterator.next();
-				ReportHelper.removeAnalyses(report, removeMap.get(report));
+        if (openConfirm) {
+            Iterator<TdReport> iterator = removeMap.keySet().iterator();
+            while (iterator.hasNext()) {
+                TdReport report = iterator.next();
+                ReportHelper.removeAnalyses(report, removeMap.get(report));
 
-				// save now modified resources (that contain the Dependency
-				// objects)
-				List<Resource> modifiedResources = DependenciesHandler
-						.getInstance().removeDependenciesBetweenModels(report,
-								removeMap.get(report));
-				for (int i = 0; i < modifiedResources.size(); i++) {
-					EMFUtil.saveSingleResource(modifiedResources.get(i));
-				}
+                // save now modified resources (that contain the Dependency
+                // objects)
+                List<Resource> modifiedResources = DependenciesHandler.getInstance().removeDependenciesBetweenModels(report,
+                        removeMap.get(report));
+                for (int i = 0; i < modifiedResources.size(); i++) {
+                    EMFUtil.saveSingleResource(modifiedResources.get(i));
+                }
 
-				RepResourceFileHelper.getInstance().save(report);
-			}
+                RepResourceFileHelper.getInstance().save(report);
+            }
 
-			IFolder reportsFolder = ResourceManager.getDataProfilingFolder()
-					.getFolder(DQStructureManager.REPORTS);
-			try {
+            IFolder reportsFolder = ResourceManager.getReportsFolder();
+            try {
                 ProxyRepositoryManager.getInstance().save();
-				reportsFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
-			} catch (CoreException e) {
-				log.error(e, e);
-			}
-			findView.getCommonViewer().refresh();
-		}
-	}
+                reportsFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
+            } catch (CoreException e) {
+                log.error(e, e);
+            }
+            findView.getCommonViewer().refresh();
+        }
+    }
 }

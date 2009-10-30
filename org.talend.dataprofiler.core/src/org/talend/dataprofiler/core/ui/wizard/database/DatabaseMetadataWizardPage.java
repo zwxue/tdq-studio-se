@@ -17,7 +17,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
-import org.talend.dataquality.PluginConstant;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -25,65 +24,58 @@ import org.talend.resource.ResourceManager;
  */
 public class DatabaseMetadataWizardPage extends MetadataWizardPage {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createControl
-	 * (org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createControl(Composite parent) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createControl (org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createControl(Composite parent) {
 
-		super.createControl(parent);
+        super.createControl(parent);
 
-		pathText.setText(getParameter().getFolderProvider().getFolderURI());
-	}
+        pathText.setText(getParameter().getFolderProvider().getFolderURI());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#
-	 * createExtendedControl(org.eclipse.swt.widgets.Composite )
-	 */
-	@Override
-	protected void createExtendedControl(Composite container) {
-		// TODO Auto-generated method stub
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#
+     * createExtendedControl(org.eclipse.swt.widgets.Composite )
+     */
+    @Override
+    protected void createExtendedControl(Composite container) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#addListeners()
-	 */
-	@Override
-	protected void addListeners() {
-		button.addSelectionListener(new SelectionAdapter() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#addListeners()
+     */
+    @Override
+    protected void addListeners() {
+        button.addSelectionListener(new SelectionAdapter() {
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
-			 * .swt.events.SelectionEvent)
-			 */
-			@Override
-			public void widgetSelected(SelectionEvent e) {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
 
-				openFolderSelectionDialog(ResourceManager.METADATA_FOLDER_NAME,
-						PluginConstant.DB_CONNECTIONS);
-			}
-		});
+                openFolderSelectionDialog(getStoredFolder());
+            }
+        });
 
-		super.addListeners();
-	}
+        super.addListeners();
+    }
 
-	@Override
-	protected IFolder getStoredFolder() {
-		return ResourceManager.getMetadataFolder().getFolder(
-				PluginConstant.DB_CONNECTIONS);
-	}
+    @Override
+    protected IFolder getStoredFolder() {
+        return ResourceManager.getConnectionFolder();
+    }
 
 }

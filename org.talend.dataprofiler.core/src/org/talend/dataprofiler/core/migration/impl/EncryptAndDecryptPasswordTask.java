@@ -26,7 +26,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.security.CryptoHelper;
@@ -41,7 +40,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 public class EncryptAndDecryptPasswordTask extends AbstractMigrationTask {
 
     public boolean execute() {
-        IFolder folder = ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS);
+        IFolder folder = ResourceManager.getConnectionFolder();
         try {
             IResource[] resource = folder.members();
             if (resource.length > 0) {

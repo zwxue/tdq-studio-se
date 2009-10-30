@@ -23,9 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
 import org.talend.resource.ResourceManager;
@@ -75,7 +73,7 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
                     }
                 } else if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    return DQRuleUtilities.isLibraiesSubfolder(folder, DQStructureManager.RULES);
+                    return ResourceManager.isSubFolder(ResourceManager.getRulesFolder(), folder);
                 }
                 return false;
             }

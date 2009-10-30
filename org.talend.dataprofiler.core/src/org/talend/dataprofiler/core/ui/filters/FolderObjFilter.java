@@ -16,8 +16,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.jface.viewers.Viewer;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -55,10 +53,6 @@ public class FolderObjFilter extends AbstractViewerFilter {
                 if (resourceAttributes.isHidden()) {
                     return false;
                 }
-            } else if (IResource.PROJECT == res.getType()) {
-                    Object persistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(res,
-                            DQStructureManager.PROJECT_TDQ_KEY);
-                    return persistentProperty != null && !persistentProperty.toString().trim().equals(""); //$NON-NLS-1$
             } else {
                 return true;
             }

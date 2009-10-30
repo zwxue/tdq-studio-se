@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -66,22 +67,21 @@ public class DBPackagesViewLabelProvider extends AdapterFactoryLabelProvider {
             return ((IContainer) element).getName();
         } else if (element instanceof IFolderNode) {
             return ((IFolderNode) element).getName();
-        }
-
-        String text = super.getText(element);
-        if (text.endsWith(org.talend.dq.PluginConstant.PRV_SUFFIX)) {
-            IFile file = (IFile) element;
-            TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(file);
-            String decorateText = PluginConstant.EMPTY_STRING;
-            if (rc.isOk()) {
-                decorateText = rc.getObject().getName();
-            } else {
-                log.warn(rc.getMessage());
+        } else if (element instanceof IFile) {
+            if (FactoriesUtil.isProvFile((IFile) element)) {
+                IFile file = (IFile) element;
+                TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(file);
+                String decorateText = PluginConstant.EMPTY_STRING;
+                if (rc.isOk()) {
+                    decorateText = rc.getObject().getName();
+                } else {
+                    log.warn(rc.getMessage());
+                }
+                return decorateText;
             }
-            return decorateText;
         }
 
-        return text;
+        return super.getText(element);
     }
 
 }

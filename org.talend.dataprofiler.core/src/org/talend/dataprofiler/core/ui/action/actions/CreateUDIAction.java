@@ -23,7 +23,6 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
@@ -52,8 +51,7 @@ public class CreateUDIAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
         if (this.folder == null) {
-            this.folder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.INDICATORS).getFolder(
-                    DQStructureManager.USER_DEFINED_INDICATORS);
+            this.folder = ResourceManager.getUDIFolder();
         }
         UDIndicatorParameter parameter = new UDIndicatorParameter();
         FolderProvider folderProvider = new FolderProvider();

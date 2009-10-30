@@ -33,7 +33,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
 import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
 import org.talend.dataprofiler.ecos.EcosConstants;
@@ -111,26 +110,25 @@ public class ImportRemotePatternAction extends Action {
 
                 // MOD yyi 8746: strange behaviour for imported patterns!
                 ExpressionType type = ExpressionType.REGEXP;
-                IFolder folder = getFolder(DQStructureManager.PATTERNS);
+                IFolder folder = ResourceManager.getPatternFolder();
 
                 if ("regex".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
                     type = ExpressionType.REGEXP;
-                    folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.REGEX);
+                    folder = ResourceManager.getPatternRegexFolder();
                 } else if ("pattern".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
                     type = ExpressionType.REGEXP;
-                    folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.REGEX);
+                    folder = ResourceManager.getPatternRegexFolder();
                 } else if ("SQL".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
                     // MOD yyi 8960: Patterns imported from Exchange/SQL can not be put in "Patterns/SQL" folder
                     type = ExpressionType.SQL_LIKE;
-                    folder = getFolder(DQStructureManager.PATTERNS).getFolder(DQStructureManager.SQL);
+                    folder = ResourceManager.getPatternSQLFolder();
                 } else if ("indicator".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
                     type = null;
                 }
 
                 for (File oneFile : files) {
                     if (type == null) {
-                        IFolder udiFolder = getFolder(DQStructureManager.INDICATORS).getFolder(
-                                DQStructureManager.USER_DEFINED_INDICATORS);
+                        IFolder udiFolder = ResourceManager.getUDIFolder();
                         information.addAll(ImportFactory.importIndicatorToStucture(oneFile, udiFolder, true, true));
                     } else {
                         information.addAll(ImportFactory.importToStucture(oneFile, folder, type, true, true));
@@ -179,10 +177,6 @@ public class ImportRemotePatternAction extends Action {
         fInstalledComponents.add(extension);
     }
 
-    private IFolder getFolder(String dest) {
-        return ResourceManager.getLibrariesFolder().getFolder(dest);
-    }
-
     /**
      * DOC bZhou ImportRemotePatternAction class global comment. Detailled comment
      */
@@ -222,7 +216,7 @@ public class ImportRemotePatternAction extends Action {
             // get the latest revision url
             String componentUrl = extension.getLatestRevision().getUrl();
             monitor.setTaskName(EcosConstants.DOWNLOAD_TASK_NAME + componentUrl);
-            String targetFolder = getFolder(DQStructureManager.EXCHANGE).getLocation().toOSString();
+            String targetFolder = ResourceManager.getExchangeFolder().getLocation().toOSString();
             try {
                 String fileName = extension.getLatestRevision().getFileName();
                 // fileName = extension.getLatestRevision().getFileName();

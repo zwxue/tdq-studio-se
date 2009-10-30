@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -32,7 +31,6 @@ import org.eclipse.ui.part.ISetSelectionTarget;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
@@ -137,8 +135,7 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
             int idx = 1;
             while (true) {
                 final String newFilename = "copy" + idx + definition.getName() + ".definition"; //$NON-NLS-1$ //$NON-NLS-2$
-                newFile = getFolder(DQStructureManager.INDICATORS).getFolder(DQStructureManager.USER_DEFINED_INDICATORS).getFile(
-                        newFilename);
+                newFile = ResourceManager.getUDIFolder().getFile(newFilename);
                 if (!newFile.exists()) {
                     break;
                 }
@@ -146,16 +143,6 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
             }
             return newFile;
         } // end of getNewFile
-
-        /**
-         * DOC yyi Comment method "getFolder".
-         * 
-         * @param dest
-         * @return
-         */
-        private IFolder getFolder(String dest) {
-            return ResourceManager.getLibrariesFolder().getFolder(dest);
-        }
 
         /**
          * DOC yyi 2009-09-07, Feature:8882.

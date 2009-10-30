@@ -23,7 +23,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
@@ -35,56 +34,49 @@ import org.talend.top.repository.ProxyRepositoryManager;
  */
 public class DeletePatternAction extends Action {
 
-	protected static Logger log = Logger.getLogger(DeletePatternAction.class);
+    protected static Logger log = Logger.getLogger(DeletePatternAction.class);
 
-	private List<IFile> selectedFiles;
+    private List<IFile> selectedFiles;
 
-	/**
-	 * DOC qzhang AddSqlFileAction constructor comment.
-	 * 
-	 * @param folder
-	 */
-	public DeletePatternAction(List<IFile> selectedFiles) {
-		setText(DefaultMessagesImpl
-				.getString("DeletePatternAction.deleteRegularPattern")); //$NON-NLS-1$
-		// setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.
-		// CREATE_SQL_ACTION));
-		this.selectedFiles = selectedFiles;
-	}
+    /**
+     * DOC qzhang AddSqlFileAction constructor comment.
+     * 
+     * @param folder
+     */
+    public DeletePatternAction(List<IFile> selectedFiles) {
+        setText(DefaultMessagesImpl.getString("DeletePatternAction.deleteRegularPattern")); //$NON-NLS-1$
+        // setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.
+        // CREATE_SQL_ACTION));
+        this.selectedFiles = selectedFiles;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		IFolder sourceFiles = ResourceManager.getLibrariesFolder().getFolder(
-				DQStructureManager.PATTERNS);
-		for (IFile file : selectedFiles) {
-			if (MessageDialog
-					.openConfirm(
-							new Shell(),
-							DefaultMessagesImpl
-									.getString("DeletePatternAction.deleteRegularPatternFile"), //$NON-NLS-1$
-							DefaultMessagesImpl
-									.getString(
-											"DeletePatternAction.areYouDeleteRegularPatternFile", file.getName()))) { //$NON-NLS-1$
-				try {
-					if (file.exists()) {
-						file.delete(true, null);
-					}
-				} catch (CoreException e) {
-					log.error(e, e);
-				}
-			}
-		}
-		try {
-		    ProxyRepositoryManager.getInstance().save();
-			sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e) {
-			log.error(e, e);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        IFolder sourceFiles = ResourceManager.getPatternFolder();
+        for (IFile file : selectedFiles) {
+            if (MessageDialog.openConfirm(new Shell(), DefaultMessagesImpl
+                    .getString("DeletePatternAction.deleteRegularPatternFile"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("DeletePatternAction.areYouDeleteRegularPatternFile", file.getName()))) { //$NON-NLS-1$
+                try {
+                    if (file.exists()) {
+                        file.delete(true, null);
+                    }
+                } catch (CoreException e) {
+                    log.error(e, e);
+                }
+            }
+        }
+        try {
+            ProxyRepositoryManager.getInstance().save();
+            sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+    }
 
 }

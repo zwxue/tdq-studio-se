@@ -82,7 +82,6 @@ import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -116,6 +115,9 @@ public class DQRespositoryView extends CommonNavigator {
 
         new TDCPFolderMergeTask().execute();
 
+        addPostWindowCloseListener();
+        addResourceChangedListener();
+
         if (isNeedCreateStructure()) {
             DQStructureManager manager = DQStructureManager.getInstance();
             if (!manager.createDQStructure()) {
@@ -128,10 +130,6 @@ public class DQRespositoryView extends CommonNavigator {
         MigrationTaskManager.doMigrationTask(MigrationTaskManager.findValidMigrationTasks());
 
         CorePlugin.getDefault().setRespositoryView(this);
-        // MOD mzhao bug 8581 Add pre window close listener.
-        addPostWindowCloseListener();
-        // MOD mzhao bug 7488 ,Add resource changed listener.
-        addResourceChangedListener();
     }
 
     private void addResourceChangedListener() {
@@ -152,7 +150,7 @@ public class DQRespositoryView extends CommonNavigator {
             public boolean preShutdown(IWorkbench workbench, boolean forced) {
                 // Clean the copied comparison resources under folder
                 // "Metadata/"
-                IFolder folder = ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS);
+                IFolder folder = ResourceManager.getConnectionFolder();
                 try {
                     IResource[] resources = folder.members(true);
                     for (IResource resource : resources) {
@@ -285,7 +283,7 @@ public class DQRespositoryView extends CommonNavigator {
                         List<RenderedObject> tempList = new ArrayList<RenderedObject>();
                         tempList.add(analysis);
 
-                        IFolder analysesFolder = ResourceManager.getDataProfilingFolder().getFolder(DQStructureManager.ANALYSIS);
+                        IFolder analysesFolder = ResourceManager.getAnalysisFolder();
                         IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList, analysesFolder).get(0);
 
                         CorePlugin.getDefault()

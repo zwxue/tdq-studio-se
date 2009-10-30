@@ -64,7 +64,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
@@ -422,7 +421,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     }
                 } else if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    return DQRuleUtilities.isLibraiesSubfolder(folder, DQStructureManager.RULES);
+                    return ResourceManager.isSubFolder(ResourceManager.getRulesFolder(), folder);
                 }
                 return false;
             }
@@ -433,7 +432,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         dialog.setSize(80, 30);
         dialog.create();
         // MOD xqliu 2009-04-30 bug 6808
-        IFolder whereRuleFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.RULES);
+        IFolder whereRuleFolder = ResourceManager.getRulesFolder();
         Object[] ownedWhereRuleFiles = getOwnedWhereRuleFiles(tableIndicator, whereRuleFolder);
         dialog.setCheckedElements(ownedWhereRuleFiles);
         if (dialog.open() == Window.OK) {
@@ -1129,9 +1128,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 WhereRuleIndicator indicator = (WhereRuleIndicator) indicatorUnit.getIndicator();
                 WhereRule whereRule = (WhereRule) indicator.getIndicatorDefinition();
-                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-                // project.
-                IFolder whereRuleFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.RULES);
+
+                IFolder whereRuleFolder = ResourceManager.getRulesFolder();
                 IFile file = DQRuleResourceFileHelper.getInstance()
                         .getWhereRuleFile(whereRule, new IFolder[] { whereRuleFolder });
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

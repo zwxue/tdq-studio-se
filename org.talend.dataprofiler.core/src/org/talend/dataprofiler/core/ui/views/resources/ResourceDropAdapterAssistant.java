@@ -45,7 +45,6 @@ import org.eclipse.ui.part.ResourceTransfer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -54,7 +53,7 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.resource.xml.TdqPropertieManager;
+import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -123,7 +122,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 String name = res.getName();
                 IFile fileRes = (IFile) res;
                 IFile movedIFile = folder.getFile(name);
-                if (!DQStructureManager.getInstance().getModelElementSuffixs().contains(fileRes.getFileExtension())) {
+                if (!FactoriesUtil.isEmfFile(fileRes)) {
 
                     try {
                         fileRes.move(movedIFile.getFullPath(), false, null);
@@ -239,19 +238,17 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 if ((targetRes.getType() == IResource.FOLDER)) {
                     IFolder targetFolder = (IFolder) targetRes;
                     IFolder sourceFolder = (IFolder) res.getParent();
-                    Object srcPersistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(sourceFolder,
-                            DQStructureManager.FOLDER_CLASSIFY_KEY);
-                    Object destPersistentProperty = TdqPropertieManager.getInstance().getFolderPropertyValue(targetFolder,
-                            DQStructureManager.FOLDER_CLASSIFY_KEY);
-                    if (srcPersistentProperty != null && destPersistentProperty != null
-                            && srcPersistentProperty.toString().equals(destPersistentProperty.toString())) {
+                    if (ResourceManager.isSubFolder(targetFolder, sourceFolder)) {
                         return Status.OK_STATUS;
                     }
-                } else if (res.getName().endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)
-                        && (targetRes.getType() == IResource.FILE)) {
+
+                    if (ResourceManager.isSubFolder(sourceFolder, targetFolder) && !ResourceManager.isNoSubFolder(sourceFolder)) {
+                        return Status.OK_STATUS;
+                    }
+                } else if ((targetRes.getType() == IResource.FILE) && FactoriesUtil.isAnalysisFile((IFile) res)) {
                     // if (targetRes instanceof IFile) {
                     IFile tfile = (IFile) targetRes;
-                    if (FactoriesUtil.REP.equals(tfile.getFileExtension())) {
+                    if (FactoriesUtil.isReportFile(tfile)) {
                         // dropRep = true;
                         return Status.OK_STATUS;
                     }

@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dq.analysis.parameters.SqlFileParameter;
@@ -136,7 +134,7 @@ public class CreateSqlFileWizardPage extends WizardPage {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                openFolderSelectionDialog(ResourceManager.LIBRARIES_FOLDER_NAME, DQStructureManager.SOURCE_FILES);
+                openFolderSelectionDialog(ResourceManager.getSourceFileFolder());
             }
         });
     }
@@ -150,9 +148,8 @@ public class CreateSqlFileWizardPage extends WizardPage {
         return this.pathText;
     }
 
-    protected void openFolderSelectionDialog(String projectName, String folderName) {
-        IProject rootProject = ResourceManager.getRootProject();
-        IFolder inputFolder = rootProject.getFolder(projectName).getFolder(folderName);
+    protected void openFolderSelectionDialog(IFolder inputFolder) {
+        assert inputFolder != null;
 
         FolderSelectionDialog dialog = new FolderSelectionDialog(getShell());
         dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$

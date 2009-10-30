@@ -20,8 +20,8 @@ import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.xml.TdqPropertieManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -33,23 +33,14 @@ public class CreateUserDefIndicatorFolderTask extends AbstractMigrationTask {
     public boolean execute() {
         try {
             DQStructureManager manager = DQStructureManager.getInstance();
-            
+
             // creator Indicators
-            IFolder createNewFoler = manager.createNewReadOnlyFolder(ResourceManager.getLibrariesFolder(), DQStructureManager.INDICATORS);
-            // createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
-            // DQStructureManager.INDICATORS_FOLDER_PROPERTY);
-            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
-                    DQStructureManager.INDICATORS_FOLDER_PROPERTY);
-            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.NO_SUBFOLDER_KEY,
-                    DQStructureManager.NO_SUBFOLDER_PROPERTY);
-            // createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY,
-            // DQStructureManager.NO_SUBFOLDER_PROPERTY);
+            IFolder folder = manager.createNewReadOnlyFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.INDICATORS
+                    .getName());
+            ResourceManager.setNoSubFolderProperty(folder);
+
             // create User Defined Indicators
-            createNewFoler = manager.createNewReadOnlyFolder(createNewFoler, DQStructureManager.USER_DEFINED_INDICATORS);
-            TdqPropertieManager.getInstance().addFolderProperties(createNewFoler, DQStructureManager.FOLDER_CLASSIFY_KEY,
-                    DQStructureManager.UDI_FOLDER_PROPERTY);
-            // createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
-            // DQStructureManager.UDI_FOLDER_PROPERTY);
+            folder = manager.createNewReadOnlyFolder(folder, EResourceConstant.USER_DEFINED_INDICATORS.getName());
 
         } catch (Exception e) {
             ExceptionHandler.process(e);

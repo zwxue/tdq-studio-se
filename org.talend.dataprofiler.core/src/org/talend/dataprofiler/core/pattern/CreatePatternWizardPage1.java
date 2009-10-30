@@ -21,7 +21,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.resource.ResourceManager;
@@ -34,81 +33,73 @@ import org.talend.resource.ResourceManager;
  */
 public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
-	protected static Logger log = Logger
-			.getLogger(CreatePatternWizardPage1.class);
+    protected static Logger log = Logger.getLogger(CreatePatternWizardPage1.class);
 
-	protected HashMap<String, String> metadata;
+    protected HashMap<String, String> metadata;
 
-	/**
-	 * DOC qzhang CreateSqlFileWizardPage constructor comment.
-	 */
-	public CreatePatternWizardPage1() {
-		metadata = new HashMap<String, String>();
-		setPageComplete(false);
-	}
+    /**
+     * DOC qzhang CreateSqlFileWizardPage constructor comment.
+     */
+    public CreatePatternWizardPage1() {
+        metadata = new HashMap<String, String>();
+        setPageComplete(false);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
-	 */
-	public void createControl(Composite parent) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets .Composite)
+     */
+    public void createControl(Composite parent) {
 
-		super.createControl(parent);
-		pathText.setText(getParameter().getFolderProvider().getFolderURI());
+        super.createControl(parent);
+        pathText.setText(getParameter().getFolderProvider().getFolderURI());
 
-		button.addSelectionListener(new SelectionAdapter() {
+        button.addSelectionListener(new SelectionAdapter() {
 
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
-			 * .swt.events.SelectionEvent)
-			 */
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openFolderSelectionDialog(
-						ResourceManager.LIBRARIES_FOLDER_NAME,
-						DQStructureManager.PATTERNS);
-			}
-		});
-		if (getControl() != null) {
-			try {
-				PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-						HelpPlugin.getDefault().getPatternHelpContextID());
-			} catch (Exception e) {
-				log.error(e, e);
-			}
-		}
-	}
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                openFolderSelectionDialog(getStoredFolder());
+            }
+        });
+        if (getControl() != null) {
+            try {
+                PlatformUI.getWorkbench().getHelpSystem()
+                        .setHelp(getControl(), HelpPlugin.getDefault().getPatternHelpContextID());
+            } catch (Exception e) {
+                log.error(e, e);
+            }
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#
-	 * createExtendedControl(org.eclipse.swt.widgets.Composite )
-	 */
-	@Override
-	protected void createExtendedControl(Composite container) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#
+     * createExtendedControl(org.eclipse.swt.widgets.Composite )
+     */
+    @Override
+    protected void createExtendedControl(Composite container) {
 
-	}
+    }
 
-	/**
-	 * Getter for pathText.
-	 * 
-	 * @return the pathText
-	 */
-	public Text getPathText() {
-		return this.pathText;
-	}
+    /**
+     * Getter for pathText.
+     * 
+     * @return the pathText
+     */
+    public Text getPathText() {
+        return this.pathText;
+    }
 
-	@Override
-	protected IFolder getStoredFolder() {
-		return ResourceManager.getLibrariesFolder().getFolder(
-				DQStructureManager.PATTERNS);
-	}
+    @Override
+    protected IFolder getStoredFolder() {
+        return ResourceManager.getPatternFolder();
+    }
 
 }
