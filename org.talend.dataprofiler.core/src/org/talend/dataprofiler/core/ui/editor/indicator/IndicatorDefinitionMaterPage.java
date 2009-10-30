@@ -40,7 +40,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -99,9 +98,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private Combo comboCategory;
 
-    private Label labelDescription;
-
-    private Label labelPurpose;
+    private Label labelDetail;
 
     private IndicatorDefinition definition;
 
@@ -784,16 +781,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     protected void updateDetailList() {
         if (!"".equals(comboCategory.getText())) { //$NON-NLS-1$
             IndicatorCategory ic = UDIHelper.getUDICategory(definition);
+            String purposeText = "";
+            String descriptionText = "";
             for (TaggedValue value : ic.getTaggedValue()) {
                 if ("Purpose".equals(value.getTag())) {
-                    labelPurpose
-                            .setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue()); //$NON-NLS-1$
+                    purposeText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue();
                 } else if (DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Descript").equals(value.getTag())) { //$NON-NLS-1$
-                    labelDescription
-                            .setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description") + value.getValue()); //$NON-NLS-1$
+                    descriptionText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description")
+                            + value.getValue();
                 }
             }
-            labelPurpose.getParent().layout();
+            labelDetail.setText(purposeText + System.getProperty("line.separator") + System.getProperty("line.separator")
+                    + descriptionText);
         }
     }
 
@@ -806,22 +805,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Composite compoDetail = new Composite(composite, SWT.NONE);
         compoDetail.setLayout(new GridLayout(1, false));
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-        data.heightHint = 100;
-        data.horizontalIndent = 20;
+        data.heightHint = 300;
+        data.widthHint = 300;
         compoDetail.setLayoutData(data);
 
-        Font font0 = new Font(null, "Arial", 9, SWT.None); //$NON-NLS-1$
-        data = new GridData();
-        data.horizontalAlignment = GridData.FILL;
-        data.grabExcessHorizontalSpace = true;
-
-        labelPurpose = new Label(compoDetail, SWT.WRAP | SWT.HORIZONTAL);
-        labelPurpose.setLayoutData(data);
-        labelPurpose.setFont(font0);
-
-        labelDescription = new Label(compoDetail, SWT.WRAP | SWT.HORIZONTAL);
-        labelDescription.setLayoutData(data);
-        labelDescription.setFont(font0);
+        labelDetail = new Label(compoDetail, SWT.WRAP);
+        labelDetail.setLayoutData(data);
     }
 
     private void createDefinitionSection(Composite topCmp) {
