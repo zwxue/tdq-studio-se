@@ -60,11 +60,12 @@ public abstract class EcosystemService {
     private static Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(RC|M)\\d+)?_r\\d+"); //$NON-NLS-1$
 
     private static Pattern DEFAULT_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.*(\\d*)"); //$NON-NLS-1$
-    
+
     private static String CATEGORY_LIST_URL = "http://talendforge.org/exchange/top/api/get_category_list.php";
 
     private static MultiValueMap versionMap = new MultiValueMap();
 
+    private static final int TIMEOUT = 10000;
     static {
         System.setProperty("axis.socketFactory", EcosystemSocketFactory.class.getName()); //$NON-NLS-1$
     }
@@ -155,7 +156,9 @@ public abstract class EcosystemService {
 
     public static String sendGetRequest(String urlAddress) throws Exception {
         HttpClient httpclient = new HttpClient();
+        httpclient.getParams().setConnectionManagerTimeout(TIMEOUT);
         GetMethod getMethod = new GetMethod(urlAddress);
+        getMethod.getParams().setSoTimeout(TIMEOUT);
         httpclient.executeMethod(getMethod);
         String response = getMethod.getResponseBodyAsString();
         getMethod.releaseConnection();
@@ -165,6 +168,7 @@ public abstract class EcosystemService {
     public static String sendPostRequest(String urlAddress, Map<String, String> parameters) throws Exception {
         HttpClient httpclient = new HttpClient();
         PostMethod postMethod = new PostMethod(urlAddress);
+        postMethod.getParams().setSoTimeout(TIMEOUT);
         if (parameters != null) {
             NameValuePair[] postData = new NameValuePair[parameters.size()];
             int i = 0;
@@ -204,17 +208,17 @@ public abstract class EcosystemService {
         return rev1.length > rev2.length;
     }
 
-    public static List<IEcosCategory> getCategoryList(String version) throws Exception{
-    	
-    	String jsonContent = sendGetRequest(CATEGORY_LIST_URL);
-    	List<IEcosCategory> categorys = parseJsonObject(jsonContent,EcosCategory.class);
-    	for (Iterator iterator = categorys.iterator(); iterator.hasNext();) {
-    		EcosCategory iEcosCategory = (EcosCategory) iterator.next();
-			iEcosCategory.setVersion(version);
-		}
-    	return categorys;
+    public static List<IEcosCategory> getCategoryList(String version) throws Exception {
+
+        String jsonContent = sendGetRequest(CATEGORY_LIST_URL);
+        List<IEcosCategory> categorys = parseJsonObject(jsonContent, EcosCategory.class);
+        for (Iterator iterator = categorys.iterator(); iterator.hasNext();) {
+            EcosCategory iEcosCategory = (EcosCategory) iterator.next();
+            iEcosCategory.setVersion(version);
+        }
+        return categorys;
     }
-    
+
     public static List<RevisionInfo> getRevisionList(String category, String version) throws Exception {
         StringBuffer url = new StringBuffer();
         url.append(REVISION_LIST_URL).append("?categories=").append(category).append("&version="); //$NON-NLS-1$ //$NON-NLS-2$
