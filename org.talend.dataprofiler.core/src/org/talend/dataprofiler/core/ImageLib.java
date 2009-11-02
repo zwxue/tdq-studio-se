@@ -18,6 +18,8 @@ import java.net.URL;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
@@ -247,6 +249,30 @@ public final class ImageLib {
         } catch (MalformedURLException e) {
             // skip, but try to go on to the next one...
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "createInvalidIcon".
+     * 
+     * @param originalImgName
+     * @return
+     */
+    public static ImageDescriptor createInvalidIcon(String originalImgName) {
+        ImageDescriptor originalImg = getImageDescriptor(originalImgName);
+
+        return originalImg != null ? createInvalidIcon(originalImg) : null;
+    }
+
+    /**
+     * DOC bZhou Comment method "createInvalidIcon".
+     * 
+     * @param originalImg
+     * @return
+     */
+    public static ImageDescriptor createInvalidIcon(ImageDescriptor originalImg) {
+        ImageDescriptor warnImg = getImageDescriptor(WARN_OVR);
+        DecorationOverlayIcon icon = new DecorationOverlayIcon(originalImg.createImage(), warnImg, IDecoration.BOTTOM_RIGHT);
+        return icon;
     }
 
     /**

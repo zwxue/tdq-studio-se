@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.manager;
 
 import java.util.HashMap;
 
+import org.talend.dataprofiler.core.i18n.MessagesCore;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.resource.EResourceConstant;
 
@@ -24,10 +25,6 @@ public final class DQStructureMessage {
 
     private static final HashMap<String, String> MESSAGEMAP = new HashMap<String, String>();
 
-    private static final String KEY_NOT_FOUND_PREFIX = "!!!"; //$NON-NLS-1$
-
-    private static final String KEY_NOT_FOUND_SUFFIX = "!!!"; //$NON-NLS-1$
-
     private DQStructureMessage() {
 
     }
@@ -37,8 +34,8 @@ public final class DQStructureMessage {
         String message = key;
         String messageKey = MESSAGEMAP.get(key);
 
-        if (null != messageKey && !DefaultMessagesImpl.getString(messageKey).startsWith(KEY_NOT_FOUND_PREFIX)
-                && !DefaultMessagesImpl.getString(messageKey).endsWith(KEY_NOT_FOUND_SUFFIX)) {
+        if (null != messageKey && !DefaultMessagesImpl.getString(messageKey).startsWith(MessagesCore.KEY_NOT_FOUND_PREFIX)
+                && !DefaultMessagesImpl.getString(messageKey).endsWith(MessagesCore.KEY_NOT_FOUND_SUFFIX)) {
 
             message = DefaultMessagesImpl.getString(messageKey);
         }
