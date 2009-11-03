@@ -1028,6 +1028,12 @@
            id="org.talend.dataprofiler.core.migration.impl.SoundexIndicatorQueryTask"
            name="Change Soundex Query"
            version="3.2.2">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.DeleteJRXMLFolderForTopTask"
+           id="org.talend.dataprofiler.core.migration.impl.DeleteJRXMLFolderForTopTask"
+           name="Delete JRXML Folder For Top"
+           version="3.2.1">
      </workspacetask>     
   </extension>
   <extension
