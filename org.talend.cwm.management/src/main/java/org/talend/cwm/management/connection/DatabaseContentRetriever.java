@@ -112,7 +112,8 @@ public final class DatabaseContentRetriever {
         ResultSet rsc = connectionMetadata.getCatalogs();
         while (rsc.next()) {
             String cl = rsc.getString(MetaDataConstants.TABLE_CAT.name());
-            ResultSet schemaRs = getConnectionMetadata(connection).getSchemas(cl, null);
+            // SQLServerDatabaseMetaData msDBMetaData = (SQLServerDatabaseMetaData) getConnectionMetadata(connection);
+            ResultSet schemaRs = getConnectionMetadata(connection).getSchemas();
             while (schemaRs.next()) {
                 String schemaName = schemaRs.getString(MetaDataConstants.TABLE_CATALOG.name());
                 if (schemaName == null) {
