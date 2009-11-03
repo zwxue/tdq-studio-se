@@ -50,6 +50,11 @@
     <url>jdbc:sqlserver://&lt;server_name&gt;:&lt;1433&gt;</url>
     <jars/>
   </driver>
+  <driver id="-52">
+    <name>Microsoft MSSQL Server JDBC Driver</name>
+    <url>jdbc:sqlserver://&lt;server_name&gt;:&lt;1433&gt;</url>
+    <jars/>
+  </driver>
   <driver id="-12">
     <name>Mimer SQL</name>
     <url>jdbc:mimer:[//[&lt;user&gt;[:&lt;password&gt;]@]&lt;server&gt;[:&lt;1360&gt;]][/&lt;dbname&gt;][property-list]</url>
