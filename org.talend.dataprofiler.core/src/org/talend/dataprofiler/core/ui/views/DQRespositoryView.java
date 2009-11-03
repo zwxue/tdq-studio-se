@@ -39,7 +39,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.TreeAdapter;
@@ -66,6 +65,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
@@ -106,17 +106,12 @@ public class DQRespositoryView extends CommonNavigator {
 
     private static final String VIEW_CONTEXT_ID = "org.talend.dataprofiler.core.ui.views.DQRespositoryView.viewScope"; //$NON-NLS-1$
 
-    private TreeViewer commonViewer = null;
-
     private ITreeContentProvider provider = null;
 
     public DQRespositoryView() {
         super();
 
         new TDCPFolderMergeTask().execute();
-
-        addPostWindowCloseListener();
-        addResourceChangedListener();
 
         if (isNeedCreateStructure()) {
             DQStructureManager manager = DQStructureManager.getInstance();
@@ -125,11 +120,15 @@ public class DQRespositoryView extends CommonNavigator {
             } else {
                 ProxyRepositoryManager.getInstance().save();
             }
+        } else {
+            List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
+            MigrationTaskManager.doMigrationTask(tasks);
         }
 
-        MigrationTaskManager.doMigrationTask(MigrationTaskManager.findValidMigrationTasks());
-
         CorePlugin.getDefault().setRespositoryView(this);
+
+        addPostWindowCloseListener();
+        addResourceChangedListener();
     }
 
     private void addResourceChangedListener() {
@@ -183,7 +182,7 @@ public class DQRespositoryView extends CommonNavigator {
             setLinkingEnabled(false);
         }
 
-        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction(this));
+        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
     }
 
     /**
@@ -225,17 +224,17 @@ public class DQRespositoryView extends CommonNavigator {
                 getNavigatorActionService().fillContextMenu(manager);
             }
         });
-        commonViewer = getCommonViewer();
-        Menu menu = menuMgr.createContextMenu(commonViewer.getTree());
-        commonViewer.getTree().setMenu(menu);
+
+        Menu menu = menuMgr.createContextMenu(getCommonViewer().getTree());
+        getCommonViewer().getTree().setMenu(menu);
 
         this.addViewerFilter(EMFObjFilter.FILTER_ID);
         this.addViewerFilter(ReportingFilter.FILTER_ID);
         this.addViewerFilter(FolderObjFilter.FILTER_ID);
         adjustFilter();
         activateContext();
-        this.getCommonViewer().setSorter(null);
-        this.getCommonViewer().getTree().addTreeListener(new TreeAdapter() {
+        getCommonViewer().setSorter(null);
+        getCommonViewer().getTree().addTreeListener(new TreeAdapter() {
 
             @Override
             public void treeExpanded(TreeEvent e) {
@@ -252,7 +251,7 @@ public class DQRespositoryView extends CommonNavigator {
 
         });
 
-        this.getCommonViewer().getTree().addMouseListener(new MouseAdapter() {
+        getCommonViewer().getTree().addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
@@ -312,7 +311,7 @@ public class DQRespositoryView extends CommonNavigator {
         });
         // ~ADD mzhao for feature 6233 Load columns when selecting a table (or
         // view) in DQ Repository view
-        commonViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        getCommonViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
                 TreeSelection selection = (TreeSelection) event.getSelection();
@@ -322,7 +321,7 @@ public class DQRespositoryView extends CommonNavigator {
                 Object selectedElement = selection.getFirstElement();
                 if (selectedElement instanceof TdTable || selectedElement instanceof TdView) {
                     if (provider == null) {
-                        provider = (ITreeContentProvider) commonViewer.getContentProvider();
+                        provider = (ITreeContentProvider) getCommonViewer().getContentProvider();
                     }
                     for (Object child : provider.getChildren(selectedElement)) {
                         if (child instanceof IFolderNode
@@ -387,7 +386,7 @@ public class DQRespositoryView extends CommonNavigator {
             filter = new ReportingFilter();
             filterMap.put(String.valueOf(ReportingFilter.FILTER_ID), filter);
         }
-        this.getCommonViewer().addFilter(filter);
+        getCommonViewer().addFilter(filter);
     }
 
     public void removeViewerFilter(int viewerFilterId) {
@@ -408,12 +407,12 @@ public class DQRespositoryView extends CommonNavigator {
     public void showSelectedElements(Object selectedElement) {
         try {
             StructuredSelection structSel = new StructuredSelection(selectedElement);
-            commonViewer.setSelection(structSel);
+            getCommonViewer().setSelection(structSel);
             // If not select,unfold tree structure to this column.
-            StructuredSelection selectionTarge = (StructuredSelection) commonViewer.getSelection();
+            StructuredSelection selectionTarge = (StructuredSelection) getCommonViewer().getSelection();
             if (!selectionTarge.equals(structSel)) {
                 recursiveExpandTree(selectedElement);
-                commonViewer.setSelection(structSel);
+                getCommonViewer().setSelection(structSel);
             }
 
         } catch (Exception e) {
@@ -431,7 +430,7 @@ public class DQRespositoryView extends CommonNavigator {
      */
     private void recursiveExpandTree(Object item) {
         if (provider == null) {
-            provider = (ITreeContentProvider) commonViewer.getContentProvider();
+            provider = (ITreeContentProvider) getCommonViewer().getContentProvider();
         }
         if (item instanceof EObject) {
             Object parent = provider.getParent(item);
@@ -454,7 +453,7 @@ public class DQRespositoryView extends CommonNavigator {
             // If EMF node,get folder parent.
             if (fn != null) {
                 recursiveExpandTree(fn);
-                commonViewer.expandToLevel(fn, 1);
+                getCommonViewer().expandToLevel(fn, 1);
             } else {
                 Object emfParent = provider.getParent(item);
                 // EMF XMI resources
@@ -477,7 +476,7 @@ public class DQRespositoryView extends CommonNavigator {
                 }
 
                 recursiveExpandTree(emfParent);
-                commonViewer.expandToLevel(emfParent, 1);
+                getCommonViewer().expandToLevel(emfParent, 1);
             }
         } else if (item instanceof IFolderNode) {
             // User provider get IFolderNode parent will be null, here must call
@@ -485,14 +484,14 @@ public class DQRespositoryView extends CommonNavigator {
             IFolderNode folderNode = (IFolderNode) item;
             Object eo = folderNode.getParent();
             recursiveExpandTree(eo);
-            commonViewer.expandToLevel(eo, 1);
+            getCommonViewer().expandToLevel(eo, 1);
         } else {
             // Workspace resources
             Object workspaceParent = provider.getParent(item);
             if (workspaceParent == null) {
                 return;
             }
-            commonViewer.expandToLevel(workspaceParent, 1);
+            getCommonViewer().expandToLevel(workspaceParent, 1);
             recursiveExpandTree(workspaceParent);
         }
 
@@ -503,18 +502,15 @@ public class DQRespositoryView extends CommonNavigator {
      */
     class RefreshDQReponsitoryViewAction extends RefreshAction {
 
-        private DQRespositoryView dqRespositoryView;
-
-        public RefreshDQReponsitoryViewAction(DQRespositoryView dqRespositoryView) {
+        public RefreshDQReponsitoryViewAction() {
             super(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
             setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_SPACE));
-            this.dqRespositoryView = dqRespositoryView;
         }
 
         @Override
         public void run() {
             ProxyRepositoryManager.getInstance().refresh();
-            dqRespositoryView.getCommonViewer().refresh();
+            getCommonViewer().refresh();
             super.run();
         }
     }

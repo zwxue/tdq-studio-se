@@ -79,7 +79,11 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     }
 
     public IFile findCorrespondingFile(TdDataProvider provider) {
-        Iterator<IFile> iterator = this.providerMap.keySet().iterator();
+        if (providerMap.isEmpty()) {
+            getAllDataProviders();
+        }
+
+        Iterator<IFile> iterator = providerMap.keySet().iterator();
         while (iterator.hasNext()) {
             IFile next = iterator.next();
             TypedReturnCode<TdDataProvider> typedReturnCode = providerMap.get(next);
