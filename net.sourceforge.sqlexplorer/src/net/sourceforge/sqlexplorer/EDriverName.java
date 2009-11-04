@@ -51,7 +51,7 @@ public enum EDriverName {
                     "-11", "lib/jtds-1.2.jar"), //$NON-NLS-1$
     MSSQL2008URL("MSSQL2008", //$NON-NLS-1$
                  "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
-                 "-52", "lib/sqljdbc4.jar"), //$NON-NLS-1$
+                 "-52", "lib/sqljdbc.jar"), //$NON-NLS-1$
     DB2DEFAULTURL("DB2", //$NON-NLS-1$
                   "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
                   "-24",
