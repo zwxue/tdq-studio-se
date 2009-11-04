@@ -12,9 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.filters;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.talend.commons.emf.FactoriesUtil;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -44,6 +46,11 @@ public class DQFolderFliter extends ViewerFilter {
         if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
             return !folder.getName().endsWith(SVN_FOLDER_NAME);
+        }
+
+        if (element instanceof IFile && isShowFile) {
+            IFile file = (IFile) element;
+            return !file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION);
         }
 
         return isShowFile;

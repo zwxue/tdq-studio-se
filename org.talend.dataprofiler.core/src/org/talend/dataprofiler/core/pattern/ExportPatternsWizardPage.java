@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.DQCheckedTreeViewer;
 
 /**
@@ -144,6 +145,7 @@ public class ExportPatternsWizardPage extends WizardPage {
         group.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         selectedPatternsTree = new DQCheckedTreeViewer(group);
+        selectedPatternsTree.addFilter(new DQFolderFliter(true));
         selectedPatternsTree.setInput(this.folder);
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedPatternsTree.getTree());
