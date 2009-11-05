@@ -141,8 +141,9 @@ public enum PatternLanguageType {
         for (PatternLanguageType oneType : values()) {
             set.add(oneType.getName());
         }
-
-        set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
+        // MOD xqliu 2009-11-05 bug 9652
+        // set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
+        // ~
 
         return set.toArray(new String[set.size()]);
     }
