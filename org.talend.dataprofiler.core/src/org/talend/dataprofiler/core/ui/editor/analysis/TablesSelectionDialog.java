@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -91,6 +93,23 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         packageCheckedMap = new HashMap<PackageKey, TableCheckedMap>();
         initCheckedTable(tableList);
         this.setTitle(title);
+    }
+
+    @Override
+    /*
+     * 
+     * DOC mzhao bug 9240 mzhao 2009-11-05
+     * 
+     * @param columnSetList
+     */
+    protected void unfoldToCheckedElements() {
+        Iterator<PackageKey> it = packageCheckedMap.keySet().iterator();
+        while (it.hasNext()) {
+            PackageKey csk = it.next();
+            getTreeViewer().expandToLevel(csk.getPackage(), 1);
+            StructuredSelection structSel = new StructuredSelection(csk.getPackage());
+            getTreeViewer().setSelection(structSel);
+        }
     }
 
     private void initCheckedTable(List<Table> tableList) {
@@ -278,11 +297,17 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
         private final String schemaName;
 
+        private Package pakg = null;
+
         public PackageKey(Package pckg) {
             schemaName = SwitchHelpers.SCHEMA_SWITCH.doSwitch(pckg) == null ? "__Schema_Name__" : SwitchHelpers.SCHEMA_SWITCH //$NON-NLS-1$
                     .doSwitch(pckg).getName();
             catalogName = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg) == null ? "__Catalog_Name__" : SwitchHelpers.CATALOG_SWITCH //$NON-NLS-1$
                     .doSwitch(pckg).getName();
+        }
+
+        public Package getPackage() {
+            return pakg;
         }
 
         @Override

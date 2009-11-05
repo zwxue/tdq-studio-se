@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.dialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -97,6 +99,23 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         setInput(metadataFolder);
         setTitle(title);
+    }
+
+    @Override
+    /*
+     * 
+     * DOC mzhao bug 9240 mzhao 2009-11-05
+     * 
+     * @param columnSetList
+     */
+    protected void unfoldToCheckedElements() {
+        Iterator<ColumnSetKey> it = columnSetCheckedMap.keySet().iterator();
+        while (it.hasNext()) {
+            ColumnSetKey csk = it.next();
+            getTreeViewer().expandToLevel(csk.getColumnSetOwner(), 1);
+            StructuredSelection structSel = new StructuredSelection(csk.getColumnSetOwner());
+            getTreeViewer().setSelection(structSel);
+        }
     }
 
     private void initCheckedColumn(List<Column> columnList) {
@@ -282,6 +301,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         private final String columnSetName;
 
+        private ColumnSet columnSetOwner;
+
         public ColumnSetKey(ColumnSet columnSetOwner) {
             Package parent = EObjectHelper.getParent(columnSetOwner);
             if (parent != null) {
@@ -290,6 +311,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 this.catalogName = ""; //$NON-NLS-1$
             }
             this.columnSetName = columnSetOwner.getName();
+        }
+
+        public ColumnSet getColumnSetOwner() {
+            return columnSetOwner;
         }
 
         /*
