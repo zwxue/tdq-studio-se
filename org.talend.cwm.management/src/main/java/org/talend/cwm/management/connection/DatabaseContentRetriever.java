@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.cwm.management.connection;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -113,7 +115,27 @@ public final class DatabaseContentRetriever {
         while (rsc.next()) {
             String cl = rsc.getString(MetaDataConstants.TABLE_CAT.name());
             // SQLServerDatabaseMetaData msDBMetaData = (SQLServerDatabaseMetaData) getConnectionMetadata(connection);
-            ResultSet schemaRs = getConnectionMetadata(connection).getSchemas();
+            ResultSet schemaRs = null;
+            try {
+                // Case of JDK 1.6
+                Method getSchemaMethod = connectionMetadata.getClass().getMethod("getSchemas", String.class, String.class);
+                schemaRs = (ResultSet) getSchemaMethod.invoke(connectionMetadata, cl, null);
+            } catch (SecurityException e) {
+                // Case of JDK1.5
+                schemaRs = getSchemaForJDK15(connectionMetadata);
+            } catch (NoSuchMethodException e) {
+                schemaRs = getSchemaForJDK15(connectionMetadata);
+            } catch (IllegalArgumentException e) {
+                schemaRs = getSchemaForJDK15(connectionMetadata);
+            } catch (IllegalAccessException e) {
+                schemaRs = getSchemaForJDK15(connectionMetadata);
+            } catch (InvocationTargetException e) {
+                schemaRs = getSchemaForJDK15(connectionMetadata);
+            }
+            if (schemaRs == null) {
+                schemaRs = getSchemaForJDK15(connectionMetadata);
+            }
+
             while (schemaRs.next()) {
                 String schemaName = schemaRs.getString(MetaDataConstants.TABLE_CATALOG.name());
                 if (schemaName == null) {
@@ -126,6 +148,15 @@ public final class DatabaseContentRetriever {
         }
         rsc.close();
         return catalogName2schemas;
+    }
+
+    /**
+     * DOC Administrator Comment method "getSchemaForJDK1_5".
+     * 
+     * @throws SQLException
+     */
+    private static ResultSet getSchemaForJDK15(DatabaseMetaData databaseMetaData) throws SQLException {
+        return databaseMetaData.getSchemas();
     }
 
     /**
