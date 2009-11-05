@@ -31,9 +31,9 @@ import org.jfree.chart.ChartMouseListener;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
-import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataprofiler.core.ui.utils.UIPagination;
 
 /**

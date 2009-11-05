@@ -55,9 +55,9 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
-import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.DateValueAggregate;
-import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.ValueAggregator;
+import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils;
+import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils.DateValueAggregate;
+import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils.ValueAggregator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import orgomg.cwm.resource.relational.Column;
 
