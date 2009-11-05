@@ -304,6 +304,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                     .doSwitch(pckg).getName();
             catalogName = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg) == null ? "__Catalog_Name__" : SwitchHelpers.CATALOG_SWITCH //$NON-NLS-1$
                     .doSwitch(pckg).getName();
+            this.pakg = pckg;
         }
 
         public Package getPackage() {
