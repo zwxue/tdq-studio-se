@@ -821,7 +821,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         tableOfCatalogOrSchemaViewer.setInput(indicatorTableList);
         List<ViewIndicator> indicatorViewList = (List<ViewIndicator>) schemaIndicator.getViewIndicators();
         viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
-        tableAndViewComposite.layout();
+        // MOD xqliu 2009-11-05 bug 9521
+        tableAndViewComposite.pack();
+        statisticalSection.pack();
+        statisticalSection.layout();
+        // ~
         form.reflow(true);
 
     }
