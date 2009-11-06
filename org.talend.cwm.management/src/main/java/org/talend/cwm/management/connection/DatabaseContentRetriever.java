@@ -188,7 +188,14 @@ public final class DatabaseContentRetriever {
                     // set link Catalog -> Schema if exists
                     String catName = null;
                     if (columnCount > 1) {
-                        catName = schemas.getString(MetaDataConstants.TABLE_CATALOG.name());
+                        try {
+                            catName = schemas.getString(MetaDataConstants.TABLE_CATALOG.name());
+                        } catch (Exception e) { // catch exception required for DB2/ZOS
+                            log
+                                    .warn(
+                                            "Exception when trying to get the catalog name linked to the schema. Catalogs won't be used.",
+                                            e);
+                        }
                         if (catName != null) { // standard case (Postgresql)
                             createSchema(schemas, catName, catalogName2schemas);
                         }
