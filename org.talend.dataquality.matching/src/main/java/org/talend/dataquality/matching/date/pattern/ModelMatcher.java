@@ -34,7 +34,8 @@ class ModelMatcher implements java.lang.Comparable {
         this.regex = regex;
         this.score = 0;
     }
-
+    
+ 
     public String getRegex() {
         return this.regex;
     }
@@ -43,17 +44,23 @@ class ModelMatcher implements java.lang.Comparable {
         return this.model;
     }
 
-    public boolean matches(String expression) {
-        return Pattern.matches(this.getRegex(), expression);
+    /**
+     * @param expression
+     * @return boolean true:match , false : don't match
+     */
+    public boolean matches(String expression) { 
+    	//if the pattern match onetime , we increase his score
+    	if(Pattern.matches(this.getRegex(), expression))
+    	{
+    		this.score++;
+    	}
+        return Pattern.matches(this.getRegex(), expression);       
     }
 
     public int getScore() {
         return this.score;
     }
 
-    public void increment() {
-        this.score++;
-    }
 
     // comparison method used to sort modelMatchers
     public int compareTo(Object other) {

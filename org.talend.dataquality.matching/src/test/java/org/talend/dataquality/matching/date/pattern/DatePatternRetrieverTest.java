@@ -14,6 +14,8 @@ package org.talend.dataquality.matching.date.pattern;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,12 +26,13 @@ import org.junit.Test;
  */
 public class DatePatternRetrieverTest {
 
-    /**
+   
+	/**
      * DOC scorreia Comment method "setUp".
      * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception {    	
     }
 
     /**
@@ -37,15 +40,7 @@ public class DatePatternRetrieverTest {
      * @throws java.lang.Exception
      */
     @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test method for {@link org.talend.dataquality.matching.date.pattern.DatePatternRetriever#DatePatternRetriever()}.
-     */
-    @Test
-    public void testDatePatternRetriever() {
-        fail("Not yet implemented"); // TODO
+    public void tearDown() throws Exception {    	
     }
 
     /**
@@ -53,7 +48,9 @@ public class DatePatternRetrieverTest {
      */
     @Test
     public void testInitModel2Regex() {
-        fail("Not yet implemented"); // TODO
+    	DatePatternRetriever dtr = new  DatePatternRetriever(); 
+    	dtr.initModel2Regex(new File("PatternsNameAndRegularExpressions.txt"));
+    	assertNotNull(dtr.getModelMatchers());
     }
 
     /**
@@ -61,15 +58,9 @@ public class DatePatternRetrieverTest {
      */
     @Test
     public void testHandle() {
-        fail("Not yet implemented"); // TODO
+    	 DatePatternRetriever dtr = new  DatePatternRetriever(); 
+    	 dtr.handle("21 11 1999");
+    	 dtr.getModelMatchers().add(new ModelMatcher("^[0-3][0-9](-|/| )([0-0][1-9]|10|11|12)(-|/| )(19|20)[0-9]{2}$", "11 novenmber 1999"));    	    	 
+    	 assertEquals(dtr.getModelMatchers(),1);
     }
-
-    /**
-     * Test method for {@link org.talend.dataquality.matching.date.pattern.DatePatternRetriever#toPattern(java.lang.String)}.
-     */
-    @Test
-    public void testToPattern() {
-        fail("Not yet implemented"); // TODO
-    }
-
-}
+ }

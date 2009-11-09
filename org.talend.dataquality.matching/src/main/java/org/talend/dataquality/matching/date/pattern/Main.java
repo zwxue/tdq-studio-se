@@ -12,7 +12,13 @@
 // ============================================================================
 package org.talend.dataquality.matching.date.pattern;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -23,13 +29,39 @@ public final class Main {
 
     private Main() {
     }
-
+    private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
+	
+     /**
+     * @param fileDates : parse dates stored on external file
+     */
+    public static void parseFile(File fileDates,DatePatternRetriever patt ) {
+        try {
+            FileReader fr = new FileReader(fileDates);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            try {
+                while ((line = br.readLine()) != null) {
+                	patt.handle(line.replace("\"", ""));
+                }
+            } finally {
+                br.close();
+            }
+        } catch (FileNotFoundException e) {
+        	logger.warn("File not found");
+        } catch (IOException e) {
+        	logger.warn("Problem when reading");
+        }
+    }
+    
     public static void main(String[] args) {
+    	
         DatePatternRetriever patt = new DatePatternRetriever();
         File file = new File("PatternsNameAndRegularExpressions.txt");
         File filedates = new File("dates.txt");
         patt.initModel2Regex(file);
-        patt.parseFile(filedates);
+        parseFile(filedates,patt);
         patt.showResults();
+        
+   
     }
 }

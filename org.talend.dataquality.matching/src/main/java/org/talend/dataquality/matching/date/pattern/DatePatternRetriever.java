@@ -34,28 +34,24 @@ public class DatePatternRetriever {
 
     private List<ModelMatcher> modelMatchers = new ArrayList<ModelMatcher>();
 
-    private boolean ordered;
+    public List<ModelMatcher> getModelMatchers() {
+		return modelMatchers;
+	}
 
-    private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
+	public void setModelMatchers(List<ModelMatcher> modelMatchers) {
+		this.modelMatchers = modelMatchers;
+	}
+
+	private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
 
     // constructor
     public DatePatternRetriever() {
     }
 
-    // setter
-    public void setOrdered(boolean value) {
-        this.ordered = value;
-    }
-
-    // getter
-    public boolean getOrdered(boolean value) {
-        return this.ordered;
-    }
-
     // initialization method of modelMatchers
-    public void initModel2Regex(File PatternFile) {
+    public void initModel2Regex(File patternFile) {
         try {
-            FileReader fr = new FileReader(PatternFile);
+            FileReader fr = new FileReader(patternFile);
             BufferedReader br = new BufferedReader(fr);
             String line;
             try {
@@ -72,25 +68,29 @@ public class DatePatternRetriever {
                 br.close();
             }
         } catch (FileNotFoundException e) {
-            System.out.print("File not found");
+        	logger.warn("File not found");
         } catch (IOException e) {
-            System.out.print("Problem when reading");
+        	logger.warn("Problem when reading");
         }
     }
 
-    // this method returns an ordered list of patterns
-    public void handle(String expression) {
-        this.setOrdered(false);
+    /**
+     * @param expression
+     */
+    public void handle(String expression) {        
         for (ModelMatcher patternMatcher : this.modelMatchers) {
-            if (patternMatcher.matches(expression)) {
-                patternMatcher.increment();
+            if(patternMatcher.matches(expression)){
+            	//patternMatcher.increment();                  
             }
         }
     }
 
+    /**
+     * method to show results on screen console
+     */
     public void showResults() {
         this.getOrderedModelMatchers();
-        for (ModelMatcher patternMatcher : this.modelMatchers) {
+        for (ModelMatcher patternMatcher : this.modelMatchers){
             if (patternMatcher.getScore() > 0) {
                 if (logger.isInfoEnabled()) {
                     logger.info(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");
@@ -99,30 +99,12 @@ public class DatePatternRetriever {
         }
     }
 
-    // method contains dates to be analyzed from external file
-    public void parseFile(File fileDates) {
-        try {
-            FileReader fr = new FileReader(fileDates);
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-            try {
-                while ((line = br.readLine()) != null) {
-                    this.handle(line.replace("\"", ""));
-                }
-            } finally {
-                br.close();
-            }
-        } catch (FileNotFoundException e) {
-            System.out.print("File not found");
-        } catch (IOException e) {
-            System.out.print("Problem when reading");
-        }
-    }
-
     // method witch sort ModelMatchers according their scores
+    /**
+     * sort pattern according to theirs score
+     */
     @SuppressWarnings("unchecked")
-    public void getOrderedModelMatchers() {
-        Collections.sort(this.modelMatchers);
-        this.setOrdered(true);
+    public void getOrderedModelMatchers() {    	
+    	Collections.sort(this.modelMatchers);        
     }
 }
