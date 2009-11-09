@@ -24,6 +24,7 @@ import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dq.dbms.DB2DbmsLanguage;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -32,7 +33,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class FrequencyStatisticsExplorer extends DataExplorer {
 
-    private static final String REGEX = "SELECT (.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
+    private static final String REGEX = "SELECT (TOP\\s*[1-9]\\d*\\s*(.*)|.*), COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
     protected String getFreqRowsStatement() {
 
@@ -234,8 +235,18 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         // get function which convert data into a pattern
         String function = getFunction();
 
+        // MOD mzhao bug 9681 2009-11-09
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        int javaType = column.getJavaType();
+        Object value = null;
+        if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof DB2DbmsLanguage) {
+            value = entity.getKey();
+        } else {
+            value = "'" + entity.getKey() + "'";
+        }
+
         String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : function
-                + dbmsLanguage.equal() + "'" + entity.getKey() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+                + dbmsLanguage.equal() + value; //$NON-NLS-1$ //$NON-NLS-2$
         return clause;
     }
 
@@ -245,8 +256,9 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
         Matcher matcher = p.matcher(body);
         matcher.find();
-        String group = matcher.group(1);
+        // MOD mzhao 2009-11-09 bug 9681: Catch the possibility that the sql body contains "TOP" keywords.
+        String group = matcher.group(2);
+        group = group == null ? matcher.group(1) : group;
         return group;
     }
-
 }
