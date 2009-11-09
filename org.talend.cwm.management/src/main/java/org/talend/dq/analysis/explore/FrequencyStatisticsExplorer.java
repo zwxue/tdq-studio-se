@@ -33,7 +33,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class FrequencyStatisticsExplorer extends DataExplorer {
 
-    private static final String REGEX = "SELECT (TOP\\s*[1-9]\\d*\\s*(.*)|.*), COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
+    private static final String REGEX = "SELECT (TOP\\s*[1-9]\\d*\\s*(.*)|.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
     protected String getFreqRowsStatement() {
 
