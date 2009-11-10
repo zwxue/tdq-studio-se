@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a numerical column correlation analysis">
+      title="Create a nominal correlation analysis">
    <intro>
       <description>
          This type of analysis analyzes works with only nominal values and shows the relations between pairs of data in network graph. It highlights weak relationships between pairs of data in order to find potential incorrect relationships.
@@ -11,7 +11,7 @@
       <description>
          This step opens the <b> Create New Analysis </b> wizard. You can <b> right click on the &quot;Analysis&quot; folder </b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens the corresponding editor in which you can define the settings of the analysis.
       </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8" param2="0"/>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="true" param1="8" param2="1"/>
    </item>
    <item
          title="Select the columns to analysis">

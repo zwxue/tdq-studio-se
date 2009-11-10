@@ -77,6 +77,16 @@
          <param name="path" value="NumericalColumnCorrelationAnalysis_cheat.xml">
          </param>
       </task>
+      <task kind="cheatsheet" name="NominalCorrelationAnalysis" skip="false">
+         <intro>
+            <b>Introduction</b>
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="NominalCorrelationAnalysis_cheat.xml">
+         </param>
+      </task>
       <task kind="cheatsheet" name="TimeColumnCorrelationAnalysis" skip="false">
          <intro>
             <b>Introduction</b>

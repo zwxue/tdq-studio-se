@@ -113,6 +113,8 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
                         int correAnaType = NumberUtils.toInt(params[1]);
                         if (correAnaType == 0) {
                             parameter.setCategoryLabel(AnalysisLabelParameter.NUMBERIC_CORRELATION);
+                        } else if (correAnaType == 1) {
+                            parameter.setCategoryLabel(AnalysisLabelParameter.NOMINAL_CORRELATION);
                         } else {
                             parameter.setCategoryLabel(AnalysisLabelParameter.DATE_CORRELATION);
                         }
