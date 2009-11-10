@@ -125,10 +125,8 @@ public class DQRespositoryView extends CommonNavigator {
             MigrationTaskManager.doMigrationTask(tasks);
         }
 
-        CorePlugin.getDefault().setRespositoryView(this);
+        ResourceManager.initResourcePersistence();
 
-        addPostWindowCloseListener();
-        addResourceChangedListener();
     }
 
     private void addResourceChangedListener() {
@@ -183,6 +181,9 @@ public class DQRespositoryView extends CommonNavigator {
         }
 
         getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
+
+        addPostWindowCloseListener();
+        addResourceChangedListener();
     }
 
     /**

@@ -1182,7 +1182,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         private void showSelectedElements(Tree newTree) {
             TreeItem[] selection = newTree.getSelection();
 
-            DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+            DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
             if (selection.length == 1) {
                 try {
                     TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);

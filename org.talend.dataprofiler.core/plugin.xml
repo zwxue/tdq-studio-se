@@ -970,12 +970,6 @@
            version="3.2.0">
      </workspacetask>
      <workspacetask
-           class="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
-           id="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
-           name="Update Project Persistent Property"
-           version="1.2.0">
-     </workspacetask>
-     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
            id="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
            name="Create DQRules Folder"
@@ -1003,12 +997,6 @@
            class="org.talend.dataprofiler.core.migration.impl.CreateUserDefIndicatorFolderTask"
            id="org.talend.dataprofiler.core.migration.impl.CreateUserDefIndicatorFolderTask"
            name="Create User Defined Indicator Folder"
-           version="3.2.0">
-     </workspacetask>
-     <workspacetask
-           class="org.talend.dataprofiler.core.migration.impl.CopyWorkspacePropertiesFileTask"
-           id="org.talend.dataprofiler.core.migration.impl.CopyWorkspacePropertiesFileTask"
-           name="Copy workspace properties file task"
            version="3.2.0">
      </workspacetask>
      <workspacetask

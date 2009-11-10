@@ -60,7 +60,7 @@ public class RemoveAnalysisAction extends Action {
      */
     @Override
     public void run() {
-        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
         TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
         TreePath[] paths = treeSelection.getPaths();
         TdReport parentReport;

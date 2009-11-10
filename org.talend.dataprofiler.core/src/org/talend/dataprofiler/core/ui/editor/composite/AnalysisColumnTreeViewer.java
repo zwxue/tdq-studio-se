@@ -1225,7 +1225,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         private void showSelectedElements(Tree newTree) {
             TreeItem[] selection = newTree.getSelection();
 
-            DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+            DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
             if (selection.length == 1) {
                 try {
                     ColumnIndicator columnIndicator = (ColumnIndicator) selection[0].getData(COLUMN_INDICATOR_KEY);

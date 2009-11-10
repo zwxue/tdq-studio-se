@@ -35,12 +35,12 @@ public class CreateUserDefIndicatorFolderTask extends AbstractMigrationTask {
             DQStructureManager manager = DQStructureManager.getInstance();
 
             // creator Indicators
-            IFolder folder = manager.createNewReadOnlyFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.INDICATORS
-                    .getName());
+            IFolder folder = manager
+                    .createNewFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.INDICATORS.getName());
             ResourceManager.setNoSubFolderProperty(folder);
 
             // create User Defined Indicators
-            folder = manager.createNewReadOnlyFolder(folder, EResourceConstant.USER_DEFINED_INDICATORS.getName());
+            folder = manager.createNewFolder(folder, EResourceConstant.USER_DEFINED_INDICATORS.getName());
 
         } catch (Exception e) {
             ExceptionHandler.process(e);

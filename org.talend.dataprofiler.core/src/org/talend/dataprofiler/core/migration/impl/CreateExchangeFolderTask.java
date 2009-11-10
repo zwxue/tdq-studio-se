@@ -37,7 +37,7 @@ public class CreateExchangeFolderTask extends AbstractMigrationTask {
     public boolean execute() {
         try {
             DQStructureManager manager = DQStructureManager.getInstance();
-            manager.createNewReadOnlyFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.EXCHANGE.getName());
+            manager.createNewFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.EXCHANGE.getName());
         } catch (Exception e) {
             ExceptionHandler.process(e);
             return false;

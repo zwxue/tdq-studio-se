@@ -46,7 +46,6 @@ import org.talend.cwm.compare.ui.ImageLib;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
@@ -62,7 +61,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class ReloadDatabaseAction extends Action {
 
     private static Logger log = Logger.getLogger(ReloadDatabaseAction.class);
+
     private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
+
     private Object selectedObject;
 
     public ReloadDatabaseAction(Object selectedNode, String menuText) {
@@ -85,22 +86,19 @@ public class ReloadDatabaseAction extends Action {
                 final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(selectedObject);
                 Display.getDefault().asyncExec(new Runnable() {
 
-                    
-
-					public void run() {
+                    public void run() {
                         try {
-                           DataProvider oldDataProvider = creatComparisonLevel
-									.reloadCurrentLevelElement();
+                            DataProvider oldDataProvider = creatComparisonLevel.reloadCurrentLevelElement();
 
-							// MOD mzhao 2009-07-13 bug 7454 Impact existing
-							// analysis.
-							impactExistingAnalyses(oldDataProvider);
+                            // MOD mzhao 2009-07-13 bug 7454 Impact existing
+                            // analysis.
+                            impactExistingAnalyses(oldDataProvider);
                         } catch (ReloadCompareException e) {
                             // TODO Auto-generated catch block
                             log.error(e, e);
                         } catch (PartInitException e) {
-							log.error(e, e);
-						}
+                            log.error(e, e);
+                        }
 
                     }
                 });
@@ -108,7 +106,7 @@ public class ReloadDatabaseAction extends Action {
         };
         try {
             ProgressUI.popProgressDialog(op);
-            ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
+            CorePlugin.getDefault().refreshDQView();
         } catch (InvocationTargetException e) {
             MessageUI.openError(Messages.getString("ReloadDatabaseAction.checkConnectionFailured", e.getCause().getMessage())); //$NON-NLS-1$
             log.error(e, e);
@@ -117,81 +115,74 @@ public class ReloadDatabaseAction extends Action {
         }
 
     }
-    
-    private void impactExistingAnalyses(DataProvider oldDataProvider)
-			throws PartInitException {
-    	EList<Dependency> clientDependencies = oldDataProvider
-				.getSupplierDependency();
-		List<Analysis> unsynedAnalyses = new ArrayList<Analysis>();
-		for (Dependency dep : clientDependencies) {
-			StringBuffer impactedAnaStr = new StringBuffer();
-			for (ModelElement mod : dep.getClient()) {
-			 // MOD mzhao 2009-08-24 The dependencies include "Property" and "Analysis"
-			    if (!(mod instanceof Analysis)) {
-			        continue;
+
+    private void impactExistingAnalyses(DataProvider oldDataProvider) throws PartInitException {
+        EList<Dependency> clientDependencies = oldDataProvider.getSupplierDependency();
+        List<Analysis> unsynedAnalyses = new ArrayList<Analysis>();
+        for (Dependency dep : clientDependencies) {
+            StringBuffer impactedAnaStr = new StringBuffer();
+            for (ModelElement mod : dep.getClient()) {
+                // MOD mzhao 2009-08-24 The dependencies include "Property" and "Analysis"
+                if (!(mod instanceof Analysis)) {
+                    continue;
                 }
-				Analysis ana = (Analysis) mod;
-				unsynedAnalyses.add(ana);
-				impactedAnaStr.append(ana.getName());
-			}
+                Analysis ana = (Analysis) mod;
+                unsynedAnalyses.add(ana);
+                impactedAnaStr.append(ana.getName());
+            }
 
-			for (Analysis analysis : unsynedAnalyses) {
-				// Reload.
-				EMFSharedResources.getInstance().unloadResource(
-						analysis.eResource().getURI().toString());
+            for (Analysis analysis : unsynedAnalyses) {
+                // Reload.
+                EMFSharedResources.getInstance().unloadResource(analysis.eResource().getURI().toString());
 
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				Path path = new Path(analysis.getFileName());
-				IFile file = root.getFile(path);
-				analysis = AnaResourceFileHelper.getInstance().readFromFile(
-						file);
-				Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer
-						.find(analysis.eResource());
-				Iterator<EObject> it = referenceMaps.keySet().iterator();
-				ModelElement eobj = null;
-				while (it.hasNext()) {
-					eobj = (ModelElement) it.next();
-					Collection<Setting> settings = referenceMaps.get(eobj);
-					for (Setting setting : settings) {
-						if (setting.getEObject() instanceof AnalysisContext) {
-							analysis.getContext().getAnalysedElements().remove(
-									eobj);
-						} else if (setting.getEObject() instanceof Indicator) {
-							analysis.getResults().getIndicators().remove(
-									setting.getEObject());
-						}
-					}
+                IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+                Path path = new Path(analysis.getFileName());
+                IFile file = root.getFile(path);
+                analysis = AnaResourceFileHelper.getInstance().readFromFile(file);
+                Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(analysis
+                        .eResource());
+                Iterator<EObject> it = referenceMaps.keySet().iterator();
+                ModelElement eobj = null;
+                while (it.hasNext()) {
+                    eobj = (ModelElement) it.next();
+                    Collection<Setting> settings = referenceMaps.get(eobj);
+                    for (Setting setting : settings) {
+                        if (setting.getEObject() instanceof AnalysisContext) {
+                            analysis.getContext().getAnalysedElements().remove(eobj);
+                        } else if (setting.getEObject() instanceof Indicator) {
+                            analysis.getResults().getIndicators().remove(setting.getEObject());
+                        }
+                    }
 
-				}
-				AnaResourceFileHelper.getInstance().save(analysis);
-			}
-		}
+                }
+                AnaResourceFileHelper.getInstance().save(analysis);
+            }
+        }
 
-		// Refresh current opened editors.
-		IWorkbenchPage activePage = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage();
-		IEditorReference[] editors = activePage.getEditorReferences();
-		if (editors != null) {
-			for (IEditorReference editorRef : editors) {
-				if (editorRef.getId().equals(ANALYSIS_EDITOR_ID)) {
-					boolean isConfirm = MessageDialog.openConfirm(PlatformUI
-							.getWorkbench().getActiveWorkbenchWindow()
-							.getShell(), Messages.getString("ReloadDatabaseAction.ElementChange"), //$NON-NLS-1$
-							Messages.getString("ReloadDatabaseAction.RefreshCurrentEditor")); //$NON-NLS-1$
-					if (!isConfirm) {
-						return;
-					}
-				}
-			}
+        // Refresh current opened editors.
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorReference[] editors = activePage.getEditorReferences();
+        if (editors != null) {
+            for (IEditorReference editorRef : editors) {
+                if (editorRef.getId().equals(ANALYSIS_EDITOR_ID)) {
+                    boolean isConfirm = MessageDialog.openConfirm(
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages
+                                    .getString("ReloadDatabaseAction.ElementChange"), //$NON-NLS-1$
+                            Messages.getString("ReloadDatabaseAction.RefreshCurrentEditor")); //$NON-NLS-1$
+                    if (!isConfirm) {
+                        return;
+                    }
+                }
+            }
 
-			for (IEditorReference editorRef : editors) {
-				IEditorInput editorInput = editorRef.getEditorInput();
-				if (editorRef.getId().equals(ANALYSIS_EDITOR_ID)) {
-					activePage.closeEditor(editorRef.getEditor(false), false);
-					activePage.openEditor(editorInput, ANALYSIS_EDITOR_ID);
-				}
-			}
-		}
+            for (IEditorReference editorRef : editors) {
+                IEditorInput editorInput = editorRef.getEditorInput();
+                if (editorRef.getId().equals(ANALYSIS_EDITOR_ID)) {
+                    activePage.closeEditor(editorRef.getEditor(false), false);
+                    activePage.openEditor(editorInput, ANALYSIS_EDITOR_ID);
+                }
+            }
+        }
 
-	}
+    }
 }

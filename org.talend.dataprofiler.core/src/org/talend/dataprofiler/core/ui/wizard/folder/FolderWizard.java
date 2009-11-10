@@ -75,7 +75,7 @@ public class FolderWizard extends Wizard {
             try {
                 newFolder.create(false, true, null);
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
-                DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+                DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
                 findView.getCommonViewer().refresh();
                 findView.getCommonViewer().setExpandedState(newFolder, true);
 

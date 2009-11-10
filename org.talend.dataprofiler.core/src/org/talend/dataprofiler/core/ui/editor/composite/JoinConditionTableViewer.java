@@ -65,33 +65,34 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * DOC xqliu class global comment. bug 8791 2009-08-31.
  */
 public class JoinConditionTableViewer extends AbstractColumnDropTree {
-    
+
     protected static Logger log = Logger.getLogger(JoinConditionTableViewer.class);
 
     private static final String COLUMN_A = "A"; //$NON-NLS-1$
 
     private static final String COLUMN_B = "B"; //$NON-NLS-1$
-    
+
     private DQRuleMasterDetailsPage masterPage;
-    
+
     private Table myTable;
-    
+
     private TableViewer myTableViewer;
 
     private List<JoinElement> myJoinElement;
-    
+
     private Composite parentComposite;
 
     private static final String DEFAULT_OPERATOR = "="; //$NON-NLS-1$
 
     private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
-    private String[] headers = { DefaultMessagesImpl.getString("JoinConditionTableViewer.TableA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.Operator"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnB") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+    private String[] headers = {
+            DefaultMessagesImpl.getString("JoinConditionTableViewer.TableA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnA"), DefaultMessagesImpl.getString("JoinConditionTableViewer.Operator"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.TableAliasB"), DefaultMessagesImpl.getString("JoinConditionTableViewer.ColumnB") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 
     private int[] widths = { 100, 100, 100, 70, 100, 100, 100 };
-    
-    private Package columnSetPackage; 
-    
+
+    private Package columnSetPackage;
+
     public JoinConditionTableViewer(Composite parent, DQRuleMasterDetailsPage masterPage) {
         this.parentComposite = parent;
         this.masterPage = masterPage;
@@ -121,7 +122,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         }
         return true;
     }
-    
+
     /**
      * DOC xqliu Comment method "createTable".
      * 
@@ -129,7 +130,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
      */
     private Table createTable(Composite parent) {
         int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
-        
+
         final Table table = new Table(parentComposite, style);
 
         table.setHeaderVisible(true);
@@ -141,7 +142,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             tableColumn.setText(headers[i]);
             tableColumn.setWidth(widths[i]);
         }
-        
+
         myTableViewer = new TableViewer(table);
 
         myTableViewer.setUseHashlookup(true);
@@ -158,8 +159,8 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 editors[i] = new ComboBoxCellEditor(table, OPERATORS, SWT.READ_ONLY);
                 break;
             default:
-                 editors[i] = null;
-             }
+                editors[i] = null;
+            }
         }
         myTableViewer.setCellEditors(editors);
 
@@ -167,17 +168,17 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         myTableViewer.setContentProvider(new JoinElementContentProvider());
         myTableViewer.setLabelProvider(new JoinElementLabelProvider());
         myTableViewer.setInput(this.myJoinElement);
-        
+
         // ADD xqliu 2009-09-01 bug 8790
-        table.setMenu(createMenus(table)); 
+        table.setMenu(createMenus(table));
         // ~
-        
+
         ColumnViewerDND.installDND(table);
         table.setData(this);
         GridData tableGD = new GridData(GridData.FILL_BOTH);
         tableGD.heightHint = 130;
         table.setLayoutData(tableGD);
-        
+
         return table;
     }
 
@@ -201,7 +202,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             }
 
         });
-        
+
         MenuItem menuItemB = new MenuItem(menu, SWT.CASCADE);
         menuItemB.setText(DefaultMessagesImpl.getString("JoinConditionTableViewer.showDQElementB")); //$NON-NLS-1$
         menuItemB.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
@@ -213,7 +214,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             }
 
         });
-        
+
         return menu;
     }
 
@@ -225,7 +226,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
      */
     protected void showSelectedElements(Table table, String ab) {
         TableItem[] selection = table.getSelection();
-        DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
         if (selection.length == 1) {
             try {
                 JoinElement join = (JoinElement) selection[0].getData();
@@ -327,6 +328,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             this.columnSetPackage = null;
         }
     }
+
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
@@ -476,7 +478,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
         public String getColumnText(Object element, int columnIndex) {
             String result = ""; //$NON-NLS-1$
-            
+
             JoinElement join = (JoinElement) element;
 
             TdColumn colA = (TdColumn) join.getColA();
@@ -514,18 +516,18 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         }
 
     }
-    
+
     /**
      * DOC xqliu JoinConditionTableViewer class global comment. Detailled comment
      */
     private class JoinElementColumnDialog extends Dialog {
-        
+
         private String ab;
 
         public String getAb() {
             return ab;
         }
-        
+
         public void setAb(String ab) {
             this.ab = ab;
         }
@@ -544,7 +546,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             Composite comp = new Composite(parent, SWT.NONE);
             comp.setLayout(new GridLayout(2, true));
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
-            
+
             Button[] radios = new Button[2];
 
             radios[0] = new Button(comp, SWT.RADIO);
@@ -576,7 +578,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 }
 
             });
-            
+
             GridData radioGD = new GridData(GridData.FILL_BOTH);
             radios[0].setLayoutData(radioGD);
             radios[1].setLayoutData(radioGD);

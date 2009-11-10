@@ -27,13 +27,13 @@ public final class ResourceConstant {
     static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(PluginConstant.PLUGIN_ID, "FOLDER_CLASSIFY"); //$NON-NLS-1$
 
     // PROPERTIES
-    static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(PluginConstant.PLUGIN_ID, "FOLDER_READ_ONLY"); //$NON-NLS-1$
+    static final QualifiedName READONLY = new QualifiedName(PluginConstant.PLUGIN_ID, "FOLDER_READ_ONLY"); //$NON-NLS-1$
 
-    static final QualifiedName NO_SUBFOLDER_KEY = new QualifiedName(PluginConstant.PLUGIN_ID, "NO_SUBFOLDER"); //$NON-NLS-1$
+    static final QualifiedName NO_SUBFOLDER = new QualifiedName(PluginConstant.PLUGIN_ID, "NO_SUBFOLDER"); //$NON-NLS-1$
 
-    static final QualifiedName PROJECT_TDQ_KEY = new QualifiedName(PluginConstant.PLUGIN_ID, "TDQ_PROJECT"); //$NON-NLS-1$
+    static final QualifiedName PROJECT_TDQ = new QualifiedName(PluginConstant.PLUGIN_ID, "TDQ_PROJECT"); //$NON-NLS-1$
 
-    static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_PROPERTY"; //$NON-NLS-1$
+    static final String READONLY_PROPERTY = "FOLDER_READONLY_PROPERTY"; //$NON-NLS-1$
 
     static final String NO_SUBFOLDER_PROPERTY = "NO_SUBFOLDER_PROPERTY"; //$NON-NLS-1$
 

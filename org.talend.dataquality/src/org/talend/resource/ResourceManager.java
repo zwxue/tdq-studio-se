@@ -17,10 +17,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.QualifiedName;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
-import org.talend.resource.xml.TdqPropertieManager;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -30,6 +34,15 @@ public final class ResourceManager {
     private static Logger log = Logger.getLogger(ResourceManager.class);
 
     private ResourceManager() {
+    }
+
+    /**
+     * DOC bzhou Comment method "getRoot".
+     * 
+     * @return
+     */
+    static IWorkspaceRoot getRoot() {
+        return ResourcesPlugin.getWorkspace().getRoot();
     }
 
     /**
@@ -120,7 +133,7 @@ public final class ResourceManager {
      * @return
      */
     public static IFolder getRulesSQLFolder() {
-        return getRulesFolder().getFolder(EResourceConstant.RULES_SQL.getName());
+        return getOneFolder(EResourceConstant.RULES_SQL);
     }
 
     /**
@@ -138,7 +151,7 @@ public final class ResourceManager {
      * @return
      */
     public static IFolder getPatternSQLFolder() {
-        return getPatternFolder().getFolder(EResourceConstant.PATTERN_SQL.getName());
+        return getOneFolder(EResourceConstant.PATTERN_SQL);
     }
 
     /**
@@ -281,7 +294,7 @@ public final class ResourceManager {
      * @return
      */
     public static boolean isRulesSQLFolder(IResource resource) {
-        return getRulesSQLFolder().getProjectRelativePath().equals(resource.getProjectRelativePath());
+        return isOneFolder(resource, EResourceConstant.RULES_SQL);
     }
 
     /**
@@ -301,7 +314,7 @@ public final class ResourceManager {
      * @return
      */
     public static boolean isPatternSQLFolder(IResource resource) {
-        return getPatternSQLFolder().getProjectRelativePath().equals(resource.getProjectRelativePath());
+        return isOneFolder(resource, EResourceConstant.PATTERN_SQL);
     }
 
     /**
@@ -385,7 +398,7 @@ public final class ResourceManager {
         assert resource != null;
 
         String path = resource.getProjectRelativePath().toString();
-        String compPath = getOneFolder(constant).getProjectRelativePath().toString();
+        String compPath = constant.getPath();
 
         return path.equalsIgnoreCase(compPath);
     }
@@ -397,36 +410,24 @@ public final class ResourceManager {
      * @return
      */
     public static IFolder getOneFolder(EResourceConstant constant) {
-        Object value = TdqPropertieManager.getInstance().getFolderPropertyValue(constant.getName(),
-                ResourceConstant.FOLDER_CLASSIFY_KEY);
-        if (value == null) {
-            return getRootProject().getFolder(constant.getName());
-        }
-        return getRootProject().getFolder(new Path(value.toString()));
-    }
+        assert constant != null;
 
-    /**
-     * DOC bZhou Comment method "setClassifyProperty".
-     * 
-     * @param resource
-     */
-    public static void setClassifyProperty(IResource resource) {
-        assert resource != null;
-
-        String relativePath = resource.getProjectRelativePath().toString();
-        TdqPropertieManager.getInstance().addFolderProperties(resource, ResourceConstant.FOLDER_CLASSIFY_KEY, relativePath);
+        return getRootProject().getFolder(new Path(constant.getPath()));
     }
 
     /**
      * DOC bZhou Comment method "setReadOnlyProperty".
      * 
      * @param resource
+     * @throws CoreException
      */
-    public static void setReadOnlyProperty(IResource resource) {
+    public static void setReadOnlyProperty(IResource resource) throws CoreException {
         assert resource != null;
 
-        TdqPropertieManager.getInstance().addFolderProperties(resource, ResourceConstant.FOLDER_READONLY_KEY,
-                ResourceConstant.FOLDER_READONLY_PROPERTY);
+        String property = resource.getPersistentProperty(ResourceConstant.READONLY);
+        if (property == null) {
+            resource.setPersistentProperty(ResourceConstant.READONLY, ResourceConstant.READONLY_PROPERTY);
+        }
     }
 
     /**
@@ -434,25 +435,34 @@ public final class ResourceManager {
      * 
      * @param resource
      * @return
+     * @throws CoreException
      */
     public static boolean isReadOnlyFolder(IResource resource) {
         assert resource != null;
 
-        Object property = TdqPropertieManager.getInstance()
-                .getFolderPropertyValue(resource, ResourceConstant.FOLDER_READONLY_KEY);
-        return property != null && !StringUtils.isEmpty(property.toString());
+        try {
+            String property = resource.getPersistentProperty(ResourceConstant.READONLY);
+            return StringUtils.equals(property, ResourceConstant.READONLY_PROPERTY);
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+
+        return false;
     }
 
     /**
      * DOC bZhou Comment method "setNoSubFolderProperty".
      * 
      * @param resource
+     * @throws CoreException
      */
-    public static void setNoSubFolderProperty(IResource resource) {
+    public static void setNoSubFolderProperty(IResource resource) throws CoreException {
         assert resource != null;
 
-        TdqPropertieManager.getInstance().addFolderProperties(resource, ResourceConstant.NO_SUBFOLDER_KEY,
-                ResourceConstant.NO_SUBFOLDER_PROPERTY);
+        String property = resource.getPersistentProperty(ResourceConstant.NO_SUBFOLDER);
+        if (property == null) {
+            resource.setPersistentProperty(ResourceConstant.NO_SUBFOLDER, ResourceConstant.NO_SUBFOLDER_PROPERTY);
+        }
     }
 
     /**
@@ -460,12 +470,19 @@ public final class ResourceManager {
      * 
      * @param resource
      * @return
+     * @throws CoreException
      */
     public static boolean isNoSubFolder(IResource resource) {
         assert resource != null;
 
-        Object property = TdqPropertieManager.getInstance().getFolderPropertyValue(resource, ResourceConstant.NO_SUBFOLDER_KEY);
-        return property != null && !StringUtils.isEmpty(property.toString());
+        try {
+            String property = resource.getPersistentProperty(ResourceConstant.NO_SUBFOLDER);
+            return StringUtils.equals(property, ResourceConstant.NO_SUBFOLDER_PROPERTY);
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+
+        return false;
     }
 
     /**
@@ -511,5 +528,40 @@ public final class ResourceManager {
         }
 
         return true;
+    }
+
+    /**
+     * DOC bzhou Comment method "initResourcePersistence".
+     */
+    public static ReturnCode initResourcePersistence() {
+        ReturnCode rc = new ReturnCode();
+
+        try {
+            IPath[] allPathes = EResourceConstant.getPathes();
+            if (allPathes != null) {
+                for (IPath path : allPathes) {
+                    IFolder folder = getRootProject().getFolder(path);
+                    if (folder.exists()) {
+                        QualifiedName[] qualifications = EResourceConstant.findQualificationsByPath(path.toString());
+                        for (QualifiedName qualification : qualifications) {
+                            if (qualification == ResourceConstant.READONLY) {
+                                setReadOnlyProperty(folder);
+                            }
+
+                            if (qualification == ResourceConstant.NO_SUBFOLDER) {
+                                setNoSubFolderProperty(folder);
+                            }
+                        }
+                    }
+                }
+            }
+
+            rc.setOk(true);
+        } catch (CoreException e) {
+            rc.setOk(false);
+            rc.setMessage(e.getMessage());
+        }
+
+        return rc;
     }
 }

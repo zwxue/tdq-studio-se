@@ -51,7 +51,7 @@ public class DeleteCWMResourceProvider extends CommonActionProvider {
      */
     @SuppressWarnings("unchecked")
     private IFile[] getSelectedResourcesArray() {
-        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
         TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
         List<IFile> selectedFiles = new ArrayList<IFile>();
         Iterator iterator = treeSelection.iterator();

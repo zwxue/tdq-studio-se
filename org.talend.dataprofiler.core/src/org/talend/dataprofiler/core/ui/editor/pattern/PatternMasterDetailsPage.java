@@ -284,7 +284,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
                 public void widgetSelected(SelectionEvent e) {
                     // Open test pattern viewer
-                    PatternTestView patternTestView = (PatternTestView) CorePlugin.getDefault().findView(PatternTestView.ID);
+                    PatternTestView patternTestView = CorePlugin.getDefault().getPatternTestView();
                     patternTestView.setPatternExpression(PatternMasterDetailsPage.this, pattern, finalRegExpress);
                 }
             });

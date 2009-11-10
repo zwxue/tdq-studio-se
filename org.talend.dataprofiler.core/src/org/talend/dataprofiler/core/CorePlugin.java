@@ -48,6 +48,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
@@ -61,26 +62,6 @@ import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 public class CorePlugin extends AbstractUIPlugin {
 
     protected static Logger log = Logger.getLogger(CorePlugin.class);
-
-    private DQRespositoryView respositoryView;
-
-    /**
-     * Getter for respositoryView.
-     * 
-     * @return the respositoryView
-     */
-    public DQRespositoryView getRespositoryView() {
-        return this.respositoryView;
-    }
-
-    /**
-     * Sets the respositoryView.
-     * 
-     * @param respositoryView the respositoryView to set
-     */
-    public void setRespositoryView(DQRespositoryView respositoryView) {
-        this.respositoryView = respositoryView;
-    }
 
     // The plug-in ID
     public static final String PLUGIN_ID = "org.talend.dataprofiler.core"; //$NON-NLS-1$
@@ -331,7 +312,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param viewId the identifier of viewPart
      * @return
      */
-    public IViewPart findView(String viewId) {
+    private IViewPart findView(String viewId) {
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (activeWorkbenchWindow == null) {
             return null;
@@ -353,6 +334,26 @@ public class CorePlugin extends AbstractUIPlugin {
         return part;
     }
 
+    /**
+     * DOC bzhou Comment method "getRepositoryView".
+     * 
+     * @return
+     */
+    public DQRespositoryView getRepositoryView() {
+        IViewPart view = findView(DQRespositoryView.ID);
+        return view != null ? (DQRespositoryView) view : null;
+    }
+
+    /**
+     * DOC bzhou Comment method "getPatternTestView".
+     * 
+     * @return
+     */
+    public PatternTestView getPatternTestView() {
+        IViewPart view = findView(PatternTestView.ID);
+        return view != null ? (PatternTestView) view : null;
+    }
+
     public void refreshWorkSpace() {
         if (refreshAction == null) {
             refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
@@ -362,7 +363,7 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     public void refreshDQView() {
-        ((DQRespositoryView) findView(DQRespositoryView.ID)).getCommonViewer().refresh();
+        getRepositoryView().getCommonViewer().refresh();
     }
 
     /**

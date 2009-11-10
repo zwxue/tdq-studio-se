@@ -45,7 +45,6 @@ import org.eclipse.ui.part.ResourceTransfer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
@@ -153,7 +152,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
             }
         }
         ProxyRepositoryManager.getInstance().save();
-        ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
+        CorePlugin.getDefault().refreshDQView();
         return null;
     }
 

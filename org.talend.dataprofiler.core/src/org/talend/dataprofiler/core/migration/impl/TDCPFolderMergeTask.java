@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
@@ -57,7 +56,6 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             if (!rootProject.exists()) {
                 rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.getRootProjectName());
             }
-            DQStructureManager.copyConfigFiles(rootProject, CorePlugin.getDefault());
 
             // Copy "top level" folders already as projects in TOP/TDQ into this
             // project.

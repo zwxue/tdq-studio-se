@@ -261,7 +261,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 TreeItem[] selection = newTree.getSelection();
 
                 if (selection.length == 1) {
-                    DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+                    DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
                     try {
                         TdColumn tdColumn = (TdColumn) selection[0].getData(COLUMN_INDICATOR_KEY);
                         dqview.showSelectedElements(tdColumn);

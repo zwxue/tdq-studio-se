@@ -12,45 +12,50 @@
 // ============================================================================
 package org.talend.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.QualifiedName;
+
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public enum EResourceConstant {
 
-    DATA_PROFILING(0, "TDQ_Data Profiling"),
-    LIBRARIES(1, "TDQ_Libraries"),
-    METADATA(2, "TDQ_Metadata"),
-    ANALYSIS(3, "Analyses"),
-    REPORTS(4, "Reports"),
-    EXCHANGE(5, "Exchange"),
-    INDICATORS(6, "Indicators"),
-    JRXML_TEMPLATE(7, "JRXML Template"),
-    PATTERNS(8, "Patterns"),
-    RULES(9, "Rules"),
-    SOURCE_FILES(10, "Source Files"),
-    USER_DEFINED_INDICATORS(11, "User Defined Indicators"),
-    PATTERN_REGEX(12, "Regex"),
-    PATTERN_SQL(13, "SQL"),
-    RULES_SQL(14, "SQL"),
-    DB_CONNECTIONS(15, "DB Connections"),
-    REPORTING_DB(16, "TDQ_reporting_db");
-
-    private int index;
+    DATA_PROFILING("TDQ_Data Profiling", "TDQ_Data Profiling", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
+    LIBRARIES("TDQ_Libraries", "TDQ_Libraries", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
+    METADATA("TDQ_Metadata", "TDQ_Metadata", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
+    ANALYSIS("Analyses", "TDQ_Data Profiling/Analyses", ResourceConstant.READONLY),
+    REPORTS("Reports", "TDQ_Data Profiling/Reports", ResourceConstant.READONLY),
+    EXCHANGE("Exchange", "TDQ_Libraries/Exchange", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
+    INDICATORS("Indicators", "TDQ_Libraries/Indicators", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
+    JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY),
+    PATTERNS("Patterns", "TDQ_Libraries/Patterns", ResourceConstant.READONLY),
+    RULES("Rules", "TDQ_Libraries/Patterns/Rules", ResourceConstant.READONLY),
+    SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY),
+    USER_DEFINED_INDICATORS(
+                            "User Defined Indicators",
+                            "TDQ_Libraries/Indicators/User Defined Indicators",
+                            ResourceConstant.READONLY),
+    PATTERN_REGEX("Regex", "TDQ_Libraries/Patterns/Regex", ResourceConstant.READONLY),
+    PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY),
+    RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY),
+    DB_CONNECTIONS("DB Connections", "TDQ_Metadata/DB Connections", ResourceConstant.READONLY),
+    REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY);
 
     private String name;
 
-    EResourceConstant(int index, String name) {
-        this.index = index;
-        this.name = name;
-    }
+    private String path;
 
-    /**
-     * Getter for index.
-     * 
-     * @return the index
-     */
-    public int getIndex() {
-        return index;
+    private QualifiedName[] qualifications;
+
+    EResourceConstant(String name, String path, QualifiedName... qualifications) {
+        this.name = name;
+        this.path = path;
+        this.qualifications = qualifications;
     }
 
     /**
@@ -63,31 +68,48 @@ public enum EResourceConstant {
     }
 
     /**
-     * DOC bZhou Comment method "getNameByIndex".
+     * Getter for path.
      * 
-     * @param index
-     * @return
+     * @return the path
      */
-    public String getNameByIndex(int index) {
-        for (EResourceConstant constant : values()) {
-            if (constant.getIndex() == index) {
-                return constant.getName();
-            }
-        }
-
-        return null;
+    public String getPath() {
+        return path;
     }
 
     /**
-     * DOC bZhou Comment method "getIndexByName".
+     * Getter for qualifications.
      * 
-     * @param name
+     * @return the qualifications
+     */
+    public QualifiedName[] getQualifications() {
+        return qualifications;
+    }
+
+    /**
+     * DOC bzhou Comment method "getPathes".
+     * 
      * @return
      */
-    public Integer getIndexByName(String name) {
+    public static IPath[] getPathes() {
+        List<IPath> allPathes = new ArrayList<IPath>();
+
         for (EResourceConstant constant : values()) {
-            if (constant.getName().equals(name)) {
-                return constant.getIndex();
+            allPathes.add(new Path(constant.getPath()));
+        }
+
+        return allPathes.toArray(new Path[allPathes.size()]);
+    }
+
+    /**
+     * DOC bzhou Comment method "findQualificationsByPath".
+     * 
+     * @param path
+     * @return
+     */
+    public static QualifiedName[] findQualificationsByPath(String path) {
+        for (EResourceConstant constant : values()) {
+            if (StringUtils.equals(path, constant.getPath())) {
+                return constant.getQualifications();
             }
         }
 

@@ -42,7 +42,7 @@ public class CreateDQRulesFolderTask extends AbstractMigrationTask {
     public boolean execute() {
         try {
             DQStructureManager manager = DQStructureManager.getInstance();
-            IFolder createNewFoler = manager.createNewReadOnlyFolder(ResourceManager.getLibrariesFolder(), DQ_RULES);
+            IFolder createNewFoler = manager.createNewFolder(ResourceManager.getLibrariesFolder(), DQ_RULES);
             manager.copyFilesToFolder(CorePlugin.getDefault(), RULES_PATH, true, createNewFoler, null);
         } catch (Exception e) {
             ExceptionHandler.process(e);

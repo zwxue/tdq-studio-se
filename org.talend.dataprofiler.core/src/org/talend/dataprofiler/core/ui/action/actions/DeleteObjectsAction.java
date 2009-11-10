@@ -58,7 +58,7 @@ public class DeleteObjectsAction extends Action {
      * DOC qzhang Comment method "removeSQLFile".
      */
     private boolean removeSQLFile() {
-        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
         TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
         List<IFile> selectedFiles = new ArrayList<IFile>();
         boolean isSelectFile = NewSourceFileActionProvider.computeSelectedFiles(treeSelection, selectedFiles);
@@ -80,7 +80,7 @@ public class DeleteObjectsAction extends Action {
      */
     @SuppressWarnings("unchecked")
     private IFile[] getSelectedResourcesArray() {
-        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
         TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
         List<IFile> selectedFiles = new ArrayList<IFile>();
         Iterator iterator = treeSelection.iterator();

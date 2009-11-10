@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Enumeration;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IContainer;
@@ -39,7 +38,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -89,34 +87,26 @@ public final class DQStructureManager {
 
             }
 
-            copyConfigFiles(project, plugin);
+            IFolder dataProfilingFolder = createNewFolder(project, EResourceConstant.DATA_PROFILING);
+            IFolder analysisFoler = createNewFolder(dataProfilingFolder, EResourceConstant.ANALYSIS);
+            IFolder reportFoler = createNewFolder(dataProfilingFolder, EResourceConstant.REPORTS);
 
-            IFolder dataProfilingFolder = createNewReadOnlyFolder(project, EResourceConstant.DATA_PROFILING);
-            IFolder analysisFoler = createNewReadOnlyFolder(dataProfilingFolder, EResourceConstant.ANALYSIS);
-            IFolder reportFoler = createNewReadOnlyFolder(dataProfilingFolder, EResourceConstant.REPORTS);
-
-            IFolder librariesFoler = createNewReadOnlyFolder(project, EResourceConstant.LIBRARIES);
-            IFolder patternFoler = createNewReadOnlyFolder(librariesFoler, EResourceConstant.PATTERNS);
-            IFolder patternRegexFoler = createNewReadOnlyFolder(patternFoler, EResourceConstant.PATTERN_REGEX);
-            IFolder patternSQLFoler = createNewReadOnlyFolder(patternFoler, EResourceConstant.PATTERN_SQL);
-            IFolder sourceFileFoler = createNewReadOnlyFolder(librariesFoler, EResourceConstant.SOURCE_FILES);
-            IFolder rulesFoler = createNewReadOnlyFolder(librariesFoler, EResourceConstant.RULES);
-            IFolder rulesSQLFoler = createNewReadOnlyFolder(rulesFoler, EResourceConstant.RULES_SQL);
-            IFolder exchangeFoler = createNewReadOnlyFolder(librariesFoler, EResourceConstant.EXCHANGE);
-            IFolder indicatorFoler = createNewReadOnlyFolder(librariesFoler, EResourceConstant.INDICATORS);
-            IFolder udiFoler = createNewReadOnlyFolder(indicatorFoler, EResourceConstant.USER_DEFINED_INDICATORS);
+            IFolder librariesFoler = createNewFolder(project, EResourceConstant.LIBRARIES);
+            IFolder patternFoler = createNewFolder(librariesFoler, EResourceConstant.PATTERNS);
+            IFolder patternRegexFoler = createNewFolder(patternFoler, EResourceConstant.PATTERN_REGEX);
+            IFolder patternSQLFoler = createNewFolder(patternFoler, EResourceConstant.PATTERN_SQL);
+            IFolder sourceFileFoler = createNewFolder(librariesFoler, EResourceConstant.SOURCE_FILES);
+            IFolder rulesFoler = createNewFolder(librariesFoler, EResourceConstant.RULES);
+            IFolder rulesSQLFoler = createNewFolder(rulesFoler, EResourceConstant.RULES_SQL);
+            IFolder exchangeFoler = createNewFolder(librariesFoler, EResourceConstant.EXCHANGE);
+            IFolder indicatorFoler = createNewFolder(librariesFoler, EResourceConstant.INDICATORS);
+            IFolder udiFoler = createNewFolder(indicatorFoler, EResourceConstant.USER_DEFINED_INDICATORS);
             if (PluginChecker.isTDQLoaded()) {
-                IFolder jrxmlFolder = createNewReadOnlyFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
+                IFolder jrxmlFolder = createNewFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
             }
 
-            IFolder metadataFolder = createNewReadOnlyFolder(project, EResourceConstant.METADATA);
-            IFolder connectionFolder = createNewReadOnlyFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
-
-            ResourceManager.setNoSubFolderProperty(dataProfilingFolder);
-            ResourceManager.setNoSubFolderProperty(librariesFoler);
-            ResourceManager.setNoSubFolderProperty(metadataFolder);
-            ResourceManager.setNoSubFolderProperty(exchangeFoler);
-            ResourceManager.setNoSubFolderProperty(indicatorFoler);
+            IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
+            IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
 
             copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null);
             copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null);
@@ -185,30 +175,15 @@ public final class DQStructureManager {
     }
 
     /**
-     * DOC bZhou Comment method "createNewReadOnlyFolder".
+     * DOC bzhou Comment method "createNewFolder".
      * 
      * @param parent
      * @param constant
      * @return
      * @throws CoreException
      */
-    public IFolder createNewReadOnlyFolder(IContainer parent, EResourceConstant constant) throws CoreException {
-        return createNewReadOnlyFolder(parent, constant.getName());
-    }
-
-    /**
-     * 
-     * mzhao Create new READ-ONLY folder by project or folder.
-     * 
-     * @param parentFolder
-     * @param folderName
-     * @return
-     * @throws CoreException
-     */
-    public IFolder createNewReadOnlyFolder(IContainer parent, String folderName) throws CoreException {
-        IFolder desFolder = createNewFolder(parent, folderName);
-        ResourceManager.setReadOnlyProperty(desFolder);
-        return desFolder;
+    public IFolder createNewFolder(IContainer parent, EResourceConstant constant) throws CoreException {
+        return createNewFolder(parent, constant.getName());
     }
 
     /**
@@ -231,7 +206,6 @@ public final class DQStructureManager {
 
         if (!desFolder.exists()) {
             desFolder.create(false, true, null);
-            ResourceManager.setClassifyProperty(desFolder);
         }
         return desFolder;
     }
@@ -306,33 +280,6 @@ public final class DQStructureManager {
             return;
         }
         file.create(inputStream, false, null);
-    }
-
-    public static void copyConfigFiles(IProject project, Plugin plugin) {
-        Enumeration paths = plugin.getBundle().getEntryPaths(CONFIG_PATH);
-        if (paths == null) {
-            return;
-        }
-        while (paths.hasMoreElements()) {
-            String nextElement = (String) paths.nextElement();
-            String currentPath = "/" + nextElement; //$NON-NLS-1$
-            URL resourceURL = plugin.getBundle().getEntry(currentPath);
-            URL fileURL = null;
-            File srcFile = null;
-            File destFile = null;
-            try {
-                fileURL = FileLocator.toFileURL(resourceURL);
-                srcFile = new File(fileURL.getFile());
-                if (!srcFile.getName().endsWith(FactoriesUtil.XML)) {
-                    continue;
-                }
-                destFile = new File(project.getLocation().toOSString() + File.separator + srcFile.getName());
-                FileUtils.copyFile(srcFile, destFile);
-            } catch (IOException e) {
-                log.error(e, e);
-            }
-
-        }
     }
 
     public boolean isPathValid(IPath path, String label) {
