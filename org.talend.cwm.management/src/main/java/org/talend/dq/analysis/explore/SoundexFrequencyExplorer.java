@@ -26,6 +26,8 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     private static final String REGEX = "SELECT MAX\\((.*)\\)\\s*, SOUNDEX\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
+    private static final String SOUNDEX_PREFIX = "SOUNDEX";
+
     @Override
     protected String getFreqRowsStatement() {
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
@@ -39,8 +41,10 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         // get function which convert data into a pattern
         String function = getFunction();
 
-        String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : function
-                + dbmsLanguage.equal() + "'" + entity.getKey() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+        // MOD mzhao bug 9740 2009-11-10
+
+        String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : SOUNDEX_PREFIX + "("//$NON-NLS-1$ 
+                + function + ")" + dbmsLanguage.equal() + SOUNDEX_PREFIX + "('" + entity.getKey() + "')"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
         return clause;
     }
 
