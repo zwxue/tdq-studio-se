@@ -71,6 +71,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -1096,8 +1097,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
 
-        UDIResourceFileHelper.getInstance().save(definition);
-        this.isDirty = false;
+        ReturnCode rc = UDIHelper.validate(definition);
+        if (rc.isOk()) {
+            // EMFUtil.saveSingleResource(definition.eResource());
+            UDIResourceFileHelper.getInstance().save(definition);
+            this.isDirty = false;
+        } else {
+            MessageDialog.openError(null, "error", rc.getMessage());
+        }
     }
 
     /**

@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -21,6 +23,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -30,6 +33,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -192,4 +196,35 @@ public final class UDIHelper {
         return true;
     }
 
+    public static ReturnCode validate(IndicatorDefinition indicatorDefinition) {
+
+        ReturnCode rc = new ReturnCode(true);
+        List<String> errorList = new ArrayList<String>();
+
+        if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
+            errorList.add(Messages.getString("UDIHelper.validateNoExpression"));
+            rc.setOk(false);
+        }
+
+        if ("".equals(indicatorDefinition.getName())) {
+            errorList.add(Messages.getString("UDIHelper.validateNoName"));
+            rc.setOk(false);
+        }
+
+        for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
+            if (null == exp.getBody() || exp.getBody().length() + 1 < MIN_EXPRESSION_LENGTH) {
+                errorList.add(Messages.getString("UDIHelper.validateTooShort"));
+                rc.setOk(false);
+            }
+        }
+
+        String message = Messages.getString("UDIHelper.validateCannotSave");
+        String wrap = System.getProperty("line.separator");
+        for (int i = 0; i < errorList.size(); i++) {
+            message += wrap + (i + 1) + "." + errorList.get(i);
+        }
+        rc.setMessage(message);
+
+        return rc;
+    }
 }
