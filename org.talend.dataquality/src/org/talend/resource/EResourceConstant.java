@@ -34,7 +34,7 @@ public enum EResourceConstant {
     INDICATORS("Indicators", "TDQ_Libraries/Indicators", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY),
     PATTERNS("Patterns", "TDQ_Libraries/Patterns", ResourceConstant.READONLY),
-    RULES("Rules", "TDQ_Libraries/Patterns/Rules", ResourceConstant.READONLY),
+    RULES("Rules", "TDQ_Libraries/Rules", ResourceConstant.READONLY),
     SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY),
     USER_DEFINED_INDICATORS(
                             "User Defined Indicators",

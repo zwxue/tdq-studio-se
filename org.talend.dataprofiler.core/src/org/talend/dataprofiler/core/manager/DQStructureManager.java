@@ -39,7 +39,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
@@ -101,9 +100,7 @@ public final class DQStructureManager {
             IFolder exchangeFoler = createNewFolder(librariesFoler, EResourceConstant.EXCHANGE);
             IFolder indicatorFoler = createNewFolder(librariesFoler, EResourceConstant.INDICATORS);
             IFolder udiFoler = createNewFolder(indicatorFoler, EResourceConstant.USER_DEFINED_INDICATORS);
-            if (PluginChecker.isTDQLoaded()) {
-                IFolder jrxmlFolder = createNewFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
-            }
+            IFolder jrxmlFolder = createNewFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
 
             IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
             IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);

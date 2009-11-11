@@ -51,6 +51,8 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
 
     private static final String DQ_RULES = "DQ Rules";
 
+    private static final String JRXML_REPORTS = "JRXML Reports";
+
     public ReorderingLibraryFoldersTask() {
     }
 
@@ -80,6 +82,12 @@ public class ReorderingLibraryFoldersTask extends AbstractMigrationTask {
             IFolder newRulesSQLSubfolder = createSubfolder(newRulesFolder, EResourceConstant.RULES_SQL.getName());
             moveItems(oldDqRulesFolder, newRulesSQLSubfolder);
             oldDqRulesFolder.delete(true, null);
+
+            // JRXML Reports -> JRXML Template
+            IFolder oldJrxmlFolder = libraryFolder.getFolder(JRXML_REPORTS);
+            IFolder newJrxmlFolder = createSubfolder(libraryFolder, EResourceConstant.JRXML_TEMPLATE.getName());
+            moveItems(oldJrxmlFolder, newJrxmlFolder);
+            oldJrxmlFolder.delete(true, null);
 
             // Refresh project
             ResourceManager.refreshStructure();
