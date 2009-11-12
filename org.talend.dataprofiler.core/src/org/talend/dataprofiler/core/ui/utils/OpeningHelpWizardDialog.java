@@ -65,7 +65,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
     public void create() {
         super.create();
 
-        if (href != null) {
+        if (href != null && page == null) {
             showHelp();
         }
     }
