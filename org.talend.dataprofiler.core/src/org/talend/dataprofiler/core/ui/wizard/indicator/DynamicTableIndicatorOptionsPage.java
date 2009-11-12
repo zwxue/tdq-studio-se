@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
@@ -86,9 +88,11 @@ public class DynamicTableIndicatorOptionsPage extends WizardPage {
             public void widgetSelected(SelectionEvent e) {
 
                 Object formObject = e.item.getData();
-                if (formObject != null) {
+                if (formObject != null && getCurrentDialog() != null) {
                     AbstractIndicatorForm form = (AbstractIndicatorForm) formObject;
-                    form.showHelp();
+                    String helpHref = form.getFormEnum().getHelpHref();
+                    getCurrentDialog().setHref(helpHref);
+                    getCurrentDialog().showHelp();
                 }
             }
 
@@ -147,4 +151,17 @@ public class DynamicTableIndicatorOptionsPage extends WizardPage {
         return validFroms;
     }
 
+    /**
+     * DOC bZhou Comment method "getCurrentDialog".
+     * 
+     * @return
+     */
+    private OpeningHelpWizardDialog getCurrentDialog() {
+        IWizardContainer container = getWizard().getContainer();
+        if (container instanceof OpeningHelpWizardDialog) {
+            return (OpeningHelpWizardDialog) container;
+        }
+
+        return null;
+    }
 }

@@ -737,7 +737,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         if (FormEnum.isExsitingForm(indicatorUnit)) {
             String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
             OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(shell, wizard, href);
-            optionDialog.create();
+
             if (Window.OK == optionDialog.open()) {
                 setDirty(wizard.isDirty());
                 createIndicatorParameters(indicatorItem, indicatorUnit);
