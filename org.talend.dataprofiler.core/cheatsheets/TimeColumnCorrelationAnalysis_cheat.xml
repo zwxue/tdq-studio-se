@@ -11,7 +11,7 @@
       <description>
          This step opens the <b> Create New Analysis </b> wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a nomnal or a date column</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens the corresponding editor in which you can define the settings of the analysis.
       </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8" param2="1"/>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="true" param1="8" param2="2"/>
    </item>
    <item
          title="Select columns to analysis">
