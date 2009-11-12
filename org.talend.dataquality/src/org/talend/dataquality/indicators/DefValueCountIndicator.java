@@ -30,6 +30,7 @@ package org.talend.dataquality.indicators;
 public interface DefValueCountIndicator extends Indicator {
     /**
      * Returns the value of the '<em><b>Default Val Count</b></em>' attribute.
+     * The default value is <code>"0"</code>.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Default Val Count</em>' attribute isn't clear,
@@ -39,7 +40,7 @@ public interface DefValueCountIndicator extends Indicator {
      * @return the value of the '<em>Default Val Count</em>' attribute.
      * @see #setDefaultValCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getDefValueCountIndicator_DefaultValCount()
-     * @model
+     * @model default="0"
      * @generated
      */
     Long getDefaultValCount();
