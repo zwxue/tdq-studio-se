@@ -34,6 +34,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
@@ -140,6 +141,13 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * @generated
      */
     private EClass columnDependencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass simpleStatIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -526,6 +534,15 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getSimpleStatIndicator() {
+        return simpleStatIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EDataType getListObject() {
         return listObjectEDataType;
     }
@@ -592,6 +609,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         createEAttribute(columnDependencyIndicatorEClass, COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT);
         createEAttribute(columnDependencyIndicatorEClass, COLUMN_DEPENDENCY_INDICATOR__DEPENDENCY_FACTOR);
 
+        simpleStatIndicatorEClass = createEClass(SIMPLE_STAT_INDICATOR);
+
         // Create data types
         listObjectEDataType = createEDataType(LIST_OBJECT);
     }
@@ -636,6 +655,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         minMaxDateIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         weakCorrelationIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         columnDependencyIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
+        simpleStatIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(columnsCompareIndicatorEClass, ColumnsCompareIndicator.class, "ColumnsCompareIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -671,6 +691,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         initEAttribute(getColumnDependencyIndicator_ACount(), ecorePackage.getELongObject(), "aCount", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnDependencyIndicator_DistinctACount(), ecorePackage.getELongObject(), "distinctACount", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnDependencyIndicator_DependencyFactor(), ecorePackage.getEDoubleObject(), "dependencyFactor", null, 0, 1, ColumnDependencyIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(simpleStatIndicatorEClass, SimpleStatIndicator.class, "SimpleStatIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize data types
         initEDataType(listObjectEDataType, List.class, "ListObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<Object>");

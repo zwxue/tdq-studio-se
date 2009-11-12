@@ -1955,7 +1955,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEClass(patternLowFreqIndicatorEClass, PatternLowFreqIndicator.class, "PatternLowFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(defValueCountIndicatorEClass, DefValueCountIndicator.class, "DefValueCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getDefValueCountIndicator_DefaultValCount(), ecorePackage.getELongObject(), "defaultValCount", null, 0, 1, DefValueCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDefValueCountIndicator_DefaultValCount(), ecorePackage.getELongObject(), "defaultValCount", "0", 0, 1, DefValueCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(soundexFreqIndicatorEClass, SoundexFreqIndicator.class, "SoundexFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getSoundexFreqIndicator_ValueToDistinctFreq(), this.getJavaHashMap(), "valueToDistinctFreq", null, 0, 1, SoundexFreqIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

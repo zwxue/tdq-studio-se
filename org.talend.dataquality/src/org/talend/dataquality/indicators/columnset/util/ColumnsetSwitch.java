@@ -184,6 +184,17 @@ public class ColumnsetSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case ColumnsetPackage.SIMPLE_STAT_INDICATOR: {
+                SimpleStatIndicator simpleStatIndicator = (SimpleStatIndicator)theEObject;
+                T result = caseSimpleStatIndicator(simpleStatIndicator);
+                if (result == null) result = caseColumnSetMultiValueIndicator(simpleStatIndicator);
+                if (result == null) result = caseCompositeIndicator(simpleStatIndicator);
+                if (result == null) result = caseIndicator(simpleStatIndicator);
+                if (result == null) result = caseModelElement(simpleStatIndicator);
+                if (result == null) result = caseElement(simpleStatIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -305,6 +316,21 @@ public class ColumnsetSwitch<T> {
      * @generated
      */
     public T caseColumnDependencyIndicator(ColumnDependencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Simple Stat Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Simple Stat Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseSimpleStatIndicator(SimpleStatIndicator object) {
         return null;
     }
 

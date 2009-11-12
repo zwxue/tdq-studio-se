@@ -89,6 +89,15 @@ public interface ColumnsetFactory extends EFactory {
     ColumnDependencyIndicator createColumnDependencyIndicator();
 
     /**
+     * Returns a new object of class '<em>Simple Stat Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Simple Stat Indicator</em>'.
+     * @generated
+     */
+    SimpleStatIndicator createSimpleStatIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

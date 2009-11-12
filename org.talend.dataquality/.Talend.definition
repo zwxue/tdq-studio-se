@@ -294,6 +294,11 @@
     <taggedValue xmi:id="_r4i4ICOMEd6YB57jaCfKaA" tag="Purpose" value="estimates the number of record matching the rule"/>
     <sqlGenericExpression xmi:id="_axQAACOMEd6YB57jaCfKaA" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__JOIN_CLAUSE__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_JoeMkM-jEd6qN5aKpPNGTg" name="Multiple Column Simple Statistics" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Multiple Column Simple Statistics">
+    <taggedValue xmi:id="_JoezoM-jEd6qN5aKpPNGTg" tag="Description" value="Computes simple statistics on several columns"/>
+    <taggedValue xmi:id="_Joezoc-jEd6qN5aKpPNGTg" tag="Purpose" value="evaluates the multiplicity of records on several columns"/>
+    <sqlGenericExpression xmi:id="_Joezos-jEd6qN5aKpPNGTg" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>" language="SQL"/>
+  </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>

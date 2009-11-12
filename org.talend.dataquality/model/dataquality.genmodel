@@ -495,6 +495,7 @@
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnDependencyIndicator/distinctACount"/>
           <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnDependencyIndicator/dependencyFactor"/>
         </genClasses>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/SimpleStatIndicator"/>
       </nestedGenPackages>
     </nestedGenPackages>
     <nestedGenPackages prefix="Expressions" basePackage="org.talend.dataquality" disposableProviderFactory="true"
