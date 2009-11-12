@@ -20,10 +20,9 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IFolder;
 import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -49,19 +48,10 @@ public class SoundexIndicatorQueryTask extends AbstractMigrationTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
      */
     public boolean execute() {
-        IFile definitionFile = ResourceManager.getLibrariesFolder().getFile(talendDefinitionFileName);
+        IFolder librariesFolder = ResourceManager.getLibrariesFolder();
+        IFile definitionFile = librariesFolder.getFile(talendDefinitionFileName);
+
         if (definitionFile.exists()) {
-            try {
-                definitionFile.delete(true, null);
-            } catch (CoreException e) {
-                log.error(e.getMessage(), e);
-                return false;
-            }
-        }
-
-        DefinitionHandler.getInstance();
-
-        if (definitionFile != null) {
             File file = new File(definitionFile.getLocationURI());
             try {
                 String content = FileUtils.readFileToString(file);
