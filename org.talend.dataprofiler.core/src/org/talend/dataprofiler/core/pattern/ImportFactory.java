@@ -47,7 +47,7 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -281,8 +281,7 @@ public final class ImportFactory {
 
         IFile pfile = selectionFolder.getFile(fname);
 
-        EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), pattern);
-        EMFSharedResources.getInstance().saveLastResource();
+        ElementWriterFactory.getInstance().createPatternWriter().save(pattern, pfile);
 
         return ResourceManager.getPatternFolder().getLocationURI().relativize(selectionFolder.getLocationURI()).toString();
     }
@@ -567,8 +566,7 @@ public final class ImportFactory {
 
         IFile pfile = selectionFolder.getFile(fname);
 
-        EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), id);
-        EMFSharedResources.getInstance().saveLastResource();
+        ElementWriterFactory.getInstance().createUDIndicatorWriter().save(id, pfile);
     }
 
     /**

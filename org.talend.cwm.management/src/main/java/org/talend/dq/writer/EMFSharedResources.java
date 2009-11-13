@@ -165,8 +165,21 @@ public final class EMFSharedResources {
         return this.emfUtil.save();
     }
 
+    /**
+     * Method "saveResource" saves the resources of the resourceSet.
+     * 
+     * @return true when ok
+     */
     public boolean saveResource(Resource resource) {
-        return EMFUtil.saveResource(resource);
+        // set the current file encoding with utf-8
+        String oldProp = System.getProperty("file.encoding");
+        System.setProperty("file.encoding", "UTF-8");
+
+        boolean status = EMFUtil.saveResource(resource);
+
+        // restore previous property
+        System.setProperty("file.encoding", oldProp);
+        return status;
     }
 
     /**
@@ -197,7 +210,7 @@ public final class EMFSharedResources {
         URI changeUri = EMFUtil.changeUri(res, destinationUri);
         needSaves.add(res);
         for (Resource toSave : needSaves) {
-            EMFUtil.saveResource(toSave);
+            saveResource(toSave);
         }
         return changeUri;
     }
