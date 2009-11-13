@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -67,7 +66,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
-import org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
@@ -111,22 +109,34 @@ public class DQRespositoryView extends CommonNavigator {
     public DQRespositoryView() {
         super();
 
-        new TDCPFolderMergeTask().execute();
+        DQStructureManager manager = DQStructureManager.getInstance();
 
-        if (isNeedCreateStructure()) {
-            DQStructureManager manager = DQStructureManager.getInstance();
-            if (!manager.createDQStructure()) {
-                log.error("Failed to create structure of TDQ!");
-            } else {
-                ProxyRepositoryManager.getInstance().save();
-            }
+        if (manager.isNeedCreateStructure()) {
+            manager.createDQStructure();
         } else {
             List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
             MigrationTaskManager.doMigrationTask(tasks);
         }
 
         ResourceManager.initResourcePersistence();
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
+     */
+    @Override
+    public void init(IViewSite site, IMemento memento) throws PartInitException {
+        super.init(site, memento);
+        if (memento == null) {
+            setLinkingEnabled(false);
+        }
+
+        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
+
+        addPostWindowCloseListener();
+        addResourceChangedListener();
     }
 
     private void addResourceChangedListener() {
@@ -166,43 +176,6 @@ public class DQRespositoryView extends CommonNavigator {
             }
 
         });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-     */
-    @Override
-    public void init(IViewSite site, IMemento memento) throws PartInitException {
-        super.init(site, memento);
-        if (memento == null) {
-            setLinkingEnabled(false);
-        }
-
-        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
-
-        addPostWindowCloseListener();
-        addResourceChangedListener();
-    }
-
-    /**
-     * DOC bZhou Comment method "isNeedCreateStructure".
-     * 
-     * @return false if not needed.
-     */
-    public boolean isNeedCreateStructure() {
-        IProject rootProject = ResourceManager.getRootProject();
-        if (!rootProject.exists()) {
-            return true;
-        } else {
-            if (!ResourceManager.getDataProfilingFolder().exists() || !ResourceManager.getLibrariesFolder().exists()
-                    || !ResourceManager.getMetadataFolder().exists()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /*

@@ -45,6 +45,7 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * Create the folder structure for the DQ Reponsitory view.
@@ -62,20 +63,36 @@ public final class DQStructureManager {
 
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
-    private static final String CONFIG_PATH = "/configure";//$NON-NLS-1$
-
     public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
 
-    private static DQStructureManager manager = new DQStructureManager();
+    private static DQStructureManager manager;
 
     public static DQStructureManager getInstance() {
+        if (manager == null) {
+            manager = new DQStructureManager();
+        }
+
         return manager;
     }
 
+    /**
+     * DOC bZhou DQStructureManager constructor comment.
+     */
     private DQStructureManager() {
+        initStructure();
     }
 
-    public boolean createDQStructure() {
+    /**
+     * DOC bZhou Comment method "initStructure".
+     */
+    private void initStructure() {
+        ResourceManager.refreshStructure();
+    }
+
+    /**
+     * DOC bZhou Comment method "createDQStructure".
+     */
+    public void createDQStructure() {
 
         Plugin plugin = CorePlugin.getDefault();
         try {
@@ -114,10 +131,30 @@ public final class DQStructureManager {
 
         } catch (Exception ex) {
             ExceptionHandler.process(ex);
-            return false;
+            ProxyRepositoryManager.getInstance().save();
+        }
+    }
+
+    /**
+     * Method "isNeedCreateStructure" created by bzhou@talend.com.
+     * 
+     * @return true if need to create new resource structure.
+     */
+    public boolean isNeedCreateStructure() {
+        if (isSecludedVersion()) {
+            return !ResourceManager.checkSecludedResource();
         }
 
-        return true;
+        return !ResourceManager.checkResource();
+    }
+
+    /**
+     * Method "isSecludedVersion" created by bzhou@talend.com.
+     * 
+     * @return true if version is before 3.0.0
+     */
+    private boolean isSecludedVersion() {
+        return !WorkspaceVersionHelper.getVersionFile().exists();
     }
 
     /**

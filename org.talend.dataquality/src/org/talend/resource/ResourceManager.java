@@ -531,6 +531,33 @@ public final class ResourceManager {
     }
 
     /**
+     * DOC bZhou Comment method "checkResource".
+     * 
+     * @return
+     */
+    public static boolean checkResource() {
+
+        return getRootProject().exists() && getDataProfilingFolder().exists() && getLibrariesFolder().exists()
+                && getMetadataFolder().exists();
+    }
+
+    /**
+     * DOC bZhou Comment method "checkResource".
+     * 
+     * @return
+     */
+    public static boolean checkSecludedResource() {
+
+        String dpProject = "Data Profiling";
+        String lbProject = "Libraries";
+        String mtProject = "Metadata";
+
+        IWorkspaceRoot root = getRoot();
+
+        return root.getProject(dpProject).exists() && root.getProject(lbProject).exists() && root.getProject(mtProject).exists();
+    }
+
+    /**
      * DOC bzhou Comment method "initResourcePersistence".
      */
     public static ReturnCode initResourcePersistence() {
