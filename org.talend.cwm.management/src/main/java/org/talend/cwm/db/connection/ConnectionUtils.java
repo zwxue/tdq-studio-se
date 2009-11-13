@@ -21,6 +21,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -310,4 +311,42 @@ public final class ConnectionUtils {
         DB2ForZosDataBaseMetadata dmd = new DB2ForZosDataBaseMetadata(conn);
         return dmd;
     }
+
+    // ADD xqliu 2009-11-09 bug 9403
+    private static final String DEFAULT_TABLE_NAME = "TDQ_PRODUCT";
+
+    /**
+     * DOC xqliu Comment method "existTable".
+     * 
+     * @param url
+     * @param driver
+     * @param props
+     * @param tableName
+     * @return
+     */
+    public static boolean existTable(String url, String driver, Properties props, String tableName) {
+        Connection connection = null;
+        if (tableName == null || "".equals(tableName.trim())) {
+            tableName = DEFAULT_TABLE_NAME;
+        }
+        try {
+            connection = ConnectionUtils.createConnection(url, driver, props);
+            if (connection != null) {
+                Statement stat = connection.createStatement();
+                stat.executeQuery("Select * from " + tableName);
+            }
+        } catch (Exception e) {
+            return false;
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    log.warn(e);
+                }
+            }
+        }
+        return true;
+    }
+    // ~
 }
