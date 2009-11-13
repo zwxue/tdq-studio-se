@@ -118,7 +118,7 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
                 }
 
                 IFile file = (IFile) resource;
-                if (FactoriesUtil.isPatternFile(file)) {
+                if (file.exists() && FactoriesUtil.isPatternFile(file)) {
                     Resource fileResource = getFileResource(file);
                     Pattern pattern = retirePattern(fileResource);
                     if (pattern != null) {
