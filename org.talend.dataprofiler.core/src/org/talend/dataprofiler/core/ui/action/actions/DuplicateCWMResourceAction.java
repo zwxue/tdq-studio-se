@@ -23,6 +23,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
@@ -85,6 +86,12 @@ public class DuplicateCWMResourceAction extends Action {
                 DependenciesHandler.getInstance().setDependencyOn((TdReport) newObject, analysis);
                 ((TdReport) newObject).addAnalysis(analysis);
             }
+        }
+
+        // MOD 2009-11-13 yyi 9349: Duplicate analysis don't work right
+        if (newObject instanceof Analysis) {
+            AnalysisHelper.getDataFilter((Analysis) newObject).clear();
+            AnalysisHelper.setStringDataFilter((Analysis) newObject, AnalysisHelper.getStringDataFilter((Analysis) oldObject));
         }
 
         return newObject;
