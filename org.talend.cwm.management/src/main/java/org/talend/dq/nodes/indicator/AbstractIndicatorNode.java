@@ -14,6 +14,7 @@ package org.talend.dq.nodes.indicator;
 
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -63,7 +64,14 @@ public abstract class AbstractIndicatorNode implements IIndicatorNode {
     }
 
     public String getLabel() {
-        return getIndicatorInstance().getIndicatorDefinition().getLabel();
+        if (getIndicatorInstance() != null) {
+            IndicatorDefinition define = getIndicatorInstance().getIndicatorDefinition();
+            if (define != null) {
+                return define.getLabel();
+            }
+        }
+
+        return "";
     }
 
     /*

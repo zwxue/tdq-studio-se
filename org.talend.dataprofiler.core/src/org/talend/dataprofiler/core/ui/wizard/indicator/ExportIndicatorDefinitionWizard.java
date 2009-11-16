@@ -22,9 +22,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ExportFactory;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
-
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class ExportIndicatorDefinitionWizard extends Wizard {
 
@@ -37,11 +36,14 @@ public class ExportIndicatorDefinitionWizard extends Wizard {
         String targetFile = page.getTargetFile();
 
         if ("".equals(targetFile)) { //$NON-NLS-1$
-            MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizard.Error"), DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog
+                    .openError(
+                            getShell(),
+                            DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizard.Error"), DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         } else {
             try {
-                ExportFactory.exportFile(new File(targetFile), DefinitionHandler.getInstance().getTalendDefinitionFile());
+                ExportFactory.exportFile(new File(targetFile), DefinitionHandler.getTalendDefinitionFile());
             } catch (IOException e) {
                 log.error(e, e);
                 return false;

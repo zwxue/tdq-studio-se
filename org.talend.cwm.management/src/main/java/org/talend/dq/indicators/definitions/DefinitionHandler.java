@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -89,10 +88,7 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.dq.writer.impl.SYSIndicatorWriter;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -150,6 +146,17 @@ public final class DefinitionHandler {
     // MOD mzhao 2009-03-13 Feature:6066 Move all folders into one single
     // project.
     private static final String WORKSPACE_PATH = ReponsitoryContextBridge.getProjectName() + "/TDQ_Libraries/"; //$NON-NLS-1$
+
+    public static DefinitionHandler getInstance() {
+        if (instance == null) {
+            instance = new DefinitionHandler();
+            // try to copy in workspace
+            if (instance.needCopy) {
+                instance.copyDefinitionsIntoFolder(ResourceManager.getLibrariesFolder());
+            }
+        }
+        return instance;
+    }
 
     private DefinitionHandler() {
         this.indicatorDefinitions = loadFromFile();
@@ -279,38 +286,15 @@ public final class DefinitionHandler {
         return resource;
     }
 
-    public Resource copyDefinitionsIntoFolder(URI destinationUri) {
-        Resource resource = getIndicatorsDefinitions().eResource();
-        URI newURI = EMFUtil.changeUri(resource, destinationUri);
-
-        String platformString = newURI.toPlatformString(true);
-        String platformStringPath = platformString.substring(0, platformString.lastIndexOf(FILENAME));
-        IFolder fileFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot().findMember(platformStringPath);
-
-        SYSIndicatorWriter sysIndicatorWriter = ElementWriterFactory.getInstance().createSYSIndicatorWriter();
-        ReturnCode retCode = sysIndicatorWriter.saveWithoutProperty(getIndicatorsDefinitions(), fileFolder.getFile(FILENAME));
-
-        if (retCode.isOk()) {
-            if (log.isInfoEnabled()) {
-                log.info("Indicator default definitions correctly saved in " + resource.getURI());
-            }
-        } else {
-            log.error("Failed to save default indicator definitions in " + resource.getURI());
-
-        }
-
-        return resource;
-    }
-
-    public static DefinitionHandler getInstance() {
-        if (instance == null) {
-            instance = new DefinitionHandler();
-            // try to copy in workspace
-            if (instance.needCopy) {
-                instance.copyDefinitionsIntoFolder(URI.createPlatformResourceURI(WORKSPACE_PATH, false));
-            }
-        }
-        return instance;
+    /**
+     * DOC bZhou Comment method "copyDefinitionsIntoFolder".
+     * 
+     * @param ifolder
+     * @return
+     */
+    public Resource copyDefinitionsIntoFolder(IFolder ifolder) {
+        File folder = new File(ifolder.getLocationURI());
+        return copyDefinitionsIntoFolder(folder);
     }
 
     /**
@@ -854,15 +838,6 @@ public final class DefinitionHandler {
         return null;
     }
 
-    /**
-     * Sets the needCopy.
-     * 
-     * @param needCopy the needCopy to set
-     */
-    public void setNeedCopy(boolean needCopy) {
-        this.needCopy = needCopy;
-    }
-
     public IndicatorCategory getUserDefinedCountIndicatorCategory() {
         return getIndicatorCategory(USER_DEFINED_COUNT_CATEGORY);
     }
@@ -935,7 +910,7 @@ public final class DefinitionHandler {
         return getUserDefinedIndicatorCategoryMap().get(label);
     }
 
-    public IFile getTalendDefinitionFile() {
+    public static IFile getTalendDefinitionFile() {
         return ResourceManager.getLibrariesFolder().getFile(FILENAME);
     }
 

@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
@@ -117,8 +118,6 @@ public class DQRespositoryView extends CommonNavigator {
             List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
             MigrationTaskManager.doMigrationTask(tasks);
         }
-
-        ResourceManager.initResourcePersistence();
     }
 
     /*
@@ -133,10 +132,28 @@ public class DQRespositoryView extends CommonNavigator {
             setLinkingEnabled(false);
         }
 
-        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
-
         addPostWindowCloseListener();
+
         addResourceChangedListener();
+
+        initToolBar();
+
+        initWorkspace();
+    }
+
+    /**
+     * DOC bZhou Comment method "initWorkspace".
+     */
+    private void initWorkspace() {
+        ResourceManager.initResourcePersistence();
+    }
+
+    /**
+     * DOC bZhou Comment method "initToolBar".
+     */
+    private void initToolBar() {
+        IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+        toolBarManager.add(new RefreshDQReponsitoryViewAction());
     }
 
     private void addResourceChangedListener() {

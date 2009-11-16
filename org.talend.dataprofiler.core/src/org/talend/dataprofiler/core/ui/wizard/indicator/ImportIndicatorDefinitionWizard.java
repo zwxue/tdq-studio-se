@@ -36,11 +36,14 @@ public class ImportIndicatorDefinitionWizard extends Wizard {
         String targetFile = page.getTargetFile();
 
         if ("".equals(targetFile)) { //$NON-NLS-1$
-            MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizard.Error"), DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog
+                    .openError(
+                            getShell(),
+                            DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizard.Error"), DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         } else {
             try {
-                ImportFactory.importFile(new File(targetFile), DefinitionHandler.getInstance().getTalendDefinitionFile());
+                ImportFactory.importFile(new File(targetFile), DefinitionHandler.getTalendDefinitionFile());
             } catch (IOException e) {
                 log.error(e, e);
                 return false;

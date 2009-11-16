@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,6 +31,7 @@ import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationT
 import org.talend.dataprofiler.core.migration.helper.DataBaseVersionHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -201,8 +203,30 @@ public final class MigrationTaskManager {
 
                     monitor.done();
 
-                    WorkspaceVersionHelper.storeVersion();
+                    updateVersions();
 
+                    updateDefinitions();
+                }
+
+                /**
+                 * DOC bZhou Comment method "updateDefinitions".
+                 */
+                private void updateDefinitions() {
+                    IFile talendDefinitionFile = DefinitionHandler.getTalendDefinitionFile();
+                    if (talendDefinitionFile.exists()) {
+                        try {
+                            talendDefinitionFile.delete(true, null);
+                        } catch (CoreException e) {
+                            log.error(e, e);
+                        }
+                    }
+                }
+
+                /**
+                 * DOC bZhou Comment method "updateVersions".
+                 */
+                private void updateVersions() {
+                    WorkspaceVersionHelper.storeVersion();
                     DataBaseVersionHelper.storeVersion();
                 }
             };
