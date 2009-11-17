@@ -69,8 +69,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     private DbmsLanguage dbmsLanguage;
 
-//    protected Analysis cachedAnalysis;
-
+    // protected Analysis cachedAnalysis;
 
     @Override
     protected String createSqlStatement(Analysis analysis) {
@@ -152,7 +151,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
             whereExpression.add(wr.getWhereExpression());
-            
+
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
             if (!wr.getJoins().isEmpty()) {
@@ -168,7 +167,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
 
         String schemaName = getQuotedSchemaName(tdTable);
-       
 
         // --- normalize table name
         String catalogName = getQuotedCatalogName(tdTable);
@@ -206,8 +204,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return false;
     }
 
-    
-
     protected boolean belongToSameSchemata(final TdTable tdTable) {
         assert tdTable != null;
         if (schemata.get(tdTable) != null) {
@@ -229,8 +225,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
         return this.dbmsLanguage;
     }
-
-  
 
     private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString) throws ParseException {
         return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions);
@@ -277,11 +271,11 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             }
 
             connection.close();
-            
+
             // --- finalize indicators by setting the row count and null when they exist.
             ColumnAnalysisSqlExecutor finalization = new ColumnAnalysisSqlExecutor();
             finalization.setRowCountAndNullCount(elementToIndicator);
-            
+
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
@@ -368,5 +362,122 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         statement.close();
 
         return myResultSet;
+    }
+
+    /**
+     * DOC xqliu Comment method "getValidStatement". 2009-10-29 bug 9702
+     * 
+     * @param dataFilterAsString
+     * @param indicator
+     * @return
+     */
+    public String getValidStatement(String dataFilterAsString, Indicator indicator) {
+        ModelElement analyzedElement = indicator.getAnalyzedElement();
+        if (analyzedElement == null) {
+            traceError("Analyzed element is null for indicator " + indicator.getName());
+            return "";
+        }
+        TdTable tdTable = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        if (tdTable == null) {
+            traceError("Analyzed element is not a table for indicator " + indicator.getName());
+            return "";
+        }
+        // --- get the schema owner
+        String tableName = quote(tdTable.getName());
+        if (!belongToSameSchemata(tdTable)) {
+            StringBuffer buf = new StringBuffer();
+            for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
+                buf.append(schema.getName() + " "); //$NON-NLS-1$
+            }
+            log.error("Table " + tableName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
+            return "";
+        }
+
+        // get correct language for current database
+        Expression sqlGenericExpression = null;
+
+        // --- create select statement
+        // get indicator's sql tableS (generate the real SQL statement from its definition)
+
+        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+        if (indicatorDefinition == null) {
+            traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
+                    + ". Please, report a bug at http://talendforge.org/bugs/");
+            return "";
+        }
+        sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
+
+        final EClass indicatorEclass = indicator.eClass();
+        if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
+            traceError("Unsupported Indicator. No SQL expression found for indicator "
+                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (UUID: "
+                    + ResourceHelper.getUUID(indicatorDefinition) + ")");
+            return "";
+        }
+
+        // --- get indicator parameters and convert them into sql expression
+        List<String> whereExpression = new ArrayList<String>();
+        if (StringUtils.isNotBlank(dataFilterAsString)) {
+            whereExpression.add(dataFilterAsString);
+        }
+        String tableAliasA = "";
+        final EList<JoinElement> joinConditions = indicator.getJoinConditions();
+        if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
+            WhereRule wr = (WhereRule) indicatorDefinition;
+            whereExpression.add(wr.getWhereExpression());
+
+            // MOD scorreia 2009-03-13 copy joins conditions into the indicator
+            joinConditions.clear();
+            if (!wr.getJoins().isEmpty()) {
+                for (JoinElement joinelt : wr.getJoins()) {
+                    JoinElement joinCopy = (JoinElement) EcoreUtil.copy(joinelt);
+                    joinConditions.add(joinCopy);
+                    tableAliasA = "".equals(tableAliasA) ? joinCopy.getTableAliasA() : tableAliasA;
+                }
+            }
+        }
+
+        String schemaName = getQuotedSchemaName(tdTable);
+
+        // --- normalize table name
+        String catalogName = getQuotedCatalogName(tdTable);
+        if (catalogName == null && schemaName != null) {
+            // try to get catalog above schema
+            final TdSchema parentSchema = SchemaHelper.getParentSchema(tdTable);
+            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+            catalogName = parentCatalog != null ? parentCatalog.getName() : null;
+        }
+
+        tableName = dbms().toQualifiedName(catalogName, schemaName, tableName);
+
+        // ### evaluate SQL Statement depending on indicators ###
+        String completedSqlString = null;
+
+        // --- default case
+        // allow join
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(tdTable, joinConditions) : "";
+
+        String genericSql = sqlGenericExpression.getBody();
+        tableAliasA = "".equals(tableAliasA) ? "*" : tableAliasA + ".*";
+        genericSql = genericSql.replace("COUNT(*)", tableAliasA);
+
+        completedSqlString = dbms().fillGenericQueryWithJoin(genericSql, tableName, joinclause);
+        // ~
+        try {
+            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+        } catch (ParseException e) {
+            log.warn(e);
+        }
+
+        return completedSqlString;
+    }
+
+    /**
+     * DOC xqliu Comment method "setCachedAnalysis". 2009-10-29 bug 9702
+     * 
+     * @param analysis
+     */
+    public void setCachedAnalysis(Analysis analysis) {
+        this.cachedAnalysis = analysis;
     }
 }

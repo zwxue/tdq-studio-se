@@ -15,8 +15,10 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.analysis.TableAnalysisSqlExecutor;
 import orgomg.cwm.resource.relational.Table;
 
 /**
@@ -29,7 +31,11 @@ public class DQRuleExplorer extends DataExplorer {
 
         switch (this.indicatorEnum) {
         case WhereRuleIndicatorEnum:
-            map.put(MENU_VIEW_INVALID_ROWS, getRowsStatement(false));
+            // MOD xqliu 2009-10-30 bug 9702
+            if (!includeJoinCondition(this.indicator)) {
+                map.put(MENU_VIEW_INVALID_ROWS, getRowsStatement(false));
+            }
+            // ~
             map.put(MENU_VIEW_VALID_ROWS, getRowsStatement(true));
             break;
         default:
@@ -45,9 +51,33 @@ public class DQRuleExplorer extends DataExplorer {
      * @return
      */
     private String getRowsStatement(boolean valid) {
-        String non = valid ? "" : "!"; //$NON-NLS-1$ //$NON-NLS-2$
-        Table table = (Table) indicator.getAnalyzedElement();
-        String whereClause = ((WhereRule) ((WhereRuleIndicator) indicator).getIndicatorDefinition()).getWhereExpression();
-        return "SELECT * FROM " + getFullyQualifiedTableName(table) + dbmsLanguage.where() + non + "(" + whereClause + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        // MOD xqliu 2009-10-29 bug 9702
+        String dataFilterClause = this.getDataFilterClause();
+        Indicator indicator2 = this.indicator;
+
+        TableAnalysisSqlExecutor tasExecutor = new TableAnalysisSqlExecutor();
+        tasExecutor.setCachedAnalysis(this.analysis);
+
+        if (valid) {
+            return tasExecutor.getValidStatement(dataFilterClause, indicator2);
+        } else {
+            String non = valid ? "" : "!";
+            Table table = (Table) indicator2.getAnalyzedElement();
+            String whereClause = ((WhereRule) indicator2.getIndicatorDefinition()).getWhereExpression();
+            return "SELECT * FROM " + getFullyQualifiedTableName(table) + dbmsLanguage.where() + non + "(" + whereClause + ")";
+        }
+        // ~
+    }
+
+    /**
+     * DOC xqliu Comment method "includeJoinCondition". 2009-10-30 bug 9702
+     * 
+     * @param indicator
+     * @return
+     */
+    private boolean includeJoinCondition(Indicator indicator) {
+        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+        WhereRule wr = (WhereRule) indicatorDefinition;
+        return !wr.getJoins().isEmpty();
     }
 }
