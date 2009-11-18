@@ -16,6 +16,8 @@ package net.sourceforge.sqlexplorer;
 import java.net.URL;
 import java.util.LinkedList;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.ManifestElement;
@@ -51,7 +53,7 @@ public enum EDriverName {
                     "-11", "lib/jtds-1.2.jar"), //$NON-NLS-1$
     MSSQL2008URL("MSSQL2008", //$NON-NLS-1$
                  "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
-                 "-52", "lib/sqljdbc.jar"), //$NON-NLS-1$
+                 "-52", isAboveJDK15() ? "lib/sqljdbc4.jar" : "lib/sqljdbc.jar"), //$NON-NLS-1$
     DB2DEFAULTURL("DB2", //$NON-NLS-1$
                   "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
                   "-24",
@@ -196,6 +198,11 @@ public enum EDriverName {
             }
         }
         return linkedList;
+    }
+
+    public static Boolean isAboveJDK15() {
+        Float curVersion = Float.parseFloat(StringUtils.substringBeforeLast(System.getProperty("java.version"), "."));
+        return NumberUtils.compare(curVersion, 1.5) > 0;
     }
 
     /**

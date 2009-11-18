@@ -4,6 +4,7 @@ Bundle-Name: Mssql Plug-in
 Bundle-SymbolicName: org.talend.libraries.jdbc.mssql
 Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/sqljdbc.jar,
+ lib/sqljdbc4.jar,
  .
 Export-Package: com.microsoft.sqlserver.jdbc
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
