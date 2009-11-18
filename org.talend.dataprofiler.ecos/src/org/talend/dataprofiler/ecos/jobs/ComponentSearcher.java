@@ -16,8 +16,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,20 +40,15 @@ public class ComponentSearcher {
 
     private static DateFormat formatter = new SimpleDateFormat(RELEASE_DATE_FORMAT);
 
-//    private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
+    // private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
 
-    public static List<IEcosCategory> getAvailableCategory(String version){
-    	
-    	List<IEcosCategory> categorys = null;
-		try {
-			categorys = EcosystemService.getCategoryList(version);
-			return categorys;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-    	
-    	return Collections.EMPTY_LIST;
+    public static List<IEcosCategory> getAvailableCategory(String version) throws Exception {
+
+        List<IEcosCategory> categorys = null;
+        categorys = EcosystemService.getCategoryList(version);
+        return categorys;
     }
+
     /**
      * Find available components.
      * 
@@ -76,39 +69,39 @@ public class ComponentSearcher {
      * @return
      */
     public static List<IEcosComponent> getAvailableComponentExtensions(String version, IEcosCategory categry, boolean reload) {
-    	 
-    		List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();
-            
-    		try {
-                 List<RevisionInfo> revisions = EcosystemService.getRevisionList(categry.getId(), version);
 
-                 Map<String, IEcosComponent> extensionsMap = new HashMap<String, IEcosComponent>();
+        List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();
 
-                 for (RevisionInfo revision : revisions) {
-                     IEcosComponent extension = extensionsMap.get(revision.getExtension_name());
-                     if (extension == null) {
-                         extension = new EcosComponent();
-                         extension.setName(revision.getExtension_name());
-                         extension.setAuthor(revision.getAuthor_name());
-                         extension.setCategry(categry);
-                         extension.setDescription(revision.getExtension_description());
+        try {
+            List<RevisionInfo> revisions = EcosystemService.getRevisionList(categry.getId(), version);
 
-                         extensionsMap.put(extension.getName(), extension);
-                         extensions.add(extension);
-                     }
+            Map<String, IEcosComponent> extensionsMap = new HashMap<String, IEcosComponent>();
 
-                     IRevision rev = convertRevision(revision);
-                     extension.getRevisions().add(rev);
-                     if (extension.getLatestRevision() == null || extension.getLatestRevision().getDate().before(rev.getDate())) {
-                         // assumes that the revision with latest release date is the newest one.
-                         extension.setLatestRevision(rev);
-                     }
-                 }
-             } catch (Exception e) {
-                 log.error(e, e);
-             }
-             
-         return extensions;
+            for (RevisionInfo revision : revisions) {
+                IEcosComponent extension = extensionsMap.get(revision.getExtension_name());
+                if (extension == null) {
+                    extension = new EcosComponent();
+                    extension.setName(revision.getExtension_name());
+                    extension.setAuthor(revision.getAuthor_name());
+                    extension.setCategry(categry);
+                    extension.setDescription(revision.getExtension_description());
+
+                    extensionsMap.put(extension.getName(), extension);
+                    extensions.add(extension);
+                }
+
+                IRevision rev = convertRevision(revision);
+                extension.getRevisions().add(rev);
+                if (extension.getLatestRevision() == null || extension.getLatestRevision().getDate().before(rev.getDate())) {
+                    // assumes that the revision with latest release date is the newest one.
+                    extension.setLatestRevision(rev);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+
+        return extensions;
 
     }
 

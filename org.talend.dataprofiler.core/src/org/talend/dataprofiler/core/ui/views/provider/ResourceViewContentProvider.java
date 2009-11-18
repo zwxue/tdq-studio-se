@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -115,7 +116,18 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             IFolder folder = (IFolder) element;
             if (ResourceManager.isExchangeFolder(folder)) {
                 // Mod gyichao 2009-07-07, feature 8109
-                return ComponentSearcher.getAvailableCategory(CorePlugin.getDefault().getProductVersion().toString()).toArray();
+                List<IEcosCategory> availableCategory = Collections.EMPTY_LIST;
+                try {
+                    availableCategory = ComponentSearcher.getAvailableCategory(CorePlugin.getDefault().getProductVersion()
+                            .toString());
+                } catch (SocketTimeoutException e) {
+                    log.error(e, e);
+                    return new String[] { "Connection failed:" + e.getMessage() };
+
+                } catch (Exception e) {
+                    log.error(e, e);
+                    return new String[] { e.getMessage() };
+                }
 
             } else if (ResourceManager.isIndicatorFolder(folder)) {
                 // MOD xqliu 2009-07-27 bug 7810
