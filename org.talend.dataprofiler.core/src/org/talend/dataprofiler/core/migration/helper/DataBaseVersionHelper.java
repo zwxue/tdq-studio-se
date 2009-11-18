@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.migration.helper;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
@@ -142,5 +143,37 @@ public final class DataBaseVersionHelper {
         }
 
         return false;
+    }
+    
+    /**
+     * DOC xqliu Comment method "getVersion".
+     * 
+     * @return
+     */
+    public static ProductVersion getVersion() {
+        Connection connection = null;
+
+        try {
+            connection = ConnectionUtils.createConnection(url, driver, props);
+            if (connection != null) {
+                Statement stat = connection.createStatement();
+                ResultSet result = stat.executeQuery("select PR_VERSION from " + dbName + ".TDQ_PRODUCT");
+                result.next();
+                String versionStr = result.getString(1);
+                return ProductVersion.fromString(versionStr);//$NON-NLS-1$
+            }
+        } catch (Exception e) {
+            log.error(e, e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return null;
     }
 }

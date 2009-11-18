@@ -59,14 +59,11 @@ public final class MigrationTaskManager {
      * 
      * @return
      */
-    public static List<IWorkspaceMigrationTask> findValidMigrationTasks() {
+    public static List<IWorkspaceMigrationTask> findValidMigrationTasks(ProductVersion workspaceVersion,
+            ProductVersion currentVersion, List<IWorkspaceMigrationTask> tasks) {
+        
         List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
-
-        ProductVersion workspaceVersion = WorkspaceVersionHelper.getVesion();
-        ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
-
-        List<IWorkspaceMigrationTask> allTasks = findAllMigrationTasks();
-        for (IWorkspaceMigrationTask task : allTasks) {
+        for (IWorkspaceMigrationTask task : tasks) {
             ProductVersion taskVersion = ProductVersion.fromString(task.getVersion());
             if (taskVersion.compareTo(workspaceVersion) > 0 && taskVersion.compareTo(currentVersion) <= 0) {
                 validTasks.add(task);
@@ -74,6 +71,17 @@ public final class MigrationTaskManager {
         }
 
         return validTasks;
+    }
+    
+    /**
+     * DOC bZhou Comment method "findValidMigrationTasks".
+     * 
+     * @return
+     */
+    public static List<IWorkspaceMigrationTask> findValidMigrationTasks() {
+        ProductVersion workspaceVersion = WorkspaceVersionHelper.getVesion();
+        ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
+        return findValidMigrationTasks(workspaceVersion, currentVersion, findAllMigrationTasks());
     }
 
     /**
@@ -131,15 +139,35 @@ public final class MigrationTaskManager {
      * @return
      */
     public static List<IWorkspaceMigrationTask> findMigrationTaskByType(MigrationTaskType... types) {
+        List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
+
+        for (MigrationTaskType type : types) {
+            validTasks.addAll(findMigrationTaskByType(type));
+        }
+
+        return validTasks;
+    }
+
+    /**
+     * DOC bZhou Comment method "findMigrationTaskByType".
+     * 
+     * @param type
+     * @return
+     */
+    public static List<IWorkspaceMigrationTask> findMigrationTaskByType(MigrationTaskType type) {
         List<IWorkspaceMigrationTask> allTasks = findAllMigrationTasks();
         List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
 
         for (IWorkspaceMigrationTask task : allTasks) {
-            for (MigrationTaskType type : types) {
-                if (task.getMigrationTaskType() == type) {
-                    validTasks.add(task);
-                }
+            if (task.getMigrationTaskType() == type) {
+                validTasks.add(task);
             }
+        }
+        
+        if (type == MigrationTaskType.DATABASE) {
+            ProductVersion workspaceVersion = DataBaseVersionHelper.getVersion();
+            ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
+            return findValidMigrationTasks(workspaceVersion, currentVersion, validTasks);
         }
 
         return validTasks;
