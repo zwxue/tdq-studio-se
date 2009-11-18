@@ -243,10 +243,14 @@ public class CatalogBuilder extends CwmBuilder {
         for (String catName : catNames) {
             List<TdSchema> schemas = catalog2schemas.get(catName);
             if (catName != null) { // a mapping between catalog and schema exist
-                TdCatalog catalog = name2catalog.get(catName);
-                // MOD mzhao bug 8502 2009-10-28, filter user for MSSQL 2005 and 2008.
-                if (catalog != null && schemas != null) {
-                    CatalogHelper.addSchemas(schemas, catalog);
+                if (schemas != null) {
+                    TdCatalog catalog = name2catalog.get(catName);
+                    // MOD mzhao bug 8502 2009-10-28, filter user for MSSQL 2005 and 2008.
+                    if (catalog != null && schemas != null) {
+                        if (!(schemas.size() == 1 && schemas.get(0) == null)) {
+                            CatalogHelper.addSchemas(schemas, catalog);
+                        }
+                    }
                 }
             } else {
                 this.schemata.addAll(schemas);
