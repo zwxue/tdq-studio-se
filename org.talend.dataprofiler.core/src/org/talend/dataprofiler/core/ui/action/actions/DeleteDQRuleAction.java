@@ -24,7 +24,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
@@ -46,7 +45,7 @@ public class DeleteDQRuleAction extends Action {
     private List<ModelElement> modelElementList;
 
     public DeleteDQRuleAction(List<IFile> selectedFiles) {
-        setText(DefaultMessagesImpl.getString("DeleteDQRuleAction.delete")); //$NON-NLS-1$
+        setText("Delete"); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
         this.folder = selectedFiles;
     }

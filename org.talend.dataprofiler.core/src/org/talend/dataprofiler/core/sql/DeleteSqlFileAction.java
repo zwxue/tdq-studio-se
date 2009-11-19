@@ -45,7 +45,7 @@ public class DeleteSqlFileAction extends Action {
      * @param selectedFiles
      */
     public DeleteSqlFileAction(List<IFile> selectedFiles) {
-        setText(DefaultMessagesImpl.getString("DeleteSqlFileAction.delete")); //$NON-NLS-1$
+        setText("Delete"); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
         this.folder = selectedFiles;
     }
