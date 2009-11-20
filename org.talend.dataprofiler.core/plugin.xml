@@ -176,7 +176,7 @@
                       value="org.talend.dataprofiler.ecos.model.IEcosCategory">
                 </instanceof>
                 <instanceof
-                      value="String">
+                      value="java.lang.String">
                 </instanceof>  
               </or> 
            </possibleChildren>   
