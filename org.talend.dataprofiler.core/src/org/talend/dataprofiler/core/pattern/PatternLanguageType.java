@@ -132,7 +132,7 @@ public enum PatternLanguageType {
             }
         }
 
-        return null;
+        return "Unrecognized";
     }
 
     public static String[] getAllLanguageTypes() {
