@@ -26,4 +26,6 @@ public class EcosConstants {
     public final static String RELOAD_PALETTE = ""; //$NON-NLS-1$
 
     public final static String DOWNLOAD_TASK_NAME = DefaultMessagesImpl.getString("EcosConstants.Download"); //$NON-NLS-1$
+
+    public static final int DEFAULT_TIME_OUT_VALUE = 10000;
 }

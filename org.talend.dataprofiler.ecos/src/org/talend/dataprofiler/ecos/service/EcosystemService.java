@@ -44,6 +44,7 @@ import org.talend.dataprofiler.ecos.model.RevisionInfo;
 import org.talend.dataprofiler.ecos.model.VersionInfo;
 import org.talend.dataprofiler.ecos.model.impl.EcosCategory;
 import org.talend.dataprofiler.ecos.model.impl.Revision;
+import org.talend.dataprofiler.ecos.pref.PreferenceConstants;
 import org.talend.dataprofiler.ecos.proxy.EcosystemSocketFactory;
 
 /**
@@ -65,9 +66,11 @@ public abstract class EcosystemService {
 
     private static MultiValueMap versionMap = new MultiValueMap();
 
-    private static final int TIMEOUT = 10000;
+    private static int TIMEOUT;
+
     static {
         System.setProperty("axis.socketFactory", EcosystemSocketFactory.class.getName()); //$NON-NLS-1$
+        TIMEOUT = EcosPlugin.getDefault().getPluginPreferences().getDefaultInt(PreferenceConstants.ECOS_TIME_OUT_VALUE);
     }
 
     /**
