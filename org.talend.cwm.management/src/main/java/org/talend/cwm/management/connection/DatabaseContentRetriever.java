@@ -151,7 +151,7 @@ public final class DatabaseContentRetriever {
     }
 
     /**
-     * DOC Administrator Comment method "getSchemaForJDK1_5".
+     * DOC mzhao Comment method "getSchemaForJDK1_5".
      * 
      * @throws SQLException
      */
@@ -249,15 +249,23 @@ public final class DatabaseContentRetriever {
      */
     private static void fillListOfCatalogs(Connection connection, List<String> catalogNames) throws SQLException {
         if (catalogNames.isEmpty()) {
-            ResultSet catalogSet = getConnectionMetadata(connection).getCatalogs();
+            // MOD xqliu 2009-10-29 bug 9838
+            ResultSet catalogSet = null;
+            DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+            if (connectionMetadata.getDriverName() != null && connectionMetadata.getDriverName().toLowerCase().indexOf(DatabaseConstant.ODBC_ORACLE_DRIVER_NAME) < 0) {
+                catalogSet = connectionMetadata.getCatalogs();
+            }
+            // ~
             try {
                 if (catalogSet != null) {
                     // DB support getCatalogs() method
                     while (catalogSet.next()) {
                         String catalogName = catalogSet.getString(MetaDataConstants.TABLE_CAT.name());
-                        if (catalogName != null) {
+                        // MOD xqliu 2009-10-29 bug 9838
+                        if (catalogName != null || !"".equals(catalogName)) {
                             catalogNames.add(catalogName);
                         }
+                        // ~
                     }
                 }
             } catch (SQLException e) {
@@ -273,9 +281,32 @@ public final class DatabaseContentRetriever {
 
     private static void createSchema(ResultSet schemas, String catalogName, Map<String, List<TdSchema>> catalogName2schemas)
             throws SQLException {
-        String schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+        // MOD xqliu 2009-10-29 bug 9838
+        String schemaName = null;
+        try {
+            schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+        } catch (Exception e) {
+            log.warn(e, e);
+        }
+        if (schemaName == null) {
+            try {
+                schemaName = schemas.getString(DatabaseConstant.ODBC_ORACLE_SCHEMA_NAME);
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+        }
+        if (schemaName == null) {
+            try { // try to get first column
+                schemaName = schemas.getString(1);
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+        }
+        // ~
         TdSchema schema = createSchema(schemaName);
-        MultiMapHelper.addUniqueObjectToListMap(catalogName, schema, catalogName2schemas);
+        if (schema != null) {
+            MultiMapHelper.addUniqueObjectToListMap(catalogName, schema, catalogName2schemas);
+        }
     }
 
     /**
@@ -357,15 +388,16 @@ public final class DatabaseContentRetriever {
             throws SQLException {
         TdDataProvider provider = DataProviderHelper.createTdDataProvider(null);
 
+        // MOD xqliu 2009-10-23 bug 5327
         // print driver properties
         // TODO scorreia adapt this code in order to store information in CWM ????
-        // MOD xqliu 2009-10-30 bug 5327
         // DriverPropertyInfo[] driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
         DriverPropertyInfo[] driverProps = null;
         if (!databaseUrl.toLowerCase().startsWith("jdbc:odbc:")) {
             driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
         }
         // ~
+
         if (driverProps != null) {
             for (int i = 0; i < driverProps.length; i++) {
                 DriverPropertyInfo prop = driverProps[i];
@@ -404,7 +436,11 @@ public final class DatabaseContentRetriever {
         // connection
         prov.setDriverClassName(driverClassName);
         prov.setConnectionString(dbUrl);
-        prov.setIsReadOnly(connection.isReadOnly());
+        try {
+            prov.setIsReadOnly(connection.isReadOnly());
+        } catch (Exception e) {
+            log.warn(e, e);
+        }
 
         // ---add properties as tagged value of the provider connection.
         Enumeration<?> propertyNames = props.propertyNames();
@@ -430,8 +466,18 @@ public final class DatabaseContentRetriever {
         DatabaseMetaData databaseMetadata = ConnectionUtils.getConnectionMetadata(connection);
         // ~
         // --- get informations
-        String databaseProductName = databaseMetadata.getDatabaseProductName();
-        String databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
+        String databaseProductName = null;
+        try {
+            databaseProductName = databaseMetadata.getDatabaseProductName();
+        } catch (Exception e1) {
+            log.warn("could not get database product name. " + e1, e1);
+        }
+        String databaseProductVersion = null;
+        try {
+            databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
+        } catch (Exception e1) {
+            log.warn("Could not get database product version. " + e1, e1);
+        }
         try {
             int databaseMinorVersion = databaseMetadata.getDatabaseMinorVersion();
             int databaseMajorVersion = databaseMetadata.getDatabaseMajorVersion();
@@ -451,10 +497,14 @@ public final class DatabaseContentRetriever {
 
         // --- create and fill the software system
         TdSoftwareSystem system = SoftwaredeploymentFactory.eINSTANCE.createTdSoftwareSystem();
-        system.setName(databaseProductName);
+        if (databaseProductName != null) {
+            system.setName(databaseProductName);
+            system.setSubtype(databaseProductName);
+        }
         system.setType(SoftwareSystemConstants.DBMS.toString());
-        system.setSubtype(databaseProductName);
-        system.setVersion(databaseProductVersion);
+        if (databaseProductVersion != null) {
+            system.setVersion(databaseProductVersion);
+        }
         Component component = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory.eINSTANCE.createComponent();
         system.getOwnedElement().add(component);
 
@@ -475,8 +525,16 @@ public final class DatabaseContentRetriever {
             // --- store the information in CWM structure
             // TODO scorreia change to SQLSimpleType ?
             TdSqlDataType dataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
-            dataType.setName(typeInfo.getString(TypeInfoColumns.TYPE_NAME.name()));
-            dataType.setJavaDataType(typeInfo.getInt(TypeInfoColumns.DATA_TYPE.name()));
+            try {
+                dataType.setName(typeInfo.getString(TypeInfoColumns.TYPE_NAME.name()));
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
+            try {
+                dataType.setJavaDataType(typeInfo.getInt(TypeInfoColumns.DATA_TYPE.name()));
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
             try {
                 dataType.setNumericPrecision(typeInfo.getInt(TypeInfoColumns.PRECISION.name()));
             } catch (Exception e) {
@@ -486,14 +544,46 @@ public final class DatabaseContentRetriever {
                 }
             }
 
-            dataType.setNullable(typeInfo.getShort(TypeInfoColumns.NULLABLE.name()));
-            dataType.setCaseSensitive(typeInfo.getBoolean(TypeInfoColumns.CASE_SENSITIVE.name()));
-            dataType.setSearchable(typeInfo.getShort(TypeInfoColumns.SEARCHABLE.name()));
-            dataType.setUnsignedAttribute(typeInfo.getBoolean(TypeInfoColumns.UNSIGNED_ATTRIBUTE.name()));
-            dataType.setAutoIncrement(typeInfo.getBoolean(TypeInfoColumns.AUTO_INCREMENT.name()));
-            dataType.setLocalTypeName(typeInfo.getString(TypeInfoColumns.LOCAL_TYPE_NAME.name()));
-            dataType.setNumericPrecisionRadix(typeInfo.getInt(TypeInfoColumns.NUM_PREC_RADIX.name()));
-            dataType.setTypeNumber(typeInfo.getLong(TypeInfoColumns.DATA_TYPE.name()));
+            try {
+                dataType.setNullable(typeInfo.getShort(TypeInfoColumns.NULLABLE.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+            try {
+                dataType.setCaseSensitive(typeInfo.getBoolean(TypeInfoColumns.CASE_SENSITIVE.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+            try {
+                dataType.setSearchable(typeInfo.getShort(TypeInfoColumns.SEARCHABLE.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+            try {
+                dataType.setUnsignedAttribute(typeInfo.getBoolean(TypeInfoColumns.UNSIGNED_ATTRIBUTE.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+            try {
+                dataType.setAutoIncrement(typeInfo.getBoolean(TypeInfoColumns.AUTO_INCREMENT.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+            try {
+                dataType.setLocalTypeName(typeInfo.getString(TypeInfoColumns.LOCAL_TYPE_NAME.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+            try {
+                dataType.setNumericPrecisionRadix(typeInfo.getInt(TypeInfoColumns.NUM_PREC_RADIX.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+            try {
+                dataType.setTypeNumber(typeInfo.getLong(TypeInfoColumns.DATA_TYPE.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
             // --- get the informations form the DB
             // TODO scorreia store these informations
             // String literalPrefix = typeInfo.getString(TypeInfoColumns.LITERAL_PREFIX.name());
@@ -567,10 +657,22 @@ public final class DatabaseContentRetriever {
 
     public static TdSqlDataType createDataType(ResultSet columns) throws SQLException {
         TdSqlDataType sqlDataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
-        sqlDataType.setName(columns.getString(GetColumn.TYPE_NAME.name()));
-        sqlDataType.setJavaDataType(columns.getInt(GetColumn.DATA_TYPE.name()));
-        sqlDataType.setNumericPrecision(columns.getInt(GetColumn.DECIMAL_DIGITS.name()));
-        sqlDataType.setNumericPrecisionRadix(columns.getInt(GetColumn.NUM_PREC_RADIX.name()));
+        try {
+            sqlDataType.setName(columns.getString(GetColumn.TYPE_NAME.name()));
+        } catch (Exception e1) {
+            log.warn(e1, e1);
+        }
+        try {
+            sqlDataType.setJavaDataType(columns.getInt(GetColumn.DATA_TYPE.name()));
+        } catch (Exception e1) {
+            log.warn(e1, e1);
+        }
+        try {
+            sqlDataType.setNumericPrecision(columns.getInt(GetColumn.DECIMAL_DIGITS.name()));
+            sqlDataType.setNumericPrecisionRadix(columns.getInt(GetColumn.NUM_PREC_RADIX.name()));
+        } catch (Exception e) {
+            log.warn(e);
+        }
         return sqlDataType;
     }
 

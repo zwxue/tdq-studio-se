@@ -37,6 +37,7 @@ import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
+import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
@@ -294,10 +295,13 @@ public final class ConnectionUtils {
 
     public static DatabaseMetaData getConnectionMetadata(Connection conn) throws SQLException {
         DatabaseMetaData dbMetaData = conn.getMetaData();
-        if (dbMetaData == null || dbMetaData.getConnection() == null
-                || dbMetaData.getConnection() != conn) {
+        // MOD xqliu 2009-11-17 bug 7888
+        if (dbMetaData != null && dbMetaData.getDatabaseProductName() != null
+                && dbMetaData.getDatabaseProductName().equals(DatabaseConstant.IBM_DB2_ZOS_PRODUCT_NAME)) {
             dbMetaData = createFakeDatabaseMetaData(conn);
+            log.info("IBM DB2 for z/OS");
         }
+        // ~
         return dbMetaData;
     }
 
@@ -311,7 +315,7 @@ public final class ConnectionUtils {
         DB2ForZosDataBaseMetadata dmd = new DB2ForZosDataBaseMetadata(conn);
         return dmd;
     }
-
+    
     // ADD xqliu 2009-11-09 bug 9403
     private static final String DEFAULT_TABLE_NAME = "TDQ_PRODUCT";
 

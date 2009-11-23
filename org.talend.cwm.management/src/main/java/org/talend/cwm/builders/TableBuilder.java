@@ -98,7 +98,9 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
             } catch (SQLException e) {
                 throw e;
             } finally {
-                primaryKeys.close();
+                if (primaryKeys != null) {
+                    primaryKeys.close();
+                }
             }
         } catch (Exception e1) {
             log.warn("Cannot get primary keys with this database driver.", e1);
@@ -144,7 +146,9 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
             } catch (SQLException e) {
                 throw e;
             } finally {
-                foreignKeys.close();
+                if (foreignKeys != null) {
+                    foreignKeys.close();
+                }
             }
         } catch (Exception e1) {
             log.warn("Cannot get foreign key with this database driver.", e1);

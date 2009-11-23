@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
@@ -32,7 +33,7 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  * @param <T> the type of table to create (TdTable, TdView)
  */
 public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends CwmBuilder {
-
+    private static Logger log = Logger.getLogger(AbstractTableBuilder.class);
     private String[] tableType;
 
     private boolean columnsRequested = false;
@@ -69,12 +70,21 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
 
         ResultSet tablesSet = getConnectionMetadata(connection).getTables(catalogName, schemaPattern, tablePattern,
                 this.tableType);
-        while (tablesSet.next()) {
-            T table = createTable(catalogName, schemaPattern, tablesSet);
-            tables.add(table);
+        try {
+            while (tablesSet.next()) {
+                T table = createTable(catalogName, schemaPattern, tablesSet);
+                tables.add(table);
+            }
+            // release JDBC resources
+        } catch (SQLException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error(e, e);
+        } finally {
+            if (tablesSet != null) {
+                tablesSet.close();
+            }
         }
-        // release JDBC resources
-        tablesSet.close();
 
         return tables;
     }
@@ -107,14 +117,28 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
      * @throws SQLException
      */
     protected T createTable(String catalogName, String schemaPattern, ResultSet tablesSet) throws SQLException {
-        String tableName = tablesSet.getString(GetTable.TABLE_NAME.name());
-        String tableComment = getTableComment(tableName, tablesSet);
+        String tableName = null;
+        try {
+            tableName = tablesSet.getString(GetTable.TABLE_NAME.name());
+        } catch (Exception e) {
+            log.error("Table name not found. " + e, e);
+        }
+        String tableComment = null;
+        try {
+            tableComment = getTableComment(tableName, tablesSet);
+        } catch (Exception e) {
+            if (log.isInfoEnabled()) {
+                log.info("Could not get comment of table " + tableName + " " + e, e);
+            }
+        }
 
         // TODO scorreia get table type and display in separate folder according to the type
         // --- create a table and add columns
         T table = createTable();
         table.setName(tableName);
-        ColumnSetHelper.setComment(tableComment, table);
+        if (tableComment != null) {
+            ColumnSetHelper.setComment(tableComment, table);
+        }
         if (columnsRequested) {
             ColumnBuilder colBuild = new ColumnBuilder(connection);
             List<TdColumn> columns = colBuild.getColumns(catalogName, schemaPattern, tableName, null);

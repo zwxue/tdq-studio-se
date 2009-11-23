@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
@@ -39,8 +40,6 @@ import org.talend.utils.sql.metadata.constants.MetaDataConstants;
 public class CatalogBuilder extends CwmBuilder {
 
     private static Logger log = Logger.getLogger(CatalogBuilder.class);
-
-    private static final String MSSQL_JDBC2_0 = "Microsoft SQL Server JDBC Driver 2.0";
 
     private final Map<String, TdCatalog> name2catalog = new HashMap<String, TdCatalog>();
 
@@ -179,12 +178,20 @@ public class CatalogBuilder extends CwmBuilder {
     }
 
     private void initializeCatalogLow() throws SQLException {
+        // MOD xqliu 2009-10-29 bug 9838
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && connectionMetadata.getDriverName().toLowerCase().indexOf(DatabaseConstant.ODBC_ORACLE_DRIVER_NAME) > -1) {
+            catalogsInitialized = true;
+            return;
+        }
         ResultSet catalogNames = null;
         try {
-            catalogNames = getConnectionMetadata(connection).getCatalogs();
+            catalogNames = connectionMetadata.getCatalogs();
         } catch (Exception e) {
             log.warn("JDBC getCatalogs() method is not available with this driver.", e);
         }
+        // ~
         if (catalogNames == null) {
             String currentCatalogName = null;
             try {
@@ -204,7 +211,18 @@ public class CatalogBuilder extends CwmBuilder {
         } else {
             // else DB support getCatalogs() method
             while (catalogNames.next()) {
-                String catalogName = catalogNames.getString(MetaDataConstants.TABLE_CAT.name());
+                // MOD xqliu 2009-11-03 bug 9841
+                String catalogName = null;
+                try {
+                    catalogName = catalogNames.getString(MetaDataConstants.TABLE_CAT.name());
+                } catch (Exception e) {
+                    log.warn(e, e);
+                    if (connectionMetadata.getDriverName() != null
+                            && connectionMetadata.getDriverName().toLowerCase().indexOf(DatabaseConstant.ODBC_POSTGRESQL_DRIVER_NAME) > -1) {
+                        catalogName = "";
+                    }
+                }
+                // ~
                 assert catalogName != null : Messages.getString("CatalogBuilder.CatalogNameNull",//$NON-NLS-1$
                         getConnectionInformations(connection));
                 TdCatalog catalog = createOrUpdateCatalog(catalogName);
@@ -230,9 +248,10 @@ public class CatalogBuilder extends CwmBuilder {
         if (!catalogsInitialized) {
             initializeCatalog();
         }
+
         // MOD mzhao bug 8502 2009-10-29
         Map<String, List<TdSchema>> catalog2schemas = null;
-        if (connection.getMetaData().getDriverName().equals(MSSQL_JDBC2_0)) {
+        if (connection.getMetaData().getDriverName().equals(DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0)) {
             catalog2schemas = DatabaseContentRetriever.getMSSQLSchemas(connection);
         } else {
             catalog2schemas = DatabaseContentRetriever.getSchemas(connection);

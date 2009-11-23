@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.relational.TdColumn;
@@ -35,6 +36,8 @@ import orgomg.cwm.resource.relational.enumerations.NullableType;
  * closed by the ColumnBuilder.
  */
 public class ColumnBuilder extends CwmBuilder {
+
+    private static Logger log = Logger.getLogger(ColumnBuilder.class);
 
     /**
      * DOC scorreia ColumnBuilder constructor comment.
@@ -70,20 +73,51 @@ public class ColumnBuilder extends CwmBuilder {
             // get the default value
             // MOD mzhao 2009-04-09,Bug 6840: fetch LONG or LONG RAW column first , as these kind of columns are read as
             // stream,if not read by select order, there will be "Stream has already been closed" error.
-            Object defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
+            // MOD xqliu 2009-10-29 bug 9838
+            Object defaultvalue = null;
+            try {
+                defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
             String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
             Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
 
-            String colName = columns.getString(GetColumn.COLUMN_NAME.name());
+            String colName = null;
+            try {
+                colName = columns.getString(GetColumn.COLUMN_NAME.name());
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+                if (colName == null) {
+                    colName = e1.getMessage();
+                }
+            }
             TdColumn column = ColumnHelper.createTdColumn(colName);
-            column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
-            column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
-            column.setJavaType(columns.getInt(GetColumn.DATA_TYPE.name()));
+            try {
+                column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
+            try {
+                column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
+            try {
+                column.setJavaType(columns.getInt(GetColumn.DATA_TYPE.name()));
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+            // ~
             // TODO columns.getString(GetColumn.TYPE_NAME.name());
 
             // get column description (comment)
-            String colComment = getComment(colName, columns);
-            ColumnHelper.setComment(colComment, column);
+            try {
+                String colComment = getComment(colName, columns);
+                ColumnHelper.setComment(colComment, column);
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
 
             // --- create and set type of column
             // TODO scorreia get type of column on demand, not on creation of column
