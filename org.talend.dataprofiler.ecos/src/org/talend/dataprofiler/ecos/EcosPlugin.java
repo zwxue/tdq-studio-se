@@ -1,5 +1,6 @@
 package org.talend.dataprofiler.ecos;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.talend.dataprofiler.ecos.pref.PreferenceConstants;
@@ -47,7 +48,13 @@ public class EcosPlugin extends Plugin {
      * DOC bZhou Comment method "initEcosTimeout".
      */
     private void initEcosTimeout() {
-        getPluginPreferences().setDefault(PreferenceConstants.ECOS_TIME_OUT_VALUE, EcosConstants.DEFAULT_TIME_OUT_VALUE);
+        String defaultString = getPluginPreferences().getString(PreferenceConstants.ECOS_TIME_OUT_VALUE);
+        if (StringUtils.isEmpty(defaultString)) {
+            getPluginPreferences().setValue(PreferenceConstants.ECOS_TIME_OUT_VALUE, EcosConstants.DEFAULT_TIME_OUT_VALUE);
+            if (getPluginPreferences().needsSaving()) {
+                savePluginPreferences();
+            }
+        }
     }
 
     /**

@@ -70,7 +70,7 @@ public abstract class EcosystemService {
 
     static {
         System.setProperty("axis.socketFactory", EcosystemSocketFactory.class.getName()); //$NON-NLS-1$
-        TIMEOUT = EcosPlugin.getDefault().getPluginPreferences().getDefaultInt(PreferenceConstants.ECOS_TIME_OUT_VALUE);
+        TIMEOUT = EcosPlugin.getDefault().getPluginPreferences().getInt(PreferenceConstants.ECOS_TIME_OUT_VALUE);
     }
 
     /**
