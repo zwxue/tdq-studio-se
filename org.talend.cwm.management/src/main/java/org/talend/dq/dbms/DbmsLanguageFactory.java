@@ -72,7 +72,9 @@ public final class DbmsLanguageFactory {
             }
         }
         String identifierQuoteString = DataProviderHelper.getIdentifierQuoteString(dataprovider);
-        if (identifierQuoteString.length() == 0) {
+        if (identifierQuoteString == null || identifierQuoteString.length() == 0) {
+            // MOD scorreia 2009-11-24 check for null because in some cases (DB2 z/OS and TOP 3.2.2), the identifier
+            // quote was stored as null.
             // given data provider has not stored the identifier quote (version 1.1.0 of TOP)
             // we must set it by hand
             identifierQuoteString = dbmsLanguage.getHardCodedQuoteIdentifier();
