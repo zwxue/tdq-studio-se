@@ -45,7 +45,9 @@ public class DataProviderBuilder extends CwmBuilder {
         // MOD xqliu 2009-07-13 bug 7888
         String identifierQuote = ConnectionUtils.getConnectionMetadata(conn).getIdentifierQuoteString();
         // ~
-        DataProviderHelper.setIdentifierQuoteString(identifierQuote, dataProvider);
+        // MOD xqliu 2009-11-24 bug 7888
+        DataProviderHelper.setIdentifierQuoteString(identifierQuote == null ? "" : identifierQuote, dataProvider);
+        // ~
     }
 
     // TODO scorreia ctor with TdProviderConnection
