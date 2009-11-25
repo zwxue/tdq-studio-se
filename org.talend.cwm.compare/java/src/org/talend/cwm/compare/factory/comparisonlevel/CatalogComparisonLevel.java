@@ -15,8 +15,8 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.compare.DQStructureComparer;
@@ -35,7 +35,7 @@ import orgomg.cwm.objectmodel.core.Package;
  * DOC mzhao class global comment. Detailled comment
  */
 public class CatalogComparisonLevel extends AbstractComparisonLevel {
-    
+
     public CatalogComparisonLevel(TdCatalog selObj) {
         super(selObj);
     }
@@ -96,7 +96,7 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected void handleAddElement(AddModelElement addElement) {
+    protected void handleAddElement(ModelElementChangeRightTarget addElement) {
         EObject rightElement = addElement.getRightElement();
         TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
         if (schema != null) {
@@ -105,7 +105,7 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected void handleRemoveElement(RemoveModelElement removeElement) {
+    protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
         TdSchema removedSchema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removeElement.getLeftElement());
         if (removedSchema == null) {
             return;

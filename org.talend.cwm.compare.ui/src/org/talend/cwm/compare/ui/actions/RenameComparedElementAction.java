@@ -26,7 +26,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -142,7 +142,7 @@ public class RenameComparedElementAction extends Action {
         if (originCompareElement instanceof Package) {
             originCompareElement.getOwnedElement().remove(theSelectedElement);
             originCompareElement.getOwnedElement().remove(checkedElement);
-        } 
+        }
         // Save to the copied resource.
         refreshReposigoryTree(checkedElement);
         refreshEditor();
@@ -179,7 +179,7 @@ public class RenameComparedElementAction extends Action {
             }
             ((ColumnSet) originCompareElement).getFeature().add((Feature) checkedColumnSet);
         }
-        
+
         EMFSharedResources.getInstance().saveResource(originCompareElement.eResource());
         // ~
     }

@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
@@ -38,34 +38,9 @@ import orgomg.cwm.objectmodel.core.Package;
  * DOC rli class global comment. Detailled comment
  */
 public class DataProviderComparisonLevel extends AbstractComparisonLevel {
-    
+
     public DataProviderComparisonLevel(Object selectedObj) {
         super(selectedObj);
-    }
-
-    protected void handleRemoveElement(RemoveModelElement removeElement) {
-        Package removePackage = packageSwitch.doSwitch(removeElement.getLeftElement());
-        if (removePackage == null) {
-            return;
-        }
-        popRemoveElementConfirm();
-        oldDataProvider.getDataPackage().remove(removePackage);
-        oldDataProvider.eResource().getContents().remove(removePackage);
-    }
-
-    protected void handleAddElement(AddModelElement addElement) {
-        EObject rightElement = addElement.getRightElement();
-        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
-        if (catalog != null) {
-            DataProviderHelper.addCatalog(catalog, oldDataProvider);
-            this.tempReloadProvider.getDataPackage().remove(catalog);
-        } else {
-            TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
-            if (schema != null) {
-                DataProviderHelper.addSchema(schema, oldDataProvider);
-            }
-        }
-        return;
     }
 
     protected boolean isValid() {
@@ -146,6 +121,35 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         // }
         EMFSharedResources.getInstance().saveResource(reloadResource);
         return reloadResource;
+    }
+
+    @Override
+    protected void handleAddElement(ModelElementChangeRightTarget addElement) {
+        EObject rightElement = addElement.getRightElement();
+        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
+        if (catalog != null) {
+            DataProviderHelper.addCatalog(catalog, oldDataProvider);
+            this.tempReloadProvider.getDataPackage().remove(catalog);
+        } else {
+            TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
+            if (schema != null) {
+                DataProviderHelper.addSchema(schema, oldDataProvider);
+            }
+        }
+        return;
+
+    }
+
+    @Override
+    protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
+        Package removePackage = packageSwitch.doSwitch(removeElement.getLeftElement());
+        if (removePackage == null) {
+            return;
+        }
+        popRemoveElementConfirm();
+        oldDataProvider.getDataPackage().remove(removePackage);
+        oldDataProvider.eResource().getContents().remove(removePackage);
+
     }
 
 }

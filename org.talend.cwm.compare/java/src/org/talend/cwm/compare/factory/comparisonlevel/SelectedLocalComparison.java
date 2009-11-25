@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;

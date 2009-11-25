@@ -26,9 +26,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
@@ -488,7 +488,7 @@ public final class DQStructureComparer {
         final DiffModel diff = DiffService.doDiff(match);
 
         // Open UI for different comparison
-        final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+        final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
         snapshot.setDate(Calendar.getInstance().getTime());
         snapshot.setMatch(match);
         snapshot.setDiff(diff);

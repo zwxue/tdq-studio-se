@@ -137,7 +137,12 @@ public final class DatabaseContentRetriever {
             }
 
             while (schemaRs.next()) {
-                String schemaName = schemaRs.getString(MetaDataConstants.TABLE_CATALOG.name());
+                String schemaName = null;
+                try {
+                    schemaName = schemaRs.getString(MetaDataConstants.TABLE_CATALOG.name());
+                } catch (Exception e) {
+                    log.warn(e.getMessage(), e);
+                }
                 if (schemaName == null) {
                     continue;
                 }

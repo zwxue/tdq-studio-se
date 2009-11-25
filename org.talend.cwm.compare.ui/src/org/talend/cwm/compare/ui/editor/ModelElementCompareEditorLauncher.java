@@ -19,7 +19,7 @@ import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.ICompareInputLabelProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -53,7 +53,7 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
     public void open(IPath file) {
         try {
             final EObject snapshot = ModelUtils.load(file.toFile(), new ResourceSetImpl());
-            if (snapshot instanceof ModelInputSnapshot) {
+            if (snapshot instanceof ComparisonResourceSnapshot) {
                 CompareConfiguration comapreConfiguration = new CompareConfiguration();
                 comapreConfiguration.setDefaultLabelProvider(new ICompareInputLabelProvider() {
 
@@ -117,7 +117,7 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
 
                 });
                 ModelElementCompareEditorInput compEditorInput = new ModelElementCompareEditorInput(
-                        (ModelInputSnapshot) snapshot, comapreConfiguration, selectedObject);
+                        (ComparisonResourceSnapshot) snapshot, comapreConfiguration, selectedObject);
                 // MOD mzhao bug 8581 Add the specific title for comparison
                 // editor.
                 String editorTitle = Messages.getString("ModelElementCompareEditorLauncher.Compare"); //$NON-NLS-1$

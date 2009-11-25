@@ -19,8 +19,8 @@ import org.eclipse.compare.Splitter;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
@@ -61,7 +61,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
     private final ICompareInputChangeListener inputListener;
 
     /** {@link ModelInputSnapshot} result of the underlying comparison. */
-    private final ModelInputSnapshot inputSnapshot;
+    private final ComparisonResourceSnapshot inputSnapshot;
 
     /** {@link MatchModel} result of the underlying comparison. */
     private final MatchModel match;
@@ -71,7 +71,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
      * 
      * @param snapshot The {@link ModelInputSnapshot} loaded from an emfdiff.
      */
-    public ModelElementCompareEditorInput(ModelInputSnapshot snapshot, CompareConfiguration comConf, Object selObj) {
+    public ModelElementCompareEditorInput(ComparisonResourceSnapshot snapshot, CompareConfiguration comConf, Object selObj) {
         super(comConf);
         diff = snapshot.getDiff();
         match = snapshot.getMatch();

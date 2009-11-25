@@ -17,10 +17,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
@@ -105,26 +105,6 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         } else {
             handleDiffPackageElement(de);
         }
-    }
-
-    @Override
-    protected void handleAddElement(AddModelElement addElement) {
-        EObject rightElement = addElement.getRightElement();
-        ColumnSet columnSetSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
-        if (columnSetSwitch != null) {
-            Package catalog = (Package) selectedObj;
-            PackageHelper.addColumnSet(columnSetSwitch, catalog);
-        }
-    }
-
-    @Override
-    protected void handleRemoveElement(RemoveModelElement removeElement) {
-        ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(removeElement.getLeftElement());
-        if (removeColumnSet == null) {
-            return;
-        }
-        popRemoveElementConfirm();
-        PackageHelper.removeColumnSet(removeColumnSet, (Package) selectedObj);
     }
 
     @Override
@@ -246,6 +226,28 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
             throw new ReloadCompareException(e1);
         }
         return columnSetList;
+
+    }
+
+    @Override
+    protected void handleAddElement(ModelElementChangeRightTarget addElement) {
+        EObject rightElement = addElement.getRightElement();
+        ColumnSet columnSetSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
+        if (columnSetSwitch != null) {
+            Package catalog = (Package) selectedObj;
+            PackageHelper.addColumnSet(columnSetSwitch, catalog);
+        }
+
+    }
+
+    @Override
+    protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
+        ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(removeElement.getLeftElement());
+        if (removeColumnSet == null) {
+            return;
+        }
+        popRemoveElementConfirm();
+        PackageHelper.removeColumnSet(removeColumnSet, (Package) selectedObj);
 
     }
 

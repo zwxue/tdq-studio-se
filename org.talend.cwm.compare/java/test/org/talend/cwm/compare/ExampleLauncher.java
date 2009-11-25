@@ -28,13 +28,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -92,13 +92,13 @@ public final class ExampleLauncher {
                 // MatchElement elt = (MatchElement) m;
                 //
                 // }
-                EList<UnMatchElement> unMatchedElements = match.getUnMatchedElements();
+                EList<UnmatchElement> unMatchedElements = match.getUnmatchedElements();
                 for (Object object : unMatchedElements) {
-                    UnMatchElement unMatched = (UnMatchElement) object;
+                    UnmatchElement unMatched = (UnmatchElement) object;
                     ModelElement modelElt = (ModelElement) unMatched.getElement();
                     System.out.println("Unmatched elt= " + modelElt.getName());
                 }
-                System.out.println("LEFT MODEL=" + match.getLeftModel());
+                // System.out.println("LEFT MODEL=" + match.getLeftModel());
                 // EList<DiffElement> ownedElements = diff.getOwnedElements();
                 // for (Object oe : ownedElements) {
                 // System.out.println(oe.g);
@@ -118,7 +118,7 @@ public final class ExampleLauncher {
                 // Serializes the result as "result.emfdiff" in the directory this class has been called from.
                 String outputFile = "out/result.emfdiff";
                 System.out.println("saving emfdiff as \"" + outputFile + "\""); //$NON-NLS-1$
-                final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+                final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
                 snapshot.setDate(Calendar.getInstance().getTime());
                 snapshot.setMatch(match);
                 snapshot.setDiff(diff);

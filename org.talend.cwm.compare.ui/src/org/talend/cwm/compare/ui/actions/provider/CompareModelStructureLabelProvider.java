@@ -15,9 +15,9 @@ package org.talend.cwm.compare.ui.actions.provider;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -92,12 +92,12 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
                     DiffGroup diffGroup = (DiffGroup) object;
                     int subChanges = diffGroup.getSubchanges();
                     text = Messages.getString("CompareModelStructureLabelProvider.ChangeInModel", subChanges); //$NON-NLS-1$
-                    if (diffGroup.getLeftParent() != null && diffGroup.getLeftParent() instanceof ModelElement) {
-                        text += ":\"" + ((ModelElement) diffGroup.getLeftParent()).getName() + "\"";
+                    if (diffGroup.getRightParent() != null && diffGroup.getRightParent() instanceof ModelElement) {
+                        text += ":\"" + ((ModelElement) diffGroup.getRightParent()).getName() + "\"";
                     }
-                } else if (object instanceof AddModelElement) {
+                } else if (object instanceof ModelElementChangeRightTarget) {
 
-                    AddModelElement addModelElement = (AddModelElement) object;
+                    ModelElementChangeRightTarget addModelElement = (ModelElementChangeRightTarget) object;
 
                     String modelName = ""; //$NON-NLS-1$
                     EObject leftElement = addModelElement.getRightElement();
@@ -106,8 +106,8 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
                     }
                     text = Messages.getString("CompareModelStructureLabelProvider.ModelAdded", modelName); //$NON-NLS-1$
 
-                } else if (object instanceof RemoveModelElement) {
-                    RemoveModelElement removeModelElement = (RemoveModelElement) object;
+                } else if (object instanceof ModelElementChangeLeftTarget) {
+                    ModelElementChangeLeftTarget removeModelElement = (ModelElementChangeLeftTarget) object;
                     String modelName = ""; //$NON-NLS-1$
                     EObject leftElement = removeModelElement.getLeftElement();
                     if (leftElement != null && leftElement instanceof ModelElement) {

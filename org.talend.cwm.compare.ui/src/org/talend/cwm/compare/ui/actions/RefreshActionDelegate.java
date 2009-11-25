@@ -28,14 +28,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -200,13 +200,13 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             // MatchElement elt = (MatchElement) m;
             //
             // }
-            EList<UnMatchElement> unMatchedElements = match.getUnMatchedElements();
+            EList<UnmatchElement> unMatchedElements = match.getUnmatchedElements();
             for (Object object : unMatchedElements) {
-                UnMatchElement unMatched = (UnMatchElement) object;
+                UnmatchElement unMatched = (UnmatchElement) object;
                 ModelElement modelElt = (ModelElement) unMatched.getElement();
                 System.out.println("Unmatched elt= " + modelElt.getName()); //$NON-NLS-1$
             }
-            System.out.println("LEFT MODEL=" + match.getLeftModel()); //$NON-NLS-1$
+            //System.out.println("LEFT MODEL=" + match.getLeftModel()); //$NON-NLS-1$
             EList<DiffElement> ownedElements = diff.getOwnedElements();
             // for (DiffElement oe : ownedElements) {
             // // System.out.println(oe.g);
@@ -227,7 +227,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             // class has been called from.
             String outputFile = "out/result.emfdiff"; //$NON-NLS-1$
             System.out.println("saving emfdiff as \"" + outputFile + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-            final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+            final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
             snapshot.setDate(Calendar.getInstance().getTime());
             snapshot.setMatch(match);
             snapshot.setDiff(diff);

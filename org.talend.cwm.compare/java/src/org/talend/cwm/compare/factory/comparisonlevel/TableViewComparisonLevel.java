@@ -21,10 +21,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
@@ -110,7 +110,13 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
             log.error(e, e);
             return false;
         }
-        final DiffModel diff = DiffService.doDiff(match, false);
+        DiffModel diff = null;
+        try {
+            diff = DiffService.doDiff(match, false);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         EList<DiffElement> ownedElements = diff.getOwnedElements();
         for (DiffElement de : ownedElements) {
             handleSubDiffElement(de);
@@ -131,54 +137,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected void handleAddElement(AddModelElement addElement) {
-        EObject rightElement = addElement.getRightElement();
-        TdColumn columnSetSwitch = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement);
-        if (columnSetSwitch != null) {
-            ColumnSet columnSet = (ColumnSet) selectedObj;
-            ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
-            // Case of pk
-            PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
-            if (primaryKey != null) {
-                TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
-                columnSetSwitch.getUniqueKey().add(primaryKey);
-            }
-            // Case of fk
-            ForeignKey foreignKey = ColumnHelper.getForeignKey(columnSetSwitch);
-            if (foreignKey != null) {
-                TableHelper.addForeignKey((Table) columnSet, foreignKey);
-                columnSetSwitch.getKeyRelationship().add(foreignKey);
-            }
-        }
-    }
-
-    @Override
-    protected void handleRemoveElement(RemoveModelElement removeElement) {
-        TdColumn removeColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(removeElement.getLeftElement());
-        if (removeColumn == null) {
-            return;
-        }
-        popRemoveElementConfirm();
-        ColumnSet columnSet = (ColumnSet) selectedObj;
-
-        // Case of pk
-        PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(removeColumn);
-        if (primaryKey != null) {
-            columnSet.getOwnedElement().remove(primaryKey);
-            removeColumn.getUniqueKey().remove(primaryKey);
-        }
-
-        // Case of fk
-        ForeignKey foreingKey = ColumnHelper.getForeignKey(removeColumn);
-        if (foreingKey != null) {
-            columnSet.getOwnedElement().remove(foreingKey);
-            removeColumn.getKeyRelationship().remove(foreingKey);
-        }
-        // Remove column
-        ColumnSetHelper.removeColumn(removeColumn, columnSet);
-    }
-
-    @Override
     protected TdDataProvider findDataProvider() {
         ColumnSet columnSet = (ColumnSet) selectedObj;
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
@@ -192,9 +150,11 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         ColumnSet toReloadcolumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
         // MOD scorreia 2009-01-29 clear content of findMatchedColumnSet
         ColumnSetHelper.setColumns(toReloadcolumnSet, EMPTY_COLUMN_LIST);
-
+        toReloadcolumnSet.getOwnedElement().clear();
         try {
             DqRepositoryViewService.getColumns(tempReloadProvider, toReloadcolumnSet, null, true);
+            // MOD mzhao 2009-11-12 save to resoure after reload.
+            util.saveResource(toReloadcolumnSet.eResource());
         } catch (TalendException e1) {
             throw new ReloadCompareException(e1);
         }
@@ -259,6 +219,55 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         }
         EMFSharedResources.getInstance().saveResource(rightResource);
         return rightResource;
+    }
+
+    @Override
+    protected void handleAddElement(ModelElementChangeRightTarget addElement) {
+        EObject rightElement = addElement.getRightElement();
+        TdColumn columnSetSwitch = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement);
+        if (columnSetSwitch != null) {
+            ColumnSet columnSet = (ColumnSet) selectedObj;
+            ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
+            // Case of pk
+            PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
+            if (primaryKey != null) {
+                TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
+                columnSetSwitch.getUniqueKey().add(primaryKey);
+            }
+            // Case of fk
+            ForeignKey foreignKey = ColumnHelper.getForeignKey(columnSetSwitch);
+            if (foreignKey != null) {
+                TableHelper.addForeignKey((Table) columnSet, foreignKey);
+                columnSetSwitch.getKeyRelationship().add(foreignKey);
+            }
+        }
+    }
+
+    @Override
+    protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
+        TdColumn removeColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(removeElement.getLeftElement());
+        if (removeColumn == null) {
+            return;
+        }
+        popRemoveElementConfirm();
+        ColumnSet columnSet = (ColumnSet) selectedObj;
+
+        // Case of pk
+        PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(removeColumn);
+        if (primaryKey != null) {
+            columnSet.getOwnedElement().remove(primaryKey);
+            removeColumn.getUniqueKey().remove(primaryKey);
+        }
+
+        // Case of fk
+        ForeignKey foreingKey = ColumnHelper.getForeignKey(removeColumn);
+        if (foreingKey != null) {
+            columnSet.getOwnedElement().remove(foreingKey);
+            removeColumn.getKeyRelationship().remove(foreingKey);
+        }
+        // Remove column
+        ColumnSetHelper.removeColumn(removeColumn, columnSet);
+
     }
 
 }

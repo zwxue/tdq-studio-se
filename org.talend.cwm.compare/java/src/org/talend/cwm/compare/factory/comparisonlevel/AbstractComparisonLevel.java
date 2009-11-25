@@ -18,17 +18,17 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
 import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
@@ -46,6 +46,7 @@ import org.talend.cwm.relational.util.RelationalSwitch;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -58,15 +59,15 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     private static Logger log = Logger.getLogger(AbstractComparisonLevel.class);
 
-    protected DiffSwitch<AddModelElement> addModelSwitch;
+    protected DiffSwitch<ModelElementChangeRightTarget> addModelSwitch;
 
     protected DiffSwitch<UpdateModelElement> updateModelSwitch;
 
-    protected DiffSwitch<RemoveModelElement> removeModelSwitch;
+    protected DiffSwitch<ModelElementChangeLeftTarget> removeModelSwitch;
 
-    protected DiffSwitch<AddReferenceValue> removeReferenceValueSwitch;
+    protected DiffSwitch<ReferenceChangeRightTarget> removeReferenceValueSwitch;
 
-    protected DiffSwitch<RemoveReferenceValue> addReferenceValueSwitch;
+    protected DiffSwitch<ReferenceChangeLeftTarget> addReferenceValueSwitch;
 
     protected RelationalSwitch<Package> packageSwitch;
 
@@ -92,6 +93,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     protected IUIHandler guiHandler;
 
+    protected EMFSharedResources util = EMFSharedResources.getInstance();
+
     public AbstractComparisonLevel(Object selObj) {
         if (selObj instanceof AbstractDatabaseFolderNode) {
             AbstractDatabaseFolderNode fNode = (AbstractDatabaseFolderNode) selObj;
@@ -115,11 +118,13 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     private void initSwitchValue() {
 
-        addModelSwitch = new DiffSwitch<AddModelElement>() {
+        addModelSwitch = new DiffSwitch<ModelElementChangeRightTarget>() {
 
-            public AddModelElement caseAddModelElement(AddModelElement object) {
+            @Override
+            public ModelElementChangeRightTarget caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
                 return object;
             }
+
         };
 
         updateModelSwitch = new DiffSwitch<UpdateModelElement>() {
@@ -128,11 +133,13 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
                 return object;
             }
         };
-        removeModelSwitch = new DiffSwitch<RemoveModelElement>() {
+        removeModelSwitch = new DiffSwitch<ModelElementChangeLeftTarget>() {
 
-            public RemoveModelElement caseRemoveModelElement(RemoveModelElement object) {
+            @Override
+            public ModelElementChangeLeftTarget caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
                 return object;
             }
+
         };
 
         packageSwitch = new RelationalSwitch<Package>() {
@@ -286,7 +293,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected abstract Resource getLeftResource() throws ReloadCompareException;
 
     protected void handleDiffPackageElement(DiffElement difElement) {
-        AddModelElement addElement = addModelSwitch.doSwitch(difElement);
+        ModelElementChangeRightTarget addElement = addModelSwitch.doSwitch(difElement);
         if (addElement != null) {
             handleAddElement(addElement);
             return;
@@ -298,40 +305,40 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
             handleUpdateElement((UpdateAttribute) difElement);
             return;
         }
-        if (difElement instanceof AddReferenceValue) {
-            handleReferenceValuesChange((AddReferenceValue) difElement);
+        if (difElement instanceof ReferenceChangeLeftTarget) {
+            handleReferenceValuesChange((ReferenceChangeLeftTarget) difElement);
             return;
         }
 
-        if (difElement instanceof RemoveReferenceValue) {
-            handleReferenceValuesChange((RemoveReferenceValue) difElement);
+        if (difElement instanceof ReferenceChangeRightTarget) {
+            handleReferenceValuesChange((ReferenceChangeRightTarget) difElement);
             return;
         }
-        RemoveModelElement removeElement = removeModelSwitch.doSwitch(difElement);
+        ModelElementChangeLeftTarget removeElement = removeModelSwitch.doSwitch(difElement);
         if (removeElement != null) {
             handleRemoveElement(removeElement);
         }
     }
 
-    private void handleReferenceValuesChange(RemoveReferenceValue difElement) {
+    private void handleReferenceValuesChange(ReferenceChangeLeftTarget difElement) {
         removeRelationalSwitch.setLeftElement(difElement.getLeftElement());
-        final Boolean updated = removeRelationalSwitch.doSwitch(difElement.getLeftRemovedTarget());
+        final Boolean updated = removeRelationalSwitch.doSwitch(difElement.getLeftTarget());
         if (!Boolean.TRUE.equals(updated)) {
             log.warn("Element not updated: " + difElement.getLeftElement());
         }
     }
 
-    private void handleReferenceValuesChange(AddReferenceValue difElement) {
+    private void handleReferenceValuesChange(ReferenceChangeRightTarget difElement) {
         addRelationalSwitch.setLeftElement(difElement.getLeftElement());
-        final Boolean updated = addRelationalSwitch.doSwitch(difElement.getRightAddedTarget());
+        final Boolean updated = addRelationalSwitch.doSwitch(difElement.getRightTarget());
         if (!Boolean.TRUE.equals(updated)) {
             log.warn("Element not updated: " + difElement.getLeftElement());
         }
     }
 
-    protected abstract void handleRemoveElement(RemoveModelElement removeElement);
+    protected abstract void handleRemoveElement(ModelElementChangeLeftTarget removeElement);
 
-    protected abstract void handleAddElement(AddModelElement addElement);
+    protected abstract void handleAddElement(ModelElementChangeRightTarget addElement);
 
     protected void handleUpdateElement(UpdateAttribute updateAttribute) {
         EObject leftElement = updateAttribute.getLeftElement();

@@ -24,11 +24,11 @@ import org.eclipse.compare.internal.CompareUIPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
@@ -180,7 +180,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
     private List<DiffElement> getDiffElementList() {
         List<DiffElement> diffElementList = new ArrayList<DiffElement>();
         // recursive to add diff element.
-        DiffModel diffModel = ((ModelCompareInput) getInput()).getDiff();
+        DiffModel diffModel = (DiffModel) ((ModelCompareInput) getInput()).getDiff();
         EList<DiffElement> diffElements = diffModel.getOwnedElements();
         for (DiffElement diffEle : diffElements) {
             getDiffElements(diffEle, diffElementList);
@@ -192,8 +192,8 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         List<ModelElement> changedLists = new ArrayList<ModelElement>();
         List<DiffElement> diffElementList = getDiffElementList();
         for (DiffElement diffEle : diffElementList) {
-            if (diffEle instanceof AddModelElement) {
-                changedLists.add((ModelElement) ((AddModelElement) diffEle).getRightElement());
+            if (diffEle instanceof ModelElementChangeRightTarget) {
+                changedLists.add((ModelElement) ((ModelElementChangeRightTarget) diffEle).getRightElement());
             } else if (diffEle instanceof UpdateAttribute) {
                 changedLists.add((ModelElement) ((UpdateAttribute) diffEle).getRightElement());
             }
@@ -215,8 +215,8 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                     manager.add(renameComparedElementAction);
                     return;
                 }
-            } else if (diffEle instanceof RemoveModelElement) {
-                if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
+            } else if (diffEle instanceof ModelElementChangeLeftTarget) {
+                if (((ModelElementChangeLeftTarget) diffEle).getLeftElement() == selectedElement) {
                     // Add action menu
                     RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
                             (IFolderNode) selectedOjbect, (ModelElement) selectedElement, changedList);
@@ -302,8 +302,8 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                     return;
                 }
 
-            } else if (diffEle instanceof RemoveModelElement) {
-                if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
+            } else if (diffEle instanceof ModelElementChangeLeftTarget) {
+                if (((ModelElementChangeLeftTarget) diffEle).getLeftElement() == selectedElement) {
                     return;
                 }
 
