@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,11 +26,11 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.migration.IMigrationTask.MigrationTaskCategory;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.DataBaseVersionHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -51,6 +50,36 @@ public final class MigrationTaskManager {
 
     public static final String ATTR_PID = "id"; //$NON-NLS-1$
 
+    static List<IMigrationTask> allTasks = null;
+
+    static {
+
+        allTasks = new ArrayList<IMigrationTask>();
+
+        IConfigurationElement[] elems = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
+        for (IConfigurationElement elem : elems) {
+            try {
+                String taskName = elem.getAttribute(ATTR_NAME);
+                String taskID = elem.getAttribute(ATTR_PID);
+
+                IMigrationTask task = (IMigrationTask) elem.createExecutableExtension(ATTR_CLASS);
+                task.setName(taskName);
+                task.setId(taskID);
+
+                if (task.getTaskCategory() == MigrationTaskCategory.WORKSPACE) {
+                    String version = elem.getAttribute(ATTR_VERSION);
+                    ((IWorkspaceMigrationTask) task).setVersion(version);
+                }
+
+                allTasks.add(task);
+            } catch (CoreException e) {
+                log.error(e, e);
+            }
+        }
+
+        sortTasks(allTasks);
+    }
+
     private MigrationTaskManager() {
     }
 
@@ -59,60 +88,56 @@ public final class MigrationTaskManager {
      * 
      * @return
      */
-    public static List<IWorkspaceMigrationTask> findValidMigrationTasks(ProductVersion workspaceVersion,
-            ProductVersion currentVersion, List<IWorkspaceMigrationTask> tasks) {
-        
-        List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
-        for (IWorkspaceMigrationTask task : tasks) {
-            ProductVersion taskVersion = ProductVersion.fromString(task.getVersion());
-            if (taskVersion.compareTo(workspaceVersion) > 0 && taskVersion.compareTo(currentVersion) <= 0) {
+    public static List<IMigrationTask> findValidTasks(ProductVersion workspaceVersion, ProductVersion currentVersion,
+            List<IMigrationTask> tasks) {
+
+        List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
+
+        for (IMigrationTask task : tasks) {
+
+            if (task.getTaskCategory() == MigrationTaskCategory.WORKSPACE) {
+                IWorkspaceMigrationTask wTask = (IWorkspaceMigrationTask) task;
+                ProductVersion taskVersion = ProductVersion.fromString(wTask.getVersion());
+                if (taskVersion.compareTo(workspaceVersion) > 0 && taskVersion.compareTo(currentVersion) <= 0) {
+                    validTasks.add(task);
+                }
+            }
+
+            if (task.getTaskCategory() == MigrationTaskCategory.PROJECT) {
                 validTasks.add(task);
             }
         }
 
         return validTasks;
     }
-    
+
     /**
      * DOC bZhou Comment method "findValidMigrationTasks".
      * 
      * @return
      */
-    public static List<IWorkspaceMigrationTask> findValidMigrationTasks() {
-        ProductVersion workspaceVersion = WorkspaceVersionHelper.getVesion();
-        ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
-        return findValidMigrationTasks(workspaceVersion, currentVersion, findAllMigrationTasks());
+    public static List<IMigrationTask> findValidTasks() {
+        ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
+        ProductVersion cVersion = CorePlugin.getDefault().getProductVersion();
+        return findValidTasks(wVersion, cVersion, allTasks);
     }
 
     /**
-     * DOC bZhou Comment method "findAllMigrationTasks".
+     * DOC bZhou Comment method "findTasksByCategory".
      * 
+     * @param category
      * @return
      */
-    public static List<IWorkspaceMigrationTask> findAllMigrationTasks() {
-        List<IWorkspaceMigrationTask> allTasks = new ArrayList<IWorkspaceMigrationTask>();
+    public static List<IMigrationTask> findTasksByCategory(MigrationTaskCategory category) {
+        List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
 
-        IConfigurationElement[] elems = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
-        for (IConfigurationElement elem : elems) {
-            try {
-                String taskName = elem.getAttribute(ATTR_NAME);
-                String taskID = elem.getAttribute(ATTR_PID);
-                String version = elem.getAttribute(ATTR_VERSION);
-
-                IWorkspaceMigrationTask migrationTask = (IWorkspaceMigrationTask) elem.createExecutableExtension(ATTR_CLASS);
-                migrationTask.setName(taskName);
-                migrationTask.setId(taskID);
-                migrationTask.setVersion(version);
-
-                allTasks.add(migrationTask);
-            } catch (CoreException e) {
-                log.error(e, e);
+        for (IMigrationTask task : allTasks) {
+            if (task.getTaskCategory() == category) {
+                validTasks.add(task);
             }
         }
 
-        sortTasks(allTasks);
-
-        return allTasks;
+        return validTasks;
     }
 
     /**
@@ -121,9 +146,8 @@ public final class MigrationTaskManager {
      * @param pid
      * @return
      */
-    public static IWorkspaceMigrationTask findMigrationTaskByPID(String pid) {
-        List<IWorkspaceMigrationTask> allTasks = findAllMigrationTasks();
-        for (IWorkspaceMigrationTask task : allTasks) {
+    public static IMigrationTask findMigrationTaskByPID(String pid) {
+        for (IMigrationTask task : allTasks) {
             if (pid != null && pid.equals(task.getId())) {
                 return task;
             }
@@ -138,11 +162,11 @@ public final class MigrationTaskManager {
      * @param type
      * @return
      */
-    public static List<IWorkspaceMigrationTask> findMigrationTaskByType(MigrationTaskType... types) {
-        List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
+    public static List<IMigrationTask> findMigrationTaskByType(MigrationTaskType... types) {
+        List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
 
         for (MigrationTaskType type : types) {
-            validTasks.addAll(findMigrationTaskByType(type));
+            validTasks.addAll(findWorkspaceTaskByType(type));
         }
 
         return validTasks;
@@ -154,20 +178,21 @@ public final class MigrationTaskManager {
      * @param type
      * @return
      */
-    public static List<IWorkspaceMigrationTask> findMigrationTaskByType(MigrationTaskType type) {
-        List<IWorkspaceMigrationTask> allTasks = findAllMigrationTasks();
-        List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
+    public static List<IMigrationTask> findWorkspaceTaskByType(MigrationTaskType type) {
+        List<IMigrationTask> wTasks = findTasksByCategory(MigrationTaskCategory.WORKSPACE);
+        List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
 
-        for (IWorkspaceMigrationTask task : allTasks) {
-            if (task.getMigrationTaskType() == type) {
+        for (IMigrationTask task : wTasks) {
+            IWorkspaceMigrationTask wTask = (IWorkspaceMigrationTask) task;
+            if (wTask.getMigrationTaskType() == type) {
                 validTasks.add(task);
             }
         }
-        
+
         if (type == MigrationTaskType.DATABASE) {
             ProductVersion workspaceVersion = DataBaseVersionHelper.getVersion();
             ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
-            return findValidMigrationTasks(workspaceVersion, currentVersion, validTasks);
+            return findValidTasks(workspaceVersion, currentVersion, validTasks);
         }
 
         return validTasks;
@@ -178,10 +203,10 @@ public final class MigrationTaskManager {
      * 
      * @param tasks
      */
-    private static void sortTasks(List<IWorkspaceMigrationTask> tasks) {
-        Collections.sort(tasks, new Comparator<IWorkspaceMigrationTask>() {
+    private static void sortTasks(List<IMigrationTask> tasks) {
+        Collections.sort(tasks, new Comparator<IMigrationTask>() {
 
-            public int compare(IWorkspaceMigrationTask o1, IWorkspaceMigrationTask o2) {
+            public int compare(IMigrationTask o1, IMigrationTask o2) {
                 if (o1.getOrder() == null || o2.getOrder() == null) {
                     return 0;
                 }
@@ -197,7 +222,7 @@ public final class MigrationTaskManager {
      * 
      * @param tasks
      */
-    public static void doMigrationTask(final List<IWorkspaceMigrationTask> tasks) {
+    public static void doMigrationTask(final List<IMigrationTask> tasks) {
 
         if (!tasks.isEmpty()) {
             IRunnableWithProgress op = new IRunnableWithProgress() {
@@ -210,7 +235,7 @@ public final class MigrationTaskManager {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     monitor.beginTask(DefaultMessagesImpl.getString("MigrationTaskManager.MigrationTaskJob"), tasks.size()); //$NON-NLS-1$
 
-                    for (IWorkspaceMigrationTask task : tasks) {
+                    for (IMigrationTask task : tasks) {
 
                         if (monitor.isCanceled()) {
                             break;
@@ -218,45 +243,20 @@ public final class MigrationTaskManager {
 
                         monitor.subTask(task.getName());
 
-                        if (log.isInfoEnabled()) {
-                            log.info("Migration - now executing " + task.getName());
-                        }
-
-                        if (!task.execute()) {
-                            log.error("Migration Task failed: " + task.getName());
+                        if (task.valid()) {
+                            if (!task.execute()) {
+                                log.error("Migration Task failed: " + task.getName());
+                            } else {
+                                log.info("Migration Task success: " + task.getName());
+                            }
                         }
 
                         monitor.worked(1);
                     }
 
                     monitor.done();
-
-                    updateVersions();
-
-                    updateDefinitions();
                 }
 
-                /**
-                 * DOC bZhou Comment method "updateDefinitions".
-                 */
-                private void updateDefinitions() {
-                    IFile talendDefinitionFile = DefinitionHandler.getTalendDefinitionFile();
-                    if (talendDefinitionFile.exists()) {
-                        try {
-                            talendDefinitionFile.delete(true, null);
-                        } catch (CoreException e) {
-                            log.error(e, e);
-                        }
-                    }
-                }
-
-                /**
-                 * DOC bZhou Comment method "updateVersions".
-                 */
-                private void updateVersions() {
-                    WorkspaceVersionHelper.storeVersion();
-                    DataBaseVersionHelper.storeVersion();
-                }
             };
 
             try {

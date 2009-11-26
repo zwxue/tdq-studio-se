@@ -22,7 +22,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -36,7 +36,7 @@ import org.talend.resource.ResourceManager;
  * This migration task updates the dependencies between analyses and patterns. See bug 9497 (and a consequence 9461).
  * This task must be executed before moving all patterns in the "Rules/SQL" folder.
  */
-public class UpdateDependenciesFileTask extends AbstractMigrationTask {
+public class UpdateDependenciesFileTask extends AWorkspaceTask {
 
     /*
      * (non-Javadoc)

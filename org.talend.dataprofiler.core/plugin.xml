@@ -1020,6 +1020,21 @@
            name="Change Soundex Query"
            version="3.2.2">
      </workspacetask>
+     <projecttask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
+           name="Update Defintion File">
+     </projecttask>
+     <projecttask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateSQLExplorerDriversTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateSQLExplorerDriversTask"
+           name="Update SQLExplorer Drivers">
+     </projecttask>
+     <projecttask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateVersionsTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateVersionsTask"
+           name="Update Version Information">
+     </projecttask>
   </extension>
   <extension
         point="org.eclipse.emf.validation.constraintProviders">

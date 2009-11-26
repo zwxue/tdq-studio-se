@@ -19,14 +19,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class CreateUserDefIndicatorFolderTask extends AbstractMigrationTask {
+public class CreateUserDefIndicatorFolderTask extends AWorkspaceTask {
 
     protected static Logger log = Logger.getLogger(CreateUserDefIndicatorFolderTask.class);
 

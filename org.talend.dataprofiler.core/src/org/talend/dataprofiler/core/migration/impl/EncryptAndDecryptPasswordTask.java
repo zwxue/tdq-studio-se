@@ -25,7 +25,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.security.CryptoHelper;
@@ -37,7 +37,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * password stored in the Tagged values of the providerConnection.
  * 
  */
-public class EncryptAndDecryptPasswordTask extends AbstractMigrationTask {
+public class EncryptAndDecryptPasswordTask extends AWorkspaceTask {
 
     public boolean execute() {
         IFolder folder = ResourceManager.getConnectionFolder();

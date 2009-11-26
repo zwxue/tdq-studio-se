@@ -22,13 +22,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.talend.commons.utils.StringUtils;
-import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class SoundexIndicatorQueryTask extends AbstractMigrationTask {
+public class SoundexIndicatorQueryTask extends AWorkspaceTask {
 
     private static Logger log = Logger.getLogger(SoundexIndicatorQueryTask.class);
 

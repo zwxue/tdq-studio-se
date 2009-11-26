@@ -46,6 +46,7 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.utils.ProductVersion;
 
 /**
  * Create the folder structure for the DQ Reponsitory view.
@@ -79,13 +80,6 @@ public final class DQStructureManager {
      * DOC bZhou DQStructureManager constructor comment.
      */
     private DQStructureManager() {
-        initStructure();
-    }
-
-    /**
-     * DOC bZhou Comment method "initStructure".
-     */
-    private void initStructure() {
         ResourceManager.refreshStructure();
     }
 
@@ -146,6 +140,21 @@ public final class DQStructureManager {
         }
 
         return !ResourceManager.checkResource();
+    }
+
+    /**
+     * DOC bZhou Comment method "isNeedMigration".
+     * 
+     * @return
+     */
+    public boolean isNeedMigration() {
+        if (isSecludedVersion()) {
+            return true;
+        }
+
+        ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
+        ProductVersion cVersion = CorePlugin.getDefault().getProductVersion();
+        return wVersion.compareTo(cVersion) < 0;
     }
 
     /**

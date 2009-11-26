@@ -33,7 +33,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
@@ -42,7 +42,7 @@ import org.talend.resource.ResourceManager;
  * DOC mzhao 2009-03-18 Migration task for merge tdq/top system to tos. All folders existing in tdq/tos before must all
  * be moved to one project, default project name is {@link org.talend.dataquality.PluginConstant#rootProjectName}
  */
-public class TDCPFolderMergeTask extends AbstractMigrationTask {
+public class TDCPFolderMergeTask extends AWorkspaceTask {
 
     Logger logger = Logger.getLogger(TDCPFolderMergeTask.class);
 

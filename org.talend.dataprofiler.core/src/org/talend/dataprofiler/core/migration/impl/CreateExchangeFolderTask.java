@@ -18,14 +18,14 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class CreateExchangeFolderTask extends AbstractMigrationTask {
+public class CreateExchangeFolderTask extends AWorkspaceTask {
 
     private static Logger log = Logger.getLogger(CreateExchangeFolderTask.class);
 

@@ -22,7 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -42,7 +42,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class CreateElementPropertiesTask extends AbstractMigrationTask {
+public class CreateElementPropertiesTask extends AWorkspaceTask {
 
     /*
      * (non-Javadoc)
