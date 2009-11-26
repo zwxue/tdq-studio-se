@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -62,10 +64,10 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
@@ -84,12 +86,14 @@ import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * @author rli
@@ -105,7 +109,7 @@ public class DQRespositoryView extends CommonNavigator {
 
     private static final String VIEW_CONTEXT_ID = "org.talend.dataprofiler.core.ui.views.DQRespositoryView.viewScope"; //$NON-NLS-1$
 
-    private ITreeContentProvider provider = null;
+    private ITreeContentProvider contentProvider = null;
 
     public DQRespositoryView() {
         super();
@@ -114,9 +118,10 @@ public class DQRespositoryView extends CommonNavigator {
 
         if (manager.isNeedCreateStructure()) {
             manager.createDQStructure();
-        } else {
-            List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
-            MigrationTaskManager.doMigrationTask(tasks);
+        }
+
+        if (manager.isNeedMigration()) {
+            MigrationTaskManager.doMigrationTask(MigrationTaskManager.findValidTasks());
         }
     }
 
@@ -145,7 +150,18 @@ public class DQRespositoryView extends CommonNavigator {
      * DOC bZhou Comment method "initWorkspace".
      */
     private void initWorkspace() {
+
+        // initialized resource persistence property.
         ResourceManager.initResourcePersistence();
+
+        // initialized drivers in sql explorer.
+        SQLExplorerPlugin.getDefault().initAllDrivers();
+
+        // initialized connections in sql explorer.
+        List<TdDataProvider> providers = PrvResourceFileHelper.getInstance().getAllDataProviders();
+        for (DataProvider provider : providers) {
+            CorePlugin.getDefault().addConnetionAliasToSQLPlugin(provider);
+        }
     }
 
     /**
@@ -311,10 +327,10 @@ public class DQRespositoryView extends CommonNavigator {
                 }
                 Object selectedElement = selection.getFirstElement();
                 if (selectedElement instanceof TdTable || selectedElement instanceof TdView) {
-                    if (provider == null) {
-                        provider = (ITreeContentProvider) getCommonViewer().getContentProvider();
+                    if (contentProvider == null) {
+                        contentProvider = (ITreeContentProvider) getCommonViewer().getContentProvider();
                     }
-                    for (Object child : provider.getChildren(selectedElement)) {
+                    for (Object child : contentProvider.getChildren(selectedElement)) {
                         if (child instanceof IFolderNode
                                 && ((IFolderNode) child).getFolderNodeType() == ColumnFolderNode.COLUMNFOLDER_NODE_TYPE) {
                             ((IFolderNode) child).loadChildren();
@@ -420,17 +436,17 @@ public class DQRespositoryView extends CommonNavigator {
      * @param item
      */
     private void recursiveExpandTree(Object item) {
-        if (provider == null) {
-            provider = (ITreeContentProvider) getCommonViewer().getContentProvider();
+        if (contentProvider == null) {
+            contentProvider = (ITreeContentProvider) getCommonViewer().getContentProvider();
         }
         if (item instanceof EObject) {
-            Object parent = provider.getParent(item);
-            Object[] tbFolderNodes = provider.getChildren(parent);
+            Object parent = contentProvider.getParent(item);
+            Object[] tbFolderNodes = contentProvider.getChildren(parent);
             boolean isFind = false;
             IFolderNode fn = null;
             for (Object folderNode : tbFolderNodes) {
                 fn = (IFolderNode) folderNode;
-                Object[] folderChilds = provider.getChildren(fn);
+                Object[] folderChilds = contentProvider.getChildren(fn);
                 for (Object child : folderChilds) {
                     if (child == item) {
                         isFind = true;
@@ -446,7 +462,7 @@ public class DQRespositoryView extends CommonNavigator {
                 recursiveExpandTree(fn);
                 getCommonViewer().expandToLevel(fn, 1);
             } else {
-                Object emfParent = provider.getParent(item);
+                Object emfParent = contentProvider.getParent(item);
                 // EMF XMI resources
                 if (emfParent instanceof Resource) {
                     Resource cwmResource = (Resource) emfParent;
@@ -478,7 +494,7 @@ public class DQRespositoryView extends CommonNavigator {
             getCommonViewer().expandToLevel(eo, 1);
         } else {
             // Workspace resources
-            Object workspaceParent = provider.getParent(item);
+            Object workspaceParent = contentProvider.getParent(item);
             if (workspaceParent == null) {
                 return;
             }

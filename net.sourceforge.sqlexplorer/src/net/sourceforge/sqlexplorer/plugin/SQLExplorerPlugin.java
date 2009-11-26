@@ -117,9 +117,6 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             aliasManager = new AliasManager();
             aliasManager.loadAliases();
 
-            // PTODO qzhang initialize all the drivers from the Talend libraries for feature 3519
-            initAllDrivers();
-
             try {
                 resourceBundle = ResourceBundle.getBundle("net.sourceforge.sqlexplorer.test"); //$NON-NLS-1$
             } catch (MissingResourceException x) {
@@ -135,9 +132,9 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     }
 
     /**
-     * DOC qzhang Comment method "initAllDrivers".
+     * DOC bZhou Comment method "initAllDrivers".
      */
-    private void initAllDrivers() {
+    public void initAllDrivers() {
         DriverManager driverModel = getDriverModel();
         Collection<ManagedDriver> drivers = driverModel.getDrivers();
         for (ManagedDriver mand : drivers) {
