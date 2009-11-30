@@ -70,12 +70,14 @@ public final class MetadataHelper {
      * @return the DataminingType or null if none has been set.
      */
     public static DataminingType getDataminingType(TdColumn column) {
-        // ~ MOD mzhao feature 8690. 2009-08-24
-        if (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column)) {
+        // MOD xqliu 2009-11-27 bug 8690
+        String contentType = column.getContentType();
+        if ((contentType == null || contentType.equals(""))
+                && (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column))) {
             return DataminingType.NOMINAL;
+        } else {
+            return DataminingType.get(column.getContentType());
         }
-        // ~
-        return DataminingType.get(column.getContentType());
     }
 
     /**

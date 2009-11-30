@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -60,11 +59,6 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         List<TdColumn> tempList = new ArrayList<TdColumn>();
 
         for (TdColumn column : getColumns()) {
-            // MOD mzhao feature Set pk with nominal data mining type. 2009-08-24.
-            if (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column)) {
-                continue;
-            }
-            
             if (!Java2SqlType.isTextInSQL(column.getJavaType())) {
                 tempList.add(column);
             }
