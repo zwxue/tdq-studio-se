@@ -16,14 +16,20 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.connection.JavaSqlFactory;
+import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.indicators.Indicator;
@@ -35,10 +41,12 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -90,6 +98,10 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     }
 
     protected abstract TdDataProvider getDataManager();
+
+    private Set<String> catalogsName = new HashSet<String>();
+
+    private Set<String> schemasName = new HashSet<String>();
 
     /**
      * DOC scorreia Comment method "queryOnTable".
@@ -536,4 +548,67 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         this.schemaPattern = schemaPattern;
     }
 
+    /**
+     * * yyi 2009-11-30 10187 check catalog is exist in DB
+     * 
+     * @param catName
+     * @return
+     */
+    public boolean checkCatalog(String catName) {
+
+        if (0 == catalogsName.size()) {
+            Collection<TdCatalog> catalogs = new CatalogBuilder(connection).getCatalogs();
+            for (TdCatalog tc : catalogs) {
+                catalogsName.add(tc.getName());
+            }
+        }
+
+        if (!catalogsName.contains(catName)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * yyi 2009-11-30 10187 check schema is exist in DB
+     * 
+     * @param catName
+     * @return
+     */
+    public boolean checkSchema(String catName) {
+
+        if (0 == schemasName.size()) {
+            Collection<TdSchema> schemas = new CatalogBuilder(connection).getSchemata();
+            for (TdSchema ts : schemas) {
+                schemasName.add(ts.getName());
+            }
+        }
+
+        if (!schemasName.contains(catName)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /*
+     * Check DB connection is exist in Metadata
+     * 
+     * @see org.talend.dq.indicators.Evaluator#checkConnection()
+     */
+    @Override
+    protected ReturnCode checkConnection() {
+        ReturnCode rc = super.checkConnection();
+        if (!rc.isOk()) {
+            return rc;
+        }
+
+        DataProvider dataprovider = this.getDataManager();
+        if (!PrvResourceFileHelper.getInstance().getAllDataProviders().contains(dataprovider)) {
+            rc.setReturnCode(Messages.getString("Evaluator.NoConnectionFoundInMetadata", dataprovider.getName()), false);
+            return rc;
+        }
+        return rc;
+    }
 }

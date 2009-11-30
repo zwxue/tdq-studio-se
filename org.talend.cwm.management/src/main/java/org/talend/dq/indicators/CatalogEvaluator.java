@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
@@ -74,6 +75,12 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
             }
             Catalog catalog = (Catalog) catalogIndicator.getAnalyzedElement();
             String catName = catalog.getName();
+            // MOD yyi 2009-11-30 10187
+            if (!checkCatalog(catName)) {
+                ok.setReturnCode(Messages.getString("Evaluator.catalogNotExist", catName), false);
+                return ok;
+            }
+            // ~
             connection.setCatalog(catName);
             List<TdSchema> schemas = CatalogHelper.getSchemas(catalog);
             if (schemas.isEmpty()) { // no schema

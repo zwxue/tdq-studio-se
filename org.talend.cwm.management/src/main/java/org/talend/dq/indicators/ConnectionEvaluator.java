@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -102,10 +103,26 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
         if (catalogs.isEmpty()) { // no catalog, only schemata
             List<TdSchema> schemata = DataProviderHelper.getTdSchema(dataProvider);
+            // MOD yyi 2009-11-30 10187
+            for (TdSchema tdSchema : schemata){
+                if (!checkSchema(tdSchema.getName())) {
+                    ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", tdSchema.getName()), false);
+                    return ok;
+                }
+            }
+            // ~
             for (TdSchema tdSchema : schemata) {
                 evalSchemaIndic(tdSchema, ok);
             }
         } else { // catalogs exist
+            // MOD yyi 2009-11-30 10187
+            for (TdCatalog tdCatalog : catalogs) {
+                if (!checkCatalog(tdCatalog.getName())) {
+                    ok.setReturnCode(Messages.getString("Evaluator.catalogNotExist", tdCatalog.getName()), false);
+                    return ok;
+                }
+            }
+            // ~
             for (TdCatalog tdCatalog : catalogs) {
                 String catName = tdCatalog.getName();
                 try {

@@ -16,6 +16,7 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
@@ -70,6 +71,12 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             }
             TdSchema schema = (TdSchema) schemaIndicator.getAnalyzedElement();
             String catName = schema.getName();
+            // MOD yyi 2009-11-30 10187
+            if (!checkSchema(catName)) {
+                ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", catName), false);
+                return ok;
+            }
+            // ~
             connection.setCatalog(catName);
             evalSchemaIndicLow(null, schemaIndicator, null, schema, ok);
         }
