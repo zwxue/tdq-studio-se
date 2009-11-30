@@ -84,7 +84,9 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
                 // MOD xqliu 2009-1-21 feature 4715
                 DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);
                 createCatalogIndicator.setAnalyzedElement(tdCatalog);
-                indicator.addSchemaIndicator(createCatalogIndicator);
+                // MOD xqliu 2009-11-30 bug 9114
+                indicator.addCatalogIndicator(createCatalogIndicator);
+                // ~
                 addSchemaIndicator(CatalogHelper.getSchemas(tdCatalog), indicator);
             }
             getAnalysisBuilder().addElementToAnalyze(tdProvider, indicator);

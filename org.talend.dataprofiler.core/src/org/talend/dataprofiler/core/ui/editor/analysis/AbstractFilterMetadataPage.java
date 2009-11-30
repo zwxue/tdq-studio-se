@@ -503,9 +503,13 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 public void selectionChanged(SelectionChangedEvent event) {
                     StructuredSelection selection = (StructuredSelection) event.getSelection();
                     CatalogIndicator firstElement = (CatalogIndicator) selection.getFirstElement();
-                    schemaTableViewer.setInput(firstElement.getSchemaIndicators());
-                    schemaTableViewer.getTable().setVisible(true);
-                    addColumnSorters(schemaTableViewer, schemaTableViewer.getTable().getColumns(), schemaSorters);
+                    // MOD xqliu 2009-11-30 bug 9114
+                    if (firstElement != null) {
+                        schemaTableViewer.setInput(firstElement.getSchemaIndicators());
+                        schemaTableViewer.getTable().setVisible(true);
+                        addColumnSorters(schemaTableViewer, schemaTableViewer.getTable().getColumns(), schemaSorters);
+                    }
+                    // ~
                 }
 
             });
@@ -567,10 +571,13 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             if (indicatorList.size() == 0) {
                 catalogTableViewer.setInput(getSchemaIndicators());
             } else {
-                List<SchemaIndicator> schemaIndicators = new ArrayList<SchemaIndicator>();
-                schemaIndicators.addAll(getSchemaIndicators());
-                schemaIndicators.addAll(indicatorList);
-                catalogTableViewer.setInput(schemaIndicators);
+                // MOD xqliu 2009-11-30 bug 9114
+                // List<SchemaIndicator> schemaIndicators = new ArrayList<SchemaIndicator>();
+                // schemaIndicators.addAll(getSchemaIndicators());
+                // schemaIndicators.addAll(indicatorList);
+                // catalogTableViewer.setInput(schemaIndicators);
+                catalogTableViewer.setInput(indicatorList);
+                // ~
             }
         } else {
             indicatorList = new ArrayList<CatalogIndicator>();
