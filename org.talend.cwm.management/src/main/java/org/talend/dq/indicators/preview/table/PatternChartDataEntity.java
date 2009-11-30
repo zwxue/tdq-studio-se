@@ -56,11 +56,11 @@ public class PatternChartDataEntity extends ChartDataEntity {
     @Override
     public String getRangeAsString() {
         StringBuilder msg = new StringBuilder();
-        if (isOutOfRange(getNumMatch()) || isOutOfRange(getNumNoMatch())) {
+        if (isOutOfRange(getNumMatch())) {
             msg.append("This value is outside the expected indicator's thresholds: " + range); //$NON-NLS-1$
             msg.append("\n"); //$NON-NLS-1$
         }
-        if (isOutOfRange(getPerMatch()) || isOutOfRange(getPerNoMatch())) {
+        if (isOutOfRange(getPerMatch())) {
             msg.append("This value is outside the expected indicator's thresholds in percent: " + range); //$NON-NLS-1$
         }
         return msg.length() == 0 ? null : msg.toString();
