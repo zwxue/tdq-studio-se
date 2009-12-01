@@ -25,6 +25,8 @@ public class DQFolderFliter extends ViewerFilter {
 
     private static final String SVN_FOLDER_NAME = ".svn";
 
+    private static final String XSD_FOLDER_NAME = ".xsd";
+
     private boolean isShowFile;
 
     public DQFolderFliter() {
@@ -45,7 +47,8 @@ public class DQFolderFliter extends ViewerFilter {
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
-            return !folder.getName().endsWith(SVN_FOLDER_NAME);
+            // MOD mzhao feature 10238, filter xsd folder
+            return !folder.getName().endsWith(SVN_FOLDER_NAME) && !folder.getName().endsWith(XSD_FOLDER_NAME);
         }
 
         if (element instanceof IFile && isShowFile) {

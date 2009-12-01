@@ -29,7 +29,9 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.talend.libraries.jdbc.sqlite3;resolution:=optional,
  org.talend.libraries.jdbc.teradata;resolution:=optional,
  org.talend.libraries.jdbc.as400;resolution:=optional,
- org.talend.top.repository
+ org.talend.top.repository,
+ org.eclipse.xsd,
+ org.talend.libraries.eXist
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.db.connection,
  org.talend.cwm.dburl,
@@ -61,7 +63,7 @@ Export-Package: org.talend.cwm.db.connection,
  org.talend.dq.writer,
  org.talend.dq.writer.impl
 Bundle-ClassPath: .
-Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
+Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.talend.dq.CWMPlugin

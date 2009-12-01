@@ -12,12 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
@@ -55,6 +58,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.IND_DEFINITION);
         } else if (element instanceof TdView) {
             return ImageLib.getImage(ImageLib.VIEW);
+        } else if (element instanceof TdXMLDocument) {
+            return ImageLib.getImage(ImageLib.XML_DOC);
+        } else if (element instanceof TdXMLElement) {
+            return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
         }
         return super.getImage(element);
     }
@@ -84,6 +91,18 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return regExp.getExpression().getLanguage();
         } else if (element instanceof TdDataProvider) {
             return ((TdDataProvider) element).getName();
+        }
+
+        // MOD mzhao feature 10238
+        if (element instanceof TdXMLDocument) {
+            return ((TdXMLDocument) element).getName();
+        } else if (element instanceof TdXMLElement) {
+            String elemLabe = ((TdXMLElement) element).getName();
+            String elementType = ((TdXMLElement) element).getJavaType();
+            if (elementType != null && !StringUtils.isEmpty(elementType)) {
+                elemLabe += " (" + elementType + ")";
+            }
+            return elemLabe;
         }
         return super.getText(element);
     }

@@ -20,7 +20,10 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
@@ -71,6 +74,13 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
                 return FolderNodeHelper.getFolderNodes((EObject) parentElement);
             }
 
+        } else if (SwitchHelpers.XMLDOCUMENT_SWITCH.doSwitch((EObject) parentElement) != null) {
+            // MOD mzhao feature 10238 xml documents.
+            return DqRepositoryViewService.getXMLElements((TdXMLDocument) parentElement).toArray();
+        } else if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch((EObject) parentElement) != null) {
+            // MOD mzhao xml elements
+            return DqRepositoryViewService.getXMLElements((TdXMLElement) parentElement).toArray();
+
         } else {
             return FolderNodeHelper.getFolderNodes((EObject) parentElement);
         }
@@ -90,7 +100,9 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     }
 
     public boolean hasChildren(Object element) {
+        if ((element instanceof EObject) && SwitchHelpers.XMLELEMENT_SWITCH.doSwitch((EObject) element) != null) {
+            return DqRepositoryViewService.hasChildren((TdXMLElement) element);
+        }
         return !(element instanceof TdColumn);
     }
-
 }

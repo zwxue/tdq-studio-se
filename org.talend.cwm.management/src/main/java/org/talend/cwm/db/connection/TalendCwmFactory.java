@@ -42,6 +42,7 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import org.talend.utils.time.TimeTracer;
 import orgomg.cwm.objectmodel.core.Classifier;
@@ -135,6 +136,25 @@ public final class TalendCwmFactory {
         }
 
         return dataProvider;
+    }
+
+    /**
+     * Instantiate a data provider from xml documents. DOC mzhao Comment method "getTdDataProvider".
+     * 
+     * @param parameter
+     * @return
+     */
+    public static TdDataProvider createEXistTdDataProvider(DBConnectionParameter parameter) {
+        IXMLDBConnection xmlDBConnection = new EXistXMLDBConnection(parameter.getDriverClassName(), parameter.getJdbcUrl());
+        ReturnCode rt = xmlDBConnection.checkDatabaseConnection();
+        if (rt.isOk()) {
+            TdDataProvider dataProvider = DataProviderHelper.createTdDataProvider(parameter.getName());
+            xmlDBConnection.setSofewareSystem(dataProvider, parameter);
+            xmlDBConnection.setProviderConnection(dataProvider, parameter);
+            DataProviderHelper.addXMLDocuments(xmlDBConnection.createConnection(), dataProvider);
+            return dataProvider;
+        }
+        return null;
     }
 
     /**

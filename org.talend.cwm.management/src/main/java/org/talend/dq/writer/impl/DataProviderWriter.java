@@ -81,6 +81,10 @@ public class DataProviderWriter extends AElementPersistance {
         Collection<? extends ModelElement> schemas = DataProviderHelper.getTdSchema((TdDataProvider) element);
         resourceContents.addAll(schemas);
 
+        // add each schema to its own file
+        Collection<? extends ModelElement> xmlSchemas = DataProviderHelper.getTdXmlDocument((TdDataProvider) element);
+        resourceContents.addAll(xmlSchemas);
+
         if (log.isDebugEnabled()) {
             log.debug("Schema added ");
         }

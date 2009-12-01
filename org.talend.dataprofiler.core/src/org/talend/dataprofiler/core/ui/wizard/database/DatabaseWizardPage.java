@@ -38,10 +38,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.db.connection.EXistXMLDBConnection;
+import org.talend.cwm.db.connection.IXMLDBConnection;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
+import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -253,6 +256,13 @@ public class DatabaseWizardPage extends AbstractWizardPage {
     }
 
     private ReturnCode checkDBConnection() {
+        // MOD mzhao 2009-11-27 Check for an xml database (e.g eXist)
+        if (connectionParam.getDriverClassName().equals(DatabaseConstant.XML_EXIST_DRIVER_NAME)) {
+            IXMLDBConnection eXistDBConnection = new EXistXMLDBConnection(connectionParam.getDriverClassName(), connectionParam
+                    .getJdbcUrl());
+            ReturnCode retcode = eXistDBConnection.checkDatabaseConnection();
+            return retcode;
+        }
         if (this.connectionParam.getDriverPath() != null) {
             CorePlugin corePlugin = CorePlugin.getDefault();
             ReturnCode rc = new ReturnCode();

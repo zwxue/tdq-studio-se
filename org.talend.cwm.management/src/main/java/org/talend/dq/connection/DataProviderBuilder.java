@@ -21,6 +21,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import org.apache.log4j.Logger;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
+import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -48,31 +49,34 @@ public class DataProviderBuilder {
             return returnCode;
         }
 
-        DBConnect connector = new DBConnect(parameter);
-        try {
-            dataProvider = TalendCwmFactory.createDataProvider(connector);
-            if (dataProvider != null) {
-                String connectionName = parameter.getName();
-                dataProvider.setName(connectionName);
+        // MOD mzhao feature 10238 add support for xmldb(e.g eXist).
+        if (parameter.getDriverClassName().equals(DatabaseConstant.XML_EXIST_DRIVER_NAME)) {
+            dataProvider = TalendCwmFactory.createEXistTdDataProvider(parameter);
+        } else {
+            DBConnect connector = new DBConnect(parameter);
+            try {
+                dataProvider = TalendCwmFactory.createDataProvider(connector);
+            } catch (SQLException e) {
+                msg = "Failed to create a data provider for the given connection parameters: " + e.getMessage();
+                log.warn(msg, e);
 
-                returnCode.setOk(true);
-                return returnCode;
-            } else {
                 returnCode.setOk(false);
-                returnCode.setMessage("Can't create data provider!");
-                return returnCode;
+                returnCode.setMessage(msg);
+            } finally {
+                connector.closeConnection();
             }
-        } catch (SQLException e) {
-            msg = "Failed to create a data provider for the given connection parameters: " + e.getMessage();
-            log.warn(msg, e);
-
-            returnCode.setOk(false);
-            returnCode.setMessage(msg);
-        } finally {
-            connector.closeConnection();
         }
 
-        return returnCode;
+        if (dataProvider != null) {
+            String connectionName = parameter.getName();
+            dataProvider.setName(connectionName);
+            returnCode.setOk(true);
+            return returnCode;
+        } else {
+            returnCode.setOk(false);
+            returnCode.setMessage("Can't create data provider!");
+            return returnCode;
+        }
     }
 
     public DataProvider getDataProvider() {

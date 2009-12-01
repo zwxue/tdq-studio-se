@@ -47,6 +47,7 @@ import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -429,10 +430,13 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(dataProvider);
         createPurpose(dataProvider);
         createDescription(dataProvider);
-
-        String connectionString = DataProviderHelper.getTdProviderConnection(dataProvider).getObject().getConnectionString();
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
-
+        // MOD mzhao xmldb have no actual connection.
+        // TODO Handle details view.
+        TypedReturnCode<TdProviderConnection> proConn = DataProviderHelper.getTdProviderConnection(dataProvider);
+        if (proConn != null) {
+            String connectionString = proConn.getObject().getConnectionString();
+            newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
+        }
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
         if (softwareSystem == null) {
             softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);

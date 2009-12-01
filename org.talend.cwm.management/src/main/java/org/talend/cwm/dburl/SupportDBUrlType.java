@@ -132,7 +132,16 @@ public enum SupportDBUrlType {
                     "com.ibm.as400.access.AS400JDBCDriver", //$NON-NLS-1$
                     null,
                     "AS400"), //$NON-NLS-1$
+    XML_eXist("eXist", //$NON-NLS-1$
+              "localhost", //$NON-NLS-1$
+              "8080", //$NON-NLS-1$
+              "exist/xmlrpc/db", //$NON-NLS-1$
+              null,
+              "org.exist.xmldb.DatabaseImpl", //$NON-NLS-1$
+              null,
+              "eXist"),
     JAVADEFAULTURL("Java", "localhost", null, "dbname", null, null, null, "Java");
+
 
     private final String dbKey;
 

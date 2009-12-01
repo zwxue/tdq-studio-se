@@ -39,6 +39,7 @@ import org.talend.cwm.builders.AbstractTableBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
+import org.talend.cwm.builders.XMLSchemaBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -56,11 +57,15 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.cwm.xml.TdXMLContent;
+import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
@@ -114,12 +119,13 @@ public final class DqRepositoryViewService {
     private static final String REPLACEMENT_CHARS = "_"; //$NON-NLS-1$
 
     /**
-     * Method "createTechnicalName" creates a technical name used for file system storage.
+     * Method "createTechnicalName" creates a technical name used for file system storage. MOD mzhao make this method as
+     * public access.
      * 
      * @param functionalName the user friendly name
      * @return the technical name created from the user given name.
      */
-    static String createTechnicalName(final String functionalName) {
+    public static String createTechnicalName(final String functionalName) {
         String techname = "no_name"; //$NON-NLS-1$
         if (functionalName == null) {
             log.warn("A functional name should not be null");
@@ -617,5 +623,40 @@ public final class DqRepositoryViewService {
      */
     public static String buildElementName(ModelElement element) {
         return element.getName() + " " + MetadataHelper.getVersion(element);
+    }
+
+    public static List<ModelElement> getXMLElements(TdXMLDocument document) {
+        List<ModelElement> elements = document.getOwnedElement();
+        // Load from dababase
+        if (elements == null || elements.size() == 0) {
+            XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(document);
+            elements = xmlScheBuilder.getRootElements(document);
+            document.getOwnedElement().addAll(elements);
+            TdDataProvider dataManager = (TdDataProvider) document.getDataManager().get(0);
+            NeedSaveDataProviderHelper.register(dataManager.eResource().getURI().path(), dataManager);
+            NeedSaveDataProviderHelper.saveAllDataProvider();
+        }
+        return elements;
+    }
+
+    public static List<TdXMLElement> getXMLElements(TdXMLElement element) {
+        TdXMLContent xmlContent = element.getXmlContent();
+        List<TdXMLElement> elements = null;
+        // Load from dababase
+        if (xmlContent == null) {
+            XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
+            elements = xmlScheBuilder.getChildren(element);
+            TdDataProvider dataManager = (TdDataProvider) element.getOwnedDocument().getDataManager().get(0);
+            NeedSaveDataProviderHelper.register(dataManager.eResource().getURI().path(), dataManager);
+            NeedSaveDataProviderHelper.saveAllDataProvider();
+        } else {
+            elements = xmlContent.getXmlElements();
+        }
+        return elements;
+    }
+
+    public static Boolean hasChildren(TdXMLElement element) {
+        XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
+        return xmlScheBuilder.isLeafNode(element).isOk();
     }
 }

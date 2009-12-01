@@ -165,6 +165,9 @@ public final class ImageLib {
 
     public static final String ICON_INFO = "info.gif"; //$NON-NLS-1$
 
+    public static final String XML_DOC = "xmldoc.gif"; //$NON-NLS-1$
+
+    public static final String XML_ELEMENT_DOC = "xmlele.gif"; //$NON-NLS-1$
     /**
      * DOC bzhou ImageLib constructor comment.
      */

@@ -107,6 +107,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     }
 
     public ModelElement initCWMResourceBuilder() {
+
         DataProviderBuilder dpBuilder = new DataProviderBuilder();
 
         String driverPath = connectionParam.getDriverPath();
