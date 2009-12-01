@@ -165,9 +165,12 @@ public final class ImageLib {
 
     public static final String ICON_INFO = "info.gif"; //$NON-NLS-1$
 
+    public static final String ICON_LOCK = "lock.gif"; //$NON-NLS-1$
+
     public static final String XML_DOC = "xmldoc.gif"; //$NON-NLS-1$
 
     public static final String XML_ELEMENT_DOC = "xmlele.gif"; //$NON-NLS-1$
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */
@@ -261,9 +264,7 @@ public final class ImageLib {
      * @return
      */
     public static ImageDescriptor createInvalidIcon(String originalImgName) {
-        ImageDescriptor originalImg = getImageDescriptor(originalImgName);
-
-        return originalImg != null ? createInvalidIcon(originalImg) : null;
+        return createInvalidIcon(getImageDescriptor(originalImgName));
     }
 
     /**
@@ -274,8 +275,40 @@ public final class ImageLib {
      */
     public static ImageDescriptor createInvalidIcon(ImageDescriptor originalImg) {
         ImageDescriptor warnImg = getImageDescriptor(WARN_OVR);
-        DecorationOverlayIcon icon = new DecorationOverlayIcon(originalImg.createImage(), warnImg, IDecoration.BOTTOM_RIGHT);
-        return icon;
+        return originalImg != null ? createIcon(originalImg, warnImg) : null;
+    }
+
+    /**
+     * DOC bZhou Comment method "createLockedIcon".
+     * 
+     * @param originalImgName
+     * @return
+     */
+    public static ImageDescriptor createLockedIcon(String originalImgName) {
+        return createLockedIcon(getImageDescriptor(originalImgName));
+    }
+
+    /**
+     * DOC bZhou Comment method "createLockedIcon".
+     * 
+     * @param originalImg
+     * @return
+     */
+    public static ImageDescriptor createLockedIcon(ImageDescriptor originalImg) {
+        ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK);
+
+        return originalImg != null ? createIcon(originalImg, lockImg) : null;
+    }
+
+    /**
+     * DOC bZhou Comment method "createIcon".
+     * 
+     * @param originalImg
+     * @param decorateImg
+     * @return
+     */
+    public static ImageDescriptor createIcon(ImageDescriptor originalImg, ImageDescriptor decorateImg) {
+        return new DecorationOverlayIcon(originalImg.createImage(), decorateImg, IDecoration.BOTTOM_RIGHT);
     }
 
     /**

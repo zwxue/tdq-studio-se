@@ -16,8 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -25,6 +32,7 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -39,6 +47,12 @@ public final class ModelElementFileFactory {
 
     // private static Logger log = Logger.getLogger(ModelElementFileFactory.class);
 
+    /**
+     * DOC bZhou Comment method "getModelElement".
+     * 
+     * @param file
+     * @return
+     */
     public static ModelElement getModelElement(IFile file) {
         ModelElement modelElement = null;
         if (FactoriesUtil.isProvFile(file)) {
@@ -59,6 +73,12 @@ public final class ModelElementFileFactory {
         return modelElement;
     }
 
+    /**
+     * DOC bZhou Comment method "getResourceFileMap".
+     * 
+     * @param file
+     * @return
+     */
     public static ResourceFileMap getResourceFileMap(IFile file) {
         ResourceFileMap modelElement = null;
         if (FactoriesUtil.isProvFile(file)) {
@@ -77,6 +97,12 @@ public final class ModelElementFileFactory {
         return modelElement;
     }
 
+    /**
+     * DOC bZhou Comment method "getModelElements".
+     * 
+     * @param files
+     * @return
+     */
     public static ModelElement[] getModelElements(IFile[] files) {
         List<ModelElement> modelElements = new ArrayList<ModelElement>();
         ModelElement element;
@@ -87,5 +113,46 @@ public final class ModelElementFileFactory {
             }
         }
         return modelElements.toArray(new ModelElement[modelElements.size()]);
+    }
+
+    /**
+     * DOC bZhou Comment method "getProperty".
+     * 
+     * @param file
+     * @return null if there is no property reference to this file.
+     */
+    public static Property getProperty(IFile file) {
+
+        ModelElement modelElement = getModelElement(file);
+        if (modelElement != null) {
+            String propertyPath = MetadataHelper.getPropertyPath(modelElement);
+            if (propertyPath != null) {
+                IFile propertyFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
+                if (propertyFile != null) {
+                    return loadProperty(propertyFile);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "loadProperty".
+     * 
+     * @param file
+     * @return null if property is not existed.
+     */
+    static Property loadProperty(IFile file) {
+        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+        Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
+
+        if (resource != null) {
+            Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
+                    .getProperty());
+            return property;
+        }
+
+        return null;
     }
 }

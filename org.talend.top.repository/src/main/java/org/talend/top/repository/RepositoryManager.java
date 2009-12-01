@@ -12,14 +12,40 @@
 // ============================================================================
 package org.talend.top.repository;
 
+import org.talend.core.model.properties.Item;
 
 /***/
 public class RepositoryManager {
+
     public void save() {
 
     }
 
     public void refresh() {
 
+    }
+
+    public void lock(final Item item) {
+
+    }
+
+    public void unLock(Item item) {
+
+    }
+
+    public Boolean isEditable(Item item) {
+        return true;
+    }
+
+    public Boolean isReadOnly() {
+        return false;
+    }
+
+    public Boolean isLockByOthers(Item item) {
+        return false;
+    }
+
+    public Boolean isLockByUserOwn(Item item) {
+        return false;
     }
 }

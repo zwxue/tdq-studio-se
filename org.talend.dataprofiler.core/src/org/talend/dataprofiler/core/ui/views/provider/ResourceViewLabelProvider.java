@@ -22,6 +22,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonLabelProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.ImageLib;
@@ -34,6 +36,7 @@ import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ImplementationHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -48,52 +51,62 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     }
 
     protected ImageDescriptor decorateImage(ImageDescriptor input, Object element) {
+        ImageDescriptor image = super.decorateImage(input, element);
+
         if (element instanceof IFile) {
             IFile file = (IFile) element;
             if (FactoriesUtil.isPatternFile(file)) {
+                image = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
+
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 if (pattern != null) {
-                    boolean validStatus = TaggedValueHelper.getValidStatus(pattern);
-
-                    if (!validStatus) {
-                        return ImageLib.createInvalidIcon(ImageLib.PATTERN_REG);
-                    } else {
-                        return ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
+                    if (!TaggedValueHelper.getValidStatus(pattern)) {
+                        image = ImageLib.createInvalidIcon(ImageLib.PATTERN_REG);
                     }
                 }
             } else if (FactoriesUtil.isReportFile(file)) {
-                return ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
+                image = ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
             } else if (FactoriesUtil.isUDIFile(file)) {
+                image = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
 
                 IndicatorDefinition udi = UDIResourceFileHelper.getInstance().findUDI(file);
-
                 if (udi != null) {
                     boolean validStatus = TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi);
 
                     if (!validStatus) {
-                        return ImageLib.createInvalidIcon(ImageLib.IND_DEFINITION);
-                    } else {
-                        return ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
+                        image = ImageLib.createInvalidIcon(ImageLib.IND_DEFINITION);
                     }
                 }
             }
-        }
 
-        if (element instanceof IFolder) {
+            if (FactoriesUtil.isEmfFile(file)) {
+                Property property = ModelElementFileFactory.getProperty(file);
+                if (property != null) {
+                    Item item = property.getItem();
+                    Boolean lockByOthers = ImplementationHelper.getRepositoryManager().isLockByOthers(item);
+                    Boolean lockByUserOwn = ImplementationHelper.getRepositoryManager().isLockByUserOwn(item);
+                    if (lockByOthers || lockByUserOwn) {
+                        log.info(property.getLabel() + " is locked");
+                        image = ImageLib.createLockedIcon(image);
+                    }
+                }
+            }
+
+        } else if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
             if (ResourceManager.isMetadataFolder(folder)) {
-                return ImageLib.getImageDescriptor(ImageLib.METADATA);
+                image = ImageLib.getImageDescriptor(ImageLib.METADATA);
             } else if (ResourceManager.isLibrariesFolder(folder)) {
-                return ImageLib.getImageDescriptor(ImageLib.LIBRARIES);
+                image = ImageLib.getImageDescriptor(ImageLib.LIBRARIES);
             } else if (ResourceManager.isDataProfilingFolder(folder)) {
-                return ImageLib.getImageDescriptor(ImageLib.DATA_PROFILING);
+                image = ImageLib.getImageDescriptor(ImageLib.DATA_PROFILING);
             } else if (ResourceManager.isConnectionFolder(folder)) {
-                return ImageLib.getImageDescriptor(ImageLib.CONNECTION);
+                image = ImageLib.getImageDescriptor(ImageLib.CONNECTION);
             } else if (ResourceManager.isExchangeFolder(folder)) {
-                return ImageLib.getImageDescriptor(ImageLib.EXCHANGE);
+                image = ImageLib.getImageDescriptor(ImageLib.EXCHANGE);
             }
         }
-        return super.decorateImage(input, element);
+        return image;
     }
 
     public String getDescription(Object anElement) {
