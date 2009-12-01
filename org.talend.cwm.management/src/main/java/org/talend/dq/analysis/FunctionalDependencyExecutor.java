@@ -24,6 +24,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -47,7 +48,9 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
 
     private static Logger log = Logger.getLogger(FunctionalDependencyExecutor.class);
 
-    private String catalogOrSchema = null;
+    private String catalogName = null;
+
+    private String schemaName = null;
 
     @Override
     protected boolean check(Analysis analysis) {
@@ -102,7 +105,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
     private boolean executeQuery(Indicator indicator, Connection connection, Expression query) throws AnalysisExecutionException {
         try {
 
-            List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
+            List<Object[]> myResultSet = executeQuery(catalogName, connection, query.getBody());
             indicator.storeSqlResults(myResultSet);
 
         } catch (SQLException e) {
@@ -191,8 +194,17 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             log.error("ColumnSet Owner of column " + column.getName() + " is null");
         } else {
             // this is so bad code
-            Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
-            catalogOrSchema = schema.getName();
+            Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
+            if (SwitchHelpers.SCHEMA_SWITCH.doSwitch(pack) != null) {
+                schemaName = pack.getName();
+                Package catalog = ColumnSetHelper.getParentCatalogOrSchema(pack);
+                if (SwitchHelpers.CATALOG_SWITCH.doSwitch(catalog) != null) {
+                    catalogName = catalog.getName();
+                }
+            }
+            if (SwitchHelpers.CATALOG_SWITCH.doSwitch(pack) != null) {
+                catalogName = pack.getName();
+            }
             return columnSetOwner.getName();
 
         }

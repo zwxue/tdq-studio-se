@@ -258,14 +258,16 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      */
     private static Long getNBDistinct(List<Object[]> myResultSet) {
         if (myResultSet.size() == 1 && myResultSet.get(0).length == 2) {
-            return (Long) myResultSet.get(0)[1];
+            // return (Long) myResultSet.get(0)[1];
+            return Long.valueOf(String.valueOf(myResultSet.get(0)[1]));
         }
         return null;
     }
 
     private static Long getNB(List<Object[]> myResultSet) {
         if (myResultSet.size() == 1 && myResultSet.get(0).length == 2) {
-            return (Long) myResultSet.get(0)[0];
+            // return (Long) myResultSet.get(0)[0];
+            return Long.valueOf(String.valueOf(myResultSet.get(0)[0]));
         }
         return null;
     }
