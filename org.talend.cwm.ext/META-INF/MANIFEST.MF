@@ -12,11 +12,14 @@ Export-Package: org.talend.cwm.constants,
  org.talend.cwm.relational,
  org.talend.cwm.relational.util,
  org.talend.cwm.softwaredeployment,
- org.talend.cwm.softwaredeployment.util
+ org.talend.cwm.softwaredeployment.util,
+ org.talend.cwm.xml,
+ org.talend.cwm.xml.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.talend.cwm.mip;visibility:=reexport,
  org.talend.utils,
  org.eclipse.emf.ecore.xmi,
- org.talend.commons
+ org.talend.commons,
+ org.eclipse.xsd
 Bundle-ActivationPolicy: lazy
