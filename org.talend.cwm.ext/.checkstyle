@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fileset-config file-format-version="1.2.0" simple-config="true">
-    <fileset name="all" enabled="true" check-config-name="Talend Checks" local="false">
+    <fileset name="all" enabled="true" check-config-name="Talend_check" local="false">
         <file-match-pattern match-pattern="." include-pattern="true"/>
     </fileset>
     <filter name="FilesFromPackage" enabled="true">
         <filter-data value="src/org/talend/cwm/constants"/>
         <filter-data value="src/org/talend/cwm/relational"/>
         <filter-data value="src/org/talend/cwm/softwaredeployment"/>
+        <filter-data value="src/org/talend/cwm/xml"/>
     </filter>
 </fileset-config>

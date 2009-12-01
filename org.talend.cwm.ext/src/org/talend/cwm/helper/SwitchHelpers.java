@@ -22,6 +22,9 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch;
+import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.util.XmlSwitch;
 import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -96,6 +99,21 @@ public final class SwitchHelpers {
 
     };
 
+    public static final XmlSwitch<TdXMLDocument> XMLDOCUMENT_SWITCH = new XmlSwitch<TdXMLDocument>() {
+
+        @Override
+        public TdXMLDocument caseTdXMLDocument(TdXMLDocument object) {
+            return object;
+        }
+
+    };
+
+    public static final XmlSwitch<TdXMLElement> XMLELEMENT_SWITCH = new XmlSwitch<TdXMLElement>() {
+        @Override
+        public TdXMLElement caseTdXMLElement(TdXMLElement object) {
+            return object;
+        }
+    };
     public static final RelationalSwitch<TdTable> TABLE_SWITCH = new RelationalSwitch<TdTable>() {
 
         @Override

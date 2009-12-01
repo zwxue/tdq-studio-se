@@ -25,6 +25,7 @@ import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.utils.security.CryptoHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.Component;
@@ -222,6 +223,11 @@ public final class DataProviderHelper {
     public static boolean addSchema(TdSchema schema, TdDataProvider dataProvider) {
         return addPackage(schema, dataProvider);
     }
+    
+    //MOD mzhao feature 10238
+    public static boolean addXMLDocuments(Collection<TdXMLDocument> xmlDocuments, TdDataProvider dataProvider) {
+        return addPackages(xmlDocuments, dataProvider);
+    }
 
     public static TdSoftwareSystem getSoftwareSystem(TdDataProvider dataProvider) {
         final Component component = dataProvider.getComponent();
@@ -356,6 +362,17 @@ public final class DataProviderHelper {
      */
     public static List<TdSchema> getTdSchema(DataProvider dataProvider) {
         return SchemaHelper.getSchemas(dataProvider.getDataPackage());
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "getTdXmlDocument".
+     * 
+     * @param dataProvider
+     * @return
+     */
+    public static List<TdXMLDocument> getTdXmlDocument(DataProvider dataProvider) {
+        return XmlSchemaHelper.getDocuments(dataProvider.getDataPackage());
     }
 
     /**
