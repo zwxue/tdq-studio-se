@@ -257,7 +257,9 @@ public final class DatabaseContentRetriever {
             // MOD xqliu 2009-10-29 bug 9838
             ResultSet catalogSet = null;
             DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
-            if (connectionMetadata.getDriverName() != null && connectionMetadata.getDriverName().toLowerCase().indexOf(DatabaseConstant.ODBC_ORACLE_DRIVER_NAME) < 0) {
+            if (connectionMetadata.getDatabaseProductName() != null
+                    && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(
+                            DatabaseConstant.ODBC_ORACLE_PRODUCT_NAME) < 0) {
                 catalogSet = connectionMetadata.getCatalogs();
             }
             // ~

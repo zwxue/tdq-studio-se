@@ -180,8 +180,8 @@ public class CatalogBuilder extends CwmBuilder {
     private void initializeCatalogLow() throws SQLException {
         // MOD xqliu 2009-10-29 bug 9838
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
-        if (connectionMetadata.getDriverName() != null
-                && connectionMetadata.getDriverName().toLowerCase().indexOf(DatabaseConstant.ODBC_ORACLE_DRIVER_NAME) > -1) {
+        if (connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(DatabaseConstant.ODBC_ORACLE_PRODUCT_NAME) > -1) {
             catalogsInitialized = true;
             return;
         }
@@ -217,8 +217,10 @@ public class CatalogBuilder extends CwmBuilder {
                     catalogName = catalogNames.getString(MetaDataConstants.TABLE_CAT.name());
                 } catch (Exception e) {
                     log.warn(e, e);
-                    if (connectionMetadata.getDriverName() != null
-                            && connectionMetadata.getDriverName().toLowerCase().indexOf(DatabaseConstant.ODBC_POSTGRESQL_DRIVER_NAME) > -1) {
+                    connectionMetadata.getDatabaseProductName();
+                    if (connectionMetadata.getDatabaseProductName() != null
+                            && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(
+                                    DatabaseConstant.ODBC_POSTGRESQL_PRODUCT_NAME) > -1) {
                         catalogName = "";
                     }
                 }

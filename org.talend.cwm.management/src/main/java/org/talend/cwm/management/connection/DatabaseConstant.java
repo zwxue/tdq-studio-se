@@ -20,11 +20,11 @@ public final class DatabaseConstant {
     private DatabaseConstant() {
     }
 
-    public static final String ODBC_ORACLE_DRIVER_NAME = "msorcl32.dll";
+    public static final String ODBC_ORACLE_PRODUCT_NAME = "oracle";
 
     public static final String ODBC_ORACLE_SCHEMA_NAME = "TABLE_OWNER";
 
-    public static final String ODBC_POSTGRESQL_DRIVER_NAME = "psqlodbc.dll";
+    public static final String ODBC_POSTGRESQL_PRODUCT_NAME = "postgresql";
     
     public static final String IBM_DB2_ZOS_PRODUCT_NAME = "DB2";
 
