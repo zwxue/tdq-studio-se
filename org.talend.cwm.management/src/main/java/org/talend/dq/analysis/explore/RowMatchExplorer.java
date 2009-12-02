@@ -83,8 +83,9 @@ public class RowMatchExplorer extends DataExplorer {
                 if (i == 0) {
                     where = dbmsLanguage.where();
                 }
-                String clause = "SELECT " + dbmsLanguage.quote(tableB) + "." + dbmsLanguage.quote(columnSetB.get(i).getName()) //$NON-NLS-1$ //$NON-NLS-2$
-                        + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);
+                String fullColumnName = dbmsLanguage.quote(tableB) + "." + dbmsLanguage.quote(columnSetB.get(i).getName());
+                String clause = "SELECT " + fullColumnName + dbmsLanguage.from() + getFullyQualifiedTableName(tableb)
+                        + dbmsLanguage.where() + fullColumnName + dbmsLanguage.isNotNull();
                 query += where + dbmsLanguage.quote(tableA) + "." + dbmsLanguage.quote(columnSetA.get(i).getName()) //$NON-NLS-1$
                         + dbmsLanguage.in() + inBrackets(clause);
             }
