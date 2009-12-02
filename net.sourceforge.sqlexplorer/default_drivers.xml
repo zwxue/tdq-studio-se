@@ -51,7 +51,7 @@
     <jars/>
   </driver>
   <driver id="-52">
-    <name>Microsoft MSSQL Server JDBC Driver</name>
+    <name>Microsoft MSSQL 2005/08 Server JDBC Driver</name>
     <url>jdbc:sqlserver://&lt;server_name&gt;:&lt;1433&gt;</url>
     <jars/>
   </driver>
