@@ -1,8 +1,10 @@
 package org.talend.dataprofiler.ecos;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.util.tracker.ServiceTracker;
 import org.talend.dataprofiler.ecos.pref.PreferenceConstants;
 
 /**
@@ -15,6 +17,9 @@ public class EcosPlugin extends Plugin {
 
     // The shared instance
     private static EcosPlugin plugin;
+
+    // The Service tracker
+    private ServiceTracker tracker;
 
     /**
      * The constructor
@@ -32,6 +37,8 @@ public class EcosPlugin extends Plugin {
         plugin = this;
 
         initEcosTimeout();
+
+        initProxyService();
     }
 
     /*
@@ -55,6 +62,23 @@ public class EcosPlugin extends Plugin {
                 savePluginPreferences();
             }
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "initProxyService".
+     */
+    private void initProxyService() {
+        tracker = new ServiceTracker(getBundle().getBundleContext(), IProxyService.class.getName(), null);
+        tracker.open();
+    }
+
+    /**
+     * DOC bZhou Comment method "getProxyService".
+     * 
+     * @return
+     */
+    public IProxyService getProxyService() {
+        return (IProxyService) tracker.getService();
     }
 
     /**

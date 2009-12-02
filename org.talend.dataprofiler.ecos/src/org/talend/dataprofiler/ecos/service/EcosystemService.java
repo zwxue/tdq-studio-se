@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -45,6 +44,7 @@ import org.talend.dataprofiler.ecos.model.VersionInfo;
 import org.talend.dataprofiler.ecos.model.impl.EcosCategory;
 import org.talend.dataprofiler.ecos.model.impl.Revision;
 import org.talend.dataprofiler.ecos.pref.PreferenceConstants;
+import org.talend.dataprofiler.ecos.proxy.EcosystemProxyAdapter;
 import org.talend.dataprofiler.ecos.proxy.EcosystemSocketFactory;
 
 /**
@@ -160,7 +160,10 @@ public abstract class EcosystemService {
 
     public static String sendGetRequest(String urlAddress) throws Exception {
         HttpClient httpclient = new HttpClient();
-        httpclient.getParams().setConnectionManagerTimeout(TIMEOUT);
+
+        // adapt proxy to http client.
+        EcosystemProxyAdapter.adapt(httpclient, urlAddress);
+
         GetMethod getMethod = new GetMethod(urlAddress);
         getMethod.getParams().setSoTimeout(TIMEOUT);
         httpclient.executeMethod(getMethod);
@@ -171,6 +174,10 @@ public abstract class EcosystemService {
 
     public static String sendPostRequest(String urlAddress, Map<String, String> parameters) throws Exception {
         HttpClient httpclient = new HttpClient();
+
+        // adapt proxy to http client.
+        EcosystemProxyAdapter.adapt(httpclient, urlAddress);
+
         PostMethod postMethod = new PostMethod(urlAddress);
         postMethod.getParams().setSoTimeout(TIMEOUT);
         if (parameters != null) {
@@ -216,10 +223,14 @@ public abstract class EcosystemService {
 
         String jsonContent = sendGetRequest(CATEGORY_LIST_URL);
         List<IEcosCategory> categorys = parseJsonObject(jsonContent, EcosCategory.class);
-        for (Iterator iterator = categorys.iterator(); iterator.hasNext();) {
-            EcosCategory iEcosCategory = (EcosCategory) iterator.next();
-            iEcosCategory.setVersion(version);
+        if (categorys != null) {
+            for (IEcosCategory category : categorys) {
+                ((EcosCategory) category).setVersion(version);
+            }
+        } else {
+            categorys = Collections.emptyList();
         }
+
         return categorys;
     }
 
@@ -231,7 +242,9 @@ public abstract class EcosystemService {
             url.append(StringUtils.join(branch, ",")); //$NON-NLS-1$
             String jsonContent = sendGetRequest(url.toString());
             System.out.println(url);
-            return parseJsonObject(jsonContent, RevisionInfo.class);
+            if (StringUtils.isNotEmpty(jsonContent)) {
+                return parseJsonObject(jsonContent, RevisionInfo.class);
+            }
         }
 
         return Collections.EMPTY_LIST;

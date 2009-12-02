@@ -27,10 +27,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IndicatorFolderNode;
-import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
@@ -50,6 +50,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
 
     private List<IContainer> needSortContainers;
+
+    private boolean timeoutFlag = true;
 
     /**
      * DOC rli ResourceViewContentProvider constructor comment.
@@ -101,7 +103,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             return folders.toArray();
         } else if (element instanceof IFile) {
             IFile file = (IFile) element;
-            if (file.getName().endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
+            if (FactoriesUtil.isPatternFile(file)) {
                 // MOD mzhao 2009-04-20,Bug 6349.
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 RegularExpression[] regularExp = new RegularExpression[pattern.getComponents().size()];
@@ -115,17 +117,22 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         } else if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
             if (ResourceManager.isExchangeFolder(folder)) {
-                // Mod gyichao 2009-07-07, feature 8109
-                List<IEcosCategory> availableCategory = Collections.EMPTY_LIST;
+
                 try {
-                    availableCategory = ComponentSearcher.getAvailableCategory(CorePlugin.getDefault().getProductVersion()
-                            .toString());
+                    if (timeoutFlag) {
+                        String version = CorePlugin.getDefault().getProductVersion().toString();
+                        return ComponentSearcher.getAvailableCategory(version).toArray();
+                    } else {
+                        return new String[] { "Connection failed: time out" };
+                    }
                 } catch (SocketTimeoutException e) {
                     log.error(e, e);
+                    timeoutFlag = false;
                     return new String[] { "Connection failed:" + e.getMessage() };
 
                 } catch (Exception e) {
                     log.error(e, e);
+                    timeoutFlag = false;
                     return new String[] { e.getMessage() };
                 }
 

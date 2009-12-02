@@ -9,100 +9,89 @@ import org.talend.dataprofiler.ecos.model.IEcosComponent;
 
 /**
  * @author jet
- *
+ * 
  */
-public class EcosCategory implements IEcosCategory{
-	
-	String id;
-	
-	String name;
-	
-	int counter;
-	
-	String version;
+public class EcosCategory implements IEcosCategory {
 
-	public EcosCategory() {
-		super();
-	}
-	
-	public EcosCategory(String id) {
-		this.id = id;
-	}
+    String id;
 
-	public String getVersion() {
-		return version;
-	}
+    String name;
 
+    int counter;
 
-	
-	
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    String version;
 
+    List<IEcosComponent> components = Collections.emptyList();
 
+    boolean reload = false;
 
-	
-	public String getId() {
-		return id;
-	}
+    public EcosCategory() {
+        super();
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public EcosCategory(String id) {
+        this.id = id;
+    }
 
-	
-	
-	List<IEcosComponent> components = Collections.EMPTY_LIST;
-	
-	boolean reload = false;
-	
-	
+    public String getVersion() {
+        return version;
+    }
 
-	public boolean isReload() {
-		return reload;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public void setReload(boolean reload) {
-		this.reload = reload;
-	}
+    public String getId() {
+        return id;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.talend.dataprofiler.ecos.model.IEcosCategory#getComponent()
-	 */
-	public List<IEcosComponent> getComponent() {
-		if(components.isEmpty() || isReload() ){
-			components = ComponentSearcher.getAvailableComponentExtensions(version, this, reload);
-		}
-		return components;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public int getCounter() {
-		return counter;
-	}
+    public boolean isReload() {
+        return reload;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setReload(boolean reload) {
+        this.reload = reload;
+    }
 
-	@Override
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		
-		sb.append("name:").append(getName()).append("\n");
-		sb.append("counter:").append(getCounter()).append("\n");
-		return sb.toString();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.ecos.model.IEcosCategory#getComponent()
+     */
+    public List<IEcosComponent> getComponent() {
+        if (components.isEmpty() || isReload()) {
+            components = ComponentSearcher.getAvailableComponentExtensions(version, this, reload);
+        }
+        return components;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public int getCounter() {
+        return counter;
+    }
 
-	public void setCounter(int counter) {
-		this.counter = counter;
-	}
-	
-	
-	
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("name:").append(getName()).append("\n");
+        sb.append("counter:").append(getCounter()).append("\n");
+        return sb.toString();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
 
 }

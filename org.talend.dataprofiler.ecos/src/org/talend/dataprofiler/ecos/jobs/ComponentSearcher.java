@@ -42,11 +42,15 @@ public class ComponentSearcher {
 
     // private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
 
+    /**
+     * DOC bZhou Comment method "getAvailableCategory".
+     * 
+     * @param version
+     * @return empty list if no any category.
+     * @throws Exception
+     */
     public static List<IEcosCategory> getAvailableCategory(String version) throws Exception {
-
-        List<IEcosCategory> categorys = null;
-        categorys = EcosystemService.getCategoryList(version);
-        return categorys;
+        return EcosystemService.getCategoryList(version);
     }
 
     /**
