@@ -136,6 +136,7 @@ public final class DatabaseContentRetriever {
                 schemaRs = getSchemaForJDK15(connectionMetadata);
             }
 
+            List<String> schemaNameCacheTmp = new ArrayList<String>();
             while (schemaRs.next()) {
                 String schemaName = null;
                 try {
@@ -146,8 +147,13 @@ public final class DatabaseContentRetriever {
                 if (schemaName == null) {
                     continue;
                 }
-                TdSchema schema = createSchema(schemaName);
-                MultiMapHelper.addUniqueObjectToListMap(cl, schema, catalogName2schemas);
+                // MOD mzhao bug 9606 filter duplicated schemas.
+                if (!schemaNameCacheTmp.contains(schemaName)) {
+                    schemaNameCacheTmp.add(schemaName);
+                    TdSchema schema = createSchema(schemaName);
+                    MultiMapHelper.addUniqueObjectToListMap(cl, schema, catalogName2schemas);
+                }
+
             }
             schemaRs.close();
         }
