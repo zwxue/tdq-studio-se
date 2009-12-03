@@ -117,9 +117,14 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                 jars.add(driverpath);
             }
 
-            String name = connectionParam.getJdbcUrl().substring(0, 12);
-            driver = dpBuilder.buildDriverForSQLExploer(name, connectionParam.getDriverClassName(), connectionParam.getJdbcUrl(),
-                    jars);
+            // MOD xqliu 2009-12-03 bug 10247
+            String jdbcUrl = connectionParam.getJdbcUrl();
+            if (jdbcUrl != null && jdbcUrl.length() > 12) {
+                String name = jdbcUrl.substring(0, 12);
+                driver = dpBuilder.buildDriverForSQLExploer(name, connectionParam.getDriverClassName(), connectionParam
+                        .getJdbcUrl(), jars);
+            }
+            // ~
         }
 
         ReturnCode rc = dpBuilder.initializeDataProvider(connectionParam);

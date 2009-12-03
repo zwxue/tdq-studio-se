@@ -429,12 +429,15 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                 String driverName = this.connectionParam.getDriverClassName() == null ? "" : this.connectionParam //$NON-NLS-1$
                         .getDriverClassName();
                 String connURL = this.connectionParam.getJdbcUrl() == null ? "" : this.connectionParam.getJdbcUrl(); //$NON-NLS-1$
-                String userName = this.userid == null ? "" : this.userid; //$NON-NLS-1$
-                if ("".equals(driverName) || "".equals(connURL)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    complete = false;
-                } else {
-                    complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver().equals(driverName) ? true : !"".equals(userName); //$NON-NLS-1$
-                }
+                // MOD xqliu 2009-12-03 bug 10247
+                complete = !("".equals(driverName) || "".equals(connURL));
+                //                String userName = this.userid == null ? "" : this.userid; //$NON-NLS-1$
+                //                if ("".equals(driverName) || "".equals(connURL)) { //$NON-NLS-1$ //$NON-NLS-2$
+                // complete = false;
+                // } else {
+                //                    complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver().equals(driverName) ? true : !"".equals(userName); //$NON-NLS-1$
+                // }
+                // ~
             } else if (SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbTypeName)) {
                 // deal with sqlite;
                 String filename = this.connectionParam.getFilePath();
