@@ -53,7 +53,7 @@ public final class DQRuleUtilities {
         }
 
         WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
-        wrIndicator.setAnalyzedElement(tableIndicator.getTdTable());
+        wrIndicator.setAnalyzedElement(tableIndicator.getColumnSet());
         wrIndicator.setIndicatorDefinition(whereRule);
 
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(wrIndicator.eClass());

@@ -60,8 +60,8 @@ import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -80,13 +80,12 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.TableAnalysisHandler;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -177,12 +176,14 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         EList<ModelElement> analyzedTables = analysisHandler.getAnalyzedTables();
         List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
         for (ModelElement element : analyzedTables) {
-            TdTable tdTable = SwitchHelpers.TABLE_SWITCH.doSwitch(element);
-            if (tdTable == null) {
+
+            NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(element);
+            if (set == null) {
                 continue;
             }
-            TableIndicator currentTableIndicator = new TableIndicator(tdTable);
-            Collection<Indicator> indicatorList = analysisHandler.getIndicators(tdTable);
+
+            TableIndicator currentTableIndicator = new TableIndicator(set);
+            Collection<Indicator> indicatorList = analysisHandler.getIndicators(set);
             currentTableIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
             tableIndicatorList.add(currentTableIndicator);
         }
@@ -325,12 +326,12 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     public void openTableSelectionDialog() {
         TableIndicator[] tableIndicators = treeViewer.getTableIndicator();
-        List<Table> tableList = new ArrayList<Table>();
+        List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
         for (TableIndicator tableIndicator : tableIndicators) {
-            tableList.add(tableIndicator.getTdTable());
+            setList.add(tableIndicator.getColumnSet());
         }
         TablesSelectionDialog dialog = new TablesSelectionDialog(this, null, DefaultMessagesImpl
-                .getString("TableMasterDetailsPage.tableSelection"), tableList, DefaultMessagesImpl //$NON-NLS-1$
+                .getString("TableMasterDetailsPage.tableSelection"), setList, DefaultMessagesImpl //$NON-NLS-1$
                 .getString("TableMasterDetailsPage.tableSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] tables = dialog.getResult();
@@ -457,10 +458,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
         previewChartList = new ArrayList<ExpandableComposite>();
         for (final TableIndicator tableIndicator : this.treeViewer.getTableIndicator()) {
-            final TdTable table = tableIndicator.getTdTable();
+            final NamedColumnSet set = tableIndicator.getColumnSet();
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
-            exComp.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.table") + table.getName()); //$NON-NLS-1$
+            exComp.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.table") + set.getName()); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             exComp.setData(tableIndicator);
@@ -475,7 +476,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(DefaultMessagesImpl.getString("TableMasterDetailsPage.createPreview") //$NON-NLS-1$
-                                + table.getName(), IProgressMonitor.UNKNOWN);
+                                + set.getName(), IProgressMonitor.UNKNOWN);
                         Display.getDefault().syncExec(new Runnable() {
 
                             public void run() {
@@ -588,10 +589,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     @Override
     protected ReturnCode canSave() {
-        List<Table> analyzedTables = new ArrayList<Table>();
-        for (TableIndicator tableIndicator : treeViewer.getTableIndicator()) {
-            analyzedTables.add(tableIndicator.getTdTable());
-        }
         return new ReturnCode(true);
     }
 
@@ -604,11 +601,11 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         if (tableIndicators != null && tableIndicators.length != 0) {
 
-            tdProvider = EObjectHelper.getTdDataProvider(tableIndicators[0].getTdTable());
+            tdProvider = DataProviderHelper.getDataProvider(tableIndicators[0].getColumnSet());
             analysis.getContext().setConnection(tdProvider);
 
             for (TableIndicator tableIndicator : tableIndicators) {
-                analysisHandler.addIndicator(tableIndicator.getTdTable(), tableIndicator.getIndicators());
+                analysisHandler.addIndicator(tableIndicator.getColumnSet(), tableIndicator.getIndicators());
             }
         } else {
             analysis.getContext().setConnection(null);

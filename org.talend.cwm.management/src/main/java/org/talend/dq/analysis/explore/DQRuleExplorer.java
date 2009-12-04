@@ -19,7 +19,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.TableAnalysisSqlExecutor;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -62,9 +62,9 @@ public class DQRuleExplorer extends DataExplorer {
             return tasExecutor.getValidStatement(dataFilterClause, indicator2);
         } else {
             String non = valid ? "" : "!";
-            Table table = (Table) indicator2.getAnalyzedElement();
+            NamedColumnSet set = (NamedColumnSet) indicator2.getAnalyzedElement();
             String whereClause = ((WhereRule) indicator2.getIndicatorDefinition()).getWhereExpression();
-            return "SELECT * FROM " + getFullyQualifiedTableName(table) + dbmsLanguage.where() + non + "(" + whereClause + ")";
+            return "SELECT * FROM " + getFullyQualifiedTableName(set) + dbmsLanguage.where() + non + "(" + whereClause + ")";
         }
         // ~
     }

@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -53,6 +53,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -88,11 +89,12 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
         Indicator currentIndicator = (Indicator) parameters.eContainer();
         IndicatorEnum currentIndicatorType = IndicatorEnum.findIndicatorEnum(currentIndicator.eClass());
-        if (currentIndicator.getAnalyzedElement() instanceof TdTable) {
+        ModelElement analyzedElement = currentIndicator.getAnalyzedElement();
+        if (SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(analyzedElement) != null) {
             isRangeForDate = false;
             isDatetime = false;
         } else {
-            int sqltype = ((TdColumn) currentIndicator.getAnalyzedElement()).getJavaType();
+            int sqltype = ((TdColumn) analyzedElement).getJavaType();
             isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
                     && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
 

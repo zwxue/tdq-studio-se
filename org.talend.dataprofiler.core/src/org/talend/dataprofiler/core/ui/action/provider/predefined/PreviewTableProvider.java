@@ -15,8 +15,8 @@ package org.talend.dataprofiler.core.ui.action.provider.predefined;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -40,8 +40,8 @@ public class PreviewTableProvider extends CommonActionProvider {
     @Override
     public void fillContextMenu(IMenuManager menu) {
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
-        TdTable table = (TdTable) treeSelection.getFirstElement();
-        PreviewTableAction action = new PreviewTableAction(table);
+        NamedColumnSet set = (NamedColumnSet) treeSelection.getFirstElement();
+        PreviewTableAction action = new PreviewTableAction(set);
         menu.add(action);
     }
 }

@@ -53,6 +53,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
@@ -70,8 +71,8 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 import orgomg.cwm.resource.relational.Schema;
-import orgomg.cwm.resource.relational.Table;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -85,13 +86,13 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
     public TablesSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
-            List<Table> tableList, String message) {
+            List<NamedColumnSet> setList, String message) {
         super(metadataFormPage, parent, message);
         this.setDialogType(DIALOG_TYPE_TABLE);
         addFirstPartFilters();
         this.setInput(metadataFolder);
         packageCheckedMap = new HashMap<PackageKey, TableCheckedMap>();
-        initCheckedTable(tableList);
+        initCheckedTable(setList);
         this.setTitle(title);
     }
 
@@ -112,7 +113,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         }
     }
 
-    private void initCheckedTable(List<Table> tableList) {
+    private void initCheckedTable(List<NamedColumnSet> tableList) {
         List<Package> packageList = new ArrayList<Package>();
         for (int i = 0; i < tableList.size(); i++) {
             tableList.get(i).eContainer();
@@ -191,31 +192,31 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         getTableViewer().addCheckStateListener(new ICheckStateListener() {
 
             public void checkStateChanged(CheckStateChangedEvent event) {
-                if (event.getElement() instanceof TdTable) {
-                    handleTableChecked((TdTable) event.getElement(), event.getChecked());
+                if (event.getElement() instanceof NamedColumnSet) {
+                    handleTableChecked((NamedColumnSet) event.getElement(), event.getChecked());
                 }
             }
         });
     }
 
-    private TdTable[] getCheckedTables(Package pckg) {
+    private NamedColumnSet[] getCheckedTables(Package pckg) {
         PackageKey packageKey = new PackageKey(pckg);
         TableCheckedMap tableCheckMap = packageCheckedMap.get(packageKey);
         if (tableCheckMap == null) {
             Boolean allCheckFlag = this.getTreeViewer().getChecked(pckg);
             this.getTableViewer().setAllChecked(allCheckFlag);
             tableCheckMap = new TableCheckedMap();
-            List<TdTable> temp = PackageHelper.getTables(pckg);
-            TdTable[] tables = temp.toArray(new TdTable[temp.size()]);
+            List<NamedColumnSet> temp = PackageHelper.getNmaedColumnSets(pckg);
+            NamedColumnSet[] tables = temp.toArray(new NamedColumnSet[temp.size()]);
             tableCheckMap.putAllChecked(tables, allCheckFlag);
             packageCheckedMap.put(packageKey, tableCheckMap);
             return allCheckFlag ? tables : null;
         } else {
-            return tableCheckMap.getCheckedTables(PackageHelper.getTables(pckg));
+            return tableCheckMap.getCheckedTables(PackageHelper.getNmaedColumnSets(pckg));
         }
     }
 
-    private void handleTableChecked(TdTable table, Boolean checkedFlag) {
+    private void handleTableChecked(NamedColumnSet table, Boolean checkedFlag) {
         Package pckg = PackageHelper.getCatalogOrSchema(table.getNamespace());
         if (checkedFlag) {
             getTreeViewer().setChecked(pckg, true);
@@ -229,13 +230,13 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     private void handleTablesChecked(Package pckg, Boolean checkedFlag) {
         PackageKey key = new PackageKey(pckg);
         TableCheckedMap tableCheckMap = packageCheckedMap.get(key);
-        List<TdTable> temp = PackageHelper.getTables(pckg);
+        List<NamedColumnSet> temp = PackageHelper.getNmaedColumnSets(pckg);
         if (tableCheckMap != null) {
             tableCheckMap.clear();
-            tableCheckMap.putAllChecked(temp.toArray(new TdTable[temp.size()]), checkedFlag);
+            tableCheckMap.putAllChecked(temp.toArray(new NamedColumnSet[temp.size()]), checkedFlag);
         } else {
             tableCheckMap = new TableCheckedMap();
-            tableCheckMap.putAllChecked(temp.toArray(new TdTable[temp.size()]), checkedFlag);
+            tableCheckMap.putAllChecked(temp.toArray(new NamedColumnSet[temp.size()]), checkedFlag);
             packageCheckedMap.put(key, tableCheckMap);
         }
         getTableViewer().setAllChecked(checkedFlag);
@@ -281,7 +282,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         if (selectedObj instanceof Package) {
             Package pckg = (Package) selectedObj;
             this.setOutput(pckg);
-            TdTable[] tables = getCheckedTables(pckg);
+            NamedColumnSet[] tables = getCheckedTables(pckg);
             if (tables != null) {
                 this.getTableViewer().setCheckedElements(tables);
             }
@@ -358,38 +359,38 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
         Map<String, Boolean> tableNameMap = new HashMap<String, Boolean>();
 
-        public void putTableChecked(Table table, Boolean isChecked) {
-            tableNameMap.put(table.getName(), isChecked);
+        public void putTableChecked(NamedColumnSet set, Boolean isChecked) {
+            tableNameMap.put(set.getName(), isChecked);
         }
 
-        public Boolean getTableChecked(Table table) {
-            return tableNameMap.get(table.getName());
+        public Boolean getTableChecked(NamedColumnSet set) {
+            return tableNameMap.get(set.getName());
         }
 
-        public void putAllChecked(Table[] tables, Boolean isChecked) {
-            for (int i = 0; i < tables.length; i++) {
-                tableNameMap.put(tables[i].getName(), isChecked);
+        public void putAllChecked(NamedColumnSet[] sets, Boolean isChecked) {
+            for (int i = 0; i < sets.length; i++) {
+                tableNameMap.put(sets[i].getName(), isChecked);
             }
         }
 
-        public TdTable[] getCheckedTables(List<TdTable> tableList) {
-            List<TdTable> checkedTables = new ArrayList<TdTable>();
-            for (TdTable table : tableList) {
-                if (tableNameMap.containsKey(table.getName()) && tableNameMap.get(table.getName())) {
-                    checkedTables.add(table);
+        public NamedColumnSet[] getCheckedTables(List<NamedColumnSet> setList) {
+            List<NamedColumnSet> checkedTables = new ArrayList<NamedColumnSet>();
+            for (NamedColumnSet set : setList) {
+                if (tableNameMap.containsKey(set.getName()) && tableNameMap.get(set.getName())) {
+                    checkedTables.add(set);
                 }
             }
-            return checkedTables.toArray(new TdTable[checkedTables.size()]);
+            return checkedTables.toArray(new NamedColumnSet[checkedTables.size()]);
         }
 
-        public List<TdTable> getCheckedTableList(Package pckg) {
-            List<TdTable> checkedTables = new ArrayList<TdTable>();
+        public List<NamedColumnSet> getCheckedTableList(Package pckg) {
+            List<NamedColumnSet> checkedTables = new ArrayList<NamedColumnSet>();
 
-            List<TdTable> tableList = PackageHelper.getTables(pckg);
+            List<NamedColumnSet> setList = PackageHelper.getNmaedColumnSets(pckg);
 
-            for (TdTable table : tableList) {
-                if (tableNameMap.containsKey(table.getName()) && tableNameMap.get(table.getName())) {
-                    checkedTables.add(table);
+            for (NamedColumnSet set : setList) {
+                if (tableNameMap.containsKey(set.getName()) && tableNameMap.get(set.getName())) {
+                    checkedTables.add(set);
                 }
             }
             return checkedTables;
@@ -405,9 +406,9 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         setResult(getAllCheckedTables());
     }
 
-    private List<TdTable> getAllCheckedTables() {
+    private List<NamedColumnSet> getAllCheckedTables() {
         Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
-        List<TdTable> tableList = new ArrayList<TdTable>();
+        List<NamedColumnSet> tableList = new ArrayList<NamedColumnSet>();
         for (int i = 0; i < checkedNodes.length; i++) {
             if (!(checkedNodes[i] instanceof Package)) {
                 continue;
@@ -435,11 +436,17 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     class TableLabelProvider extends LabelProvider {
 
         public Image getImage(Object element) {
-            return ImageLib.getImage(ImageLib.TABLE);
+            if (element instanceof TdTable) {
+                return ImageLib.getImage(ImageLib.TABLE);
+            } else if (element instanceof TdView) {
+                return ImageLib.getImage(ImageLib.VIEW);
+            } else {
+                return null;
+            }
         }
 
         public String getText(Object element) {
-            return ((TdTable) element).getName();
+            return ((NamedColumnSet) element).getName();
         }
 
     }
@@ -524,24 +531,26 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 if (pckg != null) {
                     Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg);
                     Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(pckg);
-                    List<TdTable> temp = PackageHelper.getTables(pckg);
-                    TdTable[] tables = temp.toArray(new TdTable[temp.size()]);
+                    List<NamedColumnSet> temp = PackageHelper.getNmaedColumnSets(pckg);
+                    NamedColumnSet[] tables = temp.toArray(new NamedColumnSet[temp.size()]);
                     if (tables.length <= 0) {
                         TdDataProvider provider = DataProviderHelper.getTdDataProvider(pckg);
                         if (provider == null) {
                             return null;
                         }
                         try {
-                            List<TdTable> tableList = null;
+                            List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
                             if (catalog != null) {
-                                tableList = DqRepositoryViewService.getTables(provider, catalog, null, true);
+                                setList.addAll(DqRepositoryViewService.getTables(provider, catalog, null, true));
+                                setList.addAll(DqRepositoryViewService.getViews(provider, catalog, null, true));
                             }
                             if (schema != null) {
-                                tableList = DqRepositoryViewService.getTables(provider, schema, null, true);
+                                setList.addAll(DqRepositoryViewService.getTables(provider, schema, null, true));
+                                setList.addAll(DqRepositoryViewService.getViews(provider, schema, null, true));
                             }
-                            tables = tableList.toArray(new TdTable[tableList.size()]);
+                            tables = setList.toArray(new NamedColumnSet[setList.size()]);
                             // save the Table from db into EMF Object.
-                            pckg.getOwnedElement().addAll(tableList);
+                            pckg.getOwnedElement().addAll(setList);
                         } catch (TalendException e) {
                             MessageBoxExceptionHandler.process(e);
                         }

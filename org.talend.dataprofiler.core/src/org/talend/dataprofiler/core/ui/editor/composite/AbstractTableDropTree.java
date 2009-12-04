@@ -15,7 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * The interface class to handle the change when drop tables.
@@ -24,11 +24,11 @@ public abstract class AbstractTableDropTree extends AbstractPagePart {
 
     public static final String TABLEVIEWER_KEY = "TABLEVIEWER_KEY"; //$NON-NLS-1$
 
-    public abstract void dropTables(List<Table> tables, int index);
+    public abstract void dropTables(List<NamedColumnSet> sets, int index);
 
     public abstract void dropWhereRules(Object data, List<IFile> files, int index);
 
-    public abstract boolean canDrop(Table table);
+    public abstract boolean canDrop(NamedColumnSet set);
 
     public abstract boolean canDrop(Object data, List<IFile> files);
 }

@@ -22,12 +22,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -50,7 +50,7 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
             public void doubleClick(DoubleClickEvent event) {
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                if (object instanceof TdTable) {
+                if (object instanceof NamedColumnSet) {
                     advanceToNextPageOrFinish();
                 }
             }
@@ -60,25 +60,26 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
             public void selectionChanged(SelectionChangedEvent event) {
                 TdDataProvider oldTdDataProvider = null;
-                NamedColumnSetAnalysisParameter tablePanameter = (NamedColumnSetAnalysisParameter) getConnectionParams();
+                NamedColumnSetAnalysisParameter paraneter = (NamedColumnSetAnalysisParameter) getConnectionParams();
                 List tempList = ((IStructuredSelection) event.getSelection()).toList();
-                List<TdTable> tableList = new ArrayList<TdTable>();
+                List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
                 for (Object object : tempList) {
-                    if (object instanceof TdTable) {
-                        TdTable table = (TdTable) object;
+                    if (object instanceof NamedColumnSet) {
+                        NamedColumnSet set = (NamedColumnSet) object;
                         TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper
-                                .getParentCatalogOrSchema(table));
+                                .getParentCatalogOrSchema(set));
                         oldTdDataProvider = oldTdDataProvider == null ? tdProvider : oldTdDataProvider;
                         if (oldTdDataProvider != null && !oldTdDataProvider.equals(tdProvider)) {
-                            MessageUI.openWarning(DefaultMessagesImpl.getString("TableAnalysisDPSelectionPage.TableSelectWarning")); //$NON-NLS-1$
-                        } else if (tdProvider != null && tablePanameter != null) {
-                            tableList.add(table);
-                            tablePanameter.setTdDataProvider(oldTdDataProvider);
+                            MessageUI.openWarning(DefaultMessagesImpl
+                                    .getString("TableAnalysisDPSelectionPage.TableSelectWarning")); //$NON-NLS-1$
+                        } else if (tdProvider != null && paraneter != null) {
+                            setList.add(set);
+                            paraneter.setTdDataProvider(oldTdDataProvider);
                         }
                     }
                 }
-                if (tableList.size() > 0 && tablePanameter != null) {
-                    tablePanameter.setNamedColumnSets(tableList.toArray(new TdTable[tableList.size()]));
+                if (setList.size() > 0 && paraneter != null) {
+                    paraneter.setNamedColumnSets(setList.toArray(new NamedColumnSet[setList.size()]));
                     setPageComplete(true);
                 } else {
                     setPageComplete(false);

@@ -58,7 +58,6 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -99,7 +98,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -316,8 +315,14 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         for (int i = 0; i < elements.length; i++) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
             final TableIndicator tableIndicator = elements[i];
-            treeItem.setImage(ImageLib.getImage(ImageLib.TABLE));
-            treeItem.setText(0, tableIndicator.getTdTable().getName());
+
+            if (tableIndicator.isTable()) {
+                treeItem.setImage(ImageLib.getImage(ImageLib.TABLE));
+            } else if (tableIndicator.isView()) {
+                treeItem.setImage(ImageLib.getImage(ImageLib.VIEW));
+            }
+
+            treeItem.setText(0, tableIndicator.getColumnSet().getName());
             treeItem.setData(TABLE_INDICATOR_KEY, tableIndicator);
 
             TreeEditor addDQRuleEditor = new TreeEditor(tree);
@@ -802,14 +807,14 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      */
     public void setInput(Object[] objs) {
         if (objs != null && objs.length != 0) {
-            if (!(objs[0] instanceof TdTable)) {
+            if (!(objs[0] instanceof NamedColumnSet)) {
                 return;
             }
         }
 
-        List<TdTable> tableList = new ArrayList<TdTable>();
+        List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
         for (Object obj : objs) {
-            TdTable table = (TdTable) obj;
+            NamedColumnSet table = (NamedColumnSet) obj;
             TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
             if (tdProvider == null) {
                 MessageUI
@@ -819,18 +824,18 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 MessageUI.openError(DefaultMessagesImpl.getString(
                         "AnalysisTableTreeViewer.TableDataProviderIsInvalid", table.getName())); //$NON-NLS-1$
             } else {
-                tableList.add(table);
+                setList.add(table);
             }
         }
         List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
         for (TableIndicator tableIndicator : tableIndicators) {
-            if (tableList.contains(tableIndicator.getTdTable())) {
+            if (setList.contains(tableIndicator.getColumnSet())) {
                 tableIndicatorList.add(tableIndicator);
-                tableList.remove(tableIndicator.getTdTable());
+                setList.remove(tableIndicator.getColumnSet());
             }
         }
-        for (TdTable table : tableList) {
-            TableIndicator tableIndicator = TableIndicator.createTableIndicatorWithRowCountIndicator(table);
+        for (NamedColumnSet set : setList) {
+            TableIndicator tableIndicator = TableIndicator.createTableIndicatorWithRowCountIndicator(set);
             tableIndicatorList.add(tableIndicator);
         }
         this.tableIndicators = tableIndicatorList.toArray(new TableIndicator[tableIndicatorList.size()]);
@@ -850,8 +855,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         String expressContent = null;
         TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
         TableIndicator tableIndicator = (TableIndicator) item.getData(TABLE_INDICATOR_KEY);
-        TdTable table = tableIndicator.getTdTable();
-        TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(ColumnSetHelper.getParentCatalogOrSchema(table));
+        NamedColumnSet set = tableIndicator.getColumnSet();
+        TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(ColumnSetHelper.getParentCatalogOrSchema(set));
 
         DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
         Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
@@ -889,12 +894,12 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     @Override
-    public void dropTables(List<Table> tables, int index) {
-        int size = tables.size();
+    public void dropTables(List<NamedColumnSet> sets, int index) {
+        int size = sets.size();
         TableIndicator[] tIndicators = new TableIndicator[size];
         for (int i = 0; i < size; i++) {
-            Table table = tables.get(i);
-            TableIndicator tableIndicator = TableIndicator.createTableIndicatorWithRowCountIndicator((TdTable) table);
+            NamedColumnSet set = sets.get(i);
+            TableIndicator tableIndicator = TableIndicator.createTableIndicatorWithRowCountIndicator((NamedColumnSet) set);
             tIndicators[i] = tableIndicator;
         }
         this.addElements(tIndicators);
@@ -927,8 +932,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     @Override
-    public boolean canDrop(Table table) {
-        TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+    public boolean canDrop(NamedColumnSet set) {
+        TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(set));
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null
@@ -936,12 +941,12 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             return false;
         }
 
-        List<TdTable> existTables = new ArrayList<TdTable>();
+        List<NamedColumnSet> existSets = new ArrayList<NamedColumnSet>();
 
         for (TableIndicator tableIndicator : getTableIndicator()) {
-            existTables.add(tableIndicator.getTdTable());
+            existSets.add(tableIndicator.getColumnSet());
         }
-        if (existTables.contains(table)) {
+        if (existSets.contains(set)) {
             return false;
         }
         return true;
@@ -1093,10 +1098,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     if (selection.length > 0) {
                         TreeItem treeItem = selection[0];
                         TableIndicator tableIndicator = (TableIndicator) treeItem.getData(TABLE_INDICATOR_KEY);
-                        TdTable table = tableIndicator.getTdTable();
+                        NamedColumnSet set = tableIndicator.getColumnSet();
                         ModelElement me = getAnalysis();
-                        me.setName(table.getName());
-                        if (table instanceof ModelElement) {
+                        me.setName(set.getName());
+                        if (set instanceof ModelElement) {
                             (new TdAddTaskAction(tree.getShell(), me)).run();
                         }
                     }
@@ -1144,23 +1149,22 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
         private void previewSelectedElements(Tree newTree) {
             TreeItem[] items = newTree.getSelection();
-            TdTable[] tables = new TdTable[items.length];
+            NamedColumnSet[] sets = new NamedColumnSet[items.length];
 
             for (int i = 0; i < items.length; i++) {
                 TableIndicator tableIndicator = (TableIndicator) items[i].getData(TABLE_INDICATOR_KEY);
-                TdTable table = tableIndicator.getTdTable();
-                tables[i] = table;
+                sets[i] = tableIndicator.getColumnSet();
             }
 
-            new PreviewTableAction(tables[0]).run();
+            new PreviewTableAction(sets[0]).run();
         }
 
         private void viewQueryForSelectedElement(Tree newTree) {
             TreeItem[] selection = newTree.getSelection();
             for (TreeItem item : selection) {
                 TableIndicator tableIndicator = (TableIndicator) item.getData(TABLE_INDICATOR_KEY);
-                TdTable table = tableIndicator.getTdTable();
-                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+                NamedColumnSet set = tableIndicator.getColumnSet();
+                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(set));
                 Object temp = item.getData(INDICATOR_UNIT_KEY);
                 if (temp != null) {
                     TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
@@ -1174,7 +1178,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                         return;
                     }
 
-                    CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(), table.getName());
+                    CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(), set.getName());
                 }
             }
         }
@@ -1186,8 +1190,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             if (selection.length == 1) {
                 try {
                     TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
-                    TdTable table = tableIndicator.getTdTable();
-                    dqview.showSelectedElements(table);
+                    NamedColumnSet set = tableIndicator.getColumnSet();
+                    dqview.showSelectedElements(set);
 
                 } catch (Exception e) {
                     log.error(e, e);

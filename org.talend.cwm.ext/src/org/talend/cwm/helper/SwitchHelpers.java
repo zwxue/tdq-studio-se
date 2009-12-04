@@ -29,6 +29,7 @@ import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 import orgomg.cwm.resource.relational.PrimaryKey;
 
 /**
@@ -64,7 +65,7 @@ public final class SwitchHelpers {
         }
 
     };
-    
+
     public static final orgomg.cwm.resource.relational.util.RelationalSwitch<ForeignKey> FOREIGN_KEY_SWITCH = new orgomg.cwm.resource.relational.util.RelationalSwitch<ForeignKey>() {
 
         /*
@@ -78,7 +79,6 @@ public final class SwitchHelpers {
         public ForeignKey caseForeignKey(ForeignKey object) {
             return object;
         }
-
 
     };
 
@@ -150,6 +150,15 @@ public final class SwitchHelpers {
 
     };
 
+    public static final RelationalSwitch<NamedColumnSet> NAMED_COLUMN_SET_SWITCH = new RelationalSwitch<NamedColumnSet>() {
+
+        @Override
+        public NamedColumnSet caseNamedColumnSet(NamedColumnSet object) {
+            return object;
+        }
+
+    };
+
     public static final SoftwaredeploymentSwitch<TdDataProvider> TDDATAPROVIDER_SWITCH = new SoftwaredeploymentSwitch<TdDataProvider>() {
 
         @Override
@@ -182,7 +191,7 @@ public final class SwitchHelpers {
         }
 
     };
-    
+
     public static final orgomg.cwm.foundation.softwaredeployment.util.SoftwaredeploymentSwitch<Component> COMPONENT_SWITCH = new orgomg.cwm.foundation.softwaredeployment.util.SoftwaredeploymentSwitch<Component>() {
 
         /*
@@ -196,7 +205,7 @@ public final class SwitchHelpers {
         public Component caseComponent(Component object) {
             return object;
         }
-        
+
     };
-    
+
 }

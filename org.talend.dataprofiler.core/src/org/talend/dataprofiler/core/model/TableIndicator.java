@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.indicators.Indicator;
@@ -32,6 +32,7 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * This class can store the all the Indicators of one TdTable, and provide the method to access all indicator.
@@ -52,18 +53,51 @@ public class TableIndicator {
 
     private List<IndicatorEnum> tempIndicatorEnums = new ArrayList<IndicatorEnum>();
 
-    private TdTable tdTable;
+    private NamedColumnSet columnSet;
 
-    public TdTable getTdTable() {
-        return tdTable;
+    /**
+     * Getter for columnSet.
+     * 
+     * @return the columnSet
+     */
+    public NamedColumnSet getColumnSet() {
+        return columnSet;
     }
 
-    public void setTdTable(TdTable tdTable) {
-        this.tdTable = tdTable;
+    /**
+     * Sets the columnSet.
+     * 
+     * @param columnSet the columnSet to set
+     */
+    public void setColumnSet(NamedColumnSet columnSet) {
+        this.columnSet = columnSet;
     }
 
-    public TableIndicator(TdTable tdTable) {
-        this.tdTable = tdTable;
+    /**
+     * DOC bZhou Comment method "isTable".
+     * 
+     * @return
+     */
+    public boolean isTable() {
+        return SwitchHelpers.TABLE_SWITCH.doSwitch(columnSet) != null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isView".
+     * 
+     * @return
+     */
+    public boolean isView() {
+        return SwitchHelpers.VIEW_SWITCH.doSwitch(columnSet) != null;
+    }
+
+    /**
+     * DOC bZhou TableIndicator constructor comment.
+     * 
+     * @param columnSet
+     */
+    public TableIndicator(NamedColumnSet columnSet) {
+        this.columnSet = columnSet;
     }
 
     public boolean hasIndicators() {
@@ -178,7 +212,7 @@ public class TableIndicator {
         if (indicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
-            indicator.setAnalyzedElement(this.getTdTable());
+            indicator.setAnalyzedElement(getColumnSet());
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
                 log.error(DefaultMessagesImpl.getString("TableIndicator.couldnotSetDef") + indicator.getName()); //$NON-NLS-1$
             }
@@ -196,12 +230,12 @@ public class TableIndicator {
      * @param table
      * @return
      */
-    public static TableIndicator createTableIndicatorWithRowCountIndicator(TdTable table) {
-        TableIndicator tableIndicator = new TableIndicator(table);
+    public static TableIndicator createTableIndicatorWithRowCountIndicator(NamedColumnSet set) {
+        TableIndicator tableIndicator = new TableIndicator(set);
 
         RowCountIndicator createIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
         DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createIndicator);
-        createIndicator.setAnalyzedElement(table);
+        createIndicator.setAnalyzedElement(set);
         Indicator[] indicators = new Indicator[] { createIndicator };
         tableIndicator.setIndicators(indicators);
 
@@ -213,7 +247,7 @@ public class TableIndicator {
             IndicatorSqlFactory factory = IndicatorSqlFactory.eINSTANCE;
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             if (fe != null && indicator instanceof WhereRuleIndicator) {
-                indicator.setAnalyzedElement(getTdTable());
+                indicator.setAnalyzedElement(getColumnSet());
                 indicator.setIndicatorDefinition(DQRuleResourceFileHelper.getInstance().findWhereRule(fe));
             }
         }

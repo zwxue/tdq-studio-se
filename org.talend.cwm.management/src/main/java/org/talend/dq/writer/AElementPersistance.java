@@ -24,6 +24,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.CorePlugin;
+import org.talend.core.context.Context;
+import org.talend.core.context.RepositoryContext;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.ItemState;
@@ -212,12 +215,17 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         String version = MetadataHelper.getVersion(element);
         String status = MetadataHelper.getDevStatus(element);
 
-        property.setId(EcoreUtil.generateUUID());
-
-        User user = PropertiesFactory.eINSTANCE.createUser();
+        User user = null;
+        RepositoryContext context = (RepositoryContext) CorePlugin.getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
+        if (context != null) {
+            user = context.getUser();
+        } else {
+            user = PropertiesFactory.eINSTANCE.createUser();
+        }
         user.setLogin(author);
-        property.setAuthor(user);
 
+        property.setAuthor(user);
+        property.setId(EcoreUtil.generateUUID());
         property.setLabel(element.getName());
         property.setPurpose(purpose);
         property.setDescription(description);
@@ -264,7 +272,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TDQ_ELEMENT_FILE, uri
                 .toPlatformString(true));
         propertyResource.getContents().add(property);
-        propertyResource.getContents().add(property.getAuthor());
         propertyResource.getContents().add(taggedValue);
         propertyResource.getContents().add(property.getItem());
         propertyResource.getContents().add(property.getItem().getState());

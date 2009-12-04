@@ -47,7 +47,6 @@ import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -70,6 +69,7 @@ import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -123,7 +123,8 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(sectionClient, ExpandableComposite.TWISTIE
                     | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-            exComp.setText(DefaultMessagesImpl.getString("TableAnalysisResultPage.table", tableIndicator.getTdTable().getName())); //$NON-NLS-1$
+            exComp.setText(DefaultMessagesImpl
+                    .getString("TableAnalysisResultPage.table", tableIndicator.getColumnSet().getName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -154,14 +155,14 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
     private void createResultDataComposite(final Composite comp, final TableIndicator tableIndicator) {
         if (tableIndicator.getIndicators().length != 0) {
 
-            final TdTable table = tableIndicator.getTdTable();
+            final NamedColumnSet set = tableIndicator.getColumnSet();
             IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
                     monitor
                             .beginTask(
-                                    DefaultMessagesImpl.getString("TableAnalysisResultPage.createPreview", table.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                                    DefaultMessagesImpl.getString("TableAnalysisResultPage.createPreview", set.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
                     Display.getDefault().asyncExec(new Runnable() {
 

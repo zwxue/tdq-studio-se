@@ -57,6 +57,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 import Zql.ParseException;
 
@@ -106,18 +107,18 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         if (analyzedElement == null) {
             return traceError("Analyzed element is null for indicator " + indicator.getName());
         }
-        TdTable tdTable = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
-        if (tdTable == null) {
+        NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        if (set == null) {
             return traceError("Analyzed element is not a table for indicator " + indicator.getName());
         }
         // --- get the schema owner
-        String tableName = quote(tdTable.getName());
-        if (!belongToSameSchemata(tdTable)) {
+        String setName = quote(set.getName());
+        if (!belongToSameSchemata(set)) {
             StringBuffer buf = new StringBuffer();
             for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
                 buf.append(schema.getName() + " "); //$NON-NLS-1$
             }
-            log.error("Table " + tableName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
+            log.error("Table " + setName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
             return false;
         }
 
@@ -166,27 +167,27 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             // TODO handle parameters here
         }
 
-        String schemaName = getQuotedSchemaName(tdTable);
+        String schemaName = getQuotedSchemaName(set);
 
         // --- normalize table name
-        String catalogName = getQuotedCatalogName(tdTable);
+        String catalogName = getQuotedCatalogName(set);
         if (catalogName == null && schemaName != null) {
             // try to get catalog above schema
-            final TdSchema parentSchema = SchemaHelper.getParentSchema(tdTable);
+            final TdSchema parentSchema = SchemaHelper.getParentSchema(set);
             final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
 
-        tableName = dbms().toQualifiedName(catalogName, schemaName, tableName);
+        setName = dbms().toQualifiedName(catalogName, schemaName, setName);
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(tdTable, joinConditions) : "";
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions) : "";
 
-        completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), tableName, joinclause);
+        completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
         completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
 
@@ -377,19 +378,19 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             traceError("Analyzed element is null for indicator " + indicator.getName());
             return "";
         }
-        TdTable tdTable = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
-        if (tdTable == null) {
+        NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        if (set == null) {
             traceError("Analyzed element is not a table for indicator " + indicator.getName());
             return "";
         }
         // --- get the schema owner
-        String tableName = quote(tdTable.getName());
-        if (!belongToSameSchemata(tdTable)) {
+        String setName = quote(set.getName());
+        if (!belongToSameSchemata(set)) {
             StringBuffer buf = new StringBuffer();
             for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
                 buf.append(schema.getName() + " "); //$NON-NLS-1$
             }
-            log.error("Table " + tableName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
+            log.error("Table " + setName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
             return "";
         }
 
@@ -420,7 +421,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         if (StringUtils.isNotBlank(dataFilterAsString)) {
             whereExpression.add(dataFilterAsString);
         }
-        String tableAliasA = "";
+        String setAliasA = "";
         final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
@@ -432,36 +433,36 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 for (JoinElement joinelt : wr.getJoins()) {
                     JoinElement joinCopy = (JoinElement) EcoreUtil.copy(joinelt);
                     joinConditions.add(joinCopy);
-                    tableAliasA = "".equals(tableAliasA) ? joinCopy.getTableAliasA() : tableAliasA;
+                    setAliasA = "".equals(setAliasA) ? joinCopy.getTableAliasA() : setAliasA;
                 }
             }
         }
 
-        String schemaName = getQuotedSchemaName(tdTable);
+        String schemaName = getQuotedSchemaName(set);
 
         // --- normalize table name
-        String catalogName = getQuotedCatalogName(tdTable);
+        String catalogName = getQuotedCatalogName(set);
         if (catalogName == null && schemaName != null) {
             // try to get catalog above schema
-            final TdSchema parentSchema = SchemaHelper.getParentSchema(tdTable);
+            final TdSchema parentSchema = SchemaHelper.getParentSchema(set);
             final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
 
-        tableName = dbms().toQualifiedName(catalogName, schemaName, tableName);
+        setName = dbms().toQualifiedName(catalogName, schemaName, setName);
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(tdTable, joinConditions) : "";
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions) : "";
 
         String genericSql = sqlGenericExpression.getBody();
-        tableAliasA = "".equals(tableAliasA) ? "*" : tableAliasA + ".*";
-        genericSql = genericSql.replace("COUNT(*)", tableAliasA);
+        setAliasA = "".equals(setAliasA) ? "*" : setAliasA + ".*";
+        genericSql = genericSql.replace("COUNT(*)", setAliasA);
 
-        completedSqlString = dbms().fillGenericQueryWithJoin(genericSql, tableName, joinclause);
+        completedSqlString = dbms().fillGenericQueryWithJoin(genericSql, setName, joinclause);
         // ~
         try {
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);

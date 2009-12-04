@@ -32,6 +32,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -69,21 +70,21 @@ public class TableAnalysisHandler extends AnalysisHandler {
         return analysis.getContext().getAnalysedElements().addAll(table);
     }
 
-    public boolean addIndicator(TdTable table, Indicator... indicators) {
-        if (!analysis.getContext().getAnalysedElements().contains(table)) {
-            analysis.getContext().getAnalysedElements().add(table);
+    public boolean addIndicator(NamedColumnSet set, Indicator... indicators) {
+        if (!analysis.getContext().getAnalysedElements().contains(set)) {
+            analysis.getContext().getAnalysedElements().add(set);
         }
 
         for (Indicator indicator : indicators) {
             // store first level of indicators in result.
             analysis.getResults().getIndicators().add(indicator);
-            initializeIndicator(indicator, table);
+            initializeIndicator(indicator, set);
         }
         DataManager connection = analysis.getContext().getConnection();
         if (connection == null) {
             // try to get one
             log.error("Connection has not been set in analysis Context");
-            connection = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+            connection = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(set));
             analysis.getContext().setConnection(connection);
             // FIXME connection should be set elsewhere
         }
@@ -98,8 +99,8 @@ public class TableAnalysisHandler extends AnalysisHandler {
         return true;
     }
 
-    private void initializeIndicator(Indicator indicator, TdTable table) {
-        indicator.setAnalyzedElement(table);
+    private void initializeIndicator(Indicator indicator, NamedColumnSet set) {
+        indicator.setAnalyzedElement(set);
         // Make sure that indicator definition is set
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
@@ -107,7 +108,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
         // FIXME xqliu case of composite indicators, add children to result.
         if (indicator instanceof CompositeIndicator) {
             for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
-                initializeIndicator(child, table); // recurse
+                initializeIndicator(child, set); // recurse
             }
         }
     }
@@ -118,11 +119,11 @@ public class TableAnalysisHandler extends AnalysisHandler {
      * @param table
      * @return the indicators attached to this table
      */
-    public Collection<Indicator> getIndicators(TdTable table) {
+    public Collection<Indicator> getIndicators(NamedColumnSet set) {
         Collection<Indicator> indics = new ArrayList<Indicator>();
         EList<Indicator> allIndics = analysis.getResults().getIndicators();
         for (Indicator indicator : allIndics) {
-            if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(table)) {
+            if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(set)) {
                 indics.add(indicator);
             }
         }

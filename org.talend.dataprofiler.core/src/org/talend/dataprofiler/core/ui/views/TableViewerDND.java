@@ -33,13 +33,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractTableDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -79,7 +78,7 @@ public abstract class TableViewerDND {
                     receiver = new DQRuleReceiver();
                 }
 
-                if (object instanceof TdTable) {
+                if (object instanceof NamedColumnSet) {
                     receiver = new TableReceiver();
                 }
 
@@ -209,11 +208,11 @@ public abstract class TableViewerDND {
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
             event.detail = DND.DROP_NONE;
             Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
-            if (firstElement instanceof TdTable) {
-                TdTable table = (TdTable) firstElement;
+            if (firstElement instanceof NamedColumnSet) {
+                NamedColumnSet set = (NamedColumnSet) firstElement;
                 Tree tree = (Tree) ((DropTarget) event.widget).getControl();
                 AbstractTableDropTree viewer = (AbstractTableDropTree) tree.getData();
-                if (viewer != null && viewer.canDrop(table)) {
+                if (viewer != null && viewer.canDrop(set)) {
                     event.detail = DND.DROP_MOVE;
                 }
             }
@@ -227,10 +226,10 @@ public abstract class TableViewerDND {
             AbstractTableDropTree viewer = (AbstractTableDropTree) control.getData();
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
-            List<Table> selectedTableList = new ArrayList<Table>();
+            List<NamedColumnSet> selectedTableList = new ArrayList<NamedColumnSet>();
             while (it.hasNext()) {
-                Table table = (Table) it.next();
-                selectedTableList.add(table);
+                NamedColumnSet set = (NamedColumnSet) it.next();
+                selectedTableList.add(set);
             }
             int size1 = selection.size();
             int size2 = selectedTableList.size();

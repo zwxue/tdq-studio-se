@@ -20,7 +20,6 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
-import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
 import org.talend.resource.ResourceManager;
@@ -56,9 +55,9 @@ public class TableContentProvider extends DQRepositoryViewContentProvider {
             return null;
         } else if (parentElement instanceof NamedColumnSetFolderNode) {
             NamedColumnSetFolderNode folderNode = (NamedColumnSetFolderNode) parentElement;
-            if (folderNode instanceof ViewFolderNode) {
-                return null;
-            }
+            // if (folderNode instanceof ViewFolderNode) {
+            // return null;
+            // }
             folderNode.loadChildren();
             Object[] children = folderNode.getChildren();
             if (children != null && children.length > 0) {

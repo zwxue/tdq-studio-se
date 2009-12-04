@@ -101,7 +101,8 @@ public abstract class AbstractPagePart {
         // ArrayList<TdDataProvider>();
         TdDataProvider tdProvider = null;
         if (indicators != null && indicators.length != 0) {
-            tdProvider = DataProviderHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicators[0].getTdTable()));
+            tdProvider = DataProviderHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH
+                    .doSwitch(indicators[0].getColumnSet()));
 
             setConnectionState(masterPage, tdProvider);
         }

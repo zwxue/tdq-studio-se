@@ -28,7 +28,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -39,7 +38,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -76,18 +75,18 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
         // Set<ColumnSet> wherePart = new HashSet<ColumnSet>();
         for (ModelElement modelElement : analysedElements) {
-            Table table = SwitchHelpers.TABLE_SWITCH.doSwitch(modelElement);
-            if (table == null) {
+            NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(modelElement);
+            if (set == null) {
                 this.errorMessage = Messages.getString("TableAnalysisExecutor.NoContainerFound", modelElement.getName()); //$NON-NLS-1$
                 return null;
             }
             // else add into select
-            if (!query.addSelect(table)) {
+            if (!query.addSelect(set)) {
                 this.errorMessage = Messages.getString("TableAnalysisExecutor.Problem"); //$NON-NLS-1$
                 return null;
             }
             // add from
-            fromPart.add(table);
+            fromPart.add(set);
             // TODO add where part
         }
 
@@ -106,31 +105,30 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
             assert indicator != null;
-            TdTable tdTable = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
-            if (tdTable == null) {
+            NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
+            if (set == null) {
                 continue;
             }
             // --- get the schema owner
-            if (!belongToSameSchemata(tdTable)) {
-                this.errorMessage = Messages.getString("TableAnalysisExecutor.GivenTable", tdTable.getName()); //$NON-NLS-1$
+            if (!belongToSameSchemata(set)) {
+                this.errorMessage = Messages.getString("TableAnalysisExecutor.GivenTable", set.getName()); //$NON-NLS-1$
                 return false;
             }
-            String tableName = tdTable.getName();
-            
-         // --- normalize table name
-            String schemaName = getQuotedSchemaName(tdTable);
-            String catalogName = getQuotedCatalogName(tdTable);
+            String setName = set.getName();
+
+            // --- normalize table name
+            String schemaName = getQuotedSchemaName(set);
+            String catalogName = getQuotedCatalogName(set);
             if (catalogName == null && schemaName != null) {
                 // try to get catalog above schema
-                final TdSchema parentSchema = SchemaHelper.getParentSchema(tdTable);
+                final TdSchema parentSchema = SchemaHelper.getParentSchema(set);
                 final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
                 catalogName = parentCatalog != null ? parentCatalog.getName() : null;
             }
 
-            tableName = dbms().toQualifiedName(catalogName, schemaName, tableName);
+            setName = dbms().toQualifiedName(catalogName, schemaName, setName);
 
-            
-            eval.storeIndicator(tableName, indicator);
+            eval.storeIndicator(setName, indicator);
         }
 
         // open a connection
@@ -157,18 +155,18 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         return rc.isOk();
     }
 
-    protected boolean belongToSameSchemata(final TdTable tdTable) {
-        assert tdTable != null;
-        if (schemata.get(tdTable) != null) {
+    protected boolean belongToSameSchemata(final NamedColumnSet set) {
+        assert set != null;
+        if (schemata.get(set) != null) {
             return true;
         }
         // get catalog or schema
-        Package schema = ColumnSetHelper.getParentCatalogOrSchema(tdTable);
+        Package schema = ColumnSetHelper.getParentCatalogOrSchema(set);
         if (schema == null) {
-            this.errorMessage = Messages.getString("TableAnalysisExecutor.NoSchemaOrCatalogFound", tdTable.getName()); //$NON-NLS-1$
+            this.errorMessage = Messages.getString("TableAnalysisExecutor.NoSchemaOrCatalogFound", set.getName()); //$NON-NLS-1$
             return false;
         }
-        schemata.put(tdTable, schema);
+        schemata.put(set, schema);
         return true;
     }
 }

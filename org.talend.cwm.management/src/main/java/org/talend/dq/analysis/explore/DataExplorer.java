@@ -31,7 +31,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * @author scorreia
@@ -154,11 +154,10 @@ public abstract class DataExplorer implements IDataExplorer {
                 columnSetOwner.getName());
     }
 
-    protected String getFullyQualifiedTableName(Table table) {
-        String catalogName = CatalogHelper.getParentCatalog(table) == null ? null : CatalogHelper.getParentCatalog(table)
-                .getName();
-        String schemaName = SchemaHelper.getParentSchema(table) == null ? null : SchemaHelper.getParentSchema(table).getName();
-        return dbmsLanguage.toQualifiedName(catalogName, schemaName, table.getName());
+    protected String getFullyQualifiedTableName(NamedColumnSet set) {
+        String catalogName = CatalogHelper.getParentCatalog(set) == null ? null : CatalogHelper.getParentCatalog(set).getName();
+        String schemaName = SchemaHelper.getParentSchema(set) == null ? null : SchemaHelper.getParentSchema(set).getName();
+        return dbmsLanguage.toQualifiedName(catalogName, schemaName, set.getName());
     }
 
     /**

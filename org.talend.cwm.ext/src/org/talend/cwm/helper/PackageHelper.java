@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.cwm.helper;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * Helper class for getting elements of Schema or Catalog indifferently.
@@ -50,6 +52,19 @@ public final class PackageHelper {
     public static List<TdView> getViews(Package catOrSchema) {
         assert catOrSchema != null;
         return ViewHelper.getViews(catOrSchema.getOwnedElement());
+    }
+
+    /**
+     * DOC bZhou Comment method "getNmaedColumnSets".
+     * 
+     * @param catOrSchema
+     * @return
+     */
+    public static List<NamedColumnSet> getNmaedColumnSets(Package catOrSchema) {
+        List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
+        setList.addAll(getTables(catOrSchema));
+        setList.addAll(getViews(catOrSchema));
+        return setList;
     }
 
     public static Package getCatalogOrSchema(EObject element) {
