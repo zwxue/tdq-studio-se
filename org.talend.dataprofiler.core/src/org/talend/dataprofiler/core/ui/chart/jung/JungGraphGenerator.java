@@ -54,8 +54,8 @@ import org.talend.dq.indicators.graph.GraphBuilder;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.decorators.DefaultToolTipFunction;
 import edu.uci.ics.jung.visualization.DefaultVisualizationModel;
-import edu.uci.ics.jung.visualization.FRLayout;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
+import edu.uci.ics.jung.visualization.ISOMLayout;
 import edu.uci.ics.jung.visualization.PersistentLayout;
 import edu.uci.ics.jung.visualization.PersistentLayoutImpl;
 import edu.uci.ics.jung.visualization.PluggableRenderer;
@@ -117,7 +117,7 @@ public class JungGraphGenerator {
         pr = new LineRender(graphbuilder);
         sr = new LineRender(graphbuilder);
 
-        PersistentLayout layout = new PersistentLayoutImpl(new FRLayout(graph));
+        PersistentLayout layout = new PersistentLayoutImpl(new ISOMLayout(graph));
         VisualizationModel vm = new DefaultVisualizationModel(layout);
         vv = new VisualizationViewer(vm, pr);
         sv = new SatelliteVisualizationViewer(vv, vm, sr, new Dimension(200, 200));
