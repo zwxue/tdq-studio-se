@@ -22,6 +22,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -104,6 +105,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             }
             return elemLabe;
         }
-        return super.getText(element);
+        String text = super.getText(element);
+        return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;
     }
 }

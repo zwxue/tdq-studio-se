@@ -217,7 +217,6 @@ public class CatalogBuilder extends CwmBuilder {
                     catalogName = catalogNames.getString(MetaDataConstants.TABLE_CAT.name());
                 } catch (Exception e) {
                     log.warn(e, e);
-                    connectionMetadata.getDatabaseProductName();
                     if (connectionMetadata.getDatabaseProductName() != null
                             && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(
                                     DatabaseConstant.ODBC_POSTGRESQL_PRODUCT_NAME) > -1) {
