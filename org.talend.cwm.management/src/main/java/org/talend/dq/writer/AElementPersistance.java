@@ -219,12 +219,12 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         RepositoryContext context = (RepositoryContext) CorePlugin.getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
         if (context != null) {
             user = context.getUser();
+            user.setLogin(author);
+            property.setAuthor(user);
         } else {
-            user = PropertiesFactory.eINSTANCE.createUser();
+            // user = PropertiesFactory.eINSTANCE.createUser();
         }
-        user.setLogin(author);
 
-        property.setAuthor(user);
         property.setId(EcoreUtil.generateUUID());
         property.setLabel(element.getName());
         property.setPurpose(purpose);
