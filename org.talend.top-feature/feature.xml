@@ -30,7 +30,6 @@
       <import plugin="org.eclipse.compare" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.edit.ui" version="2.4.0" match="greaterOrEqual"/>
       <import plugin="org.talend.core" version="2.2.0" match="greaterOrEqual"/>
-      <import plugin="org.talend.commons.ui"/>
       <import plugin="org.talend.libraries.apache" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi" version="3.5.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.common" version="3.5.0" match="compatible"/>
@@ -1531,6 +1530,13 @@
 
    <plugin
          id="org.eclipse.emf.validation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.commons.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
