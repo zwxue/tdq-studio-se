@@ -76,9 +76,9 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
             shouldNotIncludeIndicatorDefinitionUuidList.add("_hgO7YMYUEd27NP4lvE0A4w"); // Table Overview //$NON-NLS-1$
             shouldNotIncludeIndicatorDefinitionUuidList.add("_lNIE0MbNEd2d_JPxxDRSfQ"); // View Overview //$NON-NLS-1$
             // composite \/
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1BF2Ed2PKb6nEJEvhw"); // Minimal Length //$NON-NLS-1$
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1RF2Ed2PKb6nEJEvhw"); // Maximal Length //$NON-NLS-1$
-            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccIR4BF2Ed2PKb6nEJEvhw"); // Average Length //$NON-NLS-1$
+            //            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1BF2Ed2PKb6nEJEvhw"); // Minimal Length //$NON-NLS-1$
+            //            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccHq1RF2Ed2PKb6nEJEvhw"); // Maximal Length //$NON-NLS-1$
+            //            shouldNotIncludeIndicatorDefinitionUuidList.add("_ccIR4BF2Ed2PKb6nEJEvhw"); // Average Length //$NON-NLS-1$
 
             shouldNotIncludeIndicatorDefinitionUuidList.add("_ccJgAhF2Ed2PKb6nEJEvhw"); // SUM //$NON-NLS-1$
             shouldNotIncludeIndicatorDefinitionUuidList.add("_vf0k4PkbEd2z55b7dTkWFw"); // Multiple Column Correlation //$NON-NLS-1$
