@@ -13,6 +13,7 @@
 package org.talend.dq.analysis;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -37,6 +38,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdCatalog;
@@ -940,7 +942,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // execute the sql statement for each indicator
             Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
             // MOD xqliu 2009-08-07 bug 6194
-            if (parallel) {
+            if (canParallel()) {
                 ok = runAnalysisIndicatorsParallel(connection, elementToIndicator, indicators);
             } else {
                 ok = runAnalysisIndicators(connection, elementToIndicator, indicators);
@@ -1247,5 +1249,25 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return traceError("Problem when changing trying to set catalog \"" + catalogName
                     + "\" on connection. SQLException message: " + e.getMessage());
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "canParallel".
+     * 
+     * @return
+     */
+    private boolean canParallel() {
+        try {
+            TypedReturnCode<Connection> typedReturnCode = this.getConnection(cachedAnalysis);
+            Connection connection = typedReturnCode.getObject();
+            DatabaseMetaData connectionMetadata = ConnectionUtils.getConnectionMetadata(connection);
+            if (connectionMetadata.getDriverName() != null
+                    && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)) {
+                return false;
+            }
+        } catch (SQLException e) {
+            log.warn(e, e);
+        }
+        return this.parallel;
     }
 }

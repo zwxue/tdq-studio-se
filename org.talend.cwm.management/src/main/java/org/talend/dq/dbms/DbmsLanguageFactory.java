@@ -115,6 +115,9 @@ public final class DbmsLanguageFactory {
         if (isTeradata(dbmsSubtype)) {
             return new TeradataDbmsLanguage(dbmsSubtype, dbVersion);
         }
+        if (isIngres(dbmsSubtype)) {
+            return new IngresDbmsLanguage(dbmsSubtype, dbVersion);
+        }
         // TODO other supported databases here
         return new DbmsLanguage(dbmsSubtype, dbVersion);
     }
@@ -220,6 +223,10 @@ public final class DbmsLanguageFactory {
 
     private static boolean isTeradata(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.TERADATA, dbms);
+    }
+
+    private static boolean isIngres(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.INGRES, dbms);
     }
 
     static boolean compareDbmsLanguage(String lang1, String lang2) {
