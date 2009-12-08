@@ -305,7 +305,6 @@ public class DbmsLanguage {
         return null;
     }
 
-    
     /**
      * Method "getPatternFinderFunction".
      * 
@@ -331,7 +330,7 @@ public class DbmsLanguage {
                 }
                 return this.getPatternFinderFunction(colName, charactersToReplace, replacementCharacters);
             }
-            
+
         }
         return resultingExpressionWithDefaultLang;
     }
@@ -443,13 +442,17 @@ public class DbmsLanguage {
         return " SELECT * FROM " + table + where() + column + in() + "( SELECT " + column + from() + "(" + subquery //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 + ") AS mysubquery )"; //$NON-NLS-1$
     }
-    
+
     public String selectColumnsFromTable(List<String> columns, String table) {
         return " SELECT " + StringUtils.join(columns.iterator(), ',') + from() + table;
     }
 
     public String in() {
         return " IN "; //$NON-NLS-1$
+    }
+
+    public String notIn() {
+        return " NOT IN "; //$NON-NLS-1$
     }
 
     /**
@@ -853,14 +856,14 @@ public class DbmsLanguage {
      * @return the SQL statement
      */
     public String getSelectOrderedAggregate(boolean distinct, List<String> columns, String table, String whereClause,
-            List<Integer> groupByIndexes, String havingClause, List<Integer> orderByIndexes) { 
+            List<Integer> groupByIndexes, String havingClause, List<Integer> orderByIndexes) {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT ");
         builder.append(StringUtils.join(columns.iterator(), ','));
         builder.append(", COUNT(*) ");
         builder.append(from());
         builder.append(table);
-        
+
         if (whereClause != null) {
             builder.append(whereClause);
         }
@@ -877,7 +880,7 @@ public class DbmsLanguage {
         if (havingClause != null) {
             builder.append(havingClause);
         }
-        
+
         List<String> orderByColumns = new ArrayList<String>();
         for (int i = 0; i < orderByIndexes.size(); i++) {
             orderByColumns.add(columns.get(i));
@@ -886,10 +889,10 @@ public class DbmsLanguage {
             builder.append(" ORDER BY ");
             builder.append(StringUtils.join(orderByColumns.iterator(), ','));
         }
-        
+
         return builder.toString();
     }
-    
+
     public String orderBy(List<String> columns, boolean ascending) {
         return orderBy() + StringUtils.join(columns.iterator(), ',') + (ascending ? " ASC " : " DESC ");
     }
@@ -1013,7 +1016,7 @@ public class DbmsLanguage {
     public boolean supportRegexp() {
         return false;
     }
-    
+
     public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements) {
         if (joinElements.isEmpty()) {
             return "";
@@ -1025,17 +1028,16 @@ public class DbmsLanguage {
             ModelElement colA = joinElement.getColA();
             String tableA = getTableName(colA);
             String tableAliasA = joinElement.getTableAliasA();
-            
+
             String columnAName = getColumnName(colA);
 
             boolean hasTableAliasA = !StringUtils.isEmpty(tableAliasA);
 
-            
             ModelElement colB = joinElement.getColB();
             String tableB = getTableName(colB);
             String tableAliasB = joinElement.getTableAliasB();
 
-            String columnBName = getColumnName(colB);            
+            String columnBName = getColumnName(colB);
 
             boolean hasTableAliasB = !StringUtils.isEmpty(tableAliasB);
 
@@ -1063,7 +1065,7 @@ public class DbmsLanguage {
         if (hasTableAliasA && !hasAlreadyOneJoin) {
             builder.append(surroundWithSpaces(tableAliasA));
         }
-        
+
         join(builder, quote(tableA), tableAliasA, quote(columnAName), hasTableAliasA, quote(tableB), tableAliasB,
                 quote(columnBName), hasTableAliasB, operator);
     }
@@ -1085,13 +1087,11 @@ public class DbmsLanguage {
             String tableAliasB, String columnBName, boolean hasTableAliasB) {
         StringBuilder builder = new StringBuilder();
         return this.join(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName,
-                hasTableAliasB, this
-                .equal());
+                hasTableAliasB, this.equal());
     }
 
     private String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
-            String tableB,
-            String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
+            String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
 
         builder.append(join());
 
@@ -1106,8 +1106,7 @@ public class DbmsLanguage {
         String tB = hasTableAliasB ? tableAliasB : tableB;
         String cA = columnAName;
         String cB = columnBName;
-        
-        
+
         createJoinClause(builder, tA, cA, tB, cB, operator);
         return builder.toString();
     }
@@ -1115,7 +1114,7 @@ public class DbmsLanguage {
     public String join() {
         return " JOIN ";
     }
-    
+
     /**
      * DOC scorreia Comment method "joinClauseStartsWithWrongTable".
      * 
@@ -1153,7 +1152,7 @@ public class DbmsLanguage {
         builder.append(columnBName);
         builder.append(')');
     }
-    
+
     private String getColumnName(ModelElement col) {
         TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
         return column != null ? column.getName() : null;
@@ -1170,14 +1169,15 @@ public class DbmsLanguage {
     }
 
     /**
-     * DOC jet adapt to {@link GenericSQLHandler}("").createGenericSqlWithRegexFunction() method<p>
+     * DOC jet adapt to {@link GenericSQLHandler}("").createGenericSqlWithRegexFunction() method
+     * <p>
+     * 
      * @see GenericSQLHandler
      * @param function UDF function name.
      * @return special sql statement
      */
-    public String createGenericSqlWithRegexFunction(String function){
+    public String createGenericSqlWithRegexFunction(String function) {
         return new GenericSQLHandler("").createGenericSqlWithRegexFunction(function);
     }
-
 
 }

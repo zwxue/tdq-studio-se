@@ -44,18 +44,43 @@ public class RowMatchExplorer extends DataExplorer {
     }
 
     /**
-     * DOC Administrator Comment method "getRowsNotMatchStatement".
+     * DOC yyi Comment method "getRowsNotMatchStatement".
      * 
      * @return
      */
     public String getRowsNotMatchStatement() {
 
-        String queryMatch = getRowsMatchStatement();
-        String query = null;
-        query = queryMatch.replace(dbmsLanguage.in(), " NOT IN "); //$NON-NLS-1$
-        if (query.indexOf(dbmsLanguage.and()) > 0) {
-            query = query.replace(dbmsLanguage.and(), dbmsLanguage.or());
+        Table tablea = (Table) indicator.getAnalyzedElement();
+
+        String tableA = tablea.getName();
+        String query = "SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea); //$NON-NLS-1$
+
+        if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
+            Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
+            String tableB = tableb.getName();
+            EList<Column> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
+            EList<Column> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
+
+            String where = null;
+
+            for (int i = 0; i < columnSetA.size(); i++) {
+                where = dbmsLanguage.or();
+                if (i == 0) {
+                    where = dbmsLanguage.where();
+                }
+                String fullColumnAName = dbmsLanguage.quote(tableA) + "." + dbmsLanguage.quote(columnSetA.get(i).getName());
+                String fullColumnBName = dbmsLanguage.quote(tableB) + "." + dbmsLanguage.quote(columnSetB.get(i).getName());
+                String clause = "SELECT " + fullColumnBName + dbmsLanguage.from() + getFullyQualifiedTableName(tableb)
+                        + dbmsLanguage.where() + fullColumnBName + dbmsLanguage.isNotNull();
+                query += where + fullColumnAName + dbmsLanguage.notIn() + inBrackets(clause);
+
+                // MOD yyi 2009-12-07 9538 list nulls in no match rows
+                String listNulls = dbmsLanguage.or() + fullColumnAName + dbmsLanguage.isNull();
+                query += listNulls;
+                // ~
+            }
         }
+
         return query;
     }
 
