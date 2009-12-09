@@ -32,5 +32,7 @@ public final class DatabaseConstant {
 
     public static final String ODBC_DRIVER_NAME = "jdbc-odbc";
 
+    public static final String ODBC_MSSQL_PRODUCT_NAME = "Microsoft SQL Server";
+
     public static final String XML_EXIST_DRIVER_NAME = "org.exist.xmldb.DatabaseImpl";
 }

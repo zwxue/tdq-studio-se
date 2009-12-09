@@ -74,15 +74,7 @@ public class ColumnBuilder extends CwmBuilder {
             // MOD mzhao 2009-04-09,Bug 6840: fetch LONG or LONG RAW column first , as these kind of columns are read as
             // stream,if not read by select order, there will be "Stream has already been closed" error.
             // MOD xqliu 2009-10-29 bug 9838
-            Object defaultvalue = null;
-            try {
-                defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-            }
-            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
-            Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
-
+            // MOD xqliu 2009-12-08 bug 9822, if use odbc connect to sqlserver the resultset is forward only!!!
             String colName = null;
             try {
                 colName = columns.getString(GetColumn.COLUMN_NAME.name());
@@ -93,23 +85,41 @@ public class ColumnBuilder extends CwmBuilder {
                 }
             }
             TdColumn column = ColumnHelper.createTdColumn(colName);
+
+            int dataType = 0;
+            try {
+                dataType = columns.getInt(GetColumn.DATA_TYPE.name());
+                column.setJavaType(dataType);
+            } catch (Exception e) {
+                log.warn(e, e);
+            }
+
+            String typeName = null;
+            try {
+                typeName = columns.getString(GetColumn.TYPE_NAME.name());
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
+
             try {
                 column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
             } catch (Exception e1) {
                 log.warn(e1, e1);
             }
+
+            int decimalDigits = 0;
             try {
-                column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-            }
-            try {
-                column.setJavaType(columns.getInt(GetColumn.DATA_TYPE.name()));
+                decimalDigits = columns.getInt(GetColumn.DECIMAL_DIGITS.name());
             } catch (Exception e) {
-                log.warn(e, e);
+                log.warn(e);
             }
-            // ~
-            // TODO columns.getString(GetColumn.TYPE_NAME.name());
+
+            int numPrecRadix = 0;
+            try {
+                numPrecRadix = columns.getInt(GetColumn.NUM_PREC_RADIX.name());
+            } catch (Exception e) {
+                log.warn(e);
+            }
 
             // get column description (comment)
             try {
@@ -119,9 +129,24 @@ public class ColumnBuilder extends CwmBuilder {
                 log.warn(e, e);
             }
 
+            Object defaultvalue = null;
+            try {
+                defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
+            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
+            Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
+
+            try {
+                column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
             // --- create and set type of column
             // TODO scorreia get type of column on demand, not on creation of column
-            TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);
+            // TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);
+            TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(dataType, typeName, decimalDigits, numPrecRadix);
             column.setSqlDataType(sqlDataType);
             // column.setType(sqlDataType); // it's only reference to previous sql data type
 

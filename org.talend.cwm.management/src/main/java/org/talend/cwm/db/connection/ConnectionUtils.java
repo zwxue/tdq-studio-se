@@ -353,4 +353,22 @@ public final class ConnectionUtils {
         return true;
     }
     // ~
+
+    /**
+     * DOC xqliu Comment method "isOdbcMssql". bug 9822
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isOdbcMssql(Connection connection) throws SQLException {
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
+                && connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().equals(DatabaseConstant.ODBC_MSSQL_PRODUCT_NAME)) {
+            return true;
+        }
+        return false;
+    }
 }

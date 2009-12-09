@@ -180,9 +180,16 @@ public final class DatabaseContentRetriever {
      */
     public static Map<String, List<TdSchema>> getSchemas(Connection connection) throws SQLException {
         Map<String, List<TdSchema>> catalogName2schemas = new HashMap<String, List<TdSchema>>();
+        // MOD xqliu 2009-12-08 bug 9822
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        final List<String> catalogNames = new ArrayList<String>();
+        fillListOfCatalogs(connection, catalogNames);
+
+        boolean odbcMssqlFlag = ConnectionUtils.isOdbcMssql(connection);
+
         ResultSet schemas = null;
         try {
-            schemas = getConnectionMetadata(connection).getSchemas();
+            schemas = connectionMetadata.getSchemas();
         } catch (Exception e1) {
             log.warn("Cannot get Schemas from the JDBC driver's metadata", e1);
         }
@@ -198,7 +205,9 @@ public final class DatabaseContentRetriever {
 
                     // set link Catalog -> Schema if exists
                     String catName = null;
+                    String schemaName = null;
                     if (columnCount > 1) {
+                        // get catalog name
                         try {
                             catName = schemas.getString(MetaDataConstants.TABLE_CATALOG.name());
                         } catch (Exception e) { // catch exception required for DB2/ZOS
@@ -207,21 +216,48 @@ public final class DatabaseContentRetriever {
                                             "Exception when trying to get the catalog name linked to the schema. Catalogs won't be used.",
                                             e);
                         }
+                        // get schema name
+                        try {
+                            schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+                        } catch (Exception e) {
+                            log.warn(e, e);
+                        }
+                        if (schemaName == null) {
+                            try {
+                                schemaName = schemas.getString(DatabaseConstant.ODBC_ORACLE_SCHEMA_NAME);
+                            } catch (Exception e) {
+                                log.warn(e, e);
+                            }
+                        }
+                        if (schemaName == null) {
+                            try { // try to get first column
+                                schemaName = schemas.getString(1);
+                            } catch (Exception e) {
+                                log.warn(e, e);
+                            }
+                        }
+                        // create schema
                         if (catName != null) { // standard case (Postgresql)
-                            createSchema(schemas, catName, catalogName2schemas);
+                            createSchema(schemaName, catName, catalogName2schemas);
+                        }
+                    }
+
+                    if (odbcMssqlFlag) { // add schema to all catalogs ???
+                        try { // try to get first column
+                            schemaName = schemas.getString(1);
+                        } catch (Exception e) {
+                            log.warn(e, e);
                         }
                     }
 
                     if (catName == null) { // MSSQL, Sybase, Oracle, Postgresql
                         // loop on all existing catalogs and create a new Schema for each existing catalog
-                        final List<String> catalogNames = new ArrayList<String>();
-                        fillListOfCatalogs(connection, catalogNames);
                         if (catalogNames.isEmpty()) {
                             // store schemata with a null key (meaning no catalog -> e.g. Oracle)
-                            createSchema(schemas, null, catalogName2schemas);
+                            createSchema(schemaName, null, catalogName2schemas);
                         } else { // MSSQL, Sybase case
                             for (String catalogName : catalogNames) {
-                                createSchema(schemas, catalogName, catalogName2schemas);
+                                createSchema(schemaName, catalogName, catalogName2schemas);
                             }
                         }
                     }
@@ -243,10 +279,8 @@ public final class DatabaseContentRetriever {
                 schemas.close();
             }
         }
-
         // if no schema exist in catalog, do not create a default one.
         // The tables will be added directly to the catalog.
-
         return catalogName2schemas;
     }
 
@@ -316,6 +350,22 @@ public final class DatabaseContentRetriever {
             }
         }
         // ~
+        TdSchema schema = createSchema(schemaName);
+        if (schema != null) {
+            MultiMapHelper.addUniqueObjectToListMap(catalogName, schema, catalogName2schemas);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "createSchema".
+     * 
+     * @param schemaName
+     * @param catalogName
+     * @param catalogName2schemas
+     * @throws SQLException
+     */
+    private static void createSchema(String schemaName, String catalogName, Map<String, List<TdSchema>> catalogName2schemas)
+            throws SQLException {
         TdSchema schema = createSchema(schemaName);
         if (schema != null) {
             MultiMapHelper.addUniqueObjectToListMap(catalogName, schema, catalogName2schemas);
@@ -671,12 +721,12 @@ public final class DatabaseContentRetriever {
     public static TdSqlDataType createDataType(ResultSet columns) throws SQLException {
         TdSqlDataType sqlDataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
         try {
-            sqlDataType.setName(columns.getString(GetColumn.TYPE_NAME.name()));
+            sqlDataType.setJavaDataType(columns.getInt(GetColumn.DATA_TYPE.name()));
         } catch (Exception e1) {
             log.warn(e1, e1);
         }
         try {
-            sqlDataType.setJavaDataType(columns.getInt(GetColumn.DATA_TYPE.name()));
+            sqlDataType.setName(columns.getString(GetColumn.TYPE_NAME.name()));
         } catch (Exception e1) {
             log.warn(e1, e1);
         }
@@ -706,5 +756,23 @@ public final class DatabaseContentRetriever {
         TdSchema schema = RelationalFactory.eINSTANCE.createTdSchema();
         schema.setName(name);
         return schema;
+    }
+
+    /**
+     * DOC xqliu Comment method "createDataType".
+     * 
+     * @param dataType
+     * @param typeName
+     * @param decimalDigits
+     * @param numPrecRadix
+     * @return
+     */
+    public static TdSqlDataType createDataType(int dataType, String typeName, int decimalDigits, int numPrecRadix) {
+        TdSqlDataType sqlDataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
+        sqlDataType.setName(typeName);
+        sqlDataType.setJavaDataType(dataType);
+        sqlDataType.setNumericPrecision(decimalDigits);
+        sqlDataType.setNumericPrecisionRadix(numPrecRadix);
+        return sqlDataType;
     }
 }

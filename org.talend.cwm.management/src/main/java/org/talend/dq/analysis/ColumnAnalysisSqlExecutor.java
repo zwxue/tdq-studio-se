@@ -1239,8 +1239,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     protected boolean changeCatalog(String catalogName, Connection connection) {
         try {
-            // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
-            connection.setCatalog(catalogName);
+            // MOD xqliu 2009-12-09 bug 9822
+            if (!ConnectionUtils.isOdbcMssql(connection)) {
+                // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
+                connection.setCatalog(catalogName);
+            }
+            // ~
             return true;
         } catch (RuntimeException e) {
             return traceError("Problem when changing trying to set catalog \"" + catalogName
