@@ -532,12 +532,18 @@ public final class DatabaseContentRetriever {
         String databaseProductName = null;
         try {
             databaseProductName = databaseMetadata.getDatabaseProductName();
+            if (log.isInfoEnabled()) {
+                log.info("Database Product Name: " + databaseProductName);
+            }
         } catch (Exception e1) {
             log.warn("could not get database product name. " + e1, e1);
         }
         String databaseProductVersion = null;
         try {
             databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
+            if (log.isInfoEnabled()) {
+                log.info("Database Product Version: " + databaseProductVersion);
+            }
         } catch (Exception e1) {
             log.warn("Could not get database product version. " + e1, e1);
         }

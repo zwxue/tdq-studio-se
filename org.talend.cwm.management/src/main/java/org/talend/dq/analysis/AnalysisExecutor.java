@@ -18,6 +18,7 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.JavaSqlFactory;
@@ -25,6 +26,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -34,6 +36,8 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -135,6 +139,14 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         if (connection == null) {
             this.errorMessage = Messages.getString("AnalysisExecutor.NoConnectionFound", analysis.getName()); //$NON-NLS-1$
             return false;
+        }
+        if (log.isInfoEnabled()) {
+            if (SoftwaredeploymentPackage.eINSTANCE.getDataProvider().isInstance(connection)) {
+                TypedReturnCode<TdProviderConnection> rc = DataProviderHelper
+                        .getTdProviderConnection((DataProvider) connection);
+                TdProviderConnection providerConnection = rc.getObject();
+                log.info("Connection to " + providerConnection.getConnectionString());
+            }
         }
         AnalysisResult results = analysis.getResults();
         if (results == null) {
