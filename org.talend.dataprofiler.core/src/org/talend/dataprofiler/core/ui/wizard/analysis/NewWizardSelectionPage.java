@@ -154,7 +154,8 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         AnalysisParameter correlationParam = new AnalysisParameter();
                         correlationParam.setFolderProvider(currentFolderProvider);
                         parameter = correlationParam;
-                        href = relatedTopics[4].getHref();
+                        type = currentType == AnalysisType.COLUMN_SET ? currentType : type;
+                        href = currentType == AnalysisType.COLUMN_SET ? relatedTopics[8].getHref() : relatedTopics[4].getHref();
                         break;
                     case COLUMNS_COMPARISON:
                         AnalysisParameter anaParam = new AnalysisParameter();
@@ -182,6 +183,14 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         href = relatedTopics[2].getHref();
                         break;
                     case TABLE:
+                        if (currentType == AnalysisType.COLUMN_SET) {
+                            AnalysisParameter corrParam = new AnalysisParameter();
+                            corrParam.setFolderProvider(currentFolderProvider);
+                            parameter = corrParam;
+                            href = relatedTopics[8].getHref();
+                            type = currentType;
+                            break;
+                        }
                         if (currentType == AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY) {
                             FuncationDependencyParameter funcationDependency = new FuncationDependencyParameter();
                             funcationDependency.setFolderProvider(currentFolderProvider);

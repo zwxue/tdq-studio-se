@@ -101,6 +101,7 @@
       <eLiterals name="MULTIPLE_COLUMN" value="6" literal="Multiple Column Analysis"/>
       <eLiterals name="CATALOG" value="7" literal="Catalog Analysis"/>
       <eLiterals name="COLUMN_CORRELATION" value="8" literal="Column Correlation Analysis"/>
+      <eLiterals name="COLUMN_SET" value="9" literal="Column Set Analysis"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EEnum" name="ExecutionLanguage">
       <eLiterals name="SQL"/>

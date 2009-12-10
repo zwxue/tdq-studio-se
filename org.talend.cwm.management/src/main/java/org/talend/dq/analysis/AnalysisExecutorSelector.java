@@ -67,6 +67,9 @@ public final class AnalysisExecutorSelector {
         case COLUMN_CORRELATION:
             exec = new MultiColumnAnalysisExecutor();
             break;
+        case COLUMN_SET:
+            exec = new MultiColumnAnalysisExecutor();
+            break;
         case TABLE:
             exec = ExecutionLanguage.SQL.equals(executionEngine) ? new TableAnalysisSqlExecutor() : new TableAnalysisExecutor();
             break;

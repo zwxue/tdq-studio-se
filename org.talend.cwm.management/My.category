@@ -12,11 +12,13 @@
   <categories analysisType="Table Analysis" label="Table Analysis">
     <subCategories analysisType="Table Analysis" label="DQ Rule Analysis"/>
     <subCategories analysisType="Functional Dependency" label="Functional Dependency"/>
+    <subCategories analysisType="Column Set Analysis" label="Column Set Analysis"/>
     <!-- subCategories analysisType="Table Analysis" label="Duplicate Analysis"/ -->
   </categories>
   <categories analysisType="Multiple Column Analysis" label="Column Analysis">
     <!--subCategories label="Default Analysis"/-->
     <subCategories analysisType="Multiple Column Analysis" label="Column Analysis"/>
+    <subCategories analysisType="Column Set Analysis" label="Column Set Analysis"/>
   </categories>
   <!--categories label="Analysis on a column">
     <subCategories label="Default Analysis"/>

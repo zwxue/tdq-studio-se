@@ -111,6 +111,10 @@ public class AnalysisEditor extends CommonFormEditor {
             masterPage = new ColumnDependencyMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             resultPage = new ColumnDependencyResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
+        case COLUMN_SET:
+            masterPage = new ColumnSetMasterPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new ColumnSetResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
+            break;
         default:
 
         }

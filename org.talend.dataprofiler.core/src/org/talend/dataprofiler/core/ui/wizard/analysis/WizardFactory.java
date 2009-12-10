@@ -20,6 +20,7 @@ import org.talend.dataprofiler.core.sql.CreateSqlFileWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.catalog.CatalogAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnNominalWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnNumbericWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnSetWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnTimeWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionAnalysisWizard;
@@ -118,6 +119,12 @@ public final class WizardFactory {
             }
             parameter.setAnalysisTypeName(type.getLiteral());
             return new FunctionDependencyWizard(parameter);
+        case COLUMN_SET:
+            if (parameter == null) {
+                parameter = new AnalysisParameter();
+            }
+            parameter.setAnalysisTypeName(type.getLiteral());
+            return new ColumnSetWizard(parameter);
         default:
             return null;
         }

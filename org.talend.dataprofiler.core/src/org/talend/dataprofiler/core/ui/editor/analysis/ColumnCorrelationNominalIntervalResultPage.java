@@ -163,7 +163,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         graphicsAndTableSection.setClient(sectionClient);
     }
 
-    private Section createGraphicsSectionPart(Composite parentComp) {
+    protected Section createGraphicsSectionPart(Composite parentComp) {
         Section section = createSection(form, parentComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ 
         section.setLayoutData(new GridData(GridData.FILL_BOTH));

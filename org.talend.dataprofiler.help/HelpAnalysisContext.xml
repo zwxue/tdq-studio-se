@@ -10,5 +10,6 @@
       <topic label="Redundancy Analysis" href="html/wizard/analysis/redundancyAnalysis.html"/>
       <topic label="Column Correlation Analysis" href="html/wizard/analysis/columnCorrelationAnalysis.html"/>
       <topic href="html/wizard/analysis/columnDependencyAnalysis.html" label="Column Functional Dependency"/>
+      <topic label="Column Set Analysis" href="html/wizard/analysis/columnSetAnalysis.html"/>
    </context>
 </contexts>

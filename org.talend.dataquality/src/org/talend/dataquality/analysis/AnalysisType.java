@@ -109,7 +109,15 @@ public enum AnalysisType implements Enumerator {
      * @generated
      * @ordered
      */
-    COLUMN_CORRELATION(8, "COLUMN_CORRELATION", "Column Correlation Analysis");
+    COLUMN_CORRELATION(8, "COLUMN_CORRELATION", "Column Correlation Analysis"), /**
+     * The '<em><b>COLUMN SET</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #COLUMN_SET_VALUE
+     * @generated
+     * @ordered
+     */
+    COLUMN_SET(9, "COLUMN_SET", "Column Set Analysis");
 
     /**
      * The '<em><b>COLUMN</b></em>' literal value.
@@ -262,6 +270,21 @@ public enum AnalysisType implements Enumerator {
     public static final int COLUMN_CORRELATION_VALUE = 8;
 
     /**
+     * The '<em><b>COLUMN SET</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>COLUMN SET</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #COLUMN_SET
+     * @model literal="Column Set Analysis"
+     * @generated
+     * @ordered
+     */
+    public static final int COLUMN_SET_VALUE = 9;
+
+    /**
      * An array of all the '<em><b>Type</b></em>' enumerators.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -279,6 +302,7 @@ public enum AnalysisType implements Enumerator {
             MULTIPLE_COLUMN,
             CATALOG,
             COLUMN_CORRELATION,
+            COLUMN_SET,
         };
 
     /**
