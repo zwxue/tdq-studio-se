@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.ConnectionService;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sugars.ReturnCode;
@@ -123,12 +124,14 @@ public final class DataBaseVersionHelper {
     public static boolean updateVersionInDB(String url, String driver, Properties props) {
         Connection connection = null;
 
+        ProductVersion curVersion = CorePlugin.getDefault().getProductVersion();
+        String sql = "update TDQ_PRODUCT set PR_VERSION = '" + curVersion + "'";
+
         try {
             connection = ConnectionUtils.createConnection(url, driver, props);
             if (connection != null) {
                 Statement stat = connection.createStatement();
-                ProductVersion curVersion = WorkspaceVersionHelper.getVesion();
-                return stat.execute("update TDQ_PRODUCT set PR_VERSION = '" + curVersion + "'"); //$NON-NLS-1$
+                return stat.executeUpdate(sql) > 0;
             }
         } catch (Exception e) {
             log.error(e, e);
@@ -144,13 +147,25 @@ public final class DataBaseVersionHelper {
 
         return false;
     }
-    
+
     /**
      * DOC xqliu Comment method "getVersion".
      * 
      * @return
      */
     public static ProductVersion getVersion() {
+        return getVersion(url, driver, props);
+    }
+
+    /**
+     * DOC bZhou Comment method "getVersion".
+     * 
+     * @param url
+     * @param driver
+     * @param props
+     * @return
+     */
+    public static ProductVersion getVersion(String url, String driver, Properties props) {
         Connection connection = null;
 
         try {
