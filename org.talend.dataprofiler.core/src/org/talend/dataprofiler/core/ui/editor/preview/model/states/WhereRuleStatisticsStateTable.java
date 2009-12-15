@@ -95,7 +95,6 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
             customerdataset.addValue(value, ROW_KEY_PASS, columnKey);
 
             WhereRuleChartDataEntity entity = new WhereRuleChartDataEntity();
-            entity.setRowCount(getRowCount());
             entity.setIndicator(unit.getIndicator());
             entity.setLabel(columnKey);
             entity.setNumMatch(String.valueOf(value));

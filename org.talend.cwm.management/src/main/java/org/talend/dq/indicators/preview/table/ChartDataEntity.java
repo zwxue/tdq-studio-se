@@ -47,7 +47,9 @@ public class ChartDataEntity {
 
     protected String range;
 
-    private boolean labelNull = false;
+    private boolean labelNull;
+
+    private boolean isPercent;
 
     // MOD mzhao 2009-03-24, feature 6307 Show soundex distinct count and count
     // label.
@@ -144,6 +146,15 @@ public class ChartDataEntity {
     }
 
     /**
+     * Getter for isPercent.
+     * 
+     * @return the isPercent
+     */
+    public boolean isPercent() {
+        return this.isPercent;
+    }
+
+    /**
      * DOC Zqin Comment method "isOutOfRange".
      * 
      * @return
@@ -180,11 +191,11 @@ public class ChartDataEntity {
     }
 
     protected String[] getDefinedRange(String inString) {
-        boolean flag = inString.indexOf('%') > 0;
+        isPercent = inString.indexOf('%') > 0;
         String[] threshold = IndicatorHelper.getDataThreshold(indicator);
 
         if (threshold == null) {
-            if (flag) {
+            if (isPercent) {
                 threshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
             } else {
                 threshold = IndicatorHelper.getIndicatorThreshold(indicator);
@@ -243,6 +254,10 @@ public class ChartDataEntity {
                     max = Double.POSITIVE_INFINITY;
                 }
 
+                if (isPercent) {
+                    return dValue < min * 100 || dValue > max * 100;
+
+                }
                 return dValue < min || dValue > max;
             }
         }

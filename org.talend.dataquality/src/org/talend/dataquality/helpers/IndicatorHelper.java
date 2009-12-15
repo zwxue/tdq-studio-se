@@ -47,6 +47,8 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
+import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 
 /**
@@ -428,47 +430,13 @@ public final class IndicatorHelper {
         return (textParameter != null) ? textParameter.isIgnoreCase() : null;
     }
 
+    /**
+     * DOC bZhou Comment method "getIndicatorValue".
+     * 
+     * @param indicator
+     * @return
+     */
     public static String getIndicatorValue(Indicator indicator) {
-        // String tempObject = null;
-        // if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
-        // tempObject = ((RowCountIndicator) indicator).getCount().toString();
-        // } else if (IndicatorsPackage.eINSTANCE.getNullCountIndicator().equals(indicator.eClass())) {
-        // tempObject = ((NullCountIndicator) indicator).getNullCount().toString();
-        //
-        // } else if (IndicatorsPackage.eINSTANCE.getDistinctCountIndicator().equals(indicator.eClass())) {
-        // tempObject = ((DistinctCountIndicator) indicator).getDistinctValueCount().toString();
-        // } else if (IndicatorsPackage.eINSTANCE.getUniqueCountIndicator().equals(indicator.eClass())) {
-        // tempObject = (((UniqueCountIndicator) indicator).getUniqueValueCount()).toString();
-        // } else if (IndicatorsPackage.eINSTANCE.getDuplicateCountIndicator().equals(indicator.eClass())) {
-        // tempObject = ((DuplicateCountIndicator) indicator).getDuplicateValueCount().toString();
-        // } else if (IndicatorsPackage.eINSTANCE.getBlankCountIndicator().equals(indicator.eClass())) {
-        // tempObject = ((BlankCountIndicator) indicator).getBlankCount().toString();
-        // } else if (IndicatorsPackage.eINSTANCE.getMinLengthIndicator().equals(indicator.eClass())) {
-        // tempObject = ((MinLengthIndicator) indicator).getLength().toString();
-        // } else if (IndicatorsPackage.eINSTANCE.getMaxLengthIndicator().equals(indicator.eClass())) {
-        // tempObject = ((MaxLengthIndicator) indicator).getLength().toString();
-        // } else if (IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().equals(indicator.eClass())) {
-        // tempObject = createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
-        // } else if (IndicatorsPackage.eINSTANCE.getFrequencyIndicator().equals(indicator.eClass())
-        // || IndicatorsPackage.eINSTANCE.getModeIndicator().equals(indicator.eClass())) {
-        // // TODO tempObject = createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
-        // } else if (IndicatorsPackage.eINSTANCE.getMeanIndicator().equals(indicator.eClass())) {
-        // tempObject = createStandardNumber(((MeanIndicator) indicator).getMean());
-        // } else if (IndicatorsPackage.eINSTANCE.getMedianIndicator().equals(indicator.eClass())) {
-        // tempObject = createStandardNumber(((MedianIndicator) indicator).getMedian());
-        // } else if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicator.eClass())
-        // || IndicatorsPackage.eINSTANCE.getSqlPatternMatchingIndicator().equals(indicator.eClass())) {
-        // Long matchingValueCount = ((PatternMatchingIndicator) indicator).getMatchingValueCount();
-        // Long notMatchingValueCount = ((PatternMatchingIndicator) indicator).getNotMatchingValueCount();
-        // Double total = matchingValueCount.doubleValue() + notMatchingValueCount.doubleValue();
-        // tempObject = Double.valueOf(total > 0 ? matchingValueCount.doubleValue() * 100 / total :
-        // Double.NaN).toString();
-        //
-        // } else {
-        // tempObject = ((ValueIndicator) indicator).getValue();
-        // }
-
-        // return tempObject;
 
         IndicatorsSwitch<String> mySwitch = new IndicatorsSwitch<String>() {
 
@@ -529,10 +497,7 @@ public final class IndicatorHelper {
 
             @Override
             public String casePatternMatchingIndicator(PatternMatchingIndicator object) {
-                Long matchingValueCount = object.getMatchingValueCount();
-                Long notMatchingValueCount = object.getNotMatchingValueCount();
-                Double total = matchingValueCount.doubleValue() + notMatchingValueCount.doubleValue();
-                return Double.valueOf(total > 0 ? matchingValueCount.doubleValue() * 100 / total : Double.NaN).toString();
+                return String.valueOf(object.getMatchingValueCount());
             }
 
             @Override
@@ -552,7 +517,46 @@ public final class IndicatorHelper {
 
         };
 
-        return mySwitch.doSwitch(indicator);
+        IndicatorSqlSwitch<String> sqlSwitch = new IndicatorSqlSwitch<String>() {
+
+            @Override
+            public String caseWhereRuleIndicator(WhereRuleIndicator object) {
+                return String.valueOf(object.getUserCount());
+            }
+        };
+
+        String result = mySwitch.doSwitch(indicator);
+
+        return result == null ? sqlSwitch.doSwitch(indicator) : result;
+    }
+
+    /**
+     * DOC bZhou Comment method "getIndicatorPercentValue".
+     * 
+     * @param indicator
+     * @return
+     */
+    public static String getIndicatorPercentValue(Indicator indicator) {
+
+        try {
+            double userCount = Double.valueOf(getIndicatorValue(indicator));
+            double count = Double.valueOf(indicator.getCount());
+            return computePercent(userCount, count);
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "computePercent".
+     * 
+     * @param userCount
+     * @param count
+     * @return
+     */
+    private static String computePercent(double userCount, double count) {
+        double result = userCount / count;
+        return result != Double.NaN ? String.valueOf(result) : null;
     }
 
     private static String createStandardNumber(Object input) {

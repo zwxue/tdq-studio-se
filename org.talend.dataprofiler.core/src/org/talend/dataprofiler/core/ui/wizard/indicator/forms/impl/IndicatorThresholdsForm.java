@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -51,6 +52,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -217,8 +219,10 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         boolean isMinEmpty = CheckValueUtils.isEmpty(lowerText.getText());
         boolean isMaxEmpty = CheckValueUtils.isEmpty(higherText.getText());
         if (isContainRowCount) {
-            boolean isPerMinEmpty = CheckValueUtils.isEmpty(pLowerText.getText());
-            boolean isPerMaxEmpty = CheckValueUtils.isEmpty(pHigherText.getText());
+            String plower = pLowerText.getText();
+            String phigher = pHigherText.getText();
+            boolean isPerMinEmpty = CheckValueUtils.isEmpty(plower);
+            boolean isPerMaxEmpty = CheckValueUtils.isEmpty(phigher);
 
             if (isMinEmpty && isMaxEmpty && isPerMinEmpty && isPerMaxEmpty) {
                 parameters.setIndicatorValidDomain(null);
@@ -232,7 +236,16 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 if (isPerMinEmpty && isPerMaxEmpty) {
                     removeRange(PERCENTAGE_THRESHOLD);
                 } else {
-                    IndicatorHelper.setIndicatorThresholdInPercent(parameters, pLowerText.getText(), pHigherText.getText());
+                    String lower = "", higher = "";
+                    if (StringUtils.isNotEmpty(plower)) {
+                        lower = String.valueOf(Double.valueOf(plower) / 100);
+                    }
+
+                    if (StringUtils.isNotEmpty(phigher)) {
+                        higher = String.valueOf(Double.valueOf(phigher) / 100);
+                    }
+
+                    IndicatorHelper.setIndicatorThresholdInPercent(parameters, lower, higher);
                 }
             }
 
@@ -440,13 +453,20 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
     protected void initialize() {
         String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(parameters);
         if (indicatorThreshold != null) {
-            lowerText.setText(indicatorThreshold[0]);
-            higherText.setText(indicatorThreshold[1]);
+            lowerText.setText(indicatorThreshold[0] == null ? "" : indicatorThreshold[0]);
+            higherText.setText(indicatorThreshold[1] == null ? "" : indicatorThreshold[1]);
         }
         String[] indicatorPersentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(parameters);
         if (indicatorPersentThreshold != null && isContainRowCount) {
-            pLowerText.setText(indicatorPersentThreshold[0]);
-            pHigherText.setText(indicatorPersentThreshold[1]);
+            if (StringUtils.isNotEmpty(indicatorPersentThreshold[0])) {
+                Double min = StringFormatUtil.parseDouble(indicatorPersentThreshold[0]);
+                pLowerText.setText(String.valueOf(min * 100));
+            }
+
+            if (StringUtils.isNotEmpty(indicatorPersentThreshold[1])) {
+                Double max = StringFormatUtil.parseDouble(indicatorPersentThreshold[1]);
+                pHigherText.setText(String.valueOf(max * 100));
+            }
         }
     }
 }

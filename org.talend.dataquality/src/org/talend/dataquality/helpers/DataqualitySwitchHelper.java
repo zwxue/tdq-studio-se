@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
-
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.domain.DateValue;
@@ -132,8 +131,8 @@ public final class DataqualitySwitchHelper {
             return object;
         }
 
-      
     };
+
     public static final DomainSwitch<String> LITTERAL_VALUE_AS_TEXT_SWITCH = new DomainSwitch<String>() {
 
         @Override
@@ -153,7 +152,7 @@ public final class DataqualitySwitchHelper {
 
         @Override
         public String caseTextValue(TextValue object) {
-            return String.valueOf(object.getValue());
+            return object.getValue();
         }
 
     };
