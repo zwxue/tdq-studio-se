@@ -115,6 +115,7 @@ public final class DQStructureManager {
 
             IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
             IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
+            IFolder mdmConnectionFolder = createNewFolder(metadataFolder, EResourceConstant.MDM_CONNECTIONS);
 
             copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null);
             copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null);

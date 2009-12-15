@@ -43,7 +43,7 @@ public class NewConnectionActionProvider extends CommonActionProvider {
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
 
-            if (ResourceManager.isConnectionFolder(folder)) {
+            if (ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder)) {
                 CreateConnectionAction createConnectionAction = new CreateConnectionAction(folder);
                 menu.add(createConnectionAction);
                 // menu.insertBefore("group.edit", createConnectionAction);
