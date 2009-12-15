@@ -36,27 +36,76 @@ public final class DataBaseVersionHelper {
 
     private static Logger log = Logger.getLogger(DataBaseVersionHelper.class);
 
-    private static String dbType = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DBTYPE"); //$NON-NLS-1$
-
-    private static String url = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_URL"); //$NON-NLS-1$
-
-    private static String dbName = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DBNAME"); //$NON-NLS-1$
-
-    private static String driver = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_DRIVER"); //$NON-NLS-1$
-
-    private static String user = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_USER"); //$NON-NLS-1$
-
-    private static String pass = ResourcesPlugin.getPlugin().getPluginPreferences().getString("TDQ_PASSWORD"); //$NON-NLS-1$
-
-    private static Properties props = new Properties();
-
-    static {
-        props.setProperty("user", user); //$NON-NLS-1$
-        props.setProperty("password", pass); //$NON-NLS-1$
-    }
+    private static Preferences pluginPreferences = ResourcesPlugin.getPlugin().getPluginPreferences();
 
     private DataBaseVersionHelper() {
 
+    }
+
+    /**
+     * Getter for dbType.
+     * 
+     * @return the dbType
+     */
+    public static String getDbType() {
+        return pluginPreferences.getString("TDQ_DBTYPE");
+    }
+
+    /**
+     * Getter for url.
+     * 
+     * @return the url
+     */
+    public static String getUrl() {
+        return pluginPreferences.getString("TDQ_URL");
+    }
+
+    /**
+     * Getter for dbName.
+     * 
+     * @return the dbName
+     */
+    public static String getDbName() {
+        return pluginPreferences.getString("TDQ_DBNAME");
+    }
+
+    /**
+     * Getter for driver.
+     * 
+     * @return the driver
+     */
+    public static String getDriver() {
+        return pluginPreferences.getString("TDQ_DRIVER");
+    }
+
+    /**
+     * Getter for pass.
+     * 
+     * @return the pass
+     */
+    public static String getPass() {
+        return pluginPreferences.getString("TDQ_PASSWORD");
+    }
+
+    /**
+     * Getter for user.
+     * 
+     * @return the user
+     */
+    public static String getUser() {
+        return pluginPreferences.getString("TDQ_USER");
+    }
+
+    /**
+     * Getter for props.
+     * 
+     * @return the props
+     */
+    public static Properties getProps() {
+        Properties props = new Properties();
+        props.setProperty("user", getUser());
+        props.setProperty("password", getPass());
+        return props;
     }
 
     /**
@@ -66,13 +115,13 @@ public final class DataBaseVersionHelper {
      */
     public static boolean checkConnection() {
 
-        int index = url.indexOf(dbName);
+        int index = getUrl().indexOf(getDbName());
         String surl = ""; //$NON-NLS-1$
         if (index > 0) {
-            surl = url.substring(0, index);
+            surl = getUrl().substring(0, index);
         }
 
-        ReturnCode checkConnection = ConnectionService.checkConnection(surl, driver, props);
+        ReturnCode checkConnection = ConnectionService.checkConnection(surl, getDriver(), getProps());
 
         return checkConnection.isOk();
     }
@@ -83,7 +132,7 @@ public final class DataBaseVersionHelper {
      * @return
      */
     public static boolean checkDatabase() {
-        ReturnCode checkConnection = ConnectionService.checkConnection(url + dbName, driver, props);
+        ReturnCode checkConnection = ConnectionService.checkConnection(getUrl() + getDbName(), getDriver(), getProps());
 
         return checkConnection.isOk();
     }
@@ -96,17 +145,9 @@ public final class DataBaseVersionHelper {
     public static boolean storeVersion() {
         if (PluginChecker.isTDQLoaded()) {
 
-            Preferences resourcePreferences = ResourcesPlugin.getPlugin().getPluginPreferences();
+            if (getDbType() != null && getDbType().equals(SupportDBUrlType.MYSQLDEFAULTURL.getDBKey())) {
 
-            if (dbType != null && dbType.equals(SupportDBUrlType.MYSQLDEFAULTURL.getDBKey())) {
-
-                if (user != null && pass != null) {
-                    Properties props = new Properties();
-                    props.setProperty("user", user); //$NON-NLS-1$
-                    props.setProperty("password", pass); //$NON-NLS-1$
-
-                    return updateVersionInDB(url + dbName, driver, props);
-                }
+                return updateVersionInDB(getUrl() + getDbName(), getDriver(), getProps());
             }
         }
 
@@ -154,7 +195,7 @@ public final class DataBaseVersionHelper {
      * @return
      */
     public static ProductVersion getVersion() {
-        return getVersion(url, driver, props);
+        return getVersion(getUrl(), getDriver(), getProps());
     }
 
     /**
@@ -172,7 +213,7 @@ public final class DataBaseVersionHelper {
             connection = ConnectionUtils.createConnection(url, driver, props);
             if (connection != null) {
                 Statement stat = connection.createStatement();
-                ResultSet result = stat.executeQuery("select PR_VERSION from " + dbName + ".TDQ_PRODUCT");
+                ResultSet result = stat.executeQuery("select PR_VERSION from " + getDbName() + ".TDQ_PRODUCT");
                 result.next();
                 String versionStr = result.getString(1);
                 return ProductVersion.fromString(versionStr);//$NON-NLS-1$
