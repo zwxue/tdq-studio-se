@@ -17,7 +17,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteFolderAction;
-import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * This provider for deleting a user folder.
@@ -46,7 +46,7 @@ public class DeleteUserFolderProvider extends CommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
             currentSelection = (IFolder) obj;
-            if (!ResourceManager.isReadOnlyFolder(currentSelection)) {
+            if (!ResourceService.isReadOnlyFolder(currentSelection)) {
                 DeleteFolderAction createSubFolderAction = new DeleteFolderAction(currentSelection);
                 menu.add(createSubFolderAction);
             }

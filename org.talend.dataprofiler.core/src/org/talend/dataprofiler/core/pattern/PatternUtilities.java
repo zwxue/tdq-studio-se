@@ -72,6 +72,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
@@ -363,7 +364,7 @@ public final class PatternUtilities {
                     }
                 } else if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    return ResourceManager.isSubFolder(ResourceManager.getPatternFolder(), folder);
+                    return ResourceService.isSubFolder(ResourceManager.getPatternFolder(), folder);
                 }
                 return false;
             }

@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -73,7 +74,7 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
                     }
                 } else if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    return ResourceManager.isSubFolder(ResourceManager.getRulesFolder(), folder);
+                    return ResourceService.isSubFolder(ResourceManager.getRulesFolder(), folder);
                 }
                 return false;
             }

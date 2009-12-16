@@ -22,6 +22,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -37,7 +38,7 @@ public class CreateUserDefIndicatorFolderTask extends AWorkspaceTask {
             // creator Indicators
             IFolder folder = manager
                     .createNewFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.INDICATORS.getName());
-            ResourceManager.setNoSubFolderProperty(folder);
+            ResourceService.setNoSubFolderProperty(folder);
 
             // create User Defined Indicators
             folder = manager.createNewFolder(folder, EResourceConstant.USER_DEFINED_INDICATORS.getName());

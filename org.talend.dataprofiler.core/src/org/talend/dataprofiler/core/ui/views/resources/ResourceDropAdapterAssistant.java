@@ -52,7 +52,7 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -234,24 +234,25 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
         IResource targetRes = (IResource) target;
         for (IResource res : getSelectedResources()) {
             if (res.getType() == IResource.FILE) {
-                if ((targetRes.getType() == IResource.FOLDER)) {
+                IFile sourceFile = (IFile) res;
+
+                switch (targetRes.getType()) {
+                case IResource.FOLDER:
                     IFolder targetFolder = (IFolder) targetRes;
-                    IFolder sourceFolder = (IFolder) res.getParent();
-                    if (ResourceManager.isSubFolder(targetFolder, sourceFolder)) {
+                    if (ResourceService.allowDND(sourceFile, targetFolder)) {
+                        return Status.OK_STATUS;
+                    }
+                    break;
+                case IResource.FILE:
+                    IFile targetFile = (IFile) targetRes;
+                    if (FactoriesUtil.isAnalysisFile(sourceFile) && FactoriesUtil.isReportFile(targetFile)) {
                         return Status.OK_STATUS;
                     }
 
-                    if (ResourceManager.isSubFolder(sourceFolder, targetFolder) && !ResourceManager.isNoSubFolder(sourceFolder)) {
-                        return Status.OK_STATUS;
-                    }
-                } else if ((targetRes.getType() == IResource.FILE) && FactoriesUtil.isAnalysisFile((IFile) res)) {
-                    // if (targetRes instanceof IFile) {
-                    IFile tfile = (IFile) targetRes;
-                    if (FactoriesUtil.isReportFile(tfile)) {
-                        // dropRep = true;
-                        return Status.OK_STATUS;
-                    }
-                    // }
+                    break;
+
+                default:
+                    break;
                 }
             }
         }

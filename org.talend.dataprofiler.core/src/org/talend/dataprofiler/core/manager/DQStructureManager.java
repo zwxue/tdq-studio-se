@@ -45,6 +45,7 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.ProductVersion;
 
@@ -80,7 +81,7 @@ public final class DQStructureManager {
      * DOC bZhou DQStructureManager constructor comment.
      */
     private DQStructureManager() {
-        ResourceManager.refreshStructure();
+        ResourceService.refreshStructure();
     }
 
     /**
@@ -137,10 +138,10 @@ public final class DQStructureManager {
      */
     public boolean isNeedCreateStructure() {
         if (isSecludedVersion()) {
-            return !ResourceManager.checkSecludedResource();
+            return !ResourceService.checkSecludedResource();
         }
 
-        return !ResourceManager.checkResource();
+        return !ResourceService.checkResource();
     }
 
     /**

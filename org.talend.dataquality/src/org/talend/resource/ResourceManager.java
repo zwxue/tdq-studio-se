@@ -12,26 +12,19 @@
 // ============================================================================
 package org.talend.resource;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.QualifiedName;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public final class ResourceManager {
-
-    private static Logger log = Logger.getLogger(ResourceManager.class);
 
     private ResourceManager() {
     }
@@ -426,179 +419,15 @@ public final class ResourceManager {
     }
 
     /**
-     * DOC bZhou Comment method "setReadOnlyProperty".
+     * DOC bZhou Comment method "getOneFolder".
      * 
-     * @param resource
-     * @throws CoreException
+     * @param file
+     * @return null if can't find.
      */
-    public static void setReadOnlyProperty(IResource resource) throws CoreException {
-        assert resource != null;
+    static IFolder getOneFolder(IFile file) {
+        assert file != null;
 
-        String property = resource.getPersistentProperty(ResourceConstant.READONLY);
-        if (property == null) {
-            resource.setPersistentProperty(ResourceConstant.READONLY, ResourceConstant.READONLY_PROPERTY);
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "isReadOnlyFolder".
-     * 
-     * @param resource
-     * @return
-     * @throws CoreException
-     */
-    public static boolean isReadOnlyFolder(IResource resource) {
-        assert resource != null;
-
-        try {
-            String property = resource.getPersistentProperty(ResourceConstant.READONLY);
-            return StringUtils.equals(property, ResourceConstant.READONLY_PROPERTY);
-        } catch (Exception e) {
-            log.error(e, e);
-        }
-
-        return false;
-    }
-
-    /**
-     * DOC bZhou Comment method "setNoSubFolderProperty".
-     * 
-     * @param resource
-     * @throws CoreException
-     */
-    public static void setNoSubFolderProperty(IResource resource) throws CoreException {
-        assert resource != null;
-
-        String property = resource.getPersistentProperty(ResourceConstant.NO_SUBFOLDER);
-        if (property == null) {
-            resource.setPersistentProperty(ResourceConstant.NO_SUBFOLDER, ResourceConstant.NO_SUBFOLDER_PROPERTY);
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "isNoSubFolder".
-     * 
-     * @param resource
-     * @return
-     * @throws CoreException
-     */
-    public static boolean isNoSubFolder(IResource resource) {
-        assert resource != null;
-
-        try {
-            String property = resource.getPersistentProperty(ResourceConstant.NO_SUBFOLDER);
-            return StringUtils.equals(property, ResourceConstant.NO_SUBFOLDER_PROPERTY);
-        } catch (Exception e) {
-            log.error(e, e);
-        }
-
-        return false;
-    }
-
-    /**
-     * DOC bZhou Comment method "refreshStructure".
-     */
-    public static void refreshStructure() {
-        try {
-            getRootProject().refreshLocal(IResource.DEPTH_INFINITE, null);
-        } catch (CoreException e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "isSubFolder".
-     * 
-     * @param parentFolder
-     * @param subFolder
-     * @return
-     */
-    public static boolean isSubFolder(IFolder parentFolder, IFolder subFolder) {
-        assert parentFolder != null;
-        assert subFolder != null;
-
-        return parentFolder.getFullPath().isPrefixOf(subFolder.getFullPath());
-    }
-
-    /**
-     * DOC bZhou Comment method "isSubFolder".
-     * 
-     * @param parentFolder
-     * @param subFolders
-     * @return
-     */
-    public static boolean isSubFolder(IFolder parentFolder, IFolder... subFolders) {
-        assert parentFolder != null;
-        assert subFolders != null;
-
-        for (IFolder subFolder : subFolders) {
-            if (!isSubFolder(parentFolder, subFolder)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * DOC bZhou Comment method "checkResource".
-     * 
-     * @return
-     */
-    public static boolean checkResource() {
-
-        return getRootProject().exists() && getDataProfilingFolder().exists() && getLibrariesFolder().exists()
-                && getMetadataFolder().exists();
-    }
-
-    /**
-     * DOC bZhou Comment method "checkResource".
-     * 
-     * @return
-     */
-    public static boolean checkSecludedResource() {
-
-        String dpProject = "Data Profiling";
-        String lbProject = "Libraries";
-        String mtProject = "Metadata";
-
-        IWorkspaceRoot root = getRoot();
-
-        return root.getProject(dpProject).exists() && root.getProject(lbProject).exists() && root.getProject(mtProject).exists();
-    }
-
-    /**
-     * DOC bzhou Comment method "initResourcePersistence".
-     */
-    public static ReturnCode initResourcePersistence() {
-        ReturnCode rc = new ReturnCode();
-
-        try {
-            IPath[] allPathes = EResourceConstant.getPathes();
-            if (allPathes != null) {
-                for (IPath path : allPathes) {
-                    IFolder folder = getRootProject().getFolder(path);
-                    if (folder.exists()) {
-                        QualifiedName[] qualifications = EResourceConstant.findQualificationsByPath(path.toString());
-                        for (QualifiedName qualification : qualifications) {
-                            if (qualification == ResourceConstant.READONLY) {
-                                setReadOnlyProperty(folder);
-                            }
-
-                            if (qualification == ResourceConstant.NO_SUBFOLDER) {
-                                setNoSubFolderProperty(folder);
-                            }
-                        }
-                    }
-                }
-            }
-
-            rc.setOk(true);
-        } catch (CoreException e) {
-            rc.setOk(false);
-            rc.setMessage(e.getMessage());
-        }
-
-        return rc;
+        EResourceConstant constant = EResourceConstant.getResourceConstant(file);
+        return constant == null ? null : getOneFolder(constant);
     }
 }

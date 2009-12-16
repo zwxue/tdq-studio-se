@@ -36,6 +36,7 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -83,7 +84,7 @@ public class ReorderingLibraryFoldersTask extends AWorkspaceTask {
             oldJrxmlFolder.delete(true, null);
 
             // Refresh project
-            ResourceManager.refreshStructure();
+            ResourceService.refreshStructure();
         } catch (CoreException e) {
             log.error(e.getMessage(), e);
         }

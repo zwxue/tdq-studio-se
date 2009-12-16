@@ -91,6 +91,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -152,7 +153,7 @@ public class DQRespositoryView extends CommonNavigator {
     private void initWorkspace() {
 
         // initialized resource persistence property.
-        ResourceManager.initResourcePersistence();
+        ResourceService.initResourcePersistence();
 
         // initialized drivers in sql explorer.
         SQLExplorerPlugin.getDefault().initAllDrivers();

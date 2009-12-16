@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.talend.commons.emf.FactoriesUtil;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -112,6 +114,32 @@ public enum EResourceConstant {
             if (StringUtils.equals(path, constant.getPath())) {
                 return constant.getQualifications();
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getResourceConstant".
+     * 
+     * @param file
+     * @return null if can't find.
+     */
+    public static EResourceConstant getResourceConstant(IFile file) {
+        if (FactoriesUtil.isAnalysisFile(file)) {
+            return ANALYSIS;
+        } else if (FactoriesUtil.isDQRuleFile(file)) {
+            return RULES_SQL;
+        } else if (FactoriesUtil.isPatternFile(file)) {
+            return PATTERNS;
+        } else if (FactoriesUtil.isProvFile(file)) {
+            return DB_CONNECTIONS;
+        } else if (FactoriesUtil.isReportFile(file)) {
+            return REPORTS;
+        } else if (FactoriesUtil.isUDIFile(file)) {
+            return USER_DEFINED_INDICATORS;
+        } else if (FactoriesUtil.SQL.equals(file.getFileExtension())) {
+            return SOURCE_FILES;
         }
 
         return null;

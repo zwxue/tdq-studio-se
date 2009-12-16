@@ -96,6 +96,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -426,7 +427,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     }
                 } else if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    return ResourceManager.isSubFolder(ResourceManager.getRulesFolder(), folder);
+                    return ResourceService.isSubFolder(ResourceManager.getRulesFolder(), folder);
                 }
                 return false;
             }
