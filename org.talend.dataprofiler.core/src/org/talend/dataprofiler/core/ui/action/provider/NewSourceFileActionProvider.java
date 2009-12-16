@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
@@ -28,6 +27,7 @@ import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.sql.RenameFolderAction;
 import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -46,17 +46,16 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
-                IPath fullPath = ((IFolder) obj).getFullPath();
-                IPath sourceFileFolderPath = ResourceManager.getSourceFileFolder().getFullPath();
-                if (fullPath.equals(sourceFileFolderPath)) {
+                IFolder folder = (IFolder) obj;
+
+                IFolder sourceFolder = ResourceManager.getSourceFileFolder();
+                if (ResourceService.isSubFolder(sourceFolder, folder)) {
                     menu.add(new AddSqlFileAction((IFolder) obj));
-                    // rli Modification: 2008-7-16. for the feature 0004366
-                    // menu.add(new CreateSourceFolderAction((IFolder) obj));
-                    if (fullPath.segmentCount() > sourceFileFolderPath.segmentCount()) {
-                        // menu.add(new DeleteFolderAction((IFolder) obj));
+                    if (folder.getFullPath().segmentCount() > sourceFolder.getFullPath().segmentCount()) {
                         menu.add(new RenameFolderAction((IFolder) obj));
                     }
                 }
+
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
                 if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$

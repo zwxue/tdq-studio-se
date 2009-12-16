@@ -193,6 +193,15 @@ public final class ResourceManager {
     }
 
     /**
+     * DOC bZhou Comment method "getMDMConnectionFolder".
+     * 
+     * @return
+     */
+    public static IFolder getMDMConnectionFolder() {
+        return getOneFolder(EResourceConstant.MDM_CONNECTIONS);
+    }
+
+    /**
      * DOC bZhou Comment method "getExchangeFolder".
      * 
      * @return

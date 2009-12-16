@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.pattern.actions.ExportPatternsAction;
 import org.talend.dataprofiler.core.pattern.actions.ImportPatternsAction;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -55,9 +56,9 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
                     IFolder folder = (IFolder) obj;
                     ExpressionType type = null;
 
-                    if (ResourceManager.isPatternRegex(folder)) {
+                    if (ResourceService.isSubFolder(ResourceManager.getPatternRegexFolder(), folder)) {
                         type = ExpressionType.REGEXP;
-                    } else if (ResourceManager.isPatternSQLFolder(folder)) {
+                    } else if (ResourceService.isSubFolder(ResourceManager.getPatternSQLFolder(), folder)) {
                         type = ExpressionType.SQL_LIKE;
                     }
 

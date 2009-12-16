@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * @author rli
@@ -39,7 +40,7 @@ public class NewAnalysisActionProvider extends CommonActionProvider {
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
 
-            if (ResourceManager.isAnalysisFolder(folder)) {
+            if (ResourceService.isSubFolder(ResourceManager.getAnalysisFolder(), folder)) {
                 CreateNewAnalysisAction createAnalysisAction = new CreateNewAnalysisAction(folder);
                 menu.add(createAnalysisAction);
             }

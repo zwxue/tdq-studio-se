@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * @author rli
@@ -43,7 +44,8 @@ public class NewConnectionActionProvider extends CommonActionProvider {
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
 
-            if (ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder)) {
+            if (ResourceService.isSubFolder(ResourceManager.getConnectionFolder(), folder)
+                    || ResourceService.isSubFolder(ResourceManager.getMDMConnectionFolder(), folder)) {
                 CreateConnectionAction createConnectionAction = new CreateConnectionAction(folder);
                 menu.add(createConnectionAction);
                 // menu.insertBefore("group.edit", createConnectionAction);

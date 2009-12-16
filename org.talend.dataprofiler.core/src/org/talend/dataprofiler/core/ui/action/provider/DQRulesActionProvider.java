@@ -26,6 +26,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteDQRuleAction;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -50,7 +51,7 @@ public class DQRulesActionProvider extends CommonActionProvider {
                 try {
                     IFolder folder = (IFolder) obj;
 
-                    if (ResourceManager.isRulesSQLFolder(folder)) {
+                    if (ResourceService.isSubFolder(ResourceManager.getRulesSQLFolder(), folder)) {
                         menu.add(new CreateDQRulesAction(folder));
                     }
                 } catch (Exception e) {

@@ -21,6 +21,7 @@ import org.talend.dataprofiler.core.ui.action.actions.CreateUDIAction;
 import org.talend.dataprofiler.core.ui.action.actions.ExportUDIAction;
 import org.talend.dataprofiler.core.ui.action.actions.ImportUDIAction;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -38,7 +39,7 @@ public class UDIActionProvider extends CommonActionProvider {
             if (obj instanceof IFolder) {
                 try {
                     IFolder folder = (IFolder) obj;
-                    if (ResourceManager.isUDIFolder(folder)) {
+                    if (ResourceService.isSubFolder(ResourceManager.getUDIFolder(), folder)) {
                         menu.add(new CreateUDIAction(folder));
                         menu.add(new ImportUDIAction(folder));
                         menu.add(new ExportUDIAction(folder, false));
