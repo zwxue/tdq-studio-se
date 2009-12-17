@@ -17,9 +17,9 @@ import org.talend.utils.ProductVersion;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public final class VersionCompareHlper {
+public final class VersionCompareHelper {
 
-    private VersionCompareHlper() {
+    private VersionCompareHelper() {
 
     }
 
@@ -31,14 +31,37 @@ public final class VersionCompareHlper {
      * @return
      */
     public static boolean isLower(ProductVersion v1, ProductVersion v2) {
-        if (v1 == null) {
-            return true;
-        }
-
-        if (v2 == null) {
-            return false;
-        }
+        assert v1 != null;
+        assert v2 != null;
 
         return v1.compareTo(v2) < 0;
+    }
+
+    /**
+     * DOC bZhou Comment method "isHigher".
+     * 
+     * @param v1
+     * @param v2
+     * @return
+     */
+    public static boolean isHigher(ProductVersion v1, ProductVersion v2) {
+        assert v1 != null;
+        assert v2 != null;
+
+        return v1.compareTo(v2) > 0;
+    }
+
+    /**
+     * DOC bZhou Comment method "isEqual".
+     * 
+     * @param v1
+     * @param v2
+     * @return
+     */
+    public static boolean isEqual(ProductVersion v1, ProductVersion v2) {
+        assert v1 != null;
+        assert v2 != null;
+
+        return v1.compareTo(v2) == 0;
     }
 }
