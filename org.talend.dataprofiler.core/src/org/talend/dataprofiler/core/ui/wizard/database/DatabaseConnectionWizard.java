@@ -34,6 +34,7 @@ import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -54,6 +55,12 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     private ManagedDriver driver;
 
+    private boolean mdmFlag = false;
+
+    public boolean isMdmFlag() {
+        return mdmFlag;
+    }
+
     /**
      * Constructor for DatabaseWizard. Analyse Iselection to extract DatabaseConnection and the pathToSave. Start the
      * Lock Strategy.
@@ -63,24 +70,38 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      */
     public DatabaseConnectionWizard(DBConnectionParameter connectionParam) {
         this.connectionParam = connectionParam;
+        mdmFlag = ResourceManager.isMdmConnectionFolder(connectionParam.getFolderProvider().getFolderResource());
     }
 
     /**
      * Adding the page to the wizard and set Title, Description and PageComplete.
      */
     public void addPages() {
-        setWindowTitle(DefaultMessagesImpl.getString("DatabaseConnectionWizard.databaseConnection")); //$NON-NLS-1$
+        String winTitle = mdmFlag ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.mdmConnection") : DefaultMessagesImpl
+                .getString("DatabaseConnectionWizard.databaseConnection");
+
+        setWindowTitle(winTitle); //$NON-NLS-1$
         setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
 
         propertiesWizardPage = new DatabaseMetadataWizardPage();
         databaseWizardPage = new DatabaseWizardPage();
+        databaseWizardPage.setMdmFlag(mdmFlag);
 
-        propertiesWizardPage.setTitle(DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnection")); //$NON-NLS-1$
-        propertiesWizardPage.setDescription(DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineProperties")); //$NON-NLS-1$
+        String propTitle = mdmFlag ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnection")
+                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnection");
+        String propDesc = DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineProperties");
+
+        propertiesWizardPage.setTitle(propTitle); //$NON-NLS-1$
+        propertiesWizardPage.setDescription(propDesc); //$NON-NLS-1$
         propertiesWizardPage.setPageComplete(false);
 
-        databaseWizardPage.setTitle(DefaultMessagesImpl.getString("DatabaseConnectionWizard.databaseConnections")); //$NON-NLS-1$
-        databaseWizardPage.setDescription(DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnections")); //$NON-NLS-1$
+        String dataTitle = mdmFlag ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnections")
+                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnections");
+        String dataDesc = mdmFlag ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineMdm") : DefaultMessagesImpl
+                .getString("DatabaseConnectionWizard.defineDatabase");
+
+        databaseWizardPage.setTitle(dataTitle); //$NON-NLS-1$
+        databaseWizardPage.setDescription(dataDesc); //$NON-NLS-1$
 
         try {
             addPage(propertiesWizardPage);

@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.EXistXMLDBConnection;
 import org.talend.cwm.db.connection.IXMLDBConnection;
+import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -89,6 +90,12 @@ public class DatabaseWizardPage extends AbstractWizardPage {
     private Text username;
 
     private Text passwordText;
+
+    private boolean mdmFlag = false;
+
+    public void setMdmFlag(boolean mdm) {
+        this.mdmFlag = mdm;
+    }
 
     private PropertyChangeListener listener = new PropertyChangeListener() {
 
@@ -178,6 +185,10 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         });
 
         String defalutItem = SupportDBUrlType.MYSQLDEFAULTURL.getDBKey();
+        if (mdmFlag) {
+            defalutItem = SupportDBUrlType.MDM.getDBKey();
+            dbTypeCombo.setEnabled(false);
+        }
         dbTypeCombo.setText(defalutItem);
         setDBType(defalutItem);
         lastTimeDBType = SupportDBUrlStore.getInstance().getDBUrlType(dbTypeCombo.getText());
@@ -212,7 +223,11 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         this.container = comp;
         setControl(comp);
 
-        rebuildJDBCControls(SupportDBUrlType.MYSQLDEFAULTURL);
+        if (mdmFlag) {
+            rebuildJDBCControls(SupportDBUrlType.MDM);
+        } else {
+            rebuildJDBCControls(SupportDBUrlType.MYSQLDEFAULTURL);
+        }
 
         String tempUserid = connectionParam.getParameters().getProperty(TaggedValueHelper.USER);
         if (tempUserid != null) {
@@ -256,6 +271,12 @@ public class DatabaseWizardPage extends AbstractWizardPage {
     }
 
     private ReturnCode checkDBConnection() {
+        // MOD xqliu 2009-12-17 check for a mdm database
+        if (mdmFlag) {
+            IXMLDBConnection mdmConnection = new MdmConnection(connectionParam.getJdbcUrl(), connectionParam.getParameters());
+            ReturnCode retcode = mdmConnection.checkDatabaseConnection();
+            return retcode;
+        }
         // MOD mzhao 2009-11-27 Check for an xml database (e.g eXist)
         if (connectionParam.getDriverClassName().equals(DatabaseConstant.XML_EXIST_DRIVER_NAME)) {
             IXMLDBConnection eXistDBConnection = new EXistXMLDBConnection(connectionParam.getDriverClassName(), connectionParam

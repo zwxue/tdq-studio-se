@@ -35,13 +35,19 @@ import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
+import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLContent;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.cwm.xml.XmlFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC mzhao class global comment. Detailled comment
@@ -73,11 +79,13 @@ public final class XMLSchemaBuilder {
      * @return
      */
     public List<ModelElement> getRootElements(TdXMLDocument document) {
+        String uri = isMdm(document) ? ResourceManager.getMDMConnectionFolder().getFile(document.getXsdFilePath())
+                .getRawLocation().toOSString() : ResourceManager.getConnectionFolder().getFile(document.getXsdFilePath())
+                .getRawLocation().toOSString();
         Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("*", new XSDResourceFactoryImpl());
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XSDResourceFactoryImpl());
         ResourceSet resourceSet = new ResourceSetImpl();
-        resourceSet.getResource(URI.createFileURI(ResourceManager.getConnectionFolder().getFile(document.getXsdFilePath())
-                .getRawLocation().toOSString()), true);
+        resourceSet.getResource(URI.createFileURI(uri), true);
         XSDSchema xsdSchema = null;
         for (Iterator<Resource> resources = resourceSet.getResources().iterator(); resources.hasNext(); /* no-op */) {
             // Return the first schema object found, which is the main schema
@@ -152,9 +160,11 @@ public final class XMLSchemaBuilder {
     }
 
     private XSDElementDeclaration findFromGlobalXSDEleDeclarations(String name) {
-        for (XSDElementDeclaration xsdEleDecl : globalXSDElemDeclarations) {
-            if (xsdEleDecl.getName().equals(name)) {
-                return xsdEleDecl;
+        if (globalXSDElemDeclarations != null) {
+            for (XSDElementDeclaration xsdEleDecl : globalXSDElemDeclarations) {
+                if (xsdEleDecl.getName().equals(name)) {
+                    return xsdEleDecl;
+                }
             }
         }
         return null;
@@ -186,21 +196,23 @@ public final class XMLSchemaBuilder {
 
     public List<TdXMLElement> getChildren(TdXMLElement parent) {
         XSDElementDeclaration xsdElementDeclearation = (XSDElementDeclaration) parent.getXsdElementDeclaration();
-        XSDTypeDefinition xsdTypeDef = xsdElementDeclearation.getTypeDefinition();
         TdXMLContent createTdXMLContent = XmlFactory.eINSTANCE.createTdXMLContent();
-        if (xsdTypeDef instanceof XSDComplexTypeDefinition) {
-            XSDComplexTypeDefinition xsdComplexTypeDef = (XSDComplexTypeDefinition) xsdTypeDef;
-            XSDTerm term = xsdComplexTypeDef.getComplexType().getTerm();
-            if (term instanceof XSDModelGroup) {
-                XSDModelGroup modGroup = (XSDModelGroup) term;
-                EList<XSDParticle> paticleList = modGroup.getContents();
-                for (XSDParticle paticle : paticleList) {
-                    if (paticle.getContent() instanceof XSDElementDeclaration) {
-                        XSDElementDeclaration xed = (XSDElementDeclaration) paticle.getContent();
-                        TdXMLElement xmlElem = getElementFromXsdDeclaration(xed);
-                        xmlElem.setOwnedDocument(parent.getOwnedDocument());
-                        createTdXMLContent.getXmlElements().add(xmlElem);
+        if (xsdElementDeclearation != null) {
+            XSDTypeDefinition xsdTypeDef = xsdElementDeclearation.getTypeDefinition();
+            if (xsdTypeDef instanceof XSDComplexTypeDefinition) {
+                XSDComplexTypeDefinition xsdComplexTypeDef = (XSDComplexTypeDefinition) xsdTypeDef;
+                XSDTerm term = xsdComplexTypeDef.getComplexType().getTerm();
+                if (term instanceof XSDModelGroup) {
+                    XSDModelGroup modGroup = (XSDModelGroup) term;
+                    EList<XSDParticle> paticleList = modGroup.getContents();
+                    for (XSDParticle paticle : paticleList) {
+                        if (paticle.getContent() instanceof XSDElementDeclaration) {
+                            XSDElementDeclaration xed = (XSDElementDeclaration) paticle.getContent();
+                            TdXMLElement xmlElem = getElementFromXsdDeclaration(xed);
+                            xmlElem.setOwnedDocument(parent.getOwnedDocument());
+                            createTdXMLContent.getXmlElements().add(xmlElem);
 
+                        }
                     }
                 }
             }
@@ -212,10 +224,28 @@ public final class XMLSchemaBuilder {
     public ReturnCode isLeafNode(TdXMLElement element) {
         ReturnCode code = new ReturnCode();
         XSDElementDeclaration xsdElementDeclearation = (XSDElementDeclaration) element.getXsdElementDeclaration();
-        XSDTypeDefinition xsdTypeDef = xsdElementDeclearation.getTypeDefinition();
-        if (xsdTypeDef instanceof XSDSimpleTypeDefinition) {
-            code.setOk(Boolean.FALSE);
+        if (xsdElementDeclearation != null) {
+            XSDTypeDefinition xsdTypeDef = xsdElementDeclearation.getTypeDefinition();
+            if (xsdTypeDef instanceof XSDSimpleTypeDefinition) {
+                code.setOk(Boolean.FALSE);
+            }
         }
         return code;
+    }
+
+    private boolean isMdm(TdXMLDocument document) {
+        EList<DataManager> dataManagers = document.getDataManager();
+        if (dataManagers != null && dataManagers.size() > 0) {
+            DataManager dataManager = dataManagers.get(0);
+            EList<ProviderConnection> clientConnections = ((TdDataProvider) dataManager).getResourceConnection();
+            if (clientConnections != null && clientConnections.size() > 0) {
+                ProviderConnection providerConnection = clientConnections.get(0);
+                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBTYPE, providerConnection.getTaggedValue());
+                if (tv != null && SupportDBUrlType.MDM.getDBKey().equals(tv.getValue())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

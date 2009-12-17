@@ -36,6 +36,8 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
@@ -50,6 +52,7 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -177,8 +180,16 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         Properties props = new Properties();
         props.put(TaggedValueHelper.USER, loginText.getText());
         props.put(TaggedValueHelper.PASSWORD, passwordText.getText());
+        // MOD xqliu 2009-12-17 bug 10238
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
-        ReturnCode returnCode = ConnectionService.checkConnection(this.urlText.getText(), connection.getDriverClassName(), props);
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.UNIVERSE, connection.getTaggedValue());
+        if (tv != null && !"".equals(tv.getValue().trim())) {
+            props.put(TaggedValueHelper.UNIVERSE, tv.getValue().trim());
+        }
+        ReturnCode returnCode = ConnectionUtils.isMdmConnection(connection) ? new MdmConnection(connection.getConnectionString(),
+                props).checkDatabaseConnection() : ConnectionService.checkConnection(this.urlText.getText(), connection
+                .getDriverClassName(), props);
+        // ~
         return returnCode;
     }
 

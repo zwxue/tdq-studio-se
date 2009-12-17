@@ -21,6 +21,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import org.apache.log4j.Logger;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sugars.ReturnCode;
@@ -49,8 +50,12 @@ public class DataProviderBuilder {
             return returnCode;
         }
 
+        // MOD xqliu 2009-12-17 feature 10238 add support for MDM
+        if (parameter.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
+            dataProvider = TalendCwmFactory.createMdmTdDataProvider(parameter);
+        }
         // MOD mzhao feature 10238 add support for xmldb(e.g eXist).
-        if (parameter.getDriverClassName().equals(DatabaseConstant.XML_EXIST_DRIVER_NAME)) {
+        else if (parameter.getDriverClassName().equals(DatabaseConstant.XML_EXIST_DRIVER_NAME)) {
             dataProvider = TalendCwmFactory.createEXistTdDataProvider(parameter);
         } else {
             DBConnect connector = new DBConnect(parameter);

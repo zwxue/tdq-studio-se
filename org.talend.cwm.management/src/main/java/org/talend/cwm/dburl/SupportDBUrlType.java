@@ -140,6 +140,14 @@ public enum SupportDBUrlType {
               "org.exist.xmldb.DatabaseImpl", //$NON-NLS-1$
               null,
               "eXist"),
+    MDM("MDM", //$NON-NLS-1$
+        "localhost", //$NON-NLS-1$
+        "8080", //$NON-NLS-1$
+        "talend/TalendPort", //$NON-NLS-1$
+        null,
+        "", //$NON-NLS-1$
+        null,
+        "MDM"),
     JAVADEFAULTURL("Java", "localhost", null, "dbname", null, null, null, "Java");
 
 

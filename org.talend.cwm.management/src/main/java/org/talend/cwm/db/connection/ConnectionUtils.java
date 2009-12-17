@@ -37,11 +37,15 @@ import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
+import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * Utility class for database connection handling.
@@ -368,6 +372,20 @@ public final class ConnectionUtils {
                 && connectionMetadata.getDatabaseProductName() != null
                 && connectionMetadata.getDatabaseProductName().equals(DatabaseConstant.ODBC_MSSQL_PRODUCT_NAME)) {
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "isMdmConnection".
+     * 
+     * @param connection
+     * @return
+     */
+    public static boolean isMdmConnection(TdProviderConnection connection) {
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBTYPE, connection.getTaggedValue());
+        if (tv != null) {
+            return SupportDBUrlType.MDM.getDBKey().equals(tv.getValue());
         }
         return false;
     }

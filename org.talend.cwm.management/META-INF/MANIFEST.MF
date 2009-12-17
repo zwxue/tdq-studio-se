@@ -63,7 +63,12 @@ Export-Package: org.talend.cwm.db.connection,
  org.talend.dq.pattern,
  org.talend.dq.writer,
  org.talend.dq.writer.impl
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/axis.jar,
+ lib/commons-discovery-0.2.jar,
+ lib/jaxrpc.jar,
+ lib/mdm_webservice.jar,
+ lib/mail.jar
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy

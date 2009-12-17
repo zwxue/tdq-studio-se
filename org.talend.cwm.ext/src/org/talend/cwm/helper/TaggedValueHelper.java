@@ -76,6 +76,8 @@ public final class TaggedValueHelper {
 
     public static final String DB_IDENTIFIER_QUOTE_STRING = "DB IdentifierQuoteString"; //$NON-NLS-1$
 
+    public static final String UNIVERSE = "universe";
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // report tagged values

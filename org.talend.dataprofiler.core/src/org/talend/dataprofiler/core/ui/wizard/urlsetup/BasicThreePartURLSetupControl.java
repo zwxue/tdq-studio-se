@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
@@ -249,6 +250,121 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
                     setConnectionURL(url);
                     urlText.setText(getConnectionURL());
+                }
+            });
+
+        } else if (dbLiteral.trim().equals(SupportDBUrlType.MDM.getLanguage())) {
+            GridLayout layout = new GridLayout();
+            layout.numColumns = 2;
+            parent.setLayout(layout);
+
+            boolean compositeEnable = !(dbType.getHostName() == null);
+            Label label = new Label(parent, SWT.NONE);
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Hostname")); //$NON-NLS-1$
+            final Text hostNameText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            hostNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            if (compositeEnable) {
+                hostNameText.setText(dbType.getHostName());
+                connectionParam.setHost(dbType.getHostName());
+            }
+            label.setEnabled(compositeEnable);
+            hostNameText.setEnabled(compositeEnable);
+
+            compositeEnable = !(dbType.getPort() == null);
+            label = new Label(parent, SWT.NONE);
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Port")); //$NON-NLS-1$
+            final Text portText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            portText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            if (compositeEnable) {
+                portText.setText(dbType.getPort());
+                connectionParam.setPort(dbType.getPort());
+            }
+            label.setEnabled(compositeEnable);
+            portText.setEnabled(compositeEnable);
+
+            compositeEnable = false;
+            label = new Label(parent, SWT.NONE);
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.DBname")); //$NON-NLS-1$
+            final Text databaseNameText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            databaseNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            databaseNameText.setText(dbType.getDBName());
+            label.setEnabled(compositeEnable);
+            databaseNameText.setEnabled(compositeEnable);
+
+            label = new Label(parent, SWT.NONE);
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.universe")); //$NON-NLS-1$
+            final Text universeText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            universeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            universeText.setText("");
+
+            label = new Label(parent, SWT.NONE);
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.url")); //$NON-NLS-1$
+            urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            urlText.setEditable(false);
+            urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            urlText.addFocusListener(new FocusAdapter() {
+
+                public void focusGained(FocusEvent e) {
+                    urlText.setEditable(true);
+                }
+
+                public void focusLost(FocusEvent e) {
+                    urlText.setEditable(false);
+                }
+            });
+            urlText.setText(getConnectionURL());
+            urlText.addKeyListener(new KeyAdapter() {
+
+                public void keyReleased(KeyEvent e) {
+                    setConnectionURL(urlText.getText());
+                }
+
+            });
+
+            universeText.addModifyListener(new ModifyListener() {
+
+                public void modifyText(ModifyEvent event) {
+                    setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(),
+                            portText.getText(), databaseNameText.getText(), universeText.getText(), ""));
+                    urlText.setText(getConnectionURL());
+                    connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE, universeText.getText());
+                }
+            });
+
+            hostNameText.addModifyListener(new ModifyListener() {
+
+                public void modifyText(ModifyEvent event) {
+                    String host = hostNameText.getText();
+                    setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), host, portText.getText(),
+                            databaseNameText.getText(), universeText.getText(), ""));
+                    urlText.setText(getConnectionURL());
+                    connectionParam.setHost(host);
+                }
+            });
+
+            portText.addModifyListener(new ModifyListener() {
+
+                public void modifyText(ModifyEvent event) {
+
+                    String port = portText.getText();
+                    setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(), port,
+                            databaseNameText.getText(), universeText.getText(), ""));
+                    urlText.setText(getConnectionURL());
+                    connectionParam.setPort(port);
+                }
+            });
+            portText.addKeyListener(new KeyAdapter() {
+
+                public void keyReleased(KeyEvent e) {
+                    Long portValue = null;
+                    try {
+                        portValue = new Long(portText.getText());
+                    } catch (NumberFormatException e1) {
+                        // JUMP
+                    }
+                    if (portValue == null || portValue <= 0) {
+                        portText.setText(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+                    }
                 }
             });
 

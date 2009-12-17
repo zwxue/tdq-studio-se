@@ -158,6 +158,25 @@ public final class TalendCwmFactory {
     }
 
     /**
+     * Instantiate a data provider from mdm service. DOC xqliu feature 10238.
+     * 
+     * @param parameter
+     * @return
+     */
+    public static TdDataProvider createMdmTdDataProvider(DBConnectionParameter parameter) {
+        IXMLDBConnection mdmConnection = new MdmConnection(parameter.getJdbcUrl(), parameter.getParameters());
+        ReturnCode rt = mdmConnection.checkDatabaseConnection();
+        if (rt.isOk()) {
+            TdDataProvider dataProvider = DataProviderHelper.createTdDataProvider(parameter.getName());
+            mdmConnection.setSofewareSystem(dataProvider, parameter);
+            mdmConnection.setProviderConnection(dataProvider, parameter);
+            DataProviderHelper.addXMLDocuments(mdmConnection.createConnection(), dataProvider);
+            return dataProvider;
+        }
+        return null;
+    }
+
+    /**
      * Method "getTdDataProvider" simply tries to instantiate a data provider from the given connection. The connector
      * should have already open its connection. If not, this method tries to open a connection. The caller should close
      * the connection.
