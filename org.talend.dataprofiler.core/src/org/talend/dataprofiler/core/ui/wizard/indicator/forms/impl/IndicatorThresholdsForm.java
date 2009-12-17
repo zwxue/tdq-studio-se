@@ -316,8 +316,9 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 statusLabelText += MSG_ONLY_DATE + System.getProperty("line.separator");
             }
         } else {
-            if ((!CheckValueUtils.isNumberValue(min) && !CheckValueUtils.isEmpty(min))
-                    || (!CheckValueUtils.isNumberValue(max) && !CheckValueUtils.isEmpty(max))) {
+            // bug 10550 by zshen,Cannot set a negative threshold on individual summary statistics indicators
+            if ((!CheckValueUtils.isNumberWithNegativeValue(min) && !CheckValueUtils.isEmpty(min))
+                    || (!CheckValueUtils.isNumberWithNegativeValue(max) && !CheckValueUtils.isEmpty(max))) {
 
                 rc.setOk(false);
                 statusLabelText += MSG_ONLY_NUMBER + System.getProperty("line.separator");
