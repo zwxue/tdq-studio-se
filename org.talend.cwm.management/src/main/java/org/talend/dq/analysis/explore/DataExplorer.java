@@ -15,10 +15,11 @@ package org.talend.dq.analysis.explore;
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -31,7 +32,6 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * @author scorreia
@@ -148,15 +148,32 @@ public abstract class DataExplorer implements IDataExplorer {
         this.columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
     }
 
+    /**
+     * DOC bZhou Comment method "getFullyQualifiedTableName".
+     * 
+     * @param column
+     * @return
+     */
     protected String getFullyQualifiedTableName(Column column) {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
-        return dbmsLanguage.toQualifiedName(null, ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner).getName(),
-                columnSetOwner.getName());
+        return getFullyQualifiedTableName(columnSetOwner);
     }
 
-    protected String getFullyQualifiedTableName(NamedColumnSet set) {
-        String catalogName = CatalogHelper.getParentCatalog(set) == null ? null : CatalogHelper.getParentCatalog(set).getName();
-        String schemaName = SchemaHelper.getParentSchema(set) == null ? null : SchemaHelper.getParentSchema(set).getName();
+    /**
+     * DOC bZhou Comment method "getFullyQualifiedTableName".
+     * 
+     * @param set
+     * @return
+     */
+    protected String getFullyQualifiedTableName(ColumnSet set) {
+        TdSchema parentSchema = SchemaHelper.getParentSchema(set);
+        TdCatalog parentCatalog = CatalogHelper.getParentCatalog(set);
+        if (parentSchema != null) {
+            parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+        }
+
+        String schemaName = parentSchema == null ? null : parentSchema.getName();
+        String catalogName = parentCatalog == null ? null : parentCatalog.getName();
         return dbmsLanguage.toQualifiedName(catalogName, schemaName, set.getName());
     }
 

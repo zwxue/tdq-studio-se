@@ -198,12 +198,16 @@ public class CorePlugin extends AbstractUIPlugin {
             }
         } else {
             try {
-                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
-                input.setUser(alias.getDefaultUser());
-                IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
-                SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
-                editorPart.setText(query);
-                return editorPart;
+                TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+                if (connection != null) {
+                    String userName = DataProviderHelper.getUser(connection);
+                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
+                    input.setUser(alias.getUser(userName));
+                    IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
+                    SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+                    editorPart.setText(query);
+                    return editorPart;
+                }
             } catch (PartInitException e) {
                 log.error(e, e);
             }
