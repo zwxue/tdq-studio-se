@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
-import java.util.Properties;
-
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -22,25 +20,11 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -48,6 +32,7 @@ import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
+import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -56,17 +41,16 @@ import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.analysis.explore.IDataExplorer;
-import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.analysis.parameters.ParameterFactory;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -122,7 +106,7 @@ public final class ChartTableFactory {
                                 }
                             });
 
-                            if (((indicator instanceof PatternFreqIndicator || indicator instanceof PatternLowFreqIndicator))) {
+                            if (isPatternFrequencyIndicator(indicator)) {
                                 MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
                                 itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {
@@ -139,55 +123,24 @@ public final class ChartTableFactory {
                         }
 
                         if (PluginChecker.isTDCPLoaded()) {
-                            if (indicator instanceof DuplicateCountIndicator || indicator instanceof UniqueCountIndicator
-                                    || indicator instanceof DistinctCountIndicator) {
-                                MenuItem rmDuplicated = new MenuItem(menu, SWT.PUSH);
-                                rmDuplicated.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
-                                rmDuplicated.addSelectionListener(new SelectionAdapter() {
+                            final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault()
+                                    .getService(IJobService.class);
+                            if (service != null) {
+                                service.setIndicator(indicator);
+                                service.setAnalysis(analysis);
 
-                                    @Override
-                                    public void widgetSelected(SelectionEvent e) {
-                                        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-                                        DataManager dataManager = analysis.getContext().getConnection();
+                                MenuItem item = null;
+                                if (isDUDIndicator(indicator)) {
+                                    item = new MenuItem(menu, SWT.PUSH);
+                                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
+                                } else if (isPatternMatchingIndicator(indicator)) {
+                                    item = new MenuItem(menu, SWT.PUSH);
+                                    item.setText("Generate jobs");
+                                }
 
-                                        try {
-                                            IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister
-                                                    .getDefault().getService(IJobService.class);
-                                            if (service != null) {
-                                                DBConnectionParameter parameter = buildParameter(dataManager);
-                                                service.setConnectionParameter(parameter);
-                                                service.setSelectedColumn(column);
-                                                service.setAnalysis(analysis);
-                                                service.executeJob();
-                                            }
-                                        } catch (Exception e2) {
-                                            e2.printStackTrace();
-                                        }
-                                    }
-
-                                    private DBConnectionParameter buildParameter(DataManager dataManager) {
-                                        DBConnectionParameter parameter = ParameterFactory.createDBConnectionParameter();
-
-                                        DataProvider dataProvider = (DataProvider) dataManager;
-                                        TdProviderConnection providerConnection = (TdProviderConnection) dataProvider
-                                                .getResourceConnection().get(0);
-
-                                        Properties prop = new Properties();
-                                        prop.setProperty(TaggedValueHelper.USER, DataProviderHelper.getUser(providerConnection));
-                                        prop.setProperty(TaggedValueHelper.PASSWORD, DataProviderHelper
-                                                .getClearTextPassword(providerConnection));
-                                        parameter.setParameters(prop);
-
-                                        parameter.setHost(DataProviderHelper.getHost(providerConnection));
-                                        parameter.setPort(DataProviderHelper.getPort(providerConnection));
-                                        parameter.setDbName(DataProviderHelper.getDBName(providerConnection));
-                                        parameter.setJdbcUrl(providerConnection.getConnectionString());
-                                        parameter.setDriverClassName(providerConnection.getDriverClassName());
-                                        parameter.setSqlTypeName(DataProviderHelper.getDBType(providerConnection));
-
-                                        return parameter;
-                                    }
-                                });
+                                if (item != null) {
+                                    item.addSelectionListener(getAdapter(service));
+                                }
                             }
                         }
 
@@ -195,102 +148,29 @@ public final class ChartTableFactory {
                     }
                 }
             }
+
+            private SelectionAdapter getAdapter(final IDatabaseJobService service) {
+                return new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        service.executeJob();
+                    }
+                };
+            }
         });
 
         // add tool tip
-        addTooltipOnTableItem(table);
+        TableUtils.addTooltipOnTableItem(table);
     }
 
-    private static void addTooltipOnTableItem(final Table table) {
-        table.setToolTipText(""); //$NON-NLS-1$
-
-        final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
-        shell.setLayout(new FillLayout());
-
-        final Listener labelListener = new Listener() {
-
-            public void handleEvent(Event event) {
-                Label label = (Label) event.widget;
-                Shell shell = label.getShell();
-
-                switch (event.type) {
-                case SWT.MouseDown:
-                    Event e = new Event();
-                    e.item = (TableItem) label.getData("_TABLEITEM"); //$NON-NLS-1$
-                    table.setSelection(new TableItem[] { (TableItem) e.item });
-                    table.notifyListeners(SWT.Selection, e);
-                case SWT.MouseExit:
-                    shell.dispose();
-                    break;
-                default:
-                    break;
-                }
-            }
-        };
-
-        Listener tableListener = new Listener() {
-
-            Shell tip = null;
-
-            Label label = null;
-
-            public void handleEvent(Event event) {
-                switch (event.type) {
-                case SWT.Dispose:
-                case SWT.KeyDown:
-                case SWT.MouseMove:
-                    if (tip == null) {
-                        break;
-                    }
-                    tip.dispose();
-                    tip = null;
-                    label = null;
-                    break;
-                case SWT.MouseHover:
-                    TableItem item = table.getItem(new Point(event.x, event.y));
-
-                    if (item != null) {
-                        // show tool tip
-                        ChartDataEntity entity = (ChartDataEntity) item.getData();
-
-                        String rangeAsString = entity.getRangeAsString();
-                        if (rangeAsString != null) {
-                            showTip(item, rangeAsString);
-                        }
-                    }
-                default:
-                    break;
-                }
-            }
-
-            private void showTip(TableItem item, String msg) {
-                if (tip != null && !tip.isDisposed()) {
-                    tip.dispose();
-                }
-
-                tip = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
-                tip.setLayout(new FillLayout());
-                label = new Label(tip, SWT.NONE);
-
-                label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-                label.setData("_TABLEITEM", item); //$NON-NLS-1$
-                label.setText(msg);
-                label.addListener(SWT.MouseExit, labelListener);
-                label.addListener(SWT.MouseDown, labelListener);
-                Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-                Rectangle rect = item.getBounds(1);
-                Point pt = table.toDisplay(rect.x, rect.y);
-                tip.setBounds(pt.x + 10, pt.y + 18, size.x, size.y);
-                tip.setVisible(true);
-            }
-        };
-
-        table.addListener(SWT.Dispose, tableListener);
-        table.addListener(SWT.KeyDown, tableListener);
-        table.addListener(SWT.MouseMove, tableListener);
-        table.addListener(SWT.MouseHover, tableListener);
-    }
-
+    /**
+     * DOC bZhou Comment method "createPattern".
+     * 
+     * @param analysis
+     * @param itemEntity
+     * @param pattTransformer
+     */
     public static void createPattern(Analysis analysis, MenuItemEntity itemEntity, final PatternTransformer pattTransformer) {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
         String query = itemEntity.getQuery();
@@ -299,4 +179,69 @@ public final class ChartTableFactory {
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    /**
+     * DOC bZhou Comment method "isDUDIndicator".
+     * 
+     * @param indicator
+     * @return false if the indicator is not Duplicated,Uniqure,Distinct indicator.
+     */
+    public static boolean isDUDIndicator(Indicator indicator) {
+        IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
+
+            public Indicator caseDuplicateCountIndicator(DuplicateCountIndicator object) {
+                return object;
+            };
+
+            public Indicator caseUniqueCountIndicator(UniqueCountIndicator object) {
+                return object;
+            };
+
+            public Indicator caseDistinctCountIndicator(DistinctCountIndicator object) {
+                return object;
+            };
+        };
+
+        return iSwitch.doSwitch(indicator) != null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isPatternMatchingIndicator".
+     * 
+     * @param indicator
+     * @return false if the indicator is not pattern matching indicator.
+     */
+    public static boolean isPatternMatchingIndicator(Indicator indicator) {
+        IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
+
+            @Override
+            public Indicator casePatternMatchingIndicator(PatternMatchingIndicator object) {
+                return object;
+            }
+        };
+
+        return iSwitch.doSwitch(indicator) != null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isPatternFrequencyIndicator".
+     * 
+     * @param indicator
+     * @return false if the indicator is not pattern frequency indicator.
+     */
+    public static boolean isPatternFrequencyIndicator(Indicator indicator) {
+        IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
+
+            @Override
+            public Indicator casePatternFreqIndicator(PatternFreqIndicator object) {
+                return object;
+            }
+
+            @Override
+            public Indicator casePatternLowFreqIndicator(PatternLowFreqIndicator object) {
+                return object;
+            }
+        };
+
+        return iSwitch.doSwitch(indicator) != null;
+    }
 }

@@ -13,8 +13,7 @@
 package org.talend.dataprofiler.core.service;
 
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import orgomg.cwm.resource.relational.Column;
+import org.talend.dataquality.indicators.Indicator;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -22,18 +21,11 @@ import orgomg.cwm.resource.relational.Column;
 public interface IDatabaseJobService extends IJobService {
 
     /**
-     * DOC bZhou Comment method "setConnectionParameter".
+     * DOC bZhou Comment method "setIndicator".
      * 
-     * @param connectionParameter
+     * @param indicator
      */
-    public void setConnectionParameter(DBConnectionParameter connectionParameter);
-
-    /**
-     * DOC bZhou Comment method "setSelectedColumn".
-     * 
-     * @param column
-     */
-    public void setSelectedColumn(Column column);
+    public void setIndicator(Indicator indicator);
 
     /**
      * DOC bZhou Comment method "setAnalysis".
