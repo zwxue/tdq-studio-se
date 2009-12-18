@@ -50,7 +50,6 @@ public class DB2DbmsLanguage extends DbmsLanguage {
                 + " '1234567890BCDEFGHIJKLMNOPQRSTUVWXYZbcdefghijklmnopqrstuvwxyz')"; // cannot put accents //$NON-NLS-1$
     }
 
-    
     @Override
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
         return "TRANSLATE(CHAR(" + expression + ") ,VARCHAR('" + replacementChars + "'),'" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -88,4 +87,13 @@ public class DB2DbmsLanguage extends DbmsLanguage {
         return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#trim(java.lang.String)
+     */
+    @Override
+    public String trim(String colName) {
+        return " LTRIM(RTRIM(" + colName + ")) ";
+    }
 }
