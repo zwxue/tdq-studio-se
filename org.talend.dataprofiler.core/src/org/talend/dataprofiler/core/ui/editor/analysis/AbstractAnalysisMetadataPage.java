@@ -162,7 +162,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     // MOD mzhao 2009-05-05, bug 6587.
     protected void reloadDataproviderAndFillConnCombo() {
         IFolder connFolder = ResourceManager.getConnectionFolder();
+        IFolder mdmFolder = ResourceManager.getMDMConnectionFolder();
         List<TdDataProvider> dataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(connFolder);
+        List<TdDataProvider> mdmProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(mdmFolder);
+        dataProviders.addAll(mdmProviders);
 
         int index = 0;
         connCombo.removeAll();

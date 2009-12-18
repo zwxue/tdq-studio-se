@@ -563,7 +563,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     log.error("Can't get the children of container:" + container.getLocation());
                 }
 
-                if (container.equals(ResourceManager.getConnectionFolder())) {
+                if (ResourceManager.getConnectionFolder().equals(container)
+                        || ResourceManager.getMDMConnectionFolder().equals(container)) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
                 return members;

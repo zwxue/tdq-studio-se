@@ -188,6 +188,8 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         if (mdmFlag) {
             defalutItem = SupportDBUrlType.MDM.getDBKey();
             dbTypeCombo.setEnabled(false);
+        } else {
+            dbTypeCombo.remove(SupportDBUrlType.MDM.getDBKey());
         }
         dbTypeCombo.setText(defalutItem);
         setDBType(defalutItem);
