@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Table;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
@@ -109,6 +110,7 @@ public final class ChartTableFactory {
                             if (isPatternFrequencyIndicator(indicator)) {
                                 MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
                                 itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
+                                itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
                                     @Override
@@ -139,6 +141,7 @@ public final class ChartTableFactory {
                                 }
 
                                 if (item != null) {
+                                    item.setImage(ImageLib.getImage(ImageLib.ICON_PROCESS));
                                     item.addSelectionListener(getAdapter(service));
                                 }
                             }
