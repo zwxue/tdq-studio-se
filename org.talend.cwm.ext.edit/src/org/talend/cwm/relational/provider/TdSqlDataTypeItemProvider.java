@@ -30,6 +30,7 @@ import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdSqlDataType;
 
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
+import org.talend.cwm.xml.XmlFactory;
 import orgomg.cwm.objectmodel.core.CorePackage;
 
 import orgomg.cwm.resource.relational.provider.SQLSimpleTypeItemProvider;
@@ -359,6 +360,21 @@ public class TdSqlDataTypeItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  SoftwaredeploymentFactory.eINSTANCE.createTdMachine()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 XmlFactory.eINSTANCE.createTdXMLElement()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 XmlFactory.eINSTANCE.createTdXMLContent()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 XmlFactory.eINSTANCE.createTdXMLDocument()));
 
         newChildDescriptors.add
             (createChildParameter

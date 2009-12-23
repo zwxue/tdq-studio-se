@@ -170,4 +170,20 @@ public final class ModelElementHelper {
         }
         return null;
     }
+
+    /**
+     * DOC xqliu Comment method "getContainer".
+     * 
+     * @param modelElement
+     * @return
+     */
+    public static ModelElement getContainer(ModelElement modelElement) {
+        if (modelElement instanceof Column) {
+            return ColumnHelper.getColumnSetOwner((Column) modelElement);
+        } else if (modelElement instanceof TdXMLElement) {
+            // TODO 10238
+            return modelElement;
+        }
+        return null;
+    }
 }

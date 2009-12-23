@@ -65,6 +65,16 @@ public final class MetadataHelper {
     }
 
     /**
+     * DOC xqliu Comment method "setDataminingType".
+     * 
+     * @param type
+     * @param xmlElement
+     */
+    public static void setDataminingType(DataminingType type, TdXMLElement xmlElement) {
+        xmlElement.setContentType(type.getLiteral());
+    }
+
+    /**
      * Method "getDataminingType" gets the type of the content of a column.
      * 
      * @param column

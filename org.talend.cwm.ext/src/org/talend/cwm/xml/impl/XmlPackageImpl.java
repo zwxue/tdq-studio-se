@@ -7,6 +7,7 @@ package org.talend.cwm.xml.impl;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -328,6 +329,11 @@ public class XmlPackageImpl extends EPackageImpl implements XmlPackage {
         initEReference(getTdXMLElement_OwnedDocument(), this.getTdXMLDocument(), null, "ownedDocument", null, 0, 1, TdXMLElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdXMLElement_JavaType(), theCorePackage.getString(), "javaType", null, 0, 1, TdXMLElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getTdXMLElement_XmlContent(), this.getTdXMLContent(), null, "xmlContent", null, 0, 1, TdXMLElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        EOperation op = addEOperation(tdXMLElementEClass, null, "setContentType", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theCorePackage.getString(), "contentType", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        addEOperation(tdXMLElementEClass, theCorePackage.getString(), "getContentType", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(tdXMLContentEClass, TdXMLContent.class, "TdXMLContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getTdXMLContent_XmlElements(), this.getTdXMLElement(), null, "xmlElements", null, 0, -1, TdXMLContent.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

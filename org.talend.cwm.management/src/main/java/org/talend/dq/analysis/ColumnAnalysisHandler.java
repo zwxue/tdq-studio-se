@@ -21,7 +21,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -96,40 +98,36 @@ public class ColumnAnalysisHandler extends AnalysisHandler {
     }
 
     public boolean addIndicator(ModelElement modelElement, Indicator... indicators) {
-        // TODO 10238
-        if (modelElement instanceof TdColumn) {
-            TdColumn column = (TdColumn) modelElement;
-            if (!analysis.getContext().getAnalysedElements().contains(column)) {
-                analysis.getContext().getAnalysedElements().add(column);
-            }
+        if (!analysis.getContext().getAnalysedElements().contains(modelElement)) {
+            analysis.getContext().getAnalysedElements().add(modelElement);
+        }
 
-            for (Indicator indicator : indicators) {
-                // store first level of indicators in result.
-                analysis.getResults().getIndicators().add(indicator);
-                initializeIndicator(indicator, column);
-            }
-            DataManager connection = analysis.getContext().getConnection();
-            if (connection == null) {
-                // try to get one
-                log.error("Connection has not been set in analysis Context");
-                connection = DataProviderHelper.getTdDataProvider(column);
-                analysis.getContext().setConnection(connection);
-                // FIXME connection should be set elsewhere
-            }
-            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
-            if (rc.isOk()) {
-                // DependenciesHandler.getInstance().addDependency(rc.getObject());
-                Resource resource = connection.eResource();
-                if (resource != null) {
-                    this.modifiedResources.add(resource);
-                }
+        for (Indicator indicator : indicators) {
+            // store first level of indicators in result.
+            analysis.getResults().getIndicators().add(indicator);
+            initializeIndicator(indicator, modelElement);
+        }
+        DataManager connection = analysis.getContext().getConnection();
+        if (connection == null) {
+            // try to get one
+            log.error("Connection has not been set in analysis Context");
+            connection = ModelElementHelper.getTdDataProvider(modelElement);
+            analysis.getContext().setConnection(connection);
+            // FIXME connection should be set elsewhere
+        }
+        TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+        if (rc.isOk()) {
+            // DependenciesHandler.getInstance().addDependency(rc.getObject());
+            Resource resource = connection.eResource();
+            if (resource != null) {
+                this.modifiedResources.add(resource);
             }
         }
         return true;
     }
 
-    private void initializeIndicator(Indicator indicator, TdColumn column) {
-        indicator.setAnalyzedElement(column);
+    private void initializeIndicator(Indicator indicator, ModelElement modelElement) {
+        indicator.setAnalyzedElement(modelElement);
         // Make sure that indicator definition is set
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
@@ -138,27 +136,10 @@ public class ColumnAnalysisHandler extends AnalysisHandler {
         // FIXME scorreia in case of composite indicators, add children to result.
         if (indicator instanceof CompositeIndicator) {
             for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
-                initializeIndicator(child, column); // recurse
+                initializeIndicator(child, modelElement); // recurse
             }
         }
 
-    }
-
-    /**
-     * Method "setDatamingType".
-     * 
-     * @param dataminingTypeLiteral the literal expression of the datamining type used for the analysis
-     * @param column a column
-     */
-    public void setDatamingType(String dataminingTypeLiteral, TdColumn column) {
-        DataminingType type = DataminingType.get(dataminingTypeLiteral);
-        MetadataHelper.setDataminingType(type, column);
-        Resource resource = column.eResource();
-        if (resource != null) {
-            resource.setModified(true); // tell that the resource has been modified.
-            // it would be better to handle modifications with EMF Commands
-            this.modifiedResources.add(resource);
-        }
     }
 
     /**
@@ -233,9 +214,19 @@ public class ColumnAnalysisHandler extends AnalysisHandler {
      * @param modelElement
      */
     public void setDatamingType(String dataminingTypeLiteral, ModelElement modelElement) {
-        // TODO 10238
+        DataminingType type = DataminingType.get(dataminingTypeLiteral);
         if (modelElement instanceof TdColumn) {
-            this.setDatamingType(dataminingTypeLiteral, (TdColumn) modelElement);
+            MetadataHelper.setDataminingType(type, (TdColumn) modelElement);
+        } else if (modelElement instanceof TdXMLElement) {
+            MetadataHelper.setDataminingType(type, (TdXMLElement) modelElement);
+        } else {
+            return;
+        }
+        Resource resource = modelElement.eResource();
+        if (resource != null) {
+            resource.setModified(true); // tell that the resource has been modified.
+            // it would be better to handle modifications with EMF Commands
+            this.modifiedResources.add(resource);
         }
     }
 }

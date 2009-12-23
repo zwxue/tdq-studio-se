@@ -352,19 +352,19 @@ public class TdSqlDataTypeImpl extends SQLSimpleTypeImpl implements TdSqlDataTyp
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RelationalPackage.TD_SQL_DATA_TYPE__JAVA_DATA_TYPE:
-                return new Integer(getJavaDataType());
+                return getJavaDataType();
             case RelationalPackage.TD_SQL_DATA_TYPE__NULLABLE:
-                return new Short(getNullable());
+                return getNullable();
             case RelationalPackage.TD_SQL_DATA_TYPE__UNSIGNED_ATTRIBUTE:
-                return isUnsignedAttribute() ? Boolean.TRUE : Boolean.FALSE;
+                return isUnsignedAttribute();
             case RelationalPackage.TD_SQL_DATA_TYPE__CASE_SENSITIVE:
-                return isCaseSensitive() ? Boolean.TRUE : Boolean.FALSE;
+                return isCaseSensitive();
             case RelationalPackage.TD_SQL_DATA_TYPE__AUTO_INCREMENT:
-                return isAutoIncrement() ? Boolean.TRUE : Boolean.FALSE;
+                return isAutoIncrement();
             case RelationalPackage.TD_SQL_DATA_TYPE__LOCAL_TYPE_NAME:
                 return getLocalTypeName();
             case RelationalPackage.TD_SQL_DATA_TYPE__SEARCHABLE:
-                return new Short(getSearchable());
+                return getSearchable();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -378,25 +378,25 @@ public class TdSqlDataTypeImpl extends SQLSimpleTypeImpl implements TdSqlDataTyp
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RelationalPackage.TD_SQL_DATA_TYPE__JAVA_DATA_TYPE:
-                setJavaDataType(((Integer)newValue).intValue());
+                setJavaDataType((Integer)newValue);
                 return;
             case RelationalPackage.TD_SQL_DATA_TYPE__NULLABLE:
-                setNullable(((Short)newValue).shortValue());
+                setNullable((Short)newValue);
                 return;
             case RelationalPackage.TD_SQL_DATA_TYPE__UNSIGNED_ATTRIBUTE:
-                setUnsignedAttribute(((Boolean)newValue).booleanValue());
+                setUnsignedAttribute((Boolean)newValue);
                 return;
             case RelationalPackage.TD_SQL_DATA_TYPE__CASE_SENSITIVE:
-                setCaseSensitive(((Boolean)newValue).booleanValue());
+                setCaseSensitive((Boolean)newValue);
                 return;
             case RelationalPackage.TD_SQL_DATA_TYPE__AUTO_INCREMENT:
-                setAutoIncrement(((Boolean)newValue).booleanValue());
+                setAutoIncrement((Boolean)newValue);
                 return;
             case RelationalPackage.TD_SQL_DATA_TYPE__LOCAL_TYPE_NAME:
                 setLocalTypeName((String)newValue);
                 return;
             case RelationalPackage.TD_SQL_DATA_TYPE__SEARCHABLE:
-                setSearchable(((Short)newValue).shortValue());
+                setSearchable((Short)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

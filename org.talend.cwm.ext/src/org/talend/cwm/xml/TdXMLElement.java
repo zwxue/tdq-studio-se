@@ -131,4 +131,26 @@ public interface TdXMLElement extends Element {
      */
     void setXmlContent(TdXMLContent value);
 
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The type of the content of the xml element. This type is a meta-information either set by the user who knows what type of data is contained in the xml element, or infered from the data.
+     * <!-- end-model-doc -->
+     * @model contentTypeDataType="orgomg.cwm.objectmodel.core.String"
+     * @generated
+     */
+    void setContentType(String contentType);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The type of the content of the xml element. This type is a meta-information either set by the user who knows what type of data is contained in the xml element, or infered from the data.
+     * <!-- end-model-doc -->
+     * @model kind="operation" dataType="orgomg.cwm.objectmodel.core.String"
+     * @generated
+     */
+    String getContentType();
+
 } // TdXMLElement

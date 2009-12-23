@@ -42,11 +42,13 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.cwm.builders.XMLSchemaBuilder;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
@@ -54,6 +56,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
@@ -83,16 +86,16 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private static Logger log = Logger.getLogger(ColumnsSelectionDialog.class);
 
-    private Map<ColumnSetKey, ColumnCheckedMap> columnSetCheckedMap;
+    private Map<ModelElementKey, ModelElementCheckedMap> modelElementCheckedMap;
 
-    private List<ColumnSet> currentCheckedColumnSet = new ArrayList<ColumnSet>();
+    private List<ModelElement> currentCheckedModelElement = new ArrayList<ModelElement>();
 
     private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
     public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
             List<? extends ModelElement> modelElementList, String message) {
         super(metadataFormPage, parent, message);
-        columnSetCheckedMap = new HashMap<ColumnSetKey, ColumnCheckedMap>();
+        modelElementCheckedMap = new HashMap<ModelElementKey, ModelElementCheckedMap>();
         initCheckedModelElement(modelElementList);
 
         addFilter(new EMFObjFilter());
@@ -103,49 +106,37 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     @Override
-    /*
-     * 
+    /**
      * DOC mzhao bug 9240 mzhao 2009-11-05
-     * 
-     * @param columnSetList
      */
     protected void unfoldToCheckedElements() {
-        Iterator<ColumnSetKey> it = columnSetCheckedMap.keySet().iterator();
+        Iterator<ModelElementKey> it = modelElementCheckedMap.keySet().iterator();
         while (it.hasNext()) {
-            ColumnSetKey csk = it.next();
-            getTreeViewer().expandToLevel(csk.getColumnSetOwner(), 1);
-            StructuredSelection structSel = new StructuredSelection(csk.getColumnSetOwner());
+            ModelElementKey mek = it.next();
+            getTreeViewer().expandToLevel(mek.getModelElement(), 1);
+            StructuredSelection structSel = new StructuredSelection(mek.getModelElement());
             getTreeViewer().setSelection(structSel);
         }
     }
 
     private void initCheckedModelElement(List<? extends ModelElement> modelElementList) {
         // TODO 10238
-        List<Column> columnList = new ArrayList<Column>();
-        ModelElement modelElement = modelElementList.get(0);
-        if (modelElement != null && modelElement instanceof Column) {
-            for (ModelElement element : modelElementList) {
-                columnList.add((Column) element);
+        List<ModelElement> containerList = new ArrayList<ModelElement>();
+        for (int i = 0; i < modelElementList.size(); i++) {
+            modelElementList.get(i).eContainer();
+            ModelElement container = ModelElementHelper.getContainer(modelElementList.get(i));
+            if (!containerList.contains(container)) {
+                containerList.add(container);
             }
+            ModelElementKey modelElementKey = new ModelElementKeyImpl(container);
+            ModelElementCheckedMap meCheckedMap = modelElementCheckedMap.get(modelElementKey);
+            if (meCheckedMap == null) {
+                meCheckedMap = new ModelElementCheckedMapImpl();
+                this.modelElementCheckedMap.put(modelElementKey, meCheckedMap);
+            }
+            meCheckedMap.putModelElementChecked(modelElementList.get(i), Boolean.TRUE);
         }
-        // ~
-        List<ColumnSet> columnSetList = new ArrayList<ColumnSet>();
-        for (int i = 0; i < columnList.size(); i++) {
-            columnList.get(i).eContainer();
-            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(columnList.get(i));
-            if (!columnSetList.contains(columnSetOwner)) {
-                columnSetList.add(columnSetOwner);
-            }
-            ColumnSetKey columnSetKey = new ColumnSetKey(columnSetOwner);
-            ColumnCheckedMap columnCheckedMap = columnSetCheckedMap.get(columnSetKey);
-            if (columnCheckedMap == null) {
-                columnCheckedMap = new ColumnCheckedMap();
-                this.columnSetCheckedMap.put(columnSetKey, columnCheckedMap);
-            }
-            columnCheckedMap.putColumnChecked(columnList.get(i), Boolean.TRUE);
-        }
-        // this.setExpandedElements(columnSetList.toArray());
-        this.setInitialElementSelections(columnSetList);
+        this.setInitialElementSelections(containerList);
     }
 
     protected void initProvider() {
@@ -198,21 +189,39 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         });
     }
 
-    private TdColumn[] getCheckedColumns(ColumnSet columnSet) {
-        ColumnSetKey columnSetKey = new ColumnSetKey(columnSet);
-        ColumnCheckedMap columnCheckMap = columnSetCheckedMap.get(columnSetKey);
-        if (columnCheckMap == null) {
-            Boolean allCheckFlag = this.getTreeViewer().getChecked(columnSet);
-            this.getTableViewer().setAllChecked(allCheckFlag);
-            columnCheckMap = new ColumnCheckedMap();
-            TdColumn[] columns = EObjectHelper.getColumns(columnSet);
-            columnCheckMap.putAllChecked(columns, allCheckFlag);
-            columnSetCheckedMap.put(columnSetKey, columnCheckMap);
-            return allCheckFlag ? columns : null;
-        } else {
-            return columnCheckMap.getCheckedColumns(ColumnSetHelper.getColumns(columnSet));
-        }
+    private ModelElement[] getCheckedModelElements(ModelElement modelElement) {
+        boolean isColumnSet = modelElement instanceof ColumnSet;
+        boolean isTdXMLElement = modelElement instanceof TdXMLElement;
 
+        ModelElementKey mek = new ModelElementKeyImpl(modelElement);
+        ModelElementCheckedMap meCheckMap = modelElementCheckedMap.get(mek);
+        if (meCheckMap == null) {
+            Boolean allCheckFlag = this.getTreeViewer().getChecked(modelElement);
+            this.getTableViewer().setAllChecked(allCheckFlag);
+            meCheckMap = new ModelElementCheckedMapImpl();
+            ModelElement[] modelElements = null;
+            if (isColumnSet) {
+                modelElements = EObjectHelper.getColumns((ColumnSet) modelElement);
+            } else if (isTdXMLElement) {
+                TdXMLElement xmlElement = (TdXMLElement) modelElement;
+                XMLSchemaBuilder schemaBuilder = XMLSchemaBuilder.getSchemaBuilder(xmlElement.getOwnedDocument());
+                List<TdXMLElement> children = schemaBuilder.getChildren(xmlElement);
+                modelElements = children.toArray(new ModelElement[children.size()]);
+            }
+            meCheckMap.putAllChecked(modelElements, allCheckFlag);
+            modelElementCheckedMap.put(mek, meCheckMap);
+            return allCheckFlag ? modelElements : null;
+        } else {
+            if (isColumnSet) {
+                return meCheckMap.getCheckedModelElements(ColumnSetHelper.getColumns((ColumnSet) modelElement));
+            } else if (isTdXMLElement) {
+                TdXMLElement xmlElement = (TdXMLElement) modelElement;
+                XMLSchemaBuilder schemaBuilder = XMLSchemaBuilder.getSchemaBuilder(xmlElement.getOwnedDocument());
+                List<TdXMLElement> children = schemaBuilder.getChildren(xmlElement);
+                return meCheckMap.getCheckedModelElements(children);
+            }
+            return null;
+        }
     }
 
     private void handleColumnChecked(TdColumn column, Boolean checkedFlag) {
@@ -220,23 +229,23 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         if (checkedFlag) {
             getTreeViewer().setChecked(columnSetOwner, true);
         }
-        ColumnCheckedMap columnCheckMap = columnSetCheckedMap.get(new ColumnSetKey(columnSetOwner));
+        ModelElementCheckedMap columnCheckMap = modelElementCheckedMap.get(new ModelElementKeyImpl(columnSetOwner));
         if (columnCheckMap != null) {
-            columnCheckMap.putColumnChecked(column, checkedFlag);
+            columnCheckMap.putModelElementChecked(column, checkedFlag);
         }
 
     }
 
     private void handleColumnsChecked(ColumnSet columnSet, Boolean checkedFlag) {
-        ColumnSetKey key = new ColumnSetKey(columnSet);
-        ColumnCheckedMap columnCheckMap = columnSetCheckedMap.get(key);
+        ModelElementKey key = new ModelElementKeyImpl(columnSet);
+        ModelElementCheckedMap columnCheckMap = modelElementCheckedMap.get(key);
         if (columnCheckMap != null) {
             columnCheckMap.clear();
             columnCheckMap.putAllChecked(EObjectHelper.getColumns(columnSet), checkedFlag);
         } else {
-            columnCheckMap = new ColumnCheckedMap();
+            columnCheckMap = new ModelElementCheckedMapImpl();
             columnCheckMap.putAllChecked(EObjectHelper.getColumns(columnSet), checkedFlag);
-            columnSetCheckedMap.put(key, columnCheckMap);
+            modelElementCheckedMap.put(key, columnCheckMap);
         }
         getTableViewer().setAllChecked(checkedFlag);
     }
@@ -259,7 +268,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         getTreeViewer().setSubtreeChecked(viewerElements[i], true);
                     }
                 }
-                columnSetCheckedMap.clear();
+                modelElementCheckedMap.clear();
                 if (getTableViewer().getInput() != null) {
                     handleColumnsChecked((ColumnSet) getTableViewer().getInput(), true);
                 }
@@ -272,7 +281,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
             public void widgetSelected(SelectionEvent e) {
                 getTreeViewer().setCheckedElements(new Object[0]);
-                columnSetCheckedMap.clear();
+                modelElementCheckedMap.clear();
                 if (getTableViewer().getInput() != null) {
                     handleColumnsChecked((ColumnSet) getTableViewer().getInput(), false);
                 }
@@ -284,20 +293,75 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     public void selectionChanged(SelectionChangedEvent event) {
         Object selectedObj = ((IStructuredSelection) event.getSelection()).getFirstElement();
-        if (selectedObj instanceof ColumnSet) {
+        if (selectedObj instanceof ColumnSet || selectedObj instanceof TdXMLElement) {
             this.setOutput(selectedObj);
-            TdColumn[] columns = getCheckedColumns((ColumnSet) selectedObj);
-            if (columns != null) {
-                this.getTableViewer().setCheckedElements(columns);
+            ModelElement[] modelElements = getCheckedModelElements((ModelElement) selectedObj);
+            if (modelElements != null) {
+                this.getTableViewer().setCheckedElements(modelElements);
             }
         }
 
     }
 
     /**
+     * DOC xqliu ColumnsSelectionDialog class global comment. Detailled comment
+     */
+    interface ModelElementKey {
+
+        public int hashCode();
+
+        public boolean equals(Object obj);
+
+        public ModelElement getModelElement();
+
+        public ModelElement getParentModelElement();
+    }
+
+    /**
+     * DOC xqliu ColumnsSelectionDialog class global comment. Detailled comment
+     */
+    class ModelElementKeyImpl implements ModelElementKey {
+
+        private static final int KEY_PRIME = 128;
+
+        private ModelElement modelElement;
+
+        private ModelElement parentModelElement;
+
+        public ModelElementKeyImpl(ModelElement mElment) {
+            modelElement = mElment;
+            parentModelElement = getParentModelElement(mElment);
+        }
+
+        /**
+         * DOC xqliu Comment method "getParentModelElement".
+         * 
+         * @param mElment
+         * @return null if the mElement is the top element
+         */
+        private ModelElement getParentModelElement(ModelElement mElment) {
+            // TODO 10238
+            return null;
+        }
+
+        public ModelElement getModelElement() {
+            return modelElement;
+        }
+
+        public ModelElement getParentModelElement() {
+            return parentModelElement;
+        }
+
+        public int hashCode() {
+            return KEY_PRIME
+                    + (getParentModelElement() == null ? 0 : new ModelElementKeyImpl(getParentModelElement()).hashCode());
+        }
+    }
+
+    /**
      * This class will combine catlogName and columnSetName as a key.
      */
-    class ColumnSetKey {
+    class ColumnSetKey implements ModelElementKey {
 
         private final String catalogName;
 
@@ -318,6 +382,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         public ColumnSet getColumnSetOwner() {
             return columnSetOwner;
+        }
+
+        public ModelElement getModelElement() {
+            return getColumnSetOwner();
         }
 
         /*
@@ -367,6 +435,84 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             }
             return true;
         }
+
+        public ModelElement getParentModelElement() {
+            return null;
+        }
+    }
+
+    /**
+     * @author xqliu
+     */
+    interface ModelElementCheckedMap {
+
+        public void putModelElementChecked(ModelElement modelElement, Boolean isChecked);
+
+        public Boolean getModelElementChecked(ModelElement modelElement);
+
+        public void putAllChecked(ModelElement[] modelElement, Boolean isChecked);
+
+        public ModelElement[] getCheckedModelElements(List<? extends ModelElement> modelElementList);
+
+        public List<ModelElement> getCheckedModelElementList(ModelElement modelElement);
+
+        public void clear();
+    }
+
+    /**
+     * DOC xqliu ColumnsSelectionDialog class global comment. Detailled comment
+     */
+    class ModelElementCheckedMapImpl implements ModelElementCheckedMap {
+
+        Map<String, Boolean> modelElementNameMap = new HashMap<String, Boolean>();
+
+        public void clear() {
+            modelElementNameMap.clear();
+        }
+
+        public List<ModelElement> getCheckedModelElementList(ModelElement modelElement) {
+            List<ModelElement> checkedModelElements = new ArrayList<ModelElement>();
+            List<? extends ModelElement> modelElementList = new ArrayList<ModelElement>();
+            
+            if (modelElement instanceof ColumnSet) {
+                modelElementList = ColumnSetHelper.getColumns((ColumnSet) modelElement);
+            } else if ((modelElement instanceof TdXMLElement)) {
+                TdXMLElement xmlElement = (TdXMLElement) modelElement;
+                XMLSchemaBuilder schemaBuilder = XMLSchemaBuilder.getSchemaBuilder(xmlElement.getOwnedDocument());
+                modelElementList = schemaBuilder.getChildren(xmlElement);
+            }
+
+            for (ModelElement mElement : modelElementList) {
+                if (modelElementNameMap.containsKey(mElement.getName()) && modelElementNameMap.get(mElement.getName())) {
+                    checkedModelElements.add(mElement);
+                }
+            }
+
+            return checkedModelElements;
+        }
+
+        public ModelElement[] getCheckedModelElements(List<? extends ModelElement> modelElementList) {
+            List<ModelElement> checkedModelElements = new ArrayList<ModelElement>();
+            for (ModelElement modelElement : modelElementList) {
+                if (modelElementNameMap.containsKey(modelElement.getName()) && modelElementNameMap.get(modelElement.getName())) {
+                    checkedModelElements.add(modelElement);
+                }
+            }
+            return checkedModelElements.toArray(new ModelElement[checkedModelElements.size()]);
+        }
+
+        public Boolean getModelElementChecked(ModelElement modelElement) {
+            return null;
+        }
+
+        public void putAllChecked(ModelElement[] modelElement, Boolean isChecked) {
+
+        }
+
+        public void putModelElementChecked(ModelElement modelElement, Boolean isChecked) {
+
+        }
+
     }
 
     /**
@@ -421,31 +567,37 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     protected void computeResult() {
-        setResult(getAllCheckedColumns());
+        setResult(getAllCheckedModelElements());
     }
 
-    private List<TdColumn> getAllCheckedColumns() {
+    private List<ModelElement> getAllCheckedModelElements() {
         Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
-        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        List<ModelElement> meList = new ArrayList<ModelElement>();
         for (int i = 0; i < checkedNodes.length; i++) {
-            if (!(checkedNodes[i] instanceof ColumnSet)) {
+            if (!(checkedNodes[i] instanceof ColumnSet || checkedNodes[i] instanceof TdXMLElement)) {
                 continue;
             }
-            ColumnSetKey columnSetKey = new ColumnSetKey((ColumnSet) checkedNodes[i]);
-            if (columnSetCheckedMap.containsKey(columnSetKey)) {
-                ColumnCheckedMap columnMap = columnSetCheckedMap.get(columnSetKey);
-                columnList.addAll(columnMap.getCheckedColumnList((ColumnSet) checkedNodes[i]));
+            ModelElementKey mek = new ModelElementKeyImpl((ColumnSet) checkedNodes[i]);
+            if (modelElementCheckedMap.containsKey(mek)) {
+                ModelElementCheckedMap columnMap = modelElementCheckedMap.get(mek);
+                meList.addAll(columnMap.getCheckedModelElementList((ModelElement) checkedNodes[i]));
             } else {
-                columnList.addAll(ColumnSetHelper.getColumns((ColumnSet) checkedNodes[i]));
+                if (checkedNodes[i] instanceof ColumnSet) {
+                    meList.addAll(ColumnSetHelper.getColumns((ColumnSet) checkedNodes[i]));
+                } else if ((checkedNodes[i] instanceof TdXMLElement)) {
+                    TdXMLElement xmlElement = (TdXMLElement) checkedNodes[i];
+                    XMLSchemaBuilder schemaBuilder = XMLSchemaBuilder.getSchemaBuilder(xmlElement.getOwnedDocument());
+                    meList.addAll(schemaBuilder.getChildren(xmlElement));
+                }
             }
         }
-        return columnList;
+        return meList;
     }
 
     protected void okPressed() {
         super.okPressed();
-        this.columnSetCheckedMap = null;
-        this.currentCheckedColumnSet = null;
+        this.modelElementCheckedMap = null;
+        this.currentCheckedModelElement = null;
     }
 
     /**
@@ -582,9 +734,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     }
                     for (int i = 0; i < children.length; i++) {
                         ColumnSet columnSet = (ColumnSet) children[i];
-                        ColumnSetKey key = new ColumnSetKey(columnSet);
-                        if (columnSetCheckedMap.containsKey(key)) {
-                            currentCheckedColumnSet.add(columnSet);
+                        ModelElementKey key = new ModelElementKeyImpl(columnSet);
+                        if (modelElementCheckedMap.containsKey(key)) {
+                            currentCheckedModelElement.add(columnSet);
                         }
                     }
                 }

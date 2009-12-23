@@ -28,6 +28,7 @@ import org.talend.cwm.relational.provider.OrgtalendcwmEditPlugin;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 
+import org.talend.cwm.xml.XmlFactory;
 import orgomg.cwm.foundation.softwaredeployment.provider.SoftwareSystemItemProvider;
 
 import orgomg.cwm.objectmodel.core.CorePackage;
@@ -184,6 +185,21 @@ public class TdSoftwareSystemItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  RelationalFactory.eINSTANCE.createTdProcedure()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 XmlFactory.eINSTANCE.createTdXMLElement()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 XmlFactory.eINSTANCE.createTdXMLContent()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 XmlFactory.eINSTANCE.createTdXMLDocument()));
 
         newChildDescriptors.add
             (createChildParameter
