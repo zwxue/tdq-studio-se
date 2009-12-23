@@ -461,7 +461,12 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             final NamedColumnSet set = tableIndicator.getColumnSet();
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
-            exComp.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.table") + set.getName()); //$NON-NLS-1$
+            // bug 10541 modify by zshen,Change some character set to be proper to add view in the table anasys
+            if (tableIndicator.isTable()) {
+                exComp.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.table") + set.getName()); //$NON-NLS-1$
+            } else {
+                exComp.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.view") + set.getName()); //$NON-NLS-1$
+            }
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             exComp.setData(tableIndicator);

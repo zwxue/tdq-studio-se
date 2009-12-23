@@ -27,6 +27,7 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.View;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -120,6 +121,16 @@ public class AnalysisHandler {
         return str;
     }
 
+    // bug 10541 fix by zshen,Change some character set to be proper to add view in the table anasys
+    public String getViewNames() {
+        String str = ""; //$NON-NLS-1$
+        for (String aStr : getColumnSetOwnerViewNames()) {
+            str = str + aStr + " "; //$NON-NLS-1$
+        }
+
+        return str;
+    }
+
     /**
      * Method "getSchemaNames".
      * 
@@ -196,7 +207,7 @@ public class AnalysisHandler {
         List<String> existingTables = new ArrayList<String>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            if (element instanceof Column) {
+            if (element instanceof Column && element.eContainer() instanceof Table) {
                 String tableName = ColumnHelper.getColumnSetFullName((Column) element);
                 if (!existingTables.contains(tableName)) {
                     existingTables.add(tableName);
@@ -206,10 +217,31 @@ public class AnalysisHandler {
                 if (!existingTables.contains(tableName)) {
                     existingTables.add(tableName);
                 }
+
             }
         }
 
         return existingTables.toArray(new String[existingTables.size()]);
     }
 
+    // bug 10541 fix by zshen,Change some character set to be proper to add view in the table anasys
+    private String[] getColumnSetOwnerViewNames() {
+        List<String> existingViews = new ArrayList<String>();
+
+        for (ModelElement element : getAnalyzedColumns()) {
+            if (element instanceof Column && element.eContainer() instanceof View) {
+                String viewName = ColumnHelper.getColumnSetFullName((Column) element);
+                if (!existingViews.contains(viewName)) {
+                    existingViews.add(viewName);
+                }
+            } else if (element instanceof View) {
+                String viewName = ((View) element).getName();
+                if (!existingViews.contains(viewName)) {
+                    existingViews.add(viewName);
+                }
+            }
+        }
+
+        return existingViews.toArray(new String[existingViews.size()]);
+    }
 }

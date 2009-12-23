@@ -90,6 +90,10 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         toolkit.createLabel(databaseComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.table")); //$NON-NLS-1$
         toolkit.createLabel(databaseComp, analysisHandler.getTableNames());
 
+        // bug 10541 fix by zshen,Change some character set to be proper to add view in the table anasys
+        toolkit.createLabel(databaseComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.view"));
+        toolkit.createLabel(databaseComp, analysisHandler.getViewNames());
+
         Composite executionComp = toolkit.createComposite(sectionClient);
         executionComp.setLayout(new GridLayout(2, false));
         GridData executionCompData = new GridData(GridData.FILL_HORIZONTAL);

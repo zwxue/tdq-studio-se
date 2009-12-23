@@ -123,8 +123,14 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(sectionClient, ExpandableComposite.TWISTIE
                     | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-            exComp.setText(DefaultMessagesImpl
-                    .getString("TableAnalysisResultPage.table", tableIndicator.getColumnSet().getName())); //$NON-NLS-1$
+            // bug 10541 fix by zshen,Change some character set to be proper to add view in the table anasys
+            if (tableIndicator.isTable()) {
+                exComp.setText(DefaultMessagesImpl.getString(
+                        "TableAnalysisResultPage.table", tableIndicator.getColumnSet().getName())); //$NON-NLS-1$
+            } else {
+                exComp.setText(DefaultMessagesImpl.getString(
+                        "TableAnalysisResultPage.view", tableIndicator.getColumnSet().getName())); //$NON-NLS-1$
+            }
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
