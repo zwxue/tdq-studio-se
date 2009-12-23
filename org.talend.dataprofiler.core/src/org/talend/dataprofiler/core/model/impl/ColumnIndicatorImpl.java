@@ -10,17 +10,31 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.model;
+package org.talend.dataprofiler.core.model.impl;
 
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.model.ColumnIndicator;
 
 /**
  * This class can store the all the Indicators of one TdColumn, and provide the method to access all indicator.
+ * 
  */
-public interface ColumnIndicator extends ModelElementIndicator {
+public class ColumnIndicatorImpl extends ModelElementIndicatorImpl implements ColumnIndicator {
 
-    /**
-     * @return the tdColumn
-     */
-    public TdColumn getTdColumn();
+    public ColumnIndicatorImpl(TdColumn tdColumn) {
+        super();
+        this.setModelElement(tdColumn);
+    }
+
+    public TdColumn getTdColumn() {
+        return (TdColumn) this.getModelElement();
+    }
+
+    public int getJavaType() {
+        return this.getTdColumn().getJavaType();
+    }
+
+    // public String getName() {
+    // return getTdColumn().getName();
+    // }
 }

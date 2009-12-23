@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.List;
 
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -27,4 +28,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     public abstract boolean canDrop(Column column);
 
+    public abstract boolean canDrop(ModelElement modelElement);
+
+    public abstract void dropModelElements(List<? extends ModelElement> modelElements, int index);
 }

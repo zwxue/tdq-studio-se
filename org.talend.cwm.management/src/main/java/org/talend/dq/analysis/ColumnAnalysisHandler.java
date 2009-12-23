@@ -32,6 +32,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
@@ -89,6 +90,39 @@ public class ColumnAnalysisHandler extends AnalysisHandler {
             Resource resource = connection.eResource();
             if (resource != null) {
                 this.modifiedResources.add(resource);
+            }
+        }
+        return true;
+    }
+
+    public boolean addIndicator(ModelElement modelElement, Indicator... indicators) {
+        // TODO 10238
+        if (modelElement instanceof TdColumn) {
+            TdColumn column = (TdColumn) modelElement;
+            if (!analysis.getContext().getAnalysedElements().contains(column)) {
+                analysis.getContext().getAnalysedElements().add(column);
+            }
+
+            for (Indicator indicator : indicators) {
+                // store first level of indicators in result.
+                analysis.getResults().getIndicators().add(indicator);
+                initializeIndicator(indicator, column);
+            }
+            DataManager connection = analysis.getContext().getConnection();
+            if (connection == null) {
+                // try to get one
+                log.error("Connection has not been set in analysis Context");
+                connection = DataProviderHelper.getTdDataProvider(column);
+                analysis.getContext().setConnection(connection);
+                // FIXME connection should be set elsewhere
+            }
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+            if (rc.isOk()) {
+                // DependenciesHandler.getInstance().addDependency(rc.getObject());
+                Resource resource = connection.eResource();
+                if (resource != null) {
+                    this.modifiedResources.add(resource);
+                }
             }
         }
         return true;
@@ -192,9 +226,16 @@ public class ColumnAnalysisHandler extends AnalysisHandler {
         return AnalysisHelper.getStringDataFilter(analysis);
     }
 
-    // public boolean saveModifiedResources() {
-    // EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-    // util.getResourceSet().getResources().addAll(this.modifiedResources);
-    // return util.save();
-    // }
+    /**
+     * DOC xqliu Comment method "setDatamingType".
+     * 
+     * @param dataminingTypeLiteral
+     * @param modelElement
+     */
+    public void setDatamingType(String dataminingTypeLiteral, ModelElement modelElement) {
+        // TODO 10238
+        if (modelElement instanceof TdColumn) {
+            this.setDatamingType(dataminingTypeLiteral, (TdColumn) modelElement);
+        }
+    }
 }

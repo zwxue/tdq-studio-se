@@ -32,6 +32,7 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.resource.ResourceManager;
@@ -307,5 +308,21 @@ public final class MetadataHelper {
             result.add((Status) obj);
         }
         return result;
+    }
+
+    /**
+     * DOC xqliu Comment method "getDataminingType".
+     * 
+     * @param modelElement
+     * @return
+     */
+    public static DataminingType getDataminingType(ModelElement modelElement) {
+        if (modelElement instanceof TdColumn) {
+            return getDataminingType((TdColumn) modelElement);
+        } else if (modelElement instanceof TdXMLElement) {
+            // TODO 10238
+            getDefaultDataminingType(0);
+        }
+        return null;
     }
 }

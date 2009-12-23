@@ -223,11 +223,12 @@ public final class XMLSchemaBuilder {
 
     public ReturnCode isLeafNode(TdXMLElement element) {
         ReturnCode code = new ReturnCode();
+        code.setOk(false);
         XSDElementDeclaration xsdElementDeclearation = (XSDElementDeclaration) element.getXsdElementDeclaration();
         if (xsdElementDeclearation != null) {
             XSDTypeDefinition xsdTypeDef = xsdElementDeclearation.getTypeDefinition();
             if (xsdTypeDef instanceof XSDSimpleTypeDefinition) {
-                code.setOk(Boolean.FALSE);
+                code.setOk(Boolean.TRUE);
             }
         }
         return code;

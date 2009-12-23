@@ -34,7 +34,8 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.eclipse.xsd,
  org.talend.libraries.eXist
 Bundle-Vendor: .Talend SA.
-Export-Package: org.talend.cwm.db.connection,
+Export-Package: org.talend.cwm.builders,
+ org.talend.cwm.db.connection,
  org.talend.cwm.dburl,
  org.talend.cwm.dependencies,
  org.talend.cwm.exception,

@@ -349,6 +349,9 @@ public class DatabaseWizardPage extends AbstractWizardPage {
      * 
      */
     private void rebuildJDBCControls(SupportDBUrlType dbType) {
+        if (SupportDBUrlType.MDM.equals(dbType)) {
+            dbType.setDBName(DatabaseConstant.MDM_DBNAME);
+        }
         Point windowSize = getShell().getSize();
         Point oldSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 

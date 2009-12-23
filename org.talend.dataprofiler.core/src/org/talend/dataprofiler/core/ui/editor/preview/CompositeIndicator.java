@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
@@ -121,99 +122,101 @@ public final class CompositeIndicator {
         return tempList.toArray(new IndicatorUnit[tempList.size()]);
     }
 
-    public Map<EIndicatorChartType, List<IndicatorUnit>> getIndicatorComposite(ColumnIndicator columnIndicator) {
+    public Map<EIndicatorChartType, List<IndicatorUnit>> getIndicatorComposite(ModelElementIndicator modelElementIndicator) {
         this.clear();
-        List<IndicatorUnit> tempList = new ArrayList<IndicatorUnit>();
-        this.indicatorUnits = initChildIndicatorUnits(tempList, columnIndicator.getIndicatorUnits());
-        for (IndicatorUnit one : indicatorUnits) {
+        if (modelElementIndicator instanceof ColumnIndicator) {
+            List<IndicatorUnit> tempList = new ArrayList<IndicatorUnit>();
+            this.indicatorUnits = initChildIndicatorUnits(tempList, ((ColumnIndicator) modelElementIndicator).getIndicatorUnits());
+            for (IndicatorUnit one : indicatorUnits) {
 
-            switch (one.getType()) {
-            case RowCountIndicatorEnum:
-            case NullCountIndicatorEnum:
-            case DistinctCountIndicatorEnum:
-            case UniqueIndicatorEnum:
-            case DuplicateCountIndicatorEnum:
-            case BlankCountIndicatorEnum:
-            case DefValueCountIndicatorEnum:
-                simpleList.add(one);
-                break;
-            case MinLengthIndicatorEnum:
-            case MaxLengthIndicatorEnum:
-            case AverageLengthIndicatorEnum:
-                textList.add(one);
-                break;
-            case FrequencyIndicatorEnum:
-                frequencyList.add(one);
-                break;
-            case LowFrequencyIndicatorEnum:
-                lowFrequencyList.add(one);
-                break;
-            // ~ MOD mzhao 2009-03-23 Feature 6307
-            case SoundexIndicatorEnum:
-                soundexFrequencyList.add(one);
-                break;
-            case SoundexLowIndicatorEnum:
-                soundexLowFrequencyList.add(one);
-                break;
-            // ~
-            case PatternFreqIndicatorEnum:
-                patternFrequencylist.add(one);
-                break;
-            case PatternLowFreqIndicatorEnum:
-                patternLowFrequencyList.add(one);
-                break;
-            case IQRIndicatorEnum:
-            case RangeIndicatorEnum:
-            case MeanIndicatorEnum:
-            case MinValueIndicatorEnum:
-            case MaxValueIndicatorEnum:
-            case MedianIndicatorEnum:
-            case LowerQuartileIndicatorEnum:
-            case UpperQuartileIndicatorEnum:
-                summaryList.add(one);
-                break;
-            case RegexpMatchingIndicatorEnum:
-                patternList.add(one);
-                break;
+                switch (one.getType()) {
+                case RowCountIndicatorEnum:
+                case NullCountIndicatorEnum:
+                case DistinctCountIndicatorEnum:
+                case UniqueIndicatorEnum:
+                case DuplicateCountIndicatorEnum:
+                case BlankCountIndicatorEnum:
+                case DefValueCountIndicatorEnum:
+                    simpleList.add(one);
+                    break;
+                case MinLengthIndicatorEnum:
+                case MaxLengthIndicatorEnum:
+                case AverageLengthIndicatorEnum:
+                    textList.add(one);
+                    break;
+                case FrequencyIndicatorEnum:
+                    frequencyList.add(one);
+                    break;
+                case LowFrequencyIndicatorEnum:
+                    lowFrequencyList.add(one);
+                    break;
+                // ~ MOD mzhao 2009-03-23 Feature 6307
+                case SoundexIndicatorEnum:
+                    soundexFrequencyList.add(one);
+                    break;
+                case SoundexLowIndicatorEnum:
+                    soundexLowFrequencyList.add(one);
+                    break;
+                // ~
+                case PatternFreqIndicatorEnum:
+                    patternFrequencylist.add(one);
+                    break;
+                case PatternLowFreqIndicatorEnum:
+                    patternLowFrequencyList.add(one);
+                    break;
+                case IQRIndicatorEnum:
+                case RangeIndicatorEnum:
+                case MeanIndicatorEnum:
+                case MinValueIndicatorEnum:
+                case MaxValueIndicatorEnum:
+                case MedianIndicatorEnum:
+                case LowerQuartileIndicatorEnum:
+                case UpperQuartileIndicatorEnum:
+                    summaryList.add(one);
+                    break;
+                case RegexpMatchingIndicatorEnum:
+                    patternList.add(one);
+                    break;
 
-            case SqlPatternMatchingIndicatorEnum:
-                sqlPatternList.add(one);
-                break;
+                case SqlPatternMatchingIndicatorEnum:
+                    sqlPatternList.add(one);
+                    break;
 
-            case ModeIndicatorEnum:
-                modelIndicatorList.add(one);
-                break;
+                case ModeIndicatorEnum:
+                    modelIndicatorList.add(one);
+                    break;
 
-            case UserDefinedIndicatorEnum:
-                IndicatorCategory ic = UDIUtils.getUDICategory(one);
-                if (DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().equals(ic)) {
-                    udiCountList.add(one);
-                } else if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(ic)) {
-                    udiMatchingList.add(one);
-                } else if (DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory().equals(ic)) {
-                    udiFrequencyList.add(one);
+                case UserDefinedIndicatorEnum:
+                    IndicatorCategory ic = UDIUtils.getUDICategory(one);
+                    if (DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().equals(ic)) {
+                        udiCountList.add(one);
+                    } else if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(ic)) {
+                        udiMatchingList.add(one);
+                    } else if (DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory().equals(ic)) {
+                        udiFrequencyList.add(one);
+                    }
+                    break;
+
+                default:
                 }
-                break;
-
-            default:
             }
-        }
 
-        separatedMap.put(EIndicatorChartType.SIMPLE_STATISTICS, simpleList);
-        separatedMap.put(EIndicatorChartType.TEXT_STATISTICS, textList);
-        separatedMap.put(EIndicatorChartType.FREQUENCE_STATISTICS, frequencyList);
-        separatedMap.put(EIndicatorChartType.LOW_FREQUENCE_STATISTICS, lowFrequencyList);
-        separatedMap.put(EIndicatorChartType.SOUNDEX_FREQUENCY_TABLE, soundexFrequencyList);
-        separatedMap.put(EIndicatorChartType.SOUNDEX_LOW_FREQUENCY_TABLE, soundexLowFrequencyList);
-        separatedMap.put(EIndicatorChartType.PATTERN_FREQUENCE_STATISTICS, patternFrequencylist);
-        separatedMap.put(EIndicatorChartType.PATTERN_LOW_FREQUENCE_STATISTICS, patternLowFrequencyList);
-        separatedMap.put(EIndicatorChartType.SUMMARY_STATISTICS, summaryList);
-        separatedMap.put(EIndicatorChartType.PATTERN_MATCHING, patternList);
-        separatedMap.put(EIndicatorChartType.SQL_PATTERN_MATCHING, sqlPatternList);
-        separatedMap.put(EIndicatorChartType.MODE_INDICATOR, modelIndicatorList);
-        separatedMap.put(EIndicatorChartType.UDI_COUNT, udiCountList);
-        separatedMap.put(EIndicatorChartType.UDI_FREQUENCY, udiFrequencyList);
-        separatedMap.put(EIndicatorChartType.UDI_MATCHING, udiMatchingList);
+            separatedMap.put(EIndicatorChartType.SIMPLE_STATISTICS, simpleList);
+            separatedMap.put(EIndicatorChartType.TEXT_STATISTICS, textList);
+            separatedMap.put(EIndicatorChartType.FREQUENCE_STATISTICS, frequencyList);
+            separatedMap.put(EIndicatorChartType.LOW_FREQUENCE_STATISTICS, lowFrequencyList);
+            separatedMap.put(EIndicatorChartType.SOUNDEX_FREQUENCY_TABLE, soundexFrequencyList);
+            separatedMap.put(EIndicatorChartType.SOUNDEX_LOW_FREQUENCY_TABLE, soundexLowFrequencyList);
+            separatedMap.put(EIndicatorChartType.PATTERN_FREQUENCE_STATISTICS, patternFrequencylist);
+            separatedMap.put(EIndicatorChartType.PATTERN_LOW_FREQUENCE_STATISTICS, patternLowFrequencyList);
+            separatedMap.put(EIndicatorChartType.SUMMARY_STATISTICS, summaryList);
+            separatedMap.put(EIndicatorChartType.PATTERN_MATCHING, patternList);
+            separatedMap.put(EIndicatorChartType.SQL_PATTERN_MATCHING, sqlPatternList);
+            separatedMap.put(EIndicatorChartType.MODE_INDICATOR, modelIndicatorList);
+            separatedMap.put(EIndicatorChartType.UDI_COUNT, udiCountList);
+            separatedMap.put(EIndicatorChartType.UDI_FREQUENCY, udiFrequencyList);
+            separatedMap.put(EIndicatorChartType.UDI_MATCHING, udiMatchingList);
+        }
 
         return separatedMap;
     }

@@ -54,13 +54,17 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
@@ -131,7 +135,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     private Tree tree;
 
-    private ColumnIndicator[] columnIndicators;
+    // private ColumnIndicator[] columnIndicators;
+
+    private ModelElementIndicator[] modelElementIndicators;
 
     private ColumnMasterDetailsPage masterPage;
 
@@ -156,7 +162,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     public AnalysisColumnTreeViewer(Composite parent, ColumnMasterDetailsPage masterPage) {
         this(parent);
         this.masterPage = masterPage;
-        this.setElements(masterPage.getCurrentColumnIndicators());
+        this.setElements(masterPage.getCurrentModelElementIndicators());
         this.setDirty(false);
     }
 
@@ -227,63 +233,67 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     public void setInput(Object[] objs) {
+        boolean isMdm = false;
         if (objs != null && objs.length != 0) {
-            if (!(objs[0] instanceof TdColumn)) {
+            isMdm = objs[0] instanceof TdXMLElement;
+            if (!(objs[0] instanceof TdColumn || isMdm)) {
                 return;
             }
         }
-        List<TdColumn> columnList = new ArrayList<TdColumn>();
+
+        List<ModelElement> modelElementList = new ArrayList<ModelElement>();
         for (Object obj : objs) {
-            columnList.add((TdColumn) obj);
+            modelElementList.add((ModelElement) obj);
         }
-        List<ColumnIndicator> columnIndicatorList = new ArrayList<ColumnIndicator>();
-        for (ColumnIndicator columnIndicator : columnIndicators) {
-            if (columnList.contains(columnIndicator.getTdColumn())) {
-                columnIndicatorList.add(columnIndicator);
-                columnList.remove(columnIndicator.getTdColumn());
+        List<ModelElementIndicator> modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+            if (modelElementList.contains(modelElementIndicator.getModelElement())) {
+                modelElementIndicatorList.add(modelElementIndicator);
+                modelElementList.remove(modelElementIndicator.getModelElement());
             }
         }
 
-        for (TdColumn column : columnList) {
-            columnIndicatorList.add(new ColumnIndicator(column));
+        for (ModelElement modelElement : modelElementList) {
+            ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper
+                    .createXmlElementIndicator((TdXMLElement) modelElement) : ModelElementIndicatorHelper
+                    .createColumnIndicator((TdColumn) modelElement);
+            modelElementIndicatorList.add(temp);
         }
-        this.columnIndicators = columnIndicatorList.toArray(new ColumnIndicator[columnIndicatorList.size()]);
-        this.setElements(columnIndicators);
+        this.modelElementIndicators = modelElementIndicatorList.toArray(new ColumnIndicator[modelElementIndicatorList.size()]);
+        this.setElements(modelElementIndicators);
     }
 
-    public void setElements(final ColumnIndicator[] elements) {
+    public void setElements(final ModelElementIndicator[] elements) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
         tree.setData(VIEWER_KEY, this);
-        this.columnIndicators = elements;
+        this.modelElementIndicators = elements;
         addItemElements(elements);
         initializedConnection(elements);
         // MOD mzhao 2009-05-5, bug 6587.
-        updateBindConnection(masterPage, columnIndicators, tree);
+        updateBindConnection(masterPage, modelElementIndicators, tree);
     }
-
     /**
      * MOD mzhao 2009-06-16 feature 5887.
      */
     @Override
     public void updateModelViewer() {
         masterPage.recomputeIndicators();
-        columnIndicators = masterPage.getCurrentColumnIndicators();
-        setElements(columnIndicators);
+        modelElementIndicators = masterPage.getCurrentModelElementIndicators();
+        setElements(modelElementIndicators);
     }
 
-    public void addElements(final ColumnIndicator[] elements) {
-
-        ColumnIndicator[] newsArray = new ColumnIndicator[this.columnIndicators.length + elements.length];
-        System.arraycopy(this.columnIndicators, 0, newsArray, 0, this.columnIndicators.length);
+    public void addElements(final ModelElementIndicator[] elements) {
+        ModelElementIndicator[] newsArray = new ModelElementIndicator[this.modelElementIndicators.length + elements.length];
+        System.arraycopy(this.modelElementIndicators, 0, newsArray, 0, this.modelElementIndicators.length);
         for (int i = 0; i < elements.length; i++) {
-            newsArray[this.columnIndicators.length + i] = elements[i];
+            newsArray[this.modelElementIndicators.length + i] = elements[i];
         }
-        this.columnIndicators = newsArray;
+        this.modelElementIndicators = newsArray;
         this.addItemElements(elements);
         initializedConnection(elements);
         // MOD mzhao 2009-05-5, bug 6587.
-        updateBindConnection(masterPage, columnIndicators, tree);
+        updateBindConnection(masterPage, modelElementIndicators, tree);
     }
 
     /**
@@ -292,21 +302,20 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @param columnIndicator
      * 
      */
-    private void initializedConnection(ColumnIndicator[] columnIndicatores) {
+    private void initializedConnection(ModelElementIndicator[] indicators) {
         Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
         DataManager connection = analysis.getContext().getConnection();
+        TdDataProvider tdDataProvider = null;
 
-        if (columnIndicatores != null && columnIndicatores.length > 0) {
-
+        if (indicators != null && indicators.length > 0) {
             if (connection == null) {
-                TdColumn column = columnIndicatores[0].getTdColumn();
-                TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(column);
+                tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
                 connection = tdDataProvider;
             }
         }
     }
 
-    private void addItemElements(final ColumnIndicator[] elements) {
+    private void addItemElements(final ModelElementIndicator[] elements) {
         for (int i = 0; i < elements.length; i++) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
@@ -404,7 +413,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 public void mouseDown(MouseEvent e) {
                     deleteColumnItems(columnIndicator);
                     if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
-                        setElements(columnIndicators);
+                        setElements(modelElementIndicators);
                     } else {
                         removeItemBranch(treeItem);
                     }
@@ -525,7 +534,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 ColumnIndicator columnIndicator = (ColumnIndicator) treeItem.getData(COLUMN_INDICATOR_KEY);
                 deleteIndicatorItems(columnIndicator, unit);
                 if (indicatorItem.getParentItem() != null && indicatorItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
-                    setElements(columnIndicators);
+                    setElements(modelElementIndicators);
                 } else {
                     removeItemBranch(indicatorItem);
                 }
@@ -680,25 +689,25 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * DOC rli Comment method "deleteTreeElements".
      * 
      * @param columnIndicators
-     * @param deleteColumnIndiciators
+     * @param deleteModelElementIndiciator
      */
-    private void deleteColumnItems(ColumnIndicator deleteColumnIndiciator) {
-        ColumnIndicator[] remainIndicators = new ColumnIndicator[columnIndicators.length - 1];
+    private void deleteColumnItems(ModelElementIndicator deleteModelElementIndiciator) {
+        ModelElementIndicator[] remainIndicators = new ModelElementIndicator[modelElementIndicators.length - 1];
         int i = 0;
-        for (ColumnIndicator indicator : columnIndicators) {
-            if (deleteColumnIndiciator.equals(indicator)) {
+        for (ModelElementIndicator indicator : modelElementIndicators) {
+            if (deleteModelElementIndiciator.equals(indicator)) {
                 continue;
             } else {
                 remainIndicators[i] = indicator;
                 i++;
             }
         }
-        this.columnIndicators = remainIndicators;
+        this.modelElementIndicators = remainIndicators;
     }
 
     public void openIndicatorSelectDialog(Shell shell) {
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, DefaultMessagesImpl
-                .getString("AnalysisColumnTreeViewer.indicatorSelection"), columnIndicators); //$NON-NLS-1$
+                .getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators); //$NON-NLS-1$
         dialog.create();
         dialog.getShell().addShellListener(new ShellAdapter() {
 
@@ -716,9 +725,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         });
 
         if (dialog.open() == Window.OK) {
-            ColumnIndicator[] result = dialog.getResult();
-            for (ColumnIndicator columnIndicator : result) {
-                columnIndicator.storeTempIndicator();
+            ModelElementIndicator[] result = dialog.getResult();
+            for (ModelElementIndicator modelElementIndicator : result) {
+                modelElementIndicator.storeTempIndicator();
             }
             this.setElements(result);
             return;
@@ -748,8 +757,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
     }
 
-    public ColumnIndicator[] getColumnIndicator() {
-        return this.columnIndicators;
+    public ModelElementIndicator[] getModelElementIndicator() {
+        return this.modelElementIndicators;
     }
 
     /**
@@ -780,7 +789,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         }
         if (branchIndicatorExist) {
-            setElements(columnIndicators);
+            setElements(modelElementIndicators);
         }
         // MOD mzhao 2009-05-5, bug 6587.
         // MOD mzhao 2009-06-8, bug 5887.
@@ -926,29 +935,35 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return tree;
     }
 
-    public void dropColumns(List<Column> columns, int index) {
-
-        int size = columns.size();
-        ColumnIndicator[] cIndicators = new ColumnIndicator[size];
-        for (int i = 0; i < size; i++) {
-            Column column = columns.get(i);
-            ColumnIndicator columnIndicator = new ColumnIndicator((TdColumn) column);
-            cIndicators[i] = columnIndicator;
-        }
-        this.addElements(cIndicators);
-    }
-
     @Override
-    public boolean canDrop(Column column) {
-        List<TdColumn> existColumns = new ArrayList<TdColumn>();
-
-        for (ColumnIndicator columnIndicator : this.getColumnIndicator()) {
-            existColumns.add(columnIndicator.getTdColumn());
+    public boolean canDrop(ModelElement modelElement) {
+        List<ModelElement> existModelElements = new ArrayList<ModelElement>();
+        for (ModelElementIndicator modelElementIndicator : this.getModelElementIndicator()) {
+            existModelElements.add(modelElementIndicator.getModelElement());
         }
-        if (existColumns.contains(column)) {
+        if (existModelElements.contains(modelElement)) {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
+        int size = modelElements.size();
+        ModelElementIndicator[] meIndicators = new ModelElementIndicator[size];
+        for (int i = 0; i < size; i++) {
+            ModelElement modelElement = modelElements.get(i);
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
+            if (tdColumn != null) {
+                meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(tdColumn);
+            } else {
+                TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(modelElement);
+                if (xmlElement != null) {
+                    meIndicators[i] = ModelElementIndicatorHelper.createXmlElementIndicator(xmlElement);
+                }
+            }
+        }
+        this.addElements(meIndicators);
     }
 
     /**
@@ -1308,4 +1323,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
     }
 
+    @Override
+    public boolean canDrop(Column column) {
+        return false;
+    }
+
+    @Override
+    public void dropColumns(List<Column> columns, int index) {
+    }
 }

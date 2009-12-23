@@ -27,7 +27,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.utils.UIPagination;
 import org.talend.dq.analysis.AnalysisHandler;
 
@@ -80,29 +80,29 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        final ColumnIndicator[] columnIndicatores = masterPage.getTreeViewer().getColumnIndicator();
+        final ModelElementIndicator[] modelElementIndicatores = masterPage.getTreeViewer().getModelElementIndicator();
 
         // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
         UIPagination uiPagination = new UIPagination(toolkit, sectionClient);
         int pageSize = UIPagination.getPageSize();
-        int totalPages = columnIndicatores.length / pageSize;
-        List<ColumnIndicator> columnIndLs = null;
+        int totalPages = modelElementIndicatores.length / pageSize;
+        List<ModelElementIndicator> modelElementIndLs = null;
         for (int index = 0; index < totalPages; index++) {
-            columnIndLs = new ArrayList<ColumnIndicator>();
+            modelElementIndLs = new ArrayList<ModelElementIndicator>();
             for (int idx = 0; idx < pageSize; idx++) {
-                columnIndLs.add(columnIndicatores[index * pageSize + idx]);
+                modelElementIndLs.add(modelElementIndicatores[index * pageSize + idx]);
             }
-            PaginationInfo pginfo = new ResultPaginationInfo(form, columnIndLs, masterPage, uiPagination);
+            PaginationInfo pginfo = new ResultPaginationInfo(form, modelElementIndLs, masterPage, uiPagination);
             uiPagination.addPage(pginfo);
 
         }
-        int left = columnIndicatores.length % pageSize;
+        int left = modelElementIndicatores.length % pageSize;
         if (left != 0) {
-            columnIndLs = new ArrayList<ColumnIndicator>();
+            modelElementIndLs = new ArrayList<ModelElementIndicator>();
             for (int leftIdx = 0; leftIdx < left; leftIdx++) {
-                columnIndLs.add(columnIndicatores[totalPages * pageSize + leftIdx]);
+                modelElementIndLs.add(modelElementIndicatores[totalPages * pageSize + leftIdx]);
             }
-            PaginationInfo pginfo = new ResultPaginationInfo(form, columnIndLs, masterPage, uiPagination);
+            PaginationInfo pginfo = new ResultPaginationInfo(form, modelElementIndLs, masterPage, uiPagination);
             uiPagination.addPage(pginfo);
             totalPages++;
         }

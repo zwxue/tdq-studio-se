@@ -588,4 +588,12 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     }
 
+    @Override
+    public boolean canDrop(ModelElement modelElement) {
+        return false;
+    }
+
+    @Override
+    public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
+    }
 }

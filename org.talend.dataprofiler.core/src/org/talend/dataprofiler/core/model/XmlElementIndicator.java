@@ -12,15 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model;
 
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXMLElement;
 
 /**
- * This class can store the all the Indicators of one TdColumn, and provide the method to access all indicator.
+ * DOC xqliu  class global comment. Detailled comment
  */
-public interface ColumnIndicator extends ModelElementIndicator {
+public interface XmlElementIndicator extends ModelElementIndicator {
 
     /**
-     * @return the tdColumn
+     * @return the xmlElement
      */
-    public TdColumn getTdColumn();
+    public TdXMLElement getXmlElement();
 }

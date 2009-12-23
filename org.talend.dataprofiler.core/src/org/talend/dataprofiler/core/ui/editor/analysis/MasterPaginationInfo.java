@@ -26,10 +26,9 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -46,23 +45,28 @@ public class MasterPaginationInfo extends PaginationInfo {
 
     private List<ExpandableComposite> previewChartList;
 
+    // public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
+    // List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
+    // super(form, columnIndicatores, uiPagination);
+    // this.previewChartList = previewChartList;
+    // }
+
     public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
-            List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
-        super(form, columnIndicatores, uiPagination);
+            List<? extends ModelElementIndicator> modelElementIndicators, UIPagination uiPagination) {
+        super(form, modelElementIndicators, uiPagination);
         this.previewChartList = previewChartList;
     }
-
     @Override
     protected void render() {
         previewChartList.clear();
-        for (final ColumnIndicator columnIndicator : columnIndicatores) {
+        for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getComposite(),
                     ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
             needDispostWidgets.add(exComp);
-            TdColumn column = columnIndicator.getTdColumn();
-            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column", column.getName())); //$NON-NLS-1$
+            exComp.setText(DefaultMessagesImpl
+                    .getString("ColumnMasterDetailsPage.column", modelElementIndicator.getElementName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
-            exComp.setData(columnIndicator);
+            exComp.setData(modelElementIndicator);
             previewChartList.add(exComp);
 
             Composite comp = uiPagination.getToolkit().createComposite(exComp);
@@ -70,7 +74,7 @@ public class MasterPaginationInfo extends PaginationInfo {
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
-                    .getIndicatorComposite(columnIndicator);
+                    .getIndicatorComposite(modelElementIndicator);
             for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
                 List<IndicatorUnit> units = indicatorComposite.get(chartType);
                 if (!units.isEmpty()) {

@@ -48,15 +48,16 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
@@ -75,7 +76,6 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * @author rli
@@ -93,7 +93,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     ColumnAnalysisHandler analysisHandler;
 
-    private ColumnIndicator[] currentColumnIndicators;
+    private ModelElementIndicator[] currentModelElementIndicators;
 
     private String stringDataFilter;
 
@@ -139,14 +139,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             if (tdColumn == null) {
                 continue;
             }
-            currentColumnIndicator = new ColumnIndicator(tdColumn);
+            currentColumnIndicator = ModelElementIndicatorHelper.createColumnIndicator(tdColumn);
             DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(tdColumn));
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, tdColumn);
             Collection<Indicator> indicatorList = analysisHandler.getIndicators(tdColumn);
             currentColumnIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
             columnIndicatorList.add(currentColumnIndicator);
         }
-        currentColumnIndicators = columnIndicatorList.toArray(new ColumnIndicator[columnIndicatorList.size()]);
+        currentModelElementIndicators = columnIndicatorList.toArray(new ColumnIndicator[columnIndicatorList.size()]);
     }
 
     // @Override
@@ -312,17 +312,17 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * 
      */
     public void openColumnsSelectionDialog() {
-        ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
-        List<Column> columnList = new ArrayList<Column>();
-        for (ColumnIndicator columnIndicator : columnIndicators) {
-            columnList.add(columnIndicator.getTdColumn());
+        ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
+        List<ModelElement> modelElementList = new ArrayList<ModelElement>();
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+            modelElementList.add(modelElementIndicator.getModelElement());
         }
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(this, null, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl //$NON-NLS-1$
+                .getString("ColumnMasterDetailsPage.columnSelection"), modelElementList, DefaultMessagesImpl //$NON-NLS-1$
                 .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
-            Object[] columns = dialog.getResult();
-            treeViewer.setInput(columns);
+            Object[] modelElements = dialog.getResult();
+            treeViewer.setInput(modelElements);
             return;
         }
     }
@@ -429,28 +429,28 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
         previewChartList = new ArrayList<ExpandableComposite>();
 
-        final ColumnIndicator[] columnIndicatores = treeViewer.getColumnIndicator();
+        final ModelElementIndicator[] modelElementIndicatores = treeViewer.getModelElementIndicator();
         // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
         UIPagination uiPagination = new UIPagination(toolkit, composite);
         int pageSize = UIPagination.getPageSize();
-        int totalPages = columnIndicatores.length / pageSize;
-        List<ColumnIndicator> columnIndLs = null;
+        int totalPages = modelElementIndicatores.length / pageSize;
+        List<ModelElementIndicator> modelElementIndicators = null;
         for (int index = 0; index < totalPages; index++) {
-            columnIndLs = new ArrayList<ColumnIndicator>();
+            modelElementIndicators = new ArrayList<ModelElementIndicator>();
             for (int idx = 0; idx < pageSize; idx++) {
-                columnIndLs.add(columnIndicatores[index * pageSize + idx]);
+                modelElementIndicators.add(modelElementIndicatores[index * pageSize + idx]);
             }
-            PaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, columnIndLs, uiPagination);
+            PaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators, uiPagination);
             uiPagination.addPage(pginfo);
 
         }
-        int left = columnIndicatores.length % pageSize;
+        int left = modelElementIndicatores.length % pageSize;
         if (left != 0) {
-            columnIndLs = new ArrayList<ColumnIndicator>();
+            modelElementIndicators = new ArrayList<ModelElementIndicator>();
             for (int leftIdx = 0; leftIdx < left; leftIdx++) {
-                columnIndLs.add(columnIndicatores[totalPages * pageSize + leftIdx]);
+                modelElementIndicators.add(modelElementIndicatores[totalPages * pageSize + leftIdx]);
             }
-            PaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, columnIndLs, uiPagination);
+            PaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators, uiPagination);
             uiPagination.addPage(pginfo);
             totalPages++;
         }
@@ -549,9 +549,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @return
      */
     protected boolean includeUDI() {
-        ColumnIndicator[] columnIndicators = this.getTreeViewer().getColumnIndicator();
-        for (ColumnIndicator columnIndicator : columnIndicators) {
-            Indicator[] indicators = columnIndicator.getIndicators();
+        ModelElementIndicator[] modelElementIndicators = this.getTreeViewer().getModelElementIndicator();
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+            Indicator[] indicators = modelElementIndicator.getIndicators();
             for (Indicator indicator : indicators) {
                 if (indicator instanceof UserDefIndicator) {
                     return true;
@@ -567,23 +567,23 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      */
     public void saveAnalysis() throws DataprofilerCoreException {
         analysisHandler.clearAnalysis();
-        ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
+        ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
         TdDataProvider tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
-        if (columnIndicators != null && columnIndicators.length != 0) {
+        if (modelElementIndicators != null && modelElementIndicators.length != 0) {
 
-            tdProvider = DataProviderHelper.getTdDataProvider(columnIndicators[0].getTdColumn());
+            tdProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]);
             analysis.getContext().setConnection(tdProvider);
 
-            for (ColumnIndicator columnIndicator : columnIndicators) {
-                analysisHandler.addIndicator(columnIndicator.getTdColumn(), columnIndicator.getIndicators());
-                DataminingType type = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
+            for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+                analysisHandler.addIndicator(modelElementIndicator.getModelElement(), modelElementIndicator.getIndicators());
+                DataminingType type = MetadataHelper.getDataminingType(modelElementIndicator.getModelElement());
                 if (type == null) {
-                    type = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
+                    type = MetadataHelper.getDefaultDataminingType(modelElementIndicator.getJavaType());
                 }
-                analysisHandler.setDatamingType(type.getLiteral(), columnIndicator.getTdColumn());
+                analysisHandler.setDatamingType(type.getLiteral(), modelElementIndicator.getModelElement());
             }
         } else {
             analysis.getContext().setConnection(null);
@@ -695,8 +695,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         return analysisHandler;
     }
 
-    public ColumnIndicator[] getCurrentColumnIndicators() {
-        return currentColumnIndicators;
+    public ModelElementIndicator[] getCurrentModelElementIndicators() {
+        return this.currentModelElementIndicators;
     }
 
     public Composite[] getPreviewChartCompsites() {
@@ -712,12 +712,12 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     protected ReturnCode canRun() {
-        ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
-        if (columnIndicators == null || columnIndicators.length == 0) {
+        ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
+        if (modelElementIndicators == null || modelElementIndicators.length == 0) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoColumnAssigned"), false); //$NON-NLS-1$
         }
-        for (ColumnIndicator columnIndicator : columnIndicators) {
-            if (columnIndicator.getIndicators().length == 0) {
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+            if (modelElementIndicator.getIndicators().length == 0) {
                 return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoIndicatorAssigned"), false); //$NON-NLS-1$
             }
         }
@@ -727,18 +727,18 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     protected ReturnCode canSave() {
-        List<Column> analyzedColumns = new ArrayList<Column>();
+        List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
 
-        for (ColumnIndicator columnIndicator : treeViewer.getColumnIndicator()) {
-            analyzedColumns.add(columnIndicator.getTdColumn());
+        for (ModelElementIndicator modelElementIndicator : treeViewer.getModelElementIndicator()) {
+            analyzedElement.add(modelElementIndicator.getModelElement());
         }
 
-        if (!analyzedColumns.isEmpty()) {
-            if (!ColumnHelper.isFromSameConnection(analyzedColumns)) {
+        if (!analyzedElement.isEmpty()) {
+            if (!ModelElementHelper.isFromSameConnection(analyzedElement)) {
                 return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AlreadyShown"), false); //$NON-NLS-1$
             }
 
-            if (!ColumnHelper.isFromSameTable(analyzedColumns) && !"".equals(dataFilterComp.getDataFilterString())) { //$NON-NLS-1$
+            if (!ModelElementHelper.isFromSameTable(analyzedElement) && !"".equals(dataFilterComp.getDataFilterString())) { //$NON-NLS-1$
                 return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotCreatAnalysis"), false); //$NON-NLS-1$
             }
         }

@@ -30,6 +30,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
@@ -156,7 +157,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         for (int i = 0; i < getColumns().length; i++) {
 
             TdColumn column = getColumns()[i];
-            ColumnIndicator columnIndicator = new ColumnIndicator(column);
+            ColumnIndicator columnIndicator = ModelElementIndicatorHelper.createColumnIndicator(column);
 
             for (IndicatorEnum oneEnum : allowedEnum) {
                 columnIndicator.addTempIndicatorEnum(oneEnum);

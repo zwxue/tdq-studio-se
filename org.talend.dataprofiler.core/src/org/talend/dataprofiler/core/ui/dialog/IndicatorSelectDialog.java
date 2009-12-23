@@ -36,6 +36,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -75,7 +76,7 @@ public class IndicatorSelectDialog extends TrayDialog {
 
     private static final String COLUMNINDICATORFLAG = "_COLUMNINDICATORFLAG"; //$NON-NLS-1$
 
-    private ColumnIndicator[] columnIndicators;
+    private ModelElementIndicator[] modelElementIndicators;
 
     private Label purposeLabel;
 
@@ -89,7 +90,22 @@ public class IndicatorSelectDialog extends TrayDialog {
     public IndicatorSelectDialog(Shell parentShell, String title, ColumnIndicator[] columnIndicators) {
         super(parentShell);
         this.title = title;
-        this.columnIndicators = columnIndicators;
+        this.modelElementIndicators = columnIndicators;
+        int shellStyle = getShellStyle();
+        setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
+    }
+
+    /**
+     * DOC xqliu IndicatorSelectDialog constructor comment.
+     * 
+     * @param parentShell
+     * @param title
+     * @param modelElementIndicators
+     */
+    public IndicatorSelectDialog(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators) {
+        super(parentShell);
+        this.title = title;
+        this.modelElementIndicators = modelElementIndicators;
         int shellStyle = getShellStyle();
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
     }
@@ -477,8 +493,8 @@ public class IndicatorSelectDialog extends TrayDialog {
         tree.setHeaderVisible(true);
         TreeColumn[] treeColumn = null;
 
-        if (this.columnIndicators.length > 1) {
-            treeColumn = new TreeColumn[columnIndicators.length + 2];
+        if (this.modelElementIndicators.length > 1) {
+            treeColumn = new TreeColumn[modelElementIndicators.length + 2];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[0].setWidth(COL0_WIDTH);
             treeColumn[0].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicator")); //$NON-NLS-1$
@@ -487,32 +503,32 @@ public class IndicatorSelectDialog extends TrayDialog {
             treeColumn[1].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.allColumn")); //$NON-NLS-1$
             treeColumn[1].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.string")); //$NON-NLS-1$
 
-            for (int i = 0; i < this.columnIndicators.length; i++) {
+            for (int i = 0; i < this.modelElementIndicators.length; i++) {
                 treeColumn[i + 2] = new TreeColumn(tree, SWT.CENTER);
                 treeColumn[i + 2].setWidth(COLI_WIDTH);
-                treeColumn[i + 2].setText(columnIndicators[i].getTdColumn().getName());
-                treeColumn[i + 2].setData(columnIndicators[i]);
+                treeColumn[i + 2].setText(modelElementIndicators[i].getElementName());
+                treeColumn[i + 2].setData(modelElementIndicators[i]);
                 treeColumn[i + 2].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.analyzeColumn")); //$NON-NLS-1$
-                columnIndicators[i].copyOldIndicatorEnum();
+                modelElementIndicators[i].copyOldIndicatorEnum();
             }
         } else {
-            treeColumn = new TreeColumn[columnIndicators.length + 1];
+            treeColumn = new TreeColumn[modelElementIndicators.length + 1];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[0].setWidth(COL0_WIDTH);
             treeColumn[0].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicators")); //$NON-NLS-1$
-            for (int i = 0; i < this.columnIndicators.length; i++) {
+            for (int i = 0; i < this.modelElementIndicators.length; i++) {
                 treeColumn[i + 1] = new TreeColumn(tree, SWT.CENTER);
                 treeColumn[i + 1].setWidth(COLI_WIDTH);
-                treeColumn[i + 1].setText(columnIndicators[i].getTdColumn().getName());
-                treeColumn[i + 1].setData(columnIndicators[i]);
-                columnIndicators[i].copyOldIndicatorEnum();
+                treeColumn[i + 1].setText(modelElementIndicators[i].getElementName());
+                treeColumn[i + 1].setData(modelElementIndicators[i]);
+                modelElementIndicators[i].copyOldIndicatorEnum();
             }
         }
 
         return treeColumn;
     }
 
-    public ColumnIndicator[] getResult() {
-        return columnIndicators;
+    public ModelElementIndicator[] getResult() {
+        return modelElementIndicators;
     }
 }

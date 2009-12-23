@@ -30,7 +30,7 @@ import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
@@ -46,14 +46,21 @@ public abstract class PaginationInfo {
 
     protected ScrolledForm form;
 
-    protected List<ColumnIndicator> columnIndicatores;
+    protected List<? extends ModelElementIndicator> modelElementIndicators;
 
     protected List<Widget> needDispostWidgets = new ArrayList<Widget>();
 
     protected UIPagination uiPagination = null;
 
-    public PaginationInfo(ScrolledForm form, List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
-        this.columnIndicatores = columnIndicatores;
+    // public PaginationInfo(ScrolledForm form, List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
+    // this.columnIndicatores = columnIndicatores;
+    // this.uiPagination = uiPagination;
+    // this.form = form;
+    // }
+
+    public PaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
+            UIPagination uiPagination) {
+        this.modelElementIndicators = modelElementIndicators;
         this.uiPagination = uiPagination;
         this.form = form;
     }
@@ -62,7 +69,7 @@ public abstract class PaginationInfo {
         IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("Loading page...", columnIndicatores.size());
+                monitor.beginTask("Loading page...", modelElementIndicators.size());
                 uiPagination.notifyPageNavigator();
                 render();
                 uiPagination.updatePageInfoLabel();

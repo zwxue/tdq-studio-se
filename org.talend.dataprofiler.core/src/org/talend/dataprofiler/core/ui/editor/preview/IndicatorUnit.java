@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -30,16 +32,24 @@ public class IndicatorUnit {
 
     private Indicator indicator;
 
-    private ColumnIndicator parentColumn;
+    // private ColumnIndicator parentColumn;
+
+    private ModelElementIndicator modelElementIndicator;
 
     private Object value;
 
     private IndicatorUnit[] children;
 
-    public IndicatorUnit(IndicatorEnum type, Indicator indicator, ColumnIndicator parentColumn) {
+    // public IndicatorUnit(IndicatorEnum type, Indicator indicator, ColumnIndicator parentColumn) {
+    // this.type = type;
+    // this.indicator = indicator;
+    // this.parentColumn = parentColumn;
+    // }
+
+    public IndicatorUnit(IndicatorEnum type, Indicator indicator, ModelElementIndicator modelElementIndicator) {
         this.type = type;
         this.indicator = indicator;
-        this.parentColumn = parentColumn;
+        this.modelElementIndicator = modelElementIndicator;
     }
 
     /**
@@ -69,13 +79,22 @@ public class IndicatorUnit {
         return this.indicator;
     }
 
+    // /**
+    // * Getter for parentColumn.
+    // *
+    // * @return the parentColumn
+    // */
+    // public ColumnIndicator getParentColumn() {
+    // return this.parentColumn;
+    // }
+
     /**
-     * Getter for parentColumn.
+     * Getter for modelElementIndicator.
      * 
-     * @return the parentColumn
+     * @return the modelElementIndicator
      */
-    public ColumnIndicator getParentColumn() {
-        return this.parentColumn;
+    public ModelElementIndicator getModelElementIndicator() {
+        return this.modelElementIndicator;
     }
 
     /**
@@ -126,5 +145,13 @@ public class IndicatorUnit {
     public boolean isExcuted() {
         // return !indicator.getInstantiatedExpressions().isEmpty();
         return indicator.isComputed();
+    }
+
+    public boolean isColumn() {
+        return this.modelElementIndicator instanceof ColumnIndicator;
+    }
+
+    public boolean isXmlElement() {
+        return this.modelElementIndicator instanceof XmlElementIndicator;
     }
 }

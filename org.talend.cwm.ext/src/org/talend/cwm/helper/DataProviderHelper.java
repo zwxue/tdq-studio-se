@@ -26,6 +26,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.utils.security.CryptoHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.Component;
@@ -137,6 +138,16 @@ public final class DataProviderHelper {
         }
         // else
         return tdDataProviders.iterator().next();
+    }
+
+    /**
+     * DOC xqliu Comment method "getTdDataProvider".
+     * 
+     * @param xmlElement
+     * @return
+     */
+    public static TdDataProvider getTdDataProvider(TdXMLElement xmlElement) {
+        return getTdDataProvider(xmlElement.getOwnedDocument());
     }
 
     /**

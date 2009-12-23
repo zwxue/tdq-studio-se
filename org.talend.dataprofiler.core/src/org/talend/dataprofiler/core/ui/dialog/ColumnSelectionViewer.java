@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -44,11 +45,12 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
         Object element = event.getElement();
 
         boolean isTable = element instanceof TdTable;
+        boolean isXmlElement = element instanceof TdXMLElement;
 
         if ((checked && isTable) || !checked) {
             super.fireCheckStateChanged(event);
         }
-        if (checked && !isTable) {
+        if (checked && !(isTable || isXmlElement)) {
             if (MessageDialogWithToggle.openConfirm(null,
                     DefaultMessagesImpl.getString("ColumnSelectionViewer.warning"), tooMuchItemSeleted)) { //$NON-NLS-1$
                 super.fireCheckStateChanged(event);

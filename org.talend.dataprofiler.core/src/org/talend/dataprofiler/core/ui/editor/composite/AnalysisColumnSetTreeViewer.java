@@ -68,6 +68,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -572,5 +573,14 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         // .getAnalyzedColumns().size());
         columnSetMultiValueList.clear();
         this.setElements(masterPage.getSimpleStatIndicator().getAnalyzedColumns());
+    }
+
+    @Override
+    public boolean canDrop(ModelElement modelElement) {
+        return false;
+    }
+
+    @Override
+    public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
     }
 }

@@ -29,7 +29,8 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.ChangeConnectionAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -77,14 +78,13 @@ public abstract class AbstractPagePart {
     }
 
     /**
-     * 
      * ADD mzhao 2009-05-05 bug:6587.
      */
-    protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ColumnIndicator[] indicators, Tree tree) {
+    protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ModelElementIndicator[] indicators, Tree tree) {
         if (indicators != null && indicators.length != 0) {
             TdDataProvider tdProvider = (TdDataProvider) masterPage.getAnalysis().getContext().getConnection();
             if (tdProvider == null) {
-                tdProvider = DataProviderHelper.getTdDataProvider(indicators[0].getTdColumn());
+                tdProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
             }
             setConnectionState(masterPage, tdProvider);
         }

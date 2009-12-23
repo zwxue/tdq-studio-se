@@ -38,6 +38,7 @@ import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
@@ -103,6 +104,10 @@ public class ColumnViewerDND {
 
                 if (object instanceof TdColumn) {
                     receiver = new ColumnReceiver();
+                }
+
+                if (object instanceof TdXMLElement) {
+                    receiver = new XmlElementReceiver();
                 }
 
                 if (receiver == null) {
@@ -272,7 +277,57 @@ public class ColumnViewerDND {
             int size2 = selectedColumn.size();
 
             if (size1 == size2) {
-                viewer.dropColumns(selectedColumn, index);
+                viewer.dropModelElements(selectedColumn, index);
+            }
+            localSelection = null;
+        }
+    }
+
+    /**
+     * DOC xqliu ColumnViewerDND class global comment. Detailled comment
+     */
+    static class XmlElementReceiver implements ISelectionReceiver {
+
+        // @Override
+        public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
+
+            event.detail = DND.DROP_NONE;
+            Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
+
+            if (firstElement instanceof TdXMLElement) {
+                TdXMLElement xmlElement = (TdXMLElement) firstElement;
+
+                Tree tree = (Tree) ((DropTarget) event.widget).getControl();
+                AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
+
+                if (viewer != null && viewer.canDrop(xmlElement)) {
+                    event.detail = DND.DROP_MOVE;
+                }
+
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        // @Override
+        public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
+            LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();
+            Tree control = (Tree) ((DropTarget) event.widget).getControl();
+            AbstractColumnDropTree viewer = (AbstractColumnDropTree) control.getData();
+
+            StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
+            Iterator it = selection.iterator();
+            List<TdXMLElement> selectedXmlElement = new ArrayList<TdXMLElement>();
+
+            while (it.hasNext()) {
+                TdXMLElement xmlElement = (TdXMLElement) it.next();
+                selectedXmlElement.add(xmlElement);
+            }
+
+            int size1 = selection.size();
+            int size2 = selectedXmlElement.size();
+
+            if (size1 == size2) {
+                viewer.dropModelElements(selectedXmlElement, index);
             }
             localSelection = null;
         }
@@ -457,7 +512,7 @@ public class ColumnViewerDND {
             if (it.hasNext()) {
                 Column column = (Column) it.next();
                 selectedColumn.add(column);
-                viewer.dropColumns(selectedColumn, index);
+                viewer.dropModelElements(selectedColumn, index);
             }
 
             localSelection = null;

@@ -54,7 +54,8 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
         super(units);
 
         if (units != null && !units.isEmpty()) {
-            sqltype = units.get(0).getParentColumn().getTdColumn().getJavaType();
+            // sqltype = units.get(0).getParentColumn().getTdColumn().getJavaType();
+            sqltype = units.get(0).getModelElementIndicator().getJavaType();
         }
     }
 

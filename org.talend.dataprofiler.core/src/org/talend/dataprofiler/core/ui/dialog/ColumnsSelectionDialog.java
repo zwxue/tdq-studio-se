@@ -69,6 +69,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -89,10 +90,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
     public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
-            List<Column> columnList, String message) {
+            List<? extends ModelElement> modelElementList, String message) {
         super(metadataFormPage, parent, message);
         columnSetCheckedMap = new HashMap<ColumnSetKey, ColumnCheckedMap>();
-        initCheckedColumn(columnList);
+        initCheckedModelElement(modelElementList);
 
         addFilter(new EMFObjFilter());
         addFilter(new DQFolderFliter(true));
@@ -118,7 +119,16 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         }
     }
 
-    private void initCheckedColumn(List<Column> columnList) {
+    private void initCheckedModelElement(List<? extends ModelElement> modelElementList) {
+        // TODO 10238
+        List<Column> columnList = new ArrayList<Column>();
+        ModelElement modelElement = modelElementList.get(0);
+        if (modelElement != null && modelElement instanceof Column) {
+            for (ModelElement element : modelElementList) {
+                columnList.add((Column) element);
+            }
+        }
+        // ~
         List<ColumnSet> columnSetList = new ArrayList<ColumnSet>();
         for (int i = 0; i < columnList.size(); i++) {
             columnList.get(i).eContainer();
@@ -137,14 +147,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         // this.setExpandedElements(columnSetList.toArray());
         this.setInitialElementSelections(columnSetList);
     }
-
-    // protected void checkElementChecked() {
-    // for (int i = 0; i < currentCheckedColumnSet.size(); i++) {
-    // this.getTreeViewer().setChecked(this.currentCheckedColumnSet.get(i),
-    // true);
-    // }
-    // this.currentCheckedColumnSet.clear();
-    // }
 
     protected void initProvider() {
         fLabelProvider = new DBTablesViewLabelProvider();

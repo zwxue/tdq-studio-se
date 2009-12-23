@@ -12,15 +12,27 @@
 // ============================================================================
 package org.talend.cwm.helper;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.xml.TdXMLElement;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class ModelElementHelper {
+public final class ModelElementHelper {
+
+    private ModelElementHelper() {
+    }
 
     /**
      * As specified in CWM document at p. 67, the dependency kind can be of two types "Usage" or "Abstraction", but can
@@ -120,4 +132,42 @@ public class ModelElementHelper {
         return null;
     }
 
+    public static boolean isFromSameConnection(List<ModelElement> elements) {
+        assert elements != null;
+
+        Set<DataProvider> dataProviderSets = new HashSet<DataProvider>();
+        for (ModelElement element : elements) {
+            dataProviderSets.add(getTdDataProvider(element));
+        }
+        return dataProviderSets.size() == 1;
+    }
+
+    public static boolean isFromSameTable(List<ModelElement> elements) {
+        assert elements != null;
+        ModelElement modelElement = elements.get(0);
+        if (modelElement instanceof Column) {
+            List<Column> columns = new ArrayList<Column>();
+            for (ModelElement element : elements) {
+                columns.add((Column) element);
+            }
+            return ColumnHelper.isFromSameTable(columns);
+        } else if (modelElement instanceof TdXMLElement) {
+            List<TdXMLElement> xmlElements = new ArrayList<TdXMLElement>();
+            for (ModelElement element : elements) {
+                xmlElements.add((TdXMLElement) element);
+            }
+            return XmlElementHelper.isFromSameTable(xmlElements);
+        }
+        return false;
+    }
+
+    public static final TdDataProvider getTdDataProvider(ModelElement element) {
+        if (element instanceof Column) {
+            return DataProviderHelper.getTdDataProvider((Column) element);
+        }
+        if (element instanceof TdXMLElement) {
+            DataProviderHelper.getTdDataProvider((TdXMLElement) element);
+        }
+        return null;
+    }
 }

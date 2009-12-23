@@ -42,7 +42,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -75,21 +75,29 @@ public class ResultPaginationInfo extends PaginationInfo {
 
     private ColumnMasterDetailsPage masterPage;
 
-    public ResultPaginationInfo(ScrolledForm form, List<ColumnIndicator> columnIndicatores, ColumnMasterDetailsPage masterPage,
+    // public ResultPaginationInfo(ScrolledForm form, List<ColumnIndicator> columnIndicatores, ColumnMasterDetailsPage
+    // masterPage,
+    // UIPagination uiPagination) {
+    // super(form, columnIndicatores, uiPagination);
+    // this.masterPage = masterPage;
+    // }
+
+    public ResultPaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
+            ColumnMasterDetailsPage masterPage,
             UIPagination uiPagination) {
-        super(form, columnIndicatores, uiPagination);
+        super(form, modelElementIndicators, uiPagination);
         this.masterPage = masterPage;
     }
 
     @Override
     protected void render() {
-        for (final ColumnIndicator columnIndicator : columnIndicatores) {
+        for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
 
             ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getComposite(),
                     ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
             needDispostWidgets.add(exComp);
             exComp.setText(DefaultMessagesImpl.getString(
-                    "ColumnAnalysisResultPage.Column", columnIndicator.getTdColumn().getName())); //$NON-NLS-1$
+                    "ColumnAnalysisResultPage.Column", modelElementIndicator.getElementName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -102,7 +110,7 @@ public class ResultPaginationInfo extends PaginationInfo {
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
             exComp.setClient(comp);
 
-            createResultDataComposite(comp, columnIndicator);
+            createResultDataComposite(comp, modelElementIndicator);
 
             exComp.addExpansionListener(new ExpansionAdapter() {
 
@@ -118,11 +126,11 @@ public class ResultPaginationInfo extends PaginationInfo {
         }
     }
 
-    private void createResultDataComposite(final Composite comp, final ColumnIndicator columnIndicator) {
-        if (columnIndicator.getIndicators().length != 0) {
+    private void createResultDataComposite(final Composite comp, final ModelElementIndicator modelElementIndicator) {
+        if (modelElementIndicator.getIndicators().length != 0) {
 
             Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
-                    .getIndicatorComposite(columnIndicator);
+                    .getIndicatorComposite(modelElementIndicator);
             for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
                 List<IndicatorUnit> units = indicatorComposite.get(chartType);
                 if (!units.isEmpty()) {

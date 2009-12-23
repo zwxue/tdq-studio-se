@@ -15,7 +15,9 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.forms;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -93,11 +95,14 @@ public enum FormEnum {
      * @param sqlType
      */
     public static FormEnum[] getForms(IndicatorUnit indicatorUnit) {
-        ColumnIndicator columnIndicator = indicatorUnit.getParentColumn();
-        int sqlType = columnIndicator.getTdColumn().getJavaType();
-        DataminingType dataminingType = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
+        // ColumnIndicator columnIndicator = indicatorUnit.getParentColumn();
+        ModelElementIndicator modelElementIndicator = indicatorUnit.getModelElementIndicator();
+        int sqlType = modelElementIndicator.getJavaType();
+        ColumnIndicator columnIndicator = ModelElementIndicatorHelper.switchColumnIndicator(indicatorUnit);
+        DataminingType dataminingType = columnIndicator == null ? null : MetadataHelper.getDataminingType(columnIndicator
+                .getTdColumn());
         if (dataminingType == null) {
-            dataminingType = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
+            dataminingType = MetadataHelper.getDefaultDataminingType(modelElementIndicator.getJavaType());
         }
         FormEnum[] forms = null;
 
