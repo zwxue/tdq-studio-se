@@ -25,12 +25,18 @@ import net.sourceforge.sqlexplorer.dbstructure.nodes.TableNode;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.ModifyEvent;
@@ -56,10 +62,14 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.dburl.SupportDBUrlStore;
+import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
+import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ImageLib;
@@ -67,6 +77,10 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.SqlExplorerBridge;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
+import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
+import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
+import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
@@ -132,6 +146,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.KEYS) },
             { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.INDEXES),
                     new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.INDEXES) } };
+
+    private static final int TABLE_COLUMN_INDEX = 0;
 
     private static final int VIEW_COLUMN_INDEX = 2;
 
@@ -513,6 +529,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 }
 
             });
+            createContextMenuFor(schemaTableViewer);
         } else {
             if (catalogs.size() > 0) {
                 createCatalogTableColumns(table);
@@ -539,6 +556,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         sectionClient.layout();
         statisticalSection.setClient(sectionClient);
 
+        createContextMenuFor(catalogTableViewer);
     }
 
     /**
@@ -745,6 +763,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             indexitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewIndexes")); //$NON-NLS-1$
             indexitem.setImage(ImageLib.getImage(ImageLib.INDEX_VIEW));
 
+            final Menu menu2 = new Menu(catalogOrSchemaTable);
+            MenuItem tableAnalysisitem = new MenuItem(menu2, SWT.PUSH);
+            tableAnalysisitem.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
+            tableAnalysisitem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
+
             // catalogOrSchemaTable.setMenu(menu);
             keyitem.addSelectionListener(new SelectionAdapter() {
 
@@ -803,6 +826,27 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     if (column == VIEW_COLUMN_INDEXES) {
                         cursor.setMenu(menu1);
                         menu1.setVisible(true);
+                    } else {
+                        cursor.setMenu(null);
+                    }
+                }
+            });
+
+            tableAnalysisitem.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    TableItem tableItem = cursor.getRow();
+                    runTableAnalysis(tableItem.getText(0));
+                }
+
+            });
+            cursor.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    int column = cursor.getColumn();
+                    if (column == TABLE_COLUMN_INDEX) {
+                        cursor.setMenu(menu2);
+                        menu2.setVisible(true);
                     } else {
                         cursor.setMenu(null);
                     }
@@ -906,5 +950,50 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             provider.getZeroRowColor().dispose();
         }
         super.dispose();
+    }
+
+    /**
+     * DOC yyi Comment method "runTableAnalysis".
+     * 
+     * @param tableName
+     */
+    protected void runTableAnalysis(String tableName) {
+        Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+        try {
+            TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPack);
+            List<TdTable> tableList = DqRepositoryViewService.getTables(tdDataProvider, catalogObj, tableName, false);
+            for (TdTable table : tableList) {
+                if (table.getName().equals(tableName)) {
+                    TableAnalysisWizard taw = (TableAnalysisWizard) WizardFactory.createAnalysisWizard(AnalysisType.TABLE, null);
+                    taw.setTdDataProvider(tdDataProvider);
+                    taw.setNamedColumnSet(new TdTable[] { table });
+                    taw.setShowTableSelectPage(false);
+                    WizardDialog dialog = new WizardDialog(null, taw);
+                    dialog.setPageSize(500, 340);
+                    dialog.open();
+                    break;
+                }
+            }
+        } catch (TalendException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void createContextMenuFor(final StructuredViewer viewer) {
+        final MenuManager contextMenu = new MenuManager("#PopUp");
+        contextMenu.add(new Separator("additions"));
+        contextMenu.setRemoveAllWhenShown(true);
+        contextMenu.addMenuListener(new IMenuListener() {
+
+            public void menuAboutToShow(IMenuManager mgr) {
+                Object obj = ((StructuredSelection) viewer.getSelection()).getFirstElement();
+                if (obj instanceof SchemaIndicator) {
+                    SchemaIndicator schemaIndicator = (SchemaIndicator) obj;
+                    contextMenu.add(new OverviewAnalysisAction(new Package[] { (Package) schemaIndicator.getAnalyzedElement() }));
+                }
+            }
+        });
+        Menu menu = contextMenu.createContextMenu(viewer.getControl());
+        viewer.getControl().setMenu(menu);
     }
 }
