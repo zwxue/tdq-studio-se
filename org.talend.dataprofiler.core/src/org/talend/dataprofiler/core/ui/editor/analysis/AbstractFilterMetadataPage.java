@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.ModifyEvent;
@@ -68,6 +67,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -77,11 +77,9 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.SqlExplorerBridge;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
+import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
-import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
-import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
-import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
@@ -960,22 +958,17 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      */
     protected void runTableAnalysis(String tableName) {
         Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+        TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPack);
         try {
-            TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPack);
             List<TdTable> tdTables = DqRepositoryViewService.getTables(tdDataProvider, catalogObj, tableName, true);
 
-            // Assert.assertFalse(tdTables.isEmpty());
             if (!tdTables.isEmpty()) {
-
-                CatalogHelper.addTables(tdTables, catalogObj);
                 TdTable table = tdTables.get(0);
-                TableAnalysisWizard taw = (TableAnalysisWizard) WizardFactory.createAnalysisWizard(AnalysisType.TABLE, null);
-                taw.setTdDataProvider(tdDataProvider);
-                taw.setNamedColumnSet(new TdTable[] { table });
-                taw.setShowTableSelectPage(false);
-                WizardDialog dialog = new WizardDialog(null, taw);
-                dialog.setPageSize(500, 340);
-                dialog.open();
+                if (!CatalogHelper.getTables(catalogObj).contains(table)) {
+                    CatalogHelper.addTables(tdTables, catalogObj);
+                }
+                List<TdColumn> columns = DqRepositoryViewService.getColumns(tdDataProvider, table, null, true);
+                new AnalyzeColumnSetAction(columns.toArray(new TdColumn[columns.size()])).run();
             } else {
                 MessageUI.openWarning("Table \"" + tableName + "\" does not exist!");
             }
