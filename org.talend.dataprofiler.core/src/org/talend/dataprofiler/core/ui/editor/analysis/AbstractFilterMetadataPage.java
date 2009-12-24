@@ -78,6 +78,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.SqlExplorerBridge;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -961,18 +962,22 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
         try {
             TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPack);
-            List<TdTable> tableList = DqRepositoryViewService.getTables(tdDataProvider, catalogObj, tableName, false);
-            for (TdTable table : tableList) {
-                if (table.getName().equals(tableName)) {
-                    TableAnalysisWizard taw = (TableAnalysisWizard) WizardFactory.createAnalysisWizard(AnalysisType.TABLE, null);
-                    taw.setTdDataProvider(tdDataProvider);
-                    taw.setNamedColumnSet(new TdTable[] { table });
-                    taw.setShowTableSelectPage(false);
-                    WizardDialog dialog = new WizardDialog(null, taw);
-                    dialog.setPageSize(500, 340);
-                    dialog.open();
-                    break;
-                }
+            List<TdTable> tdTables = DqRepositoryViewService.getTables(tdDataProvider, catalogObj, tableName, true);
+
+            // Assert.assertFalse(tdTables.isEmpty());
+            if (!tdTables.isEmpty()) {
+
+                CatalogHelper.addTables(tdTables, catalogObj);
+                TdTable table = tdTables.get(0);
+                TableAnalysisWizard taw = (TableAnalysisWizard) WizardFactory.createAnalysisWizard(AnalysisType.TABLE, null);
+                taw.setTdDataProvider(tdDataProvider);
+                taw.setNamedColumnSet(new TdTable[] { table });
+                taw.setShowTableSelectPage(false);
+                WizardDialog dialog = new WizardDialog(null, taw);
+                dialog.setPageSize(500, 340);
+                dialog.open();
+            } else {
+                MessageUI.openWarning("Table \"" + tableName + "\" does not exist!");
             }
         } catch (TalendException e) {
             e.printStackTrace();
