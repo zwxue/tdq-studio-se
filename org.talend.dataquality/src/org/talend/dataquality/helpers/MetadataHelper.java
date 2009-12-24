@@ -87,7 +87,7 @@ public final class MetadataHelper {
                 && (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column))) {
             return DataminingType.NOMINAL;
         } else {
-            return DataminingType.get(column.getContentType());
+            return DataminingType.get(contentType);
         }
     }
 
@@ -330,9 +330,8 @@ public final class MetadataHelper {
         if (modelElement instanceof TdColumn) {
             return getDataminingType((TdColumn) modelElement);
         } else if (modelElement instanceof TdXMLElement) {
-            // TODO 10238
-            getDefaultDataminingType(0);
+            DataminingType.get(((TdXMLElement) modelElement).getContentType());
         }
-        return null;
+        return getDefaultDataminingType(0);
     }
 }

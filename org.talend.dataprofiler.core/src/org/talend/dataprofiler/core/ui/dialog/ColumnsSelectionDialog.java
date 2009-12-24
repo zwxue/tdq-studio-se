@@ -15,9 +15,9 @@ package org.talend.dataprofiler.core.ui.dialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
@@ -74,7 +74,6 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -110,9 +109,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * DOC mzhao bug 9240 mzhao 2009-11-05
      */
     protected void unfoldToCheckedElements() {
-        Iterator<ModelElementKey> it = modelElementCheckedMap.keySet().iterator();
-        while (it.hasNext()) {
-            ModelElementKey mek = it.next();
+        Set<ModelElementKey> keySet = modelElementCheckedMap.keySet();
+        ModelElementKey[] array = keySet.toArray(new ModelElementKey[keySet.size()]);
+        for (ModelElementKey mek : array) {
             getTreeViewer().expandToLevel(mek.getModelElement(), 1);
             StructuredSelection structSel = new StructuredSelection(mek.getModelElement());
             getTreeViewer().setSelection(structSel);
@@ -120,11 +119,11 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     private void initCheckedModelElement(List<? extends ModelElement> modelElementList) {
-        // TODO 10238
         List<ModelElement> containerList = new ArrayList<ModelElement>();
         for (int i = 0; i < modelElementList.size(); i++) {
-            modelElementList.get(i).eContainer();
-            ModelElement container = ModelElementHelper.getContainer(modelElementList.get(i));
+            ModelElement modelElement = modelElementList.get(i);
+            modelElement.eContainer();
+            ModelElement container = ModelElementHelper.getContainer(modelElement);
             if (!containerList.contains(container)) {
                 containerList.add(container);
             }
@@ -134,7 +133,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 meCheckedMap = new ModelElementCheckedMapImpl();
                 this.modelElementCheckedMap.put(modelElementKey, meCheckedMap);
             }
-            meCheckedMap.putModelElementChecked(modelElementList.get(i), Boolean.TRUE);
+            meCheckedMap.putModelElementChecked(modelElement, Boolean.TRUE);
         }
         this.setInitialElementSelections(containerList);
     }
@@ -328,19 +327,25 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         private ModelElement parentModelElement;
 
-        public ModelElementKeyImpl(ModelElement mElment) {
-            modelElement = mElment;
-            parentModelElement = getParentModelElement(mElment);
+        public ModelElementKeyImpl(ModelElement mElement) {
+            modelElement = mElement;
+            parentModelElement = getParentModelElement(mElement);
         }
 
         /**
          * DOC xqliu Comment method "getParentModelElement".
          * 
-         * @param mElment
+         * @param mElement
          * @return null if the mElement is the top element
          */
-        private ModelElement getParentModelElement(ModelElement mElment) {
-            // TODO 10238
+        private ModelElement getParentModelElement(ModelElement mElement) {
+            if (mElement instanceof ColumnSet) {
+                return EObjectHelper.getParent((ColumnSet) mElement);
+            } else if (mElement instanceof TdXMLElement) {
+                // TODO 10238
+                TdXMLElement xmlElement = (TdXMLElement) mElement;
+                xmlElement.getOwnedDocument();
+            }
             return null;
         }
 
@@ -356,57 +361,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             return KEY_PRIME
                     + (getParentModelElement() == null ? 0 : new ModelElementKeyImpl(getParentModelElement()).hashCode());
         }
-    }
 
-    /**
-     * This class will combine catlogName and columnSetName as a key.
-     */
-    class ColumnSetKey implements ModelElementKey {
-
-        private final String catalogName;
-
-        private final String columnSetName;
-
-        private ColumnSet columnSetOwner;
-
-        public ColumnSetKey(ColumnSet columnSetOwner) {
-            Package parent = EObjectHelper.getParent(columnSetOwner);
-            if (parent != null) {
-                this.catalogName = parent.getName();
-            } else {
-                this.catalogName = ""; //$NON-NLS-1$
-            }
-            this.columnSetName = columnSetOwner.getName();
-            this.columnSetOwner = columnSetOwner;
-        }
-
-        public ColumnSet getColumnSetOwner() {
-            return columnSetOwner;
-        }
-
-        public ModelElement getModelElement() {
-            return getColumnSetOwner();
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((catalogName == null) ? 0 : catalogName.hashCode());
-            result = prime * result + ((columnSetName == null) ? 0 : columnSetName.hashCode());
-            return result;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Object#equals(java.lang.Object)
-         */
         @Override
         public boolean equals(Object obj) {
             if (this == obj) {
@@ -418,26 +373,24 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (getClass() != obj.getClass()) {
                 return false;
             }
-            final ColumnSetKey other = (ColumnSetKey) obj;
-            if (catalogName == null) {
-                if (other.catalogName != null) {
+            final ModelElementKey other = (ModelElementKey) obj;
+
+            if (getModelElement() == null) {
+                if (other.getModelElement() != null) {
                     return false;
                 }
-            } else if (!catalogName.equals(other.catalogName)) {
+            } else if (!getModelElement().equals(other.getModelElement())) {
                 return false;
             }
-            if (columnSetName == null) {
-                if (other.columnSetName != null) {
+
+            if (this.getParentModelElement() == null) {
+                if (other.getParentModelElement() != null) {
                     return false;
                 }
-            } else if (!columnSetName.equals(other.columnSetName)) {
+            } else if (!getParentModelElement().equals(other.getParentModelElement())) {
                 return false;
             }
             return true;
-        }
-
-        public ModelElement getParentModelElement() {
-            return null;
         }
     }
 
@@ -502,66 +455,17 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         }
 
         public Boolean getModelElementChecked(ModelElement modelElement) {
-            return null;
+            return modelElementNameMap.get(modelElement.getName());
         }
 
         public void putAllChecked(ModelElement[] modelElement, Boolean isChecked) {
-
+            for (int i = 0; i < modelElement.length; i++) {
+                modelElementNameMap.put(modelElement[i].getName(), isChecked);
+            }
         }
 
         public void putModelElementChecked(ModelElement modelElement, Boolean isChecked) {
-
-        }
-
-    }
-
-    /**
-     * @author rli
-     * 
-     */
-    class ColumnCheckedMap {
-
-        Map<String, Boolean> columnNameMap = new HashMap<String, Boolean>();
-
-        public void putColumnChecked(Column column, Boolean isChecked) {
-            columnNameMap.put(column.getName(), isChecked);
-        }
-
-        public Boolean getColumnChecked(Column column) {
-            return columnNameMap.get(column.getName());
-        }
-
-        public void putAllChecked(Column[] columns, Boolean isChecked) {
-            for (int i = 0; i < columns.length; i++) {
-                columnNameMap.put(columns[i].getName(), isChecked);
-            }
-        }
-
-        public TdColumn[] getCheckedColumns(List<TdColumn> columnList) {
-            List<TdColumn> checkedColumns = new ArrayList<TdColumn>();
-            for (TdColumn column : columnList) {
-                if (columnNameMap.containsKey(column.getName()) && columnNameMap.get(column.getName())) {
-                    checkedColumns.add(column);
-                }
-            }
-            return checkedColumns.toArray(new TdColumn[checkedColumns.size()]);
-        }
-
-        public List<TdColumn> getCheckedColumnList(ColumnSet columnSet) {
-            List<TdColumn> checkedColumns = new ArrayList<TdColumn>();
-
-            List<TdColumn> columnList = ColumnSetHelper.getColumns(columnSet);
-
-            for (TdColumn column : columnList) {
-                if (columnNameMap.containsKey(column.getName()) && columnNameMap.get(column.getName())) {
-                    checkedColumns.add(column);
-                }
-            }
-            return checkedColumns;
-        }
-
-        public void clear() {
-            columnNameMap.clear();
+            modelElementNameMap.put(modelElement.getName(), isChecked);
         }
 
     }
