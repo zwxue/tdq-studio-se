@@ -59,4 +59,14 @@ public final class XmlElementHelper {
         return modelElement.size() == 1;
     }
 
+    /**
+     * DOC xqliu Comment method "getFullName".
+     * 
+     * @param xmlElement
+     * @return
+     */
+    public static String getFullName(TdXMLElement xmlElement) {
+        return xmlElement.getName();
+    }
+
 }

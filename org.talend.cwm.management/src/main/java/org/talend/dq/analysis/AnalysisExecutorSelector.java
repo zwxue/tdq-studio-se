@@ -14,12 +14,17 @@ package org.talend.dq.analysis;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * @author scorreia
@@ -50,7 +55,7 @@ public final class AnalysisExecutorSelector {
         AnalysisExecutor exec = null;
         switch (analysisType) {
         case MULTIPLE_COLUMN:
-            exec = ExecutionLanguage.SQL.equals(executionEngine) ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
+            exec = getModelElementAnalysisExecutor(analysis, executionEngine);
             break;
         case CONNECTION:
             exec = new ConnectionAnalysisExecutor();
@@ -81,6 +86,25 @@ public final class AnalysisExecutorSelector {
             exec = null;
         }
         return exec;
+    }
+
+    /**
+     * return Column or TdXMLElement analysis executor. ADD xqliu bug 10238 2009-12-24
+     * 
+     * @param analysis
+     * @param executionEngine
+     * @return
+     */
+    private static AnalysisExecutor getModelElementAnalysisExecutor(Analysis analysis, ExecutionLanguage executionEngine) {
+        TypedReturnCode<TdProviderConnection> rc = DataProviderHelper.getTdProviderConnection((DataProvider) analysis
+                .getContext().getConnection());
+        boolean mdm = ConnectionUtils.isMdmConnection(rc.getObject());
+        boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
+        if (mdm) {
+            return sql ? new XmlElementAnalysisSqlExecutor() : new XmlElementAnalysisExecutor();
+        } else {
+            return sql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
+        }
     }
 
     /**
