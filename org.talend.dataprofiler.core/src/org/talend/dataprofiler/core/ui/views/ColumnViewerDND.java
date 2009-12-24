@@ -217,7 +217,7 @@ public class ColumnViewerDND {
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
             TreeItem item = (TreeItem) event.item;
-            ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
+            ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
             AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getParent().getData(
                     AnalysisColumnTreeViewer.VIEWER_KEY);
             Analysis analysis = viewer.getAnalysis();
@@ -374,7 +374,7 @@ public class ColumnViewerDND {
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
             TreeItem item = (TreeItem) event.item;
-            ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
+            ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
             AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getParent().getData(
                     AnalysisColumnTreeViewer.VIEWER_KEY);
             // ADD xqliu 2009-08-24 bug 8776

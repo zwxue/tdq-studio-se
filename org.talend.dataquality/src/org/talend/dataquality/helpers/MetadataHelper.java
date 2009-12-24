@@ -75,6 +75,20 @@ public final class MetadataHelper {
     }
 
     /**
+     * DOC xqliu Comment method "setDataminingType".
+     * 
+     * @param type
+     * @param modelElement
+     */
+    public static void setDataminingType(DataminingType type, ModelElement modelElement) {
+        if (modelElement instanceof TdColumn) {
+            setDataminingType(type, (TdColumn) modelElement);
+        } else if (modelElement instanceof TdXMLElement) {
+            setDataminingType(type, (TdXMLElement) modelElement);
+        }
+    }
+
+    /**
      * Method "getDataminingType" gets the type of the content of a column.
      * 
      * @param column

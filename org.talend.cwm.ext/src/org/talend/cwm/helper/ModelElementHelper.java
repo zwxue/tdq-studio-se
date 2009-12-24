@@ -166,7 +166,7 @@ public final class ModelElementHelper {
             return DataProviderHelper.getTdDataProvider((Column) element);
         }
         if (element instanceof TdXMLElement) {
-            DataProviderHelper.getTdDataProvider((TdXMLElement) element);
+            return DataProviderHelper.getTdDataProvider((TdXMLElement) element);
         }
         return null;
     }

@@ -110,7 +110,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         try {
             // --- get data filter
-            ColumnAnalysisHandler handler = new ColumnAnalysisHandler();
+            ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();
             handler.setAnalysis(analysis);
             String stringDataFilter = handler.getStringDataFilter();
 

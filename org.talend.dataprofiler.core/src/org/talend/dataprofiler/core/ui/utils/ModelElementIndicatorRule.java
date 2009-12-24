@@ -13,34 +13,33 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Column;
 
 /**
- * DOC zqin class global comment. Detailled comment <br/>
- * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ * DOC xqliu  class global comment. Detailled comment
  */
-public final class ColumnIndicatorRule {
+public final class ModelElementIndicatorRule {
 
-    private ColumnIndicatorRule() {
+    private ModelElementIndicatorRule() {
     }
 
-    public static boolean match(IIndicatorNode node, ColumnIndicator columnIndicator) {
+    public static boolean match(IIndicatorNode node, ModelElementIndicator meIndicator) {
 
         IndicatorEnum indicatorType = node.getIndicatorEnum();
-        TdColumn column = columnIndicator.getTdColumn();
+        ModelElement me = meIndicator.getModelElement();
 
         if (indicatorType == null) {
 
             for (IIndicatorNode one : node.getChildren()) {
-                if (match(one, columnIndicator)) {
+                if (match(one, meIndicator)) {
                     return true;
                 }
             }
@@ -48,13 +47,16 @@ public final class ColumnIndicatorRule {
             return false;
         }
 
-        return patternRule(indicatorType, column);
+        return patternRule(indicatorType, me);
     }
 
-    public static boolean patternRule(IndicatorEnum indicatorType, TdColumn column) {
+    public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me) {
 
-        int javaType = column.getJavaType();
-        DataminingType dataminingType = MetadataHelper.getDataminingType(column);
+        int javaType = 0;
+        if (me instanceof Column) {
+            javaType = ((TdColumn) me).getJavaType();
+        }
+        DataminingType dataminingType = MetadataHelper.getDataminingType(me);
         if (dataminingType == null) {
             dataminingType = MetadataHelper.getDefaultDataminingType(javaType);
         }
@@ -71,7 +73,10 @@ public final class ColumnIndicatorRule {
             // if (dataminingType == DataminingType.NOMINAL) {
             return true;
         case DefValueCountIndicatorEnum:
-            Expression initialValue = column.getInitialValue();
+            Expression initialValue = null;
+            if (me instanceof TdColumn) {
+                initialValue = ((TdColumn) me).getInitialValue();
+            }
             if (initialValue != null && initialValue.getBody() != null) {
                 // MOD scorreia 2009-04-21 bug 6979
                 // non nullable numeric column give a non null default value as ''

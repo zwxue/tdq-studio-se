@@ -35,10 +35,9 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
-import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
+import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -74,7 +73,7 @@ public class IndicatorSelectDialog extends TrayDialog {
 
     private static final String ROWINDICATORFLAG = "_ROWINDICATORFLAG"; //$NON-NLS-1$
 
-    private static final String COLUMNINDICATORFLAG = "_COLUMNINDICATORFLAG"; //$NON-NLS-1$
+    private static final String MODELELEMENTINDICATORFLAG = "_COLUMNINDICATORFLAG"; //$NON-NLS-1$
 
     private ModelElementIndicator[] modelElementIndicators;
 
@@ -83,17 +82,6 @@ public class IndicatorSelectDialog extends TrayDialog {
     private Label descriptionLabel;
 
     private final String title;
-
-    /**
-     * @param parentShell
-     */
-    public IndicatorSelectDialog(Shell parentShell, String title, ColumnIndicator[] columnIndicators) {
-        super(parentShell);
-        this.title = title;
-        this.modelElementIndicators = columnIndicators;
-        int shellStyle = getShellStyle();
-        setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
-    }
 
     /**
      * DOC xqliu IndicatorSelectDialog constructor comment.
@@ -176,14 +164,14 @@ public class IndicatorSelectDialog extends TrayDialog {
 
         protected final IndicatorEnum indicatorEnum;
 
-        protected final ColumnIndicator currentColumnIndicator;
+        protected final ModelElementIndicator currentIndicator;
 
         protected ButtonSelectionListener(int index, TreeItemContainer treeItemContainer, IndicatorEnum indicatorEnum,
-                ColumnIndicator currentColumnIndicator) {
+                ModelElementIndicator currentIndicator) {
             this.index = index;
             this.treeItemContainer = treeItemContainer;
             this.indicatorEnum = indicatorEnum;
-            this.currentColumnIndicator = currentColumnIndicator;
+            this.currentIndicator = currentIndicator;
         }
 
         /*
@@ -197,11 +185,11 @@ public class IndicatorSelectDialog extends TrayDialog {
             if (selection) {
                 itemButton = treeItemContainer.getButton(index);
                 if (itemButton.isEnabled() && indicatorEnum != null) {
-                    currentColumnIndicator.addTempIndicatorEnum(indicatorEnum);
+                    currentIndicator.addTempIndicatorEnum(indicatorEnum);
                 }
 
             } else {
-                currentColumnIndicator.removeTempIndicatorEnum(indicatorEnum);
+                currentIndicator.removeTempIndicatorEnum(indicatorEnum);
             }
             processParentSelection(treeItemContainer, selection);
             processChildrenSelection(treeItemContainer, index, selection);
@@ -226,13 +214,13 @@ public class IndicatorSelectDialog extends TrayDialog {
                 parentItemButton.setSelection(selection);
                 IndicatorEnum enumData = ((IIndicatorNode) parentItemButton.getData()).getIndicatorEnum();
                 if (enumData != null) {
-                    currentColumnIndicator.addTempIndicatorEnum(enumData);
+                    currentIndicator.addTempIndicatorEnum(enumData);
                 }
                 processParentSelection((TreeItemContainer) parentItem, selection);
             } else if (parentItem != null && !selection) {
                 Button parentItemButton = ((TreeItemContainer) parentItem).getButton(index);
                 parentItemButton.setSelection(selection);
-                currentColumnIndicator.removeTempIndicatorEnum(((IIndicatorNode) parentItemButton.getData()).getIndicatorEnum());
+                currentIndicator.removeTempIndicatorEnum(((IIndicatorNode) parentItemButton.getData()).getIndicatorEnum());
                 processParentSelection((TreeItemContainer) parentItem, selection);
             }
         }
@@ -250,10 +238,10 @@ public class IndicatorSelectDialog extends TrayDialog {
                     continue;
                 }
                 if (selection) {
-                    currentColumnIndicator.addTempIndicatorEnum(((IIndicatorNode) itemButton.getData()).getIndicatorEnum());
+                    currentIndicator.addTempIndicatorEnum(((IIndicatorNode) itemButton.getData()).getIndicatorEnum());
 
                 } else {
-                    currentColumnIndicator.removeTempIndicatorEnum(((IIndicatorNode) itemButton.getData()).getIndicatorEnum());
+                    currentIndicator.removeTempIndicatorEnum(((IIndicatorNode) itemButton.getData()).getIndicatorEnum());
                 }
 
                 processChildrenSelection((TreeItemContainer) childItem, idx, selection);
@@ -267,7 +255,7 @@ public class IndicatorSelectDialog extends TrayDialog {
     private class RowSelectButtonListener extends ButtonSelectionListener {
 
         protected RowSelectButtonListener(int index, TreeItemContainer treeItemContainer, IndicatorEnum indicatorEnum,
-                ColumnIndicator currentColumnIndicator) {
+                ModelElementIndicator currentColumnIndicator) {
             super(index, treeItemContainer, indicatorEnum, currentColumnIndicator);
         }
 
@@ -300,11 +288,11 @@ public class IndicatorSelectDialog extends TrayDialog {
 
         private void processRowButtonSelect(boolean selection, List<Button> rowButtons) {
             for (Button btn : rowButtons) {
-                ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
+                ModelElementIndicator columnIndicator = (ModelElementIndicator) btn.getData(MODELELEMENTINDICATORFLAG);
                 IIndicatorNode node = (IIndicatorNode) btn.getData();
                 IndicatorEnum indicEnum = node.getIndicatorEnum();
 
-                if (selection && ColumnIndicatorRule.match(node, columnIndicator)) {
+                if (selection && ModelElementIndicatorRule.match(node, columnIndicator)) {
                     btn.setSelection(true);
                     if (indicEnum != null) {
                         columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
@@ -443,20 +431,17 @@ public class IndicatorSelectDialog extends TrayDialog {
                     checkButton = new Button(tree, SWT.CHECK);
                     checkButton.setData(indicatorNode);
 
-                    if (((ColumnIndicator) treeColumns[j].getData()).contains(indicatorEnum)) {
+                    if (((ModelElementIndicator) treeColumns[j].getData()).contains(indicatorEnum)) {
                         checkButton.setSelection(true);
                     }
-                    final ColumnIndicator currentColumnIndicator = (ColumnIndicator) treeColumns[j].getData();
-                    checkButton.setEnabled(ColumnIndicatorRule.match(indicatorNode, currentColumnIndicator));
-                    checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum,
-                            currentColumnIndicator));
+                    final ModelElementIndicator currentIndicator = (ModelElementIndicator) treeColumns[j].getData();
+                    checkButton.setEnabled(ModelElementIndicatorRule.match(indicatorNode, currentIndicator));
+                    checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum, currentIndicator));
                     if (indicatorEnum != null) {
-                        checkButton
-                                .setToolTipText(DefaultMessagesImpl
-                                        .getString(
-                                                "IndicatorSelectDialog.enable", indicatorEnum.getLabel(), currentColumnIndicator.getTdColumn().getName())); //$NON-NLS-1$ //$NON-NLS-2$
+                        checkButton.setToolTipText(DefaultMessagesImpl.getString(
+                                "IndicatorSelectDialog.enable", indicatorEnum.getLabel(), currentIndicator.getElementName())); //$NON-NLS-1$ //$NON-NLS-2$
                     }
-                    checkButton.setData(COLUMNINDICATORFLAG, currentColumnIndicator);
+                    checkButton.setData(MODELELEMENTINDICATORFLAG, currentIndicator);
                     commonCheckButton = checkButton;
 
                     rowButtonList.add(checkButton);

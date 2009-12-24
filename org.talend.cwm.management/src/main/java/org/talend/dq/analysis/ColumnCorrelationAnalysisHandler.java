@@ -41,7 +41,7 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
 
-    private static Logger log = Logger.getLogger(ColumnAnalysisHandler.class);
+    private static Logger log = Logger.getLogger(ColumnCorrelationAnalysisHandler.class);
 
     /**
      * The resources that are connected to this analysis and that are potentially modified.

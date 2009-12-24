@@ -22,6 +22,7 @@ import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
 import org.talend.dataprofiler.core.model.impl.XmlElementIndicatorImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 
 /**
@@ -30,6 +31,15 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 public final class ModelElementIndicatorHelper {
 
     private ModelElementIndicatorHelper() {
+    }
+
+    public static final ModelElementIndicator createModelElementIndicator(ModelElement modelElement) {
+        if (modelElement instanceof TdColumn) {
+            return createColumnIndicator((TdColumn) modelElement);
+        } else if (modelElement instanceof TdXMLElement) {
+            return createXmlElementIndicator((TdXMLElement) modelElement);
+        }
+        return null;
     }
 
     public static final ColumnIndicator createColumnIndicator(TdColumn tdColumn) {

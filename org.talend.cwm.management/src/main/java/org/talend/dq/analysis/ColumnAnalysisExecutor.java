@@ -207,7 +207,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         // add where clause
         // --- get data filter
-        ColumnAnalysisHandler handler = new ColumnAnalysisHandler();
+        ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();
         handler.setAnalysis(analysis);
         String stringDataFilter = handler.getStringDataFilter();
 
@@ -258,7 +258,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @param context
      */
     protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {
-        ColumnAnalysisHandler analysisHandler = new ColumnAnalysisHandler();
+        ModelElementAnalysisHandler analysisHandler = new ModelElementAnalysisHandler();
         analysisHandler.setAnalysis(analysis);
 
         for (ModelElement node : context.getAnalysedElements()) {

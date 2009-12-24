@@ -53,8 +53,9 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLElement;
@@ -65,6 +66,7 @@ import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
@@ -123,7 +125,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY"; //$NON-NLS-1$
 
-    public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY"; //$NON-NLS-1$
+    public static final String MODELELEMENT_INDICATOR_KEY = "MODELELEMENT_INDICATOR_KEY"; //$NON-NLS-1$
 
     public static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY"; //$NON-NLS-1$
 
@@ -259,7 +261,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     .createColumnIndicator((TdColumn) modelElement);
             modelElementIndicatorList.add(temp);
         }
-        this.modelElementIndicators = modelElementIndicatorList.toArray(new ColumnIndicator[modelElementIndicatorList.size()]);
+        this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList
+                .size()]);
         this.setElements(modelElementIndicators);
     }
 
@@ -299,7 +302,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     /**
      * DOC Administrator Comment method "initializedConnection". for 6560
      * 
-     * @param columnIndicator
+     * @param indicators
      * 
      */
     private void initializedConnection(ModelElementIndicator[] indicators) {
@@ -320,11 +323,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
-            final ColumnIndicator columnIndicator = (ColumnIndicator) elements[i];
-            String columnName = columnIndicator.getTdColumn().getName();
-            treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
-                    + columnIndicator.getTdColumn().getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
-            treeItem.setData(COLUMN_INDICATOR_KEY, columnIndicator);
+            final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
+            treeItem.setText(0, getModelElemetnDisplayName(meIndicator)); //$NON-NLS-1$
+            treeItem.setData(MODELELEMENT_INDICATOR_KEY, meIndicator);
 
             TreeEditor comboEditor = new TreeEditor(tree);
             final CCombo combo = new CCombo(tree, SWT.BORDER);
@@ -332,10 +333,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
                 // for presentation
             }
-            DataminingType dataminingType = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
-            if (dataminingType == null) {
-                dataminingType = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
-            }
+            DataminingType dataminingType = MetadataHelper.getDataminingType(meIndicator.getModelElement());
 
             if (dataminingType == null) {
                 combo.select(0);
@@ -345,7 +343,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             combo.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
-                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), columnIndicator.getTdColumn());
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), meIndicator.getModelElement());
                     setDirty(true);
                 }
 
@@ -382,7 +380,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         for (Object obj : dialog.getResult()) {
                             if (obj instanceof IFile) {
                                 IFile file = (IFile) obj;
-                                IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, columnIndicator,
+                                IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, meIndicator,
                                         getAnalysis());
                                 if (addIndicatorUnit != null) {
                                     createOneUnit(treeItem, addIndicatorUnit);
@@ -411,7 +409,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
                 @Override
                 public void mouseDown(MouseEvent e) {
-                    deleteColumnItems(columnIndicator);
+                    deleteModelElementItems(meIndicator);
                     if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
                         setElements(modelElementIndicators);
                     } else {
@@ -429,12 +427,30 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             delLabelEditor.horizontalAlignment = SWT.CENTER;
             delLabelEditor.setEditor(delLabel, treeItem, 3);
             treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor, addPatternEditor });
-            if (columnIndicator.hasIndicators()) {
-                createIndicatorItems(treeItem, columnIndicator.getIndicatorUnits());
+            if (meIndicator.hasIndicators()) {
+                createIndicatorItems(treeItem, meIndicator.getIndicatorUnits());
             }
             treeItem.setExpanded(true);
         }
         this.setDirty(true);
+    }
+
+    /**
+     * DOC xqliu Comment method "getModelElemetnDisplayName".
+     * 
+     * @param meIndicator
+     * @return
+     */
+    private String getModelElemetnDisplayName(ModelElementIndicator meIndicator) {
+        String meName = meIndicator.getElementName();
+        String typeName = "";
+        if (meIndicator instanceof ColumnIndicator) {
+            typeName = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType().getName();
+        } else if (meIndicator instanceof XmlElementIndicator) {
+            typeName = ((TdXMLElement) meIndicator.getModelElement()).getJavaType();
+        }
+        return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
+                + PluginConstant.PARENTHESIS_RIGHT : "null";
     }
 
     private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
@@ -478,7 +494,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         final IndicatorUnit unit = indicatorUnit;
         IndicatorEnum indicatorType = indicatorUnit.getType();
 
-        indicatorItem.setData(COLUMN_INDICATOR_KEY, treeItem.getData(COLUMN_INDICATOR_KEY));
+        indicatorItem.setData(MODELELEMENT_INDICATOR_KEY, treeItem.getData(MODELELEMENT_INDICATOR_KEY));
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
 
@@ -531,8 +547,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
              */
             @Override
             public void mouseDown(MouseEvent e) {
-                ColumnIndicator columnIndicator = (ColumnIndicator) treeItem.getData(COLUMN_INDICATOR_KEY);
-                deleteIndicatorItems(columnIndicator, unit);
+                ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
+                deleteIndicatorItems(meIndicator, unit);
                 if (indicatorItem.getParentItem() != null && indicatorItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
                     setElements(modelElementIndicators);
                 } else {
@@ -547,7 +563,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         delEditor.setEditor(delLabel, indicatorItem, 3);
         indicatorItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { optionEditor, delEditor });
         if (indicatorType.hasChildren()) {
-            indicatorItem.setData(treeItem.getData(COLUMN_INDICATOR_KEY));
+            indicatorItem.setData(treeItem.getData(MODELELEMENT_INDICATOR_KEY));
             createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
         }
         createIndicatorParameters(indicatorItem, indicatorUnit);
@@ -679,8 +695,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @param treeItem
      * @param inidicatorUnit
      */
-    private void deleteIndicatorItems(ColumnIndicator columnIndicator, IndicatorUnit inidicatorUnit) {
-        columnIndicator.removeIndicatorUnit(inidicatorUnit);
+    private void deleteIndicatorItems(ModelElementIndicator meIndicator, IndicatorUnit inidicatorUnit) {
+        meIndicator.removeIndicatorUnit(inidicatorUnit);
         // remove dependency
         removeDependency(getAnalysis(), inidicatorUnit);
     }
@@ -688,10 +704,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     /**
      * DOC rli Comment method "deleteTreeElements".
      * 
-     * @param columnIndicators
      * @param deleteModelElementIndiciator
      */
-    private void deleteColumnItems(ModelElementIndicator deleteModelElementIndiciator) {
+    private void deleteModelElementItems(ModelElementIndicator deleteModelElementIndiciator) {
         ModelElementIndicator[] remainIndicators = new ModelElementIndicator[modelElementIndicators.length - 1];
         int i = 0;
         for (ModelElementIndicator indicator : modelElementIndicators) {
@@ -772,9 +787,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         for (TreeItem item : selection) {
             IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
             if (indicatorUnit != null) {
-                deleteIndicatorItems((ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY), indicatorUnit);
+                deleteIndicatorItems((ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY), indicatorUnit);
             } else {
-                deleteColumnItems((ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY));
+                deleteModelElementItems((ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY));
             }
             // if the item's parent item is a indicator item, when current
             // indicator item removed, it's parent item
@@ -821,10 +836,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private String isExpressionNull(TreeItem item) {
         String expressContent = null;
         IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-        ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
-        TdColumn column = columnIndicator.getTdColumn();
-        TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(column);
-
+        ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+        ModelElement me = meIndicator.getModelElement();
+        TdDataProvider dataprovider = ModelElementHelper.getTdDataProvider(me);
         DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
         Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
         if (expression != null) {
@@ -842,7 +856,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
                     tree.setMenu(null);
                 } else {
-                    new ColumnTreeMenuProvider(tree).createTreeMenu();
+                    new ModelElementTreeMenuProvider(tree).createTreeMenu();
                 }
             }
 
@@ -890,11 +904,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 if (treeSelection.length > 0) {
                     TreeItem item = treeSelection[0];
                     Object indicatorobj = item.getData(INDICATOR_UNIT_KEY);
-                    Object columnobj = item.getData(COLUMN_INDICATOR_KEY);
-                    if (columnobj != null && indicatorobj == null) {
+                    Object meobj = item.getData(MODELELEMENT_INDICATOR_KEY);
+                    if (meobj != null && indicatorobj == null) {
                         // open indicator selector
                         openIndicatorSelectDialog(null);
-                    } else if (columnobj != null && indicatorobj != null) {
+                    } else if (meobj != null && indicatorobj != null) {
                         // open indicator option wizard
                         openIndicatorOptionDialog(null, item);
                     }
@@ -909,11 +923,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             return null;
         }
 
-        Object obj = e.item.getData(COLUMN_INDICATOR_KEY);
-        if (obj instanceof ColumnIndicator) {
-            ColumnIndicator columnIndicator = (ColumnIndicator) obj;
+        Object obj = e.item.getData(MODELELEMENT_INDICATOR_KEY);
+        if (obj instanceof ModelElementIndicator) {
+            ModelElementIndicator meIndicator = (ModelElementIndicator) obj;
             for (Composite comp : previewChartCompsites) {
-                if (comp.getData() == columnIndicator) {
+                if (comp.getData() == meIndicator) {
                     return (ExpandableComposite) comp;
                 }
             }
@@ -944,6 +958,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         if (existModelElements.contains(modelElement)) {
             return false;
         }
+        if (modelElement instanceof TdXMLElement) {
+            return XmlElementHelper.isLeafNode((TdXMLElement) modelElement);
+        }
         return true;
     }
 
@@ -972,11 +989,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * this class provide an action to deal with the menu actions on tree viewer.
      * 
      */
-    class ColumnTreeMenuProvider {
+    class ModelElementTreeMenuProvider {
 
         private Tree tree;
 
-        public ColumnTreeMenuProvider(Tree tree) {
+        public ModelElementTreeMenuProvider(Tree tree) {
             this.tree = tree;
         }
 
@@ -1107,12 +1124,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     TreeItem[] selection = tree.getSelection();
                     if (selection.length > 0) {
                         TreeItem treeItem = selection[0];
-                        ColumnIndicator columnIndicator = (ColumnIndicator) treeItem.getData(COLUMN_INDICATOR_KEY);
-                        TdColumn column = columnIndicator.getTdColumn();
-                        ModelElement me = getAnalysis();
-                        me.setName(column.getName());
-                        if (column instanceof ModelElement) {
-                            (new TdAddTaskAction(tree.getShell(), me)).run();
+                        ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
+                        ModelElement me = meIndicator.getModelElement();
+                        ModelElement ana = getAnalysis();
+                        ana.setName(me.getName());
+                        if (me instanceof ModelElement) {
+                            (new TdAddTaskAction(tree.getShell(), ana)).run();
                         }
                     }
 
@@ -1194,15 +1211,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
          */
         private void previewSelectedElements(Tree newTree) {
             TreeItem[] items = newTree.getSelection();
-            TdColumn[] columns = new TdColumn[items.length];
+            ModelElement[] mes = new ModelElement[items.length];
 
             for (int i = 0; i < items.length; i++) {
-                ColumnIndicator columnIndicator = (ColumnIndicator) items[i].getData(COLUMN_INDICATOR_KEY);
-                TdColumn column = columnIndicator.getTdColumn();
-                columns[i] = column;
+                ModelElementIndicator meIndicator = (ModelElementIndicator) items[i].getData(MODELELEMENT_INDICATOR_KEY);
+                ModelElement me = meIndicator.getModelElement();
+                mes[i] = me;
             }
 
-            new PreviewColumnAction(columns).run();
+            new PreviewColumnAction(mes).run();
         }
 
         /**
@@ -1214,9 +1231,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         private void viewQueryForSelectedElement(Tree newTree) {
             TreeItem[] selection = newTree.getSelection();
             for (TreeItem item : selection) {
-                ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
-                TdColumn column = columnIndicator.getTdColumn();
-                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(column);
+                ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                ModelElement me = meIndicator.getModelElement();
+                TdDataProvider dataprovider = ModelElementHelper.getTdDataProvider(me);
                 IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
                 DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
                 Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
@@ -1228,7 +1245,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     return;
                 }
 
-                CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(), column.getName());
+                CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(), me.getName());
             }
         }
 
@@ -1243,9 +1260,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
             if (selection.length == 1) {
                 try {
-                    ColumnIndicator columnIndicator = (ColumnIndicator) selection[0].getData(COLUMN_INDICATOR_KEY);
-                    TdColumn column = columnIndicator.getTdColumn();
-                    dqview.showSelectedElements(column);
+                    ModelElementIndicator meIndicator = (ModelElementIndicator) selection[0].getData(MODELELEMENT_INDICATOR_KEY);
+                    ModelElement me = meIndicator.getModelElement();
+                    dqview.showSelectedElements(me);
 
                 } catch (Exception e) {
                     log.error(e, e);

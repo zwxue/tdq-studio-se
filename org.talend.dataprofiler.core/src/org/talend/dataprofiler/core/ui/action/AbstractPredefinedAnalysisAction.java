@@ -34,7 +34,7 @@ import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
+import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
@@ -163,7 +163,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 columnIndicator.addTempIndicatorEnum(oneEnum);
                 if (oneEnum.getChildren() != null) {
                     for (IndicatorEnum childEnum : oneEnum.getChildren()) {
-                        if (ColumnIndicatorRule.patternRule(childEnum, column)) {
+                        if (ModelElementIndicatorRule.patternRule(childEnum, column)) {
                             columnIndicator.addTempIndicatorEnum(childEnum);
                         }
                     }

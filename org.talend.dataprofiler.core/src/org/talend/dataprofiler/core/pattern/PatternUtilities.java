@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.UDIFactory;
@@ -110,32 +111,24 @@ public final class PatternUtilities {
         return valid;
     }
 
-    /**
-     * DOC qzhang Comment method "createIndicatorUnit".
-     * 
-     * @param pfile
-     * @param columnIndicator
-     * @param analysis
-     * @return
-     */
-    public static IndicatorUnit createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis) {
-        return createIndicatorUnit(pfile, columnIndicator, analysis, null);
+    public static IndicatorUnit createIndicatorUnit(IFile pfile, ModelElementIndicator modelElementIndicator, Analysis analysis) {
+        return createIndicatorUnit(pfile, modelElementIndicator, analysis, null);
     }
 
     /**
      * DOC xqliu Comment method "createIndicatorUnit".
      * 
      * @param pfile
-     * @param columnIndicator
+     * @param modelElementIndicator
      * @param analysis
-     * @param indicatorDefinition user defined indicator
+     * @param indicatorDefinition
      * @return
      */
-    public static IndicatorUnit createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis,
+    public static IndicatorUnit createIndicatorUnit(IFile pfile, ModelElementIndicator modelElementIndicator, Analysis analysis,
             IndicatorDefinition indicatorDefinition) {
         Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(pfile);
 
-        for (Indicator indicator : columnIndicator.getIndicators()) {
+        for (Indicator indicator : modelElementIndicator.getIndicators()) {
             // MOD xqliu 2009-08-12 bug 7810
             if (UDIHelper.getMatchingIndicatorName(indicatorDefinition, pattern).equals(indicator.getName())) {
                 return null;
@@ -213,7 +206,7 @@ public final class PatternUtilities {
         }
 
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
-        IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
+        IndicatorUnit addIndicatorUnit = modelElementIndicator.addSpecialIndicator(type, patternMatchingIndicator);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
         return addIndicatorUnit;
     }

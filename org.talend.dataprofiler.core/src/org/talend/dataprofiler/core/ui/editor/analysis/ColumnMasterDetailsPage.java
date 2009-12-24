@@ -52,11 +52,11 @@ import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
@@ -71,7 +71,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
-import org.talend.dq.analysis.ColumnAnalysisHandler;
+import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -91,7 +91,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     DataFilterComp dataFilterComp;
 
-    ColumnAnalysisHandler analysisHandler;
+    ModelElementAnalysisHandler analysisHandler;
 
     private ModelElementIndicator[] currentModelElementIndicators;
 
@@ -128,35 +128,27 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     public void recomputeIndicators() {
-        analysisHandler = new ColumnAnalysisHandler();
+        analysisHandler = new ModelElementAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = analysisHandler.getStringDataFilter();
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
-        List<ColumnIndicator> columnIndicatorList = new ArrayList<ColumnIndicator>();
-        ColumnIndicator currentColumnIndicator;
+        List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
+        ModelElementIndicator currentIndicator;
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-            if (tdColumn == null) {
+            TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(element);
+            if (tdColumn == null && xmlElement == null) {
                 continue;
             }
-            currentColumnIndicator = ModelElementIndicatorHelper.createColumnIndicator(tdColumn);
-            DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(tdColumn));
-            MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, tdColumn);
-            Collection<Indicator> indicatorList = analysisHandler.getIndicators(tdColumn);
-            currentColumnIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
-            columnIndicatorList.add(currentColumnIndicator);
+            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(element);
+            DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
+            MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
+            Collection<Indicator> indicatorList = analysisHandler.getIndicators(element);
+            currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
+            meIndicatorList.add(currentIndicator);
         }
-        currentModelElementIndicators = columnIndicatorList.toArray(new ColumnIndicator[columnIndicatorList.size()]);
+        currentModelElementIndicators = meIndicatorList.toArray(new ModelElementIndicator[meIndicatorList.size()]);
     }
-
-    // @Override
-    // protected ModelElement getCurrentModelElement(FormEditor editor) {
-    //
-    // FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-    // Analysis findAnalysis =
-    // AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
-    // return findAnalysis;
-    // }
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
@@ -691,7 +683,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         this.form = form;
     }
 
-    public ColumnAnalysisHandler getAnalysisHandler() {
+    public ModelElementAnalysisHandler getAnalysisHandler() {
         return analysisHandler;
     }
 
