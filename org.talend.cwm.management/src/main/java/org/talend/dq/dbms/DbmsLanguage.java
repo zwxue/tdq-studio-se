@@ -79,6 +79,8 @@ public class DbmsLanguage {
 
     static final String INGRES = SupportDBUrlType.INGRESDEFAULTURL.getLanguage();
 
+    static final String MDM = SupportDBUrlType.MDM.getLanguage();
+
     static final String JAVA = SupportDBUrlType.JAVADEFAULTURL.getLanguage();
 
     /**

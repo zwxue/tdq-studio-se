@@ -118,6 +118,9 @@ public final class DbmsLanguageFactory {
         if (isIngres(dbmsSubtype)) {
             return new IngresDbmsLanguage(dbmsSubtype, dbVersion);
         }
+        if (isMdm(dbmsSubtype)) {
+            return new MdmDbmsLanguage(dbmsSubtype, dbVersion);
+        }
         // TODO other supported databases here
         return new DbmsLanguage(dbmsSubtype, dbVersion);
     }
@@ -227,6 +230,10 @@ public final class DbmsLanguageFactory {
 
     private static boolean isIngres(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.INGRES, dbms);
+    }
+
+    private static boolean isMdm(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.MDM, dbms);
     }
 
     static boolean compareDbmsLanguage(String lang1, String lang2) {

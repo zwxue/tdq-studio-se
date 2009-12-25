@@ -12,25 +12,33 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. TODO 10238
  */
-public class XmlElementAnalysisExecutor extends AnalysisExecutor {
+public class MdmAnalysisExecutor extends AnalysisExecutor {
 
     private TdDataProvider dataprovider;
 
-    private static Logger log = Logger.getLogger(XmlElementAnalysisExecutor.class);
+    private static Logger log = Logger.getLogger(MdmAnalysisExecutor.class);
 
     protected boolean isAccessWith(TdDataProvider dp) {
         if (dataprovider == null) {
@@ -126,5 +134,27 @@ public class XmlElementAnalysisExecutor extends AnalysisExecutor {
             }
         }
         return true;
+    }
+
+    protected TypedReturnCode<MdmConnection> getMdmConnection(Analysis analysis) {
+        TypedReturnCode<MdmConnection> rc = new TypedReturnCode<MdmConnection>(false);
+        TdDataProvider dataProvider = (TdDataProvider) analysis.getContext().getConnection();
+        EList<ProviderConnection> resourceConnections = dataProvider.getResourceConnection();
+        if (resourceConnections != null && resourceConnections.size() > 0) {
+            TdProviderConnection providerConnection = (TdProviderConnection) resourceConnections.get(0);
+            String url = providerConnection.getConnectionString();
+            EList<TaggedValue> taggedValues = providerConnection.getTaggedValue();
+            Properties props = new Properties();
+            for (TaggedValue tv : taggedValues) {
+                if (tv != null && tv.getTag() != null) {
+                    props.setProperty(tv.getTag(), tv.getValue() == null ? "" : tv.getValue());
+                }
+            }
+            MdmConnection mdmConnection = new MdmConnection(url, props);
+            rc.setObject(mdmConnection);
+            rc.setOk(mdmConnection.checkDatabaseConnection().isOk());
+            rc.setMessage(url);
+        }
+        return rc;
     }
 }

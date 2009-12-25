@@ -101,7 +101,7 @@ public final class AnalysisExecutorSelector {
         boolean mdm = ConnectionUtils.isMdmConnection(rc.getObject());
         boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
         if (mdm) {
-            return sql ? new XmlElementAnalysisSqlExecutor() : new XmlElementAnalysisExecutor();
+            return sql ? new MdmAnalysisSqlExecutor() : new MdmAnalysisExecutor();
         } else {
             return sql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
         }

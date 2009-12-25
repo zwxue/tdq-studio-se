@@ -12,34 +12,42 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.exception.AnalysisExecutionException;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Namespace;
 
 import Zql.ParseException;
 
 /**
  * DOC xqliu class global comment. TODO 10238
  */
-public class XmlElementAnalysisSqlExecutor extends XmlElementAnalysisExecutor {
+public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
 
     protected boolean parallel = true;
 
-    private static Logger log = Logger.getLogger(XmlElementAnalysisSqlExecutor.class);
+    private static Logger log = Logger.getLogger(MdmAnalysisSqlExecutor.class);
 
     @Override
     protected String createSqlStatement(Analysis analysis) {
@@ -84,7 +92,39 @@ public class XmlElementAnalysisSqlExecutor extends XmlElementAnalysisExecutor {
      */
     private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
             AnalysisExecutionException {
-        return true;
+        ModelElement analyzedElement = indicator.getAnalyzedElement();
+        if (analyzedElement == null) {
+            return traceError("Analyzed element is null for indicator " + indicator.getName());
+        }
+        TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        if (xmlElement == null) {
+            return traceError("Analyzed element is not a XmlElement for indicator " + indicator.getName());
+        }
+        String elementName = getFullXmlElementName(xmlElement);
+
+        // completedSqlString is the final query
+        String finalQuery = "count(" + elementName + ")";
+
+        String language = dbms().getDbmsName();
+
+        if (finalQuery != null) {
+            Expression instantiateSqlExpression = BooleanExpressionHelper.createExpression(language, finalQuery);
+            indicator.setInstantiatedExpression(instantiateSqlExpression);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "getFullXmlElementName".
+     * 
+     * @param xmlElement
+     * @return
+     */
+    private String getFullXmlElementName(TdXMLElement xmlElement) {
+        Namespace namespace = xmlElement.getNamespace();
+        return "//Country/" + xmlElement.getName();
     }
 
     /**
@@ -122,13 +162,13 @@ public class XmlElementAnalysisSqlExecutor extends XmlElementAnalysisExecutor {
      */
     private Long getCountLow(Analysis analysis, String colName, String table, String catalogName, List<String> whereExpression)
             throws SQLException, AnalysisExecutionException {
-        TypedReturnCode<Connection> trc = this.getConnection(analysis);
+        TypedReturnCode<MdmConnection> trc = this.getMdmConnection(analysis);
         if (!trc.isOk()) {
             throw new AnalysisExecutionException(Messages.getString(
                     "ColumnAnalysisSqlExecutor.CannotExecuteAnalysis", analysis.getName() //$NON-NLS-1$
                     , trc.getMessage()));
         }
-        Connection connection = trc.getObject();
+        MdmConnection connection = trc.getObject();
         String whereExp = (whereExpression == null || whereExpression.isEmpty()) ? "" : " WHERE " //$NON-NLS-1$ //$NON-NLS-2$
                 + dbms().buildWhereExpression(whereExpression);
         String queryStmt = "SELECT COUNT(" + colName + ") FROM " + table + whereExp; // + dbms().eos(); //$NON-NLS-1$ //$NON-NLS-2$
@@ -178,7 +218,67 @@ public class XmlElementAnalysisSqlExecutor extends XmlElementAnalysisExecutor {
 
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        return true;
+        boolean ok = true;
+        TypedReturnCode<MdmConnection> trc = this.getMdmConnection(analysis);
+        if (!trc.isOk()) {
+            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+        }
+
+        MdmConnection connection = trc.getObject();
+        try {
+            // store map of element to each indicator used for computation (leaf indicator)
+            Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
+
+            // execute the sql statement for each indicator
+            Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
+            ok = runAnalysisIndicators(connection, elementToIndicator, indicators);
+            // connection.close();
+
+            // --- finalize indicators by setting the row count and null when they exist.
+            setRowCountAndNullCount(elementToIndicator);
+
+        } catch (SQLException e) {
+            log.error(e, e);
+            this.errorMessage = e.getMessage();
+            ok = false;
+        } finally {
+            // ConnectionUtils.closeConnection(connection);
+        }
+        return ok;
+    }
+
+    /**
+     * DOC xqliu Comment method "runAnalysisIndicators".
+     * 
+     * @param connection
+     * @param elementToIndicator
+     * @param indicators
+     * @return
+     * @throws SQLException
+     */
+    private boolean runAnalysisIndicators(MdmConnection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
+            Collection<Indicator> indicators) throws SQLException {
+        boolean ok = true;
+        for (Indicator indicator : indicators) {
+            // skip composite indicators that do not require a sql execution
+            if (indicator instanceof CompositeIndicator) {
+                // options of composite indicators are handled elsewhere
+                continue;
+            }
+
+            Expression query = dbms().getInstantiatedExpression(indicator);
+            if (query == null || !executeQuery(indicator, connection, query.getBody())) {
+                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
+                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+            } else {
+                // set computation done
+                indicator.setComputed(true);
+            }
+
+            // add mapping of analyzed elements to their indicators
+            MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
+        }
+        return ok;
     }
 
     /**
@@ -208,8 +308,21 @@ public class XmlElementAnalysisSqlExecutor extends XmlElementAnalysisExecutor {
      * @return
      * @throws SQLException
      */
-    protected boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
-        return true;
+    protected boolean executeQuery(Indicator indicator, MdmConnection connection, String queryStmt) throws SQLException {
+        String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+        if (log.isInfoEnabled()) {
+            log.info("Computing indicator: " + indicator.getName());
+        }
+        List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
+
+        // give result to indicator so that it handles the results
+        boolean ret = false;
+        try {
+            ret = indicator.storeSqlResults(myResultSet);
+        } catch (Exception e) {
+            throw new SQLException(e.toString());
+        }
+        return ret;
     }
 
     /**
@@ -221,11 +334,8 @@ public class XmlElementAnalysisSqlExecutor extends XmlElementAnalysisExecutor {
      * @return
      * @throws SQLException
      */
-    protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
+    protected List<Object[]> executeQuery(String catalogName, MdmConnection connection, String queryStmt) throws SQLException {
         List<Object[]> myResultSet = new ArrayList<Object[]>();
         return myResultSet;
     }
-
-
-
 }

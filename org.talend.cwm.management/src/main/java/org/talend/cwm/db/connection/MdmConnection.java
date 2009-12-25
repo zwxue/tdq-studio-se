@@ -224,5 +224,4 @@ public class MdmConnection implements IXMLDBConnection {
         system.getOwnedElement().add(component);
         DataProviderHelper.setSoftwareSystem(dataProvider, system);
     }
-
 }
