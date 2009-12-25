@@ -163,6 +163,23 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         return saved;
     }
 
+    /**
+     * DOC bZhou Comment method "findFileByReport".
+     * 
+     * @param report
+     * @return
+     */
+    public IFile findFileByReport(TdReport report) {
+        for (IFile file : allRepMap.keySet()) {
+            TdReport findReport = findReport(file);
+            if (findReport != null && findReport == report) {
+                return file;
+            }
+        }
+
+        return null;
+    }
+
     /*
      * (non-Javadoc)
      * 
