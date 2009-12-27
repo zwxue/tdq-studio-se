@@ -12,19 +12,22 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.sql.SQLException;
-import java.text.MessageFormat;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.rpc.ServiceException;
+
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.db.connection.MdmConnection;
+import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -36,7 +39,6 @@ import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.Namespace;
 
 import Zql.ParseException;
 
@@ -44,8 +46,6 @@ import Zql.ParseException;
  * DOC xqliu class global comment. TODO 10238
  */
 public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
-
-    protected boolean parallel = true;
 
     private static Logger log = Logger.getLogger(MdmAnalysisSqlExecutor.class);
 
@@ -92,6 +92,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      */
     private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
             AnalysisExecutionException {
+        // TODO 10238
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
             return traceError("Analyzed element is null for indicator " + indicator.getName());
@@ -123,85 +124,13 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @return
      */
     private String getFullXmlElementName(TdXMLElement xmlElement) {
-        Namespace namespace = xmlElement.getNamespace();
-        return "//Country/" + xmlElement.getName();
-    }
-
-    /**
-     * DOC xqliu Comment method "getCount".
-     * 
-     * @param analysis
-     * @param colName
-     * @param table
-     * @param catalog
-     * @param whereExpression
-     * @return
-     * @throws AnalysisExecutionException
-     */
-    protected Long getCount(Analysis analysis, String colName, String table, String catalog, List<String> whereExpression)
-            throws AnalysisExecutionException {
-        try {
-            return getCountLow(analysis, colName, table, catalog, whereExpression);
-        } catch (SQLException e) {
-            throw new AnalysisExecutionException(Messages.getString("ColumnAnalysisSqlExecutor.CannotGetCount",//$NON-NLS-1$
-                    analysis.getName(), colName, dbms().toQualifiedName(catalog, null, table)), e);
+        String fullName = SLASH + xmlElement.getName();
+        EObject eContainer = xmlElement.eContainer().eContainer();
+        if (eContainer instanceof TdXMLElement) {
+            TdXMLElement parentElement = (TdXMLElement) eContainer;
+            fullName = DOUBLE_SLASH + parentElement.getName() + fullName;
         }
-    }
-
-    /**
-     * DOC xqliu Comment method "getCountLow".
-     * 
-     * @param analysis
-     * @param colName
-     * @param table
-     * @param catalogName
-     * @param whereExpression
-     * @return
-     * @throws SQLException
-     * @throws AnalysisExecutionException
-     */
-    private Long getCountLow(Analysis analysis, String colName, String table, String catalogName, List<String> whereExpression)
-            throws SQLException, AnalysisExecutionException {
-        TypedReturnCode<MdmConnection> trc = this.getMdmConnection(analysis);
-        if (!trc.isOk()) {
-            throw new AnalysisExecutionException(Messages.getString(
-                    "ColumnAnalysisSqlExecutor.CannotExecuteAnalysis", analysis.getName() //$NON-NLS-1$
-                    , trc.getMessage()));
-        }
-        MdmConnection connection = trc.getObject();
-        String whereExp = (whereExpression == null || whereExpression.isEmpty()) ? "" : " WHERE " //$NON-NLS-1$ //$NON-NLS-2$
-                + dbms().buildWhereExpression(whereExpression);
-        String queryStmt = "SELECT COUNT(" + colName + ") FROM " + table + whereExp; // + dbms().eos(); //$NON-NLS-1$ //$NON-NLS-2$
-
-        List<Object[]> myResultSet = executeQuery(catalogName, connection, queryStmt);
-
-        if (myResultSet.isEmpty() || myResultSet.size() > 1) {
-            log.error("Too many result obtained for a simple count: " + myResultSet);
-            return -1L;
-        }
-        return Long.valueOf(String.valueOf(myResultSet.get(0)[0]));
-    }
-
-    /**
-     * DOC xqliu Comment method "replaceVariablesLow".
-     * 
-     * @param sqlGenericString
-     * @param arguments
-     * @return
-     */
-    protected String replaceVariablesLow(String sqlGenericString, Object... arguments) {
-        String toFormat = surroundSingleQuotes(sqlGenericString);
-        return MessageFormat.format(toFormat, arguments);
-    }
-
-    /**
-     * DOC xqliu Comment method "surroundSingleQuotes".
-     * 
-     * @param sqlGenericString
-     * @return
-     */
-    private String surroundSingleQuotes(String sqlGenericString) {
-        return sqlGenericString.replaceAll("'", "''"); //$NON-NLS-1$ //$NON-NLS-2$
+        return fullName;
     }
 
     /**
@@ -237,7 +166,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             // --- finalize indicators by setting the row count and null when they exist.
             setRowCountAndNullCount(elementToIndicator);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
@@ -254,10 +183,11 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @param elementToIndicator
      * @param indicators
      * @return
-     * @throws SQLException
+     * @throws ServiceException
+     * @throws RemoteException
      */
     private boolean runAnalysisIndicators(MdmConnection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
-            Collection<Indicator> indicators) throws SQLException {
+            Collection<Indicator> indicators) throws RemoteException, ServiceException {
         boolean ok = true;
         for (Indicator indicator : indicators) {
             // skip composite indicators that do not require a sql execution
@@ -290,37 +220,30 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
     }
 
     /**
-     * DOC xqliu Comment method "getCatalogOrSchemaName".
-     * 
-     * @param analyzedElement
-     * @return
-     */
-    protected String getCatalogOrSchemaName(ModelElement analyzedElement) {
-        return analyzedElement.getName();
-    }
-
-    /**
      * DOC xqliu Comment method "executeQuery".
      * 
      * @param indicator
      * @param connection
      * @param queryStmt
      * @return
-     * @throws SQLException
+     * @throws ServiceException
+     * @throws RemoteException
      */
-    protected boolean executeQuery(Indicator indicator, MdmConnection connection, String queryStmt) throws SQLException {
-        String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+    protected boolean executeQuery(Indicator indicator, MdmConnection connection, String queryStmt) throws RemoteException,
+            ServiceException {
+        TdXMLElement analyzedElement = (TdXMLElement) indicator.getAnalyzedElement();
+        TdXMLDocument xmlDocument = analyzedElement.getOwnedDocument();
         if (log.isInfoEnabled()) {
             log.info("Computing indicator: " + indicator.getName());
         }
-        List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
+        List<Object[]> myResultSet = executeQuery(xmlDocument, connection, queryStmt);
 
         // give result to indicator so that it handles the results
         boolean ret = false;
         try {
             ret = indicator.storeSqlResults(myResultSet);
         } catch (Exception e) {
-            throw new SQLException(e.toString());
+            throw new RemoteException(e.toString());
         }
         return ret;
     }
@@ -328,14 +251,42 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
     /**
      * DOC xqliu Comment method "executeQuery".
      * 
-     * @param catalogName
+     * @param xmlDocument
      * @param connection
      * @param queryStmt
      * @return
-     * @throws SQLException
+     * @throws ServiceException
+     * @throws RemoteException
      */
-    protected List<Object[]> executeQuery(String catalogName, MdmConnection connection, String queryStmt) throws SQLException {
+    protected List<Object[]> executeQuery(TdXMLDocument xmlDocument, MdmConnection connection, String queryStmt)
+            throws RemoteException, ServiceException {
+        // create query statement
+        MdmStatement statement = connection.createStatement();
+        // statement.setFetchSize(fetchSize);
+        if (log.isInfoEnabled()) {
+            log.info("Executing query: " + queryStmt);
+        }
+
+        if (continueRun()) {
+            statement.execute(queryStmt);
+        }
+
+        // TODO should support several columns result
+        // get the results
+        String[] resultSet = statement.getResultSet();
+        if (resultSet == null) {
+            String mess = "No result set for this statement: " + queryStmt;
+            log.warn(mess);
+            return null;
+        }
+
         List<Object[]> myResultSet = new ArrayList<Object[]>();
+        for (String rs : resultSet) {
+            Object[] result = new Object[1];
+            result[0] = rs;
+            myResultSet.add(result);
+        }
+
         return myResultSet;
     }
 }

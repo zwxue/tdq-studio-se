@@ -20,6 +20,7 @@ import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
@@ -29,12 +30,15 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. TODO 10238
  */
 public class MdmAnalysisExecutor extends AnalysisExecutor {
+
+    protected static final String SLASH = "/";
+
+    protected static final String DOUBLE_SLASH = "//";
 
     private TdDataProvider dataprovider;
 
@@ -70,7 +74,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected String createSqlStatement(Analysis analysis) {
         // TODO 10238
-        return "//Country";
+        return "";
     }
 
     @Override
@@ -107,10 +111,11 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "checkAnalyzedElements".
+     * DOC xqliu Comment method "checkAnalyzedElements".
      * 
      * @param analysis
      * @param context
+     * @return
      */
     protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {
         ModelElementAnalysisHandler analysisHandler = new ModelElementAnalysisHandler();
@@ -136,6 +141,12 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         return true;
     }
 
+    /**
+     * DOC xqliu Comment method "getMdmConnection".
+     * 
+     * @param analysis
+     * @return
+     */
     protected TypedReturnCode<MdmConnection> getMdmConnection(Analysis analysis) {
         TypedReturnCode<MdmConnection> rc = new TypedReturnCode<MdmConnection>(false);
         TdDataProvider dataProvider = (TdDataProvider) analysis.getContext().getConnection();
@@ -143,13 +154,10 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         if (resourceConnections != null && resourceConnections.size() > 0) {
             TdProviderConnection providerConnection = (TdProviderConnection) resourceConnections.get(0);
             String url = providerConnection.getConnectionString();
-            EList<TaggedValue> taggedValues = providerConnection.getTaggedValue();
             Properties props = new Properties();
-            for (TaggedValue tv : taggedValues) {
-                if (tv != null && tv.getTag() != null) {
-                    props.setProperty(tv.getTag(), tv.getValue() == null ? "" : tv.getValue());
-                }
-            }
+            props.setProperty(TaggedValueHelper.USER, DataProviderHelper.getUser(providerConnection));
+            props.setProperty(TaggedValueHelper.PASSWORD, DataProviderHelper.getClearTextPassword(providerConnection));
+            props.setProperty(TaggedValueHelper.UNIVERSE, DataProviderHelper.getUniverse(providerConnection));
             MdmConnection mdmConnection = new MdmConnection(url, props);
             rc.setObject(mdmConnection);
             rc.setOk(mdmConnection.checkDatabaseConnection().isOk());

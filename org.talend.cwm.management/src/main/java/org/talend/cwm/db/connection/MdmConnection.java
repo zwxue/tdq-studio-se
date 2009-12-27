@@ -47,6 +47,7 @@ import org.talend.mdm.webservice.WSDataModelPK;
 import org.talend.mdm.webservice.WSGetDataModel;
 import org.talend.mdm.webservice.WSPing;
 import org.talend.mdm.webservice.WSRegexDataModelPKs;
+import org.talend.mdm.webservice.WSRunQuery;
 import org.talend.mdm.webservice.XtentisBindingStub;
 import org.talend.mdm.webservice.XtentisPort;
 import org.talend.mdm.webservice.XtentisServiceLocator;
@@ -223,5 +224,27 @@ public class MdmConnection implements IXMLDBConnection {
         Component component = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory.eINSTANCE.createComponent();
         system.getOwnedElement().add(component);
         DataProviderHelper.setSoftwareSystem(dataProvider, system);
+    }
+
+    /**
+     * DOC xqliu Comment method "createStatement".
+     * 
+     * @return
+     */
+    public MdmStatement createStatement() {
+        return new MdmStatement(this);
+    }
+
+    /**
+     * DOC xqliu Comment method "runQuery".
+     * 
+     * @param xmlSql
+     * @return
+     * @throws ServiceException
+     * @throws RemoteException
+     */
+    public String[] runQuery(String xmlSql) throws ServiceException, RemoteException {
+        XtentisBindingStub stub = getXtentisBindingStub();
+        return stub.runQuery(new WSRunQuery(null, null, xmlSql, null));
     }
 }

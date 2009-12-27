@@ -581,4 +581,28 @@ public final class DataProviderHelper {
     public static void setDBName(String dbname, ModelElement element) {
         TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.DBNAME, dbname);
     }
+
+    /**
+     * DOC xqliu Comment method "getUniverse".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getUniverse(ModelElement element) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.UNIVERSE, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "setUniverse".
+     * 
+     * @param universe
+     * @param element
+     */
+    public static void setUniverse(String universe, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.UNIVERSE, universe);
+    }
 }
