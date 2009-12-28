@@ -45,12 +45,6 @@ public class MasterPaginationInfo extends PaginationInfo {
 
     private List<ExpandableComposite> previewChartList;
 
-    // public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
-    // List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
-    // super(form, columnIndicatores, uiPagination);
-    // this.previewChartList = previewChartList;
-    // }
-
     public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
             List<? extends ModelElementIndicator> modelElementIndicators, UIPagination uiPagination) {
         super(form, modelElementIndicators, uiPagination);

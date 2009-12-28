@@ -23,7 +23,7 @@ public class MdmDbmsLanguage extends DbmsLanguage {
     /**
      * DOC xqliu MdmDbmsLanguage constructor comment.
      */
-    MdmDbmsLanguage() {
+    public MdmDbmsLanguage() {
         super(DbmsLanguage.MDM);
     }
 
@@ -33,7 +33,7 @@ public class MdmDbmsLanguage extends DbmsLanguage {
      * @param dbmsType
      * @param dbVersion
      */
-    MdmDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    public MdmDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
     }
 }

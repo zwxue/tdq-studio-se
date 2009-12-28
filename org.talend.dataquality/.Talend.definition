@@ -4,11 +4,13 @@
     <taggedValue xmi:id="_yboaoDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of rows"/>
     <taggedValue xmi:id="_yboaoTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of records"/>
     <sqlGenericExpression xmi:id="_wmX5MGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+    <sqlGenericExpression xmi:id="_wmX5MGoAEd20k7biVpOSRq" body="count(//&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%>)" language="MDM"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0BF2Ed2PKb6nEJEvhw" name="Distinct Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Distinct Count">
     <taggedValue xmi:id="_ybpowDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of distinct rows (like a &quot;SELECT DISTINCT&quot; SQL statement)"/>
     <taggedValue xmi:id="_ybqP0Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of distinct records"/>
     <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyk" body="count(distinct-values(//&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%>))" language="MDM"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0RF2Ed2PKb6nEJEvhw" name="Unique Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Unique Count">
     <taggedValue xmi:id="_ybq24Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of unique rows (i.e. distinct rows with only one instance: rows that are not duplicated)"/>
@@ -18,6 +20,7 @@
     <sqlGenericExpression xmi:id="_v_vkMKafEd2vAre0A_m0Dg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) myquery" language="Oracle"/>
     <sqlGenericExpression xmi:id="_BsX1oMtNEd2CMtoJzSqU8Q" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount = 1) AS myquery" language="Teradata"/>
     <sqlGenericExpression xmi:id="_D9BAYBILEd6Zsu-w7oQdJw" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) AS myquery" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_D9BAYBILEd6Zsu-w7oQdJx" body="count(for $x in //&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%> return if (count(for $y in //&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%> return if(data($y) = data($x)) then ($y) else()) = 1) then ($x) else())" language="MDM"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Duplicate Count">
     <taggedValue xmi:id="_ybrd8Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of duplicate rows. This number and the number of unique data equals the number of distinct rows"/>
@@ -27,6 +30,7 @@
     <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) myquery" language="Oracle"/>
     <sqlGenericExpression xmi:id="_H3q6QMtNEd2CMtoJzSqU8Q" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount > 1) AS myquery" language="Teradata"/>
     <sqlGenericExpression xmi:id="_Oid8IBILEd6Zsu-w7oQdJw" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) myquery" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_Oid8IBILEd6Zsu-w7oQdJx" body="count(distinct-values(for $x in //&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%> return if (count(for $y in //&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%> return if(data($y) = data($x)) then ($y) else()) > 1) then ($x) else()))" language="MDM"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_YqcX0XHpEd6udst2R2sgpA" name="Functional Dependency" categories="_ARDkwJ4gEd6f9IaQrCGYNQ" label="Functional Dependency">
     <taggedValue xmi:id="_Yqc-4HHpEd6udst2R2sgpA" tag="Description" value="Reports the extent to which the values in one column (the dependent column) depend on the values in another column or set of columns (the determinant column)"/>
@@ -188,6 +192,7 @@
     <taggedValue xmi:id="_GrBFEDh9Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of missing data (null records)"/>
     <taggedValue xmi:id="_GrBFETh9Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of null rows"/>
     <sqlGenericExpression xmi:id="_GrBFEjh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NULL &lt;%=__AND_WHERE_CLAUSE__%>" language="SQL"/>
+    <sqlGenericExpression xmi:id="_GrBFEjh9Ed2XmO7pl5Yuyp" body="count(for $x in //&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%> return if ($x = '') then ($x) else())" language="MDM"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_jMh4gJE3Ed2HGNmGoaS-_w" name="Row Comparison" categories="_as5yEJOuEd2Iyo0dtkB9pA" label="Row Comparison">
     <taggedValue xmi:id="_l9ZdoJE3Ed2HGNmGoaS-_w" tag="Purpose" value="Compare content of two column sets"/>

@@ -21,12 +21,16 @@ import java.util.Map;
 
 import javax.xml.rpc.ServiceException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EClass;
 import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.db.connection.MdmStatement;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.AnalysisExecutionException;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.analysis.Analysis;
@@ -35,6 +39,12 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.MdmDbmsLanguage;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.utils.ProductVersion;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -49,6 +59,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
 
     private static Logger log = Logger.getLogger(MdmAnalysisSqlExecutor.class);
 
+    private DbmsLanguage dbmsLanguage;
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
@@ -92,7 +103,6 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      */
     private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
             AnalysisExecutionException {
-        // TODO 10238
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
             return traceError("Analyzed element is null for indicator " + indicator.getName());
@@ -101,36 +111,57 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         if (xmlElement == null) {
             return traceError("Analyzed element is not a XmlElement for indicator " + indicator.getName());
         }
-        String elementName = getFullXmlElementName(xmlElement);
-
-        // completedSqlString is the final query
-        String finalQuery = "count(" + elementName + ")";
-
+        // String elementName = XmlElementHelper.getFullName(xmlElement);
+        String elementName = xmlElement.getName();
+        // get correct language for current database
         String language = dbms().getDbmsName();
-
+        Expression sqlGenericExpression = null;
+        // --- create select statement
+        // get indicator's sql columnS (generate the real SQL statement from its definition)
+        IndicatorDefinition indicatorDefinition;
+        String label = indicator.getIndicatorDefinition().getLabel();
+        if (label == null || "".equals(label)) { //$NON-NLS-1$
+            indicatorDefinition = indicator.getIndicatorDefinition();
+        } else {
+            indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
+        }
+        if (indicatorDefinition == null) {
+            return traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
+                    + ". Please, report a bug at http://talendforge.org/bugs/");
+        }
+        sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
+        final EClass indicatorEclass = indicator.eClass();
+        if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
+            // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
+            // expressions.
+            if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
+                return traceError("Unsupported use of regular expressions on this database (" + language
+                        + "). Remove all Pattern indicators from this analysis, please.");
+            }
+            return traceError("Unsupported Indicator. No SQL expression found for indicator "
+                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (UUID: "
+                    + ResourceHelper.getUUID(indicatorDefinition) + ")");
+        }
+        // --- get indicator parameters and convert them into sql expression
+        List<String> whereExpression = new ArrayList<String>();
+        if (StringUtils.isNotBlank(dataFilterAsString)) {
+            whereExpression.add(dataFilterAsString);
+        }
+        String parentElementName = XmlElementHelper.getParentElementName(xmlElement);
+        // ### evaluate SQL Statement depending on indicators ###
+        String completedSqlString = null;
+        // --- default case
+        completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(sqlGenericExpression.getBody(), elementName,
+                parentElementName);
+        completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+        // completedSqlString is the final query
+        String finalQuery = completedSqlString;
         if (finalQuery != null) {
             Expression instantiateSqlExpression = BooleanExpressionHelper.createExpression(language, finalQuery);
             indicator.setInstantiatedExpression(instantiateSqlExpression);
             return true;
         }
-
         return false;
-    }
-
-    /**
-     * DOC xqliu Comment method "getFullXmlElementName".
-     * 
-     * @param xmlElement
-     * @return
-     */
-    private String getFullXmlElementName(TdXMLElement xmlElement) {
-        String fullName = SLASH + xmlElement.getName();
-        EObject eContainer = xmlElement.eContainer().eContainer();
-        if (eContainer instanceof TdXMLElement) {
-            TdXMLElement parentElement = (TdXMLElement) eContainer;
-            fullName = DOUBLE_SLASH + parentElement.getName() + fullName;
-        }
-        return fullName;
     }
 
     /**
@@ -288,5 +319,24 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         }
 
         return myResultSet;
+    }
+
+    /**
+     * DOC xqliu Comment method "addWhereToSqlStringStatement".
+     * 
+     * @param whereExpressions
+     * @param completedSqlString
+     * @return
+     * @throws ParseException
+     */
+    private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString) throws ParseException {
+        return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions);
+    }
+
+    protected DbmsLanguage dbms() {
+        if (this.dbmsLanguage == null) {
+            this.dbmsLanguage = new MdmDbmsLanguage(SupportDBUrlType.MDM.getLanguage(), ProductVersion.fromString("1.0.0"));
+        }
+        return this.dbmsLanguage;
     }
 }

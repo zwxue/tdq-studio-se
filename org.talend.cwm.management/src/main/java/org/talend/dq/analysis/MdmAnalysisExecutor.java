@@ -36,10 +36,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MdmAnalysisExecutor extends AnalysisExecutor {
 
-    protected static final String SLASH = "/";
-
-    protected static final String DOUBLE_SLASH = "//";
-
     private TdDataProvider dataprovider;
 
     private static Logger log = Logger.getLogger(MdmAnalysisExecutor.class);
