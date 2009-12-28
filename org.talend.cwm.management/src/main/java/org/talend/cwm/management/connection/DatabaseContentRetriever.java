@@ -254,6 +254,9 @@ public final class DatabaseContentRetriever {
                         // loop on all existing catalogs and create a new Schema for each existing catalog
                         if (catalogNames.isEmpty()) {
                             // store schemata with a null key (meaning no catalog -> e.g. Oracle)
+                            if (schemaName == null) {
+                                schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+                            }
                             createSchema(schemaName, null, catalogName2schemas);
                         } else { // MSSQL, Sybase case
                             for (String catalogName : catalogNames) {
