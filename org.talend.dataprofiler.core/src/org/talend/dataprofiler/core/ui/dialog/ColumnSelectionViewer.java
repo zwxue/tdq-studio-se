@@ -35,7 +35,6 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
      */
     public ColumnSelectionViewer(Composite parent, int style) {
         super(parent, style);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -47,7 +46,7 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
         boolean isTable = element instanceof TdTable;
         boolean isXmlElement = element instanceof TdXMLElement;
 
-        if ((checked && isTable) || !checked) {
+        if ((checked && (isTable || isXmlElement)) || !checked) {
             super.fireCheckStateChanged(event);
         }
         if (checked && !(isTable || isXmlElement)) {

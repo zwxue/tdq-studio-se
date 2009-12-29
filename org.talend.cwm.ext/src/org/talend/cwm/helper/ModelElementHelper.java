@@ -181,8 +181,7 @@ public final class ModelElementHelper {
         if (modelElement instanceof Column) {
             return ColumnHelper.getColumnSetOwner((Column) modelElement);
         } else if (modelElement instanceof TdXMLElement) {
-            // TODO 10238
-            return modelElement;
+            return XmlElementHelper.getParentElement((TdXMLElement) modelElement);
         }
         return null;
     }

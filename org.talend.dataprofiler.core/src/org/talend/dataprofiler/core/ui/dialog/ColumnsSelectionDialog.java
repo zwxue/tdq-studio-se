@@ -15,9 +15,9 @@ package org.talend.dataprofiler.core.ui.dialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
@@ -42,7 +42,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.cwm.builders.XMLSchemaBuilder;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -50,12 +49,14 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -109,9 +110,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * DOC mzhao bug 9240 mzhao 2009-11-05
      */
     protected void unfoldToCheckedElements() {
-        Set<ModelElementKey> keySet = modelElementCheckedMap.keySet();
-        ModelElementKey[] array = keySet.toArray(new ModelElementKey[keySet.size()]);
-        for (ModelElementKey mek : array) {
+        Iterator<ModelElementKey> it = modelElementCheckedMap.keySet().iterator();
+        while (it.hasNext()) {
+            ModelElementKey mek = it.next();
             getTreeViewer().expandToLevel(mek.getModelElement(), 1);
             StructuredSelection structSel = new StructuredSelection(mek.getModelElement());
             getTreeViewer().setSelection(structSel);
@@ -122,7 +123,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         List<ModelElement> containerList = new ArrayList<ModelElement>();
         for (int i = 0; i < modelElementList.size(); i++) {
             ModelElement modelElement = modelElementList.get(i);
-            modelElement.eContainer();
             ModelElement container = ModelElementHelper.getContainer(modelElement);
             if (!containerList.contains(container)) {
                 containerList.add(container);
@@ -141,8 +141,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     protected void initProvider() {
         fLabelProvider = new DBTablesViewLabelProvider();
         fContentProvider = new DBTreeViewContentProvider();
-        sLabelProvider = new ColumnLabelProvider();
-        sContentProvider = new ColumnContentProvider();
+        sLabelProvider = new ModelElementLabelProvider();
+        sContentProvider = new ModelElementContentProvider();
     }
 
     /*
@@ -156,24 +156,18 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         getTreeViewer().addCheckStateListener(new ICheckStateListener() {
 
             public void checkStateChanged(CheckStateChangedEvent event) {
-
                 ColumnSelectionViewer columnViewer = (ColumnSelectionViewer) event.getSource();
                 TreePath treePath = new TreePath(new Object[] { event.getElement() });
                 columnViewer.setSelection(new TreeSelection(treePath));
 
-                if (event.getChecked()) {
-                    getTreeViewer().setSubtreeChecked(event.getElement(), true);
-                    if (event.getElement() instanceof ColumnSet) {
-                        setOutput(event.getElement());
-                        handleColumnsChecked((ColumnSet) event.getElement(), true);
-                    }
-
-                } else {
-                    getTreeViewer().setSubtreeChecked(event.getElement(), false);
-                    if (event.getElement() instanceof ColumnSet) {
-                        setOutput(event.getElement());
-                        handleColumnsChecked((ColumnSet) event.getElement(), false);
-                    }
+                getTreeViewer().setSubtreeChecked(event.getElement(), event.getChecked());
+                setOutput(event.getElement());
+                if (event.getElement() instanceof ColumnSet) {
+                    handleColumnsChecked((ColumnSet) event.getElement(), event.getChecked());
+                } else if (event.getElement() instanceof TdXMLDocument) {
+                    handleXmlDocumentChecked((TdXMLDocument) event.getElement(), event.getChecked());
+                } else if (event.getElement() instanceof TdXMLElement) {
+                    handleXmlElementsChecked((TdXMLElement) event.getElement(), event.getChecked());
                 }
             }
         });
@@ -183,13 +177,22 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             public void checkStateChanged(CheckStateChangedEvent event) {
                 if (event.getElement() instanceof TdColumn) {
                     handleColumnChecked((TdColumn) event.getElement(), event.getChecked());
+                } else if (event.getElement() instanceof TdXMLElement) {
+                    handleXmlElementChecked((TdXMLElement) event.getElement(), event.getChecked());
                 }
             }
         });
     }
 
+    /**
+     * DOC xqliu Comment method "getCheckedModelElements".
+     * 
+     * @param modelElement
+     * @return
+     */
     private ModelElement[] getCheckedModelElements(ModelElement modelElement) {
         boolean isColumnSet = modelElement instanceof ColumnSet;
+        boolean isTdXMLDocument = modelElement instanceof TdXMLDocument;
         boolean isTdXMLElement = modelElement instanceof TdXMLElement;
 
         ModelElementKey mek = new ModelElementKeyImpl(modelElement);
@@ -201,10 +204,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             ModelElement[] modelElements = null;
             if (isColumnSet) {
                 modelElements = EObjectHelper.getColumns((ColumnSet) modelElement);
+            } else if (isTdXMLDocument) {
+                List<TdXMLElement> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXMLDocument) modelElement));
+                modelElements = children.toArray(new ModelElement[children.size()]);
             } else if (isTdXMLElement) {
-                TdXMLElement xmlElement = (TdXMLElement) modelElement;
-                XMLSchemaBuilder schemaBuilder = XMLSchemaBuilder.getSchemaBuilder(xmlElement.getOwnedDocument());
-                List<TdXMLElement> children = schemaBuilder.getChildren(xmlElement);
+                List<TdXMLElement> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXMLElement) modelElement));
                 modelElements = children.toArray(new ModelElement[children.size()]);
             }
             meCheckMap.putAllChecked(modelElements, allCheckFlag);
@@ -213,10 +219,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         } else {
             if (isColumnSet) {
                 return meCheckMap.getCheckedModelElements(ColumnSetHelper.getColumns((ColumnSet) modelElement));
+            } else if (isTdXMLDocument) {
+                List<TdXMLElement> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXMLDocument) modelElement));
+                return meCheckMap.getCheckedModelElements(children);
             } else if (isTdXMLElement) {
-                TdXMLElement xmlElement = (TdXMLElement) modelElement;
-                XMLSchemaBuilder schemaBuilder = XMLSchemaBuilder.getSchemaBuilder(xmlElement.getOwnedDocument());
-                List<TdXMLElement> children = schemaBuilder.getChildren(xmlElement);
+                List<TdXMLElement> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXMLElement) modelElement));
                 return meCheckMap.getCheckedModelElements(children);
             }
             return null;
@@ -232,7 +241,23 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         if (columnCheckMap != null) {
             columnCheckMap.putModelElementChecked(column, checkedFlag);
         }
+    }
 
+    /**
+     * handle Column(TdXMLElement) checked.
+     * 
+     * @param xmlElement
+     * @param checkedFlag
+     */
+    private void handleXmlElementChecked(TdXMLElement xmlElement, Boolean checkedFlag) {
+        ModelElement parentElement = XmlElementHelper.getParentElement(xmlElement);
+        if (checkedFlag) {
+            getTreeViewer().setChecked(parentElement, true);
+        }
+        ModelElementCheckedMap columnCheckMap = modelElementCheckedMap.get(new ModelElementKeyImpl(parentElement));
+        if (columnCheckMap != null) {
+            columnCheckMap.putModelElementChecked(xmlElement, checkedFlag);
+        }
     }
 
     private void handleColumnsChecked(ColumnSet columnSet, Boolean checkedFlag) {
@@ -244,6 +269,50 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         } else {
             columnCheckMap = new ModelElementCheckedMapImpl();
             columnCheckMap.putAllChecked(EObjectHelper.getColumns(columnSet), checkedFlag);
+            modelElementCheckedMap.put(key, columnCheckMap);
+        }
+        getTableViewer().setAllChecked(checkedFlag);
+    }
+
+    /**
+     * handle catalog/table(TdXMLDocument) checked.
+     * 
+     * @param xmlDocument
+     * @param checkedFlag
+     */
+    private void handleXmlDocumentChecked(TdXMLDocument xmlDocument, Boolean checkedFlag) {
+        ModelElementKey key = new ModelElementKeyImpl(xmlDocument);
+        ModelElementCheckedMap columnCheckMap = modelElementCheckedMap.get(key);
+        if (columnCheckMap != null) {
+            columnCheckMap.clear();
+            List<TdXMLElement> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlDocument));
+            columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
+        } else {
+            columnCheckMap = new ModelElementCheckedMapImpl();
+            List<TdXMLElement> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlDocument));
+            columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
+            modelElementCheckedMap.put(key, columnCheckMap);
+        }
+        getTableViewer().setAllChecked(checkedFlag);
+    }
+
+    /**
+     * handle table(TdXMLElement) checked.
+     * 
+     * @param xmlElement
+     * @param checkedFlag
+     */
+    private void handleXmlElementsChecked(TdXMLElement xmlElement, Boolean checkedFlag) {
+        ModelElementKey key = new ModelElementKeyImpl(xmlElement);
+        ModelElementCheckedMap columnCheckMap = modelElementCheckedMap.get(key);
+        if (columnCheckMap != null) {
+            columnCheckMap.clear();
+            List<TdXMLElement> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlElement));
+            columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
+        } else {
+            columnCheckMap = new ModelElementCheckedMapImpl();
+            List<TdXMLElement> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlElement));
+            columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
             modelElementCheckedMap.put(key, columnCheckMap);
         }
         getTableViewer().setAllChecked(checkedFlag);
@@ -269,7 +338,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
                 modelElementCheckedMap.clear();
                 if (getTableViewer().getInput() != null) {
-                    handleColumnsChecked((ColumnSet) getTableViewer().getInput(), true);
+                    if (getTableViewer().getInput() instanceof ColumnSet) {
+                        handleColumnsChecked((ColumnSet) getTableViewer().getInput(), true);
+                    } else if (getTableViewer().getInput() instanceof TdXMLDocument) {
+                        handleXmlDocumentChecked((TdXMLDocument) getTableViewer().getInput(), true);
+                    } else if (getTableViewer().getInput() instanceof TdXMLElement) {
+                        handleXmlElementsChecked((TdXMLElement) getTableViewer().getInput(), true);
+                    }
                 }
                 updateOKStatus();
             }
@@ -282,7 +357,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 getTreeViewer().setCheckedElements(new Object[0]);
                 modelElementCheckedMap.clear();
                 if (getTableViewer().getInput() != null) {
-                    handleColumnsChecked((ColumnSet) getTableViewer().getInput(), false);
+                    if (getTableViewer().getInput() instanceof ColumnSet) {
+                        handleColumnsChecked((ColumnSet) getTableViewer().getInput(), false);
+                    } else if (getTableViewer().getInput() instanceof TdXMLDocument) {
+                        handleXmlDocumentChecked((TdXMLDocument) getTableViewer().getInput(), false);
+                    } else if (getTableViewer().getInput() instanceof TdXMLElement) {
+                        handleXmlElementsChecked((TdXMLElement) getTableViewer().getInput(), false);
+                    }
                 }
                 updateOKStatus();
             }
@@ -292,14 +373,14 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     public void selectionChanged(SelectionChangedEvent event) {
         Object selectedObj = ((IStructuredSelection) event.getSelection()).getFirstElement();
-        if (selectedObj instanceof ColumnSet || selectedObj instanceof TdXMLElement) {
+        if (selectedObj instanceof ColumnSet || selectedObj instanceof TdXMLDocument
+                || (selectedObj instanceof TdXMLElement && !XmlElementHelper.isLeafNode((TdXMLElement) selectedObj))) {
             this.setOutput(selectedObj);
             ModelElement[] modelElements = getCheckedModelElements((ModelElement) selectedObj);
             if (modelElements != null) {
                 this.getTableViewer().setCheckedElements(modelElements);
             }
         }
-
     }
 
     /**
@@ -342,9 +423,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (mElement instanceof ColumnSet) {
                 return EObjectHelper.getParent((ColumnSet) mElement);
             } else if (mElement instanceof TdXMLElement) {
-                // TODO 10238
-                TdXMLElement xmlElement = (TdXMLElement) mElement;
-                xmlElement.getOwnedDocument();
+                return XmlElementHelper.getParentElement((TdXMLElement) mElement);
             }
             return null;
         }
@@ -358,7 +437,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         }
 
         public int hashCode() {
-            return KEY_PRIME
+            return KEY_PRIME + (getModelElement().getName().hashCode())
                     + (getParentModelElement() == null ? 0 : new ModelElementKeyImpl(getParentModelElement()).hashCode());
         }
 
@@ -430,9 +509,11 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (modelElement instanceof ColumnSet) {
                 modelElementList = ColumnSetHelper.getColumns((ColumnSet) modelElement);
             } else if ((modelElement instanceof TdXMLElement)) {
-                TdXMLElement xmlElement = (TdXMLElement) modelElement;
-                XMLSchemaBuilder schemaBuilder = XMLSchemaBuilder.getSchemaBuilder(xmlElement.getOwnedDocument());
-                modelElementList = schemaBuilder.getChildren(xmlElement);
+                modelElementList = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXMLElement) modelElement));
+            } else if ((modelElement instanceof TdXMLDocument)) {
+                modelElementList = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXMLDocument) modelElement));
             }
 
             for (ModelElement mElement : modelElementList) {
@@ -478,10 +559,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
         List<ModelElement> meList = new ArrayList<ModelElement>();
         for (int i = 0; i < checkedNodes.length; i++) {
-            if (!(checkedNodes[i] instanceof ColumnSet || checkedNodes[i] instanceof TdXMLElement)) {
+            if (!(checkedNodes[i] instanceof ColumnSet || checkedNodes[i] instanceof TdXMLElement || checkedNodes[i] instanceof TdXMLDocument)) {
                 continue;
             }
-            ModelElementKey mek = new ModelElementKeyImpl((ColumnSet) checkedNodes[i]);
+            ModelElementKey mek = new ModelElementKeyImpl((ModelElement) checkedNodes[i]);
             if (modelElementCheckedMap.containsKey(mek)) {
                 ModelElementCheckedMap columnMap = modelElementCheckedMap.get(mek);
                 meList.addAll(columnMap.getCheckedModelElementList((ModelElement) checkedNodes[i]));
@@ -489,9 +570,11 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 if (checkedNodes[i] instanceof ColumnSet) {
                     meList.addAll(ColumnSetHelper.getColumns((ColumnSet) checkedNodes[i]));
                 } else if ((checkedNodes[i] instanceof TdXMLElement)) {
-                    TdXMLElement xmlElement = (TdXMLElement) checkedNodes[i];
-                    XMLSchemaBuilder schemaBuilder = XMLSchemaBuilder.getSchemaBuilder(xmlElement.getOwnedDocument());
-                    meList.addAll(schemaBuilder.getChildren(xmlElement));
+                    meList.addAll(XmlElementHelper.getLeafNode(DqRepositoryViewService
+                            .getXMLElements((TdXMLElement) checkedNodes[i])));
+                } else if ((checkedNodes[i] instanceof TdXMLDocument)) {
+                    meList.addAll(XmlElementHelper.getLeafNode(DqRepositoryViewService
+                            .getXMLElements((TdXMLDocument) checkedNodes[i])));
                 }
             }
         }
@@ -508,7 +591,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * @author rli
      * 
      */
-    class ColumnLabelProvider extends LabelProvider {
+    class ModelElementLabelProvider extends LabelProvider {
 
         /*
          * (non-Javadoc)
@@ -516,6 +599,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
          * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
          */
         public Image getImage(Object element) {
+            if (element instanceof TdXMLElement) {
+                return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
+            }
             return ImageLib.getImage(ImageLib.TD_COLUMN);
         }
 
@@ -525,49 +611,67 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
          * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
          */
         public String getText(Object element) {
-            TdColumn columnObj = (TdColumn) element;
-            return columnObj.getName() + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
-                    + columnObj.getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT;
+            if (element instanceof TdColumn) {
+                TdColumn columnObj = (TdColumn) element;
+                return columnObj.getName() + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
+                        + columnObj.getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT;
+            } else if (element instanceof TdXMLElement) {
+                TdXMLElement xmlElement = (TdXMLElement) element;
+                return xmlElement.getName() + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
+                        + xmlElement.getJavaType() + PluginConstant.PARENTHESIS_RIGHT;
+            }
+            return "";
         }
 
     }
 
     /**
      * @author rli
-     * 
      */
-    class ColumnContentProvider implements IStructuredContentProvider {
+    class ModelElementContentProvider implements IStructuredContentProvider {
 
         public Object[] getElements(Object inputElement) {
-            if (inputElement instanceof ColumnSet) {
-                EObject eObj = (EObject) inputElement;
-                ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObj);
-                if (columnSet != null) {
-                    TdColumn[] columns = EObjectHelper.getColumns(columnSet);
-                    if (columns.length <= 0) {
-                        Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-                        if (parentCatalogOrSchema == null) {
-                            return null;
-                        }
-                        TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
-                        if (provider == null) {
-                            return null;
-                        }
-                        try {
-                            List<TdColumn> columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
-                            columns = columnList.toArray(new TdColumn[columnList.size()]);
-                            // store tables in catalog
-                            // MOD scorreia 2009-01-29 columns are stored in the
-                            // table
-                            // ColumnSetHelper.addColumns(columnSet,
-                            // columnList);
-                        } catch (TalendException e) {
-                            MessageBoxExceptionHandler.process(e);
-                        }
-
-                        PrvResourceFileHelper.getInstance().save(provider);
+            EObject eObj = (EObject) inputElement;
+            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObj);
+            if (columnSet != null) {
+                TdColumn[] columns = EObjectHelper.getColumns(columnSet);
+                if (columns.length <= 0) {
+                    Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
+                    if (parentCatalogOrSchema == null) {
+                        return null;
                     }
-                    return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+                    TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+                    if (provider == null) {
+                        return null;
+                    }
+                    try {
+                        List<TdColumn> columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
+                        columns = columnList.toArray(new TdColumn[columnList.size()]);
+                        // store tables in catalog
+                        // MOD scorreia 2009-01-29 columns are stored in the
+                        // table
+                        // ColumnSetHelper.addColumns(columnSet,
+                        // columnList);
+                    } catch (TalendException e) {
+                        MessageBoxExceptionHandler.process(e);
+                    }
+
+                    PrvResourceFileHelper.getInstance().save(provider);
+                }
+                return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+            } else {
+                TdXMLDocument xmlDocument = SwitchHelpers.XMLDOCUMENT_SWITCH.doSwitch(eObj);
+                if (xmlDocument != null) {
+                    List<ModelElement> xmlElements = DqRepositoryViewService.getXMLElements(xmlDocument);
+                    List<TdXMLElement> leafNodes = XmlElementHelper.getLeafNode(xmlElements);
+                    return sort(leafNodes.toArray(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+                } else {
+                    TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(eObj);
+                    if (xmlElement != null) {
+                        List<TdXMLElement> xmlElements = DqRepositoryViewService.getXMLElements(xmlElement);
+                        List<TdXMLElement> leafNodes = XmlElementHelper.getLeafNode(xmlElements);
+                        return sort(leafNodes.toArray(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+                    }
                 }
             }
             return null;
@@ -593,7 +697,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
         }
 
     }
@@ -645,6 +748,25 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     }
                 }
                 return ComparatorsFactory.sort(children, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+            } else if (parentElement instanceof TdXMLDocument || parentElement instanceof TdXMLElement) {
+                boolean isXmlDocument = parentElement instanceof TdXMLDocument;
+                List<? extends ModelElement> modelElements = isXmlDocument ? DqRepositoryViewService
+                        .getXMLElements((TdXMLDocument) parentElement) : DqRepositoryViewService
+                        .getXMLElements((TdXMLElement) parentElement);
+                Object[] children = XmlElementHelper.clearLeafNode(modelElements).toArray();
+                if (children != null && children.length > 0) {
+                    if (!(children[0] instanceof TdXMLElement)) {
+                        return children;
+                    }
+                    for (int i = 0; i < children.length; i++) {
+                        TdXMLElement xmlElement = (TdXMLElement) children[i];
+                        ModelElementKey key = new ModelElementKeyImpl(xmlElement);
+                        if (modelElementCheckedMap.containsKey(key)) {
+                            currentCheckedModelElement.add(xmlElement);
+                        }
+                    }
+                }
+                return children;
             }
             return super.getChildren(parentElement);
         }
@@ -669,24 +791,35 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
                     IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
                     return findCorrespondingFile;
-                    // Path path = new Path(uri.path());
-                    // String fileName = path.lastSegment();
-                    // IFolder connectionsFolder =
-                    // ResourcesPlugin.getWorkspace().getRoot().getProject(
-                    // DQStructureManager.getMetaData())
-                    // .getFolder(DQStructureManager.DB_CONNECTIONS);
-                    // IFile resourceFile = connectionsFolder.getFile(fileName);
                 }
             } else if (element instanceof IFolderNode) {
                 return ((IFolderNode) element).getParent();
             } else if (element instanceof IResource) {
                 return ((IResource) element).getParent();
+            } else if (element instanceof TdXMLDocument) {
+                TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider((TdXMLDocument) element);
+                IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
+                return findCorrespondingFile;
+            } else if (element instanceof TdXMLElement) {
+                return XmlElementHelper.getParentElement((TdXMLElement) element);
             }
             return super.getParent(element);
         }
 
         public boolean hasChildren(Object element) {
-            return !(element instanceof TdView || element instanceof TdTable);
+            boolean result = !(element instanceof TdView || element instanceof TdTable);
+            if (!result) {
+                if (element instanceof TdXMLDocument) {
+                    List<ModelElement> elements = XmlElementHelper.clearLeafNode(DqRepositoryViewService
+                            .getXMLElements((TdXMLDocument) element));
+                    result = result || (elements != null && elements.size() > 0);
+                } else if (element instanceof TdXMLElement) {
+                    List<ModelElement> elements = XmlElementHelper.clearLeafNode(DqRepositoryViewService
+                            .getXMLElements((TdXMLElement) element));
+                    result = result || (elements != null && elements.size() > 0);
+                }
+            }
+            return result;
         }
 
     }

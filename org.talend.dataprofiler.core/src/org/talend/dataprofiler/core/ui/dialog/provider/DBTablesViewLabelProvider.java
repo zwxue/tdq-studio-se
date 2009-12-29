@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.dialog.provider;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -21,6 +22,8 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
@@ -69,6 +72,10 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else if (element instanceof IFile) {
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+        } else if (element instanceof TdXMLDocument) {
+            return ImageLib.getImage(ImageLib.XML_DOC);
+        } else if (element instanceof TdXMLElement) {
+            return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
         }
         return super.getImage(element);
     }
@@ -90,6 +97,15 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
                 }
                 return decorateText;
             }
+        } else if (element instanceof TdXMLDocument) {
+            return ((TdXMLDocument) element).getName();
+        } else if (element instanceof TdXMLElement) {
+            String elemLabe = ((TdXMLElement) element).getName();
+            String elementType = ((TdXMLElement) element).getJavaType();
+            if (elementType != null && !StringUtils.isEmpty(elementType)) {
+                elemLabe += " (" + elementType + ")";
+            }
+            return elemLabe;
         }
 
         return super.getText(element);

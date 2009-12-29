@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.cwm.helper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.talend.cwm.xml.TdXMLContent;
+import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu  class global comment. Detailled comment
@@ -75,7 +79,7 @@ public final class XmlElementHelper {
      * @return
      */
     public static String getFullName(TdXMLElement xmlElement) {
-        TdXMLElement parentElement = getParentElement(xmlElement);
+        ModelElement parentElement = getParentElement(xmlElement);
         if (parentElement != null) {
             return DOUBLE_SLASH + parentElement.getName() + SLASH + xmlElement.getName();
         }
@@ -88,13 +92,15 @@ public final class XmlElementHelper {
      * @param xmlElement
      * @return
      */
-    public static TdXMLElement getParentElement(TdXMLElement xmlElement) {
+    public static ModelElement getParentElement(TdXMLElement xmlElement) {
         EObject temp = xmlElement.eContainer();
-        if (temp != null) {
+        if (temp instanceof TdXMLContent) {
             EObject eContainer = temp.eContainer();
-            if (eContainer instanceof TdXMLElement) {
-                return (TdXMLElement) eContainer;
+            if (eContainer instanceof TdXMLElement || eContainer instanceof TdXMLDocument) {
+                return (ModelElement) eContainer;
             }
+        } else if (temp instanceof TdXMLElement || temp instanceof TdXMLDocument) {
+            return (ModelElement) temp;
         }
         return null;
     }
@@ -106,8 +112,43 @@ public final class XmlElementHelper {
      * @return
      */
     public static String getParentElementName(TdXMLElement xmlElement) {
-        TdXMLElement parentElement = getParentElement(xmlElement);
+        ModelElement parentElement = getParentElement(xmlElement);
         return parentElement == null ? "" : parentElement.getName();
     }
 
+    /**
+     * DOC xqliu Comment method "clearLeafNode".
+     * 
+     * @param modelElements
+     * @return
+     */
+    public static List<ModelElement> clearLeafNode(List<? extends ModelElement> modelElements) {
+        List<ModelElement> result = new ArrayList<ModelElement>();
+        for (ModelElement me : modelElements) {
+            if (me instanceof TdXMLElement) {
+                if (!isLeafNode((TdXMLElement) me)) {
+                    result.add(me);
+                }
+            } else {
+                result.add(me);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * DOC xqliu Comment method "getLeafNode".
+     * 
+     * @param modelElements
+     * @return
+     */
+    public static List<TdXMLElement> getLeafNode(List<? extends ModelElement> modelElements) {
+        List<TdXMLElement> result = new ArrayList<TdXMLElement>();
+        for (ModelElement me : modelElements) {
+            if (me instanceof TdXMLElement && isLeafNode((TdXMLElement) me)) {
+                result.add((TdXMLElement) me);
+            }
+        }
+        return result;
+    }
 }
