@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.db.connection.MdmStatement;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -42,9 +41,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
-import org.talend.dq.dbms.MdmDbmsLanguage;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.utils.ProductVersion;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -331,12 +328,5 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      */
     private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString) throws ParseException {
         return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions);
-    }
-
-    protected DbmsLanguage dbms() {
-        if (this.dbmsLanguage == null) {
-            this.dbmsLanguage = new MdmDbmsLanguage(SupportDBUrlType.MDM.getLanguage(), ProductVersion.fromString("1.0.0"));
-        }
-        return this.dbmsLanguage;
     }
 }

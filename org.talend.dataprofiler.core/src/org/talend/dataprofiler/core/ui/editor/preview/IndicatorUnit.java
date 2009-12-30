@@ -32,19 +32,11 @@ public class IndicatorUnit {
 
     private Indicator indicator;
 
-    // private ColumnIndicator parentColumn;
-
     private ModelElementIndicator modelElementIndicator;
 
     private Object value;
 
     private IndicatorUnit[] children;
-
-    // public IndicatorUnit(IndicatorEnum type, Indicator indicator, ColumnIndicator parentColumn) {
-    // this.type = type;
-    // this.indicator = indicator;
-    // this.parentColumn = parentColumn;
-    // }
 
     public IndicatorUnit(IndicatorEnum type, Indicator indicator, ModelElementIndicator modelElementIndicator) {
         this.type = type;
@@ -78,15 +70,6 @@ public class IndicatorUnit {
     public Indicator getIndicator() {
         return this.indicator;
     }
-
-    // /**
-    // * Getter for parentColumn.
-    // *
-    // * @return the parentColumn
-    // */
-    // public ColumnIndicator getParentColumn() {
-    // return this.parentColumn;
-    // }
 
     /**
      * Getter for modelElementIndicator.

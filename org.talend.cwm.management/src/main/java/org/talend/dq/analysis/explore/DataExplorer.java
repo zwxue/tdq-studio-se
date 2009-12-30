@@ -20,6 +20,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -228,6 +229,18 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     public String inBrackets(String clause) {
         return " (" + clause + ") "; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * DOC xqliu Comment method "isXml".
+     * 
+     * @return
+     */
+    public boolean isXml() {
+        if (this.indicator != null) {
+            return this.indicator.getAnalyzedElement() instanceof TdXMLElement;
+        }
+        return false;
     }
 
 }

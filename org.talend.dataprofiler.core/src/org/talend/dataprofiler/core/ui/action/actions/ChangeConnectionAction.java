@@ -35,6 +35,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedColumnSetsSynDialog;
@@ -65,183 +66,169 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * DOC mzhao class global comment. Detailled comment
  */
 public class ChangeConnectionAction extends Action implements ICheatSheetAction {
-	private static Logger log = Logger.getLogger(ChangeConnectionAction.class);
-	private TdDataProvider oldDataProvider;
-	private TdDataProvider newDataProvider;
-	private Analysis synAnalysis = null;
-	private AnalyzedElementSynDialog anaEleSynDialog = null;
-	private ReturnCode changeActionStatus;
 
-	public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage,
-			TdDataProvider tdProvider) {
-		this.newDataProvider = (TdDataProvider) masterPage.getConnCombo()
-				.getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
-		this.oldDataProvider = tdProvider;
-		this.synAnalysis = masterPage.getAnalysis();
-		changeActionStatus = new ReturnCode(Boolean.FALSE);
-	}
+    private static Logger log = Logger.getLogger(ChangeConnectionAction.class);
 
-	public ChangeConnectionAction(TdDataProvider oldDataProvider,
-			TdDataProvider newDataProvider, Analysis analysis) {
-		this.oldDataProvider = oldDataProvider;
-		this.newDataProvider = newDataProvider;
-		this.synAnalysis = analysis;
-		changeActionStatus = new ReturnCode(Boolean.FALSE);
-	}
+    private TdDataProvider oldDataProvider;
 
-	public void run(String[] params, ICheatSheetManager manager) {
-		run();
-	}
+    private TdDataProvider newDataProvider;
 
-	@Override
-	public void run() {
-		try {
-			changeActionStatus = changedDatabaseConnection();
-		} catch (ReloadCompareException e) {
-			log.error(e, e);
-		}
-	}
+    private Analysis synAnalysis = null;
 
-	private ReturnCode changedDatabaseConnection()
-			throws ReloadCompareException {
+    private AnalyzedElementSynDialog anaEleSynDialog = null;
 
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell();
+    private ReturnCode changeActionStatus;
 
-		final EList<ModelElement> analyzedElements = synAnalysis.getContext()
-				.getAnalysedElements();
-		if (analyzedElements == null || analyzedElements.size() == 0) {
-			return new ReturnCode(Boolean.TRUE);
-		}
+    public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, TdDataProvider tdProvider) {
+        this.newDataProvider = (TdDataProvider) masterPage.getConnCombo().getData(
+                masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
+        this.oldDataProvider = tdProvider;
+        this.synAnalysis = masterPage.getAnalysis();
+        changeActionStatus = new ReturnCode(Boolean.FALSE);
+    }
 
-		// Open synchronized dialog.
-		boolean retCode = MessageDialog
-				.openQuestion(
-						shell,
-						DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"), //$NON-NLS-1$
-						DefaultMessagesImpl.getString("ChangeConnectionAction.MayCauseAsynProblem")); //$NON-NLS-1$
-		if (retCode) {
+    public ChangeConnectionAction(TdDataProvider oldDataProvider, TdDataProvider newDataProvider, Analysis analysis) {
+        this.oldDataProvider = oldDataProvider;
+        this.newDataProvider = newDataProvider;
+        this.synAnalysis = analysis;
+        changeActionStatus = new ReturnCode(Boolean.FALSE);
+    }
 
-			if (analyzedElements.get(0) instanceof Column) {
-				anaEleSynDialog = new AnalyzedColumnsSynDialog(shell,
-						synAnalysis, newDataProvider, analyzedElements);
-			} else if (analyzedElements.get(0) instanceof ColumnSet) {
-				anaEleSynDialog = new AnalyzedColumnSetsSynDialog(shell,
-						synAnalysis, newDataProvider, analyzedElements);
-			} else if (analyzedElements.get(0) instanceof Package) {
-				anaEleSynDialog = new AnalyzedPackageSynDialog(shell,
-						synAnalysis, newDataProvider, analyzedElements);
-			}
+    public void run(String[] params, ICheatSheetManager manager) {
+        run();
+    }
 
-			final List<SynTreeModel> treeModelLs = anaEleSynDialog
-					.getSynInputModel();
-			if (treeModelLs != null && treeModelLs.size() > 0) {
-				// Make attempt to reload from db before showing asyned
-				// message.
-				boolean isReload = MessageDialog
-						.openQuestion(
-								shell,
-								DefaultMessagesImpl.getString("ChangeConnectionAction.ReloadFromDatabase"), //$NON-NLS-1$
-								DefaultMessagesImpl.getString("ChangeConnectionAction.ExistElementAsynchronuos")); //$NON-NLS-1$
-				if (isReload) {
-					ModelElement newDataProviderModel = treeModelLs.get(0)
-							.getNewDataProvElement();
-					if (newDataProviderModel != null
-							&& (newDataProviderModel instanceof ColumnSet || newDataProviderModel instanceof Package)) {
-						if (newDataProviderModel instanceof Package) {
+    @Override
+    public void run() {
+        try {
+            changeActionStatus = changedDatabaseConnection();
+        } catch (ReloadCompareException e) {
+            log.error(e, e);
+        }
+    }
 
-							IRunnableWithProgress op = new IRunnableWithProgress() {
-								public void run(IProgressMonitor monitor)
-										throws InvocationTargetException,
-										InterruptedException {
-									try {
-										reloadByColumnSetFolderLevel(
-												treeModelLs, anaEleSynDialog,
-												newDataProvider);
+    private ReturnCode changedDatabaseConnection() throws ReloadCompareException {
 
-										if (analyzedElements.get(0) instanceof Column) {
-											// Reload column folder
-											reloadByColumnFolderLevel(
-													treeModelLs,
-													anaEleSynDialog,
-													newDataProvider);
-										}
-									} catch (ReloadCompareException e) {
-										log.error(e, e);
-									}
-								}
+        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
-							};
+        final EList<ModelElement> analyzedElements = synAnalysis.getContext().getAnalysedElements();
+        if (analyzedElements == null || analyzedElements.size() == 0) {
+            return new ReturnCode(Boolean.TRUE);
+        }
 
-							try {
-								ProgressUI.popProgressDialog(op);
-							} catch (InvocationTargetException e) {
-								log.error(e, e);
-							} catch (InterruptedException e) {
-								log.error(e, e);
-							}
+        if (analyzedElements.get(0) instanceof TdXMLElement) {
+            MessageDialog.openInformation(shell, DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"),
+                    "Can't change this connection!");
+            return new ReturnCode(Boolean.FALSE);
+        }
+        
+        // Open synchronized dialog.
+        boolean retCode = MessageDialog.openQuestion(shell, DefaultMessagesImpl
+                .getString("ChangeConnectionAction.ChangeConnection"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ChangeConnectionAction.MayCauseAsynProblem")); //$NON-NLS-1$
+        if (retCode) {
 
-						} else if (newDataProviderModel instanceof ColumnSet) {
-							IRunnableWithProgress op = new IRunnableWithProgress() {
-								public void run(IProgressMonitor monitor)
-										throws InvocationTargetException,
-										InterruptedException {
-									try {
-									    reloadByColumnFolderLevel(treeModelLs,
-												anaEleSynDialog,
-												newDataProvider);
-									} catch (ReloadCompareException e) {
-										log.error(e, e);
-									}
-								}
+            if (analyzedElements.get(0) instanceof Column) {
+                anaEleSynDialog = new AnalyzedColumnsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
+            } else if (analyzedElements.get(0) instanceof ColumnSet) {
+                anaEleSynDialog = new AnalyzedColumnSetsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
+            } else if (analyzedElements.get(0) instanceof Package) {
+                anaEleSynDialog = new AnalyzedPackageSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
+            }
 
-							};
+            final List<SynTreeModel> treeModelLs = anaEleSynDialog.getSynInputModel();
+            if (treeModelLs != null && treeModelLs.size() > 0) {
+                // Make attempt to reload from db before showing asyned
+                // message.
+                boolean isReload = MessageDialog.openQuestion(shell, DefaultMessagesImpl
+                        .getString("ChangeConnectionAction.ReloadFromDatabase"), //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("ChangeConnectionAction.ExistElementAsynchronuos")); //$NON-NLS-1$
+                if (isReload) {
+                    ModelElement newDataProviderModel = treeModelLs.get(0).getNewDataProvElement();
+                    if (newDataProviderModel != null
+                            && (newDataProviderModel instanceof ColumnSet || newDataProviderModel instanceof Package)) {
+                        if (newDataProviderModel instanceof Package) {
 
-							try {
-								ProgressUI.popProgressDialog(op);
-							} catch (InvocationTargetException e) {
-								log.error(e, e);
-							} catch (InterruptedException e) {
-								log.error(e, e);
-							}
+                            IRunnableWithProgress op = new IRunnableWithProgress() {
 
-						}
-					}
+                                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                                    try {
+                                        reloadByColumnSetFolderLevel(treeModelLs, anaEleSynDialog, newDataProvider);
 
-				}
+                                        if (analyzedElements.get(0) instanceof Column) {
+                                            // Reload column folder
+                                            reloadByColumnFolderLevel(treeModelLs, anaEleSynDialog, newDataProvider);
+                                        }
+                                    } catch (ReloadCompareException e) {
+                                        log.error(e, e);
+                                    }
+                                }
 
-			}
-			// Open asyned dialog.
-			if (treeModelLs != null && treeModelLs.size() > 0) {
-				// Open confirmation dialog to see whether user want to
-				// continue or not.
-				int returnCode = anaEleSynDialog.open();
-				if (returnCode != Window.OK) {
-					return new ReturnCode(Boolean.FALSE);
-				}
-			}
-			// Synchronize analyzed elements.
-			boolean isExistSynedElement = synAnalyzedElements(anaEleSynDialog,
-					synAnalysis, oldDataProvider, newDataProvider);
-			// Add new dependencies.
-			if (isExistSynedElement) {
-				DependenciesHandler.getInstance().setDependencyOn(synAnalysis,
-						newDataProvider);
-				PrvResourceFileHelper.getInstance().save(newDataProvider);
-			}
-			// Refresh analysis editor viewer.
-			AnaResourceFileHelper.getInstance().save(synAnalysis);
-		} else {
-			return new ReturnCode(Boolean.FALSE);
-		}
-		return new ReturnCode(Boolean.TRUE);
-	}
+                            };
 
-	private void reloadByColumnSetFolderLevel(List<SynTreeModel> treeModelLs,
-			AnalyzedElementSynDialog anaEleSynDialog, TdDataProvider newDataProv)
-			throws ReloadCompareException {
-		ModelElement oldDataProviderModel = treeModelLs.get(0).getOldDataProvElement();
-		// Reload columnSet folder
+                            try {
+                                ProgressUI.popProgressDialog(op);
+                            } catch (InvocationTargetException e) {
+                                log.error(e, e);
+                            } catch (InterruptedException e) {
+                                log.error(e, e);
+                            }
+
+                        } else if (newDataProviderModel instanceof ColumnSet) {
+                            IRunnableWithProgress op = new IRunnableWithProgress() {
+
+                                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                                    try {
+                                        reloadByColumnFolderLevel(treeModelLs, anaEleSynDialog, newDataProvider);
+                                    } catch (ReloadCompareException e) {
+                                        log.error(e, e);
+                                    }
+                                }
+
+                            };
+
+                            try {
+                                ProgressUI.popProgressDialog(op);
+                            } catch (InvocationTargetException e) {
+                                log.error(e, e);
+                            } catch (InterruptedException e) {
+                                log.error(e, e);
+                            }
+
+                        }
+                    }
+
+                }
+
+            }
+            // Open asyned dialog.
+            if (treeModelLs != null && treeModelLs.size() > 0) {
+                // Open confirmation dialog to see whether user want to
+                // continue or not.
+                int returnCode = anaEleSynDialog.open();
+                if (returnCode != Window.OK) {
+                    return new ReturnCode(Boolean.FALSE);
+                }
+            }
+            // Synchronize analyzed elements.
+            boolean isExistSynedElement = synAnalyzedElements(anaEleSynDialog, synAnalysis, oldDataProvider, newDataProvider);
+            // Add new dependencies.
+            if (isExistSynedElement) {
+                DependenciesHandler.getInstance().setDependencyOn(synAnalysis, newDataProvider);
+                PrvResourceFileHelper.getInstance().save(newDataProvider);
+            }
+            // Refresh analysis editor viewer.
+            AnaResourceFileHelper.getInstance().save(synAnalysis);
+        } else {
+            return new ReturnCode(Boolean.FALSE);
+        }
+        return new ReturnCode(Boolean.TRUE);
+    }
+
+    private void reloadByColumnSetFolderLevel(List<SynTreeModel> treeModelLs, AnalyzedElementSynDialog anaEleSynDialog,
+            TdDataProvider newDataProv) throws ReloadCompareException {
+        ModelElement oldDataProviderModel = treeModelLs.get(0).getOldDataProvElement();
+        // Reload columnSet folder
         ColumnSet columnset = null;
         if (oldDataProviderModel instanceof ColumnSet) {
             columnset = (ColumnSet) oldDataProviderModel;
@@ -250,170 +237,140 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         } else {
             return;
         }
-		
-		IFolderNode reloadFolder = FolderNodeHelper.getFolderNode(
-		        treeModelLs.get(0).getNewDataProvElement(),
-		        columnset);
-		if (reloadFolder != null) {
-			IComparisonLevel creatComparisonLevel = ComparisonLevelFactory
-					.creatComparisonLevel(reloadFolder);
-			newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
-			// Recompute after reload
-			treeModelLs = anaEleSynDialog.getSynInputModel();
-		}
 
-	}
+        IFolderNode reloadFolder = FolderNodeHelper.getFolderNode(treeModelLs.get(0).getNewDataProvElement(), columnset);
+        if (reloadFolder != null) {
+            IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reloadFolder);
+            newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
+            // Recompute after reload
+            treeModelLs = anaEleSynDialog.getSynInputModel();
+        }
 
-	private void reloadByColumnFolderLevel(List<SynTreeModel> treeModelLs,
-			AnalyzedElementSynDialog anaEleSynDialog, TdDataProvider newDataProv)
-			throws ReloadCompareException {
-		ModelElement newDataProviderModel = treeModelLs.get(0)
-				.getNewDataProvElement();
-		// If schema or catalog changed, we did not load anymore.
-		// Reload column folder
+    }
+
+    private void reloadByColumnFolderLevel(List<SynTreeModel> treeModelLs, AnalyzedElementSynDialog anaEleSynDialog,
+            TdDataProvider newDataProv) throws ReloadCompareException {
+        ModelElement newDataProviderModel = treeModelLs.get(0).getNewDataProvElement();
+        // If schema or catalog changed, we did not load anymore.
+        // Reload column folder
         ColumnSet columnset = null;
-        if(newDataProviderModel instanceof ColumnSet){
-            columnset=(ColumnSet)newDataProviderModel;
+        if (newDataProviderModel instanceof ColumnSet) {
+            columnset = (ColumnSet) newDataProviderModel;
         } else if (newDataProviderModel instanceof Column) {
             columnset = ColumnHelper.getColumnSetOwner((Column) newDataProviderModel);
         } else {
             return;
         }
-		IFolderNode reloadFolder = FolderNodeHelper.getFolderNode(
-				 newDataProviderModel, columnset);
+        IFolderNode reloadFolder = FolderNodeHelper.getFolderNode(newDataProviderModel, columnset);
 
-		if (reloadFolder != null) {
-			IComparisonLevel creatComparisonLevel = ComparisonLevelFactory
-					.creatComparisonLevel(reloadFolder);
-			newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
-			// Recompute after reload
-			treeModelLs = anaEleSynDialog.getSynInputModel();
-		}
-	}
+        if (reloadFolder != null) {
+            IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reloadFolder);
+            newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
+            // Recompute after reload
+            treeModelLs = anaEleSynDialog.getSynInputModel();
+        }
+    }
 
-	private boolean synAnalyzedElements(
-			AnalyzedElementSynDialog anaEleSynDialog, Analysis synAnalysis,
-			TdDataProvider oldDataProvider, TdDataProvider newDataProv) {
-		// Change connection uuid.
-		Map<ModelElement, ModelElement> synEleMap = anaEleSynDialog
-				.getSynedEleMap();
-		AnalysisBuilder anaBuilder = new AnalysisBuilder();
-		anaBuilder.setAnalysis(synAnalysis);
-		synAnalysis.getContext().setConnection(newDataProv);
-		// Remove old dependencies.
-		List<ModelElement> tempList = new ArrayList<ModelElement>();
-		tempList.add(oldDataProvider);
-		DependenciesHandler.getInstance().removeDependenciesBetweenModels(
-				synAnalysis, tempList);
-		PrvResourceFileHelper.getInstance().save(oldDataProvider);
-		// Synchronize analysis result.
-		EList<Indicator> indcList = synAnalysis.getResults().getIndicators();
-		Indicator[] copiedIndArray = new Indicator[indcList.size()];
-		System.arraycopy(indcList.toArray(), 0, copiedIndArray, 0, indcList
-				.size());
-		synAnalysis.getContext().getAnalysedElements().clear();
-		synAnalysis.getResults().getIndicators().clear();
+    private boolean synAnalyzedElements(AnalyzedElementSynDialog anaEleSynDialog, Analysis synAnalysis,
+            TdDataProvider oldDataProvider, TdDataProvider newDataProv) {
+        // Change connection uuid.
+        Map<ModelElement, ModelElement> synEleMap = anaEleSynDialog.getSynedEleMap();
+        AnalysisBuilder anaBuilder = new AnalysisBuilder();
+        anaBuilder.setAnalysis(synAnalysis);
+        synAnalysis.getContext().setConnection(newDataProv);
+        // Remove old dependencies.
+        List<ModelElement> tempList = new ArrayList<ModelElement>();
+        tempList.add(oldDataProvider);
+        DependenciesHandler.getInstance().removeDependenciesBetweenModels(synAnalysis, tempList);
+        PrvResourceFileHelper.getInstance().save(oldDataProvider);
+        // Synchronize analysis result.
+        EList<Indicator> indcList = synAnalysis.getResults().getIndicators();
+        Indicator[] copiedIndArray = new Indicator[indcList.size()];
+        System.arraycopy(indcList.toArray(), 0, copiedIndArray, 0, indcList.size());
+        synAnalysis.getContext().getAnalysedElements().clear();
+        synAnalysis.getResults().getIndicators().clear();
 
-		boolean isExistSynedElement = false;
-		for (Indicator indicator : copiedIndArray) {
+        boolean isExistSynedElement = false;
+        for (Indicator indicator : copiedIndArray) {
 
-			// Add new analyzed element contained in new
-			// connection.
-			if (indicator instanceof ColumnSetMultiValueIndicator) {
-				ColumnSetMultiValueIndicator compositeInd = (ColumnSetMultiValueIndicator) indicator;
-				ModelElement[] mes = new ModelElement[compositeInd
-						.getAnalyzedColumns().size()];
-				((ColumnSetMultiValueIndicator) indicator).getAnalyzedColumns()
-						.toArray(mes);
-				compositeInd.getAnalyzedColumns().clear();
-				for (ModelElement me : mes) {
-					if (synEleMap.get(me) != null) {
-						TdColumn newColumn = (TdColumn) synEleMap.get(me);
-						DataminingType dataminingType = MetadataHelper
-								.getDataminingType((TdColumn) me);
-						if (dataminingType == null) {
-							dataminingType = MetadataHelper
-									.getDefaultDataminingType(((TdColumn) me)
-											.getJavaType());
-						}
-						MetadataHelper.setDataminingType(dataminingType,
-								newColumn);
-						compositeInd.getAnalyzedColumns().add(newColumn);
-						anaBuilder.addElementToAnalyze(newColumn, indicator);
-						isExistSynedElement = true;
-					}
-				}
+            // Add new analyzed element contained in new
+            // connection.
+            if (indicator instanceof ColumnSetMultiValueIndicator) {
+                ColumnSetMultiValueIndicator compositeInd = (ColumnSetMultiValueIndicator) indicator;
+                ModelElement[] mes = new ModelElement[compositeInd.getAnalyzedColumns().size()];
+                ((ColumnSetMultiValueIndicator) indicator).getAnalyzedColumns().toArray(mes);
+                compositeInd.getAnalyzedColumns().clear();
+                for (ModelElement me : mes) {
+                    if (synEleMap.get(me) != null) {
+                        TdColumn newColumn = (TdColumn) synEleMap.get(me);
+                        DataminingType dataminingType = MetadataHelper.getDataminingType((TdColumn) me);
+                        if (dataminingType == null) {
+                            dataminingType = MetadataHelper.getDefaultDataminingType(((TdColumn) me).getJavaType());
+                        }
+                        MetadataHelper.setDataminingType(dataminingType, newColumn);
+                        compositeInd.getAnalyzedColumns().add(newColumn);
+                        anaBuilder.addElementToAnalyze(newColumn, indicator);
+                        isExistSynedElement = true;
+                    }
+                }
 
-			} else if (indicator instanceof ColumnsCompareIndicator) {
-				// Correlation compare
-				ColumnsCompareIndicator compInd = (ColumnsCompareIndicator) indicator;
-				if ((compInd.getColumnSetA() == null || compInd.getColumnSetA()
-						.size() == 0)
-						|| (compInd.getColumnSetB() == null || compInd
-								.getColumnSetB().size() == 0)) {
-					return false;
-				}
-				// Column set(Columns)
-				ModelElement[] mesA = new ModelElement[compInd.getColumnSetA()
-						.size()];
-				compInd.getColumnSetA().toArray(mesA);
-				compInd.getColumnSetA().clear();
-				for (ModelElement me : mesA) {
-					if (synEleMap.get(me) != null) {
-						TdColumn newColumn = (TdColumn) synEleMap.get(me);
-						compInd.getColumnSetA().add(newColumn);
-						anaBuilder.addElementToAnalyze(newColumn, indicator);
-						isExistSynedElement = true;
-					}
-				}
+            } else if (indicator instanceof ColumnsCompareIndicator) {
+                // Correlation compare
+                ColumnsCompareIndicator compInd = (ColumnsCompareIndicator) indicator;
+                if ((compInd.getColumnSetA() == null || compInd.getColumnSetA().size() == 0)
+                        || (compInd.getColumnSetB() == null || compInd.getColumnSetB().size() == 0)) {
+                    return false;
+                }
+                // Column set(Columns)
+                ModelElement[] mesA = new ModelElement[compInd.getColumnSetA().size()];
+                compInd.getColumnSetA().toArray(mesA);
+                compInd.getColumnSetA().clear();
+                for (ModelElement me : mesA) {
+                    if (synEleMap.get(me) != null) {
+                        TdColumn newColumn = (TdColumn) synEleMap.get(me);
+                        compInd.getColumnSetA().add(newColumn);
+                        anaBuilder.addElementToAnalyze(newColumn, indicator);
+                        isExistSynedElement = true;
+                    }
+                }
 
-				ModelElement[] mesB = new ModelElement[compInd.getColumnSetB()
-						.size()];
-				compInd.getColumnSetB().toArray(mesB);
-				compInd.getColumnSetB().clear();
-				for (ModelElement me : mesB) {
-					if (synEleMap.get(me) != null) {
-						TdColumn newColumn = (TdColumn) synEleMap.get(me);
-						compInd.getColumnSetB().add(newColumn);
-						anaBuilder.addElementToAnalyze(newColumn, indicator);
-						isExistSynedElement = true;
-					}
-				}
-				// Analyzed element(Table)
-				ModelElement oldAnaEle = compInd.getAnalyzedElement();
-				compInd.setAnalyzedElement(null);
-				ColumnSet oldColSetA = ColumnHelper
-						.getColumnSetOwner((Column) mesA[0]);
-				ColumnSet oldColSetB = ColumnHelper
-						.getColumnSetOwner((Column) mesB[0]);
-				if (oldColSetA == oldAnaEle) {
-					compInd
-							.setAnalyzedElement(ColumnHelper
-									.getColumnSetOwner((Column) synEleMap
-											.get(mesA[0])));
-				}
-				if (oldColSetB == oldAnaEle) {
-					compInd
-							.setAnalyzedElement(ColumnHelper
-									.getColumnSetOwner((Column) synEleMap
-											.get(mesB[0])));
-				}
+                ModelElement[] mesB = new ModelElement[compInd.getColumnSetB().size()];
+                compInd.getColumnSetB().toArray(mesB);
+                compInd.getColumnSetB().clear();
+                for (ModelElement me : mesB) {
+                    if (synEleMap.get(me) != null) {
+                        TdColumn newColumn = (TdColumn) synEleMap.get(me);
+                        compInd.getColumnSetB().add(newColumn);
+                        anaBuilder.addElementToAnalyze(newColumn, indicator);
+                        isExistSynedElement = true;
+                    }
+                }
+                // Analyzed element(Table)
+                ModelElement oldAnaEle = compInd.getAnalyzedElement();
+                compInd.setAnalyzedElement(null);
+                ColumnSet oldColSetA = ColumnHelper.getColumnSetOwner((Column) mesA[0]);
+                ColumnSet oldColSetB = ColumnHelper.getColumnSetOwner((Column) mesB[0]);
+                if (oldColSetA == oldAnaEle) {
+                    compInd.setAnalyzedElement(ColumnHelper.getColumnSetOwner((Column) synEleMap.get(mesA[0])));
+                }
+                if (oldColSetB == oldAnaEle) {
+                    compInd.setAnalyzedElement(ColumnHelper.getColumnSetOwner((Column) synEleMap.get(mesB[0])));
+                }
 
-			} else {
-				ModelElement me = indicator.getAnalyzedElement();
-				if (synEleMap.get(me) != null) {
-					indicator.setAnalyzedElement(synEleMap.get(me));
-					anaBuilder
-							.addElementToAnalyze(synEleMap.get(me), indicator);
-					isExistSynedElement = true;
-				}
-			}
-		}
-		return isExistSynedElement;
-	}
+            } else {
+                ModelElement me = indicator.getAnalyzedElement();
+                if (synEleMap.get(me) != null) {
+                    indicator.setAnalyzedElement(synEleMap.get(me));
+                    anaBuilder.addElementToAnalyze(synEleMap.get(me), indicator);
+                    isExistSynedElement = true;
+                }
+            }
+        }
+        return isExistSynedElement;
+    }
 
-	public ReturnCode getStatus() {
-		return changeActionStatus;
-	}
+    public ReturnCode getStatus() {
+        return changeActionStatus;
+    }
 
 }

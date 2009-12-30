@@ -63,7 +63,8 @@ public final class DbmsLanguageFactory {
 
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
         if (softwareSystem != null) {
-            final String dbmsSubtype = softwareSystem.getSubtype();
+            boolean isMdm = ConnectionUtils.isMdmConnection(DataProviderHelper.getTdProviderConnection(dataprovider).getObject());
+            final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : softwareSystem.getSubtype();
             if (log.isDebugEnabled()) {
                 log.debug("Software system subtype (Database type): " + dbmsSubtype);
             }

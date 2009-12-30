@@ -65,8 +65,6 @@ public class MdmConnection implements IXMLDBConnection {
 
     private static final String XSD_SUFIX = ".xsd"; //$NON-NLS-1$
 
-    private static final String XML_SUFIX = ".xml"; //$NON-NLS-1$
-
     private String url = "";
 
     private String userName = "";
@@ -246,5 +244,10 @@ public class MdmConnection implements IXMLDBConnection {
     public String[] runQuery(String xmlSql) throws ServiceException, RemoteException {
         XtentisBindingStub stub = getXtentisBindingStub();
         return stub.runQuery(new WSRunQuery(null, null, xmlSql, null));
+    }
+
+    public String getVersion() {
+        // TODO 10238
+        return "1.0.0";
     }
 }

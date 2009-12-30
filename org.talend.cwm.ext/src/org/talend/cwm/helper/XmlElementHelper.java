@@ -67,7 +67,14 @@ public final class XmlElementHelper {
 
         Set<String> modelElementNames = new HashSet<String>();
         for (TdXMLElement xmlElement : xmlElements) {
-            modelElementNames.add(getFullName(xmlElement));
+            ModelElement parentElement = getParentElement(xmlElement);
+            String fullName = "";
+            if (parentElement instanceof TdXMLDocument) {
+                fullName = DOUBLE_SLASH + parentElement.getName();
+            } else if (parentElement instanceof TdXMLElement) {
+                fullName = getFullName((TdXMLElement) parentElement);
+            }
+            modelElementNames.add(fullName);
         }
         return modelElementNames.size() == 1;
     }

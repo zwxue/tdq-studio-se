@@ -28,27 +28,29 @@ public class SimpleStatisticsExplorer extends DataExplorer {
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
 
-        switch (this.indicatorEnum) {
-        case RowCountIndicatorEnum:
-        case NullCountIndicatorEnum:
-        case BlankCountIndicatorEnum:
-        case DefValueCountIndicatorEnum:
-            map.put(MENU_VIEW_ROWS, getRowsStatement());
-            break;
+        if (!isXml()) {
+            switch (this.indicatorEnum) {
+            case RowCountIndicatorEnum:
+            case NullCountIndicatorEnum:
+            case BlankCountIndicatorEnum:
+            case DefValueCountIndicatorEnum:
+                map.put(MENU_VIEW_ROWS, getRowsStatement());
+                break;
 
-        case UniqueIndicatorEnum:
-            map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
-            map.put(MENU_VIEW_VALUES, getValuesStatement(this.columnName));
-            break;
-        case DistinctCountIndicatorEnum:
-            map.put(MENU_VIEW_VALUES, getDistinctValuesStatement(this.columnName));
-            break;
+            case UniqueIndicatorEnum:
+                map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
+                map.put(MENU_VIEW_VALUES, getValuesStatement(this.columnName));
+                break;
+            case DistinctCountIndicatorEnum:
+                map.put(MENU_VIEW_VALUES, getDistinctValuesStatement(this.columnName));
+                break;
 
-        case DuplicateCountIndicatorEnum:
-            map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
-            map.put(MENU_VIEW_VALUES, getValuesStatement(this.columnName));
-            break;
-        default:
+            case DuplicateCountIndicatorEnum:
+                map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
+                map.put(MENU_VIEW_VALUES, getValuesStatement(this.columnName));
+                break;
+            default:
+            }
         }
 
         return map;

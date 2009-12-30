@@ -52,7 +52,9 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
@@ -118,9 +120,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     protected static Logger log = Logger.getLogger(AnalysisColumnTreeViewer.class);
 
-    /**
-     * 
-     */
     private static final String DATA_PARAM = "DATA_PARAM"; //$NON-NLS-1$
 
     public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY"; //$NON-NLS-1$
@@ -136,8 +135,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private Composite parentComp;
 
     private Tree tree;
-
-    // private ColumnIndicator[] columnIndicators;
 
     private ModelElementIndicator[] modelElementIndicators;
 
@@ -367,6 +364,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     DataManager dm = getAnalysis().getContext().getConnection();
                     if (dm == null) {
                         masterPage.doSave(null);
+                    }
+
+                    // TODO 10238
+                    if (dm != null && dm instanceof TdDataProvider) {
+                        TdDataProvider dp = (TdDataProvider) dm;
+                        if (ConnectionUtils.isMdmConnection(DataProviderHelper.getTdProviderConnection(dp).getObject())) {
+                            MessageUI.openWarning("Don't support this method yet!");
+                            return;
+                        }
                     }
 
                     IFolder libProject = ResourceManager.getLibrariesFolder();
@@ -1048,7 +1054,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 });
             }
 
-            if (isSelectedIndicator(tree.getSelection())) {
+            if (isSelectedIndicator(tree.getSelection()) && !isMdmSelected(tree.getSelection())) {
                 // MOD 2009-01-04 mzhao
                 MenuItem showQueryMenuItem = new MenuItem(menu, SWT.CASCADE);
                 showQueryMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.viewQuery")); //$NON-NLS-1$
@@ -1312,6 +1318,24 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
 
             return true;
+        }
+
+        /**
+         * DOC xqliu Comment method "isMdmSelected".
+         * @param items
+         * @return
+         */
+        private boolean isMdmSelected(TreeItem[] items) {
+            for (TreeItem item : items) {
+                Object data = item.getData(INDICATOR_UNIT_KEY);
+                if (data != null) {
+                    if (data instanceof IndicatorUnit) {
+                        IndicatorUnit iu = (IndicatorUnit) data;
+                        return iu.isXmlElement(); 
+                    }
+                }
+            }
+            return false;
         }
 
         /**
