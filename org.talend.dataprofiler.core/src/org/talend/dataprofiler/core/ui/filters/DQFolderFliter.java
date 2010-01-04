@@ -17,13 +17,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.io.FilesUtils;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class DQFolderFliter extends ViewerFilter {
-
-    private static final String SVN_FOLDER_NAME = ".svn";
 
     private static final String XSD_FOLDER_NAME = ".xsd";
 
@@ -48,7 +47,7 @@ public class DQFolderFliter extends ViewerFilter {
         if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
             // MOD mzhao feature 10238, filter xsd folder
-            return !folder.getName().endsWith(SVN_FOLDER_NAME) && !folder.getName().endsWith(XSD_FOLDER_NAME);
+            return !FilesUtils.isSVNFolder(folder) && !folder.getName().endsWith(XSD_FOLDER_NAME);
         }
 
         if (element instanceof IFile && isShowFile) {
