@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
@@ -33,6 +34,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * @author scorreia
@@ -316,6 +318,35 @@ public final class AnalysisHelper {
             // }
         }
         return rets;
+    }
+
+    /**
+     * DOC xqliu Comment method "getReloadDatabases".
+     * 
+     * @param analysis
+     * @return
+     */
+    public static boolean getReloadDatabases(Analysis analysis) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.RELOAD_DATABASES, analysis.getTaggedValue());
+        if (taggedValue != null) {
+            try {
+                return Boolean.valueOf(taggedValue.getValue());
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "setReloadDatabases".
+     * 
+     * @param analysis
+     * @param reloadDatabases
+     * @return
+     */
+    public static boolean setReloadDatabases(Analysis analysis, boolean reloadDatabases) {
+        return TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.RELOAD_DATABASES, String.valueOf(reloadDatabases));
     }
 
     // MOD scorreia 2009-10-07 User defined matching indicator is NOT a pattern matching indicator.

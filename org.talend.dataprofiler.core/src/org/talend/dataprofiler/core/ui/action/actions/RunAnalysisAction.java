@@ -32,6 +32,9 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.compare.factory.ComparisonLevelFactory;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -40,7 +43,9 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -129,10 +134,26 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             return;
         }
 
-        if (AnalysisType.COLUMNS_COMPARISON.equals(analysis.getParameters().getAnalysisType())) {
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+
+        if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
             if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
                 return;
+            }
+        }
+
+        if (AnalysisType.CONNECTION.equals(analysisType)) {
+            if (AnalysisHelper.getReloadDatabases(analysis)) {
+                IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(
+                        (TdDataProvider) analysis.getContext().getConnection());
+                if (file != null) {
+                    try {
+                        ComparisonLevelFactory.creatComparisonLevel(file).reloadCurrentLevelElement();
+                    } catch (ReloadCompareException e) {
+                        log.error(e, e);
+                    }
+                }
             }
         }
 

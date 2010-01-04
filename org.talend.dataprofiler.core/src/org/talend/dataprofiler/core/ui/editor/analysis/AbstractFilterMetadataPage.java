@@ -40,11 +40,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -80,9 +83,11 @@ import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -198,6 +203,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private Section summarySection = null;
 
     private Section statisticalSection = null;
+
+    private Button reloadDatabasesBtn = null;
 
     /**
      * 
@@ -366,7 +373,47 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             }
 
         });
+		// ADD xqliu 2010-01-04 bug 10190
+        createReloadDatabasesButton(sectionClient);
+		// ~
         analysisParamSection.setClient(sectionClient);
+    }
+
+    /**
+     * DOC xqliu Comment method "createReloadDatabasesButton".
+     * @param sectionClient
+     */
+    private void createReloadDatabasesButton(Composite sectionClient) {
+        if (isConnectionAnalysis()) {
+            reloadDatabasesBtn = new Button(sectionClient, SWT.CHECK);
+            reloadDatabasesBtn.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ReloadDatabases"));
+
+            reloadDatabasesBtn.setSelection(AnalysisHelper.getReloadDatabases(analysis));
+            reloadDatabasesBtn.addMouseListener(new MouseListener() {
+
+                public void mouseDoubleClick(MouseEvent e) {
+                }
+
+                public void mouseDown(MouseEvent e) {
+                    setDirty(true);
+                }
+
+                public void mouseUp(MouseEvent e) {
+                }
+            });
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "isConnectionAnalysis".
+     * 
+     * @return
+     */
+    private boolean isConnectionAnalysis() {
+        if (analysis != null) {
+            return AnalysisType.CONNECTION.equals(AnalysisHelper.getAnalysisType(analysis));
+        }
+        return false;
     }
 
     private void createAnalysisSummarySection(Composite topComp) {
@@ -705,6 +752,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     public void saveAnalysis() throws DataprofilerCoreException {
+        // ADD xqliu 2010-01-04 bug 10190
+        AnalysisHelper.setReloadDatabases(analysis, reloadDatabasesBtn.getSelection());
+		// ~
         EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
         if (!this.tableFilterText.getText().equals(latestTableFilterValue)) {
             DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());

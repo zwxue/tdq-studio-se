@@ -103,6 +103,11 @@ public final class TaggedValueHelper {
 
     public static final String TDQ_ELEMENT_FILE = "TDQ Element File"; //$NON-NLS-1$
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // overview analysis tagged values
+    public static final String RELOAD_DATABASES = "Reload Databases";
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~
+
     private TaggedValueHelper() {
     }
 
