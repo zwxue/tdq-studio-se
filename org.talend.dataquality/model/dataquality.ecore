@@ -817,6 +817,14 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="distinctCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="duplicateCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
             changeable="false" volatile="true" transient="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="rowCountIndicator"
+            eType="#//indicators/RowCountIndicator" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="uniqueCountIndicator"
+            eType="#//indicators/UniqueCountIndicator" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="distinctCountIndicator"
+            eType="#//indicators/DistinctCountIndicator" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="duplicateCountIndicator"
+            eType="#//indicators/DuplicateCountIndicator" containment="true"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="CountAvgNullIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
       <eClassifiers xsi:type="ecore:EDataType" name="ListObject" instanceClassName="java.util.List&lt;Object>"/>

@@ -150,7 +150,17 @@ public enum IndicatorEnum {
                                   ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR,
                                   ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR,
                                   "Column Dependency Indicator", //$NON-NLS-1$
-                                  null);
+                                  null),
+    ColumnSetMultiValueIndicatorEnum(
+                                     ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR,
+                                     ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR,
+                                     "Column Set Multi Value Indicator", //$NON-NLS-1$
+                                     null),
+    SimpleStatIndicatorEnum(
+                            ColumnsetPackage.SIMPLE_STAT_INDICATOR,
+                            ColumnsetPackage.Literals.SIMPLE_STAT_INDICATOR,
+                            "Simple Stat Indicator", //$NON-NLS-1$
+                            null);
 
     private EClass indicatorType;
 

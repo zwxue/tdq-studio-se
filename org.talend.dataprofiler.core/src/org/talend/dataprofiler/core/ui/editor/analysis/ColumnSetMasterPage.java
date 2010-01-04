@@ -23,12 +23,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -62,6 +59,7 @@ import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
+import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -86,7 +84,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private static Logger log = Logger.getLogger(ColumnSetMasterPage.class);
 
+    AnalysisEditor currentEditor;
+
     AnalysisColumnSetTreeViewer treeViewer;
+
+    IndicatorsComp indicatorsViewer;
 
     DataFilterComp dataFilterComp;
 
@@ -102,7 +104,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private ScrolledForm form;
 
-    private static final int TREE_MAX_LENGTH = 400;
+    private static final int TREE_MAX_LENGTH = 300;
+
+    private static final int INDICATORS_SECTION_HEIGHT = 300;
 
     protected Composite[] previewChartCompsites;
 
@@ -116,8 +120,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private Section analysisParamSection;
 
+    private Section indicatorsSection;
+
     public ColumnSetMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+
+        currentEditor = (AnalysisEditor) editor;
     }
 
     public void initialize(FormEditor editor) {
@@ -146,6 +154,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, tdColumn);
         }
+
     }
 
     @Override
@@ -167,6 +176,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         form.setText(DefaultMessagesImpl.getString("ColumnSetMasterPage.title")); //$NON-NLS-1$
 
         createAnalysisColumnsSection(form, topComp);
+
+        createIndicatorsSection(form, topComp);
 
         createDataFilterSection(form, topComp);
 
@@ -193,6 +204,27 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         });
         // ~
         createPreviewSection(form, previewComp);
+    }
+
+    /**
+     * DOC yyi Comment method "createIndicatorsSection".
+     * 
+     * @param topComp
+     * @param form
+     */
+    private void createIndicatorsSection(ScrolledForm form, Composite topComp) {
+        indicatorsSection = createSection(form, topComp, "Indicators", null); //$NON-NLS-1$
+
+        Composite indicatorsComp = toolkit.createComposite(indicatorsSection, SWT.NONE);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(indicatorsComp);
+        indicatorsComp.setLayout(new GridLayout());
+        ((GridData) indicatorsComp.getLayoutData()).heightHint = INDICATORS_SECTION_HEIGHT;
+
+        indicatorsViewer = new IndicatorsComp(indicatorsComp, this);
+        indicatorsViewer.setDirty(false);
+        indicatorsViewer.addPropertyChangeListener(this);
+        indicatorsViewer.setInput(simpleStatIndicator);
+        indicatorsSection.setClient(indicatorsComp);
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
@@ -333,14 +365,14 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     private void createSimpleStatistics(final ScrolledForm form, final Composite composite,
             final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(columnSetMultiValueIndicator.getCount(),
-                DefaultMessagesImpl.getString("ColumnSetMasterPage.Row_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(columnSetMultiValueIndicator.getDistinctCount(), DefaultMessagesImpl
+        dataset.addValue(columnSetMultiValueIndicator.getRowCountIndicator().getCount(), DefaultMessagesImpl
+                .getString("ColumnSetMasterPage.Row_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        dataset.addValue(columnSetMultiValueIndicator.getDistinctCountIndicator().getDistinctValueCount(), DefaultMessagesImpl
                 .getString("ColumnSetMasterPage.Distinct_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(columnSetMultiValueIndicator.getUniqueCount(), DefaultMessagesImpl
-                .getString("ColumnSetMasterPage.Unique_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(columnSetMultiValueIndicator.getDuplicateCount(), DefaultMessagesImpl
+        dataset.addValue(columnSetMultiValueIndicator.getDuplicateCountIndicator().getDuplicateValueCount(), DefaultMessagesImpl
                 .getString("ColumnSetMasterPage.Duplicate_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        dataset.addValue(columnSetMultiValueIndicator.getUniqueCountIndicator().getUniqueValueCount(), DefaultMessagesImpl
+                .getString("ColumnSetMasterPage.Unique_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
 
         JFreeChart chart = TopChartFactory.createBarChart(
                 DefaultMessagesImpl.getString("ColumnSetMasterPage.SimpleStatistics"), dataset, true); //$NON-NLS-1$
@@ -407,38 +439,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * DOC hcheng Comment method "createAnalysisParamSection".
-     * 
-     * @param form
-     * @param anasisDataComp
-     */
-    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisParamSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(analysisParamSection);
-        sectionClient.setLayout(new GridLayout(2, false));
-        toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
-        final CCombo execCombo = new CCombo(sectionClient, SWT.BORDER);
-        execCombo.setEditable(false);
-        for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
-            String temp = language.getLiteral();
-            execCombo.add(temp);
-        }
-        // ExecutionLanguage executionLanguage =
-        // analysis.getParameters().getExecutionLanguage();
-        execCombo.setText(ExecutionLanguage.SQL.getLiteral());
-        execCombo.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                execLang = execCombo.getText();
-            }
-
-        });
-        analysisParamSection.setClient(sectionClient);
-    }
-
-    /**
      * @param outputFolder
      * @throws DataprofilerCoreException
      */
@@ -476,8 +476,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             if (tdProvider != null) {
                 PrvResourceFileHelper.getInstance().save(tdProvider);
             }
-            // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true
-            // );
+
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + urlString + " successful");
             }
@@ -492,7 +491,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-            ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+            currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.columnSetAnalysisHandler.setStringDataFilter((String) evt.getNewValue());
         }
@@ -502,7 +501,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     @Override
     public boolean isDirty() {
         return super.isDirty() || (treeViewer != null && treeViewer.isDirty())
-                || (dataFilterComp != null && dataFilterComp.isDirty());
+                || (dataFilterComp != null && dataFilterComp.isDirty())
+                || (indicatorsViewer != null && indicatorsViewer.isDirty());
     }
 
     @Override
@@ -538,7 +538,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     public SimpleStatIndicator getSimpleStatIndicator() {
-        simpleStatIndicator.getListRows();
+        // simpleStatIndicator.getListRows();
         return simpleStatIndicator;
     }
 

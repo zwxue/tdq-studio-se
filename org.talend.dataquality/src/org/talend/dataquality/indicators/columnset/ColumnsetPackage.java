@@ -1346,13 +1346,49 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 10;
 
     /**
+     * The feature id for the '<em><b>Row Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 11;
+
+    /**
+     * The feature id for the '<em><b>Unique Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 12;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 13;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 14;
+
+    /**
      * The number of structural features of the '<em>Column Set Multi Value Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 11;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 15;
 
 
     /**
@@ -1715,6 +1751,42 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int COUNT_AVG_NULL_INDICATOR__DUPLICATE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Row Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__ROW_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Unique Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__UNIQUE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__DISTINCT_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__DUPLICATE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR;
 
     /**
      * The number of structural features of the '<em>Count Avg Null Indicator</em>' class.
@@ -2087,6 +2159,42 @@ public interface ColumnsetPackage extends EPackage {
     int MIN_MAX_DATE_INDICATOR__DUPLICATE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT;
 
     /**
+     * The feature id for the '<em><b>Row Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__ROW_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Unique Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__UNIQUE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__DISTINCT_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__DUPLICATE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR;
+
+    /**
      * The number of structural features of the '<em>Min Max Date Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2455,6 +2563,42 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int WEAK_CORRELATION_INDICATOR__DUPLICATE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Row Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__ROW_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Unique Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__UNIQUE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DISTINCT_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DUPLICATE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR;
 
     /**
      * The number of structural features of the '<em>Weak Correlation Indicator</em>' class.
@@ -3143,6 +3287,42 @@ public interface ColumnsetPackage extends EPackage {
     int SIMPLE_STAT_INDICATOR__DUPLICATE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT;
 
     /**
+     * The feature id for the '<em><b>Row Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SIMPLE_STAT_INDICATOR__ROW_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Unique Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SIMPLE_STAT_INDICATOR__UNIQUE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SIMPLE_STAT_INDICATOR__DISTINCT_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SIMPLE_STAT_INDICATOR__DUPLICATE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR;
+
+    /**
      * The number of structural features of the '<em>Simple Stat Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3344,6 +3524,50 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      */
     EAttribute getColumnSetMultiValueIndicator_DuplicateCount();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getRowCountIndicator <em>Row Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Row Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getRowCountIndicator()
+     * @see #getColumnSetMultiValueIndicator()
+     * @generated
+     */
+    EReference getColumnSetMultiValueIndicator_RowCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCountIndicator <em>Unique Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Unique Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCountIndicator()
+     * @see #getColumnSetMultiValueIndicator()
+     * @generated
+     */
+    EReference getColumnSetMultiValueIndicator_UniqueCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCountIndicator <em>Distinct Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Distinct Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCountIndicator()
+     * @see #getColumnSetMultiValueIndicator()
+     * @generated
+     */
+    EReference getColumnSetMultiValueIndicator_DistinctCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDuplicateCountIndicator <em>Duplicate Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Duplicate Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDuplicateCountIndicator()
+     * @see #getColumnSetMultiValueIndicator()
+     * @generated
+     */
+    EReference getColumnSetMultiValueIndicator_DuplicateCountIndicator();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator <em>Count Avg Null Indicator</em>}'.
@@ -3626,6 +3850,38 @@ public interface ColumnsetPackage extends EPackage {
          * @generated
          */
         EAttribute COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT = eINSTANCE.getColumnSetMultiValueIndicator_DuplicateCount();
+
+        /**
+         * The meta object literal for the '<em><b>Row Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR = eINSTANCE.getColumnSetMultiValueIndicator_RowCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Unique Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR = eINSTANCE.getColumnSetMultiValueIndicator_UniqueCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Distinct Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR = eINSTANCE.getColumnSetMultiValueIndicator_DistinctCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Duplicate Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR = eINSTANCE.getColumnSetMultiValueIndicator_DuplicateCountIndicator();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.columnset.impl.CountAvgNullIndicatorImpl <em>Count Avg Null Indicator</em>}' class.

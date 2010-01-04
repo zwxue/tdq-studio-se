@@ -38,6 +38,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.DateTimeDialog;
@@ -92,16 +93,19 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         Indicator currentIndicator = (Indicator) parameters.eContainer();
         IndicatorEnum currentIndicatorType = IndicatorEnum.findIndicatorEnum(currentIndicator.eClass());
         ModelElement analyzedElement = currentIndicator.getAnalyzedElement();
-        if (SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(analyzedElement) != null) {
-            isRangeForDate = false;
-            isDatetime = false;
-        } else {
-            int sqltype = ((TdColumn) analyzedElement).getJavaType();
-            isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
-                    && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
+        if (null != analyzedElement) {
 
-            if (isRangeForDate) {
-                isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
+            if (SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(analyzedElement) != null) {
+                isRangeForDate = false;
+                isDatetime = false;
+            } else {
+                int sqltype = ((TdColumn) analyzedElement).getJavaType();
+                isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
+                        && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
+
+                if (isRangeForDate) {
+                    isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
+                }
             }
         }
 
@@ -181,14 +185,18 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
         AbstractMetadataFormPage masterPage = null;
         boolean tableMasterPage = false;
+        boolean columnSetMasterPage = false;
         AnalysisEditor anaEditor = null;
         if (editor != null) {
             anaEditor = (AnalysisEditor) editor;
             Object temp = anaEditor.getMasterPage();
             if (temp != null) {
                 tableMasterPage = temp instanceof TableMasterDetailsPage;
+                columnSetMasterPage = temp instanceof ColumnSetMasterPage;
                 if (tableMasterPage) {
                     masterPage = (TableMasterDetailsPage) temp;
+                } else if (columnSetMasterPage) {
+                    masterPage = (ColumnSetMasterPage) temp;
                 } else {
                     masterPage = (ColumnMasterDetailsPage) temp;
                 }
@@ -199,6 +207,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             Analysis ana;
             if (tableMasterPage) {
                 ana = ((TableMasterDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
+            } else if (columnSetMasterPage) {
+                ana = ((ColumnSetMasterPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
             } else {
                 ana = ((ColumnMasterDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
             }

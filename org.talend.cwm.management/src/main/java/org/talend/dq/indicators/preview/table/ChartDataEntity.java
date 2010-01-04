@@ -213,7 +213,9 @@ public class ChartDataEntity {
             range = "[" + definedRange[0] + "," + definedRange[1] + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             ModelElement temp = indicator.getAnalyzedElement();
-            int sqltype = temp instanceof TdTable ? Types.INTEGER : ((TdColumn) temp).getJavaType();
+            int sqltype = Types.INTEGER;
+            if (null != temp)
+                sqltype = temp instanceof TdTable ? Types.INTEGER : ((TdColumn) temp).getJavaType();
 
             boolean isChildOfRange = IndicatorsPackage.eINSTANCE.getValueIndicator().isSuperTypeOf(indicator.eClass());
             if (Java2SqlType.isDateInSQL(sqltype) && isChildOfRange) {

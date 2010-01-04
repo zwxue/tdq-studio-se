@@ -97,12 +97,13 @@ public enum FormEnum {
     public static FormEnum[] getForms(IndicatorUnit indicatorUnit) {
         // ColumnIndicator columnIndicator = indicatorUnit.getParentColumn();
         ModelElementIndicator modelElementIndicator = indicatorUnit.getModelElementIndicator();
-        int sqlType = modelElementIndicator.getJavaType();
+        int sqlType = null != modelElementIndicator ? modelElementIndicator.getJavaType() : 0;
         ColumnIndicator columnIndicator = ModelElementIndicatorHelper.switchColumnIndicator(indicatorUnit);
         DataminingType dataminingType = columnIndicator == null ? null : MetadataHelper.getDataminingType(columnIndicator
                 .getTdColumn());
         if (dataminingType == null) {
-            dataminingType = MetadataHelper.getDefaultDataminingType(modelElementIndicator.getJavaType());
+            dataminingType = null != modelElementIndicator ? MetadataHelper.getDefaultDataminingType(modelElementIndicator
+                    .getJavaType()) : DataminingType.NOMINAL;
         }
         FormEnum[] forms = null;
 

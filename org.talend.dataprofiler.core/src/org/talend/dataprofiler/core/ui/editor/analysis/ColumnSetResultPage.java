@@ -14,8 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -35,16 +34,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.Plot;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
@@ -52,9 +47,16 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * @author yyi 2009-12-16
@@ -62,8 +64,6 @@ import org.talend.dq.analysis.AnalysisHandler;
 public class ColumnSetResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
     protected static Logger log = Logger.getLogger(ColumnSetResultPage.class);
-
-    private Composite resultComp;
 
     private Composite graphicsAndTableComp;
 
@@ -80,8 +80,6 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     private Section graphicsAndTableSection = null;
 
     /**
-     * DOC zqin ColumnAnalysisResultPage constructor comment.
-     * 
      * @param editor
      * @param id
      * @param title
@@ -160,98 +158,45 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         simpleComposite.setLayout(new GridLayout(2, true));
         simpleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        createSimpleTable(form, simpleComposite, simpleStatIndicator);
-        createSimpleStatistics(form, simpleComposite, simpleStatIndicator);
+        createSimpleTable2(form, simpleComposite, simpleStatIndicator);
         section.setClient(sectionClient);
         return section;
     }
 
-    private void createSimpleTable(final ScrolledForm form, final Composite composite,
+    private void createSimpleTable2(final ScrolledForm form, final Composite composite,
             final SimpleStatIndicator simpleStatIndicator) {
-        // final TableViewer tbViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
-        NumberFormat doubleFormat = new DecimalFormat("0.00"); //$NON-NLS-1$
-        final Table table = new Table(composite, SWT.FULL_SELECTION | SWT.BORDER);
-        GridData gd = new GridData(GridData.FILL_BOTH);
-        gd.heightHint = 200;
-        table.setLayoutData(gd);
-        table.setVisible(true);
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        String[] titles = {
-                DefaultMessagesImpl.getString("ColumnSetResultPage.Label"), DefaultMessagesImpl.getString("ColumnSetResultPage.Count"), "%" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        for (String title : titles) {
-            TableColumn column = new TableColumn(table, SWT.NONE);
-            column.setText(title);
-            column.setWidth(100);
-        }
-        String[] label = {
-                DefaultMessagesImpl.getString("ColumnSetResultPage.RowCount"), DefaultMessagesImpl.getString("ColumnSetResultPage.DistinctCount"), DefaultMessagesImpl.getString("ColumnSetResultPage.UniqueCount"), DefaultMessagesImpl.getString("ColumnSetResultPage.DuplicateCount") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-        Long countAll = simpleStatIndicator.getCount();
-        Long distinctCount = simpleStatIndicator.getDistinctCount();
-        Long uniqueCount = simpleStatIndicator.getUniqueCount();
-        Long duplicateCount = simpleStatIndicator.getDuplicateCount();
-        if (countAll != null && distinctCount != null && uniqueCount != null && duplicateCount != null) {
-            long[] count = { countAll, distinctCount, uniqueCount, duplicateCount };
-            double[] percent = new double[4];
-            for (int i = 0; i < count.length; i++) {
-                percent[i] = (double) count[i] / count[0];
-            }
-            for (int itemCount = 0; itemCount < 4; itemCount++) {
-                TableItem item = new TableItem(table, SWT.NONE);
-                if (count[0] == 0) {
-                    item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]), "N/A" }); //$NON-NLS-1$
-                    continue;
-                }
+        List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
+        units.add(new IndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, masterPage.getSimpleStatIndicator()
+                .getRowCountIndicator(), null));
+        units.add(new IndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, masterPage.getSimpleStatIndicator()
+                .getDistinctCountIndicator(), null));
+        units.add(new IndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, masterPage.getSimpleStatIndicator()
+                .getDuplicateCountIndicator(), null));
+        units.add(new IndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, masterPage.getSimpleStatIndicator()
+                .getUniqueCountIndicator(), null));
 
-                item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]),
-                        doubleFormat.format(percent[itemCount] * 100) + "%" }); //$NON-NLS-1$
-            }
-        }
+        EIndicatorChartType simpleStatType = EIndicatorChartType.SIMPLE_STATISTICS;
+        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(simpleStatType, units);
+        ChartWithData chartData = new ChartWithData(simpleStatType, chartTypeState.getChart(), chartTypeState.getDataEntity());
 
-        for (int i = 0; i < table.getColumnCount(); i++) {
-            table.getColumn(i).pack();
-        }
-    }
+        TableViewer tableviewer = chartTypeState.getTableForm(composite);
+        tableviewer.setInput(chartData);
+        DataExplorer dataExplorer = chartTypeState.getDataExplorer();
+        ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, masterPage.getAnalysis());
 
-    private void createSimpleStatistics(final ScrolledForm form, final Composite composite,
-            final SimpleStatIndicator simpleStatIndicator) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(simpleStatIndicator.getCount(), DefaultMessagesImpl.getString("ColumnSetResultPage.Row_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(simpleStatIndicator.getDistinctCount(), DefaultMessagesImpl
-                .getString("ColumnSetResultPage.Distinct_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(simpleStatIndicator.getUniqueCount(),
-                DefaultMessagesImpl.getString("ColumnSetResultPage.Unique_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(simpleStatIndicator.getDuplicateCount(), DefaultMessagesImpl
-                .getString("ColumnSetResultPage.Duplicate_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        // create chart
 
-        JFreeChart chart = TopChartFactory.createBarChart(
-                DefaultMessagesImpl.getString("ColumnSetResultPage.SimpleSatistics"), dataset, true); //$NON-NLS-1$
-
-        // MOD mzhao 2009-07-28 Bind the indicator with specific color.
+        JFreeChart chart = chartTypeState.getChart();
+        ChartDecorator.decorate(chart);
         if (chart != null) {
-            Plot plot = chart.getPlot();
-            if (plot instanceof CategoryPlot) {
-                ChartDecorator.decorateCategoryPlot(chart);
-                // Row Count
-                ((CategoryPlot) plot).getRenderer()
-                        .setSeriesPaint(0, ChartDecorator.IndiBindColor.INDICATOR_ROW_COUNT.getColor());
-                // Distinct Count
-                ((CategoryPlot) plot).getRenderer().setSeriesPaint(1,
-                        ChartDecorator.IndiBindColor.INDICATOR_DISTINCT_COUNT.getColor());
-                // Unique Count
-                ((CategoryPlot) plot).getRenderer().setSeriesPaint(2,
-                        ChartDecorator.IndiBindColor.INDICATOR_UNIQUE_COUNT.getColor());
-                // Duplicate Count
-                ((CategoryPlot) plot).getRenderer().setSeriesPaint(3,
-                        ChartDecorator.IndiBindColor.INDICATOR_DUPLICATE_COUNT.getColor());
+            ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
-            }
+            GridData gd = new GridData();
+            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+            cc.setLayoutData(gd);
         }
-
-        ChartComposite chartComp = new ChartComposite(composite, SWT.NONE, chart);
-        chartComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        // ChartUtils.createAWTSWTComp(composite, new GridData(GridData.FILL_BOTH), chart);
     }
 
     private Section createTableSectionPart(Composite parentComp, String title, SimpleStatIndicator ssIndicator) {
@@ -302,7 +247,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     private Color bg = new Color(null, 249, 139, 121);
 
     /**
-     * DOC yyi ColumnSetResultPage class global comment. Detailled comment
+     * DOC Administrator ColumnSetResultPage class global comment. Detailled comment
      */
     class TableSectionViewerProvider implements IStructuredContentProvider, ITableLabelProvider, ITableColorProvider {
 

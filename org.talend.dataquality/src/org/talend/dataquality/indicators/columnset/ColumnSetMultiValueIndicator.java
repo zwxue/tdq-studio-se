@@ -10,6 +10,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.DistinctCountIndicator;
+import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.UniqueCountIndicator;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -31,6 +35,10 @@ import orgomg.cwm.resource.relational.Column;
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCount <em>Unique Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCount <em>Distinct Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDuplicateCount <em>Duplicate Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getRowCountIndicator <em>Row Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCountIndicator <em>Unique Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCountIndicator <em>Distinct Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDuplicateCountIndicator <em>Duplicate Count Indicator</em>}</li>
  * </ul>
  * </p>
  *
@@ -244,6 +252,110 @@ public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
      * @generated
      */
     Long getDuplicateCount();
+
+    /**
+     * Returns the value of the '<em><b>Row Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Row Count Indicator</em>' containment reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Row Count Indicator</em>' containment reference.
+     * @see #setRowCountIndicator(RowCountIndicator)
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_RowCountIndicator()
+     * @model containment="true"
+     * @generated
+     */
+    RowCountIndicator getRowCountIndicator();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getRowCountIndicator <em>Row Count Indicator</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Row Count Indicator</em>' containment reference.
+     * @see #getRowCountIndicator()
+     * @generated
+     */
+    void setRowCountIndicator(RowCountIndicator value);
+
+    /**
+     * Returns the value of the '<em><b>Unique Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Unique Count Indicator</em>' containment reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Unique Count Indicator</em>' containment reference.
+     * @see #setUniqueCountIndicator(UniqueCountIndicator)
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_UniqueCountIndicator()
+     * @model containment="true"
+     * @generated
+     */
+    UniqueCountIndicator getUniqueCountIndicator();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCountIndicator <em>Unique Count Indicator</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Unique Count Indicator</em>' containment reference.
+     * @see #getUniqueCountIndicator()
+     * @generated
+     */
+    void setUniqueCountIndicator(UniqueCountIndicator value);
+
+    /**
+     * Returns the value of the '<em><b>Distinct Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Distinct Count Indicator</em>' containment reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Distinct Count Indicator</em>' containment reference.
+     * @see #setDistinctCountIndicator(DistinctCountIndicator)
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_DistinctCountIndicator()
+     * @model containment="true"
+     * @generated
+     */
+    DistinctCountIndicator getDistinctCountIndicator();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCountIndicator <em>Distinct Count Indicator</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Distinct Count Indicator</em>' containment reference.
+     * @see #getDistinctCountIndicator()
+     * @generated
+     */
+    void setDistinctCountIndicator(DistinctCountIndicator value);
+
+    /**
+     * Returns the value of the '<em><b>Duplicate Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Duplicate Count Indicator</em>' containment reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Duplicate Count Indicator</em>' containment reference.
+     * @see #setDuplicateCountIndicator(DuplicateCountIndicator)
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_DuplicateCountIndicator()
+     * @model containment="true"
+     * @generated
+     */
+    DuplicateCountIndicator getDuplicateCountIndicator();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDuplicateCountIndicator <em>Duplicate Count Indicator</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Duplicate Count Indicator</em>' containment reference.
+     * @see #getDuplicateCountIndicator()
+     * @generated
+     */
+    void setDuplicateCountIndicator(DuplicateCountIndicator value);
 
     /**
      * Method "getCountAll".
