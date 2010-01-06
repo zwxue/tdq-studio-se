@@ -16,7 +16,9 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
@@ -71,6 +73,12 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             }
             TdSchema schema = (TdSchema) schemaIndicator.getAnalyzedElement();
             String catName = schema.getName();
+            // ADD xqliu 2010-01-06 bug 10919
+            TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
+            if (catalog != null) {
+                catName = catalog.getName();
+            }
+            // ~
             // MOD yyi 2009-11-30 10187
             if (!checkSchema(catName)) {
                 ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", catName), false);
