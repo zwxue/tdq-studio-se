@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.talend.cwm.constants.ConstantsFactory;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.RelationalPackage;
@@ -229,7 +230,17 @@ public final class FactoriesUtil {
      * @return
      */
     public static boolean isAnalysisFile(IFile file) {
-        return ANA.equalsIgnoreCase(file.getFileExtension());
+        if (file != null) {
+            return ANA.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
+    }
+
+    public static boolean isAnalysisFile(IPath file) {
+        if (file != null) {
+            return ANA.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
     }
 
     /**
@@ -239,7 +250,17 @@ public final class FactoriesUtil {
      * @return
      */
     public static boolean isReportFile(IFile file) {
-        return REP.equalsIgnoreCase(file.getFileExtension());
+        if (file != null) {
+            return REP.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
+    }
+
+    public static boolean isReportFile(IPath file) {
+        if (file != null) {
+            return REP.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
     }
 
     /**
@@ -249,7 +270,17 @@ public final class FactoriesUtil {
      * @return
      */
     public static boolean isProvFile(IFile file) {
-        return PROV.equalsIgnoreCase(file.getFileExtension());
+        if (file != null) {
+            return PROV.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
+    }
+
+    public static boolean isProvFile(IPath file) {
+        if (file != null) {
+            return PROV.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
     }
 
     /**
@@ -259,7 +290,17 @@ public final class FactoriesUtil {
      * @return
      */
     public static boolean isPatternFile(IFile file) {
-        return PATTERN.equalsIgnoreCase(file.getFileExtension());
+        if (file != null) {
+            return PATTERN.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
+    }
+
+    public static boolean isPatternFile(IPath file) {
+        if (file != null) {
+            return PATTERN.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
     }
 
     /**
@@ -269,7 +310,17 @@ public final class FactoriesUtil {
      * @return
      */
     public static boolean isDQRuleFile(IFile file) {
-        return DQRULE.equalsIgnoreCase(file.getFileExtension());
+        if (file != null) {
+            return DQRULE.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
+    }
+
+    public static boolean isDQRuleFile(IPath file) {
+        if (file != null) {
+            return DQRULE.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
     }
 
     /**
@@ -279,7 +330,17 @@ public final class FactoriesUtil {
      * @return
      */
     public static boolean isUDIFile(IFile file) {
-        return UDI.equalsIgnoreCase(file.getFileExtension());
+        if (file != null) {
+            return UDI.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
+    }
+
+    public static boolean isUDIFile(IPath file) {
+        if (file != null) {
+            return UDI.equalsIgnoreCase(file.getFileExtension());
+        }
+        return false;
     }
 
     /**
@@ -298,6 +359,9 @@ public final class FactoriesUtil {
      * @return
      */
     public static boolean isEmfFile(IFile file) {
-        return isEmfFile(file.getFileExtension());
+        if (file != null) {
+            return isEmfFile(file.getFileExtension());
+        }
+        return false;
     }
 }

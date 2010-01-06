@@ -125,7 +125,7 @@ public enum EResourceConstant {
      * @param file
      * @return null if can't find.
      */
-    public static EResourceConstant getResourceConstant(IFile file) {
+    public static EResourceConstant getResourceConstant(IPath file) {
         if (FactoriesUtil.isAnalysisFile(file)) {
             return ANALYSIS;
         } else if (FactoriesUtil.isDQRuleFile(file)) {
@@ -143,5 +143,25 @@ public enum EResourceConstant {
         }
 
         return null;
+    }
+
+    public static EResourceConstant getResourceConstant(IFile file) {
+        if (file != null) {
+            return getResourceConstant(file.getFullPath());
+        }
+        return null;
+    }
+
+    private static final IPath[] RESOURCE_PATHS = EResourceConstant.getPathes();
+
+    public static boolean isConstantPath(IPath path) {
+        if (path != null) {
+            for (IPath tmp : RESOURCE_PATHS) {
+                if (tmp.equals(path)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
