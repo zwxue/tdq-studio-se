@@ -28,6 +28,7 @@ import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
@@ -604,7 +605,11 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (catalog != null) {
             try {
                 connection.setCatalog(catalog.getName());
-                List<TdSchema> schemas = DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
+                DatabaseContentRetriever.getCatalogs(connection);
+                List<TdSchema> schemas = connection.getMetaData().getDriverName().equals(
+                        DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0) ? DatabaseContentRetriever.getMSSQLSchemas(connection).get(
+                        catalog.getName()) : DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
+
                 for (TdSchema tdSchema : schemas) {
                     if (tdSchema.getName().equals(schema.getName()))
                         return true;
