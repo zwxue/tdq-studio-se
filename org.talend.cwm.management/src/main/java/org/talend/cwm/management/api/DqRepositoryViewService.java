@@ -327,8 +327,12 @@ public final class DqRepositoryViewService {
 
         Resource resource = dataProvider.eResource();
         if (addPackage) {
-            Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
-            resource.getContents().addAll(catalogs);
+            // MOD zshen bug 10633: Reload Database List can't display new Schema in DQ Repository view(Oracle Database)
+            Collection<? extends ModelElement> catalogsorSchemas = DataProviderHelper.getTdCatalogs(dataProvider);
+            if (catalogsorSchemas.size() == 0) {
+                catalogsorSchemas = DataProviderHelper.getTdSchema(dataProvider);
+            }
+            resource.getContents().addAll(catalogsorSchemas);
         }
 
         ReturnCode rc = new ReturnCode();
