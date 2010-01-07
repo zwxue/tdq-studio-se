@@ -73,16 +73,16 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             }
             TdSchema schema = (TdSchema) schemaIndicator.getAnalyzedElement();
             String catName = schema.getName();
+            // MOD yyi 2009-11-30 10187
+            if (!checkSchema(schema)) {
+                ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", catName), false);
+                return ok;
+            }
+            // ~
             // ADD xqliu 2010-01-06 bug 10919
             TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
             if (catalog != null) {
                 catName = catalog.getName();
-            }
-            // ~
-            // MOD yyi 2009-11-30 10187
-            if (!checkSchema(catName)) {
-                ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", catName), false);
-                return ok;
             }
             // ~
             connection.setCatalog(catName);

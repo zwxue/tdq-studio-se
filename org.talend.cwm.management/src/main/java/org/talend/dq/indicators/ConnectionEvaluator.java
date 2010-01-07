@@ -104,8 +104,8 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         if (catalogs.isEmpty()) { // no catalog, only schemata
             List<TdSchema> schemata = DataProviderHelper.getTdSchema(dataProvider);
             // MOD yyi 2009-11-30 10187
-            for (TdSchema tdSchema : schemata){
-                if (!checkSchema(tdSchema.getName())) {
+            for (TdSchema tdSchema : schemata) {
+                if (!checkSchema(tdSchema)) {
                     ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", tdSchema.getName()), false);
                     return ok;
                 }

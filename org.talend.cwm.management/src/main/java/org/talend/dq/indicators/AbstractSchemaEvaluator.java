@@ -27,6 +27,8 @@ import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
@@ -132,7 +134,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             // TODO get imported/exported keys
             // getConnection().getMetaData().getImportedKeys(catalog, schema, table);
             // getConnection().getMetaData().getExportedKeys(catalog, schema, table);
-            
+
             // indexes
             int idxCount = getIndexCount(catalog, schema, table);
             schemaIndic.setIndexCount(schemaIndic.getIndexCount() + idxCount);
@@ -212,8 +214,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         ResultSet idx = null;
         try {
             // MOD xqliu 2009-07-13 bug 7888
-            idx = ConnectionUtils.getConnectionMetadata(getConnection()).getIndexInfo(catalog, schema, table, false,
-                    false);
+            idx = ConnectionUtils.getConnectionMetadata(getConnection()).getIndexInfo(catalog, schema, table, false, false);
             // ~
         } catch (SQLException e) {
             log.warn("Exception while getting indexes on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
@@ -576,7 +577,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @param catName
      * @return
      */
-    public boolean checkSchema(String catName) {
+    protected boolean checkSchemaByName(String catName) {
 
         if (0 == schemasName.size()) {
             Collection<TdSchema> schemas = new CatalogBuilder(connection).getSchemata();
@@ -590,6 +591,30 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         }
 
         return true;
+    }
+
+    /**
+     * yyi 2009-11-30 10187 check schema is exist in DB
+     * 
+     * @param catName
+     * @return
+     */
+    public boolean checkSchema(TdSchema schema) {
+        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
+        if (catalog != null) {
+            try {
+                connection.setCatalog(catalog.getName());
+                List<TdSchema> schemas = DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
+                for (TdSchema tdSchema : schemas) {
+                    if (tdSchema.getName().equals(schema.getName()))
+                        return true;
+                }
+                return false;
+            } catch (SQLException e) {
+                log.error(e);
+            }
+        }
+        return checkSchemaByName(schema.getName());
     }
 
     /*
