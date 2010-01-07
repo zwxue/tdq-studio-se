@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
@@ -601,22 +602,25 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @return
      */
     public boolean checkSchema(TdSchema schema) {
-        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
-        if (catalog != null) {
-            try {
-                connection.setCatalog(catalog.getName());
-                DatabaseContentRetriever.getCatalogs(connection);
-                List<TdSchema> schemas = connection.getMetaData().getDriverName().equals(
-                        DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0) ? DatabaseContentRetriever.getMSSQLSchemas(connection).get(
-                        catalog.getName()) : DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
+        EObject container = schema.eContainer();
+        if (container != null) {
+            TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);
+            if (catalog != null) {
+                try {
+                    connection.setCatalog(catalog.getName());
+                    DatabaseContentRetriever.getCatalogs(connection);
+                    List<TdSchema> schemas = connection.getMetaData().getDriverName().equals(
+                            DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0) ? DatabaseContentRetriever.getMSSQLSchemas(connection)
+                            .get(catalog.getName()) : DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
 
-                for (TdSchema tdSchema : schemas) {
-                    if (tdSchema.getName().equals(schema.getName()))
-                        return true;
+                    for (TdSchema tdSchema : schemas) {
+                        if (tdSchema.getName().equals(schema.getName()))
+                            return true;
+                    }
+                    return false;
+                } catch (SQLException e) {
+                    log.error(e);
                 }
-                return false;
-            } catch (SQLException e) {
-                log.error(e);
             }
         }
         return checkSchemaByName(schema.getName());

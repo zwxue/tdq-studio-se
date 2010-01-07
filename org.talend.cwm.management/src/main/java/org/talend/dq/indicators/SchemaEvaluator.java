@@ -15,6 +15,7 @@ package org.talend.dq.indicators;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
@@ -80,9 +81,12 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             }
             // ~
             // ADD xqliu 2010-01-06 bug 10919
-            TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
-            if (catalog != null) {
-                catName = catalog.getName();
+            EObject container = schema.eContainer();
+            if (container != null) {
+                TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);
+                if (catalog != null) {
+                    catName = catalog.getName();
+                }
             }
             // ~
             connection.setCatalog(catName);
