@@ -125,6 +125,8 @@ public final class DQStructureManager {
 
             WorkspaceVersionHelper.storeVersion();
 
+            ResourceService.refreshStructure();
+
         } catch (Exception ex) {
             ExceptionHandler.process(ex);
             ProxyRepositoryManager.getInstance().save();
