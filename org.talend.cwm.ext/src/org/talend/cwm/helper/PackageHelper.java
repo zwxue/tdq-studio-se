@@ -71,6 +71,13 @@ public final class PackageHelper {
         if (element == null) {
             return null;
         }
+
+        // add iterator to get the top level catelog or schema, for feature 10082
+        EObject eContainer = element.eContainer();
+        if (eContainer != null) {
+            return getCatalogOrSchema(eContainer);
+        }
+
         TdCatalog res = SwitchHelpers.CATALOG_SWITCH.doSwitch(element);
         if (res != null) {
             return res;
