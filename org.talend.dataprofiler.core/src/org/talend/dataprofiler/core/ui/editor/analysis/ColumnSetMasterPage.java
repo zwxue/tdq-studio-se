@@ -275,6 +275,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
+            indicatorsViewer.setInput(simpleStatIndicator);
             return;
         }
     }

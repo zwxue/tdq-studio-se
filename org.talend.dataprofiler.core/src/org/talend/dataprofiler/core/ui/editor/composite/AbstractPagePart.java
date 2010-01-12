@@ -117,9 +117,15 @@ public abstract class AbstractPagePart {
         if (!isAnalyzedColumnsEmpty(tree)) {
             TdDataProvider tdProvider = (TdDataProvider) masterPage.getAnalysis().getContext().getConnection();
             if (tdProvider == null) {
-                AnalysisColumnNominalIntervalTreeViewer treeViewer = (AnalysisColumnNominalIntervalTreeViewer) tree.getData();
-                Column column = treeViewer.getColumnSetMultiValueList().get(0);
-                tdProvider = DataProviderHelper.getTdDataProvider(column);
+                if (tree.getData() instanceof AnalysisColumnNominalIntervalTreeViewer) {
+                    AnalysisColumnNominalIntervalTreeViewer treeViewer = (AnalysisColumnNominalIntervalTreeViewer) tree.getData();
+                    Column column = treeViewer.getColumnSetMultiValueList().get(0);
+                    tdProvider = DataProviderHelper.getTdDataProvider(column);
+                } else if (tree.getData() instanceof AnalysisColumnSetTreeViewer) {
+                    AnalysisColumnSetTreeViewer treeViewer = (AnalysisColumnSetTreeViewer) tree.getData();
+                    Column column = treeViewer.getColumnSetMultiValueList().get(0);
+                    tdProvider = DataProviderHelper.getTdDataProvider(column);
+                }
             }
             setConnectionState(masterPage, tdProvider);
         }

@@ -20,10 +20,14 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -173,7 +177,16 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         } else {
             this.catalogOrSchema = pack.getName();
         }
-        return quote(tableName);
+
+        String schemaName = getQuotedSchemaName(columnSetOwner);
+        String catalogName = getQuotedCatalogName(columnSetOwner);
+        if (catalogName == null && schemaName != null) {
+            // try to get catalog above schema
+            final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+            catalogName = parentCatalog != null ? parentCatalog.getName() : null;
+        }
+        return dbms().toQualifiedName(catalogName, schemaName, tableName);
     }
 
     /*

@@ -146,7 +146,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 removeSelectedElements(newTree);
                 // MOD mzhao 2005-05-05 bug 6587.
                 // MOD mzhao 2009-06-8, bug 5887.
-                // updateBindConnection(masterPage, tree);
+                updateBindConnection(masterPage, tree);
             }
 
         };
@@ -237,7 +237,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 removeSelectedElements(newTree);
                 // MOD mzhao 2005-05-05 bug 6587.
                 // MOD mzhao 2009-06-8, bug 5887.
-                // updateBindConnection(masterPage, tree);
+                updateBindConnection(masterPage, tree);
             }
 
         });
@@ -331,6 +331,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         columnSetMultiValueList.clear();
         addItemElements((List<Column>) columns, 0);
         // addItemElements(columns);
+        // masterPage.getAnalysis().getContext().setConnection(null);
         // MOD mzhao 2009-05-05 bug 6587.
         updateBindConnection(masterPage, tree);
     }
@@ -364,7 +365,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     removeItemBranch(treeItem);
                     // MOD mzhao 2005-05-05 bug 6587.
                     // MOD mzhao 2009-06-8, bug 5887.
-                    // updateBindConnection(masterPage, tree);
+                    updateBindConnection(masterPage, tree);
                 }
 
             });

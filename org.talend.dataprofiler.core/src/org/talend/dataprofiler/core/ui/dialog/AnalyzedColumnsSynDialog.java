@@ -70,11 +70,11 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
                     // MOD mzhao bug 8567. 2009-08-10 (Case of MS SQL Server)
                     if (pk instanceof TdCatalog && anaPackage instanceof TdSchema) {
                         Catalog catl = CatalogHelper.getParentCatalog(anaPackage);
-                        if (pk.getName().equalsIgnoreCase(catl.getName())) {
+                        if (null != catl && pk.getName().equalsIgnoreCase(catl.getName())) {
                             connPackage = pk;
                             break;
                         }
-                    } else if (pk.getName().equalsIgnoreCase(anaPackage.getName())) {
+                    } else if (null != anaPackage && pk.getName().equalsIgnoreCase(anaPackage.getName())) {
                         connPackage = pk;
                         break;
                     }
