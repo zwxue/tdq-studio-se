@@ -48,13 +48,12 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
-import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -182,8 +181,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
 
         TableViewer tableviewer = chartTypeState.getTableForm(composite);
         tableviewer.setInput(chartData);
-        DataExplorer dataExplorer = chartTypeState.getDataExplorer();
-        ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, masterPage.getAnalysis());
+        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
         // create chart
 
