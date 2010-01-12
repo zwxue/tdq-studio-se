@@ -123,11 +123,15 @@ public final class ImportFactory {
                             }
                         }
 
-                        String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
-                        names.add(name);
+                        try {
+                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
+                            names.add(name);
 
-                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name,
-                                relativePath), true));
+                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name,
+                                    relativePath), true));
+                        } catch (Exception e) {
+                            importEvent.add(new ReturnCode("Can't save pattern " + name, false));
+                        }
 
                     }
                     reader.close();
@@ -247,7 +251,7 @@ public final class ImportFactory {
 
     private static boolean checkQuotes(String[] values) {
         for (String value : values) {
-            if (!value.matches("\\\".*\\\""))
+            if (!checkQuotationMarks(value))
                 return false;
         }
         return true;
