@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -133,14 +134,18 @@ public class ReloadDatabaseAction extends Action {
 
             for (Analysis analysis : unsynedAnalyses) {
                 // Reload.
-                EMFSharedResources.getInstance().unloadResource(analysis.eResource().getURI().toString());
+                Resource eResource = analysis.eResource();
+                if (eResource == null) {
+                    continue;
+                }
+
+                EMFSharedResources.getInstance().unloadResource(eResource.getURI().toString());
 
                 IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
                 Path path = new Path(analysis.getFileName());
                 IFile file = root.getFile(path);
                 analysis = AnaResourceFileHelper.getInstance().readFromFile(file);
-                Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(analysis
-                        .eResource());
+                Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
                 Iterator<EObject> it = referenceMaps.keySet().iterator();
                 ModelElement eobj = null;
                 while (it.hasNext()) {
