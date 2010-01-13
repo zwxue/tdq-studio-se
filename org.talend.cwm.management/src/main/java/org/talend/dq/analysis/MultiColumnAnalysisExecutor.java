@@ -40,8 +40,10 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -172,6 +174,11 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String tableName = columnSetOwner.getName();
 
         Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
+        // ~ MOD mzhao feature 10082. Here differentiate case of MS SQL Sever(Catalog/schema).
+        if (pack instanceof Schema && ColumnSetHelper.getParentCatalogOrSchema(pack) instanceof Catalog) {
+            pack = ColumnSetHelper.getParentCatalogOrSchema(pack);
+        }
+        // ~
         if (pack == null) {
             log.error("No Catalog or Schema found for column set owner: " + tableName);
         } else {
