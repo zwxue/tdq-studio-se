@@ -63,12 +63,19 @@ import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.chart.jung.JungGraphGenerator;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -284,8 +291,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         simpleComposite.setLayout(new GridLayout(2, true));
         simpleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        createSimpleTable(form, simpleComposite, columnSetMultiValueIndicator);
-        createSimpleStatistics(form, simpleComposite, columnSetMultiValueIndicator);
+        createSimpleStatistics2(form, simpleComposite, columnSetMultiValueIndicator);
+
         section.setClient(sectionClient);
         return section;
     }
@@ -377,6 +384,40 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         ChartComposite chartComp = new ChartComposite(composite, SWT.NONE, chart);
         chartComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         // ChartUtils.createAWTSWTComp(composite, new GridData(GridData.FILL_BOTH), chart);
+    }
+
+    private void createSimpleStatistics2(final ScrolledForm form, final Composite composite,
+            final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
+        List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
+        units.add(new IndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, columnSetMultiValueIndicator.getRowCountIndicator(),
+                null));
+        units.add(new IndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, columnSetMultiValueIndicator
+                .getDistinctCountIndicator(), null));
+        units.add(new IndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, columnSetMultiValueIndicator
+                .getDuplicateCountIndicator(), null));
+        units.add(new IndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, columnSetMultiValueIndicator.getUniqueCountIndicator(),
+                null));
+
+        EIndicatorChartType simpleStatType = EIndicatorChartType.SIMPLE_STATISTICS;
+        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(simpleStatType, units);
+        ChartWithData chartData = new ChartWithData(simpleStatType, chartTypeState.getChart(), chartTypeState.getDataEntity());
+
+        TableViewer tableviewer = chartTypeState.getTableForm(composite);
+        tableviewer.setInput(chartData);
+        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
+
+        // create chart
+
+        JFreeChart chart = chartTypeState.getChart();
+        ChartDecorator.decorate(chart);
+        if (chart != null) {
+            ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+
+            GridData gd = new GridData();
+            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+            cc.setLayoutData(gd);
+        }
     }
 
     private Section createTableSectionPart(Composite parentComp, String title,

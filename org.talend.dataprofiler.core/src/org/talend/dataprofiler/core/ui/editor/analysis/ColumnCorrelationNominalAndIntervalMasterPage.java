@@ -65,6 +65,7 @@ import org.talend.dataprofiler.core.ui.chart.jung.JungGraphGenerator;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
+import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -110,6 +111,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private static final int TREE_MAX_LENGTH = 400;
 
+    private static final int INDICATORS_SECTION_HEIGHT = 300;
+
     protected Composite[] previewChartCompsites;
 
     private EList<ModelElement> analyzedColumns;
@@ -121,6 +124,10 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     private Section previewSection;
 
     private Section analysisParamSection;
+
+    private Section indicatorsSection;
+
+    private IndicatorsComp indicatorsViewer;
 
     public ColumnCorrelationNominalAndIntervalMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -187,6 +194,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         }
 
         createAnalysisColumnsSection(form, topComp);
+
+        createIndicatorsSection(form, topComp);
 
         createDataFilterSection(form, topComp);
 
@@ -438,6 +447,27 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             }
 
         }
+    }
+
+    /**
+     * DOC yyi Comment method "createIndicatorsSection".
+     * 
+     * @param topComp
+     * @param form
+     */
+    private void createIndicatorsSection(ScrolledForm form, Composite topComp) {
+        indicatorsSection = createSection(form, topComp, "Indicators", null); //$NON-NLS-1$
+
+        Composite indicatorsComp = toolkit.createComposite(indicatorsSection, SWT.NONE);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(indicatorsComp);
+        indicatorsComp.setLayout(new GridLayout());
+        ((GridData) indicatorsComp.getLayoutData()).heightHint = INDICATORS_SECTION_HEIGHT;
+
+        indicatorsViewer = new IndicatorsComp(indicatorsComp, this);
+        indicatorsViewer.setDirty(false);
+        indicatorsViewer.addPropertyChangeListener(this);
+        indicatorsViewer.setInput(columnSetMultiIndicator);
+        indicatorsSection.setClient(indicatorsComp);
     }
 
     /**

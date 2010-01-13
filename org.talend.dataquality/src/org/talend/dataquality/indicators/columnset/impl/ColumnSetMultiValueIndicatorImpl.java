@@ -28,6 +28,7 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
@@ -240,6 +241,15 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     protected ColumnSetMultiValueIndicatorImpl() {
         super();
+        IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
+        setRowCountIndicator(factory.createRowCountIndicator());
+        setUniqueCountIndicator(factory.createUniqueCountIndicator());
+        setDistinctCountIndicator(factory.createDistinctCountIndicator());
+        setDuplicateCountIndicator(factory.createDuplicateCountIndicator());
+        rowCountIndicator.setName("Row Count");
+        uniqueCountIndicator.setName("Unique Count");
+        distinctCountIndicator.setName("Distinct Count");
+        duplicateCountIndicator.setName("Duplicate Count");
     }
 
     /**
@@ -727,6 +737,10 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         }
 
         computeCounts(objects);
+        getRowCountIndicator().setCount(getCount());
+        getUniqueCountIndicator().setUniqueValueCount(getUniqueCount());
+        getDistinctCountIndicator().setDistinctValueCount(getDistinctCount());
+        getDuplicateCountIndicator().setDuplicateValueCount(getDuplicateCount());
         return true;
     }
 
@@ -1061,4 +1075,16 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         return children;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#setComputed(boolean)
+     */
+    @Override
+    public void setComputed(boolean newComputed) {
+        super.setComputed(newComputed);
+        for (Indicator indicator : getChildIndicators()) {
+            indicator.setComputed(newComputed);
+        }
+    }
 } // ColumnSetMultiValueIndicatorImpl

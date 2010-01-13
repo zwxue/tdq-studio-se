@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
@@ -63,7 +65,7 @@ public class IndicatorsComp extends AbstractPagePart {
 
     private List<Column> columnSetMultiValueList;
 
-    private ColumnSetMasterPage masterPage;
+    private AbstractAnalysisMetadataPage masterPage;
 
     private ColumnSetMultiValueIndicator columnSetIndicator;
 
@@ -74,7 +76,7 @@ public class IndicatorsComp extends AbstractPagePart {
         columnSetMultiValueList = new ArrayList<Column>();
     }
 
-    public IndicatorsComp(Composite parent, ColumnSetMasterPage masterPage) {
+    public IndicatorsComp(Composite parent, AbstractAnalysisMetadataPage masterPage) {
         this(parent);
         this.masterPage = masterPage;
         this.setDirty(false);
@@ -221,7 +223,12 @@ public class IndicatorsComp extends AbstractPagePart {
      * @return the analysis
      */
     public Analysis getAnalysis() {
-        return this.masterPage.getColumnSetAnalysisHandler().getAnalysis();
+        if (masterPage instanceof ColumnSetMasterPage) {
+            return ((ColumnSetMasterPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
+        } else if (masterPage instanceof ColumnCorrelationNominalAndIntervalMasterPage) {
+            return ((ColumnCorrelationNominalAndIntervalMasterPage) masterPage).getAnalysis();
+        }
+        return null;
     }
 
     public Tree getTree() {
@@ -230,7 +237,11 @@ public class IndicatorsComp extends AbstractPagePart {
 
     @Override
     public void updateModelViewer() {
-        masterPage.recomputeIndicators();
+        if (masterPage instanceof ColumnSetMasterPage) {
+            ((ColumnSetMasterPage) masterPage).recomputeIndicators();
+        } else if (masterPage instanceof ColumnCorrelationNominalAndIntervalMasterPage) {
+            ((ColumnCorrelationNominalAndIntervalMasterPage) masterPage).recomputeIndicators();
+        }
         columnSetMultiValueList.clear();
     }
 }
