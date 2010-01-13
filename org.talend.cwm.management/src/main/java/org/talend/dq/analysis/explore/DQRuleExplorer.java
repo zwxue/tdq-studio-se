@@ -61,10 +61,12 @@ public class DQRuleExplorer extends DataExplorer {
         if (valid) {
             return tasExecutor.getValidStatement(dataFilterClause, indicator2);
         } else {
-            String non = valid ? "" : "!";
+            // MOD zshen 2010-01-13 bug 10913
             NamedColumnSet set = (NamedColumnSet) indicator2.getAnalyzedElement();
             String whereClause = ((WhereRule) indicator2.getIndicatorDefinition()).getWhereExpression();
-            return "SELECT * FROM " + getFullyQualifiedTableName(set) + dbmsLanguage.where() + non + "(" + whereClause + ")";
+            return "SELECT * FROM " + getFullyQualifiedTableName(set) + dbmsLanguage.where() + dbmsLanguage.not() + "("
+                    + whereClause + ")" + andDataFilterClause();
+            // ~10913
         }
         // ~
     }

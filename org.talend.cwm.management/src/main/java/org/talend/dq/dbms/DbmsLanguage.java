@@ -459,6 +459,10 @@ public class DbmsLanguage {
         return " NOT IN "; //$NON-NLS-1$
     }
 
+    public String not() {
+        return " NOT "; //$NON-NLS-1$
+    }
+
     /**
      * Method "getDbQuoteString".
      * 
