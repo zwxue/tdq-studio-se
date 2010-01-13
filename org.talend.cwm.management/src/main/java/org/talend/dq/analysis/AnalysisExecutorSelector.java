@@ -12,11 +12,17 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -24,6 +30,7 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
@@ -98,13 +105,60 @@ public final class AnalysisExecutorSelector {
     private static AnalysisExecutor getModelElementAnalysisExecutor(Analysis analysis, ExecutionLanguage executionEngine) {
         TypedReturnCode<TdProviderConnection> rc = DataProviderHelper.getTdProviderConnection((DataProvider) analysis
                 .getContext().getConnection());
+
         boolean mdm = ConnectionUtils.isMdmConnection(rc.getObject());
         boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
         if (mdm) {
             return sql ? new MdmAnalysisSqlExecutor() : new MdmAnalysisExecutor();
         } else {
+            // feature 0010630 zshen:make the Analysis of Excel ODBC Connection to run with Java engine
+            if (analysis != null) {
+                try {
+                    TypedReturnCode<Connection> connection = getConnection(analysis);
+                    if (connection.isOk()) {
+                        if (ConnectionUtils.isOdbcConnection(connection.getObject())) {
+                            ConnectionUtils.closeConnection(connection.getObject());
+                            return new ColumnAnalysisExecutor();
+                        }
+                    } else {
+                        ConnectionUtils.closeConnection(connection.getObject());
+                        log.error(connection.getMessage());
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            // ~feature 0010630
             return sql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
         }
+    }
+
+    protected static TypedReturnCode<Connection> getConnection(Analysis analysis) {
+        TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>();
+
+        DataManager datamanager = analysis.getContext().getConnection();
+        if (datamanager == null) {
+            rc.setReturnCode(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName()), false); //$NON-NLS-1$
+            return rc;
+        }
+        TdDataProvider dataprovider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(datamanager);
+        if (dataprovider == null) {
+            rc.setReturnCode(Messages.getString("AnalysisExecutor.DataProviderNull", datamanager.getName(), //$NON-NLS-1$
+                    analysis.getName()), false);
+            return rc;
+        }
+
+        // else ok
+
+        TypedReturnCode<Connection> connection = JavaSqlFactory.createConnection(dataprovider);
+        if (!connection.isOk()) {
+            rc.setReturnCode(connection.getMessage(), false);
+            return rc;
+        }
+        // else ok
+        rc.setObject(connection.getObject());
+        return rc;
     }
 
     /**

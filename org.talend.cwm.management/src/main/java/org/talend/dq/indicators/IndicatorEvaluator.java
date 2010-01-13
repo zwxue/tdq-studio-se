@@ -15,7 +15,10 @@ package org.talend.dq.indicators;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -38,14 +41,18 @@ public class IndicatorEvaluator extends Evaluator<String> {
         ReturnCode ok = new ReturnCode(true);
         // check analyzed columns
         Set<String> columns = getAnalyzedElements();
-        if (columns.isEmpty()) {
+        // feature 0010630 zshen:Make the same order which columns and columnName in the sqlStatement
+        List<String> columnlist = sortColumnName(columns, sqlStatement);
+        if (columnlist.isEmpty()) {
             ok.setReturnCode(Messages.getString("IndicatorEvaluator.DefineAnalyzedColumns"), false); //$NON-NLS-1$
             return ok;
         }
 
         // create query statement
-        Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY,
-                ResultSet.CLOSE_CURSORS_AT_COMMIT);
+        // feature 0010630 zshen: Tables are not found when using Excel with ODBC connection
+        Statement statement = null;
+        statement = connection.createStatement();
+        // ~10630
         statement.setFetchSize(fetchSize);
         // MOD xqliu 2009-02-09 bug 6237
         if (continueRun()) {
@@ -66,9 +73,13 @@ public class IndicatorEvaluator extends Evaluator<String> {
         label: while (resultSet.next()) {
 
             // --- for each column
-            for (String col : columns) {
+            // feature 0010630 zshen: dislodge the Qualifiers from name of the column
+            for (int i = 0; i < columnlist.size(); i++) {
+                String col = columnlist.get(i);
                 List<Indicator> indicators = getIndicators(col);
-
+                int offset = col.lastIndexOf('.') + 1;
+                col = col.substring(offset);
+                // ~
                 // --- get content of column
                 Object object = resultSet.getObject(col);
 
@@ -90,6 +101,40 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // --- close
         connection.close();
         return ok;
+    }
+
+    /**
+     * 
+     * @author zshen
+     * @param columns
+     * @param sqlStatement
+     * @return the same order List which columnName in the sqlStatement
+     */
+    public List<String> sortColumnName(Set<String> columns, String sqlStatement) {
+        List<String> columnNameList = new ArrayList<String>();
+        Map offset = new HashMap();
+        for (String col : columns) {
+            int offsetCol = col.lastIndexOf('.') + 1;
+            String colName = col.substring(offsetCol);
+
+            int location = sqlStatement.indexOf(colName);
+            offset.put(location, col);
+        }
+
+        Integer[] keyArray = (Integer[]) offset.keySet().toArray(new Integer[offset.keySet().size()]);
+        int temp = 0;
+        for (int i = 0; i < columns.size(); i++) {
+            for (int j = keyArray.length - 1; j > i; j--) {
+                if (keyArray[j] < keyArray[j - 1]) {
+                    temp = keyArray[j];
+                    keyArray[j] = keyArray[j - 1];
+                    keyArray[j - 1] = temp;
+                }
+            }
+            columnNameList.add((String) offset.get(keyArray[i]));
+
+        }
+        return columnNameList;
     }
 
     /*
