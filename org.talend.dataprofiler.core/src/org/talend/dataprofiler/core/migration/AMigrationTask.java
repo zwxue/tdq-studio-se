@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * DOC bZhou class global comment. Detailled comment
  */
@@ -57,4 +60,17 @@ public abstract class AMigrationTask implements IMigrationTask {
         this.name = name;
     }
 
+    /**
+     * DOC bZhou Comment method "createDate".
+     * 
+     * @param year
+     * @param month
+     * @param day
+     * @return
+     */
+    protected Date createDate(int year, int month, int day) {
+        Calendar calender = Calendar.getInstance();
+        calender.set(year, month, day);
+        return calender.getTime();
+    }
 }

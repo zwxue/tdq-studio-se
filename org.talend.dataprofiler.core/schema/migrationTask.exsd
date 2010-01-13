@@ -92,6 +92,14 @@
                   </enumeration>
                   <enumeration value="3.2.2">
                   </enumeration>
+                  <enumeration value="3.2.3">
+                  </enumeration>
+                  <enumeration value="3.2.4">
+                  </enumeration>
+                  <enumeration value="3.2.5">
+                  </enumeration>
+                  <enumeration value="4.0.0">
+                  </enumeration>
                </restriction>
             </simpleType>
          </attribute>

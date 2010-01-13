@@ -1020,6 +1020,12 @@
            name="Change Soundex Query"
            version="3.2.2">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.MDMConnectionTask"
+           id="org.talend.dataprofiler.core.migration.impl.MDMConnectionTask"
+           name="MDM Connection Task"
+           version="4.0.0">
+     </workspacetask>
      <projecttask
            class="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
