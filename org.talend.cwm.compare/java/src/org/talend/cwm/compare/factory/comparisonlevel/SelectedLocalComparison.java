@@ -30,7 +30,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -102,9 +101,11 @@ public class SelectedLocalComparison implements IComparisonLevel {
             throw new ReloadCompareException(returnProvider.getMessage());
         }
         tempFirstSelectedDataProvider = returnProvider.getObject();
-        tempFirstSelectedDataProvider.setComponent(firstSelectedDataProvider.getComponent());
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(firstSelectedDataProvider, firstConnectionFile);
-        tempFirstSelectedDataProvider.setComponent(null);
+        // MOD mzhao bug 10972,Here do not need to set first selected data provider again.
+        // tempFirstSelectedDataProvider.setComponent(firstSelectedDataProvider.getComponent());
+        // ElementWriterFactory.getInstance().createDataProviderWriter().save(firstSelectedDataProvider,
+        // firstConnectionFile);
+        // tempFirstSelectedDataProvider.setComponent(null);
 
         // Second resource.
         IFile selectedFile2 = PrvResourceFileHelper.getInstance().findCorrespondingFile(secondSelectedDataProvider);
@@ -115,9 +116,11 @@ public class SelectedLocalComparison implements IComparisonLevel {
             throw new ReloadCompareException(returnProvider2.getMessage());
         }
         tempSecondSelectedDataProvider = returnProvider2.getObject();
-        tempSecondSelectedDataProvider.setComponent(secondSelectedDataProvider.getComponent());
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(tempSecondSelectedDataProvider, secondConnectionFile);
-        tempSecondSelectedDataProvider.setComponent(null);
+        // MOD mzhao bug 10972,Here do not need to set first selected data provider again.
+        // tempSecondSelectedDataProvider.setComponent(secondSelectedDataProvider.getComponent());
+        // ElementWriterFactory.getInstance().createDataProviderWriter().save(tempSecondSelectedDataProvider,
+        // secondConnectionFile);
+        // tempSecondSelectedDataProvider.setComponent(null);
     }
 
     private Resource getResource(int pos) throws ReloadCompareException {
