@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -276,47 +277,6 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         this.masterPage.setDirty(true);
         if (this.myJoinElement.size() == 0) {
             this.columnSetPackage = null;
-        }
-    }
-
-    @Override
-    public boolean canDrop(Column column) {
-        return true;
-    }
-
-    @Override
-    public void dropColumns(List<Column> columns, int index) {
-        JoinElementColumnDialog joinElementColumnDialog = new JoinElementColumnDialog(null);
-        if (joinElementColumnDialog.open() == Window.OK) {
-            JoinElement join = (JoinElement) this.myTableViewer.getElementAt(index);
-            if (join == null) {
-                join = this.addJoinElement();
-            }
-            if (join != null) {
-                boolean dirty = false;
-                for (Column column : columns) {
-                    if (column != null) {
-                        if (!updateColumnSetPackage(column)) {
-                            break;
-                        }
-                        if (COLUMN_A.equals(joinElementColumnDialog.getAb())) {
-                            join.setColA(column);
-                            join.setColumnAliasA(column.getName());
-                            join.setTableAliasA(ColumnHelper.getColumnSetFullName(column));
-                            dirty = true;
-                        } else {
-                            join.setColB(column);
-                            join.setColumnAliasB(column.getName());
-                            join.setTableAliasB(ColumnHelper.getColumnSetFullName(column));
-                            dirty = true;
-                        }
-                    }
-                }
-                if (dirty) {
-                    this.masterPage.setDirty(true);
-                    this.myTableViewer.update(join, null);
-                }
-            }
         }
     }
 
@@ -590,10 +550,50 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     @Override
     public boolean canDrop(ModelElement modelElement) {
-        return false;
+        return true;
     }
 
     @Override
     public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
+        List<Column> columns = new ArrayList<Column>();
+        for (ModelElement element : modelElements) {
+            TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+            if (column != null) {
+                columns.add(column);
+            }
+        }
+
+        JoinElementColumnDialog joinElementColumnDialog = new JoinElementColumnDialog(null);
+        if (joinElementColumnDialog.open() == Window.OK) {
+            JoinElement join = (JoinElement) this.myTableViewer.getElementAt(index);
+            if (join == null) {
+                join = this.addJoinElement();
+            }
+            if (join != null) {
+                boolean dirty = false;
+                for (Column column : columns) {
+                    if (column != null) {
+                        if (!updateColumnSetPackage(column)) {
+                            break;
+                        }
+                        if (COLUMN_A.equals(joinElementColumnDialog.getAb())) {
+                            join.setColA(column);
+                            join.setColumnAliasA(column.getName());
+                            join.setTableAliasA(ColumnHelper.getColumnSetFullName(column));
+                            dirty = true;
+                        } else {
+                            join.setColB(column);
+                            join.setColumnAliasB(column.getName());
+                            join.setTableAliasB(ColumnHelper.getColumnSetFullName(column));
+                            dirty = true;
+                        }
+                    }
+                }
+                if (dirty) {
+                    this.masterPage.setDirty(true);
+                    this.myTableViewer.update(join, null);
+                }
+            }
+        }
     }
 }

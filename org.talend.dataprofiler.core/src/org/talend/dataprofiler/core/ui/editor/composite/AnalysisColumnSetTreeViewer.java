@@ -48,6 +48,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -545,25 +546,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     @Override
-    public boolean canDrop(Column column) {
-        List<TdColumn> existColumns = new ArrayList<TdColumn>();
-        for (Column columnFromMultiValueList : this.getColumnSetMultiValueList()) {
-            existColumns.add((TdColumn) columnFromMultiValueList);
-        }
-
-        if (existColumns.contains(column)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void dropColumns(List<Column> columns, int index) {
-        this.addElements(columns, index);
-        // this.setElements(columnSetMultiValueList);
-    }
-
-    @Override
     public void updateModelViewer() {
         masterPage.recomputeIndicators();
         // columnSetMultiValueList =
@@ -578,10 +560,26 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     @Override
     public boolean canDrop(ModelElement modelElement) {
-        return false;
+        List<TdColumn> existColumns = new ArrayList<TdColumn>();
+        for (Column columnFromMultiValueList : this.getColumnSetMultiValueList()) {
+            existColumns.add((TdColumn) columnFromMultiValueList);
+        }
+
+        if (existColumns.contains(modelElement)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
+        List<Column> columns = new ArrayList<Column>();
+        for (ModelElement element : modelElements) {
+            TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+            if (column != null) {
+                columns.add(column);
+            }
+        }
+        this.addElements(columns, index);
     }
 }

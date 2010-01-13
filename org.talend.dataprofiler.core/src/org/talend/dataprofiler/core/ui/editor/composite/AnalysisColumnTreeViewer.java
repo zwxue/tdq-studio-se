@@ -110,7 +110,6 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * @author rli
@@ -273,6 +272,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
     }
+
     /**
      * MOD mzhao 2009-06-16 feature 5887.
      */
@@ -1322,6 +1322,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         /**
          * DOC xqliu Comment method "isMdmSelected".
+         * 
          * @param items
          * @return
          */
@@ -1331,7 +1332,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 if (data != null) {
                     if (data instanceof IndicatorUnit) {
                         IndicatorUnit iu = (IndicatorUnit) data;
-                        return iu.isXmlElement(); 
+                        return iu.isXmlElement();
                     }
                 }
             }
@@ -1362,14 +1363,5 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             return true;
         }
-    }
-
-    @Override
-    public boolean canDrop(Column column) {
-        return false;
-    }
-
-    @Override
-    public void dropColumns(List<Column> columns, int index) {
     }
 }

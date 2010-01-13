@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 import java.util.List;
 
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * The interface class to handle the change when drop columns.
@@ -23,10 +22,6 @@ import orgomg.cwm.resource.relational.Column;
 public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     public static final String COLUMNVIEWER_KEY = "COLUMNVIEWER_KEY"; //$NON-NLS-1$
-
-    public abstract void dropColumns(List<Column> columns, int index);
-
-    public abstract boolean canDrop(Column column);
 
     public abstract boolean canDrop(ModelElement modelElement);
 
