@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
@@ -35,6 +37,8 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
  * 
  */
 public class AnalysisEditor extends CommonFormEditor {
+
+    private static Logger log = Logger.getLogger(AnalysisEditor.class);
 
     public static final String RESULT_PAGE = "SecondPage";
 
@@ -156,9 +160,16 @@ public class AnalysisEditor extends CommonFormEditor {
     protected void translateInput(IEditorInput input) {
         FileEditorInput fileEditorInput = (FileEditorInput) input;
 
-        if (FactoriesUtil.isAnalysisFile(fileEditorInput.getFile())) {
-            Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(fileEditorInput.getFile());
-            analysisType = findAnalysis.getParameters().getAnalysisType();
+        IFile file = fileEditorInput.getFile();
+        if (FactoriesUtil.isAnalysisFile(file)) {
+            Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+            if (findAnalysis != null) {
+                analysisType = findAnalysis.getParameters().getAnalysisType();
+            } else {
+                log.error("Could not find an analysis in file: " + file.getFullPath());
+            }
+        } else {
+            log.error("Given file does is not an analysis file: " + file.getFullPath());
         }
     }
 
