@@ -409,4 +409,22 @@ public final class ConnectionUtils {
         }
         return false;
     }
+
+    /**
+     * DOC xqliu Comment method "isPostgresql".
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isPostgresql(Connection connection) throws SQLException {
+        DatabaseMetaData metaData = connection.getMetaData();
+        if (metaData != null) {
+            String databaseProductName = metaData.getDatabaseProductName();
+            if (databaseProductName != null) {
+                return databaseProductName.toLowerCase().indexOf(DatabaseConstant.POSTGRESQL_PRODUCT_NAME) > -1;
+            }
+        }
+        return false;
+    }
 }

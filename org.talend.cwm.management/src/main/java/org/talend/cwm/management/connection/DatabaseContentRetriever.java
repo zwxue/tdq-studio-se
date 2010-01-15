@@ -186,6 +186,7 @@ public final class DatabaseContentRetriever {
         fillListOfCatalogs(connection, catalogNames);
 
         boolean odbcMssqlFlag = ConnectionUtils.isOdbcMssql(connection);
+        boolean postgresqlFlag = ConnectionUtils.isPostgresql(connection);
 
         ResultSet schemas = null;
         try {
@@ -242,7 +243,7 @@ public final class DatabaseContentRetriever {
                         }
                     }
 
-                    if (odbcMssqlFlag) { // add schema to all catalogs ???
+                    if (odbcMssqlFlag || postgresqlFlag) { // add schema to all catalogs ???
                         try { // try to get first column
                             schemaName = schemas.getString(1);
                         } catch (Exception e) {
