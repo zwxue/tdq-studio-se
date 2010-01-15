@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
@@ -214,7 +215,9 @@ public class CatalogBuilder extends CwmBuilder {
                 // MOD xqliu 2009-11-03 bug 9841
                 String catalogName = null;
                 try {
-                    catalogName = catalogNames.getString(MetaDataConstants.TABLE_CAT.name());
+                    String temp = ConnectionUtils.isOdbcPostgresql(connection) ? DatabaseConstant.ODBC_POSTGRESQL_CATALOG_NAME
+                            : MetaDataConstants.TABLE_CAT.name();
+                    catalogName = catalogNames.getString(temp);
                 } catch (Exception e) {
                     log.warn(e, e);
                     if (connectionMetadata.getDatabaseProductName() != null

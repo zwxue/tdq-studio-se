@@ -26,6 +26,8 @@ public final class DatabaseConstant {
 
     public static final String POSTGRESQL_PRODUCT_NAME = "postgresql";
 
+    public static final String ODBC_POSTGRESQL_CATALOG_NAME = "TABLE_QUALIFIER";
+
     public static final String IBM_DB2_ZOS_PRODUCT_NAME = "DB2";
 
     public static final String MSSQL_DRIVER_NAME_JDBC2_0 = "Microsoft SQL Server JDBC Driver 2.0";
