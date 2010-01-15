@@ -54,11 +54,13 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -960,6 +962,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         List<ModelElement> existModelElements = new ArrayList<ModelElement>();
         for (ModelElementIndicator modelElementIndicator : this.getModelElementIndicator()) {
             existModelElements.add(modelElementIndicator.getModelElement());
+        }
+        // MOD mzhao 9848 2010-01-14, allowing to drag and drop table.
+        if (modelElement instanceof TdTable) {
+            System.out.println(!existModelElements.containsAll(ColumnSetHelper.getColumns((TdTable) modelElement)));
+            return !existModelElements.containsAll(ColumnSetHelper.getColumns((TdTable) modelElement));
         }
         if (existModelElements.contains(modelElement)) {
             return false;

@@ -36,11 +36,14 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
@@ -102,7 +105,8 @@ public class ColumnViewerDND {
                     }
                 }
 
-                if (object instanceof TdColumn) {
+                // MOD mzhao 9848 2010-01-14, Allowing drag table.
+                if (object instanceof TdColumn || object instanceof TdTable) {
                     receiver = new ColumnReceiver();
                 }
 
@@ -241,19 +245,35 @@ public class ColumnViewerDND {
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
 
             event.detail = DND.DROP_NONE;
-            Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
+            StructuredSelection structuredSelection = (StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
+            Object firstElement = structuredSelection.getFirstElement();
+            // MOD mzhao 9848 2010-01-14, Allowing drag table.
+            // Make sure the selected elements are the same type.
+            Iterator it = structuredSelection.iterator();
+            Object pre = firstElement;
+            while (it.hasNext()) {
+                Object current = it.next();
+                if (!isSameType(pre, current)) {
+                    return;
+                }
+                pre = current;
+            }
 
+            Tree tree = (Tree) ((DropTarget) event.widget).getControl();
+            AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
             if (firstElement instanceof TdColumn) {
                 TdColumn column = (TdColumn) firstElement;
-
-                Tree tree = (Tree) ((DropTarget) event.widget).getControl();
-                AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
-
                 if (viewer != null && viewer.canDrop(column)) {
                     event.detail = DND.DROP_MOVE;
                 }
 
+            } else if (firstElement instanceof TdTable) {
+                TdTable table = (TdTable) firstElement;
+                if (viewer != null && viewer.canDrop(table)) {
+                    event.detail = DND.DROP_MOVE;
+                }
             }
+
         }
 
         @SuppressWarnings("unchecked")
@@ -261,26 +281,58 @@ public class ColumnViewerDND {
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();
             Tree control = (Tree) ((DropTarget) event.widget).getControl();
-            AbstractColumnDropTree viewer = (AbstractColumnDropTree) control.getData();
+            AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) control.getData();
 
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
             List<Column> selectedColumn = new ArrayList<Column>();
 
             while (it.hasNext()) {
-                Column column = (Column) it.next();
+                // MOD mzhao 9848 2010-01-14, Allowing drag table.
+                Object next = it.next();
+                if (next instanceof TdTable) {
+                    List<TdColumn> columns = ColumnSetHelper.getColumns((TdTable) next);
+                    for (ModelElementIndicator modelElementIndicator : viewer.getModelElementIndicator()) {
+                        if (columns.contains(modelElementIndicator.getModelElement())) {
+                            columns.remove(modelElementIndicator.getModelElement());
+                        }
+                    }
+                    selectedColumn.addAll(columns);
+                } else {
+                    Column column = (Column) next;
+                    selectedColumn.add(column);
+                }
 
-                selectedColumn.add(column);
             }
 
-            int size1 = selection.size();
-            int size2 = selectedColumn.size();
-
-            if (size1 == size2) {
-                viewer.dropModelElements(selectedColumn, index);
-            }
+            // int size1 = selection.size();
+            // int size2 = selectedColumn.size();
+            //
+            // if (size1 == size2) {
+            viewer.dropModelElements(selectedColumn, index);
+            // }
             localSelection = null;
         }
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "isSameType". MOD mzhao 9848 2010-01-14, Allowing drag table.
+     * 
+     * @param model1
+     * @param model2
+     * @return
+     */
+    static boolean isSameType(Object model1, Object model2) {
+        if ((model1 instanceof TdTable || model1 instanceof TdColumn)
+                && (model2 instanceof TdTable || model2 instanceof TdColumn)) {
+            if (model1 instanceof TdTable && model2 instanceof TdTable) {
+                return true;
+            } else if (model1 instanceof TdColumn && model2 instanceof TdColumn) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
