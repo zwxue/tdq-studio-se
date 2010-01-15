@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 
@@ -438,5 +439,14 @@ public final class ResourceManager {
 
         EResourceConstant constant = EResourceConstant.getResourceConstant(file);
         return constant == null ? null : getOneFolder(constant);
+    }
+
+    /**
+     * DOC xqliu Comment method "getRootFolderLocation".
+     * 
+     * @return
+     */
+    public static IPath getRootFolderLocation() {
+        return ResourcesPlugin.getWorkspace().getRoot().getLocation();
     }
 }
