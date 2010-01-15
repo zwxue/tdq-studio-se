@@ -965,7 +965,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         // MOD mzhao 9848 2010-01-14, allowing to drag and drop table.
         if (modelElement instanceof TdTable) {
-            System.out.println(!existModelElements.containsAll(ColumnSetHelper.getColumns((TdTable) modelElement)));
             return !existModelElements.containsAll(ColumnSetHelper.getColumns((TdTable) modelElement));
         }
         if (existModelElements.contains(modelElement)) {
