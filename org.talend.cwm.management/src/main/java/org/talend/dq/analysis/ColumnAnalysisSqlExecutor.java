@@ -879,7 +879,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             log.error("Too many result obtained for a simple count: " + myResultSet);
             return -1L;
         }
-        // MOD zshen exchange OracleODBC will get a double value to int.Else Have a NumberFormatException at here
+        // MOD zshen exchange OracleODBC will get a double value to int.Else Have a NumberFormatException at here.
         return Long.valueOf(String.valueOf(myResultSet.get(0)[0]).split("\\.")[0]);
         // ~
     }

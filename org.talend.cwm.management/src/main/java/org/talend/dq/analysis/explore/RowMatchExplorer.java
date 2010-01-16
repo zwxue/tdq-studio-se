@@ -162,7 +162,7 @@ public class RowMatchExplorer extends DataExplorer {
      * 
      * DOC zshen 2010-01-15 Comment method "getdataFilterIndex".
      * 
-     * @param tableOrViewName the name of table or view
+     * @param tableOrViewName the name of table or view.
      * @return the index for datafilter. return -1 when can't find
      */
     private int getdataFilterIndex(String tableOrViewName) {

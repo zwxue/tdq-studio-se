@@ -180,7 +180,7 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
             return false;
         }
 
-        // MOD zshen exchange OracleODBC will get a double value to int.Else Have a NumberFormatException at here
+        // MOD zshen exchange OracleODBC will get a double value to int.Else Have a NumberFormatException at here.
         Long notMatch = Long.valueOf(String.valueOf(objects.get(0)[0]).split("\\.")[0]);
         // ~
         this.setNotMatchingValueCount(notMatch);
