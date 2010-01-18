@@ -256,7 +256,10 @@ public final class DatabaseContentRetriever {
                         if (catalogNames.isEmpty()) {
                             // store schemata with a null key (meaning no catalog -> e.g. Oracle)
                             if (schemaName == null) {
-                                schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+                                // MOD xqliu 2010-01-18 bug 9838
+                                // schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+                                schemaName = getSchemaName(schemas);
+                                // ~
                             }
                             createSchema(schemaName, null, catalogName2schemas);
                         } else { // MSSQL, Sybase case
@@ -298,13 +301,11 @@ public final class DatabaseContentRetriever {
      */
     private static void fillListOfCatalogs(Connection connection, List<String> catalogNames) throws SQLException {
         if (catalogNames.isEmpty()) {
+            // MOD xqliu 2010-01-18 bug 9840
             // MOD xqliu 2009-10-29 bug 9838
             ResultSet catalogSet = null;
-            DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
-            if (connectionMetadata.getDatabaseProductName() != null
-                    && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(
-                            DatabaseConstant.ODBC_ORACLE_PRODUCT_NAME) < 0) {
-                catalogSet = connectionMetadata.getCatalogs();
+            if (!(ConnectionUtils.isOdbcOracle(connection) || ConnectionUtils.isOdbcIngres(connection))) {
+                catalogSet = getConnectionMetadata(connection).getCatalogs();
             }
             // ~
             try {
@@ -330,9 +331,15 @@ public final class DatabaseContentRetriever {
         }
     }
 
-    private static void createSchema(ResultSet schemas, String catalogName, Map<String, List<TdSchema>> catalogName2schemas)
+    /**
+     * DOC xqliu Comment method "getSchemaName".
+     * 
+     * @param schemas
+     * @return
+     * @throws SQLException
+     */
+    private static String getSchemaName(ResultSet schemas)
             throws SQLException {
-        // MOD xqliu 2009-10-29 bug 9838
         String schemaName = null;
         try {
             schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
@@ -340,7 +347,7 @@ public final class DatabaseContentRetriever {
             log.warn(e, e);
         }
         if (schemaName == null) {
-            try {
+            try { // get odbc oracle schema name
                 schemaName = schemas.getString(DatabaseConstant.ODBC_ORACLE_SCHEMA_NAME);
             } catch (Exception e) {
                 log.warn(e, e);
@@ -353,11 +360,7 @@ public final class DatabaseContentRetriever {
                 log.warn(e, e);
             }
         }
-        // ~
-        TdSchema schema = createSchema(schemaName);
-        if (schema != null) {
-            MultiMapHelper.addUniqueObjectToListMap(catalogName, schema, catalogName2schemas);
-        }
+        return schemaName;
     }
 
     /**

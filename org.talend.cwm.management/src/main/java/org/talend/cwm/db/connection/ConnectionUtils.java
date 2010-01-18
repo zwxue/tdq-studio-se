@@ -20,6 +20,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -444,5 +446,76 @@ public final class ConnectionUtils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "isOdbcOracle".
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isOdbcOracle(Connection connection) throws SQLException {
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
+                && connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(DatabaseConstant.ODBC_ORACLE_PRODUCT_NAME) > -1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "isOdbcIngres".
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isOdbcIngres(Connection connection) throws SQLException {
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
+                && connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(DatabaseConstant.INGRES_PRODUCT_NAME) > -1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "isJdbcIngres".
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isJdbcIngres(Connection connection) throws SQLException {
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && connectionMetadata.getDriverName().equals(DatabaseConstant.JDBC_INGRES_DEIVER_NAME)
+                && connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(DatabaseConstant.INGRES_PRODUCT_NAME) > -1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "printResultSetColumns".
+     * 
+     * @param rs
+     */
+    public static void printResultSetColumns(ResultSet rs) {
+        try {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnSize = metaData.getColumnCount();
+            for (int i = 0; i < columnSize; ++i) {
+                System.out.println("[" + (i + 1) + "]:" + metaData.getColumnName(i + 1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
