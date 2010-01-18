@@ -94,4 +94,21 @@ public class IndicatorEditorInput implements IEditorInput {
     public IndicatorDefinition getIndicatorDefinition() {
         return indicatorDefinition;
     }
+
+    /**
+     * DOC zshen fixed the bug 10996: One more editors open for a system indicator
+     */
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof IndicatorEditorInput)) {
+            return false;
+        }
+        IndicatorEditorInput other = (IndicatorEditorInput) obj;
+        return indicatorDefinition.getLabel().equals(other.indicatorDefinition.getLabel());
+    }
+
 }
