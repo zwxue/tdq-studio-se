@@ -39,6 +39,7 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.analysis.category.CategoryHandler;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.ResourceManager;
 
@@ -158,7 +159,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      * @return
      */
     private Object[] getIndicatorsChildren(IndicatorCategory category) {
-        List<IndicatorDefinition> indicatorDefinitionList = IndicatorFolderNode.getIndicatorDefinitionList(category);
+        List<IndicatorDefinition> indicatorDefinitionList = CategoryHandler.getIndicatorDefinitionList(category);
         if (indicatorDefinitionList == null) {
             indicatorDefinitionList = new ArrayList<IndicatorDefinition>();
         }

@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
@@ -21,13 +24,15 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.analysis.category.CategoryHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -81,6 +86,14 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             // MOD mzhao xml elements
             return DqRepositoryViewService.getXMLElements((TdXMLElement) parentElement).toArray();
 
+        } else if (parentElement instanceof IndicatorCategory) {
+            IndicatorCategory category = (IndicatorCategory) parentElement;
+            Map<IndicatorCategory, List<IndicatorDefinition>> categoriesIDMaps = CategoryHandler.getCategoriesIDMaps();
+            List<IndicatorDefinition> list = categoriesIDMaps.get(category);
+            if (list != null) {
+                return list.toArray();
+            }
+
         } else {
             return FolderNodeHelper.getFolderNodes((EObject) parentElement);
         }
@@ -100,9 +113,21 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     }
 
     public boolean hasChildren(Object element) {
-        if ((element instanceof EObject) && SwitchHelpers.XMLELEMENT_SWITCH.doSwitch((EObject) element) != null) {
-            return DqRepositoryViewService.hasChildren((TdXMLElement) element);
+        if (element instanceof EObject) {
+            EObject eobject = (EObject) element;
+            if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(eobject) != null) {
+                return DqRepositoryViewService.hasChildren((TdXMLElement) element);
+            }
+
+            if (SwitchHelpers.COLUMN_SWITCH.doSwitch(eobject) != null) {
+                return false;
+            }
+
+            if (eobject instanceof IndicatorDefinition) {
+                return false;
+            }
         }
-        return !(element instanceof TdColumn);
+
+        return true;
     }
 }
