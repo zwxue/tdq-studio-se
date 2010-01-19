@@ -101,11 +101,6 @@ public class SelectedLocalComparison implements IComparisonLevel {
             throw new ReloadCompareException(returnProvider.getMessage());
         }
         tempFirstSelectedDataProvider = returnProvider.getObject();
-        // MOD mzhao bug 10972,Here do not need to set first selected data provider again.
-        // tempFirstSelectedDataProvider.setComponent(firstSelectedDataProvider.getComponent());
-        // ElementWriterFactory.getInstance().createDataProviderWriter().save(firstSelectedDataProvider,
-        // firstConnectionFile);
-        // tempFirstSelectedDataProvider.setComponent(null);
 
         // Second resource.
         IFile selectedFile2 = PrvResourceFileHelper.getInstance().findCorrespondingFile(secondSelectedDataProvider);
@@ -116,11 +111,6 @@ public class SelectedLocalComparison implements IComparisonLevel {
             throw new ReloadCompareException(returnProvider2.getMessage());
         }
         tempSecondSelectedDataProvider = returnProvider2.getObject();
-        // MOD mzhao bug 10972,Here do not need to set first selected data provider again.
-        // tempSecondSelectedDataProvider.setComponent(secondSelectedDataProvider.getComponent());
-        // ElementWriterFactory.getInstance().createDataProviderWriter().save(tempSecondSelectedDataProvider,
-        // secondConnectionFile);
-        // tempSecondSelectedDataProvider.setComponent(null);
     }
 
     private Resource getResource(int pos) throws ReloadCompareException {
