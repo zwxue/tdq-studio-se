@@ -24,12 +24,14 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
@@ -119,15 +121,19 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
                 return DqRepositoryViewService.hasChildren((TdXMLElement) element);
             }
 
-            if (SwitchHelpers.COLUMN_SWITCH.doSwitch(eobject) != null) {
-                return false;
-            }
-
-            if (eobject instanceof IndicatorDefinition) {
-                return false;
-            }
+            return checkLeaf(eobject);
         }
 
         return true;
+    }
+
+    /**
+     * DOC bZhou Comment method "checkLeaf".
+     * 
+     * @param eobject
+     * @return
+     */
+    private boolean checkLeaf(EObject eobject) {
+        return !(eobject instanceof TdColumn || eobject instanceof IndicatorDefinition || eobject instanceof RegularExpression);
     }
 }
