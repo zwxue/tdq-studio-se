@@ -2,22 +2,23 @@ package org.talend.dataquality.indicators.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MeanIndicator;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mean Indicator</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mean Indicator</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MeanIndicatorImpl() {
@@ -26,6 +27,7 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -52,7 +54,7 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
             sum = Double.valueOf(getSumStr());
         } catch (Exception e) {
             // do not return 0 otherwise the user will believe that the mean is 0
-            return Double.NaN; 
+            return Double.NaN;
         }
         // ~
         if (sum == null) {
@@ -76,6 +78,7 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Double getMeanWithNulls(double valueForNull) {
@@ -98,6 +101,15 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
         }
         String s = String.valueOf(objects.get(0)[0]);
         String c = String.valueOf(objects.get(0)[1]);
+
+        if (!NumberUtils.isNumber(s)) {
+            s = "0";
+        }
+
+        if (!NumberUtils.isNumber(c)) {
+            c = "0";
+        }
+
         this.setSumStr(s);
         this.setCount(Long.valueOf(c));
         return true;
@@ -114,7 +126,5 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
     public String toString() {
         return "Mean = " + getMean();
     }
-    
-    
-    
+
 } // MeanIndicatorImpl
