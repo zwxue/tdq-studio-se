@@ -93,7 +93,10 @@ public class RowMatchExplorer extends DataExplorer {
                 // ~10913
                 // MOD yyi 2009-12-07 9538 list nulls in no match rows
                 String listNulls = dbmsLanguage.or() + fullColumnAName + dbmsLanguage.isNull();
-                query += listNulls;
+                if ((tableB.equals(tableA) ? andDataFilter(tableA,
+                        (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
+                                : AnalysisHelper.DATA_FILTER_B)) : andDataFilter(tableA, null)).equals(""))
+                    query += listNulls;
                 // ~
             }
         }
