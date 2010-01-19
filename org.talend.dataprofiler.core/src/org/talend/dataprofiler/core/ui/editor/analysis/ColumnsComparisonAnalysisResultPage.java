@@ -50,7 +50,6 @@ import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdTable;
@@ -69,8 +68,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.explore.RowMatchExplorer;
-import org.talend.dq.dbms.DbmsLanguage;
-import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.utils.format.StringFormatUtil;
@@ -380,14 +377,23 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
             public void handleEvent(Event event) {
 
+                // TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
+                //
+                // DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
+                //
+                //                String query = "SELECT * " + dbmsLanguage.from() + dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName()) //$NON-NLS-1$
+                //                        + "." + dbmsLanguage.quote(columnSet.getName()); //$NON-NLS-1$
+                // MOD 10913 zshen:unique the method that get sql query
                 TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
 
-                DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
+                RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
+                rowMatchExplorer.setAnalysis(masterPage.analysis);
+                rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
-                String query = "SELECT * " + dbmsLanguage.from() + dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName()) //$NON-NLS-1$
-                        + "." + dbmsLanguage.quote(columnSet.getName()); //$NON-NLS-1$
+                String query = rowMatchExplorer.getAllRowsStatement();
 
                 CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+                // ~10913
             }
 
         });

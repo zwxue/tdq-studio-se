@@ -78,16 +78,18 @@ public class RowMatchExplorer extends DataExplorer {
                         + fullColumnBName
                         + dbmsLanguage.isNotNull()
                         // MOD 10913 zshen: find data Filter clause to adapt when ColumnA and ColumnB to be exchange
-                        + (tableA.equals(tableB) ? andDataFilter(tableB, AnalysisHelper.DATA_FILTER_B) : andDataFilter(tableB,
-                                null));
+                        + (tableA.equals(tableB) ? andDataFilter(tableB,
+                                (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_B
+                                        : AnalysisHelper.DATA_FILTER_A)) : andDataFilter(tableB, null));
                 // ~10913
                 query += where
                         + fullColumnAName
                         + dbmsLanguage.notIn()
                         + inBrackets(clause)
                         // MOD 10913 zshen: find data Filter clause to adapt when ColumnA and ColumnB to be exchange
-                        + (tableB.equals(tableA) ? andDataFilter(tableB, AnalysisHelper.DATA_FILTER_A) : andDataFilter(tableA,
-                                null));
+                        + (tableB.equals(tableA) ? andDataFilter(tableA,
+                                (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
+                                        : AnalysisHelper.DATA_FILTER_B)) : andDataFilter(tableA, null));
                 // ~10913
                 // MOD yyi 2009-12-07 9538 list nulls in no match rows
                 String listNulls = dbmsLanguage.or() + fullColumnAName + dbmsLanguage.isNull();
@@ -130,8 +132,9 @@ public class RowMatchExplorer extends DataExplorer {
                         + fullColumnName
                         + dbmsLanguage.isNotNull()
                         // MOD 10913 zshen: find data Filter clause to adapt when ColumnA and ColumnB to be exchange
-                        + (tableA.equals(tableB) ? andDataFilter(tableB, AnalysisHelper.DATA_FILTER_B) : andDataFilter(tableB,
-                                null));
+                        + (tableA.equals(tableB) ? andDataFilter(tableB,
+                                (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_B
+                                        : AnalysisHelper.DATA_FILTER_A)) : andDataFilter(tableB, null));
                 // ~10913
                 query += where
                         + dbmsLanguage.quote(tableA)
@@ -139,8 +142,9 @@ public class RowMatchExplorer extends DataExplorer {
                         + dbmsLanguage.in()
                         + inBrackets(clause)
                         // MOD 10913 zshen: find data Filter clause to adapt when ColumnA and ColumnB to be exchange
-                        + (tableB.equals(tableA) ? andDataFilter(tableA, AnalysisHelper.DATA_FILTER_A) : andDataFilter(tableA,
-                                null));
+                        + (tableB.equals(tableA) ? andDataFilter(tableA,
+                                (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
+                                        : AnalysisHelper.DATA_FILTER_B)) : andDataFilter(tableA, null));
                 // ~10913
             }
         }
@@ -154,24 +158,35 @@ public class RowMatchExplorer extends DataExplorer {
      * @return
      */
     public String getAllRowsStatement() {
-        Table table = (Table) indicator.getAnalyzedElement();
-        return "SELECT * " + dbmsLanguage.from() + getFullyQualifiedTableName(table) + whereDataFilter(table.getName()); //$NON-NLS-1$
+        Table tablea = (Table) indicator.getAnalyzedElement();
+        String tableA = tablea.getName();
+        Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
+        String tableB = tableb.getName();
+        return "SELECT * " + dbmsLanguage.from() + getFullyQualifiedTableName(tablea) + whereDataFilter(tableA.equals(tableB) ? null : tableA, null); //$NON-NLS-1$
     }
 
     /**
      * 
      * DOC zshen 2010-01-15 Comment method "getdataFilterIndex".
      * 
-     * @param tableOrViewName the name of table or view.
+     * @param tableOrViewName the name of table or view.if null get index of current indicator in analysis
      * @return the index for datafilter. return -1 when can't find
      */
-    private int getdataFilterIndex(String tableOrViewName) {
+    private int getdataFilterIndex(Object nameOrIndicator) {
+        if (nameOrIndicator == null) {
+            nameOrIndicator = this.indicator;
+        }
         Iterator<Indicator> iter = this.analysis.getResults().getIndicators().iterator();
         int result = 0;
+        Object currentObj = null;
         while (iter.hasNext()) {
             Indicator indicator = iter.next();
-            String currentName = indicator.getAnalyzedElement().getName();
-            if (currentName.equals(tableOrViewName)) {
+            if (nameOrIndicator instanceof String) {
+                currentObj = indicator.getAnalyzedElement().getName();
+            } else {
+                currentObj = indicator;
+            }
+            if (currentObj.equals(nameOrIndicator)) {
                 return result;
             } else {
                 result++;
@@ -188,10 +203,10 @@ public class RowMatchExplorer extends DataExplorer {
      * @param tableOrViewName the name of table or view
      * @return DataFilter clause
      */
-    public String andDataFilter(String tableOrViewNameA, Integer index) {
+    private String andDataFilter(String tableOrViewName, Integer index) {
         String andTable = null;
         if (index == null) {
-            andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewNameA));
+            andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewName));
         } else {
             andTable = AnalysisHelper.getStringDataFilter(analysis, index.intValue());
         }
@@ -208,11 +223,18 @@ public class RowMatchExplorer extends DataExplorer {
      * 
      * DOC zshen Comment method "andDataFilter".
      * 
-     * @param tableOrViewName the name of table or view
+     * @param tableOrViewName the name of table or view.
+     * @param index have known index.
      * @return DataFilter clause
      */
-    public String whereDataFilter(String tableOrViewName) {
-        String andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewName));
+    private String whereDataFilter(Object tableOrViewName, Integer index) {
+        String andTable = null;
+        if (index == null) {
+            andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewName));
+        } else {
+            andTable = AnalysisHelper.getStringDataFilter(analysis, index.intValue());
+        }
+        // String andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewName));
         if (null != andTable && !andTable.equals("")) {
             andTable = dbmsLanguage.where() + andTable;
         }
