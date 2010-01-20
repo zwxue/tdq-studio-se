@@ -609,14 +609,22 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 try {
                     connection.setCatalog(catalog.getName());
                     DatabaseContentRetriever.getCatalogs(connection);
-                    List<TdSchema> schemas = connection.getMetaData().getDriverName().equals(
-                            DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0) ? DatabaseContentRetriever.getMSSQLSchemas(connection)
-                            .get(catalog.getName()) : DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
-
-                    for (TdSchema tdSchema : schemas) {
-                        if (tdSchema.getName().equals(schema.getName()))
-                            return true;
+                    // MOD xqliu 2010-01-20 bug 9841
+                    List<TdSchema> schemas = null;
+                    if (connection.getMetaData().getDriverName().equals(DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0)) {
+                        schemas = DatabaseContentRetriever.getMSSQLSchemas(connection).get(catalog.getName());
+                    } else if (ConnectionUtils.isPostgresql(connection)) {
+                        schemas = DatabaseContentRetriever.getSchemas(connection).get(null);
+                    } else {
+                        schemas = DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
                     }
+                    if (schemas != null) {
+                        for (TdSchema tdSchema : schemas) {
+                            if (tdSchema.getName().equals(schema.getName()))
+                                return true;
+                        }
+                    }
+                    // ~
                     return false;
                 } catch (SQLException e) {
                     log.error(e);
