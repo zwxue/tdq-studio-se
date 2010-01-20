@@ -26,6 +26,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -62,7 +63,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
 
         // store first level of indicators in result.
         analysis.getResults().getIndicators().add(indicator);
-        initializeIndicator(indicator, columns);
+        initializeIndicator(indicator);
 
         DataManager connection = analysis.getContext().getConnection();
 
@@ -86,24 +87,16 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
         return true;
     }
 
-    private void initializeIndicator(Indicator indicator, List<Column> columns) {
+    // MOD mzhao bug 10706,Set indicator definition.
+    private void initializeIndicator(Indicator indicator) {
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }
-        // for (Column column : columns) {
-        // // indicator.setAnalyzedElement(column);
-        // // Make sure that indicator definition is set
-        // if (indicator.getIndicatorDefinition() == null) {
-        // DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
-        // }
-        //
-        // // FIXME scorreia in case of composite indicators, add children to result.
-        // // if (indicator instanceof CompositeIndicator) {
-        // // for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
-        // // initializeIndicator(child, columns); // recurse
-        // // }
-        // // }
-        // }
+        if (indicator instanceof CompositeIndicator) {
+            for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
+                initializeIndicator(child); // recurse
+            }
+        }
 
     }
 
