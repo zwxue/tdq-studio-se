@@ -115,7 +115,7 @@ public class IndicatorEditor extends CommonFormEditor {
     @Override
     public void doSave(IProgressMonitor monitor) {
         masterPage.doSave(monitor);
-
+        setPartName(masterPage.getIntactElemenetName());
         super.doSave(monitor);
     }
 

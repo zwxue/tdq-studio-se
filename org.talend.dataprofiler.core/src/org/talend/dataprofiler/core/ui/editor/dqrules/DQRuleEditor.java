@@ -59,6 +59,7 @@ public class DQRuleEditor extends CommonFormEditor {
     public void doSave(IProgressMonitor monitor) {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
+            setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
         }
         super.doSave(monitor);
 

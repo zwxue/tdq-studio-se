@@ -142,8 +142,8 @@ public class AnalysisEditor extends CommonFormEditor {
     public void doSave(IProgressMonitor monitor) {
         if (masterPage != null && masterPage.isDirty()) {
             masterPage.doSave(monitor);
+            setPartName(masterPage.getIntactElemenetName());
         }
-
         super.doSave(monitor);
     }
 
