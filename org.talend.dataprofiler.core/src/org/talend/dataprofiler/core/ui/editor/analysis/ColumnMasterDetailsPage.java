@@ -704,6 +704,12 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     protected ReturnCode canRun() {
+        // ADD xqliu 2010-01-22 bug 11200
+        ReturnCode checkMdmExecutionEngine = checkMdmExecutionEngine();
+        if (!checkMdmExecutionEngine.isOk()) {
+            return checkMdmExecutionEngine;
+        }
+        // ~
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators == null || modelElementIndicators.length == 0) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoColumnAssigned"), false); //$NON-NLS-1$
@@ -720,12 +726,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     @Override
     protected ReturnCode canSave() {
         // ADD xqliu 2010-01-22 bug 11200
-        ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
-        if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
-        }
-        if (analysisHandler.isMdmConnection() && ExecutionLanguage.JAVA.getLiteral().equals(this.execLang)) {
-            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mdmSQL"), false); //$NON-NLS-1$
+        ReturnCode checkMdmExecutionEngine = checkMdmExecutionEngine();
+        if (!checkMdmExecutionEngine.isOk()) {
+            return checkMdmExecutionEngine;
         }
         // ~
         List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
@@ -744,6 +747,20 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             }
         }
 
+        return new ReturnCode(true);
+    }
+
+    /**
+     * DOC xqliu Comment method "checkMdmExecutionEngine".
+     */
+    private ReturnCode checkMdmExecutionEngine() {
+        ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
+        if (modelElementIndicators != null && modelElementIndicators.length != 0) {
+            analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+        }
+        if (analysisHandler.isMdmConnection() && ExecutionLanguage.JAVA.getLiteral().equals(this.execLang)) {
+            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mdmSQL"), false); //$NON-NLS-1$
+        }
         return new ReturnCode(true);
     }
 }
