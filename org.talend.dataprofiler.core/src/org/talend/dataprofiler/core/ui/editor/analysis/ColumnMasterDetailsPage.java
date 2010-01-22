@@ -719,6 +719,15 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     protected ReturnCode canSave() {
+        // ADD xqliu 2010-01-22 bug 11200
+        ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
+        if (modelElementIndicators != null && modelElementIndicators.length != 0) {
+            analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+        }
+        if (analysisHandler.isMdmConnection() && ExecutionLanguage.JAVA.getLiteral().equals(this.execLang)) {
+            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mdmSQL"), false); //$NON-NLS-1$
+        }
+        // ~
         List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
 
         for (ModelElementIndicator modelElementIndicator : treeViewer.getModelElementIndicator()) {

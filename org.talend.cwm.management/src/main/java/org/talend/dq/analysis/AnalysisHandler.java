@@ -17,11 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.RelationalPackage;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
@@ -243,5 +247,23 @@ public class AnalysisHandler {
         }
 
         return existingViews.toArray(new String[existingViews.size()]);
+    }
+
+    /**
+     * DOC xqliu Comment method "isMdmConnection".
+     * 
+     * @return
+     */
+    public boolean isMdmConnection() {
+        if (this.analysis != null) {
+            TdDataProvider dataProvider = (TdDataProvider) this.analysis.getContext().getConnection();
+            if (dataProvider != null) {
+                EList<ProviderConnection> connections = dataProvider.getResourceConnection();
+                if (connections != null && connections.size() > 0) {
+                    return ConnectionUtils.isMdmConnection((TdProviderConnection) connections.get(0));
+                }
+            }
+        }
+        return false;
     }
 }
