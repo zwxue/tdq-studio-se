@@ -60,10 +60,42 @@ public class PatternExplorer extends DataExplorer {
 
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("view valid rows", getValidRowsStatement()); //$NON-NLS-1$
+        // MOD zshen 10448 Add menus "view invalid values" and "view valid values" on pattern matching indicator
+        map.put("view invalid values", getInvalidValuesStatement()); //$NON-NLS-1$
+        map.put("view valid values", getValidValuesStatement()); //$NON-NLS-1$
+        // ~10448
         map.put("view invalid rows", getInvalidRowsStatement()); //$NON-NLS-1$
+        map.put("view valid rows", getValidRowsStatement()); //$NON-NLS-1$
 
         return map;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "getValidValuesStatement".
+     * 
+     * @return SELECT statement for the invalid Value of select column
+     */
+    public String getInvalidValuesStatement() {
+        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
+        String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString);
+        // add null as invalid rows
+        String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
+        return getValuesStatement(columnName, regexCmp + nullClause);
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "getValidValuesStatement".
+     * 
+     * @return SELECT statement for the valid Value of select column
+     */
+    public String getValidValuesStatement() {
+        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        final String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
+        String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString);
+        return getValuesStatement(columnName, regexCmp);
     }
 
 }
