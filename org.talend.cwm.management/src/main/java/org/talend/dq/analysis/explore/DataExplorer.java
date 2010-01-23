@@ -99,6 +99,23 @@ public abstract class DataExplorer implements IDataExplorer {
         }
     }
 
+    /**
+     * Method "getRowsStatement".
+     * 
+     * @param whereClause the WHERE clause of the statement
+     * @param colName the name of select column
+     * @return the SELECT statement(only select column) with the WHERE clause
+     */
+    protected String getValuesStatement(String colName, String whereClause) {
+        String fromClause = getFromClause();
+        if (whereClause != null) {
+            String where = fromClause.contains(dbmsLanguage.where()) ? dbmsLanguage.and() : dbmsLanguage.where();
+            return SELECT + columnName + fromClause + where + whereClause;
+        } else {
+            return SELECT + columnName + fromClause;
+        }
+    }
+
     protected String getRowsStatement() {
         return getRowsStatement(null);
     }
