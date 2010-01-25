@@ -37,6 +37,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
@@ -186,6 +187,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         AbstractMetadataFormPage masterPage = null;
         boolean tableMasterPage = false;
         boolean columnSetMasterPage = false;
+        boolean columnCorrelationMasterPage = false;
         AnalysisEditor anaEditor = null;
         if (editor != null) {
             anaEditor = (AnalysisEditor) editor;
@@ -193,10 +195,13 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             if (temp != null) {
                 tableMasterPage = temp instanceof TableMasterDetailsPage;
                 columnSetMasterPage = temp instanceof ColumnSetMasterPage;
+                columnCorrelationMasterPage = temp instanceof ColumnCorrelationNominalAndIntervalMasterPage;
                 if (tableMasterPage) {
                     masterPage = (TableMasterDetailsPage) temp;
                 } else if (columnSetMasterPage) {
                     masterPage = (ColumnSetMasterPage) temp;
+                } else if (columnCorrelationMasterPage) {
+                    masterPage = (ColumnCorrelationNominalAndIntervalMasterPage) temp;
                 } else {
                     masterPage = (ColumnMasterDetailsPage) temp;
                 }
@@ -209,6 +214,9 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 ana = ((TableMasterDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
             } else if (columnSetMasterPage) {
                 ana = ((ColumnSetMasterPage) masterPage).getColumnSetAnalysisHandler().getAnalysis();
+            } else if (columnCorrelationMasterPage) {
+                ana = ((ColumnCorrelationNominalAndIntervalMasterPage) masterPage).getColumnCorrelationAnalysisHandler()
+                        .getAnalysis();
             } else {
                 ana = ((ColumnMasterDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
             }
