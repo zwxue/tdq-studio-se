@@ -143,7 +143,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         if (isInited) return (IndicatorSqlPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI);
 
         // Obtain or create and register package
-        IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new IndicatorSqlPackageImpl());
+        IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new IndicatorSqlPackageImpl());
 
         isInited = true;
 
@@ -227,6 +227,9 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         // Mark meta-data to indicate it can't be changed
         theIndicatorSqlPackage.freeze();
 
+  
+        // Update the registry and return the package
+        EPackage.Registry.INSTANCE.put(IndicatorSqlPackage.eNS_URI, theIndicatorSqlPackage);
         return theIndicatorSqlPackage;
     }
 
@@ -316,6 +319,24 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getUserDefIndicator_Value() {
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(8);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getUserDefIndicator_Datatype() {
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(9);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getWhereRuleIndicator() {
         return whereRuleIndicatorEClass;
     }
@@ -357,6 +378,8 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT);
         createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT);
         createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__VALUE_TO_FREQ);
+        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__VALUE);
+        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DATATYPE);
 
         whereRuleIndicatorEClass = createEClass(WHERE_RULE_INDICATOR);
     }
@@ -405,6 +428,8 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         initEAttribute(getUserDefIndicator_UniqueValueCount(), ecorePackage.getELongObject(), "uniqueValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getUserDefIndicator_DuplicateValueCount(), ecorePackage.getELongObject(), "duplicateValueCount", null, 0, 1, UserDefIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getUserDefIndicator_ValueToFreq(), theIndicatorsPackage.getJavaHashMap(), "valueToFreq", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_Value(), ecorePackage.getEString(), "value", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getUserDefIndicator_Datatype(), ecorePackage.getEInt(), "datatype", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(userDefIndicatorEClass, ecorePackage.getEDoubleObject(), "getFrequency", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);

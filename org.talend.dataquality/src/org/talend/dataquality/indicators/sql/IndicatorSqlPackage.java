@@ -394,13 +394,31 @@ public interface IndicatorSqlPackage extends EPackage {
     int USER_DEF_INDICATOR__VALUE_TO_FREQ = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 7;
 
     /**
+     * The feature id for the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__VALUE = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 8;
+
+    /**
+     * The feature id for the '<em><b>Datatype</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__DATATYPE = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 9;
+
+    /**
      * The number of structural features of the '<em>User Def Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int USER_DEF_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 8;
+    int USER_DEF_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 10;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl <em>Where Rule Indicator</em>}' class.
@@ -737,6 +755,24 @@ public interface IndicatorSqlPackage extends EPackage {
     int WHERE_RULE_INDICATOR__VALUE_TO_FREQ = USER_DEF_INDICATOR__VALUE_TO_FREQ;
 
     /**
+     * The feature id for the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__VALUE = USER_DEF_INDICATOR__VALUE;
+
+    /**
+     * The feature id for the '<em><b>Datatype</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__DATATYPE = USER_DEF_INDICATOR__DATATYPE;
+
+    /**
      * The number of structural features of the '<em>Where Rule Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -845,6 +881,28 @@ public interface IndicatorSqlPackage extends EPackage {
     EAttribute getUserDefIndicator_ValueToFreq();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getValue <em>Value</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Value</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getValue()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_Value();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getDatatype <em>Datatype</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Datatype</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getDatatype()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_Datatype();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.sql.WhereRuleIndicator <em>Where Rule Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -949,6 +1007,22 @@ public interface IndicatorSqlPackage extends EPackage {
          * @generated
          */
         EAttribute USER_DEF_INDICATOR__VALUE_TO_FREQ = eINSTANCE.getUserDefIndicator_ValueToFreq();
+
+        /**
+         * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__VALUE = eINSTANCE.getUserDefIndicator_Value();
+
+        /**
+         * The meta object literal for the '<em><b>Datatype</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__DATATYPE = eINSTANCE.getUserDefIndicator_Datatype();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl <em>Where Rule Indicator</em>}' class.

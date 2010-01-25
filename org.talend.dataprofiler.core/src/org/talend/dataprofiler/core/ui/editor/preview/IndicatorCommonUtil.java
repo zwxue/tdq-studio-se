@@ -263,6 +263,8 @@ public final class IndicatorCommonUtil {
             object = handleFrequency(indicator);
         } else if (UDIHelper.isMatching(indicator)) {
             object = handleMatchingValue(indicator);
+        } else if (UDIHelper.isRealValue(indicator)) {
+            object = ((UserDefIndicator) indicator).getRealValue();
         }
         return object;
     }

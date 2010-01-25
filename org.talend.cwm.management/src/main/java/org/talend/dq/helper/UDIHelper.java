@@ -144,6 +144,10 @@ public final class UDIHelper {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
     }
 
+    public static boolean isRealValue(Indicator indicator) {
+        return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedRealValueIndicatorCategory());
+    }
+
     public static boolean isFrequency(Indicator indicator) {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory());
     }

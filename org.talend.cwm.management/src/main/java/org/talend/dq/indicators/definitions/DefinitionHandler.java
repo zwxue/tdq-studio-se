@@ -115,6 +115,8 @@ public final class DefinitionHandler {
 
     private static final String USER_DEFINED_MATCH_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_MATCH_CATEGORY;
 
+    private static final String USER_DEFINED_REAL_VALUE_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_REAL_VALUE_CATEGORY;
+
     private static final String USER_DEFINED_COMPARISON_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_COMPARISON_CATEGORY;
 
     private static final String USER_DEFINED_NOMINAL_CORRELATION_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_NOMINAL_CORRELATION_CATEGORY;
@@ -850,6 +852,10 @@ public final class DefinitionHandler {
         return getIndicatorCategory(USER_DEFINED_FREQUENCY_CATEGORY);
     }
 
+    public IndicatorCategory getUserDefinedRealValueIndicatorCategory() {
+        return getIndicatorCategory(USER_DEFINED_REAL_VALUE_CATEGORY);
+    }
+
     public IndicatorCategory getUserDefinedComparisonIndicatorCategory() {
         return getIndicatorCategory(USER_DEFINED_COMPARISON_CATEGORY);
     }
@@ -884,6 +890,7 @@ public final class DefinitionHandler {
             categoryList.add(getUserDefinedCountIndicatorCategory());
             categoryList.add(getUserDefinedFrequencyIndicatorCategory());
             categoryList.add(getUserDefinedMatchIndicatorCategory());
+            categoryList.add(getUserDefinedRealValueIndicatorCategory());
             // categoryList.add(getUserDefinedComparisonIndicatorCategory());
             // categoryList.add(getUserDefinedIntervalCorrelationIndicatorCategory());
             // categoryList.add(getUserDefinedNominalCorrelationIndicatorCategory());

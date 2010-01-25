@@ -51,6 +51,7 @@ public final class ChartTypeStatesOperator {
             return new SimpleStatisticsState(units);
 
         case UDI_COUNT:
+        case UDI_REALVALUE:
             return new UDISimpleStatisticsState(units);
 
         case TEXT_STATISTICS:

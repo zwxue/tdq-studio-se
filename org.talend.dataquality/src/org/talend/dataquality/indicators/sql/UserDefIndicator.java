@@ -32,6 +32,8 @@ import org.talend.dataquality.indicators.Indicator;
  *   <li>{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getUniqueValueCount <em>Unique Value Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getDuplicateValueCount <em>Duplicate Value Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getValueToFreq <em>Value To Freq</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getValue <em>Value</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getDatatype <em>Datatype</em>}</li>
  * </ul>
  * </p>
  *
@@ -226,6 +228,58 @@ public interface UserDefIndicator extends Indicator {
      * @generated
      */
     void setValueToFreq(HashMap<Object, Long> value);
+
+    /**
+     * Returns the value of the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Value</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Value</em>' attribute.
+     * @see #setValue(String)
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_Value()
+     * @model
+     * @generated
+     */
+    String getValue();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getValue <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Value</em>' attribute.
+     * @see #getValue()
+     * @generated
+     */
+    void setValue(String value);
+
+    /**
+     * Returns the value of the '<em><b>Datatype</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Datatype</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Datatype</em>' attribute.
+     * @see #setDatatype(int)
+     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getUserDefIndicator_Datatype()
+     * @model
+     * @generated
+     */
+    int getDatatype();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getDatatype <em>Datatype</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Datatype</em>' attribute.
+     * @see #getDatatype()
+     * @generated
+     */
+    void setDatatype(int value);
 
     /**
      * <!-- begin-user-doc -->

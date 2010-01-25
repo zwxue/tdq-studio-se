@@ -46,7 +46,8 @@ public enum EIndicatorChartType {
                                 Messages.getString("EIndicatorChartType.SoundexLowFrequencyTable"), new SoundexFrequencyExplorer()), //$NON-NLS-1$
     UDI_COUNT(Messages.getString("EIndicatorChartType.UserDefinedCount"), new SimpleStatisticsExplorer()), //$NON-NLS-1$
     UDI_FREQUENCY(Messages.getString("EIndicatorChartType.UserDefinedFrequency"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
-    UDI_MATCHING(Messages.getString("EIndicatorChartType.UserDefinedMatching"), new PatternExplorer()); //$NON-NLS-1$
+    UDI_MATCHING(Messages.getString("EIndicatorChartType.UserDefinedMatching"), new PatternExplorer()), //$NON-NLS-1$
+    UDI_REALVALUE(Messages.getString("EIndicatorChartType.UserDefinedRealValue"), new SimpleStatisticsExplorer()); //$NON-NLS-1$
 
     private String literal;
 

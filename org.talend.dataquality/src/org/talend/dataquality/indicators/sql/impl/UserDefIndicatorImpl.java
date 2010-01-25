@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl;
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
@@ -220,6 +221,46 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     protected HashMap<Object, Long> valueToFreq = VALUE_TO_FREQ_EDEFAULT;
 
     /**
+     * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getValue()
+     * @generated
+     * @ordered
+     */
+    protected static final String VALUE_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getValue()
+     * @generated
+     * @ordered
+     */
+    protected String value = VALUE_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDatatype()
+     * @generated
+     * @ordered
+     */
+    protected static final int DATATYPE_EDEFAULT = 0;
+
+    /**
+     * The cached value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDatatype()
+     * @generated
+     * @ordered
+     */
+    protected int datatype = DATATYPE_EDEFAULT;
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -371,6 +412,48 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setValue(String newValue) {
+        String oldValue = value;
+        value = newValue;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE, oldValue, value));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public int getDatatype() {
+        return datatype;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setDatatype(int newDatatype) {
+        int oldDatatype = datatype;
+        datatype = newDatatype;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE, oldDatatype, datatype));
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated NOT
@@ -435,6 +518,10 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
                 return getDuplicateValueCount();
             case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 return getValueToFreq();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+                return getValue();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
+                return getDatatype();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -469,6 +556,12 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
             case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 setValueToFreq((HashMap<Object, Long>)newValue);
                 return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+                setValue((String)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
+                setDatatype((Integer)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -501,6 +594,12 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
             case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 setValueToFreq(VALUE_TO_FREQ_EDEFAULT);
                 return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+                setValue(VALUE_EDEFAULT);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
+                setDatatype(DATATYPE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -528,6 +627,10 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
                 return DUPLICATE_VALUE_COUNT_EDEFAULT == null ? getDuplicateValueCount() != null : !DUPLICATE_VALUE_COUNT_EDEFAULT.equals(getDuplicateValueCount());
             case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
                 return VALUE_TO_FREQ_EDEFAULT == null ? valueToFreq != null : !VALUE_TO_FREQ_EDEFAULT.equals(valueToFreq);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+                return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
+                return datatype != DATATYPE_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -555,6 +658,10 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         result.append(uniqueValueCount);
         result.append(", valueToFreq: ");
         result.append(valueToFreq);
+        result.append(", value: ");
+        result.append(value);
+        result.append(", datatype: ");
+        result.append(datatype);
         result.append(')');
         return result.toString();
     }
@@ -589,10 +696,42 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
             return storeSqlResultsFrequency(objects);
         } else if (IndicatorCategoryHelper.isUserDefMatching(getIndicatorCategory())) {
             return storeSqlResultsMatching(objects);
+        } else if (IndicatorCategoryHelper.isUserDefRealValue(getIndicatorCategory())) {
+            return storeSqlResultsRealValue(objects);
         }
         return false;
     }
 
+    /**
+     * DOC xqliu Comment method "storeSqlResultsRealValue".
+     * 
+     * @param objects
+     * @return
+     */
+    private boolean storeSqlResultsRealValue(List<Object[]> objects) {
+        if (!checkResults(objects, 1)) {
+            return false;
+        }
+
+        if (objects.size() == 1) {
+            String med = String.valueOf(objects.get(0)[0]);
+            if (med == null) {
+                log.error("Value is null of " + this.getName() + " !!");
+                return false;
+            }
+            this.setValue(med);
+            this.setDatatype(this.getColumnType());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "storeSqlResultsRowCount".
+     * 
+     * @param objects
+     * @return
+     */
     public boolean storeSqlResultsRowCount(List<Object[]> objects) {
         // store row count in userCount attribute
         if (!checkResults(objects, 1)) {
@@ -603,6 +742,12 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         return true;
     }
 
+    /**
+     * DOC xqliu Comment method "storeSqlResultsFrequency".
+     * 
+     * @param objects
+     * @return
+     */
     public boolean storeSqlResultsFrequency(List<Object[]> objects) {
         // handle case when frequencies are computed on dates.
         int nbColumns = 2;
@@ -663,6 +808,12 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         return true;
     }
 
+    /**
+     * DOC xqliu Comment method "storeSqlResultsMatching".
+     * 
+     * @param objects
+     * @return
+     */
     public boolean storeSqlResultsMatching(List<Object[]> objects) {
         if (!checkResults(objects, 2)) {
             return false;
@@ -737,6 +888,29 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         }
 
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getRealValue()
+     */
+    @Override
+    public Double getRealValue() {
+        if (IndicatorValueType.REAL_VALUE.equals(this.getValueType())) {
+            return value == null ? null : Double.valueOf(value);
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getValueType()
+     */
+    @Override
+    public IndicatorValueType getValueType() {
+        return IndicatorValueType.REAL_VALUE;
     }
 
     /**

@@ -32,6 +32,8 @@ public final class IndicatorCategoryHelper {
 
     public static final String USER_DEFINED_MATCH_CATEGORY = "_Ba7OYXsXEd63r-VLO3_0OQ";
     
+    public static final String USER_DEFINED_REAL_VALUE_CATEGORY = "_wxkncJ6tEd6t2KtWPIcDmg";
+
     public static final String USER_DEFINED_COMPARISON_CATEGORY = "_yQJQ0HsXEd63r-VLO3_0OQ";
 
     public static final String USER_DEFINED_NOMINAL_CORRELATION_CATEGORY = "_1mapEHsXEd63r-VLO3_0OQ";
@@ -63,6 +65,13 @@ public final class IndicatorCategoryHelper {
         return false;
     }
     
+    public static final boolean isUserDefRealValue(IndicatorCategory indicatorCategory) {
+        if (indicatorCategory != null) {
+            return USER_DEFINED_REAL_VALUE_CATEGORY.equals(ResourceHelper.getUUID(indicatorCategory));
+        }
+        return false;
+    }
+
     public static final boolean isCorrelation(IndicatorCategory indicatorCategory) {
         if (indicatorCategory != null) {
             return SYSTEM_CORRELATION.equals(ResourceHelper.getUUID(indicatorCategory));

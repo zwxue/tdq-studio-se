@@ -42,7 +42,7 @@ public final class CompositeIndicator {
 
     private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, soundexFrequencyList,
             soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, summaryList, patternList, sqlPatternList,
-            modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList;
+            modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList;
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
@@ -84,6 +84,7 @@ public final class CompositeIndicator {
         udiCountList = new ArrayList<IndicatorUnit>();
         udiFrequencyList = new ArrayList<IndicatorUnit>();
         udiMatchingList = new ArrayList<IndicatorUnit>();
+        udiRealValueList = new ArrayList<IndicatorUnit>();
     }
 
     private void clear() {
@@ -108,6 +109,7 @@ public final class CompositeIndicator {
         udiCountList.clear();
         udiFrequencyList.clear();
         udiMatchingList.clear();
+        udiRealValueList.clear();
     }
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
@@ -192,6 +194,8 @@ public final class CompositeIndicator {
                     udiMatchingList.add(one);
                 } else if (DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory().equals(ic)) {
                     udiFrequencyList.add(one);
+                } else if (DefinitionHandler.getInstance().getUserDefinedRealValueIndicatorCategory().equals(ic)) {
+                    udiRealValueList.add(one);
                 }
                 break;
 
@@ -214,6 +218,7 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.UDI_COUNT, udiCountList);
         separatedMap.put(EIndicatorChartType.UDI_FREQUENCY, udiFrequencyList);
         separatedMap.put(EIndicatorChartType.UDI_MATCHING, udiMatchingList);
+        separatedMap.put(EIndicatorChartType.UDI_REALVALUE, udiRealValueList);
 
         return separatedMap;
     }
