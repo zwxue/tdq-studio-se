@@ -58,6 +58,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.log4j;bundle-version="1.2.13",
  org.talend.commons,
  org.eclipse.core.resources,
- org.talend.model
+ org.talend.model,
+ org.talend.dataquality.matching
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.apache.log4j

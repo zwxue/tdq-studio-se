@@ -368,6 +368,15 @@ public interface IndicatorsFactory extends EFactory {
     SoundexLowFreqIndicator createSoundexLowFreqIndicator();
 
     /**
+     * Returns a new object of class '<em>Date Pattern Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Date Pattern Freq Indicator</em>'.
+     * @generated
+     */
+    DatePatternFreqIndicator createDatePatternFreqIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

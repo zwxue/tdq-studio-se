@@ -142,7 +142,7 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
             case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
                 return getCatalogIndicators();
             case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
-                return new Integer(getCatalogCount());
+                return getCatalogCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -160,7 +160,7 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
                 getCatalogIndicators().addAll((Collection<? extends CatalogIndicator>)newValue);
                 return;
             case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
-                setCatalogCount(((Integer)newValue).intValue());
+                setCatalogCount((Integer)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

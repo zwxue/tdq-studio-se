@@ -130,7 +130,6 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public Double getMedian() {

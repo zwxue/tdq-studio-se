@@ -507,6 +507,17 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.DATE_PATTERN_FREQ_INDICATOR: {
+                DatePatternFreqIndicator datePatternFreqIndicator = (DatePatternFreqIndicator)theEObject;
+                T result = caseDatePatternFreqIndicator(datePatternFreqIndicator);
+                if (result == null) result = casePatternFreqIndicator(datePatternFreqIndicator);
+                if (result == null) result = caseFrequencyIndicator(datePatternFreqIndicator);
+                if (result == null) result = caseIndicator(datePatternFreqIndicator);
+                if (result == null) result = caseModelElement(datePatternFreqIndicator);
+                if (result == null) result = caseElement(datePatternFreqIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -1016,6 +1027,21 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseSoundexLowFreqIndicator(SoundexLowFreqIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Date Pattern Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Date Pattern Freq Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseDatePatternFreqIndicator(DatePatternFreqIndicator object) {
         return null;
     }
 

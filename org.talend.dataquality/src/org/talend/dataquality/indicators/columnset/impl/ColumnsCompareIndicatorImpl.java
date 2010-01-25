@@ -22,21 +22,19 @@ import orgomg.cwm.resource.relational.Column;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnsCompareIndicatorImpl#getColumnSetA <em>Column Set
- * A</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnsCompareIndicatorImpl#getColumnSetB <em>Column Set
- * B</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnsCompareIndicatorImpl#getColumnSetA <em>Column Set A</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnsCompareIndicatorImpl#getColumnSetB <em>Column Set B</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl implements ColumnsCompareIndicator {
 
     /**
-     * The cached value of the '{@link #getColumnSetA() <em>Column Set A</em>}' reference list. <!-- begin-user-doc -->
+     * The cached value of the '{@link #getColumnSetA() <em>Column Set A</em>}' reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getColumnSetA()
      * @generated
      * @ordered
@@ -44,9 +42,9 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
     protected EList<Column> columnSetA;
 
     /**
-     * The cached value of the '{@link #getColumnSetB() <em>Column Set B</em>}' reference list. <!-- begin-user-doc -->
+     * The cached value of the '{@link #getColumnSetB() <em>Column Set B</em>}' reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getColumnSetB()
      * @generated
      * @ordered
@@ -55,7 +53,6 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected ColumnsCompareIndicatorImpl() {
@@ -64,7 +61,6 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -74,97 +70,89 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EList<Column> getColumnSetA() {
         if (columnSetA == null) {
-            columnSetA = new EObjectResolvingEList<Column>(Column.class, this,
-                    ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A);
+            columnSetA = new EObjectResolvingEList<Column>(Column.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A);
         }
         return columnSetA;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EList<Column> getColumnSetB() {
         if (columnSetB == null) {
-            columnSetB = new EObjectResolvingEList<Column>(Column.class, this,
-                    ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B);
+            columnSetB = new EObjectResolvingEList<Column>(Column.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B);
         }
         return columnSetB;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
-            return getColumnSetA();
-        case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
-            return getColumnSetB();
+            case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
+                return getColumnSetA();
+            case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
+                return getColumnSetB();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
-            getColumnSetA().clear();
-            getColumnSetA().addAll((Collection<? extends Column>) newValue);
-            return;
-        case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
-            getColumnSetB().clear();
-            getColumnSetB().addAll((Collection<? extends Column>) newValue);
-            return;
+            case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
+                getColumnSetA().clear();
+                getColumnSetA().addAll((Collection<? extends Column>)newValue);
+                return;
+            case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
+                getColumnSetB().clear();
+                getColumnSetB().addAll((Collection<? extends Column>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
-            getColumnSetA().clear();
-            return;
-        case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
-            getColumnSetB().clear();
-            return;
+            case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
+                getColumnSetA().clear();
+                return;
+            case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
+                getColumnSetB().clear();
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
-            return columnSetA != null && !columnSetA.isEmpty();
-        case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
-            return columnSetB != null && !columnSetB.isEmpty();
+            case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
+                return columnSetA != null && !columnSetA.isEmpty();
+            case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
+                return columnSetB != null && !columnSetB.isEmpty();
         }
         return super.eIsSet(featureID);
     }

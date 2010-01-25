@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * @date 11/08/2009
  */
 
-class ModelMatcher implements java.lang.Comparable {
+public class ModelMatcher implements java.lang.Comparable {
 
     // model is the pattern like "MM DD YY"
     private String model;
@@ -34,8 +34,7 @@ class ModelMatcher implements java.lang.Comparable {
         this.regex = regex;
         this.score = 0;
     }
-    
- 
+
     public String getRegex() {
         return this.regex;
     }
@@ -48,19 +47,17 @@ class ModelMatcher implements java.lang.Comparable {
      * @param expression
      * @return boolean true:match , false : don't match
      */
-    public boolean matches(String expression) { 
-    	//if the pattern match onetime , we increase his score
-    	if(Pattern.matches(this.getRegex(), expression))
-    	{
-    		this.score++;
-    	}
-        return Pattern.matches(this.getRegex(), expression);       
+    public boolean matches(String expression) {
+        // if the pattern match onetime , we increase his score
+        if (Pattern.matches(this.getRegex(), expression)) {
+            this.score++;
+        }
+        return Pattern.matches(this.getRegex(), expression);
     }
 
     public int getScore() {
         return this.score;
     }
-
 
     // comparison method used to sort modelMatchers
     public int compareTo(Object other) {

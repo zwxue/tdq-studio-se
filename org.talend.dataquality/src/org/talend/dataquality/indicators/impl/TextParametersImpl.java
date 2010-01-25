@@ -307,13 +307,13 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
-                return isUseBlank() ? Boolean.TRUE : Boolean.FALSE;
+                return isUseBlank();
             case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
                 return getMatchingAlgorithm();
             case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
-                return isIgnoreCase() ? Boolean.TRUE : Boolean.FALSE;
+                return isIgnoreCase();
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
-                return isUseNulls() ? Boolean.TRUE : Boolean.FALSE;
+                return isUseNulls();
             case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
                 return getCharactersToReplace();
             case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
@@ -331,16 +331,16 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
-                setUseBlank(((Boolean)newValue).booleanValue());
+                setUseBlank((Boolean)newValue);
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
                 setMatchingAlgorithm((MatchingAlgorithm)newValue);
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
-                setIgnoreCase(((Boolean)newValue).booleanValue());
+                setIgnoreCase((Boolean)newValue);
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
-                setUseNulls(((Boolean)newValue).booleanValue());
+                setUseNulls((Boolean)newValue);
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
                 setCharactersToReplace((String)newValue);

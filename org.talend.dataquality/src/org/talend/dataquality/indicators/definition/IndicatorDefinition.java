@@ -83,13 +83,11 @@ public interface IndicatorDefinition extends ModelElement {
     String getLabel();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getLabel
-     * <em>Label</em>}' attribute. 
+     * Sets the value of the '{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getLabel <em>Label</em>}' attribute.
      * <!-- begin-user-doc --> 
      * IMPORTANT: a label should not be changed, because it is used
      * in DefinitionHandler to map the indicator to its definition. 
      * <!-- end-user-doc -->
-     * 
      * @param value the new value of the '<em>Label</em>' attribute.
      * @see #getLabel()
      * @generated

@@ -272,6 +272,10 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
                 return createSoundexLowFreqIndicatorAdapter();
             }
             @Override
+            public Adapter caseDatePatternFreqIndicator(DatePatternFreqIndicator object) {
+                return createDatePatternFreqIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -856,6 +860,20 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createSoundexLowFreqIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.DatePatternFreqIndicator <em>Date Pattern Freq Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.DatePatternFreqIndicator
+     * @generated
+     */
+    public Adapter createDatePatternFreqIndicatorAdapter() {
         return null;
     }
 

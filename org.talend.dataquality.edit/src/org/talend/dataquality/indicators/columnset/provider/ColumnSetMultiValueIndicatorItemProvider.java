@@ -328,6 +328,39 @@ public class ColumnSetMultiValueIndicatorItemProvider
     }
 
     /**
+     * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+     * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+        if (childrenFeatures == null) {
+            super.getChildrenFeatures(object);
+            childrenFeatures.add(ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR);
+            childrenFeatures.add(ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR);
+            childrenFeatures.add(ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR);
+            childrenFeatures.add(ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR);
+        }
+        return childrenFeatures;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    protected EStructuralFeature getChildFeature(Object object, Object child) {
+        // Check the type of the specified child object and return the proper feature to use for
+        // adding (see {@link AddCommand}) it as a child.
+
+        return super.getChildFeature(object, child);
+    }
+
+    /**
      * This returns ColumnSetMultiValueIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -373,6 +406,12 @@ public class ColumnSetMultiValueIndicatorItemProvider
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+                return;
         }
         super.notifyChanged(notification);
     }
@@ -387,6 +426,26 @@ public class ColumnSetMultiValueIndicatorItemProvider
     @Override
     protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
+
+        newChildDescriptors.add
+            (createChildParameter
+                (ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createRowCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createUniqueCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createDistinctCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator()));
     }
 
     /**

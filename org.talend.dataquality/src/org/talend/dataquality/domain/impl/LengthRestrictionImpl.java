@@ -138,9 +138,9 @@ public class LengthRestrictionImpl extends EObjectImpl implements LengthRestrict
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
-                return new Integer(getMaximum());
+                return getMaximum();
             case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
-                return new Integer(getMinimum());
+                return getMinimum();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -154,10 +154,10 @@ public class LengthRestrictionImpl extends EObjectImpl implements LengthRestrict
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
-                setMaximum(((Integer)newValue).intValue());
+                setMaximum((Integer)newValue);
                 return;
             case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
-                setMinimum(((Integer)newValue).intValue());
+                setMinimum((Integer)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

@@ -37,6 +37,7 @@ import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -377,6 +378,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass soundexLowFreqIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass datePatternFreqIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1420,6 +1428,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getDatePatternFreqIndicator() {
+        return datePatternFreqIndicatorEClass;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1659,6 +1676,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
 
         soundexLowFreqIndicatorEClass = createEClass(SOUNDEX_LOW_FREQ_INDICATOR);
 
+        datePatternFreqIndicatorEClass = createEClass(DATE_PATTERN_FREQ_INDICATOR);
+
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
         dataminingTypeEEnum = createEEnum(DATAMINING_TYPE);
@@ -1751,6 +1770,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         defValueCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
         soundexFreqIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         soundexLowFreqIndicatorEClass.getESuperTypes().add(this.getSoundexFreqIndicator());
+        datePatternFreqIndicatorEClass.getESuperTypes().add(this.getPatternFreqIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1957,6 +1977,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(soundexLowFreqIndicatorEClass, SoundexLowFreqIndicator.class, "SoundexLowFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(datePatternFreqIndicatorEClass, DatePatternFreqIndicator.class, "DatePatternFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

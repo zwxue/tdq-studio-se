@@ -146,6 +146,7 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR: return createDefValueCountIndicator();
             case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR: return createSoundexFreqIndicator();
             case IndicatorsPackage.SOUNDEX_LOW_FREQ_INDICATOR: return createSoundexLowFreqIndicator();
+            case IndicatorsPackage.DATE_PATTERN_FREQ_INDICATOR: return createDatePatternFreqIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -591,6 +592,16 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public SoundexLowFreqIndicator createSoundexLowFreqIndicator() {
         SoundexLowFreqIndicatorImpl soundexLowFreqIndicator = new SoundexLowFreqIndicatorImpl();
         return soundexLowFreqIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DatePatternFreqIndicator createDatePatternFreqIndicator() {
+        DatePatternFreqIndicatorImpl datePatternFreqIndicator = new DatePatternFreqIndicatorImpl();
+        return datePatternFreqIndicator;
     }
 
     /**

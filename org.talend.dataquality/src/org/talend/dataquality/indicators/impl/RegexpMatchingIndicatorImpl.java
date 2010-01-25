@@ -20,14 +20,13 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements RegexpMatchingIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected RegexpMatchingIndicatorImpl() {
@@ -36,7 +35,6 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

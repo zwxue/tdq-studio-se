@@ -174,7 +174,7 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
             case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
                 return getSumStr();
             case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
-                return new Integer(getDatatype());
+                return getDatatype();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -190,7 +190,7 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
                 setSumStr((String)newValue);
                 return;
             case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
-                setDatatype(((Integer)newValue).intValue());
+                setDatatype((Integer)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

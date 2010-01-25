@@ -553,7 +553,7 @@ public class IndicatorsEditor
                             if (delta.getResource().getType() == IResource.FILE) {
                                 if (delta.getKind() == IResourceDelta.REMOVED ||
                                     delta.getKind() == IResourceDelta.CHANGED && delta.getFlags() != IResourceDelta.MARKERS) {
-                                    Resource resource = resourceSet.getResource(URI.createURI(delta.getFullPath().toString()), false);
+                                    Resource resource = resourceSet.getResource(URI.createPlatformResourceURI(delta.getFullPath().toString(), true), false);
                                     if (resource != null) {
                                         if (delta.getKind() == IResourceDelta.REMOVED) {
                                             removedResources.add(resource);
@@ -577,31 +577,31 @@ public class IndicatorsEditor
                         }
                     }
 
-                    ResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
+                    final ResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
                     delta.accept(visitor);
 
                     if (!visitor.getRemovedResources().isEmpty()) {
-                        removedResources.addAll(visitor.getRemovedResources());
-                        if (!isDirty()) {
-                            getSite().getShell().getDisplay().asyncExec
-                                (new Runnable() {
-                                     public void run() {
+                        getSite().getShell().getDisplay().asyncExec
+                            (new Runnable() {
+                                 public void run() {
+                                     removedResources.addAll(visitor.getRemovedResources());
+                                     if (!isDirty()) {
                                          getSite().getPage().closeEditor(IndicatorsEditor.this, false);
                                      }
-                                 });
-                        }
+                                 }
+                             });
                     }
 
                     if (!visitor.getChangedResources().isEmpty()) {
-                        changedResources.addAll(visitor.getChangedResources());
-                        if (getSite().getPage().getActiveEditor() == IndicatorsEditor.this) {
-                            getSite().getShell().getDisplay().asyncExec
-                                (new Runnable() {
-                                     public void run() {
+                        getSite().getShell().getDisplay().asyncExec
+                            (new Runnable() {
+                                 public void run() {
+                                     changedResources.addAll(visitor.getChangedResources());
+                                     if (getSite().getPage().getActiveEditor() == IndicatorsEditor.this) {
                                          handleActivate();
                                      }
-                                 });
-                        }
+                                 }
+                             });
                     }
                 }
                 catch (CoreException exception) {
@@ -877,11 +877,6 @@ public class IndicatorsEditor
         // Make sure it's okay.
         //
         if (theSelection != null && !theSelection.isEmpty()) {
-            // I don't know if this should be run this deferred
-            // because we might have to give the editor a chance to process the viewer update events
-            // and hence to update the views first.
-            //
-            //
             Runnable runnable =
                 new Runnable() {
                     public void run() {
@@ -892,7 +887,7 @@ public class IndicatorsEditor
                         }
                     }
                 };
-            runnable.run();
+            getSite().getShell().getDisplay().asyncExec(runnable);
         }
     }
 

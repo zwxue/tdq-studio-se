@@ -127,20 +127,10 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
     private static boolean isInited = false;
 
     /**
-     * Creates, registers, and initializes the <b>Package</b> for this
-     * model, and for any others upon which it depends.  Simple
-     * dependencies are satisfied by calling this method on all
-     * dependent packages before doing anything else.  This method drives
-     * initialization for interdependent packages directly, in parallel
-     * with this package, itself.
-     * <p>Of this package and its interdependencies, all packages which
-     * have not yet been registered by their URI values are first created
-     * and registered.  The packages are then initialized in two steps:
-     * meta-model objects for all of the packages are created before any
-     * are initialized, since one package's meta-model objects may refer to
-     * those of another.
-     * <p>Invocation of this method will not affect any packages that have
-     * already been initialized.
+     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+     * 
+     * <p>This method is used to initialize {@link ReportsPackage#eINSTANCE} when that field is accessed.
+     * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #eNS_URI
@@ -152,7 +142,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         if (isInited) return (ReportsPackage)EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI);
 
         // Obtain or create and register package
-        ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof ReportsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new ReportsPackageImpl());
+        ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ReportsPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new ReportsPackageImpl());
 
         isInited = true;
 
@@ -236,6 +226,9 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         // Mark meta-data to indicate it can't be changed
         theReportsPackage.freeze();
 
+  
+        // Update the registry and return the package
+        EPackage.Registry.INSTANCE.put(ReportsPackage.eNS_URI, theReportsPackage);
         return theReportsPackage;
     }
 

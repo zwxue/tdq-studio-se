@@ -124,7 +124,7 @@ public class DQRuleImpl extends IndicatorDefinitionImpl implements DQRule {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
-                return new Integer(getCriticalityLevel());
+                return getCriticalityLevel();
             case RulesPackage.DQ_RULE__ELEMENTS:
                 return getElements();
         }
@@ -141,7 +141,7 @@ public class DQRuleImpl extends IndicatorDefinitionImpl implements DQRule {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
-                setCriticalityLevel(((Integer)newValue).intValue());
+                setCriticalityLevel((Integer)newValue);
                 return;
             case RulesPackage.DQ_RULE__ELEMENTS:
                 getElements().clear();

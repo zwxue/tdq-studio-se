@@ -310,15 +310,15 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_DATE:
                 return getExecutionDate();
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_DURATION:
-                return new Integer(getExecutionDuration());
+                return getExecutionDuration();
             case AnalysisPackage.EXECUTION_INFORMATIONS__MESSAGE:
                 return getMessage();
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_NUMBER:
-                return new Integer(getExecutionNumber());
+                return getExecutionNumber();
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_RUN_OK:
-                return isLastRunOk() ? Boolean.TRUE : Boolean.FALSE;
+                return isLastRunOk();
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
-                return new Integer(getLastExecutionNumberOk());
+                return getLastExecutionNumberOk();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -335,19 +335,19 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
                 setExecutionDate((Date)newValue);
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_DURATION:
-                setExecutionDuration(((Integer)newValue).intValue());
+                setExecutionDuration((Integer)newValue);
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__MESSAGE:
                 setMessage((String)newValue);
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_NUMBER:
-                setExecutionNumber(((Integer)newValue).intValue());
+                setExecutionNumber((Integer)newValue);
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_RUN_OK:
-                setLastRunOk(((Boolean)newValue).booleanValue());
+                setLastRunOk((Boolean)newValue);
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
-                setLastExecutionNumberOk(((Integer)newValue).intValue());
+                setLastExecutionNumberOk((Integer)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

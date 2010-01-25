@@ -950,6 +950,29 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.DatePatternFreqIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected DatePatternFreqIndicatorItemProvider datePatternFreqIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.DatePatternFreqIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createDatePatternFreqIndicatorAdapter() {
+        if (datePatternFreqIndicatorItemProvider == null) {
+            datePatternFreqIndicatorItemProvider = new DatePatternFreqIndicatorItemProvider(this);
+        }
+
+        return datePatternFreqIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -999,7 +1022,7 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     public Object adapt(Object object, Object type) {
         if (isFactoryForType(type)) {
             Object adapter = super.adapt(object, type);
-            if (!(type instanceof Class) || (((Class<?>)type).isInstance(adapter))) {
+            if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
                 return adapter;
             }
         }
@@ -1086,6 +1109,7 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (defValueCountIndicatorItemProvider != null) defValueCountIndicatorItemProvider.dispose();
         if (soundexFreqIndicatorItemProvider != null) soundexFreqIndicatorItemProvider.dispose();
         if (soundexLowFreqIndicatorItemProvider != null) soundexLowFreqIndicatorItemProvider.dispose();
+        if (datePatternFreqIndicatorItemProvider != null) datePatternFreqIndicatorItemProvider.dispose();
     }
 
 }

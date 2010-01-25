@@ -97,7 +97,7 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      * @generated
      */
     public Analysis getAnalysis() {
-        if (eContainerFeatureID != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS) return null;
+        if (eContainerFeatureID() != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS) return null;
         return (Analysis)eContainer();
     }
 
@@ -117,7 +117,7 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      * @generated
      */
     public void setAnalysis(Analysis newAnalysis) {
-        if (newAnalysis != eInternalContainer() || (eContainerFeatureID != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS && newAnalysis != null)) {
+        if (newAnalysis != eInternalContainer() || (eContainerFeatureID() != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS && newAnalysis != null)) {
             if (EcoreUtil.isAncestor(this, newAnalysis))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -242,7 +242,7 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case AnalysisPackage.ANALYSIS_RESULT__ANALYSIS:
                 return eInternalContainer().eInverseRemove(this, AnalysisPackage.ANALYSIS__RESULTS, Analysis.class, msgs);
         }
