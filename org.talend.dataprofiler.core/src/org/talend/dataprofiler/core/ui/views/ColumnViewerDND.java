@@ -47,6 +47,8 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
+import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer;
+import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -281,7 +283,12 @@ public class ColumnViewerDND {
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();
             Tree control = (Tree) ((DropTarget) event.widget).getControl();
-            AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) control.getData();
+
+            boolean isAnalysisColumnSetTreeViewer = control.getData() instanceof AnalysisColumnSetTreeViewer;
+            boolean isAnalysisColumnTreeViewer = control.getData() instanceof AnalysisColumnTreeViewer;
+            boolean isAnalysisColumnNominalIntervalTreeViewer = control.getData() instanceof AnalysisColumnNominalIntervalTreeViewer;
+
+            AbstractColumnDropTree viewer = (AbstractColumnDropTree) control.getData();
 
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
@@ -292,9 +299,26 @@ public class ColumnViewerDND {
                 Object next = it.next();
                 if (next instanceof TdTable) {
                     List<TdColumn> columns = ColumnSetHelper.getColumns((TdTable) next);
-                    for (ModelElementIndicator modelElementIndicator : viewer.getModelElementIndicator()) {
-                        if (columns.contains(modelElementIndicator.getModelElement())) {
-                            columns.remove(modelElementIndicator.getModelElement());
+                    if (isAnalysisColumnTreeViewer) {
+                        for (ModelElementIndicator modelElementIndicator : ((AnalysisColumnTreeViewer) viewer)
+                                .getModelElementIndicator()) {
+                            if (columns.contains(modelElementIndicator.getModelElement())) {
+                                columns.remove(modelElementIndicator.getModelElement());
+                            }
+                        }
+                    } else if (isAnalysisColumnNominalIntervalTreeViewer) {
+                        List<Column> oriColumns = ((AnalysisColumnNominalIntervalTreeViewer) viewer).getColumnSetMultiValueList();
+                        for (Column column : oriColumns) {
+                            if (columns.contains(column)) {
+                                columns.remove(column);
+                            }
+                        }
+                    } else if (isAnalysisColumnSetTreeViewer) {
+                        List<Column> oriColumns = ((AnalysisColumnSetTreeViewer) viewer).getColumnSetMultiValueList();
+                        for (Column column : oriColumns) {
+                            if (columns.contains(column)) {
+                                columns.remove(column);
+                            }
                         }
                     }
                     selectedColumn.addAll(columns);
