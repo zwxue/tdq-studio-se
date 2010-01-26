@@ -150,7 +150,6 @@ public enum SupportDBUrlType {
         "MDM"),
     JAVADEFAULTURL("Java", "localhost", null, "dbname", null, null, null, "Java");
 
-
     private final String dbKey;
 
     private final String hostName;

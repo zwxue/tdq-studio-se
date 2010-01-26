@@ -74,7 +74,7 @@ public enum EDriverName {
                      "lib/jconn3.jar"),
     INFORMIXDEFAULTURL("Informix", //$NON-NLS-1$
                        "com.informix.jdbc.IfxDriver", //$NON-NLS-1$
-                       null,
+                       "-26",
                        "lib/ifxjdbc.jar"), //$NON-NLS-1$ 
     FIREBIRDDEFAULTURL("FireBird", //$NON-NLS-1$
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$

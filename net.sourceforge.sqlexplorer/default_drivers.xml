@@ -35,6 +35,11 @@
       <jar>[[install-dir]]\java\util.jar</jar>
     </jars>
   </driver>
+   <driver id="-26">
+    <name>Informix</name>
+    <url>jdbc:informix//&lt;server&gt;[:port]/&lt;dbname&gt;</url>
+    <jars/>
+  </driver>
   <driver id="-25">
     <name>JayBird JCA/JDBC Driver for Firebird</name>
     <url>jdbc:firebirdsql:[//host[:port]/]&lt;database&gt;</url>

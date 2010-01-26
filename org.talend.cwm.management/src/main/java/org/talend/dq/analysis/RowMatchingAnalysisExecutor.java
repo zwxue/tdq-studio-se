@@ -21,8 +21,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -250,11 +254,24 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         for (Column column : columnSetA) {
             if (belongToSameSchemata((TdColumn) column)) {
                 ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+
                 if (columnSetOwner == null) {
                     log.error("ColumnSet Owner of column " + column.getName() + " is null");
                     continue;
                 } else {
-                    tableName = columnSetOwner.getName();
+                    // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
+                    String schemaName = getQuotedSchemaName(columnSetOwner);
+                    String table = getQuotedTableName(column);
+                    String catalogName = getQuotedCatalogName(columnSetOwner);
+
+                    if (catalogName == null && schemaName != null) {
+                        // try to get catalog above schema
+                        final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+                        final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+                        catalogName = parentCatalog != null ? parentCatalog.getName() : null;
+                    }
+                    tableName = dbms().toQualifiedName(catalogName, schemaName, table);
+                    // ~11005
                     this.catalogOrSchema = getCatalogOrSchemaName(column);
                     break; // all columns should belong to the same table
                 }
@@ -376,7 +393,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @return the table name (within quotes)
      */
     private String getAnalyzedTable(Indicator indicator) {
-        return quote(indicator.getAnalyzedElement().getName());
+
+        return quote(this.catalogOrSchema) + dbms().getDelimiter() + quote(indicator.getAnalyzedElement().getName());
     }
 
     protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {

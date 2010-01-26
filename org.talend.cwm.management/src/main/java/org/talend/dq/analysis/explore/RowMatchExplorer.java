@@ -68,8 +68,8 @@ public class RowMatchExplorer extends DataExplorer {
                 if (i == 0) {
                     where = dbmsLanguage.where();
                 }
-                String fullColumnAName = dbmsLanguage.quote(tableA) + "." + dbmsLanguage.quote(columnSetA.get(i).getName());
-                String fullColumnBName = dbmsLanguage.quote(tableB) + "." + dbmsLanguage.quote(columnSetB.get(i).getName());
+                String fullColumnBName = getFullyQualifiedTableName(tableb) + "." + columnSetB.get(i).getName();
+                String fullColumnAName = getFullyQualifiedTableName(tablea) + "." + columnSetA.get(i).getName();
                 String clause = "SELECT "
                         + fullColumnBName
                         + dbmsLanguage.from()
@@ -126,13 +126,14 @@ public class RowMatchExplorer extends DataExplorer {
                     where = dbmsLanguage.where();
                 }
 
-                String fullColumnName = dbmsLanguage.quote(tableB) + "." + dbmsLanguage.quote(columnSetB.get(i).getName());
+                String fullColumnBName = getFullyQualifiedTableName(tableb) + "." + columnSetB.get(i).getName();
+                String fullColumnAName = getFullyQualifiedTableName(tablea) + "." + columnSetA.get(i).getName();
                 String clause = "SELECT "
-                        + fullColumnName
+                        + fullColumnBName
                         + dbmsLanguage.from()
                         + getFullyQualifiedTableName(tableb)
                         + dbmsLanguage.where()
-                        + fullColumnName
+                        + fullColumnBName
                         + dbmsLanguage.isNotNull()
                         // MOD 10913 zshen: find data Filter clause to adapt when ColumnA and ColumnB to be exchange
                         + (tableA.equals(tableB) ? andDataFilter(tableB,
@@ -140,8 +141,7 @@ public class RowMatchExplorer extends DataExplorer {
                                         : AnalysisHelper.DATA_FILTER_A)) : andDataFilter(tableB, null));
                 // ~10913
                 query += where
-                        + dbmsLanguage.quote(tableA)
-                        + "." + dbmsLanguage.quote(columnSetA.get(i).getName()) //$NON-NLS-1$
+                        + fullColumnAName
                         + dbmsLanguage.in()
                         + inBrackets(clause)
                         // MOD 10913 zshen: find data Filter clause to adapt when ColumnA and ColumnB to be exchange

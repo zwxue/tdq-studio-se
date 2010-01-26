@@ -44,7 +44,6 @@ public final class DbmsLanguageFactory {
         // avoid instantiation
     }
 
-    
     /**
      * Method "createDbmsLanguage".
      * 
@@ -122,48 +121,53 @@ public final class DbmsLanguageFactory {
         if (isMdm(dbmsSubtype)) {
             return new MdmDbmsLanguage(dbmsSubtype, dbVersion);
         }
+        // MOD zshen fixed bug 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
+        if (isInfomix(dbmsSubtype)) {
+            return new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
+        }// ~11005
         // TODO other supported databases here
         return new DbmsLanguage(dbmsSubtype, dbVersion);
     }
-    
-    public static DbmsLanguage createDbmsLanguage(String dataType){
+
+    public static DbmsLanguage createDbmsLanguage(String dataType) {
         SupportDBUrlType dbType = SupportDBUrlStore.getInstance().getDBUrlType(dataType);
         return createDbmsLanguage(dbType);
     }
-    
+
     /**
      * DOC jet Comment method "getDbmsLanguage".
+     * 
      * @param dbType
      * @return
      */
     public static DbmsLanguage createDbmsLanguage(SupportDBUrlType dbType) {
-        
+
         DbmsLanguage result = null;
-        
-        if(dbType == null){
+
+        if (dbType == null) {
             return new DbmsLanguage();
         }
         switch (dbType) {
-            case DB2ZOSDEFAULTURL:
-                result = new DB2DbmsLanguage();
-                break;
-                
-            case ORACLEWITHSERVICENAMEDEFAULTURL:
-            case ORACLEWITHSIDDEFAULTURL:
-                result = new OracleDbmsLanguage();
-                break;
-                
-            case SYBASEDEFAULTURL:
-                result = new SybaseASEDbmsLanguage();
-                break;
-                
-            case MSSQLDEFAULTURL:
-                result = new MSSqlDbmsLanguage();
-                break;
-                
-            case MYSQLDEFAULTURL:
-            default:
-                result = new DbmsLanguage();
+        case DB2ZOSDEFAULTURL:
+            result = new DB2DbmsLanguage();
+            break;
+
+        case ORACLEWITHSERVICENAMEDEFAULTURL:
+        case ORACLEWITHSIDDEFAULTURL:
+            result = new OracleDbmsLanguage();
+            break;
+
+        case SYBASEDEFAULTURL:
+            result = new SybaseASEDbmsLanguage();
+            break;
+
+        case MSSQLDEFAULTURL:
+            result = new MSSqlDbmsLanguage();
+            break;
+
+        case MYSQLDEFAULTURL:
+        default:
+            result = new DbmsLanguage();
         }
         return result;
     }
@@ -201,7 +205,7 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.MYSQL, dbms);
     }
 
-    private static boolean isOracle(String dbms) {
+    public static boolean isOracle(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.ORACLE, dbms);
     }
 
@@ -237,12 +241,24 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.MDM, dbms);
     }
 
+    // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
+    public static boolean isInfomix(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.INFOMIX, dbms);
+    }
+
+    // ~11005
+
     static boolean compareDbmsLanguage(String lang1, String lang2) {
         if (lang1 == null || lang2 == null) {
             return false;
         }
         // MOD 2008-08-04 scorreia: for DB2 database, dbName can be "DB2/NT" or "DB2/6000" or "DB2"...
         if (lang1.startsWith(DbmsLanguage.DB2)) {
+            return StringUtils.upperCase(lang1).startsWith(StringUtils.upperCase(lang2))
+                    || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
+        } else
+        // MOD 2010-01-26 zshen: for informix database, dbName can be "informix" or "informix Dynamic Server"
+        if (lang1.startsWith(DbmsLanguage.INFOMIX)) {
             return StringUtils.upperCase(lang1).startsWith(StringUtils.upperCase(lang2))
                     || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
         }

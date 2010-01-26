@@ -309,6 +309,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         }
                     }
                     // ~
+                } else if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator())
+                        || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getSoundexLowFreqIndicator())) {
+                    // change table and soundex(column)
+                    table = dbms().getSoundexFunction(table, colName);
                 }
 
                 completedSqlString = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), colName,

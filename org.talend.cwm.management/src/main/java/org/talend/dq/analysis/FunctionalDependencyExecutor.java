@@ -33,7 +33,6 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -165,13 +164,14 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
         assert columnB != null;
 
         String genericSQL = sqlGenericExpression.getBody();
-        GenericSQLHandler sqlHandler = new GenericSQLHandler(genericSQL);
 
-        sqlHandler.replaceColumnA(dbmsLanguage.quote(columnA.getName())).replaceColumnB(dbmsLanguage.quote(columnB.getName()))
-                .replaceTable(dbmsLanguage.quote(getTableNameFromColumn(columnA)));
+        // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
 
-        String instantiatedSQL = sqlHandler.getSqlString();
+        String table = getTableNameFromColumn(columnA);
+        String instantiatedSQL = dbms().fillGenericQueryWithColumnsABAndTable(genericSQL, dbmsLanguage.quote(columnA.getName()),
+                dbmsLanguage.quote(columnB.getName()), table);
 
+        // ~11005
         List<String> whereClauses = new ArrayList<String>();
 
         String dataFilter = AnalysisHelper.getStringDataFilter(cachedAnalysis);
@@ -205,7 +205,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             if (SwitchHelpers.CATALOG_SWITCH.doSwitch(pack) != null) {
                 catalogName = pack.getName();
             }
-            return columnSetOwner.getName();
+            return dbms().toQualifiedName(catalogName, schemaName, columnSetOwner.getName());
 
         }
         return null;

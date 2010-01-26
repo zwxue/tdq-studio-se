@@ -83,12 +83,16 @@ public class DbmsLanguage {
 
     static final String JAVA = SupportDBUrlType.JAVADEFAULTURL.getLanguage();
 
+    static final String INFOMIX = SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage();
+
     /**
      * Ansi SQL.
      */
     static final String SQL = "SQL"; //$NON-NLS-1$
 
     private static final String DOT = "."; //$NON-NLS-1$
+
+    protected static final String COLON = ":"; //$NON-NLS-1$
 
     /**
      * End of Statement: ";".
@@ -146,6 +150,9 @@ public class DbmsLanguage {
      * @return the sqlIdentifier quoted.
      */
     public String quote(String sqlIdentifier) {
+        if (sqlIdentifier == null || sqlIdentifier.equals("")) {
+            return "";
+        }
         String quotedSqlIdentifier = sqlIdentifier;
         if (!quotedSqlIdentifier.startsWith(dbQuoteString)) {
             quotedSqlIdentifier = dbQuoteString + quotedSqlIdentifier;
@@ -272,11 +279,12 @@ public class DbmsLanguage {
         StringBuffer qualName = new StringBuffer();
         if (catalog != null && catalog.trim().length() > 0) {
             qualName.append(this.quote(catalog));
-            qualName.append(DOT);
+
+            qualName.append(getDelimiter());
         }
         if (schema != null && schema.trim().length() > 0) {
             qualName.append(this.quote(schema));
-            qualName.append(DOT);
+            qualName.append(getDelimiter());
         }
 
         qualName.append(this.quote(table));
@@ -284,6 +292,10 @@ public class DbmsLanguage {
             log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName)); //$NON-NLS-1$
         }
         return qualName.toString();
+    }
+
+    public String getDelimiter() {
+        return DOT;
     }
 
     /**
@@ -596,6 +608,33 @@ public class DbmsLanguage {
             log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
         }
         return getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "getsoundexFunction".
+     * 
+     * @param table, the name of table.
+     * @param colName, the name of column.
+     * @return sub Select Statement which instead the function of soundex().And if the database support for soundex()
+     * then return old table name.
+     */
+    public String getSoundexFunction(String table, String colName) {
+
+        return table;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "getsoundexFunction".
+     * 
+     * @param table, the name of table.
+     * @param colName, the name of column.
+     * @param key, the condition of sql query.
+     * @return the sql query for rows Statement.
+     */
+    public String getFreqRowsStatement(String colName, String table, String key) {
+        return null;
     }
 
     /**
@@ -927,11 +966,11 @@ public class DbmsLanguage {
     }
 
     public String getFDGenericValidRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as D  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%>, A,D ORDER BY <%=__COLUMN_NAME_A__%> ASC";
     }
 
     public String getFDGenericInvalidRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as D  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%>,A,D ORDER BY <%=__COLUMN_NAME_A__%> ASC";
     }
 
     /**
@@ -964,6 +1003,11 @@ public class DbmsLanguage {
 
     public String fillGenericQueryWithColumnsAndTable(String genericQuery, String columns, String table) {
         return new GenericSQLHandler(genericQuery).replaceColumnTable(columns, table).getSqlString();
+    }
+
+    public String fillGenericQueryWithColumnsABAndTable(String genericQuery, String columnA, String columnB, String table) {
+        return new GenericSQLHandler(genericQuery).replaceColumnA(columnA).replaceColumnB(columnB).replaceTable(table)
+                .getSqlString();
     }
 
     public String fillGenericQueryWithColumnTablePattern(String genericQuery, String columns, String table, String regexp) {

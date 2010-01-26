@@ -25,6 +25,7 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.dbms.DB2DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -33,7 +34,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class FrequencyStatisticsExplorer extends DataExplorer {
 
-    private static final String REGEX = "SELECT (TOP\\s*[1-9]\\d*\\s*(.*)|.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
+    private static final String REGEX = "SELECT ((TOP|FIRST)\\s*[1-9]\\d*\\s*(.*)|.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
     protected String getFreqRowsStatement() {
 
@@ -234,7 +235,15 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
     protected String getInstantiatedClause() {
         // get function which convert data into a pattern
         String function = getFunction();
-
+        // MOD zshen bug 11005 sometimes(when instead of soundex() with some sql),the Variable named "function" is not
+        // is
+        // colName.
+        if (function != null
+                && (DbmsLanguageFactory.isInfomix(this.dbmsLanguage.getDbmsName()) || DbmsLanguageFactory
+                        .isOracle(this.dbmsLanguage.getDbmsName()))) {
+            function = columnName;
+        }
+        // ~11005
         // MOD mzhao bug 9681 2009-11-09
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         int javaType = column.getJavaType();

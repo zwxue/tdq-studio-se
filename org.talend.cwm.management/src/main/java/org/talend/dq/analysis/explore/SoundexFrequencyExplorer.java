@@ -31,6 +31,16 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
     @Override
     protected String getFreqRowsStatement() {
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
+
+        String resultSql = dbmsLanguage.getFreqRowsStatement(this.columnName, getFullyQualifiedTableName(column), entity.getKey()
+                .toString());
+        if (resultSql != null) {
+            return resultSql;
+        }
+
+        //
+
         String clause = getInstantiatedClause();
         return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$
                 + andDataFilterClause();
@@ -39,6 +49,7 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
     @Override
     protected String getInstantiatedClause() {
         // get function which convert data into a pattern
+
         String function = getFunction();
 
         // MOD mzhao bug 9740 2009-11-10
