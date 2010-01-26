@@ -703,36 +703,12 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     }
 
     /**
-     * DOC xqliu Comment method "storeSqlResultsRealValue".
-     * 
-     * @param objects
-     * @return
-     */
-    private boolean storeSqlResultsRealValue(List<Object[]> objects) {
-        if (!checkResults(objects, 1)) {
-            return false;
-        }
-
-        if (objects.size() == 1) {
-            String med = String.valueOf(objects.get(0)[0]);
-            if (med == null) {
-                log.error("Value is null of " + this.getName() + " !!");
-                return false;
-            }
-            this.setValue(med);
-            this.setDatatype(this.getColumnType());
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * DOC xqliu Comment method "storeSqlResultsRowCount".
      * 
      * @param objects
      * @return
      */
-    public boolean storeSqlResultsRowCount(List<Object[]> objects) {
+    private boolean storeSqlResultsRowCount(List<Object[]> objects) {
         // store row count in userCount attribute
         if (!checkResults(objects, 1)) {
             return false;
@@ -748,7 +724,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      * @param objects
      * @return
      */
-    public boolean storeSqlResultsFrequency(List<Object[]> objects) {
+    private boolean storeSqlResultsFrequency(List<Object[]> objects) {
         // handle case when frequencies are computed on dates.
         int nbColumns = 2;
         if (hasDateGrainParameter()) {
@@ -814,7 +790,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      * @param objects
      * @return
      */
-    public boolean storeSqlResultsMatching(List<Object[]> objects) {
+    private boolean storeSqlResultsMatching(List<Object[]> objects) {
         if (!checkResults(objects, 2)) {
             return false;
         }
@@ -830,6 +806,30 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
             this.setNotMatchingValueCount(total - match);
         }
         return true;
+    }
+
+    /**
+     * DOC xqliu Comment method "storeSqlResultsRealValue".
+     * 
+     * @param objects
+     * @return
+     */
+    private boolean storeSqlResultsRealValue(List<Object[]> objects) {
+        if (!checkResults(objects, 1)) {
+            return false;
+        }
+
+        if (objects.size() == 1) {
+            String med = String.valueOf(objects.get(0)[0]);
+            if (med == null) {
+                log.error("Value is null of " + this.getName() + " !!");
+                return false;
+            }
+            this.setValue(med);
+            this.setDatatype(this.getColumnType());
+            return true;
+        }
+        return false;
     }
 
     private boolean hasDateGrainParameter() {
