@@ -56,7 +56,6 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog;
@@ -68,6 +67,7 @@ import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -93,7 +93,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private List<String> remainDBTypeList;
 
-    private List<Expression> tempExpression;
+    private Map<CCombo, Expression> tempExpressionMap;
 
     private Composite expressionComp;
 
@@ -183,10 +183,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         remainDBTypeListCM = new ArrayList<String>();
         remainDBTypeListCM.addAll(allDBTypeList);
 
-        if (tempExpression == null) {
-            tempExpression = new ArrayList<Expression>();
+        if (tempExpressionMap == null) {
+            tempExpressionMap = new HashMap<CCombo, Expression>();
         } else {
-            tempExpression.clear();
+            tempExpressionMap.clear();
         }
 
         // initialize user defined indicator category
@@ -828,7 +828,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC bZhou Comment method "createPatternDefinitionComp".
+     * DOC bZhou Comment method "createPatternDefinitionComp". MOD mzhao feature 11128 Be able to add Java UDI,
+     * 2010-01-27
      * 
      * @param definitionSection
      * 
@@ -842,36 +843,28 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         expressionComp.setLayout(new GridLayout());
         expressionComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (tempExpression.size() == 0) {
+        if (tempExpressionMap.size() == 0) {
             if (definition != null) {
-                tempExpression.addAll(definition.getSqlGenericExpression());
+                EList<Expression> expList = definition.getSqlGenericExpression();
+                for (Expression expression : expList) {
+                    createNewLineWithExpression(expression);
+                }
             }
         }
-
-        for (Expression expression : tempExpression) {
-            createNewExpressLine(expression);
-        }
-
         createAddButton(composite);
 
         return composite;
     }
 
-    /**
-     * DOC bZhou Comment method "creatNewExpressLine".
-     * 
-     * @param expression
-     */
-    private void createNewExpressLine(final Expression expression) {
+    private void createNewLineWithExpression(final Expression expression) {
         final Composite expressComp = new Composite(expressionComp, SWT.NONE);
         expressComp.setLayout(new GridLayout(4, false));
         final CCombo combo = new CCombo(expressComp, SWT.BORDER);
+        tempExpressionMap.put(combo, expression);
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
-
         combo.setEditable(false);
         combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
-
         String language = expression.getLanguage();
         String body = expression.getBody();
 
@@ -880,33 +873,127 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             combo.setText(PatternLanguageType.findNameByLanguage(language));
         }
-
-        combo.addSelectionListener(new SelectionAdapter() {
-
-            public void widgetSelected(SelectionEvent e) {
-                String lang = combo.getText();
-                expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
-                setDirty(true);
-            }
-        });
+        combo.addSelectionListener(new LangCombSelectionListener());
+        combo.addSelectionListener(new LangCombSelectionListener());
         final Text patternText = new Text(expressComp, SWT.BORDER);
         patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
         patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) patternText.getLayoutData()).widthHint = 600;
-        patternText.addModifyListener(new ModifyListener() {
+        patternText.addModifyListener(new ExpressTextModListener(combo));
+        createExpressionEditButton(expressComp, patternText);
+        createExpressionDelButton(expressComp, combo);
 
-            public void modifyText(ModifyEvent e) {
-                expression.setBody(patternText.getText());
-                setDirty(true);
-            }
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
+    }
 
-        });
+    /**
+     * DOC bZhou Comment method "creatNewLine". MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-27
+     * 
+     * @param expression
+     */
+    private void createNewLine() {
+        final Composite expressComp = new Composite(expressionComp, SWT.NONE);
+        expressComp.setLayout(new GridLayout(4, false));
+        final CCombo combo = new CCombo(expressComp, SWT.BORDER);
+        combo.setLayoutData(new GridData());
+        ((GridData) combo.getLayoutData()).widthHint = 150;
+
+        combo.setEditable(false);
+        combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+        combo.select(0);
+        // String language = expression.getLanguage();
+        // String body = expression.getBody();
+
+        // if (language == null) {
+        // combo.setText(remainDBTypeList.get(0));
+        // } else {
+        // combo.setText(PatternLanguageType.findNameByLanguage(language));
+        // }
+        combo.addSelectionListener(new LangCombSelectionListener());
+        // combo.addSelectionListener(new SelectionAdapter() {
+        //
+        // public void widgetSelected(SelectionEvent e) {
+        // String lang = combo.getText();
+        // expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
+        // setDirty(true);
+        // }
+        // });
+        Expression expression = BooleanExpressionHelper.createExpression(combo.getText(), null);
+        tempExpressionMap.put(combo, expression);
+        updateOtherCombos(combo);
+        final Text patternText = new Text(expressComp, SWT.BORDER);
+
+        // patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
+        patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        ((GridData) patternText.getLayoutData()).widthHint = 600;
+        patternText.addModifyListener(new ExpressTextModListener(combo));
 
         createExpressionEditButton(expressComp, patternText);
 
-        createExpressionDelButton(expressComp, expression);
+        createExpressionDelButton(expressComp, combo);
 
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
+    }
+
+    /**
+     * 
+     * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
+     */
+    private class ExpressTextModListener implements ModifyListener {
+
+        private CCombo combo;
+
+        public ExpressTextModListener(CCombo combo) {
+            this.combo = combo;
+        }
+
+        public void modifyText(ModifyEvent e) {
+            Text patternText = (Text) e.getSource();
+            Expression expression = tempExpressionMap.get(combo);
+            expression.setBody(patternText.getText());
+            setDirty(true);
+        }
+
+    }
+
+    /**
+     * 
+     * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
+     */
+    private class LangCombSelectionListener extends SelectionAdapter {
+
+        public void widgetSelected(SelectionEvent e) {
+            CCombo combo = (CCombo) e.getSource();
+            String lang = combo.getText();
+            if (!lang.equals(PatternLanguageType.JAVA.getName())) {
+                Expression expression = tempExpressionMap.get(combo);
+                if (expression == null) {
+                    expression = BooleanExpressionHelper.createExpression(lang, null);
+                    tempExpressionMap.put(combo, expression);
+                } else {
+                    expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
+                }
+            } else {
+                // TODO Handle java UID.
+
+            }
+            // Update other combos.
+            updateOtherCombos(combo);
+            setDirty(true);
+        }
+    }
+
+    private void updateOtherCombos(CCombo combo) {
+        rebuildRemainDBTypeList();
+        Collection<CCombo> allCombos = tempExpressionMap.keySet();
+        for (CCombo cb : allCombos) {
+            if (combo != cb) {
+                String tx = cb.getText();
+                cb.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+                cb.setText(tx);
+            }
+        }
+
     }
 
     /**
@@ -915,7 +1002,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param expressComp
      * @param expression
      */
-    private void createExpressionDelButton(final Composite expressComp, final Expression expression) {
+    private void createExpressionDelButton(final Composite expressComp, final CCombo languageCombo) {
         Button delButton = new Button(expressComp, SWT.PUSH);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.deleteExpression"));
@@ -928,7 +1015,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 setDirty(true);
-                tempExpression.remove(expression);
+                tempExpressionMap.remove(languageCombo);
                 expressComp.dispose();
                 definitionSection.setExpanded(false);
                 definitionSection.setExpanded(true);
@@ -975,12 +1062,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            // MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-27
             public void widgetSelected(SelectionEvent e) {
                 rebuildRemainDBTypeList();
-                String language = PatternLanguageType.findLanguageByName(remainDBTypeList.get(0));
-                Expression expression = BooleanExpressionHelper.createExpression(language, null);
-                createNewExpressLine(expression);
-                tempExpression.add(expression);
+                // String language = PatternLanguageType.findLanguageByName(remainDBTypeList.get(0));
+                // Expression expression = BooleanExpressionHelper.createExpression(language, null);
+                createNewLine();
+                // tempExpression.add(expression);
                 definitionSection.setExpanded(true);
                 setDirty(true);
             }
@@ -988,12 +1076,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC xqliu Comment method "rebuildRemainDBTypeList".
+     * DOC xqliu Comment method "rebuildRemainDBTypeList". MOD mzhao feature 11128 Be able to add Java UDI.
      */
     private void rebuildRemainDBTypeList() {
         remainDBTypeList.clear();
         remainDBTypeList.addAll(allDBTypeList);
-        for (Expression expression : tempExpression) {
+        Collection<Expression> expValues = tempExpressionMap.values();
+        for (Expression expression : expValues) {
             String language = expression.getLanguage();
             String languageName = PatternLanguageType.findNameByLanguage(language);
             remainDBTypeList.remove(languageName);
@@ -1053,7 +1142,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         EList<Expression> expressiones = definition.getSqlGenericExpression();
         expressiones.clear();
-        for (Expression expression : tempExpression) {
+        Collection<Expression> expValues = tempExpressionMap.values();
+        for (Expression expression : expValues) {
             if (expression.getBody() != null && !"".equals(expression.getBody())) { //$NON-NLS-1$
                 expressiones.add(expression);
             }
