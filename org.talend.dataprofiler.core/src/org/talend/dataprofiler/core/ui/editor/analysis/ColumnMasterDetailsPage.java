@@ -62,7 +62,6 @@ import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -521,11 +520,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             public void modifyText(ModifyEvent e) {
                 // MOD xqliu 2009-08-24 bug 8776
                 execLang = execCombo.getText();
-                if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang)) && includeUDI()) {
-                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.UDIWarning")); //$NON-NLS-1$
-                    execCombo.setText(ExecutionLanguage.SQL.getLiteral());
-                    return;
-                }
+                // if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang)) && includeUDI()) {
+                //                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.UDIWarning")); //$NON-NLS-1$
+                // execCombo.setText(ExecutionLanguage.SQL.getLiteral());
+                // return;
+                // }
                 setDirty(true);
                 treeViewer.setLanguage(ExecutionLanguage.get(execLang));
                 // ~

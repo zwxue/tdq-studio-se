@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -55,6 +57,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
@@ -94,6 +97,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private List<String> remainDBTypeList;
 
     private Map<CCombo, Expression> tempExpressionMap;
+
+    private Map<CCombo, Composite> widgetMap;
 
     private Composite expressionComp;
 
@@ -187,6 +192,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             tempExpressionMap = new HashMap<CCombo, Expression>();
         } else {
             tempExpressionMap.clear();
+        }
+        if (widgetMap == null) {
+            widgetMap = new HashMap<CCombo, Composite>();
+        } else {
+            widgetMap.clear();
         }
 
         // initialize user defined indicator category
@@ -849,6 +859,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 for (Expression expression : expList) {
                     createNewLineWithExpression(expression);
                 }
+                // Whether Java UDI exists.
+                createNewLineWithJavaUDI();
             }
         }
         createAddButton(composite);
@@ -856,10 +868,84 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         return composite;
     }
 
+    private void createNewLineWithJavaUDI() {
+        EList<TaggedValue> tvs = definition.getTaggedValue();
+        String classNameStr = null;
+        String jarPathStr = "";
+        for (TaggedValue tv : tvs) {
+            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                classNameStr = tv.getValue();
+                continue;
+            }
+            if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                jarPathStr = tv.getValue();
+            }
+        }
+        if (classNameStr == null) {
+            return;
+        }
+
+        final Composite lineComp = new Composite(expressionComp, SWT.NONE);
+        lineComp.setLayout(new GridLayout(2, false));
+        final CCombo combo = new CCombo(lineComp, SWT.BORDER);
+        combo.setLayoutData(new GridData());
+        ((GridData) combo.getLayoutData()).widthHint = 150;
+        combo.setEditable(false);
+        combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+        combo.setText(PatternLanguageType.JAVA.getName());
+        combo.addSelectionListener(new LangCombSelectionListener());
+        tempExpressionMap.put(combo, BooleanExpressionHelper.createExpression(combo.getText(), null));
+
+        Composite detailComp = new Composite(combo.getParent(), SWT.NONE);
+        widgetMap.put(combo, detailComp);
+        detailComp.setLayout(new GridLayout(4, false));
+        Text classNameText = new Text(detailComp, SWT.BORDER);
+        classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        ((GridData) classNameText.getLayoutData()).widthHint = 250;
+        classNameText.addModifyListener(new NeedToSetDirtyListener());
+        classNameText.setText(classNameStr);
+        final Text jarPathText = new Text(detailComp, SWT.BORDER);
+        jarPathText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        jarPathText.addModifyListener(new NeedToSetDirtyListener());
+        ((GridData) jarPathText.getLayoutData()).widthHint = 350;
+        jarPathText.setText(jarPathStr);
+
+        Button button = new Button(detailComp, SWT.PUSH);
+        button.setText("Browse...");
+        button.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
+                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
+                String path = dialog.open();
+                if (path != null) {
+                    jarPathText.setText(path);
+                }
+            }
+        });
+        combo.setData(PluginConstant.CLASS_NAME_TEXT, classNameText);
+        combo.setData(PluginConstant.JAR_FILE_PATH, jarPathText);
+
+        createExpressionDelButton(detailComp, combo);
+
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
+    }
+
+    /**
+     * 
+     * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
+     */
+    private class NeedToSetDirtyListener implements ModifyListener {
+
+        public void modifyText(ModifyEvent e) {
+            setDirty(true);
+        }
+    }
+
     private void createNewLineWithExpression(final Expression expression) {
-        final Composite expressComp = new Composite(expressionComp, SWT.NONE);
-        expressComp.setLayout(new GridLayout(4, false));
-        final CCombo combo = new CCombo(expressComp, SWT.BORDER);
+        final Composite lineComp = new Composite(expressionComp, SWT.NONE);
+        lineComp.setLayout(new GridLayout(2, false));
+        final CCombo combo = new CCombo(lineComp, SWT.BORDER);
         tempExpressionMap.put(combo, expression);
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
@@ -874,16 +960,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             combo.setText(PatternLanguageType.findNameByLanguage(language));
         }
         combo.addSelectionListener(new LangCombSelectionListener());
-        combo.addSelectionListener(new LangCombSelectionListener());
-        final Text patternText = new Text(expressComp, SWT.BORDER);
+        Composite detailComp = new Composite(lineComp, SWT.NONE);
+        detailComp.setLayout(new GridLayout(3, false));
+        final Text patternText = new Text(detailComp, SWT.BORDER);
         patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
         patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) patternText.getLayoutData()).widthHint = 600;
         patternText.addModifyListener(new ExpressTextModListener(combo));
-        createExpressionEditButton(expressComp, patternText);
-        createExpressionDelButton(expressComp, combo);
-
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
+        createExpressionEditButton(detailComp, patternText);
+        createExpressionDelButton(detailComp, combo);
+        widgetMap.put(combo, detailComp);
+        updateOtherCombos(combo);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
     }
 
     /**
@@ -892,9 +980,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param expression
      */
     private void createNewLine() {
-        final Composite expressComp = new Composite(expressionComp, SWT.NONE);
-        expressComp.setLayout(new GridLayout(4, false));
-        final CCombo combo = new CCombo(expressComp, SWT.BORDER);
+        final Composite lineComp = new Composite(expressionComp, SWT.NONE);
+        lineComp.setLayout(new GridLayout(4, false));
+        final CCombo combo = new CCombo(lineComp, SWT.BORDER);
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
 
@@ -920,19 +1008,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // });
         Expression expression = BooleanExpressionHelper.createExpression(combo.getText(), null);
         tempExpressionMap.put(combo, expression);
+        if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
+            updateLineForJava(combo);
+        } else {
+            updateLineForExpression(combo);
+        }
         updateOtherCombos(combo);
-        final Text patternText = new Text(expressComp, SWT.BORDER);
-
-        // patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
-        patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        ((GridData) patternText.getLayoutData()).widthHint = 600;
-        patternText.addModifyListener(new ExpressTextModListener(combo));
-
-        createExpressionEditButton(expressComp, patternText);
-
-        createExpressionDelButton(expressComp, combo);
-
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
     }
 
     /**
@@ -965,22 +1046,80 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         public void widgetSelected(SelectionEvent e) {
             CCombo combo = (CCombo) e.getSource();
             String lang = combo.getText();
-            if (!lang.equals(PatternLanguageType.JAVA.getName())) {
-                Expression expression = tempExpressionMap.get(combo);
-                if (expression == null) {
-                    expression = BooleanExpressionHelper.createExpression(lang, null);
-                    tempExpressionMap.put(combo, expression);
-                } else {
-                    expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
-                }
+            Expression expression = tempExpressionMap.get(combo);
+            if (expression == null) {
+                expression = BooleanExpressionHelper.createExpression(lang, null);
+                tempExpressionMap.put(combo, expression);
             } else {
-                // TODO Handle java UID.
-
+                expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
+            }
+            if (!lang.equals(PatternLanguageType.JAVA.getName())) {
+                updateLineForExpression(combo);
+            } else {
+                // Handle java UID.
+                updateLineForJava(combo);
             }
             // Update other combos.
             updateOtherCombos(combo);
             setDirty(true);
         }
+    }
+
+    private void updateLineForExpression(final CCombo combo) {
+        Composite detailComp = widgetMap.get(combo);
+        if (detailComp != null) {
+            detailComp.dispose();
+        }
+        detailComp = new Composite(combo.getParent(), SWT.NONE);
+        widgetMap.put(combo, detailComp);
+        detailComp.setLayout(new GridLayout(3, false));
+        final Text patternText = new Text(detailComp, SWT.BORDER);
+        patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        ((GridData) patternText.getLayoutData()).widthHint = 600;
+        patternText.addModifyListener(new ExpressTextModListener(combo));
+        createExpressionEditButton(detailComp, patternText);
+        createExpressionDelButton(detailComp, combo);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
+        detailComp.getParent().layout();
+        definitionSection.setExpanded(false);
+        definitionSection.setExpanded(true);
+    }
+
+    private void updateLineForJava(final CCombo combo) {
+        Composite detailComp = widgetMap.get(combo);
+        if (detailComp != null) {
+            detailComp.dispose();
+        }
+        detailComp = new Composite(combo.getParent(), SWT.NONE);
+        widgetMap.put(combo, detailComp);
+        detailComp.setLayout(new GridLayout(4, false));
+        Text classNameText = new Text(detailComp, SWT.BORDER);
+        classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        classNameText.addModifyListener(new NeedToSetDirtyListener());
+        ((GridData) classNameText.getLayoutData()).widthHint = 250;
+        final Text jarPathText = new Text(detailComp, SWT.BORDER);
+        jarPathText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        jarPathText.addModifyListener(new NeedToSetDirtyListener());
+        ((GridData) jarPathText.getLayoutData()).widthHint = 350;
+        Button button = new Button(detailComp, SWT.PUSH);
+        button.setText("Browse...");
+        button.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
+                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
+                String path = dialog.open();
+                if (path != null) {
+                    jarPathText.setText(path);
+                }
+            }
+        });
+        combo.setData(PluginConstant.CLASS_NAME_TEXT, classNameText);
+        combo.setData(PluginConstant.JAR_FILE_PATH, jarPathText);
+        createExpressionDelButton(detailComp, combo);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
+        definitionSection.setExpanded(false);
+        definitionSection.setExpanded(true);
     }
 
     private void updateOtherCombos(CCombo combo) {
@@ -1016,7 +1155,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
                 setDirty(true);
                 tempExpressionMap.remove(languageCombo);
-                expressComp.dispose();
+                widgetMap.remove(languageCombo);
+                expressComp.getParent().dispose();
                 definitionSection.setExpanded(false);
                 definitionSection.setExpanded(true);
             }
@@ -1140,15 +1280,65 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
 
-        EList<Expression> expressiones = definition.getSqlGenericExpression();
-        expressiones.clear();
-        Collection<Expression> expValues = tempExpressionMap.values();
-        for (Expression expression : expValues) {
-            if (expression.getBody() != null && !"".equals(expression.getBody())) { //$NON-NLS-1$
-                expressiones.add(expression);
+        EList<Expression> expressions = definition.getSqlGenericExpression();
+        expressions.clear();
+        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
+
+        CCombo javaUIDCombo = null;
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            // MOD MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-28
+            if (cb.getText().equals(PatternLanguageType.JAVA.getName())) {
+                javaUIDCombo = cb;
+            } else if (tempExpressionMap.get(cb).getBody() != null
+                    && !PluginConstant.EMPTY_STRING.equals(tempExpressionMap.get(cb).getBody())) {
+                expressions.add(tempExpressionMap.get(cb));
             }
         }
 
+        // Save Java UID
+        EList<TaggedValue> tvs = definition.getTaggedValue();
+        if (javaUIDCombo != null) {
+            boolean isNewTaggedValue = true;
+            for (TaggedValue tv : tvs) {
+                if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                    tv.setValue(((Text) javaUIDCombo.getData(PluginConstant.CLASS_NAME_TEXT)).getText());
+                    isNewTaggedValue = false;
+                    continue;
+                }
+                if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                    tv.setValue(((Text) javaUIDCombo.getData(PluginConstant.JAR_FILE_PATH)).getText());
+                }
+            }
+            if (isNewTaggedValue) {
+                TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(PluginConstant.CLASS_NAME_TEXT,
+                        ((Text) javaUIDCombo.getData(PluginConstant.CLASS_NAME_TEXT)).getText());
+                TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(PluginConstant.JAR_FILE_PATH, ((Text) javaUIDCombo
+                        .getData(PluginConstant.JAR_FILE_PATH)).getText());
+                definition.getTaggedValue().add(classNameTV);
+                definition.getTaggedValue().add(jarPathTV);
+            }
+        } else {
+            // Remove Java UDI tagged values if there have.
+            TaggedValue tvCN = null;
+            TaggedValue tvJARP = null;
+            for (TaggedValue tv : tvs) {
+                if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                    tvCN = tv;
+                    continue;
+                }
+                if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                    tvJARP = tv;
+                }
+            }
+            if (tvCN != null) {
+                tvs.remove(tvCN);
+            }
+            if (tvJARP != null) {
+                tvs.remove(tvJARP);
+            }
+
+        }
         if (hasAggregateExpression) {
             EList<Expression> aggregate1argFunctions = definition.getAggregate1argFunctions();
             aggregate1argFunctions.clear();
@@ -1347,8 +1537,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         private void updateAggregateExpressionBody() {
             if (this.aggreagetExpression != null) {
-                if ("".equals(this.getHorizontalAxis()) && "".equals(this.getVerticalAxis()) && "".equals(this.getBubbleSize())) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    this.aggreagetExpression.setBody(""); //$NON-NLS-1$
+                if (PluginConstant.EMPTY_STRING.equals(this.getHorizontalAxis())
+                        && PluginConstant.EMPTY_STRING.equals(this.getVerticalAxis())
+                        && PluginConstant.EMPTY_STRING.equals(this.getBubbleSize())) {
+                    this.aggreagetExpression.setBody(PluginConstant.EMPTY_STRING);
                 } else {
                     this.aggreagetExpression.setBody(this.getHorizontalAxis() + ADDITIONAL_FUNCTIONS_SPLIT
                             + this.getVerticalAxis() + ADDITIONAL_FUNCTIONS_SPLIT + this.getBubbleSize());
@@ -1367,9 +1559,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                         this.setVerticalAxis(values[1]);
                         this.setBubbleSize(values[2]);
                     } else {
-                        this.setHorizontalAxis(""); //$NON-NLS-1$
-                        this.setVerticalAxis(""); //$NON-NLS-1$
-                        this.setBubbleSize(""); //$NON-NLS-1$
+                        this.setHorizontalAxis(PluginConstant.EMPTY_STRING);
+                        this.setVerticalAxis(PluginConstant.EMPTY_STRING);
+                        this.setBubbleSize(PluginConstant.EMPTY_STRING);
                     }
                 }
             }
@@ -1567,7 +1759,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (this.dateExpression != null) {
                 if ("".equals(this.getLowerValue()) && "".equals(this.getUpperValue()) && "".equals(this.getTotal()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         && "".equals(this.getHighlightedValues())) { //$NON-NLS-1$
-                    this.dateExpression.setBody(""); //$NON-NLS-1$
+                    this.dateExpression.setBody(PluginConstant.EMPTY_STRING);
                 } else {
                     this.dateExpression.setBody(this.getLowerValue() + ADDITIONAL_FUNCTIONS_SPLIT + this.getUpperValue()
                             + ADDITIONAL_FUNCTIONS_SPLIT + this.getTotal() + ADDITIONAL_FUNCTIONS_SPLIT
@@ -1588,10 +1780,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                         this.setTotal(values[2]);
                         this.setHighlightedValues(values[3]);
                     } else {
-                        this.setLowerValue(""); //$NON-NLS-1$
-                        this.setUpperValue(""); //$NON-NLS-1$
-                        this.setTotal(""); //$NON-NLS-1$
-                        this.setHighlightedValues(""); //$NON-NLS-1$
+                        this.setLowerValue(PluginConstant.EMPTY_STRING);
+                        this.setUpperValue(PluginConstant.EMPTY_STRING);
+                        this.setTotal(PluginConstant.EMPTY_STRING);
+                        this.setHighlightedValues(PluginConstant.EMPTY_STRING);
                     }
                 }
             }
