@@ -12,12 +12,16 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -32,6 +36,9 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
+import org.talend.dq.PluginConstant;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
@@ -39,6 +46,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -54,6 +62,15 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
 
     protected Map<ModelElement, Package> schemata = new HashMap<ModelElement, Package>();
+
+    private IndicatorSqlSwitch<UserDefIndicator> userDefIndSwitch = new IndicatorSqlSwitch<UserDefIndicator>() {
+
+        @Override
+        public UserDefIndicator caseUserDefIndicator(UserDefIndicator object) {
+            return object;
+        }
+
+    };
 
     protected boolean isAccessWith(TdDataProvider dp) {
         if (dataprovider == null) {
@@ -86,6 +103,46 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
                 return false;
             }
             String columnName = ColumnHelper.getFullName(tdColumn);
+
+            // MOD mzhao 11128, Add capability to handle Java UDI.
+
+            if (userDefIndSwitch.doSwitch(indicator) != null) {
+                EList<TaggedValue> taggedValues = indicator.getIndicatorDefinition().getTaggedValue();
+                String userJavaClassName = null;
+                String jarPath = null;
+                for (TaggedValue tv : taggedValues) {
+                    if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                        userJavaClassName = tv.getValue();
+                        continue;
+                    }
+                    if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                        jarPath = tv.getValue();
+                    }
+                }
+
+                if (validateJavaUDI(userJavaClassName, jarPath)) {
+                    File file = new File(jarPath);
+                    try {
+                        MyURLClassLoader cl;
+                        cl = new MyURLClassLoader(file.toURL());
+                        Class clazz = cl.findClass(userJavaClassName);
+                        UserDefIndicator udi = null;
+                        if (clazz != null) {
+                            udi = (UserDefIndicator) clazz.newInstance();
+                            indicator = udi;
+                        }
+                    } catch (ClassNotFoundException e) {
+                        log.error(e, e);
+                    } catch (MalformedURLException e) {
+                        log.error(e, e);
+                    } catch (InstantiationException e) {
+                        log.error(e, e);
+                    } catch (IllegalAccessException e) {
+                        log.error(e, e);
+                    }
+                }
+            }
+
             eval.storeIndicator(columnName, indicator);
         }
 
@@ -111,6 +168,11 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             this.errorMessage = rc.getMessage();
         }
         return rc.isOk();
+    }
+
+    private boolean validateJavaUDI(String className, String jarPath) {
+        // TODO validate class name and jar file path.
+        return true;
     }
 
     /**
@@ -280,8 +342,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         }
         return true;
     }
-
- 
 
     /**
      * Method "getQuotedColumnName".

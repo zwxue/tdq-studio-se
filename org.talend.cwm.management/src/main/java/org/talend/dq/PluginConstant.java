@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq;
 
-
 /**
  * This class store all the constant of current plugin.
  * 
@@ -36,4 +35,8 @@ public final class PluginConstant {
     public static final String CONNECTION_TIMEOUT = "CONNECTION_TIMEOUT"; //$NON-NLS-1$
 
     public static final String FILTER_TABLE_VIEW_COLUMN = "FILTER_TABLE_VIEW_COLUMN"; //$NON-NLS-1$
+
+    public static final String CLASS_NAME_TEXT = "CLASS_NAME_TEXT";//$NON-NLS-1$
+
+    public static final String JAR_FILE_PATH = "JAR_FILE_PATH";//$NON-NLS-1$
 }

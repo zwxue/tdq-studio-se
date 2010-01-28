@@ -89,6 +89,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     if (!continueRun()) {
                         break label;
                     }
+
                     indicator.handle(object);
                 }
             }
