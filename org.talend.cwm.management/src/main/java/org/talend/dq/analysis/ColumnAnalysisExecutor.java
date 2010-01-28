@@ -14,6 +14,7 @@ package org.talend.dq.analysis;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,10 +22,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
-
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -123,8 +123,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
                 if (validateJavaUDI(userJavaClassName, jarPath)) {
                     File file = new File(jarPath);
                     try {
-                        MyURLClassLoader cl;
-                        cl = new MyURLClassLoader(file.toURL());
+                        TalendURLClassLoader cl;
+                        cl = new TalendURLClassLoader(new URL[] { file.toURL() });
                         Class clazz = cl.findClass(userJavaClassName);
                         UserDefIndicator udi = null;
                         if (clazz != null) {
