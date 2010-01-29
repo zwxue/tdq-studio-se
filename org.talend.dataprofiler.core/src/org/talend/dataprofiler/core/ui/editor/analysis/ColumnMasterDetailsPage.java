@@ -507,7 +507,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(2, false));
         toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
-        execCombo = new CCombo(sectionClient, SWT.BORDER);
+        final CCombo execCombo = new CCombo(sectionClient, SWT.BORDER);
         execCombo.setEditable(false);
         for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
             String temp = language.getLiteral();
@@ -524,11 +524,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             public void modifyText(ModifyEvent e) {
                 // MOD xqliu 2009-08-24 bug 8776
                 execLang = execCombo.getText();
-                // if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang)) && includeUDI()) {
-                //                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.UDIWarning")); //$NON-NLS-1$
-                // execCombo.setText(ExecutionLanguage.SQL.getLiteral());
-                // return;
-                // }
+                // MOD mzhao feature 11128, 2010-01-29. Java Engine is applicable to Java UDI.
                 // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
                 // "analyzed Columns",ExecutionLanguage only is Java.
                 if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {

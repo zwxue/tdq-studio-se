@@ -32,6 +32,7 @@ import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
+import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.reports.ReportsPackage;
@@ -90,6 +91,13 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * @generated
      */
     private EClass whereRuleIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass javaUserDefIndicatorEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -336,6 +344,15 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getJavaUserDefIndicator() {
+        return javaUserDefIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public IndicatorSqlFactory getIndicatorSqlFactory() {
         return (IndicatorSqlFactory)getEFactoryInstance();
     }
@@ -372,6 +389,8 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DATATYPE);
 
         whereRuleIndicatorEClass = createEClass(WHERE_RULE_INDICATOR);
+
+        javaUserDefIndicatorEClass = createEClass(JAVA_USER_DEF_INDICATOR);
     }
 
     /**
@@ -407,6 +426,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         // Add supertypes to classes
         userDefIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
         whereRuleIndicatorEClass.getESuperTypes().add(this.getUserDefIndicator());
+        javaUserDefIndicatorEClass.getESuperTypes().add(this.getUserDefIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(userDefIndicatorEClass, UserDefIndicator.class, "UserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -430,6 +450,11 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(whereRuleIndicatorEClass, WhereRuleIndicator.class, "WhereRuleIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(javaUserDefIndicatorEClass, JavaUserDefIndicator.class, "JavaUserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        op = addEOperation(javaUserDefIndicatorEClass, null, "setJavaUserDefObject", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, this.getUserDefIndicator(), "javaUDIObj", 0, 1, IS_UNIQUE, IS_ORDERED);
     }
 
 } //IndicatorSqlPackageImpl

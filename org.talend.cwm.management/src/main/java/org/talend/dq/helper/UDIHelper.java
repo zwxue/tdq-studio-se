@@ -12,9 +12,14 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -23,6 +28,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -30,16 +36,30 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
+import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public final class UDIHelper {
+
+    private static IndicatorSqlSwitch<UserDefIndicator> userDefIndSwitch = new IndicatorSqlSwitch<UserDefIndicator>() {
+
+        @Override
+        public UserDefIndicator caseUserDefIndicator(UserDefIndicator object) {
+            return object;
+        }
+
+    };
 
     private UDIHelper() {
     }
@@ -205,9 +225,12 @@ public final class UDIHelper {
         ReturnCode rc = new ReturnCode(true);
         List<String> errorList = new ArrayList<String>();
 
-        if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
-            errorList.add(Messages.getString("UDIHelper.validateNoExpression"));
-            rc.setOk(false);
+        // MOD mzhao feature 11128, In case of Java UDI, No expression is allowed to be saved.
+        if (!containsJavaUDI(indicatorDefinition)) {
+            if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
+                errorList.add(Messages.getString("UDIHelper.validateNoExpression"));
+                rc.setOk(false);
+            }
         }
 
         if ("".equals(indicatorDefinition.getName())) {
@@ -231,4 +254,77 @@ public final class UDIHelper {
 
         return rc;
     }
+
+    /**
+     * 
+     * DOC mzhao feature 11128, If the execute engine and by the same time Java User Defined Indicator is also defined,
+     * then compute via Java UDI, here convert common udi to a Java UDI.
+     * 
+     * @param udi
+     * @return
+     */
+    public static Indicator adaptToJavaUDI(Indicator indicator) {
+        if (judiMap.get(indicator) != null) {
+            return judiMap.get(indicator);
+        }
+        UserDefIndicator adaptedUDI = null;
+        if (userDefIndSwitch.doSwitch(indicator) != null) {
+            EList<TaggedValue> taggedValues = indicator.getIndicatorDefinition().getTaggedValue();
+            String userJavaClassName = null;
+            String jarPath = null;
+            for (TaggedValue tv : taggedValues) {
+                if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                    userJavaClassName = tv.getValue();
+                    continue;
+                }
+                if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                    jarPath = tv.getValue();
+                }
+            }
+
+            if (validateJavaUDI(userJavaClassName, jarPath)) {
+                File file = new File(jarPath);
+                try {
+                    TalendURLClassLoader cl;
+                    cl = new TalendURLClassLoader(new URL[] { file.toURL() });
+                    Class<?> clazz = cl.findClass(userJavaClassName);
+                    if (clazz != null) {
+                        UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
+                        JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
+                        judiTemplate.setJavaUserDefObject(judi);
+                        judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                        judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
+                        adaptedUDI = judiTemplate;
+                        judiMap.put(indicator, adaptedUDI);
+                    }
+                } catch (ClassNotFoundException e) {
+                    log.error(e, e);
+                } catch (MalformedURLException e) {
+                    log.error(e, e);
+                } catch (InstantiationException e) {
+                    log.error(e, e);
+                } catch (IllegalAccessException e) {
+                    log.error(e, e);
+                }
+            }
+        }
+        return adaptedUDI;
+    }
+
+    private static boolean validateJavaUDI(String className, String jarPath) {
+        // TODO validate class name and jar file path.
+        return true;
+    }
+
+    private static boolean containsJavaUDI(IndicatorDefinition definition) {
+        EList<TaggedValue> tvs = definition.getTaggedValue();
+        for (TaggedValue tv : tvs) {
+            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Map<Indicator, Indicator> judiMap = new HashMap<Indicator, Indicator>();
 }

@@ -777,6 +777,11 @@
           <details key="documentation" value="Indicator defined by a where clause."/>
         </eAnnotations>
       </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="JavaUserDefIndicator" eSuperTypes="#//indicators/sql/UserDefIndicator">
+        <eOperations name="setJavaUserDefObject">
+          <eParameters name="javaUDIObj" eType="#//indicators/sql/UserDefIndicator"/>
+        </eOperations>
+      </eClassifiers>
     </eSubpackages>
     <eSubpackages name="columnset" nsURI="http://dataquality.indicators.columnset"
         nsPrefix="dataquality.indicators.columnset">

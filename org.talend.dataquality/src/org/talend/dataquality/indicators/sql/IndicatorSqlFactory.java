@@ -44,6 +44,15 @@ public interface IndicatorSqlFactory extends EFactory {
     WhereRuleIndicator createWhereRuleIndicator();
 
     /**
+     * Returns a new object of class '<em>Java User Def Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Java User Def Indicator</em>'.
+     * @generated
+     */
+    JavaUserDefIndicator createJavaUserDefIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

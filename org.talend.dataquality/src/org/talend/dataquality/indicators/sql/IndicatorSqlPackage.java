@@ -783,6 +783,368 @@ public interface IndicatorSqlPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.sql.impl.JavaUserDefIndicatorImpl <em>Java User Def Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.sql.impl.JavaUserDefIndicatorImpl
+     * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getJavaUserDefIndicator()
+     * @generated
+     */
+    int JAVA_USER_DEF_INDICATOR = 2;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__NAME = USER_DEF_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__VISIBILITY = USER_DEF_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__CLIENT_DEPENDENCY = USER_DEF_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__SUPPLIER_DEPENDENCY = USER_DEF_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__CONSTRAINT = USER_DEF_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__NAMESPACE = USER_DEF_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__IMPORTER = USER_DEF_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__STEREOTYPE = USER_DEF_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__TAGGED_VALUE = USER_DEF_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__DOCUMENT = USER_DEF_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__DESCRIPTION = USER_DEF_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__RESPONSIBLE_PARTY = USER_DEF_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__ELEMENT_NODE = USER_DEF_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__SET = USER_DEF_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__RENDERED_OBJECT = USER_DEF_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__VOCABULARY_ELEMENT = USER_DEF_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__MEASUREMENT = USER_DEF_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__CHANGE_REQUEST = USER_DEF_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__DASDL_PROPERTY = USER_DEF_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__COUNT = USER_DEF_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__NULL_COUNT = USER_DEF_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__PARAMETERS = USER_DEF_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__ANALYZED_ELEMENT = USER_DEF_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__DATAMINING_TYPE = USER_DEF_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__INDICATOR_DEFINITION = USER_DEF_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__INSTANTIATED_EXPRESSIONS = USER_DEF_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__COMPUTED = USER_DEF_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__JOIN_CONDITIONS = USER_DEF_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>User Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__USER_COUNT = USER_DEF_INDICATOR__USER_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__MATCHING_VALUE_COUNT = USER_DEF_INDICATOR__MATCHING_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT = USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__UNIQUE_VALUES = USER_DEF_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT = USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT = USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT = USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__VALUE_TO_FREQ = USER_DEF_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The feature id for the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__VALUE = USER_DEF_INDICATOR__VALUE;
+
+    /**
+     * The feature id for the '<em><b>Datatype</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__DATATYPE = USER_DEF_INDICATOR__DATATYPE;
+
+    /**
+     * The number of structural features of the '<em>Java User Def Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR_FEATURE_COUNT = USER_DEF_INDICATOR_FEATURE_COUNT + 0;
+
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.sql.UserDefIndicator <em>User Def Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -913,6 +1275,16 @@ public interface IndicatorSqlPackage extends EPackage {
     EClass getWhereRuleIndicator();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.sql.JavaUserDefIndicator <em>Java User Def Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Java User Def Indicator</em>'.
+     * @see org.talend.dataquality.indicators.sql.JavaUserDefIndicator
+     * @generated
+     */
+    EClass getJavaUserDefIndicator();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1033,6 +1405,16 @@ public interface IndicatorSqlPackage extends EPackage {
          * @generated
          */
         EClass WHERE_RULE_INDICATOR = eINSTANCE.getWhereRuleIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.sql.impl.JavaUserDefIndicatorImpl <em>Java User Def Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.sql.impl.JavaUserDefIndicatorImpl
+         * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getJavaUserDefIndicator()
+         * @generated
+         */
+        EClass JAVA_USER_DEF_INDICATOR = eINSTANCE.getJavaUserDefIndicator();
 
     }
 

@@ -111,6 +111,16 @@ public class IndicatorSqlSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorSqlPackage.JAVA_USER_DEF_INDICATOR: {
+                JavaUserDefIndicator javaUserDefIndicator = (JavaUserDefIndicator)theEObject;
+                T result = caseJavaUserDefIndicator(javaUserDefIndicator);
+                if (result == null) result = caseUserDefIndicator(javaUserDefIndicator);
+                if (result == null) result = caseIndicator(javaUserDefIndicator);
+                if (result == null) result = caseModelElement(javaUserDefIndicator);
+                if (result == null) result = caseElement(javaUserDefIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -142,6 +152,21 @@ public class IndicatorSqlSwitch<T> {
      * @generated
      */
     public T caseWhereRuleIndicator(WhereRuleIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Java User Def Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Java User Def Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseJavaUserDefIndicator(JavaUserDefIndicator object) {
         return null;
     }
 
