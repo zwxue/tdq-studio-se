@@ -101,9 +101,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // --- release resultset
         resultSet.close();
         // --- close
-        // MOD zshen :where create where close,I don't think should close the connection in here.
-        // connection.close();
-        // ~
+        connection.close();
         return ok;
     }
 
