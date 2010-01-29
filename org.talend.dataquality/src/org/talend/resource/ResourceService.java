@@ -108,8 +108,15 @@ public final class ResourceService {
      * DOC bZhou Comment method "refreshStructure".
      */
     public static void refreshStructure() {
+        refreshStructure(ResourceManager.getRootProject());
+    }
+
+    /**
+     * DOC bZhou Comment method "refreshStructure".
+     */
+    public static void refreshStructure(IResource resource) {
         try {
-            ResourceManager.getRootProject().refreshLocal(IResource.DEPTH_INFINITE, null);
+            resource.refreshLocal(IResource.DEPTH_INFINITE, null);
         } catch (CoreException e) {
             log.error(e.getMessage(), e);
         }

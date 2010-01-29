@@ -104,7 +104,8 @@ public enum EResourceConstant {
     }
 
     /**
-     * DOC bzhou Comment method "findQualificationsByPath".
+     * 
+     * This method is to find the matched Qualifications constant by path.
      * 
      * @param path
      * @return
@@ -120,43 +121,63 @@ public enum EResourceConstant {
     }
 
     /**
-     * DOC bZhou Comment method "getResourceConstant".
      * 
-     * @param file
+     * This method is to find the matched resource constant by path.
+     * 
+     * @param path
      * @return null if can't find.
      */
-    public static EResourceConstant getResourceConstant(IPath file) {
-        if (FactoriesUtil.isAnalysisFile(file)) {
+    public static EResourceConstant getResourceConstant(IPath path) {
+        if (FactoriesUtil.isAnalysisFile(path)) {
             return ANALYSIS;
-        } else if (FactoriesUtil.isDQRuleFile(file)) {
+        } else if (FactoriesUtil.isDQRuleFile(path)) {
             return RULES_SQL;
-        } else if (FactoriesUtil.isPatternFile(file)) {
+        } else if (FactoriesUtil.isPatternFile(path)) {
             return PATTERNS;
-        } else if (FactoriesUtil.isProvFile(file)) {
+        } else if (FactoriesUtil.isProvFile(path)) {
             return DB_CONNECTIONS;
-        } else if (FactoriesUtil.isReportFile(file)) {
+        } else if (FactoriesUtil.isReportFile(path)) {
             return REPORTS;
-        } else if (FactoriesUtil.isUDIFile(file)) {
+        } else if (FactoriesUtil.isUDIFile(path)) {
             return USER_DEFINED_INDICATORS;
-        } else if (FactoriesUtil.SQL.equals(file.getFileExtension())) {
+        } else if (FactoriesUtil.SQL.equals(path.getFileExtension())) {
             return SOURCE_FILES;
         }
 
         return null;
     }
 
+    /**
+     * 
+     * This method is to find the matched resource constant by file.
+     * 
+     * @param file
+     * @return null if can't find.
+     */
     public static EResourceConstant getResourceConstant(IFile file) {
-        if (file != null) {
-            return getResourceConstant(file.getFullPath());
-        }
-        return null;
+        return getResourceConstant(file.getFullPath());
     }
 
-    private static final IPath[] RESOURCE_PATHS = EResourceConstant.getPathes();
+    /**
+     * 
+     * This mehtod is to get the top level folder constant of TOP.
+     * 
+     * @return An array of EResourceConstant.
+     */
+    public static EResourceConstant[] getTopConstants() {
+        return new EResourceConstant[] { DATA_PROFILING, LIBRARIES, METADATA };
+    }
 
+    /**
+     * 
+     * This method is to see whether the path is a current workspace constant path.
+     * 
+     * @param path
+     * @return true if it is, otherwise false.
+     */
     public static boolean isConstantPath(IPath path) {
         if (path != null) {
-            for (IPath tmp : RESOURCE_PATHS) {
+            for (IPath tmp : getPathes()) {
                 if (tmp.equals(path)) {
                     return true;
                 }

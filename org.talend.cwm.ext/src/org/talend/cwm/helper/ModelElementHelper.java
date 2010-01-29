@@ -132,6 +132,28 @@ public final class ModelElementHelper {
         return null;
     }
 
+    /**
+     * DOC bZhou Comment method "iterateClientDependencies".
+     * 
+     * @param element
+     * @param returnElements
+     */
+    public static void iterateClientDependencies(ModelElement element, List<ModelElement> returnElements) {
+        if (returnElements != null) {
+            for (Dependency dependency : element.getClientDependency()) {
+
+                EList<ModelElement> supplier = dependency.getSupplier();
+                if (supplier != null) {
+                    for (ModelElement subElement : supplier) {
+                        iterateClientDependencies(subElement, returnElements);
+                    }
+
+                    returnElements.addAll(supplier);
+                }
+            }
+        }
+    }
+
     public static boolean isFromSameConnection(List<ModelElement> elements) {
         assert elements != null;
 

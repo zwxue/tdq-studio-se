@@ -56,7 +56,16 @@ public final class WorkspaceVersionHelper {
      * @return
      */
     public static ProductVersion getVesion() {
-        IFile versionFile = getVersionFile();
+        return getVesion(getVersionFile());
+    }
+
+    /**
+     * DOC bZhou Get version file by IFile.
+     * 
+     * @param versionFile
+     * @return
+     */
+    public static ProductVersion getVesion(IFile versionFile) {
         try {
             versionFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
             if (versionFile.exists()) {
