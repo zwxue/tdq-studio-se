@@ -62,6 +62,7 @@ import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -73,6 +74,7 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -85,6 +87,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
 
     private String execLang;
+
+    private CCombo execCombo;
 
     AnalysisColumnTreeViewer treeViewer;
 
@@ -503,7 +507,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(2, false));
         toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
-        final CCombo execCombo = new CCombo(sectionClient, SWT.BORDER);
+        execCombo = new CCombo(sectionClient, SWT.BORDER);
         execCombo.setEditable(false);
         for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
             String temp = language.getLiteral();
@@ -525,6 +529,16 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 // execCombo.setText(ExecutionLanguage.SQL.getLiteral());
                 // return;
                 // }
+                // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
+                // "analyzed Columns",ExecutionLanguage only is Java.
+                if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {
+                    MessageUI.openWarning(DefaultMessagesImpl
+                            .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
+                    execCombo.setText(ExecutionLanguage.JAVA.getLiteral());
+                    execLang = execCombo.getText();
+                    return;
+                }
+                // ~11104
                 setDirty(true);
                 treeViewer.setLanguage(ExecutionLanguage.get(execLang));
                 // ~
@@ -762,4 +776,47 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
         return new ReturnCode(true);
     }
+
+    /**
+     * 
+     * DOC zshen Comment method "getExecCombo".
+     * 
+     * @return the Combo for executeLanguage
+     */
+    public CCombo getExecCombo() {
+        return execCombo;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "includeDatePatternFreqIndicator".
+     * 
+     * @return whether have a datePatternFreqIndicator in the "analyzed Columns"
+     */
+    public boolean includeDatePatternFreqIndicator() {
+        for (ModelElementIndicator modelElementIndicator : this.treeViewer.getModelElementIndicator()) {
+            if (modelElementIndicator.contains(IndicatorEnum.DatePatternFreqIndicatorEnum)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "chageExecuteLanguageToJava". change ExecutionLanuage to Java.
+     */
+    public void chageExecuteLanguageToJava() {
+        if (includeDatePatternFreqIndicator() && ExecutionLanguage.SQL.getLiteral().equals(this.execLang)) {
+            int i = 0;
+            for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
+                if (language.compareTo(ExecutionLanguage.JAVA) == 0) {
+                    this.execCombo.select(i);
+                } else {
+                    i++;
+                }
+            }
+        }
+    }
+
 }

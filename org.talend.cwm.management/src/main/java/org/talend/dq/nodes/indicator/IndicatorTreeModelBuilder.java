@@ -43,7 +43,7 @@ public final class IndicatorTreeModelBuilder {
 
         // build pattern finder categoryNode
         IndicatorEnum[] patternFinderEnums = new IndicatorEnum[] { IndicatorEnum.PatternFreqIndicatorEnum,
-                IndicatorEnum.PatternLowFreqIndicatorEnum };
+                IndicatorEnum.PatternLowFreqIndicatorEnum, IndicatorEnum.DatePatternFreqIndicatorEnum };
         IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode(Messages
                 .getString("IndicatorTreeModelBuilder.PatternStatistics"), //$NON-NLS-1$
                 patternFinderEnums);

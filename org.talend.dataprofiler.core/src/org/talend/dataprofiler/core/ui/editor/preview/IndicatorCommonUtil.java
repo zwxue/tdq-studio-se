@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
+import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -119,6 +121,7 @@ public final class IndicatorCommonUtil {
                 case LowFrequencyIndicatorEnum:
                 case PatternFreqIndicatorEnum:
                 case PatternLowFreqIndicatorEnum:
+                case DatePatternFreqIndicatorEnum:
                 case SoundexIndicatorEnum:
                 case SoundexLowIndicatorEnum:
                     tempObject = handleFrequency(indicator);
@@ -201,6 +204,20 @@ public final class IndicatorCommonUtil {
                 frequencyExt[i].setFrequency(udi.getFrequency(o));
                 i++;
             }
+        } else if (IndicatorEnum.DatePatternFreqIndicatorEnum.getIndicatorType().isInstance(indicator)) {
+            DatePatternFreqIndicator datePatternFrequency = (DatePatternFreqIndicator) indicator;
+            List<Object> modelMatchers = datePatternFrequency.getRealModelMatcherList();
+            frequencyExt = new FrequencyExt[modelMatchers.size()];
+            int i = 0;
+            for (Object patternMatcher : modelMatchers) {
+
+                frequencyExt[i] = new FrequencyExt();
+                frequencyExt[i].setKey(datePatternFrequency.getModel(patternMatcher));
+                frequencyExt[i].setValue(Long.valueOf(String.valueOf(datePatternFrequency.getScore(patternMatcher))));
+                frequencyExt[i].setFrequency(datePatternFrequency.getFrequency(patternMatcher));
+                i++;
+            }
+
         } else {
             FrequencyIndicator frequency = (FrequencyIndicator) indicator;
             Set<Object> valueSet = frequency.getDistinctValues();

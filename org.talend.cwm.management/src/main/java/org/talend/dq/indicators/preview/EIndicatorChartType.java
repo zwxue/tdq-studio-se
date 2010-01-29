@@ -35,6 +35,8 @@ public enum EIndicatorChartType {
                                  Messages.getString("EIndicatorChartType.PatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
     PATTERN_LOW_FREQUENCE_STATISTICS(
                                      Messages.getString("EIndicatorChartType.PatternLowFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
+    DATE_PATTERN_FREQUENCE_STATISTICS(
+                                      Messages.getString("EIndicatorChartType.DatePatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
     SUMMARY_STATISTICS(Messages.getString("EIndicatorChartType.SummaryStatistics"), new SummaryStastictisExplorer()), //$NON-NLS-1$
     PATTERN_MATCHING(Messages.getString("EIndicatorChartType.PatternMatching"), new PatternExplorer()), //$NON-NLS-1$
     SQL_PATTERN_MATCHING(Messages.getString("EIndicatorChartType.SQLPatternMatching"), new PatternExplorer()), //$NON-NLS-1$

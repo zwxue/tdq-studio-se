@@ -37,6 +37,7 @@ import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
+import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -619,6 +620,17 @@ public final class DefinitionHandler {
         @Override
         public Boolean casePatternLowFreqIndicator(PatternLowFreqIndicator object) {
             return setIndicatorDefinition(object, "Pattern Low Frequency Table"); //$NON-NLS-1$
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#
+         * caseDatePatternFreqIndicator(org.talend.dataquality .indicators.DatePatternFreqIndicator)
+         */
+        @Override
+        public Boolean caseDatePatternFreqIndicator(DatePatternFreqIndicator object) {
+            return setIndicatorDefinition(object, "Date Pattern Frequency Table"); //$NON-NLS-1$
         }
 
         /*

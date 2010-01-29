@@ -41,8 +41,8 @@ public final class CompositeIndicator {
     private Map<EIndicatorChartType, List<TableIndicatorUnit>> tableSeparatedMap;
 
     private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, soundexFrequencyList,
-            soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, summaryList, patternList, sqlPatternList,
-            modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList;
+            soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, datePatternFrequencyList, summaryList,
+            patternList, sqlPatternList, modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList;
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
@@ -71,6 +71,7 @@ public final class CompositeIndicator {
         soundexLowFrequencyList = new ArrayList<IndicatorUnit>();
         patternFrequencylist = new ArrayList<IndicatorUnit>();
         patternLowFrequencyList = new ArrayList<IndicatorUnit>();
+        datePatternFrequencyList = new ArrayList<IndicatorUnit>();
         summaryList = new ArrayList<IndicatorUnit>();
         patternList = new ArrayList<IndicatorUnit>();
         sqlPatternList = new ArrayList<IndicatorUnit>();
@@ -96,6 +97,7 @@ public final class CompositeIndicator {
         soundexLowFrequencyList.clear();
         patternFrequencylist.clear();
         patternLowFrequencyList.clear();
+        datePatternFrequencyList.clear();
         summaryList.clear();
         patternList.clear();
         sqlPatternList.clear();
@@ -164,6 +166,9 @@ public final class CompositeIndicator {
             case PatternLowFreqIndicatorEnum:
                 patternLowFrequencyList.add(one);
                 break;
+            case DatePatternFreqIndicatorEnum:
+                datePatternFrequencyList.add(one);
+                break;
             case IQRIndicatorEnum:
             case RangeIndicatorEnum:
             case MeanIndicatorEnum:
@@ -211,6 +216,7 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.SOUNDEX_LOW_FREQUENCY_TABLE, soundexLowFrequencyList);
         separatedMap.put(EIndicatorChartType.PATTERN_FREQUENCE_STATISTICS, patternFrequencylist);
         separatedMap.put(EIndicatorChartType.PATTERN_LOW_FREQUENCE_STATISTICS, patternLowFrequencyList);
+        separatedMap.put(EIndicatorChartType.DATE_PATTERN_FREQUENCE_STATISTICS, datePatternFrequencyList);
         separatedMap.put(EIndicatorChartType.SUMMARY_STATISTICS, summaryList);
         separatedMap.put(EIndicatorChartType.PATTERN_MATCHING, patternList);
         separatedMap.put(EIndicatorChartType.SQL_PATTERN_MATCHING, sqlPatternList);

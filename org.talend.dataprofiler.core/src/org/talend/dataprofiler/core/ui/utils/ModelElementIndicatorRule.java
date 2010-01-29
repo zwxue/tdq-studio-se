@@ -24,7 +24,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public final class ModelElementIndicatorRule {
 
@@ -107,6 +107,12 @@ public final class ModelElementIndicatorRule {
                 return true;
             }
 
+            break;
+        // MOD zshen 2010-01-27 Date Pattern frequency indicator
+        case DatePatternFreqIndicatorEnum:
+            if (Java2SqlType.isDateInSQL(javaType) || Java2SqlType.isTextInSQL(javaType) || Java2SqlType.isDateTimeSQL(javaType)) {
+                return true;
+            }
             break;
         // MOD mzhao 2009-03-05 Soundex frequency indicator
         case SoundexIndicatorEnum:

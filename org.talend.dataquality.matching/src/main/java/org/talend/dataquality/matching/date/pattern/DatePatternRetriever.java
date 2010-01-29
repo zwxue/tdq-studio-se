@@ -35,17 +35,18 @@ public class DatePatternRetriever {
     private List<ModelMatcher> modelMatchers = new ArrayList<ModelMatcher>();
 
     public List<ModelMatcher> getModelMatchers() {
-		return modelMatchers;
-	}
+        return modelMatchers;
+    }
 
-	public void setModelMatchers(List<ModelMatcher> modelMatchers) {
-		this.modelMatchers = modelMatchers;
-	}
+    public void setModelMatchers(List<ModelMatcher> modelMatchers) {
+        this.modelMatchers = modelMatchers;
+    }
 
-	private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
+    private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
 
     // constructor
     public DatePatternRetriever() {
+
     }
 
     // initialization method of modelMatchers
@@ -68,19 +69,19 @@ public class DatePatternRetriever {
                 br.close();
             }
         } catch (FileNotFoundException e) {
-        	logger.warn("File not found");
+            logger.warn("File not found");
         } catch (IOException e) {
-        	logger.warn("Problem when reading");
+            logger.warn("Problem when reading");
         }
     }
 
     /**
      * @param expression
      */
-    public void handle(String expression) {        
+    public void handle(String expression) {
         for (ModelMatcher patternMatcher : this.modelMatchers) {
-            if(patternMatcher.matches(expression)){
-            	//patternMatcher.increment();                  
+            if (patternMatcher.matches(expression)) {
+                // patternMatcher.increment();
             }
         }
     }
@@ -90,7 +91,7 @@ public class DatePatternRetriever {
      */
     public void showResults() {
         this.getOrderedModelMatchers();
-        for (ModelMatcher patternMatcher : this.modelMatchers){
+        for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.getScore() > 0) {
                 if (logger.isInfoEnabled()) {
                     logger.info(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");
@@ -104,7 +105,8 @@ public class DatePatternRetriever {
      * sort pattern according to theirs score
      */
     @SuppressWarnings("unchecked")
-    public void getOrderedModelMatchers() {    	
-    	Collections.sort(this.modelMatchers);        
+    public void getOrderedModelMatchers() {
+        Collections.sort(this.modelMatchers);
     }
+
 }

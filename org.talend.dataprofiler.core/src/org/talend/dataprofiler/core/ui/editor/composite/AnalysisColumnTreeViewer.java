@@ -751,7 +751,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             ModelElementIndicator[] result = dialog.getResult();
             for (ModelElementIndicator modelElementIndicator : result) {
                 modelElementIndicator.storeTempIndicator();
+                // MOD zshen 11104:change ExecutLanguage for DatePatternFreqIndicator
+                this.masterPage.chageExecuteLanguageToJava();
+                // ~11104
             }
+
             this.setElements(result);
             return;
         }

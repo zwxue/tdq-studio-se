@@ -41,7 +41,8 @@ public class IndicatorEvaluator extends Evaluator<String> {
         ReturnCode ok = new ReturnCode(true);
         // check analyzed columns
         Set<String> columns = getAnalyzedElements();
-        // feature 0010630 zshen:Make the same order which columns and columnName in the sqlStatement
+        // feature 0010630 zshen:Make order unify which columns and columnName in the sqlStatement.mssqlOdbc need do
+        // this
         List<String> columnlist = sortColumnName(columns, sqlStatement);
         if (columnlist.isEmpty()) {
             ok.setReturnCode(Messages.getString("IndicatorEvaluator.DefineAnalyzedColumns"), false); //$NON-NLS-1$
@@ -79,10 +80,10 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 List<Indicator> indicators = getIndicators(col);
                 int offset = col.lastIndexOf('.') + 1;
                 col = col.substring(offset);
+
                 // ~
                 // --- get content of column
                 Object object = resultSet.getObject(col);
-
                 // --- give row to handle to indicators
                 for (Indicator indicator : indicators) {
                     // MOD xqliu 2009-02-09 bug 6237
@@ -100,7 +101,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // --- release resultset
         resultSet.close();
         // --- close
-        connection.close();
+        // MOD zshen :where create where close,I don't think should close the connection in here.
+        // connection.close();
+        // ~
         return ok;
     }
 

@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIFrequencyS
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIMatchStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDISimpleStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.DatePatternFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.LowFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.PatternFrequencyStatisticsState;
@@ -74,6 +75,9 @@ public final class ChartTypeStatesOperator {
 
         case PATTERN_LOW_FREQUENCE_STATISTICS:
             return new PatternLowFrequencyStatisticsState(units);
+
+        case DATE_PATTERN_FREQUENCE_STATISTICS:
+            return new DatePatternFrequencyStatisticsState(units);
 
         case PATTERN_MATCHING:
             return new REGEXPatternStatisticsState(units);

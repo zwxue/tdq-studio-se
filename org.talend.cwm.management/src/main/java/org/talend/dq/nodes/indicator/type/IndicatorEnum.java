@@ -107,6 +107,11 @@ public enum IndicatorEnum {
                                 IndicatorsPackage.Literals.PATTERN_LOW_FREQ_INDICATOR,
                                 "pattern low frequency table", //$NON-NLS-1$
                                 null),
+    DatePatternFreqIndicatorEnum(
+                                 IndicatorsPackage.DATE_PATTERN_FREQ_INDICATOR,
+                                 IndicatorsPackage.Literals.DATE_PATTERN_FREQ_INDICATOR,
+                                 "date pattern frequency table", //$NON-NLS-1$
+                                 null),
 
     MeanIndicatorEnum(IndicatorsPackage.MEAN_INDICATOR, IndicatorsPackage.Literals.MEAN_INDICATOR, "mean", null), //$NON-NLS-1$
     MedianIndicatorEnum(IndicatorsPackage.MEDIAN_INDICATOR, IndicatorsPackage.Literals.MEDIAN_INDICATOR, "median", null), //$NON-NLS-1$
@@ -296,6 +301,8 @@ public enum IndicatorEnum {
             returnEnum = PatternFreqIndicatorEnum;
         } else if (indicatorType == PatternLowFreqIndicatorEnum.getIndicatorType()) {
             returnEnum = PatternLowFreqIndicatorEnum;
+        } else if (indicatorType == DatePatternFreqIndicatorEnum.getIndicatorType()) {
+            returnEnum = DatePatternFreqIndicatorEnum;
         } else if (indicatorType == TextIndicatorEnum.getIndicatorType()) {
             returnEnum = TextIndicatorEnum;
         } else if (indicatorType == BoxIIndicatorEnum.getIndicatorType()) {
