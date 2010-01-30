@@ -70,7 +70,9 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -120,6 +122,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     private List<ExpandableComposite> previewChartList = null;
 
+    private static IndicatorSqlSwitch<JavaUserDefIndicator> javaUserDefIndSwitch = new IndicatorSqlSwitch<JavaUserDefIndicator>() {
+
+        @Override
+        public JavaUserDefIndicator caseJavaUserDefIndicator(JavaUserDefIndicator object) {
+            return object;
+        }
+
+    };
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
@@ -524,7 +534,15 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             public void modifyText(ModifyEvent e) {
                 // MOD xqliu 2009-08-24 bug 8776
                 execLang = execCombo.getText();
-                // MOD mzhao feature 11128, 2010-01-29. Java Engine is applicable to Java UDI.
+                // MOD mzhao feature 11128, 2010-01-29. Java Engine is applicable to Java UDI. Set the Java UDI the
+                // right language.
+                EList<Indicator> inds  = analysis.getResults().getIndicators();
+                for(Indicator ind:inds){
+                    if(javaUserDefIndSwitch.doSwitch(ind)!=null){
+                        ((JavaUserDefIndicator) ind).setExecuteEngine(ExecutionLanguage.get(execLang));
+                    }
+                }
+                
                 // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
                 // "analyzed Columns",ExecutionLanguage only is Java.
                 if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {

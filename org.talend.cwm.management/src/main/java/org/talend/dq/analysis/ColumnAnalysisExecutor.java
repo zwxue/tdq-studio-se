@@ -35,7 +35,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.dbms.GenericSQLHandler;
-import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -98,13 +97,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
                 return false;
             }
             String columnName = ColumnHelper.getFullName(tdColumn);
-
-            // ~ MOD mzhao 11128, Add capability to handle Java UDI.
-            Indicator judi = UDIHelper.adaptToJavaUDI(indicator);
-            if (judi != null) {
-                indicator = judi;
-            }
-            // ~
             eval.storeIndicator(columnName, indicator);
         }
 

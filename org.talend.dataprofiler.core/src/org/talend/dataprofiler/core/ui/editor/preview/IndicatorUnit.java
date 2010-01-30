@@ -17,7 +17,6 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 
@@ -43,11 +42,7 @@ public class IndicatorUnit {
         this.type = type;
         this.indicator = indicator;
         this.modelElementIndicator = modelElementIndicator;
-        // MOD mzhao feature 11128, Handle Java User Defined Indicator.
-        Indicator judi = UDIHelper.adaptToJavaUDI(this.indicator);
-        if (judi != null) {
-            this.indicator = judi;
-        }
+
     }
 
     /**

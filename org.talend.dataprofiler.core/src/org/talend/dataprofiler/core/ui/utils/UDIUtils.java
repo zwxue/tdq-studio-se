@@ -24,6 +24,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -65,6 +66,12 @@ public final class UDIUtils {
 
         Indicator udi = UDIFactory.createUserDefIndicator(udid);
         udi.setIndicatorDefinition(udid);
+        // MOD mzhao feature 11128, Handle Java User Defined Indicator.
+        Indicator judi = UDIHelper.adaptToJavaUDI(udi);
+        if (judi != null) {
+            ((JavaUserDefIndicator) judi).setExecuteEngine(analysis.getParameters().getExecutionLanguage());
+            udi = judi;
+        }
         IndicatorEnum indicatorType = IndicatorEnum.findIndicatorEnum(udi.eClass());
 
         // MOD xqliu 2009-10-09 bug 9304

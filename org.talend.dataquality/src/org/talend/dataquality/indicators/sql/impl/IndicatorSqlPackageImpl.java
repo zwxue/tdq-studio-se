@@ -418,6 +418,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
         // Obtain other dependent packages
         IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
+        AnalysisPackage theAnalysisPackage = (AnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
 
         // Create type parameters
 
@@ -455,6 +456,9 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
         op = addEOperation(javaUserDefIndicatorEClass, null, "setJavaUserDefObject", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, this.getUserDefIndicator(), "javaUDIObj", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = addEOperation(javaUserDefIndicatorEClass, null, "setExecuteEngine", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theAnalysisPackage.getExecutionLanguage(), "executionLanguage", 0, 1, IS_UNIQUE, IS_ORDERED);
     }
 
 } //IndicatorSqlPackageImpl

@@ -161,6 +161,7 @@ public final class IndicatorCommonUtil {
                     break;
 
                 case UserDefinedIndicatorEnum:
+                case JavaUserDefinedIndicatorEnum:
                     tempObject = handleUDIValue(indicator);
                     break;
 

@@ -781,6 +781,9 @@
         <eOperations name="setJavaUserDefObject">
           <eParameters name="javaUDIObj" eType="#//indicators/sql/UserDefIndicator"/>
         </eOperations>
+        <eOperations name="setExecuteEngine">
+          <eParameters name="executionLanguage" eType="#//analysis/ExecutionLanguage"/>
+        </eOperations>
       </eClassifiers>
     </eSubpackages>
     <eSubpackages name="columnset" nsURI="http://dataquality.indicators.columnset"

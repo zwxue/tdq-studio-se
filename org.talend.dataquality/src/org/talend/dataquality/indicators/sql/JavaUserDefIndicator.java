@@ -6,6 +6,8 @@
  */
 package org.talend.dataquality.indicators.sql;
 
+import org.talend.dataquality.analysis.ExecutionLanguage;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -25,5 +27,13 @@ public interface JavaUserDefIndicator extends UserDefIndicator {
      * @generated
      */
     void setJavaUserDefObject(UserDefIndicator javaUDIObj);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model
+     * @generated
+     */
+    void setExecuteEngine(ExecutionLanguage executionLanguage);
 
 } // JavaUserDefIndicator

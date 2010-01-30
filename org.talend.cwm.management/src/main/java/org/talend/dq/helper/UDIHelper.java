@@ -16,10 +16,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -264,9 +262,6 @@ public final class UDIHelper {
      * @return
      */
     public static Indicator adaptToJavaUDI(Indicator indicator) {
-        if (judiMap.get(indicator) != null) {
-            return judiMap.get(indicator);
-        }
         UserDefIndicator adaptedUDI = null;
         if (userDefIndSwitch.doSwitch(indicator) != null) {
             EList<TaggedValue> taggedValues = indicator.getIndicatorDefinition().getTaggedValue();
@@ -295,7 +290,6 @@ public final class UDIHelper {
                         judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
                         judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
                         adaptedUDI = judiTemplate;
-                        judiMap.put(indicator, adaptedUDI);
                     }
                 } catch (ClassNotFoundException e) {
                     log.error(e, e);
@@ -326,5 +320,4 @@ public final class UDIHelper {
         return false;
     }
 
-    private static Map<Indicator, Indicator> judiMap = new HashMap<Indicator, Indicator>();
 }
