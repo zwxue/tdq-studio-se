@@ -16,9 +16,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.PluginConstant;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
@@ -29,6 +31,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -66,7 +69,15 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
         IndicatorDefinition indicatorDefinition = (IndicatorDefinition) cwmElement;
-        indicatorDefinition.getSqlGenericExpression().add(getExpression());
+        // MOD mzhao feature 11128.
+        if (!getParameter().getLanguage().equals(PatternLanguageType.JAVA.getName())) {
+            indicatorDefinition.getSqlGenericExpression().add(getExpression());
+        } else {
+            TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(PluginConstant.CLASS_NAME_TEXT, "");
+            TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(PluginConstant.JAR_FILE_PATH, "");
+            indicatorDefinition.getTaggedValue().add(classNameTV);
+            indicatorDefinition.getTaggedValue().add(jarPathTV);
+        }
         UDIHelper.setUDICategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
         IFolder folder = parameter.getFolderProvider().getFolderResource();
         return ElementWriterFactory.getInstance().createUDIndicatorWriter().create(indicatorDefinition, folder);
@@ -123,6 +134,10 @@ public class NewUDIndicatorWizard extends AbstractWizard {
     @Override
     public boolean canFinish() {
         if (mPage1 != null && mPage2 != null) {
+            // MOD mzhao feature 11128, In case of Java UDI,the page can finish.
+            if (PatternLanguageType.JAVA.getName().equals(getParameter().getLanguage())) {
+                return true;
+            }
             if (getParameter().getExpression() != null && !"".equals(getParameter().getExpression().trim())) { //$NON-NLS-1$
                 return mPage1.isPageComplete() && mPage2.isPageComplete();
             }

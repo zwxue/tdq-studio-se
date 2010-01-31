@@ -108,6 +108,13 @@ public class NewUDIndicatorWizardPage2 extends AbstractWizardPage {
             public void modifyText(ModifyEvent e) {
                 UDIndicatorParameter parameter = (UDIndicatorParameter) getParameter();
                 parameter.setLanguage(PatternLanguageType.findLanguageByName(comboLang.getText()));
+                // MOD mzhao feature 11128.
+                if (PatternLanguageType.JAVA.getName().equals(comboLang.getText())) {
+                    sqlText.setEnabled(false);
+                    setPageComplete(true);
+                } else {
+                    sqlText.setEnabled(true);
+                }
             }
         });
     }
