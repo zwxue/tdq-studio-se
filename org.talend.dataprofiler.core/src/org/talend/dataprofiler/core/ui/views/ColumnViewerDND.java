@@ -41,7 +41,6 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXMLElement;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
@@ -51,10 +50,8 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalInt
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
@@ -454,10 +451,12 @@ public class ColumnViewerDND {
             AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getParent().getData(
                     AnalysisColumnTreeViewer.VIEWER_KEY);
             // ADD xqliu 2009-08-24 bug 8776
-            if (ExecutionLanguage.JAVA.equals(viewer.getLanguage())) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnViewerDND.UDIWarning")); //$NON-NLS-1$
-                return;
-            }
+            // MOD mzhao feature 11128. Allowing add java user define indicators when the language engine is pecified as
+            // JAVA.
+            // if (ExecutionLanguage.JAVA.equals(viewer.getLanguage())) {
+            //                MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnViewerDND.UDIWarning")); //$NON-NLS-1$
+            // return;
+            // }
             // ~
             Analysis analysis = viewer.getAnalysis();
 
