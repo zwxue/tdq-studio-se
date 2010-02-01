@@ -13,6 +13,7 @@
 package org.talend.dq.dbms;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -92,8 +93,26 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
                 genericQuery = genericQuery.toUpperCase().replace("SOUNDEX(" + GenericSQLHandler.COLUMN_NAMES + ")",
                         this.SOUNDEX_COLUMN_ALIASE);
             }
+        } else {
+            groupByAliases = computeAliasesIndex(columns, groupByAliases);
         }
         return super.fillGenericQueryWithColumnTableAndAlias(genericQuery, columns, table, groupByAliases);
+
+    }
+
+    private String computeAliasesIndex(String columns, String groupByAliases) {
+        if (null == columns || columns.equals("*") || columns.equals("")) {
+            return groupByAliases;
+
+        } else if (columns.indexOf(groupByAliases) > -1) {
+            String[] columnArray = columns.split(",");
+            for (int i = 0; i < columnArray.length; i++) {
+                if (columnArray[i].equals(groupByAliases)) {
+                    return String.valueOf(i + 1);
+                }
+            }
+        }
+        return groupByAliases;
 
     }
 
@@ -143,6 +162,17 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
                 + table + " ))) as t2 ,test_talend : test1 as t3 where t1." + colName + "='" + key
                 + "' and t2.soundex_column_result=t1.soundex_column_result and t2." + colName + "=t3." + colName + "";
         return sqlStatment;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain,
+     * java.lang.String)
+     */
+    @Override
+    protected String extract(DateGrain dateGrain, String colName) {
+        return dateGrain.getName() + surroundWith('(', colName, ')');
     }
 
 }
