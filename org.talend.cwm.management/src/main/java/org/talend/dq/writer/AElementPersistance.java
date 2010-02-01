@@ -108,11 +108,11 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             if (!util.addEObjectToResourceSet(filePath, element)) {
                 rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
             } else {
-                rc = save(element);
-                if (rc.isOk() && element instanceof RenderedObject) {
-                    ((RenderedObject) element).setFileName(file.getFullPath().toString());
+                if (element instanceof RenderedObject) {
+                    ((RenderedObject) element).setFileName(filePath);
                 }
 
+                rc = save(element);
             }
         }
 
