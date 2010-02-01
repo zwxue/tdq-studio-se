@@ -14,10 +14,8 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.migration.AProjectTask;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -39,8 +37,7 @@ public class UpdateDefintionFileTask extends AProjectTask {
             try {
                 talendDefinitionFile.delete(true, null);
 
-                IFolder librariesFolder = ResourceManager.getLibrariesFolder();
-                DefinitionHandler.getInstance().copyDefinitionsIntoFolder(librariesFolder);
+                DefinitionHandler.getInstance();
             } catch (Exception e) {
                 log.error(e, e);
                 return false;
