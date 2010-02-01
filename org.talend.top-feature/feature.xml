@@ -22,7 +22,6 @@
          version="0.0.0"/>
 
    <requires>
-      <import plugin="org.talend.core" version="2.2.0" match="greaterOrEqual"/>
       <import plugin="org.apache.log4j" version="1.2.13" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.compare" version="0.8.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.compare.diff" version="0.8.0" match="greaterOrEqual"/>
@@ -30,6 +29,7 @@
       <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.edit.ui" version="2.4.0" match="greaterOrEqual"/>
+      <import plugin="org.talend.core" version="2.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi" version="3.5.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.common" version="3.5.0" match="compatible"/>
       <import plugin="org.eclipse.core.jobs" version="3.2.0" match="compatible"/>
@@ -1569,7 +1569,12 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-         
-         <plugin id="org.hamcrest.core" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+
+   <plugin
+         id="org.hamcrest.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
