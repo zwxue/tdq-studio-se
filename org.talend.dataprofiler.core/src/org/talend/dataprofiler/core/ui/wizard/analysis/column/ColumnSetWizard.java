@@ -13,7 +13,9 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
+import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 
 /**
@@ -27,6 +29,13 @@ public class ColumnSetWizard extends ColumnWizard {
 
     @Override
     protected Indicator getMatchedIndicator() {
-        return ColumnsetFactory.eINSTANCE.createSimpleStatIndicator();
+        SimpleStatIndicator ssIndicator = ColumnsetFactory.eINSTANCE.createSimpleStatIndicator();
+
+        ssIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
+        ssIndicator.setDistinctCountIndicator(IndicatorsFactory.eINSTANCE.createDistinctCountIndicator());
+        ssIndicator.setDuplicateCountIndicator(IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator());
+        ssIndicator.setUniqueCountIndicator(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
+
+        return ssIndicator;
     }
 }
