@@ -130,6 +130,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
 
     };
+
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
@@ -517,7 +518,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(2, false));
         toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
-        final CCombo execCombo = new CCombo(sectionClient, SWT.BORDER);
+        // MOD zshen:need to use the component with finish indicator Selection.
+        execCombo = new CCombo(sectionClient, SWT.BORDER);
+        // ~
         execCombo.setEditable(false);
         for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
             String temp = language.getLiteral();
@@ -536,13 +539,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 execLang = execCombo.getText();
                 // MOD mzhao feature 11128, 2010-01-29. Java Engine is applicable to Java UDI. Set the Java UDI the
                 // right language.
-                EList<Indicator> inds  = analysis.getResults().getIndicators();
-                for(Indicator ind:inds){
-                    if(javaUserDefIndSwitch.doSwitch(ind)!=null){
+                EList<Indicator> inds = analysis.getResults().getIndicators();
+                for (Indicator ind : inds) {
+                    if (javaUserDefIndSwitch.doSwitch(ind) != null) {
                         ((JavaUserDefIndicator) ind).setExecuteEngine(ExecutionLanguage.get(execLang));
                     }
                 }
-                
+
                 // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
                 // "analyzed Columns",ExecutionLanguage only is Java.
                 if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {
