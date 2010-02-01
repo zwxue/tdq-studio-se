@@ -272,6 +272,8 @@ public final class DefinitionHandler {
     /**
      * Method "copyDefinitionsIntoFolder".
      * 
+     * This method is just for test case, it will cause the href of defintion to absolute.
+     * 
      * @param folder the folder where to copy the default resource.
      * @return the copied resource.
      */
@@ -296,8 +298,28 @@ public final class DefinitionHandler {
      * @return
      */
     public Resource copyDefinitionsIntoFolder(IFolder ifolder) {
-        File folder = new File(ifolder.getLocationURI());
-        return copyDefinitionsIntoFolder(folder);
+        URI destinationUri = URI.createPlatformResourceURI(ifolder.getFullPath().toString(), false);
+        return copyDefinitionsIntoFolder(destinationUri);
+    }
+
+    /**
+     * DOC bZhou Comment method "copyDefinitionsIntoFolder".
+     * 
+     * @param destinationUri
+     * @return
+     */
+    public Resource copyDefinitionsIntoFolder(URI destinationUri) {
+        Resource resource = getIndicatorsDefinitions().eResource();
+        EMFUtil.changeUri(resource, destinationUri);
+        if (EMFUtil.saveResource(resource)) {
+            if (log.isInfoEnabled()) {
+                log.info("Indicator default definitions correctly saved in " + resource.getURI());
+            }
+        } else {
+            log.error("Failed to save default indicator definitions in " + resource.getURI());
+
+        }
+        return resource;
     }
 
     /**
