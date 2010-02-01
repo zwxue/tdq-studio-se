@@ -222,6 +222,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             String tableNameA = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetA().get(0)).getName();
             String tableNameB = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetB().get(0)).getName();
             // ~
+            // MOD zshen 11136: the chart of result lose one table
+            if (tableNameA.equals(tableNameB)) {
+                tableNameB = tableNameB + "(*)";
+            }
+            // ~11136
             columnHeader1.setText(tableNameA);
             // columnHeader1.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetA")); // TODO scorreia put here table name instead //$NON-NLS-1$
             if (!isHasDeactivatedIndicator) {
@@ -383,7 +388,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                 //
                 //                String query = "SELECT * " + dbmsLanguage.from() + dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName()) //$NON-NLS-1$
                 //                        + "." + dbmsLanguage.quote(columnSet.getName()); //$NON-NLS-1$
-                // MOD 10913 zshen:unique the method that get sql query
+                // MOD 10913 zshen:unify the method that get sql query
                 TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
