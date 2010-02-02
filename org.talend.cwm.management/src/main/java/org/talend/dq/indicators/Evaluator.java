@@ -88,7 +88,7 @@ public abstract class Evaluator<T> {
      * @param sqlStatement
      * @return a return code with an error message if any problem has been encountered.
      */
-    public ReturnCode evaluateIndicators(String sqlStatement) {
+    private ReturnCode evaluateIndicators(String sqlStatement) {
         ReturnCode rc = checkConnection();
         if (!rc.isOk()) {
             return rc;

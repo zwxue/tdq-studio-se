@@ -29,9 +29,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
@@ -62,8 +60,6 @@ import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
-import org.talend.dataquality.domain.RangeRestriction;
-import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -379,25 +375,6 @@ public final class DqRepositoryViewService {
         util.setUsePlatformRelativePath(false);
         util.addPoolToResourceSet(new File(filename), domain);
 
-        return util.save();
-    }
-
-    private static boolean saveDomain(Domain domain, IFile file) {
-        EMFUtil util = new EMFUtil();
-        Resource resource = util.getResourceSet().createResource(
-                URI.createPlatformResourceURI(file.getFullPath().toString(), false));
-        assert resource != null;
-        EList<EObject> contents = resource.getContents();
-        contents.add(domain);
-
-        EList<RangeRestriction> ranges = domain.getRanges();
-        for (RangeRestriction rangeRestriction : ranges) {
-            BooleanExpressionNode rExpr = rangeRestriction.getExpressions();
-            if (rExpr != null) {
-                contents.add(rExpr);
-            }
-        }
-        contents.addAll(ranges);
         return util.save();
     }
 

@@ -171,15 +171,7 @@ public final class EMFSharedResources {
      * @return true when ok
      */
     public boolean saveResource(Resource resource) {
-        // set the current file encoding with utf-8
-        String oldProp = System.getProperty("file.encoding");
-        System.setProperty("file.encoding", "UTF-8");
-
-        boolean status = EMFUtil.saveResource(resource);
-
-        // restore previous property
-        System.setProperty("file.encoding", oldProp);
-        return status;
+        return EMFUtil.saveResource(resource);
     }
 
     /**
@@ -215,9 +207,6 @@ public final class EMFSharedResources {
         return changeUri;
     }
 
-    public boolean saveLastResource() {
-        return this.emfUtil.saveLastResource();
-    }
 
     /**
      * DOC scorreia Comment method "getSharedEmfUtil".

@@ -171,7 +171,7 @@ public final class IndicatorEvaluationMain {
             queryExpression.setLanguage("SQL"); // TODO scorreia externalize this as a constant
             tt.start("compute");
             evaluator.setFetchSize(10000);
-            evaluator.evaluateIndicators(selectCols);
+            evaluator.evaluateIndicators(selectCols, true);
             tt.end("compute");
 
             // Print indicators the median
