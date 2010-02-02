@@ -92,6 +92,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
+    // ADD xqliu 2010-02-02 bug 11198
+    private boolean mdmFlag = false;
+
     public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
             List<? extends ModelElement> modelElementList, String message) {
         super(metadataFormPage, parent, message);
@@ -123,6 +126,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         List<ModelElement> containerList = new ArrayList<ModelElement>();
         for (int i = 0; i < modelElementList.size(); i++) {
             ModelElement modelElement = modelElementList.get(i);
+            mdmFlag = mdmFlag || modelElement instanceof TdXMLElement;
             ModelElement container = ModelElementHelper.getContainer(modelElement);
             if (!containerList.contains(container)) {
                 containerList.add(container);
@@ -728,7 +732,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         || ResourceManager.getMDMConnectionFolder().equals(container)) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
-                return members;
+                return clearMdmFolder(members, mdmFlag);
             } else if (parentElement instanceof NamedColumnSet) {
                 return null;
             } else if (parentElement instanceof NamedColumnSetFolderNode) {
@@ -766,13 +770,45 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         }
                     }
                 }
-                return children;
+                return children.length == 0 ? null : children;
             }
             return super.getChildren(parentElement);
         }
 
+        /**
+         * DOC xqliu Comment method "clearMdmFolder". bug 11198
+         * 
+         * @param members
+         * @param mdmFlag
+         * @return
+         */
+        private Object[] clearMdmFolder(IResource[] members, boolean mdmFlag) {
+            List<Object> list = new ArrayList<Object>();
+            for (IResource ir : members) {
+                list.add(ir);
+            }
+            if (list.contains(ResourceManager.getMDMConnectionFolder())) {
+                if (mdmFlag) {
+                    list.clear();
+                    list.add(ResourceManager.getMDMConnectionFolder());
+                } else {
+                    list.remove(ResourceManager.getMDMConnectionFolder());
+                }
+            }
+            return list.toArray();
+        }
+
         public Object getParent(Object element) {
             if (element instanceof EObject) {
+                // MOD xqliu 2010-02-02 bug 11198
+                if (element instanceof TdXMLDocument) {
+                    TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider((TdXMLDocument) element);
+                    IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
+                    return findCorrespondingFile;
+                } else if (element instanceof TdXMLElement) {
+                    return XmlElementHelper.getParentElement((TdXMLElement) element);
+                }
+                // ~
                 EObject eObj = (EObject) element;
                 ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObj);
                 if (columnSet != null) {
@@ -796,32 +832,17 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 return ((IFolderNode) element).getParent();
             } else if (element instanceof IResource) {
                 return ((IResource) element).getParent();
-            } else if (element instanceof TdXMLDocument) {
-                TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider((TdXMLDocument) element);
-                IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
-                return findCorrespondingFile;
-            } else if (element instanceof TdXMLElement) {
-                return XmlElementHelper.getParentElement((TdXMLElement) element);
             }
             return super.getParent(element);
         }
 
         public boolean hasChildren(Object element) {
-            boolean result = !(element instanceof TdView || element instanceof TdTable);
-            if (!result) {
-                if (element instanceof TdXMLDocument) {
-                    List<ModelElement> elements = XmlElementHelper.clearLeafNode(DqRepositoryViewService
-                            .getXMLElements((TdXMLDocument) element));
-                    result = result || (elements != null && elements.size() > 0);
-                } else if (element instanceof TdXMLElement) {
-                    List<ModelElement> elements = XmlElementHelper.clearLeafNode(DqRepositoryViewService
-                            .getXMLElements((TdXMLElement) element));
-                    result = result || (elements != null && elements.size() > 0);
-                }
+            // MOD xqliu 2010-02-02 bug 11198
+            if (element instanceof TdView || element instanceof TdTable) {
+                return false;
             }
-            return result;
+            return super.hasChildren(element);
+            // ~
         }
-
     }
-
 }
