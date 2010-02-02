@@ -306,7 +306,10 @@ public final class UDIHelper {
     }
 
     private static boolean validateJavaUDI(String className, String jarPath) {
-        // TODO validate class name and jar file path.
+        if (className == null || jarPath == null || className.trim().equals(PluginConstant.EMPTY_STRING)
+                || jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
+            return false;
+        }
         return true;
     }
 
