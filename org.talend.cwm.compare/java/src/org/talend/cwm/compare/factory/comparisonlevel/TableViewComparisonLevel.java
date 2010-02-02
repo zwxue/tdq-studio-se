@@ -114,8 +114,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         try {
             diff = DiffService.doDiff(match, false);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         EList<DiffElement> ownedElements = diff.getOwnedElements();
         for (DiffElement de : ownedElements) {
