@@ -285,11 +285,16 @@ public final class UDIHelper {
                     Class<?> clazz = cl.findClass(userJavaClassName);
                     if (clazz != null) {
                         UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
-                        JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
-                        judiTemplate.setJavaUserDefObject(judi);
-                        judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                        judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
-                        adaptedUDI = judiTemplate;
+
+                        if (indicator instanceof JavaUserDefIndicator) {
+                            ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
+                        } else {
+                            JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
+                            judiTemplate.setJavaUserDefObject(judi);
+                            judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                            judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
+                            adaptedUDI = judiTemplate;
+                        }
                     }
                 } catch (ClassNotFoundException e) {
                     log.error(e, e);

@@ -336,7 +336,8 @@ public enum IndicatorEnum {
 
     public static boolean isPlainIndicatorEnum(IndicatorEnum indicatorEnumn) {
         return indicatorEnumn != RegexpMatchingIndicatorEnum && indicatorEnumn != SqlPatternMatchingIndicatorEnum
-                && indicatorEnumn != WhereRuleIndicatorEnum && indicatorEnumn != UserDefinedIndicatorEnum;
+                && indicatorEnumn != WhereRuleIndicatorEnum && indicatorEnumn != UserDefinedIndicatorEnum
+                && indicatorEnumn != JavaUserDefinedIndicatorEnum;
     }
 
     public boolean isAChildOf(IndicatorEnum parent) {

@@ -100,6 +100,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -464,6 +465,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit indicatorUnit : indicatorUnits) {
             createOneUnit(treeItem, indicatorUnit);
+            // MOD mzhao feature 11128, Handle Java User Defined Indicator.
+            Indicator judi = UDIHelper.adaptToJavaUDI(indicatorUnit.getIndicator());
+            if (judi != null) {
+                ((JavaUserDefIndicator) judi).setExecuteEngine(getAnalysis().getParameters().getExecutionLanguage());
+            }
         }
     }
 
@@ -730,7 +736,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     public void openIndicatorSelectDialog(Shell shell) {
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, DefaultMessagesImpl
-                .getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators, getLanguage()); //$NON-NLS-1$
+                .getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators); //$NON-NLS-1$
         dialog.create();
         dialog.getShell().addShellListener(new ShellAdapter() {
 
@@ -752,9 +758,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             for (ModelElementIndicator modelElementIndicator : result) {
                 modelElementIndicator.storeTempIndicator();
                 // MOD zshen 11104:change ExecutLanguage for DatePatternFreqIndicator
-                if (this.masterPage.includeDatePatternFreqIndicator()) {
-                    this.masterPage.chageExecuteLanguageToJava();
-                }
+                this.masterPage.chageExecuteLanguageToJava();
                 // ~11104
             }
 
