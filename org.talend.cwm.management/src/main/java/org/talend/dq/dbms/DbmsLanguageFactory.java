@@ -23,6 +23,7 @@ import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
+import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataquality.analysis.Analysis;
@@ -61,14 +62,15 @@ public final class DbmsLanguageFactory {
         }
 
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
-        if (softwareSystem != null) {
-            boolean isMdm = ConnectionUtils.isMdmConnection(DataProviderHelper.getTdProviderConnection(dataprovider).getObject());
+        boolean isMdm = ConnectionUtils.isMdmConnection(DataProviderHelper.getTdProviderConnection(dataprovider).getObject());
+        if (softwareSystem != null || isMdm) {
             final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : softwareSystem.getSubtype();
             if (log.isDebugEnabled()) {
                 log.debug("Software system subtype (Database type): " + dbmsSubtype);
             }
             if (StringUtils.isNotBlank(dbmsSubtype)) {
-                dbmsLanguage = createDbmsLanguage(dbmsSubtype, softwareSystem.getVersion());
+                String version = isMdm ? DatabaseConstant.MDM_VERSION : softwareSystem.getVersion();
+                dbmsLanguage = createDbmsLanguage(dbmsSubtype, version);
             }
         }
         String identifierQuoteString = DataProviderHelper.getIdentifierQuoteString(dataprovider);

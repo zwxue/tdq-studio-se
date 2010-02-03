@@ -36,6 +36,7 @@ import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
@@ -248,6 +249,6 @@ public class MdmConnection implements IXMLDBConnection {
 
     public String getVersion() {
         // TODO 10238
-        return "1.0.0";
+        return DatabaseConstant.MDM_VERSION;
     }
 }

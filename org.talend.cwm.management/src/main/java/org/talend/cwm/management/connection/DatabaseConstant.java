@@ -46,4 +46,6 @@ public final class DatabaseConstant {
     public static final String XML_EXIST_DRIVER_NAME = "org.exist.xmldb.DatabaseImpl";
 
     public static final String MDM_DBNAME = "talend/TalendPort";
+
+    public static final String MDM_VERSION = "1.0.0";
 }
