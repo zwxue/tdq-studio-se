@@ -841,7 +841,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (element instanceof TdView || element instanceof TdTable) {
                 return false;
             }
-            return super.hasChildren(element);
+            return !super.hasChildren(element); // ???
             // ~
         }
     }

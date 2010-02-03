@@ -638,7 +638,6 @@ public final class DqRepositoryViewService {
 
     public static Boolean hasChildren(TdXMLElement element) {
         XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
-        // MOD xqliu 2009-02-02 bug 11198
-        return !xmlScheBuilder.isLeafNode(element).isOk();
+        return xmlScheBuilder.isLeafNode(element).isOk();
     }
 }
