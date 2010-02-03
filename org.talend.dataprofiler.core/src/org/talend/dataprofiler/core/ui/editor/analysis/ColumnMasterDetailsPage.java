@@ -824,7 +824,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * DOC zshen Comment method "chageExecuteLanguageToJava". change ExecutionLanuage to Java.
      */
     public void chageExecuteLanguageToJava() {
-        if (includeDatePatternFreqIndicator() && ExecutionLanguage.SQL.getLiteral().equals(this.execLang)) {
+        if (!(ExecutionLanguage.JAVA.getLiteral().equals(this.execLang))) {
             int i = 0;
             for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
                 if (language.compareTo(ExecutionLanguage.JAVA) == 0) {

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.utils;
 
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
@@ -31,7 +32,7 @@ public final class ModelElementIndicatorRule {
     private ModelElementIndicatorRule() {
     }
 
-    public static boolean match(IIndicatorNode node, ModelElementIndicator meIndicator) {
+    public static boolean match(IIndicatorNode node, ModelElementIndicator meIndicator, ExecutionLanguage language) {
 
         IndicatorEnum indicatorType = node.getIndicatorEnum();
         ModelElement me = meIndicator.getModelElement();
@@ -39,7 +40,7 @@ public final class ModelElementIndicatorRule {
         if (indicatorType == null) {
 
             for (IIndicatorNode one : node.getChildren()) {
-                if (match(one, meIndicator)) {
+                if (match(one, meIndicator, language)) {
                     return true;
                 }
             }
@@ -47,10 +48,10 @@ public final class ModelElementIndicatorRule {
             return false;
         }
 
-        return patternRule(indicatorType, me);
+        return patternRule(indicatorType, me, language);
     }
 
-    public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me) {
+    public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me, ExecutionLanguage language) {
 
         int javaType = 0;
         if (me instanceof Column) {
@@ -110,7 +111,9 @@ public final class ModelElementIndicatorRule {
             break;
         // MOD zshen 2010-01-27 Date Pattern frequency indicator
         case DatePatternFreqIndicatorEnum:
-            if (Java2SqlType.isDateInSQL(javaType) || Java2SqlType.isTextInSQL(javaType) || Java2SqlType.isDateTimeSQL(javaType)) {
+            if (ExecutionLanguage.JAVA.equals(language)
+                    && (Java2SqlType.isDateInSQL(javaType) || Java2SqlType.isTextInSQL(javaType) || Java2SqlType
+                            .isDateTimeSQL(javaType))) {
                 return true;
             }
             break;

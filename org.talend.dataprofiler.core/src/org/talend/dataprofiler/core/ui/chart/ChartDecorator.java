@@ -109,20 +109,21 @@ public final class ChartDecorator {
         CategoryAxis domainAxis = plot.getDomainAxis();
         ValueAxis valueAxis = plot.getRangeAxis();
 
-        font = new Font("sans-serif", Font.BOLD, BASE_ITEM_LABEL_SIZE);
+        font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);
 
         render.setBaseItemLabelFont(font);
         // MOD zshen 10998: change the font name 2010-01-16
-        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
-
+        font = new Font("Verdana", Font.BOLD, BASE_LABEL_SIZE);
         domainAxis.setLabelFont(font);
+
+        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
         valueAxis.setLabelFont(font);
 
-        font = new Font("sans-serif", Font.PLAIN, BASE_TICK_LABEL_SIZE);
+        font = new Font("Verdana", Font.PLAIN, BASE_TICK_LABEL_SIZE);
         domainAxis.setTickLabelFont(font);
         valueAxis.setTickLabelFont(font);
 
-        font = new Font("sans-serif", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);
+        font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(font);
@@ -162,19 +163,21 @@ public final class ChartDecorator {
         ValueAxis domainAxis = plot.getDomainAxis();
         ValueAxis valueAxis = plot.getRangeAxis();
 
-        font = new Font("sans-serif", Font.BOLD, BASE_ITEM_LABEL_SIZE);
+        font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);
 
         render.setBaseItemLabelFont(font);
 
-        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
+        font = new Font("Verdana", Font.BOLD, BASE_LABEL_SIZE);
         domainAxis.setLabelFont(font);
+
+        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
         valueAxis.setLabelFont(font);
 
-        font = new Font("sans-serif", Font.PLAIN, BASE_TICK_LABEL_SIZE);
+        font = new Font("Verdana", Font.PLAIN, BASE_TICK_LABEL_SIZE);
         domainAxis.setTickLabelFont(font);
         valueAxis.setTickLabelFont(font);
 
-        font = new Font("sans-serif", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);
+        font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(font);

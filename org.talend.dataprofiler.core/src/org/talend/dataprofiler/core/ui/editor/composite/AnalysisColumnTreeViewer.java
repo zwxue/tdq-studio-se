@@ -730,7 +730,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     public void openIndicatorSelectDialog(Shell shell) {
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, DefaultMessagesImpl
-                .getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators); //$NON-NLS-1$
+                .getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators, getLanguage()); //$NON-NLS-1$
         dialog.create();
         dialog.getShell().addShellListener(new ShellAdapter() {
 
@@ -752,7 +752,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             for (ModelElementIndicator modelElementIndicator : result) {
                 modelElementIndicator.storeTempIndicator();
                 // MOD zshen 11104:change ExecutLanguage for DatePatternFreqIndicator
-                this.masterPage.chageExecuteLanguageToJava();
+                if (this.masterPage.includeDatePatternFreqIndicator()) {
+                    this.masterPage.chageExecuteLanguageToJava();
+                }
                 // ~11104
             }
 

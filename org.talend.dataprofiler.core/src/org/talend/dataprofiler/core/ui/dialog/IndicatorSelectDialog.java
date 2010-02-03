@@ -38,6 +38,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -83,6 +84,9 @@ public class IndicatorSelectDialog extends TrayDialog {
 
     private final String title;
 
+    // ADD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose bu user.
+    private ExecutionLanguage language;
+
     /**
      * DOC xqliu IndicatorSelectDialog constructor comment.
      * 
@@ -90,10 +94,12 @@ public class IndicatorSelectDialog extends TrayDialog {
      * @param title
      * @param modelElementIndicators
      */
-    public IndicatorSelectDialog(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators) {
+    public IndicatorSelectDialog(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators,
+            ExecutionLanguage language) {
         super(parentShell);
         this.title = title;
         this.modelElementIndicators = modelElementIndicators;
+        this.language = language;
         int shellStyle = getShellStyle();
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
     }
@@ -292,7 +298,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                 IIndicatorNode node = (IIndicatorNode) btn.getData();
                 IndicatorEnum indicEnum = node.getIndicatorEnum();
 
-                if (selection && ModelElementIndicatorRule.match(node, columnIndicator)) {
+                if (selection && ModelElementIndicatorRule.match(node, columnIndicator, language)) {
                     btn.setSelection(true);
                     if (indicEnum != null) {
                         columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
@@ -435,7 +441,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                         checkButton.setSelection(true);
                     }
                     final ModelElementIndicator currentIndicator = (ModelElementIndicator) treeColumns[j].getData();
-                    checkButton.setEnabled(ModelElementIndicatorRule.match(indicatorNode, currentIndicator));
+                    checkButton.setEnabled(ModelElementIndicatorRule.match(indicatorNode, currentIndicator, this.language));
                     checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum, currentIndicator));
                     if (indicatorEnum != null) {
                         checkButton.setToolTipText(DefaultMessagesImpl.getString(
