@@ -104,6 +104,21 @@ public class IndicatorSelectDialog extends TrayDialog {
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
     }
 
+    /**
+     * DOC xqliu IndicatorSelectDialog constructor comment.
+     * 
+     * @param parentShell
+     * @param title
+     * @param modelElementIndicators
+     */
+    public IndicatorSelectDialog(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators) {
+        super(parentShell);
+        this.title = title;
+        this.modelElementIndicators = modelElementIndicators;
+        int shellStyle = getShellStyle();
+        setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
+    }
+
     /*
      * (non-Javadoc) Method declared in Window.
      */
