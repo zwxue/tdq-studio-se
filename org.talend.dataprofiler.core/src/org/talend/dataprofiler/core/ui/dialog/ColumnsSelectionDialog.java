@@ -92,9 +92,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
-    // ADD xqliu 2010-02-02 bug 11198
-    private boolean mdmFlag = false;
-
     public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
             List<? extends ModelElement> modelElementList, String message) {
         super(metadataFormPage, parent, message);
@@ -126,7 +123,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         List<ModelElement> containerList = new ArrayList<ModelElement>();
         for (int i = 0; i < modelElementList.size(); i++) {
             ModelElement modelElement = modelElementList.get(i);
-            mdmFlag = mdmFlag || modelElement instanceof TdXMLElement;
             ModelElement container = ModelElementHelper.getContainer(modelElement);
             if (!containerList.contains(container)) {
                 containerList.add(container);
@@ -720,7 +716,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         @SuppressWarnings("unchecked")
         public Object[] getChildren(Object parentElement) {
             if (parentElement instanceof IContainer) {
-                IContainer container = ((IContainer) parentElement);
+                IContainer container = (IContainer) parentElement;
                 IResource[] members = null;
                 try {
                     members = container.members();
@@ -732,7 +728,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         || ResourceManager.getMDMConnectionFolder().equals(container)) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
-                return clearMdmFolder(members, mdmFlag);
+                return members;
             } else if (parentElement instanceof NamedColumnSet) {
                 return null;
             } else if (parentElement instanceof NamedColumnSetFolderNode) {
@@ -773,29 +769,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 return children.length == 0 ? null : children;
             }
             return super.getChildren(parentElement);
-        }
-
-        /**
-         * DOC xqliu Comment method "clearMdmFolder". bug 11198
-         * 
-         * @param members
-         * @param mdmFlag
-         * @return
-         */
-        private Object[] clearMdmFolder(IResource[] members, boolean mdmFlag) {
-            List<Object> list = new ArrayList<Object>();
-            for (IResource ir : members) {
-                list.add(ir);
-            }
-            if (list.contains(ResourceManager.getMDMConnectionFolder())) {
-                if (mdmFlag) {
-                    list.clear();
-                    list.add(ResourceManager.getMDMConnectionFolder());
-                } else {
-                    list.remove(ResourceManager.getMDMConnectionFolder());
-                }
-            }
-            return list.toArray();
         }
 
         public Object getParent(Object element) {
@@ -841,8 +814,28 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (element instanceof TdView || element instanceof TdTable) {
                 return false;
             }
-            return !super.hasChildren(element); // ???
+            return superHasChildren(element); // ???
             // ~
         }
+
+        /**
+         * If element if TdXMLElement, the super method hasChildren() return wrong result, so add use this method to get
+         * the right result. xqliu 2010-02-04
+         * 
+         * @param element
+         * @return
+         */
+        private boolean superHasChildren(Object element) {
+            boolean hasChildren = super.hasChildren(element);
+            if (element instanceof EObject) {
+                EObject eobject = (EObject) element;
+                if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(eobject) != null) {
+                    hasChildren = !hasChildren;
+                }
+            }
+
+            return hasChildren;
+        }
+
     }
 }
