@@ -32,11 +32,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -102,6 +105,7 @@ public class IndicatorSelectDialog extends TrayDialog {
         this.language = language;
         int shellStyle = getShellStyle();
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
+
     }
 
     /**
@@ -110,6 +114,7 @@ public class IndicatorSelectDialog extends TrayDialog {
      * @param parentShell
      * @param title
      * @param modelElementIndicators
+     * @deprecated
      */
     public IndicatorSelectDialog(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators) {
         super(parentShell);
@@ -117,6 +122,16 @@ public class IndicatorSelectDialog extends TrayDialog {
         this.modelElementIndicators = modelElementIndicators;
         int shellStyle = getShellStyle();
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
+        // MOD zshen: obtain language.
+        Object editorPart = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        if (editorPart instanceof AnalysisEditor) {
+            AnalysisEditor analyEditor = (AnalysisEditor) editorPart;
+            if (analyEditor.getMasterPage() instanceof ColumnMasterDetailsPage)
+                this.language = ExecutionLanguage.get(((ColumnMasterDetailsPage) analyEditor.getMasterPage()).getExecCombo()
+                        .getText());
+        }
+        // ~
+
     }
 
     /*

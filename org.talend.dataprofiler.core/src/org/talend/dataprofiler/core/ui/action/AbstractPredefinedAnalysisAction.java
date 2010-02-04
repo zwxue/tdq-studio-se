@@ -38,7 +38,6 @@ import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -155,7 +154,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
     protected ColumnIndicator[] composePredefinedColumnIndicator(IndicatorEnum[] allowedEnum) {
 
         ColumnIndicator[] predefinedColumnIndicator = new ColumnIndicator[getColumns().length];
-        ExecutionLanguage language = AnalysisHelper.getExecutionEngine(getMasterPage().getAnalysis());
+        ExecutionLanguage language = ExecutionLanguage.get(getMasterPage().getExecCombo().getText());
         for (int i = 0; i < getColumns().length; i++) {
 
             TdColumn column = getColumns()[i];
@@ -165,7 +164,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 columnIndicator.addTempIndicatorEnum(oneEnum);
                 if (oneEnum.getChildren() != null) {
                     for (IndicatorEnum childEnum : oneEnum.getChildren()) {
-                        // MOD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose bu
+                        // MOD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose by
                         // user.
                         if (ModelElementIndicatorRule.patternRule(childEnum, column, language)) {
                             columnIndicator.addTempIndicatorEnum(childEnum);
