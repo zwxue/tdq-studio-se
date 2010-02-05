@@ -117,11 +117,7 @@ public class IndicatorSelectDialog extends TrayDialog {
      * @deprecated
      */
     public IndicatorSelectDialog(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators) {
-        super(parentShell);
-        this.title = title;
-        this.modelElementIndicators = modelElementIndicators;
-        int shellStyle = getShellStyle();
-        setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
+        this(parentShell, title, modelElementIndicators, null);
         // MOD zshen: obtain language.
         Object editorPart = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editorPart instanceof AnalysisEditor) {
