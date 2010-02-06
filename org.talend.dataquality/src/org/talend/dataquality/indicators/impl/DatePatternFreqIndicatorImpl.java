@@ -12,6 +12,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sql.TIMESTAMP;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClass;
@@ -85,7 +87,6 @@ public class DatePatternFreqIndicatorImpl extends PatternFreqIndicatorImpl imple
         if (data != null) {
             dateRetriever.handle(filterDate(data));
         }
-
         return super.handle(data);
     }
 
@@ -161,6 +162,9 @@ public class DatePatternFreqIndicatorImpl extends PatternFreqIndicatorImpl imple
             if (timestamp.getNanos() == 0) {
                 return timestamp.toString().split("\\.")[0];
             }
+        } else if (data instanceof TIMESTAMP) {
+            TIMESTAMP tempdata = (TIMESTAMP) data;
+            tempdata.stringValue();
         }
         return data.toString();
     }

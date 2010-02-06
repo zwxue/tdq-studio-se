@@ -119,7 +119,7 @@ public final class ChartDecorator {
         font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
         valueAxis.setLabelFont(font);
 
-        font = new Font("Verdana", Font.PLAIN, BASE_TICK_LABEL_SIZE);
+        font = new Font("sans-serif", Font.PLAIN, BASE_TICK_LABEL_SIZE);
         domainAxis.setTickLabelFont(font);
         valueAxis.setTickLabelFont(font);
 
@@ -173,7 +173,7 @@ public final class ChartDecorator {
         font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
         valueAxis.setLabelFont(font);
 
-        font = new Font("Verdana", Font.PLAIN, BASE_TICK_LABEL_SIZE);
+        font = new Font("sans-serif", Font.PLAIN, BASE_TICK_LABEL_SIZE);
         domainAxis.setTickLabelFont(font);
         valueAxis.setTickLabelFont(font);
 

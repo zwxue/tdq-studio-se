@@ -365,6 +365,24 @@ public final class ConnectionUtils {
     }
 
     /**
+     * DOC zshen Comment method "isOdbcMssql".
+     * 
+     * @param connection
+     * @return decide to whether is mssql connection
+     * @throws SQLException
+     */
+    public static boolean isMssql(Connection connection) throws SQLException {
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && !connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
+                && connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().equals(DatabaseConstant.ODBC_MSSQL_PRODUCT_NAME)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * DOC xqliu Comment method "isMdmConnection".
      * 
      * @param connection

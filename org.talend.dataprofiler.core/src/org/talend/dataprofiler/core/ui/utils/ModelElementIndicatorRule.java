@@ -112,8 +112,7 @@ public final class ModelElementIndicatorRule {
         // MOD zshen 2010-01-27 Date Pattern frequency indicator
         case DatePatternFreqIndicatorEnum:
             if (ExecutionLanguage.JAVA.equals(language)
-                    && (Java2SqlType.isDateInSQL(javaType) || Java2SqlType.isTextInSQL(javaType) || Java2SqlType
-                            .isDateTimeSQL(javaType))) {
+                    && (Java2SqlType.isDateInSQL(javaType) || Java2SqlType.isTextInSQL(javaType))) {
                 return true;
             }
             break;

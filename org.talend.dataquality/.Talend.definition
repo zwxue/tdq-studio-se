@@ -250,8 +250,8 @@
     <charactersMapping xmi:id="_KUMyNJPvEd6udoWhiRnx0g" name="Characters mapping on DB2" language="DB2" charactersToReplace="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" replacementCharacters="aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_OCTbwJR_Ed2XO-JvLwVAaa" name="Date Pattern Frequency Table" categories="_0n3BsJR-Ed2XO-JvLwVAwg" label="Date Pattern Frequency Table">
-  	<taggedValue xmi:id="_OCTbwJR_Ed2XO-JvLwVAaa" tag="Description" value="counts the number of records for each distinct date pattern"/>
-    <taggedValue xmi:id="_OCTbwJR_Ed2XO-JvLwVAaa" tag="Purpose" value="evaluates the most frequent patterns"/>
+  	<taggedValue xmi:id="_OCTbwZR_Ed2XO-JvLwVAaa" tag="Description" value="counts the number of records for each distinct date pattern"/>
+    <taggedValue xmi:id="_OCTbwPR_Ed2XO-JvLwVAaa" tag="Purpose" value="evaluates the most frequent patterns"/>
    </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_10gx4JxcEd2YicTszQEJLA" name="Multiple Column Frequency Table" label="Multiple Column Frequency Table">
     <taggedValue xmi:id="_ByME0JxdEd2YicTszQEJLA" tag="Description" value="Computes a frequency table on several columns with aggregate functions when needed"/>

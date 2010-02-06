@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.relational.TdColumn;
@@ -97,6 +98,15 @@ public class ColumnBuilder extends CwmBuilder {
             String typeName = null;
             try {
                 typeName = columns.getString(GetColumn.TYPE_NAME.name());
+                // MOD zshen when the database is mssql,the datatype for "date" and "time" is "-9" and "-2"
+                // ,respective.so change them to "91" and "92" for adapt to Java2SqlType.
+                if (ConnectionUtils.isMssql(connection)) {
+                    if (typeName.toLowerCase().equals("date")) {
+                        column.setJavaType(91);
+                    } else if (typeName.toLowerCase().equals("time")) {
+                        column.setJavaType(92);
+                    }
+                }
             } catch (Exception e1) {
                 log.warn(e1, e1);
             }

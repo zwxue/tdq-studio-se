@@ -84,6 +84,11 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 // ~
                 // --- get content of column
                 Object object = resultSet.getObject(col);
+                // MOD zshen, when the type of object is TIMESTAMP then need getTimestamp(col) to get correct value,or
+                // the value only is the name of type and can't be match with TIMESTAMP.
+                if (object != null && !(object instanceof String) && object.toString().indexOf("TIMESTAMP") > -1) {
+                    object = resultSet.getTimestamp(col);
+                }
                 // --- give row to handle to indicators
                 for (Indicator indicator : indicators) {
                     // MOD xqliu 2009-02-09 bug 6237
