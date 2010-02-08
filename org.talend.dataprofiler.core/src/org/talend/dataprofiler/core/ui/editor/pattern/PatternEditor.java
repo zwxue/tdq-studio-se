@@ -33,11 +33,10 @@ public class PatternEditor extends CommonFormEditor {
     private DefaultSaveAction saveAction;
 
     // ~
+    private static final String ID = "PatternEditor.masterPage";//$NON-NLS-1$
 
     protected void addPages() {
-        masterPage = new PatternMasterDetailsPage(
-                this,
-                DefaultMessagesImpl.getString("PatternEditor.masterPage"), DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+        masterPage = new PatternMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ 
         setPartName(((PatternMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
         try {
             addPage(masterPage);

@@ -29,15 +29,15 @@ public class DQRuleEditor extends CommonFormEditor {
 
     private IFormPage masterPage;
 
+    private final static String ID = "DQRuleEditor.masterPage";//$NON-NLS-1$
+
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
 
     // ~
 
     protected void addPages() {
-        masterPage = new DQRuleMasterDetailsPage(
-                this,
-                DefaultMessagesImpl.getString("DQRuleEditor.masterPage"), DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+        masterPage = new DQRuleMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
 
         setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
 

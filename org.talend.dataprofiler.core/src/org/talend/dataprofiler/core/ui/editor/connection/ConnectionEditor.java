@@ -27,6 +27,8 @@ public class ConnectionEditor extends CommonFormEditor {
 
     private IFormPage masterPage;
 
+    private static final String ID = "ConnectionEditor.masterPage";//$NON-NLS-1$
+
     /**
      * 
      */
@@ -34,9 +36,7 @@ public class ConnectionEditor extends CommonFormEditor {
     }
 
     protected void addPages() {
-        masterPage = new ConnectionInfoPage(
-                this,
-                DefaultMessagesImpl.getString("ConnectionEditor.masterPage"), DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+        masterPage = new ConnectionInfoPage(this, ID, DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$ 
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
