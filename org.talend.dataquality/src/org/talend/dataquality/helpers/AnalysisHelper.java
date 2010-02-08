@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -268,6 +269,9 @@ public final class AnalysisHelper {
                 if (cInd.getRowCountIndicator() != null) {
                     return true;
                 }
+            }
+            if (ColumnsetPackage.eINSTANCE.getSimpleStatIndicator().equals(indicator.eClass())) {
+                return true;
             }
         }
         return false;
