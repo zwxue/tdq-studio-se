@@ -26,6 +26,8 @@ public class DQFolderFliter extends ViewerFilter {
 
     private static final String XSD_FOLDER_NAME = ".xsd";
 
+    private static final String REPORTS_FOLDER_NAME = "Reports";
+
     private boolean isShowFile;
 
     public DQFolderFliter() {
@@ -47,7 +49,9 @@ public class DQFolderFliter extends ViewerFilter {
         if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
             // MOD mzhao feature 10238, filter xsd folder
-            return !FilesUtils.isSVNFolder(folder) && !folder.getName().endsWith(XSD_FOLDER_NAME);
+            // MOD yyi 2010-02-09 11538, filter Reports folder
+            return !FilesUtils.isSVNFolder(folder) && !folder.getName().endsWith(XSD_FOLDER_NAME)
+                    && !folder.getName().endsWith(REPORTS_FOLDER_NAME);
         }
 
         if (element instanceof IFile && isShowFile) {
