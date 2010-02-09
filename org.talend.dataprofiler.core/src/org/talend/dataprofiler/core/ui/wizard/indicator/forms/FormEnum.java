@@ -139,6 +139,7 @@ public enum FormEnum {
         case LowFrequencyIndicatorEnum:
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
+        case DatePatternFreqIndicatorEnum:
             if (dataminingType == DataminingType.INTERVAL) {
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
