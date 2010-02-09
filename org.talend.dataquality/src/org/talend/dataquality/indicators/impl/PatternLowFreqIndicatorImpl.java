@@ -23,9 +23,9 @@ import org.talend.utils.string.AsciiUtils;
  */
 public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl implements PatternLowFreqIndicator {
     
-    private String charsToReplace = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789";
+    private String charsToReplace = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
+    private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
 
     /**
      * <!-- begin-user-doc -->
