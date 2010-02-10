@@ -902,14 +902,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Text classNameText = new Text(detailComp, SWT.BORDER);
         classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) classNameText.getLayoutData()).widthHint = 250;
-        classNameText.addModifyListener(new NeedToSetDirtyListener());
         classNameText.setText(classNameStr);
+        classNameText.addModifyListener(new NeedToSetDirtyListener());
         final Text jarPathText = new Text(detailComp, SWT.BORDER);
         jarPathText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        jarPathText.addModifyListener(new NeedToSetDirtyListener());
         ((GridData) jarPathText.getLayoutData()).widthHint = 350;
         jarPathText.setText(jarPathStr);
-
+        jarPathText.addModifyListener(new NeedToSetDirtyListener());
         Button button = new Button(detailComp, SWT.PUSH);
         button.setText("Browse...");
         button.addSelectionListener(new SelectionAdapter() {
