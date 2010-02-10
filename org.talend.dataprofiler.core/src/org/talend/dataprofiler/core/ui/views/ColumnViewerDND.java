@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -41,6 +43,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXMLElement;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
@@ -64,6 +67,7 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnViewerDND {
 
+    private static Logger log = Logger.getLogger(ColumnViewerDND.class);
     ISelectionReceiver receiver = null;
 
     private static int lastValidOperation;
@@ -460,7 +464,14 @@ public class ColumnViewerDND {
             // ~
             Analysis analysis = viewer.getAnalysis();
 
-            IndicatorUnit[] addIndicatorUnits = UDIUtils.createIndicatorUnit(fe, data, analysis);
+            IndicatorUnit[] addIndicatorUnits = null;
+            try {
+                addIndicatorUnits = UDIUtils.createIndicatorUnit(fe, data, analysis);
+            } catch (Throwable e) {
+                log.error(e, e);
+                MessageDialog.openError(commonViewer.getTree().getShell(), DefaultMessagesImpl
+                        .getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
+            }
             if (addIndicatorUnits != null && addIndicatorUnits.length > 0) {
                 for (IndicatorUnit unit : addIndicatorUnits) {
                     viewer.createOneUnit(item, unit);

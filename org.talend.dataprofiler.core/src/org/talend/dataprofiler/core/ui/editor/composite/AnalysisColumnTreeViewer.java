@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
@@ -466,7 +467,14 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         for (IndicatorUnit indicatorUnit : indicatorUnits) {
             createOneUnit(treeItem, indicatorUnit);
             // MOD mzhao feature 11128, Handle Java User Defined Indicator.
-            Indicator judi = UDIHelper.adaptToJavaUDI(indicatorUnit.getIndicator());
+            Indicator judi = null;
+            try {
+                judi = UDIHelper.adaptToJavaUDI(indicatorUnit.getIndicator());
+            } catch (Throwable e) {
+                log.error(e, e);
+                MessageDialog.openError(this.getTree().getShell(), DefaultMessagesImpl
+                        .getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
+            }
             if (judi != null) {
                 ((JavaUserDefIndicator) judi).setExecuteEngine(getAnalysis().getParameters().getExecutionLanguage());
             }

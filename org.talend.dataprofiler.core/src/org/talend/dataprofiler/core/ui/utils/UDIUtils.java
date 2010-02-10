@@ -49,7 +49,8 @@ public final class UDIUtils {
         return null;
     }
 
-    public static IndicatorUnit[] createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis) {
+    public static IndicatorUnit[] createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis)
+            throws Throwable {
         List<IndicatorUnit> addIndicatorUnits = new ArrayList<IndicatorUnit>();
 
         IndicatorDefinition udid = UDIResourceFileHelper.getInstance().findUDI(pfile);

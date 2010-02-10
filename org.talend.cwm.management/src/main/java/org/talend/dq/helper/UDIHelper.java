@@ -13,7 +13,6 @@
 package org.talend.dq.helper;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -260,8 +259,9 @@ public final class UDIHelper {
      * 
      * @param udi
      * @return
+     * @throws Exception
      */
-    public static Indicator adaptToJavaUDI(Indicator indicator) {
+    public static Indicator adaptToJavaUDI(Indicator indicator) throws Throwable {
         UserDefIndicator adaptedUDI = null;
         if (userDefIndSwitch.doSwitch(indicator) != null) {
             EList<TaggedValue> taggedValues = indicator.getIndicatorDefinition().getTaggedValue();
@@ -279,7 +279,6 @@ public final class UDIHelper {
 
             if (validateJavaUDI(userJavaClassName, jarPath)) {
                 File file = new File(jarPath);
-                try {
                     TalendURLClassLoader cl;
                     cl = new TalendURLClassLoader(new URL[] { file.toURL() });
                     Class<?> clazz = cl.findClass(userJavaClassName);
@@ -296,15 +295,6 @@ public final class UDIHelper {
                             adaptedUDI = judiTemplate;
                         }
                     }
-                } catch (ClassNotFoundException e) {
-                    log.error(e, e);
-                } catch (MalformedURLException e) {
-                    log.error(e, e);
-                } catch (InstantiationException e) {
-                    log.error(e, e);
-                } catch (IllegalAccessException e) {
-                    log.error(e, e);
-                }
             }
         }
         return adaptedUDI;
