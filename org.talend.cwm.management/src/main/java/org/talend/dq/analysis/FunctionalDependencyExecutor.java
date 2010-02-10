@@ -198,7 +198,8 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             if (SwitchHelpers.SCHEMA_SWITCH.doSwitch(pack) != null) {
                 schemaName = pack.getName();
                 Package catalog = ColumnSetHelper.getParentCatalogOrSchema(pack);
-                if (SwitchHelpers.CATALOG_SWITCH.doSwitch(catalog) != null) {
+                // MOD mzhao 2010-02-10 Fix a NEP.
+                if (catalog != null && SwitchHelpers.CATALOG_SWITCH.doSwitch(catalog) != null) {
                     catalogName = catalog.getName();
                 }
             }
