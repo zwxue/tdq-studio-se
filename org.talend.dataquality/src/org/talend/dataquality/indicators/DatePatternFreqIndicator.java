@@ -18,13 +18,25 @@ import org.talend.dataquality.matching.date.pattern.ModelMatcher;
  * @model
  * @generated
  */
-public interface DatePatternFreqIndicator extends PatternFreqIndicator {
+public interface DatePatternFreqIndicator extends FrequencyIndicator {
 
     public List<ModelMatcher> getModelMatcherList();
 
+    /**
+     * return List for ModelMatcher which Score more than 1.
+     */
     public List<Object> getRealModelMatcherList();
 
     public String getModel(Object matcher);
 
     public int getScore(Object matcher);
+
+    /**
+     * 
+     * DOC zshen Comment method "getRegex".
+     * 
+     * @param model the model of matcher.
+     * @return if can find corresponding to matcher return it's the Regex of matcher else return null;
+     */
+    public String getRegex(String model);
 } // DatePatternFreqIndicator

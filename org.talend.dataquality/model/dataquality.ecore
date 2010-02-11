@@ -606,7 +606,7 @@
           eType="#//indicators/JavaHashMap"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="SoundexLowFreqIndicator" eSuperTypes="#//indicators/SoundexFreqIndicator"/>
-    <eClassifiers xsi:type="ecore:EClass" name="DatePatternFreqIndicator" eSuperTypes="#//indicators/PatternFreqIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DatePatternFreqIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eOperations name="addTableIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">

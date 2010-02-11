@@ -510,7 +510,6 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.DATE_PATTERN_FREQ_INDICATOR: {
                 DatePatternFreqIndicator datePatternFreqIndicator = (DatePatternFreqIndicator)theEObject;
                 T result = caseDatePatternFreqIndicator(datePatternFreqIndicator);
-                if (result == null) result = casePatternFreqIndicator(datePatternFreqIndicator);
                 if (result == null) result = caseFrequencyIndicator(datePatternFreqIndicator);
                 if (result == null) result = caseIndicator(datePatternFreqIndicator);
                 if (result == null) result = caseModelElement(datePatternFreqIndicator);

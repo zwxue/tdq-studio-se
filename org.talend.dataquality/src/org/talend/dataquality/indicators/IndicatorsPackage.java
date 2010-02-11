@@ -11090,7 +11090,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__NAME = PATTERN_FREQ_INDICATOR__NAME;
+    int DATE_PATTERN_FREQ_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -11099,7 +11099,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__VISIBILITY = PATTERN_FREQ_INDICATOR__VISIBILITY;
+    int DATE_PATTERN_FREQ_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -11108,7 +11108,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__CLIENT_DEPENDENCY = PATTERN_FREQ_INDICATOR__CLIENT_DEPENDENCY;
+    int DATE_PATTERN_FREQ_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -11117,7 +11117,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__SUPPLIER_DEPENDENCY = PATTERN_FREQ_INDICATOR__SUPPLIER_DEPENDENCY;
+    int DATE_PATTERN_FREQ_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -11126,7 +11126,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__CONSTRAINT = PATTERN_FREQ_INDICATOR__CONSTRAINT;
+    int DATE_PATTERN_FREQ_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -11135,7 +11135,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__NAMESPACE = PATTERN_FREQ_INDICATOR__NAMESPACE;
+    int DATE_PATTERN_FREQ_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -11144,7 +11144,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__IMPORTER = PATTERN_FREQ_INDICATOR__IMPORTER;
+    int DATE_PATTERN_FREQ_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -11153,7 +11153,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__STEREOTYPE = PATTERN_FREQ_INDICATOR__STEREOTYPE;
+    int DATE_PATTERN_FREQ_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -11162,7 +11162,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__TAGGED_VALUE = PATTERN_FREQ_INDICATOR__TAGGED_VALUE;
+    int DATE_PATTERN_FREQ_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -11171,7 +11171,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__DOCUMENT = PATTERN_FREQ_INDICATOR__DOCUMENT;
+    int DATE_PATTERN_FREQ_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -11180,7 +11180,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__DESCRIPTION = PATTERN_FREQ_INDICATOR__DESCRIPTION;
+    int DATE_PATTERN_FREQ_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -11189,7 +11189,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__RESPONSIBLE_PARTY = PATTERN_FREQ_INDICATOR__RESPONSIBLE_PARTY;
+    int DATE_PATTERN_FREQ_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -11198,7 +11198,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__ELEMENT_NODE = PATTERN_FREQ_INDICATOR__ELEMENT_NODE;
+    int DATE_PATTERN_FREQ_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -11207,7 +11207,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__SET = PATTERN_FREQ_INDICATOR__SET;
+    int DATE_PATTERN_FREQ_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -11216,7 +11216,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__RENDERED_OBJECT = PATTERN_FREQ_INDICATOR__RENDERED_OBJECT;
+    int DATE_PATTERN_FREQ_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -11225,7 +11225,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__VOCABULARY_ELEMENT = PATTERN_FREQ_INDICATOR__VOCABULARY_ELEMENT;
+    int DATE_PATTERN_FREQ_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -11234,7 +11234,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__MEASUREMENT = PATTERN_FREQ_INDICATOR__MEASUREMENT;
+    int DATE_PATTERN_FREQ_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -11243,7 +11243,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__CHANGE_REQUEST = PATTERN_FREQ_INDICATOR__CHANGE_REQUEST;
+    int DATE_PATTERN_FREQ_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -11252,7 +11252,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__DASDL_PROPERTY = PATTERN_FREQ_INDICATOR__DASDL_PROPERTY;
+    int DATE_PATTERN_FREQ_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -11261,7 +11261,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__COUNT = PATTERN_FREQ_INDICATOR__COUNT;
+    int DATE_PATTERN_FREQ_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -11270,7 +11270,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__NULL_COUNT = PATTERN_FREQ_INDICATOR__NULL_COUNT;
+    int DATE_PATTERN_FREQ_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -11279,7 +11279,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__PARAMETERS = PATTERN_FREQ_INDICATOR__PARAMETERS;
+    int DATE_PATTERN_FREQ_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -11288,7 +11288,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__ANALYZED_ELEMENT = PATTERN_FREQ_INDICATOR__ANALYZED_ELEMENT;
+    int DATE_PATTERN_FREQ_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -11297,7 +11297,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__DATAMINING_TYPE = PATTERN_FREQ_INDICATOR__DATAMINING_TYPE;
+    int DATE_PATTERN_FREQ_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -11306,7 +11306,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__INDICATOR_DEFINITION = PATTERN_FREQ_INDICATOR__INDICATOR_DEFINITION;
+    int DATE_PATTERN_FREQ_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -11315,7 +11315,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__INSTANTIATED_EXPRESSIONS = PATTERN_FREQ_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int DATE_PATTERN_FREQ_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -11324,7 +11324,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__COMPUTED = PATTERN_FREQ_INDICATOR__COMPUTED;
+    int DATE_PATTERN_FREQ_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -11333,7 +11333,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__JOIN_CONDITIONS = PATTERN_FREQ_INDICATOR__JOIN_CONDITIONS;
+    int DATE_PATTERN_FREQ_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -11342,7 +11342,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__UNIQUE_VALUES = PATTERN_FREQ_INDICATOR__UNIQUE_VALUES;
+    int DATE_PATTERN_FREQ_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
 
     /**
      * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
@@ -11351,7 +11351,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__DISTINCT_VALUE_COUNT = PATTERN_FREQ_INDICATOR__DISTINCT_VALUE_COUNT;
+    int DATE_PATTERN_FREQ_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
@@ -11360,7 +11360,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__UNIQUE_VALUE_COUNT = PATTERN_FREQ_INDICATOR__UNIQUE_VALUE_COUNT;
+    int DATE_PATTERN_FREQ_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
@@ -11369,7 +11369,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__DUPLICATE_VALUE_COUNT = PATTERN_FREQ_INDICATOR__DUPLICATE_VALUE_COUNT;
+    int DATE_PATTERN_FREQ_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
@@ -11378,7 +11378,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR__VALUE_TO_FREQ = PATTERN_FREQ_INDICATOR__VALUE_TO_FREQ;
+    int DATE_PATTERN_FREQ_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
      * The number of structural features of the '<em>Date Pattern Freq Indicator</em>' class.
@@ -11387,7 +11387,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DATE_PATTERN_FREQ_INDICATOR_FEATURE_COUNT = PATTERN_FREQ_INDICATOR_FEATURE_COUNT + 0;
+    int DATE_PATTERN_FREQ_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

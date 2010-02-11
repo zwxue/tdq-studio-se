@@ -31,7 +31,7 @@ import org.talend.dataquality.matching.date.pattern.ModelMatcher;
  * 
  * @generated
  */
-public class DatePatternFreqIndicatorImpl extends PatternFreqIndicatorImpl implements DatePatternFreqIndicator {
+public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements DatePatternFreqIndicator {
 
     private DatePatternRetriever dateRetriever;
 
@@ -68,7 +68,6 @@ public class DatePatternFreqIndicatorImpl extends PatternFreqIndicatorImpl imple
         try {
             filepath = FileLocator.toFileURL(url).getFile();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         File file = new File(filepath);
@@ -121,6 +120,9 @@ public class DatePatternFreqIndicatorImpl extends PatternFreqIndicatorImpl imple
         return dateRetriever.getModelMatchers();
     }
 
+    /**
+     * return List for ModelMatcher which Score more than 1.
+     */
     public List<Object> getRealModelMatcherList() {
         List<Object> realModelMatcherList = new ArrayList<Object>();
         for (ModelMatcher matcher : dateRetriever.getModelMatchers()) {
@@ -166,7 +168,18 @@ public class DatePatternFreqIndicatorImpl extends PatternFreqIndicatorImpl imple
             TIMESTAMP tempdata = (TIMESTAMP) data;
             tempdata.stringValue();
         }
-        return data.toString();
+        return String.valueOf(data);
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "getRegex".
+     * 
+     * @param model the model of matcher.
+     * @return if can find corresponding to matcher return it's the Regex of matcher else return null;
+     */
+    public String getRegex(String model) {
+        return this.dateRetriever.getRegex(model);
     }
 
 } // DatePatternFreqIndicatorImpl
