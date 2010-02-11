@@ -109,4 +109,19 @@ public class DatePatternRetriever {
         Collections.sort(this.modelMatchers);
     }
 
+    /**
+     * 
+     * DOC zshen Comment method "getRegex".
+     * 
+     * @param model the model of matcher.
+     * @return if can find corresponding to matcher return it's the Regex of matcher else return null;
+     */
+    public String getRegex(String model) {
+        for (ModelMatcher matcher : this.getModelMatchers()) {
+            if (matcher.getModel().equals(model)) {
+                return matcher.getRegex();
+            }
+        }
+        return null;
+    }
 }
