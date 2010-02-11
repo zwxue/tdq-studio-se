@@ -66,8 +66,9 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
@@ -77,12 +78,12 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.SqlExplorerBridge;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
@@ -373,14 +374,15 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             }
 
         });
-		// ADD xqliu 2010-01-04 bug 10190
+        // ADD xqliu 2010-01-04 bug 10190
         createReloadDatabasesButton(sectionClient);
-		// ~
+        // ~
         analysisParamSection.setClient(sectionClient);
     }
 
     /**
      * DOC xqliu Comment method "createReloadDatabasesButton".
+     * 
      * @param sectionClient
      */
     private void createReloadDatabasesButton(Composite sectionClient) {
@@ -754,7 +756,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD xqliu 2010-01-04 bug 10190
         AnalysisHelper.setReloadDatabases(analysis, reloadDatabasesBtn.getSelection());
-		// ~
+        // ~
         EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
         if (!this.tableFilterText.getText().equals(latestTableFilterValue)) {
             DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());
@@ -1008,21 +1010,18 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      */
     protected void runTableAnalysis(String tableName) {
         Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
-        TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPack);
+        TdTable tdTable = getTable(parentPack, tableName);
+        if (null == tdTable) {
+            FolderNodeHelper.getTableFolderNode(parentPack).loadChildren();
+            tdTable = getTable(parentPack, tableName);
+        }
         try {
-            List<TdTable> tdTables = DqRepositoryViewService.getTables(tdDataProvider, catalogObj, tableName, true);
+            List<TdColumn> columns = 0 == ColumnSetHelper.getColumns(tdTable).size() ? DqRepositoryViewService.getColumns(
+                    tdDataProvider, tdTable, null, true) : ColumnSetHelper.getColumns(tdTable);
 
-            if (!tdTables.isEmpty()) {
-                TdTable table = tdTables.get(0);
-                if (!CatalogHelper.getTables(catalogObj).contains(table)) {
-                    CatalogHelper.addTables(tdTables, catalogObj);
-                }
-                List<TdColumn> columns = DqRepositoryViewService.getColumns(tdDataProvider, table, null, true);
-                new AnalyzeColumnSetAction(columns.toArray(new TdColumn[columns.size()])).run();
-            } else {
-                MessageUI.openWarning("Table \"" + tableName + "\" does not exist!");
-            }
+            new AnalyzeColumnSetAction(columns.toArray(new TdColumn[columns.size()])).run();
         } catch (TalendException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1043,5 +1042,21 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         });
         Menu menu = contextMenu.createContextMenu(viewer.getControl());
         viewer.getControl().setMenu(menu);
+    }
+
+    /**
+     * DOC yyi get table form package by its name.
+     * 
+     * @param pkg
+     * @param tableName
+     * @return
+     */
+    private TdTable getTable(Package pkg, String tableName) {
+        for (TdTable tabel : TableHelper.getTables(pkg.getOwnedElement())) {
+            if (tabel.getName().equals(tableName)) {
+                return tabel;
+            }
+        }
+        return null;
     }
 }
