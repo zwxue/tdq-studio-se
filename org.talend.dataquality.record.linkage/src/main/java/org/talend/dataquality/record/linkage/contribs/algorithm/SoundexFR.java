@@ -22,7 +22,7 @@
  */
 package org.talend.dataquality.record.linkage.contribs.algorithm;
 
-import org.talend.dataquality.record.linkage.contribs.utils.DiacriticalMarks;
+import org.talend.utils.string.AsciiUtils;
 
 /**
  * Encode a string using a version of French Soundex algorithm (Soundex2 by .
@@ -31,6 +31,8 @@ import org.talend.dataquality.record.linkage.contribs.utils.DiacriticalMarks;
  * 
  * MOD 2010-01-22 scorreia: only changed the import and removed a javadoc comment in "encode" method refering to
  * PhoneticEncoderException.
+ * 
+ * MOD scorreia 2010-02-18 replace str by trimmed str
  */
 public class SoundexFR {
     
@@ -62,7 +64,8 @@ public class SoundexFR {
     public String encode(String str) {
         
         // Trim the token from trailing spaces
-        str.trim();
+        // str.trim(); // MOD scorreia 2010-02-18 replace str by trimmed str
+        str = str.trim();
         int size = str.length();
         char ch;
         int i;
@@ -85,8 +88,9 @@ public class SoundexFR {
         StringBuffer word = new StringBuffer(str);  
                       
         // Remove all diacretical marks
+
         for (i = 0; i < size; i++) { 
-            ch = str.charAt(i);  
+                ch = str.charAt(i);
 
             // Remove all special characters and numbers
             if (!Character.isLetter(ch)) {
@@ -97,7 +101,7 @@ public class SoundexFR {
             }
             
             if ((int) ch > 191) {                         
-                word.setCharAt(i, DiacriticalMarks.removeDiacriticalMark(ch));
+                word.setCharAt(i, AsciiUtils.removeDiacriticalMark(ch));
             }
         }               
         
@@ -152,6 +156,11 @@ public class SoundexFR {
             }
         }
                 
+        // MOD scorreia 2010-02-18 ensure that some characters remain
+        if (size <= 0) { // could be zero when input is "y" for example then it would result in a out of bound index
+            return "    ";
+        }
+
         // Remove the following characters (A, T, D, S) if they are the last character
         ch = word.charAt(size - 1);
         if (ch == 'A' || ch == 'T' || ch == 'D' || ch == 'S') {

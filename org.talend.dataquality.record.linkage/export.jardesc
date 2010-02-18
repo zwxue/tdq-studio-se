@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="org.talend.designer.components.tdqprovider/components/tRecordMatching/org.talend.dataquality.record.linkage.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/org.talend.dataquality.record.linkage/export.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <folder path="/org.talend.dataquality.record.linkage/META-INF"/>
+        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java"/>
+        <folder path="/org.talend.dataquality.record.linkage/src"/>
+        <file path="/org.talend.dataquality.record.linkage/version.txt"/>
+        <javaElement handleIdentifier="=org.talend.dataquality.record.linkage/src\/test\/java"/>
+        <javaElement handleIdentifier="=org.talend.dataquality.record.linkage/src\/main\/java"/>
+    </selectedElements>
+</jardesc>

@@ -42,6 +42,14 @@ public class SoundexFRMatcher implements IAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
      */
     public double getMatchingWeight(String str1, String str2) {
+        if (str1 == null) {
+            return (str2 == null) ? 1 : 0;
+        } else { // only str2 is null
+            if (str2 == null) {
+                return 0;
+            }
+        }
+        // none of the input string is null
         return StringComparisonUtil.difference(algorithm.encode(str1), algorithm.encode(str2)) / MAX;
     }
 
