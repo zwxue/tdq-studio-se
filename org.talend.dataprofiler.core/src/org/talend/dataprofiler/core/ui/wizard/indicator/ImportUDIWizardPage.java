@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import java.io.File;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -42,6 +43,8 @@ public class ImportUDIWizardPage extends WizardPage {
 
     private Button renameBtn;
 
+    private CsvFileTableViewer csvViewer;
+
     protected ImportUDIWizardPage() {
         super(DefaultMessagesImpl.getString("ImportUDIWizardPage.importUDIWizardPage")); //$NON-NLS-1$
 
@@ -69,12 +72,7 @@ public class ImportUDIWizardPage extends WizardPage {
         fileText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                File file = new File(fileText.getText());
-                if (file.exists()) {
-                    setPageComplete(true);
-                } else {
-                    setPageComplete(false);
-                }
+                updatePreview();
             }
         });
         Button button = new Button(fileComp, SWT.PUSH);
@@ -91,6 +89,7 @@ public class ImportUDIWizardPage extends WizardPage {
                 String path = dialog.open();
                 if (path != null) {
                     fileText.setText(path);
+                    updatePreview();
                 }
             }
         });
@@ -108,6 +107,12 @@ public class ImportUDIWizardPage extends WizardPage {
 
         renameBtn = new Button(group, SWT.RADIO);
         renameBtn.setText(DefaultMessagesImpl.getString("ImportUDIWizardPage.renameNewIndicator")); //$NON-NLS-1$
+
+        Label label2 = new Label(container, SWT.NONE);
+        label2.setText("Preview:");
+
+        csvViewer = new CsvFileTableViewer(container, SWT.NONE);
+        csvViewer.setLayoutData(new GridData(GridData.FILL_BOTH));
         setPageComplete(false);
         setControl(container);
     }
@@ -122,6 +127,36 @@ public class ImportUDIWizardPage extends WizardPage {
 
     public boolean getRename() {
         return renameBtn.getSelection();
+    }
+
+    public CsvFileTableViewer getCsvViewer() {
+        return csvViewer;
+    }
+
+    private void updatePreview() {
+        File file = new File(fileText.getText());
+        if (!file.exists()) {
+            setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.FileNotExist"), IMessageProvider.ERROR);
+            setPageComplete(false);
+            return;
+        }
+        if (csvViewer.setCsvFile(file)) {
+            if (csvViewer.isHeadersInvalid()) {
+                setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.FileHeaderInvalid"), IMessageProvider.ERROR);
+                setPageComplete(false);
+                return;
+            }
+            if (csvViewer.isQuotesError()) {
+                setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.QuoteError"), IMessageProvider.WARNING);
+            } else {
+                setMessage(null);
+            }
+            setPageComplete(true);
+        } else {
+            setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.ReadError"), IMessageProvider.ERROR);
+            setPageComplete(false);
+        }
+
     }
 
 }

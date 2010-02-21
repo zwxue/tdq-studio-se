@@ -16,6 +16,8 @@ import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -44,6 +46,12 @@ public class ImportUDIWizard extends Wizard {
 
     @Override
     public boolean performFinish() {
+        if (IMessageProvider.WARNING == page.getMessageType()) {
+            if (!MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("ImportPatternsWizard.Warning"),
+                    DefaultMessagesImpl.getString("ImportPatternsWizard.ConfirmImport"))) {
+                return false;
+            }
+        }
         File file = new File(page.getSourceFile());
         final List<ReturnCode> information = ImportFactory.importIndicatorToStucture(file, folder, page.getSkip(), page
                 .getRename());

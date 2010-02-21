@@ -83,62 +83,57 @@ public final class ImportFactory {
         String fileExtName = getFileExtName(importFile);
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
-            ReturnCode rc = verifyImportFile(importFile);
-            if (!rc.isOk()) {
-                importEvent.add(rc);
-            } else {
-                try {
-                    CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                    reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-                    reader.setTextQualifier(TEXT_QUAL);
-                    reader.setUseTextQualifier(USE_TEXT_QUAL);
+            try {
+                CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
+                reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+                reader.setTextQualifier(TEXT_QUAL);
+                reader.setUseTextQualifier(USE_TEXT_QUAL);
 
-                    reader.readHeaders();
-                    while (reader.readRecord()) {
+                reader.readHeaders();
+                while (reader.readRecord()) {
 
-                        String name = reader.get(PatternToExcelEnum.Label.getLiteral());
+                    String name = reader.get(PatternToExcelEnum.Label.getLiteral());
 
-                        if (names.contains(name)) {
-                            if (skip) {
-                                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString(
-                                        "ImportFactory.patternInported", name), false)); //$NON-NLS-1$
-                                continue;
-                            }
-                            if (rename) {
-                                name = name + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-                            }
+                    if (names.contains(name)) {
+                        if (skip) {
+                            importEvent.add(new ReturnCode(
+                                    DefaultMessagesImpl.getString("ImportFactory.patternInported", name), false)); //$NON-NLS-1$
+                            continue;
                         }
-
-                        PatternParameters patternParameters = new ImportFactory().new PatternParameters();
-                        patternParameters.name = name;
-                        patternParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
-                        patternParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
-                        patternParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
-                        patternParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
-
-                        for (PatternLanguageType languagetype : PatternLanguageType.values()) {
-                            String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
-                            if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
-                                patternParameters.regex.put(languagetype.getLiteral(), cellStr);
-                            }
+                        if (rename) {
+                            name = name + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                         }
-
-                        try {
-                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
-                            names.add(name);
-
-                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name,
-                                    relativePath), true));
-                        } catch (Exception e) {
-                            importEvent.add(new ReturnCode("Can't save pattern " + name, false));
-                        }
-
                     }
-                    reader.close();
-                } catch (Exception e) {
-                    log.error(e, e);
-                    importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false));
+
+                    PatternParameters patternParameters = new ImportFactory().new PatternParameters();
+                    patternParameters.name = name;
+                    patternParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
+                    patternParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
+                    patternParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
+                    patternParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
+
+                    for (PatternLanguageType languagetype : PatternLanguageType.values()) {
+                        String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
+                        if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
+                            patternParameters.regex.put(languagetype.getLiteral(), cellStr);
+                        }
+                    }
+
+                    try {
+                        String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
+                        names.add(name);
+
+                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name,
+                                relativePath), true));
+                    } catch (Exception e) {
+                        importEvent.add(new ReturnCode("Can't save pattern " + name, false));
+                    }
+
                 }
+                reader.close();
+            } catch (Exception e) {
+                log.error(e, e);
+                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false));
             }
         }
 
@@ -375,65 +370,60 @@ public final class ImportFactory {
         String fileExtName = getFileExtName(importFile);
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
-            ReturnCode rc = verifyImportFile(importFile);
-            if (!rc.isOk()) {
-                information.add(rc);
-            } else {
-                String name = "";
-                try {
-                    CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                    reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-                    reader.setTextQualifier(TEXT_QUAL);
-                    reader.setUseTextQualifier(USE_TEXT_QUAL);
+            String name = "";
+            try {
+                CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
+                reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+                reader.setTextQualifier(TEXT_QUAL);
+                reader.setUseTextQualifier(USE_TEXT_QUAL);
 
-                    reader.readHeaders();
+                reader.readHeaders();
 
-                    java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
+                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
 
-                    while (reader.readRecord()) {
-                        name = reader.get(PatternToExcelEnum.Label.getLiteral());
+                while (reader.readRecord()) {
+                    name = reader.get(PatternToExcelEnum.Label.getLiteral());
 
-                        if (names.contains(name)) {
-                            if (skip) {
-                                information.add(new ReturnCode("User Defined Indicator \"" + name + "\" has already imported",
-                                        false));
-                                continue;
-                            }
-                            if (rename) {
-                                name = name + "(" + simpleDateFormat.format(new Date()) + Math.random() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-                            }
+                    if (names.contains(name)) {
+                        if (skip) {
+                            information
+                                    .add(new ReturnCode("User Defined Indicator \"" + name + "\" has already imported", false));
+                            continue;
                         }
-
-                        UDIParameters udiParameters = new ImportFactory().new UDIParameters();
-                        udiParameters.name = name;
-                        udiParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
-                        udiParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
-                        udiParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
-                        udiParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
-                        udiParameters.category = reader.get(PatternToExcelEnum.Category.getLiteral());
-
-                        for (PatternLanguageType languagetype : PatternLanguageType.values()) {
-                            String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
-                            if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
-                                udiParameters.regex.put(languagetype.getLiteral(), cellStr);
-                            }
+                        if (rename) {
+                            name = name + "(" + simpleDateFormat.format(new Date()) + Math.random() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                         }
-
-                        createAndStoreUDI(udiParameters, selectionFolder);
-
-                        names.add(name);
-
-                        information.add(new ReturnCode("User Defined Indicator \"" + name
-                                + "\" imported in the \"Indicators/User Defined Indicators\" folder", true));
-
                     }
 
-                    reader.close();
+                    UDIParameters udiParameters = new ImportFactory().new UDIParameters();
+                    udiParameters.name = name;
+                    udiParameters.auther = reader.get(PatternToExcelEnum.Author.getLiteral());
+                    udiParameters.description = reader.get(PatternToExcelEnum.Description.getLiteral());
+                    udiParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
+                    udiParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
+                    udiParameters.category = reader.get(PatternToExcelEnum.Category.getLiteral());
 
-                } catch (Exception e) {
-                    log.error(e, e);
-                    information.add(new ReturnCode("User Defined Indicator \"" + name + "\" import failed", false));
+                    for (PatternLanguageType languagetype : PatternLanguageType.values()) {
+                        String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
+                        if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
+                            udiParameters.regex.put(languagetype.getLiteral(), cellStr);
+                        }
+                    }
+
+                    createAndStoreUDI(udiParameters, selectionFolder);
+
+                    names.add(name);
+
+                    information.add(new ReturnCode("User Defined Indicator \"" + name
+                            + "\" imported in the \"Indicators/User Defined Indicators\" folder", true));
+
                 }
+
+                reader.close();
+
+            } catch (Exception e) {
+                log.error(e, e);
+                information.add(new ReturnCode("User Defined Indicator \"" + name + "\" import failed", false));
             }
         }
 
