@@ -210,16 +210,13 @@ public class DeleteModelElementConfirmDialog {
         if (impactElements.length > 0) {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, DefaultMessagesImpl
                     .getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
-                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 1);
+                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
-            int result = dialog.open();
-            if (result == Window.OK) {
-                removeReportComponent(impactElements);
-            }
-            return result;
+            dialog.open();
+            return Window.CANCEL;
         } else {
             return popConfirmDialog(modelElements);
         }
