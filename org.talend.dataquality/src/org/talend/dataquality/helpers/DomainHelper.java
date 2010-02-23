@@ -99,16 +99,7 @@ public final class DomainHelper {
      * @return the body of the regular expression applicable to this dbms or null
      */
     public static String getSQLRegexp(Pattern pattern) {
-        EList<PatternComponent> components = pattern.getComponents();
-        for (PatternComponent patternComponent : components) {
-            if (patternComponent != null) {
-                Expression expression = getExpression(patternComponent, "SQL"); //$NON-NLS-1$
-                if (expression != null) {
-                    return expression.getBody();
-                }
-            }
-        }
-        return null;
+        return getRegexp(pattern, "SQL");
     }
 
     /**
@@ -118,10 +109,21 @@ public final class DomainHelper {
      * @return
      */
     public static String getJavaRegexp(Pattern pattern) {
+        return getRegexp(pattern, "Java");
+    }
+
+    /**
+     * DOC bZhou Comment method "getRegexp".
+     * 
+     * @param pattern
+     * @param language
+     * @return
+     */
+    public static String getRegexp(Pattern pattern, String language) {
         EList<PatternComponent> components = pattern.getComponents();
         for (PatternComponent patternComponent : components) {
             if (patternComponent != null) {
-                Expression expression = getExpression(patternComponent, "Java"); //$NON-NLS-1$
+                Expression expression = getExpression(patternComponent, language); //$NON-NLS-1$
                 if (expression != null) {
                     return expression.getBody();
                 }
