@@ -83,6 +83,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
@@ -214,7 +215,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         column3.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.pattern")); //$NON-NLS-1$
         TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
         column4.setWidth(80);
-        column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
+        column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udi")); //$NON-NLS-1$
+        TreeColumn column5 = new TreeColumn(newTree, SWT.CENTER);
+        column5.setWidth(80);
+        column5.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
 
         parent.layout();
 
@@ -374,7 +378,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     if (dm != null && dm instanceof TdDataProvider) {
                         TdDataProvider dp = (TdDataProvider) dm;
                         if (ConnectionUtils.isMdmConnection(DataProviderHelper.getTdProviderConnection(dp).getObject())) {
-                            MessageUI.openWarning("Don't support this method yet!");
+                            MessageUI.openWarning(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dontSupport"));
                             return;
                         }
                     }
@@ -409,6 +413,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             addPatternEditor.minimumWidth = addPatternLabl.getImage().getBounds().width;
             addPatternEditor.setEditor(addPatternLabl, treeItem, 2);
 
+            // ADD xqliu 2010-02-23 feature 11617
+            addColumnUdi(treeItem, meIndicator, 3);
+            // ~
+
             TreeEditor delLabelEditor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
             delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
@@ -435,7 +443,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
-            delLabelEditor.setEditor(delLabel, treeItem, 3);
+            delLabelEditor.setEditor(delLabel, treeItem, 4);
             treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor, addPatternEditor });
             if (meIndicator.hasIndicators()) {
                 createIndicatorItems(treeItem, meIndicator.getIndicatorUnits());
@@ -443,6 +451,69 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             treeItem.setExpanded(true);
         }
         this.setDirty(true);
+    }
+
+    /**
+     * DOC xqliu Comment method "addColumnUdi".
+     * 
+     * @param treeItem
+     * @param meIndicator
+     * @param columnIndex
+     */
+    private void addColumnUdi(final TreeItem treeItem, final ModelElementIndicator meIndicator,
+            int columnIndex) {
+        TreeEditor addUdiEditor = new TreeEditor(tree);
+        Label addUdiLabl = new Label(tree, SWT.NONE);
+        addUdiLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        addUdiLabl.setImage(ImageLib.getImage(ImageLib.IND_DEFINITION));
+        addUdiLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addUdi")); //$NON-NLS-1$
+        addUdiLabl.pack();
+
+        addUdiLabl.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseDown(MouseEvent e) {
+                DataManager dm = getAnalysis().getContext().getConnection();
+                if (dm == null) {
+                    masterPage.doSave(null);
+                }
+
+                // TODO 10238
+                if (dm != null && dm instanceof TdDataProvider) {
+                    TdDataProvider dp = (TdDataProvider) dm;
+                    if (ConnectionUtils.isMdmConnection(DataProviderHelper.getTdProviderConnection(dp).getObject())) {
+                        MessageUI.openWarning(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dontSupport"));
+                        return;
+                    }
+                }
+
+                IFolder udiProject = ResourceManager.getUDIFolder();
+
+                CheckedTreeSelectionDialog dialog = UDIUtils.createUdiCheckedTreeSelectionDialog(udiProject);
+
+                if (dialog.open() == Window.OK) {
+                    for (Object obj : dialog.getResult()) {
+                        if (obj instanceof IFile) {
+                            IFile file = (IFile) obj;
+                            IndicatorUnit[] addIndicatorUnits = null;
+                            try {
+                                addIndicatorUnits = UDIUtils.createIndicatorUnit(file, meIndicator, getAnalysis());
+                            } catch (Throwable e1) {
+                                log.warn(e1, e1);
+                            }
+                            if (addIndicatorUnits != null && addIndicatorUnits.length > 0) {
+                                for (IndicatorUnit unit : addIndicatorUnits) {
+                                    createOneUnit(treeItem, unit);
+                                }
+                                setDirty(true);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        addUdiEditor.minimumWidth = addUdiLabl.getImage().getBounds().width;
+        addUdiEditor.setEditor(addUdiLabl, treeItem, columnIndex);
     }
 
     /**
@@ -582,7 +653,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         delEditor.minimumWidth = delLabel.getImage().getBounds().width;
         delEditor.horizontalAlignment = SWT.CENTER;
-        delEditor.setEditor(delLabel, indicatorItem, 3);
+        delEditor.setEditor(delLabel, indicatorItem, 4);
         indicatorItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { optionEditor, delEditor });
         if (indicatorType.hasChildren()) {
             indicatorItem.setData(treeItem.getData(MODELELEMENT_INDICATOR_KEY));
