@@ -185,7 +185,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions) : "";
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
+                schemaName) : "";
 
         completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
@@ -456,7 +457,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions) : "";
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
+                schemaName) : "";
 
         String genericSql = sqlGenericExpression.getBody();
         setAliasA = "".equals(setAliasA) ? "*" : setAliasA + ".*";

@@ -1069,7 +1069,9 @@ public class DbmsLanguage {
         return false;
     }
 
-    public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements) {
+    // MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
+    public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName,
+            String schemaName) {
         if (joinElements.isEmpty()) {
             return "";
         }
@@ -1098,9 +1100,15 @@ public class DbmsLanguage {
             if (joinClauseStartsWithWrongTable(leftTable, getTable(colB)) && !hasTableAliasA && !hasTableAliasB) {
                 // we need to exchange the table names otherwise we could get "tableA join tableA" which would cause
                 // an SQL exception.
+                // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
+                tableA = toQualifiedName(catalogName, schemaName, tableA);
+                // ~
                 buildJoinClause(builder, tableB, tableAliasB, columnBName, hasTableAliasB, tableA, tableAliasA, columnAName,
                         hasTableAliasA, operator);
             } else {
+                // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
+                tableB = toQualifiedName(catalogName, schemaName, tableB);
+                // ~
                 buildJoinClause(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName,
                         hasTableAliasB, operator);
             }
@@ -1117,9 +1125,9 @@ public class DbmsLanguage {
         if (hasTableAliasA && !hasAlreadyOneJoin) {
             builder.append(surroundWithSpaces(tableAliasA));
         }
-
-        join(builder, quote(tableA), tableAliasA, quote(columnAName), hasTableAliasA, quote(tableB), tableAliasB,
-                quote(columnBName), hasTableAliasB, operator);
+        // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
+        join(builder, quote(tableA), tableAliasA, quote(columnAName), hasTableAliasA, tableB, tableAliasB, quote(columnBName),
+                hasTableAliasB, operator);
     }
 
     /**
