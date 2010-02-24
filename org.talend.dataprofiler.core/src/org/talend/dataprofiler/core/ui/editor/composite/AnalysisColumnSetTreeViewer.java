@@ -21,6 +21,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.dnd.DND;
@@ -55,6 +57,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
@@ -223,6 +226,18 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             oldMenu.dispose();
         }
         menu = new Menu(newTree);
+
+        MenuItem createColumnAnalysisMenuItem = new MenuItem(menu, SWT.CASCADE);
+        createColumnAnalysisMenuItem.setText(DefaultMessagesImpl.getString("CreateColumnAnalysisAction.columnAnalysis")); //$NON-NLS-1$
+        createColumnAnalysisMenuItem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
+        createColumnAnalysisMenuItem.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                createColumnAnalysis(tree);
+            }
+        });
+
         MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
         deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
         deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
@@ -413,6 +428,21 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     public List<Column> getColumnSetMultiValueList() {
         return this.columnSetMultiValueList;
+    }
+
+    private void createColumnAnalysis(Tree newTree) {
+        TreeItem[] items = newTree.getSelection();
+        if (items.length > 0) {
+            TreePath[] paths = new TreePath[items.length];
+
+            for (int i = 0; i < items.length; i++) {
+                TdColumn tdColumn = (TdColumn) items[i].getData(COLUMN_INDICATOR_KEY);
+                paths[i] = new TreePath(new Object[] { tdColumn });
+            }
+            CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();
+            analysisAction.setSelection(new TreeSelection(paths));
+            analysisAction.run();
+        }
     }
 
     /**

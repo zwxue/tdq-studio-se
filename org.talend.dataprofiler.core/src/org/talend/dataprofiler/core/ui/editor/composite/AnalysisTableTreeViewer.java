@@ -25,6 +25,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
@@ -65,6 +67,7 @@ import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorCheckedTreeSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
@@ -1035,6 +1038,17 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             Menu menu = new Menu(tree);
 
             if (isSelectedTable(tree.getSelection())) {
+                MenuItem createColumnAnalysisMenuItem = new MenuItem(menu, SWT.CASCADE);
+                createColumnAnalysisMenuItem.setText(DefaultMessagesImpl.getString("CreateColumnAnalysisAction.columnAnalysis")); //$NON-NLS-1$
+                createColumnAnalysisMenuItem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
+                createColumnAnalysisMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        createColumnAnalysis(tree);
+                    }
+                });
+
                 MenuItem previewMenuItem = new MenuItem(menu, SWT.CASCADE);
                 previewMenuItem.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.previewDQElement")); //$NON-NLS-1$
                 previewMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
@@ -1145,6 +1159,21 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 } catch (PartInitException e1) {
                     log.error(e1, e1);
                 }
+            }
+        }
+
+        private void createColumnAnalysis(Tree newTree) {
+            TreeItem[] items = newTree.getSelection();
+            if (items.length > 0) {
+                TreePath[] paths = new TreePath[items.length];
+
+                for (int i = 0; i < items.length; i++) {
+                    TableIndicator tableIndicator = (TableIndicator) items[i].getData(TABLE_INDICATOR_KEY);
+                    paths[i] = new TreePath(new Object[] { tableIndicator.getColumnSet() });
+                }
+                CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();
+                analysisAction.setSelection(new TreeSelection(paths));
+                analysisAction.run();
             }
         }
 
