@@ -943,22 +943,34 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private void createNewLineWithExpression(final Expression expression) {
         final Composite lineComp = new Composite(expressionComp, SWT.NONE);
-        lineComp.setLayout(new GridLayout(2, false));
+        lineComp.setLayout(new GridLayout(3, false));
         final CCombo combo = new CCombo(lineComp, SWT.BORDER);
         tempExpressionMap.put(combo, expression);
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
         combo.setEditable(false);
-        combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+        // MOD xqliu 2010-02-25 feature 11201
+        // combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+        combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
+        // ~
         String language = expression.getLanguage();
         String body = expression.getBody();
+        // ADD xqliu 2010-02-25 feature 11201
+        String version = expression.getVersion();
+        // ~
 
         if (language == null) {
-            combo.setText(remainDBTypeList.get(0));
+            // MOD xqliu 2010-02-25 feature 11201
+            // combo.setText(remainDBTypeList.get(0));
+            combo.setText(allDBTypeList.get(0));
+            // ~
         } else {
             combo.setText(PatternLanguageType.findNameByLanguage(language));
         }
         combo.addSelectionListener(new LangCombSelectionListener());
+        // ADD xqliu 2010-02-25 feature 11201
+        createDbVersionText(combo, lineComp, version, 30);
+        // ~
         Composite detailComp = new Composite(lineComp, SWT.NONE);
         detailComp.setLayout(new GridLayout(3, false));
         final Text patternText = new Text(detailComp, SWT.BORDER);
@@ -980,13 +992,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createNewLine() {
         final Composite lineComp = new Composite(expressionComp, SWT.NONE);
-        lineComp.setLayout(new GridLayout(4, false));
+        lineComp.setLayout(new GridLayout(5, false));
         final CCombo combo = new CCombo(lineComp, SWT.BORDER);
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
 
         combo.setEditable(false);
-        combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+        // MOD xqliu 2010-02-25 feature 11201
+        // combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+        combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
+        // ~
         combo.select(0);
         // String language = expression.getLanguage();
         // String body = expression.getBody();
@@ -1005,6 +1020,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // setDirty(true);
         // }
         // });
+        // ADD xqliu 2010-02-25 feature 11201
+        createDbVersionText(combo, lineComp, null, 30);
+        // ~
         Expression expression = BooleanExpressionHelper.createExpression(combo.getText(), null);
         tempExpressionMap.put(combo, expression);
         if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
@@ -1013,6 +1031,22 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             updateLineForExpression(combo);
         }
         updateOtherCombos(combo);
+    }
+
+    /**
+     * DOC xqliu Comment method "createDbVersionText". ADD xqliu 2010-02-25 feature 11201
+     * 
+     * @param combo
+     * @param composite
+     * @param value
+     * @param width
+     */
+    private void createDbVersionText(final CCombo combo, final Composite composite, String value, int width) {
+        final Text dbVersionText = new Text(composite, SWT.BORDER);
+        dbVersionText.setText(value == null ? PluginConstant.EMPTY_STRING : value);
+        dbVersionText.setLayoutData(new GridData(GridData.BEGINNING));
+        ((GridData) dbVersionText.getLayoutData()).widthHint = width;
+        dbVersionText.addModifyListener(new DbVersionTextModListener(combo));
     }
 
     /**
@@ -1031,6 +1065,26 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             Text patternText = (Text) e.getSource();
             Expression expression = tempExpressionMap.get(combo);
             expression.setBody(patternText.getText());
+            setDirty(true);
+        }
+
+    }
+
+    /**
+     * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     */
+    private class DbVersionTextModListener implements ModifyListener {
+
+        private CCombo combo;
+
+        public DbVersionTextModListener(CCombo combo) {
+            this.combo = combo;
+        }
+
+        public void modifyText(ModifyEvent e) {
+            Text dbVersionText = (Text) e.getSource();
+            Expression expression = tempExpressionMap.get(combo);
+            expression.setVersion(dbVersionText.getText().trim());
             setDirty(true);
         }
 
@@ -1279,6 +1333,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
 
+        // ADD xqliu 2010-02-25 feature 11201
+        if (!checkBeforeSave())
+            return;
+        // ~
+
         EList<Expression> expressions = definition.getSqlGenericExpression();
         expressions.clear();
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
@@ -1384,6 +1443,44 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "checkBeforeSave". ADD xqliu 2010-02-25 feature 11201
+     * 
+     * @return
+     */
+    private boolean checkBeforeSave() {
+        Map<String, Integer> languageVersionCountMap = new HashMap<String, Integer>();
+        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            if (tempExpressionMap.get(cb).getBody() != null
+                    && !PluginConstant.EMPTY_STRING.equals(tempExpressionMap.get(cb).getBody())) {
+                Expression expression = tempExpressionMap.get(cb);
+                String language = expression.getLanguage();
+                String version = expression.getVersion();
+                if (version != null && !"".equals(version)) {
+                    language = language + " V" + expression.getVersion();
+                }
+                Integer integer = languageVersionCountMap.get(language);
+                if (integer == null) {
+                    languageVersionCountMap.put(language, 1);
+                } else {
+                    languageVersionCountMap.put(language, integer + 1);
+                }
+            }
+        }
+        Iterator<String> iterator = languageVersionCountMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Integer integer = languageVersionCountMap.get(key);
+            if (integer > 1) {
+                MessageUI.openError(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", key));
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

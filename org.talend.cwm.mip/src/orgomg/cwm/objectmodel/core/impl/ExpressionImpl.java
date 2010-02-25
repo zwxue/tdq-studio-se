@@ -24,6 +24,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  * <ul>
  *   <li>{@link orgomg.cwm.objectmodel.core.impl.ExpressionImpl#getBody <em>Body</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.impl.ExpressionImpl#getLanguage <em>Language</em>}</li>
+ *   <li>{@link orgomg.cwm.objectmodel.core.impl.ExpressionImpl#getVersion <em>Version</em>}</li>
  * </ul>
  * </p>
  *
@@ -69,6 +70,26 @@ public class ExpressionImpl extends ElementImpl implements Expression {
      * @ordered
      */
     protected String language = LANGUAGE_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getVersion()
+     * @generated
+     * @ordered
+     */
+    protected static final String VERSION_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getVersion() <em>Version</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getVersion()
+     * @generated
+     * @ordered
+     */
+    protected String version = VERSION_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -136,6 +157,27 @@ public class ExpressionImpl extends ElementImpl implements Expression {
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getVersion() {
+        return version;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setVersion(String newVersion) {
+        String oldVersion = version;
+        version = newVersion;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, CorePackage.EXPRESSION__VERSION, oldVersion, version));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -143,6 +185,8 @@ public class ExpressionImpl extends ElementImpl implements Expression {
                 return getBody();
             case CorePackage.EXPRESSION__LANGUAGE:
                 return getLanguage();
+            case CorePackage.EXPRESSION__VERSION:
+                return getVersion();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -160,6 +204,9 @@ public class ExpressionImpl extends ElementImpl implements Expression {
                 return;
             case CorePackage.EXPRESSION__LANGUAGE:
                 setLanguage((String)newValue);
+                return;
+            case CorePackage.EXPRESSION__VERSION:
+                setVersion((String)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -179,6 +226,9 @@ public class ExpressionImpl extends ElementImpl implements Expression {
             case CorePackage.EXPRESSION__LANGUAGE:
                 setLanguage(LANGUAGE_EDEFAULT);
                 return;
+            case CorePackage.EXPRESSION__VERSION:
+                setVersion(VERSION_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -195,6 +245,8 @@ public class ExpressionImpl extends ElementImpl implements Expression {
                 return BODY_EDEFAULT == null ? body != null : !BODY_EDEFAULT.equals(body);
             case CorePackage.EXPRESSION__LANGUAGE:
                 return LANGUAGE_EDEFAULT == null ? language != null : !LANGUAGE_EDEFAULT.equals(language);
+            case CorePackage.EXPRESSION__VERSION:
+                return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
         }
         return super.eIsSet(featureID);
     }
@@ -213,6 +265,8 @@ public class ExpressionImpl extends ElementImpl implements Expression {
         result.append(body);
         result.append(", language: ");
         result.append(language);
+        result.append(", version: ");
+        result.append(version);
         result.append(')');
         return result.toString();
     }

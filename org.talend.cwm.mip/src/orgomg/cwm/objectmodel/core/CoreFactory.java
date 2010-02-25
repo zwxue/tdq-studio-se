@@ -32,7 +32,7 @@ public interface CoreFactory extends EFactory {
      * @return a new object of class '<em>Class</em>'.
      * @generated
      */
-    orgomg.cwm.objectmodel.core.Class createClass();
+    Class createClass();
 
     /**
      * Returns a new object of class '<em>Data Type</em>'.
@@ -50,7 +50,7 @@ public interface CoreFactory extends EFactory {
      * @return a new object of class '<em>Package</em>'.
      * @generated
      */
-    orgomg.cwm.objectmodel.core.Package createPackage();
+    Package createPackage();
 
     /**
      * Returns a new object of class '<em>Subsystem</em>'.

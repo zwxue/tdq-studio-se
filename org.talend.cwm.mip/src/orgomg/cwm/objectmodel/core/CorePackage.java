@@ -3748,13 +3748,22 @@ public interface CorePackage extends EPackage {
     int EXPRESSION__LANGUAGE = ELEMENT_FEATURE_COUNT + 1;
 
     /**
+     * The feature id for the '<em><b>Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int EXPRESSION__VERSION = ELEMENT_FEATURE_COUNT + 2;
+
+    /**
      * The number of structural features of the '<em>Expression</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int EXPRESSION_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 2;
+    int EXPRESSION_FEATURE_COUNT = ELEMENT_FEATURE_COUNT + 3;
 
     /**
      * The meta object id for the '{@link orgomg.cwm.objectmodel.core.impl.BooleanExpressionImpl <em>Boolean Expression</em>}' class.
@@ -3783,6 +3792,15 @@ public interface CorePackage extends EPackage {
      * @ordered
      */
     int BOOLEAN_EXPRESSION__LANGUAGE = EXPRESSION__LANGUAGE;
+
+    /**
+     * The feature id for the '<em><b>Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BOOLEAN_EXPRESSION__VERSION = EXPRESSION__VERSION;
 
     /**
      * The number of structural features of the '<em>Boolean Expression</em>' class.
@@ -3820,6 +3838,15 @@ public interface CorePackage extends EPackage {
      * @ordered
      */
     int PROCEDURE_EXPRESSION__LANGUAGE = EXPRESSION__LANGUAGE;
+
+    /**
+     * The feature id for the '<em><b>Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PROCEDURE_EXPRESSION__VERSION = EXPRESSION__VERSION;
 
     /**
      * The number of structural features of the '<em>Procedure Expression</em>' class.
@@ -5158,6 +5185,17 @@ public interface CorePackage extends EPackage {
     EAttribute getExpression_Language();
 
     /**
+     * Returns the meta object for the attribute '{@link orgomg.cwm.objectmodel.core.Expression#getVersion <em>Version</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Version</em>'.
+     * @see orgomg.cwm.objectmodel.core.Expression#getVersion()
+     * @see #getExpression()
+     * @generated
+     */
+    EAttribute getExpression_Version();
+
+    /**
      * Returns the meta object for class '{@link orgomg.cwm.objectmodel.core.BooleanExpression <em>Boolean Expression</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -6157,6 +6195,14 @@ public interface CorePackage extends EPackage {
          * @generated
          */
         EAttribute EXPRESSION__LANGUAGE = eINSTANCE.getExpression_Language();
+
+        /**
+         * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute EXPRESSION__VERSION = eINSTANCE.getExpression_Version();
 
         /**
          * The meta object literal for the '{@link orgomg.cwm.objectmodel.core.impl.BooleanExpressionImpl <em>Boolean Expression</em>}' class.

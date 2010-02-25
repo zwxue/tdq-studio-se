@@ -55,6 +55,9 @@ public class DbmsLanguage {
 
     private static Logger log = Logger.getLogger(DbmsLanguage.class);
 
+    // ADD xqliu 2010-02-25 feature 11201
+    private static final boolean MATCH_DB_VERSION = true;
+
     // TODO scorreia put this into its own class and offer simple methods to replace tokens.
 
     // --- add here other supported systems (always in uppercase) // DBMS_SUPPORT
@@ -594,7 +597,10 @@ public class DbmsLanguage {
     public Expression getSqlExpression(IndicatorDefinition indicatorDefinition) {
         EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
 
-        Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression);
+        // MOD xqliu 2010-02-25 feature 11201
+        Expression sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression,
+                this.getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression);
+        // ~11201
         if (sqlGenExpr != null) {
             return sqlGenExpr; // language found
         }
@@ -607,7 +613,9 @@ public class DbmsLanguage {
                     + "Nevertheless, if an SQL error during the analysis, this could be the cause.");
             log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
         }
-        return getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
+        // MOD xqliu 2010-02-25 feature 11201
+        return MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression, this
+                .getDbVersion()) : getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
     }
 
     /**
@@ -660,7 +668,10 @@ public class DbmsLanguage {
     }
 
     private List<String> getFunctions(IndicatorDefinition indicatorDefinition, final EList<Expression> functions) {
-        Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName, functions);
+        // MOD xqliu 2010-02-25 feature 11201
+        Expression sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, this.dbmsName, functions, this
+                .getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, functions);
+        // ~11201
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();
             final String[] fonc = body.split(";"); //$NON-NLS-1$
@@ -668,7 +679,10 @@ public class DbmsLanguage {
         }
 
         // else try with default language (ANSI SQL)
-        sqlGenExpr = getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions);
+        // MOD xqliu 2010-02-25 feature 11201
+        sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions, this
+                .getDbVersion()) : getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions);
+        // ~11201
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();
             final String[] fonc = body.split(";"); //$NON-NLS-1$
@@ -714,6 +728,36 @@ public class DbmsLanguage {
             }
         }
         return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "getSqlExpression". ADD xqliu 2010-02-25 feature 11201
+     * 
+     * @param indicatorDefinition
+     * @param language
+     * @param sqlGenericExpression
+     * @param dbVersion
+     * @return
+     */
+    private static Expression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
+            EList<Expression> sqlGenericExpression, ProductVersion dbVersion) {
+        List<Expression> tempExpressions = new ArrayList<Expression>();
+        for (Expression sqlGenExpr : sqlGenericExpression) {
+            if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
+                tempExpressions.add(sqlGenExpr);
+            }
+        }
+        Expression defaultExpression = null;
+        for (Expression exp : tempExpressions) {
+            if (exp.getVersion() == null || "".equals(exp.getVersion())) {
+                defaultExpression = exp;
+            } else {
+                if (dbVersion.toString().startsWith(exp.getVersion()) || exp.getVersion().startsWith(dbVersion.toString())) {
+                    return exp;
+                }
+            }
+        }
+        return defaultExpression;
     }
 
     /**
