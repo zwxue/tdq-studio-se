@@ -853,6 +853,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         expressionComp.setLayout(new GridLayout());
         expressionComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+        // ADD xqliu 2010-02-26 bug 11201
+        addTitleComp(expressionComp);
+        // ~11201
+
         if (tempExpressionMap.size() == 0) {
             if (definition != null) {
                 EList<Expression> expList = definition.getSqlGenericExpression();
@@ -866,6 +870,29 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         createAddButton(composite);
 
         return composite;
+    }
+
+    /**
+     * DOC xqliu Comment method "addTitleComp". ADD xqliu 2010-02-26 bug 11201
+     * 
+     * @param expressionComp
+     * @return
+     */
+    private Composite addTitleComp(Composite expressionComp) {
+        final Composite titleComp = new Composite(expressionComp, SWT.NONE);
+        titleComp.setLayout(new GridLayout(3, false));
+        Label databaseLabel = new Label(titleComp, SWT.NONE);
+        databaseLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database"));
+        databaseLabel.setLayoutData(new GridData());
+        ((GridData) databaseLabel.getLayoutData()).widthHint = 150;
+        Label dbversionLabel = new Label(titleComp, SWT.NONE);
+        dbversionLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion"));
+        dbversionLabel.setLayoutData(new GridData(GridData.BEGINNING));
+        ((GridData) dbversionLabel.getLayoutData()).widthHint = 60;
+        Label sqlTemplateLabel = new Label(titleComp, SWT.NONE);
+        sqlTemplateLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate"));
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(titleComp);
+        return titleComp;
     }
 
     private void createNewLineWithJavaUDI() {
