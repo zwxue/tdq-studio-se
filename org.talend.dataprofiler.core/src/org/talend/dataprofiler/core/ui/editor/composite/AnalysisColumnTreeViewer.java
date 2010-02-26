@@ -414,7 +414,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             addPatternEditor.setEditor(addPatternLabl, treeItem, 2);
 
             // ADD xqliu 2010-02-23 feature 11617
-            addColumnUdi(treeItem, meIndicator, 3);
+            TreeEditor addUdiEditor = addColumnUdi(treeItem, meIndicator, 3);
             // ~
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
@@ -444,7 +444,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
             delLabelEditor.setEditor(delLabel, treeItem, 4);
-            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor, addPatternEditor });
+            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor, addPatternEditor, addUdiEditor });
             if (meIndicator.hasIndicators()) {
                 createIndicatorItems(treeItem, meIndicator.getIndicatorUnits());
             }
@@ -454,13 +454,14 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * DOC xqliu Comment method "addColumnUdi".
+     * DOC xqliu Comment method "addColumnUdi". ADD xqliu 2010-02-23 feature 11617
      * 
      * @param treeItem
      * @param meIndicator
      * @param columnIndex
+     * @return
      */
-    private void addColumnUdi(final TreeItem treeItem, final ModelElementIndicator meIndicator,
+    private TreeEditor addColumnUdi(final TreeItem treeItem, final ModelElementIndicator meIndicator,
             int columnIndex) {
         TreeEditor addUdiEditor = new TreeEditor(tree);
         Label addUdiLabl = new Label(tree, SWT.NONE);
@@ -514,6 +515,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         });
         addUdiEditor.minimumWidth = addUdiLabl.getImage().getBounds().width;
         addUdiEditor.setEditor(addUdiLabl, treeItem, columnIndex);
+        return addUdiEditor;
     }
 
     /**
