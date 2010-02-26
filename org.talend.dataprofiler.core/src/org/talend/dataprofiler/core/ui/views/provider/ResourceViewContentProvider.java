@@ -104,7 +104,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             return folders.toArray();
         } else if (element instanceof IFile) {
             IFile file = (IFile) element;
-            if (FactoriesUtil.isPatternFile(file)) {
+            if (FactoriesUtil.isPatternFile(file.getFileExtension())) {
                 // MOD mzhao 2009-04-20,Bug 6349.
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 RegularExpression[] regularExp = new RegularExpression[pattern.getComponents().size()];

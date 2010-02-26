@@ -193,9 +193,10 @@ public class ReorderingLibraryFoldersTask extends AWorkspaceTask {
      * @return
      */
     private ModelElement getModelElement(IFile file) {
-        if (FactoriesUtil.isPatternFile(file)) {
+        String fileExtension = file.getFileExtension();
+        if (FactoriesUtil.isPatternFile(fileExtension)) {
             return PatternResourceFileHelper.getInstance().findPattern(file);
-        } else if (FactoriesUtil.isDQRuleFile(file)) {
+        } else if (FactoriesUtil.isDQRuleFile(fileExtension)) {
             return DQRuleResourceFileHelper.getInstance().findWhereRule(file);
         }
         log.error("Unhandled file " + file.getFullPath().toOSString());

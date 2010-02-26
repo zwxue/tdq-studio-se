@@ -51,7 +51,7 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
             }
         } else if (parentElement instanceof IFile) {
             IFile prvFile = (IFile) parentElement;
-            if (FactoriesUtil.isProvFile(prvFile)) {
+            if (FactoriesUtil.isProvFile(prvFile.getFileExtension())) {
                 parentElement = PrvResourceFileHelper.getInstance().getFileResource((IFile) parentElement);
                 return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             }

@@ -24,21 +24,27 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.core.model.properties.Property;
+import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * 
@@ -62,14 +68,14 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
             public boolean visit(IResourceDelta delta) {
                 if (delta.getKind() == IResourceDelta.ADDED) {
                     IResource resource = delta.getResource();
-                    if (resource.getType() == IResource.FILE && FactoriesUtil.isEmfFile((IFile) resource)) {
+                    if (resource.getType() == IResource.FILE && FactoriesUtil.isEmfFile(resource.getFileExtension())) {
                         added.add((IFile) resource);
                     }
                 }
 
                 if (delta.getKind() == IResourceDelta.REMOVED) {
                     IResource resource = delta.getResource();
-                    if (resource.getType() == IResource.FILE && FactoriesUtil.isEmfFile((IFile) resource)) {
+                    if (resource.getType() == IResource.FILE && FactoriesUtil.isEmfFile(resource.getFileExtension())) {
                         removed.add((IFile) resource);
                     }
                 }
@@ -131,15 +137,6 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
     //
     // }
 
-    private boolean isExist(URI uri) {
-        String fileString = uri.toPlatformString(true);
-        IFile f = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(fileString);
-        if (f != null && f.exists()) {
-            return true;
-        }
-        return false;
-    }
-
     private void postEventExecute(final List<Runnable> refreshedRunnables) {
         WorkspaceJob cleanJob = new WorkspaceJob("Workspace refresh") {
 
@@ -190,87 +187,100 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
             public void run() {
 
-                // Refresh property file.
-                IFile file = getPropertyFile(resource);
+                IFile propertyFile = getPropertyFile(resource);
 
-                if (file != null) {
-                    // Move the property to new location.
-                    Resource propertyResource = RepResourceFileHelper.getInstance().getFileResource(file);
-                    EList<EObject> contents = propertyResource.getContents();
-                    TaggedValue taggedValue = null;
-                    for (EObject obj : contents) {
-                        if (obj instanceof TaggedValue) {
-                            taggedValue = (TaggedValue) obj;
-                            break;
-                        }
-                    }
-                    if (taggedValue != null) {
-                        taggedValue.setValue(resource.getURI().toPlatformString(true));
+                if (propertyFile != null) {
 
-                    } else {
-                        taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TDQ_ELEMENT_FILE, resource.getURI()
-                                .toPlatformString(true));
-                        propertyResource.getContents().add(taggedValue);
-                    }
+                    Resource propertyResource = RepResourceFileHelper.getInstance().getFileResource(propertyFile);
 
-                    URI desUri = resource.getURI().trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-                    // Delete previous property file.
-                    try {
-                        file.delete(true, new NullProgressMonitor());
-                    } catch (CoreException e) {
-                        log.error(e);
-                    }
-                    if (!isExist(desUri)) {
-                        try {
-                            EMFSharedResources.getInstance().saveToUri(propertyResource, desUri.trimSegments(1));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        util.saveResource(propertyResource);
-                    }
+                    updateProperty(resource, propertyResource);
 
-                    // Refresh TDQ Element file.
-                    EList<EObject> modelElements = resource.getContents();
-                    ModelElement modelElement = null;
-                    for (EObject obj : modelElements) {
-                        if (obj instanceof ModelElement) {
-                            modelElement = (ModelElement) obj;
-                            TaggedValue taggedvalue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PROPERTY_FILE,
-                                    modelElement.getTaggedValue());
-                            if (taggedvalue != null) {
-                                taggedvalue.setValue(propertyResource.getURI().toPlatformString(true));
-                                break;
-                            }
-                        }
-                    }
-                    util.saveResource(resource);
+                    updateElement(resource, propertyResource);
 
+                    clear(propertyFile);
                 }
             }
+
         };
     }
 
-    private IFile getPropertyFile(Resource resource) {
-        IFile toDelFile = null;
-        if (resource != null) {
-            ModelElement modelElement = null;
-            EList<EObject> modelElements = resource.getContents();
-            for (EObject obj : modelElements) {
-                if (obj instanceof ModelElement) {
-                    modelElement = (ModelElement) obj;
-                    TaggedValue taggedvalue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PROPERTY_FILE, modelElement
-                            .getTaggedValue());
-                    if (taggedvalue != null) {
-                        String propertyPath = taggedvalue.getValue();
-                        toDelFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
-                        break;
-                    }
-                }
-
-            }
+    /**
+     * DOC bZhou Comment method "clear".
+     * 
+     * @param file
+     */
+    private void clear(IFile file) {
+        try {
+            // Delete previous property file.
+            file.delete(true, new NullProgressMonitor());
+        } catch (CoreException e) {
+            log.error(e);
         }
-        return toDelFile;
+    }
+
+    /**
+     * DOC bZhou Comment method "updateElement".
+     * 
+     * @param resource
+     * @param propertyResource
+     */
+    private void updateElement(final Resource resource, Resource propertyResource) {
+        EList<EObject> modelElements = resource.getContents();
+
+        ModelElement modelElement = (ModelElement) EcoreUtil.getObjectByType(modelElements, CorePackage.eINSTANCE
+                .getModelElement());
+        if (modelElement != null) {
+            MetadataHelper.setPropertyPath(propertyResource.getURI().toPlatformString(true), modelElement);
+            util.saveResource(resource);
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "updateProperty".
+     * 
+     * @param elementResource
+     * @param propertyResource
+     */
+    private void updateProperty(final Resource elementResource, Resource propertyResource) {
+        EList<EObject> contents = propertyResource.getContents();
+
+        Property property = (Property) EcoreUtil.getObjectByType(contents, PropertiesPackage.eINSTANCE.getProperty());
+
+        if (property != null) {
+            URI elementURI = elementResource.getURI();
+            String fileExtension = elementURI.fileExtension();
+
+            IPath path = new Path(elementURI.toPlatformString(true));
+            path = path.makeRelativeTo(PropertyHelper.getItemWorkspaceBasePath(fileExtension));
+            path = path.removeLastSegments(1);
+            property.getItem().getState().setPath(path.toString());
+        }
+
+        URI desUri = elementResource.getURI().trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        EMFSharedResources.getInstance().saveToUri(propertyResource, desUri.trimSegments(1));
+    }
+
+    /**
+     * DOC bZhou Comment method "getPropertyFile".
+     * 
+     * @param resource
+     * @return
+     */
+    private IFile getPropertyFile(Resource resource) {
+
+        if (resource != null) {
+
+            EList<EObject> modelElements = resource.getContents();
+
+            ModelElement modelElement = (ModelElement) EcoreUtil.getObjectByType(modelElements, CorePackage.eINSTANCE
+                    .getModelElement());
+            if (modelElement != null) {
+                String propertyPath = MetadataHelper.getPropertyPath(modelElement);
+                return (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
+            }
+
+        }
+        return null;
 
     }
 }

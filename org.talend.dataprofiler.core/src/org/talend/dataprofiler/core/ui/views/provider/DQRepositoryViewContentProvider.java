@@ -56,7 +56,7 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof IFile) {
             IFile file = (IFile) parentElement;
-            if (FactoriesUtil.isAnalysisFile(file)) {
+            if (FactoriesUtil.isAnalysisFile(file.getFileExtension())) {
                 Analysis analysis = (Analysis) AnaResourceFileHelper.getInstance().findAnalysis(file);
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 AnaElementFolderNode folderNode = new AnaElementFolderNode(analysedElements);

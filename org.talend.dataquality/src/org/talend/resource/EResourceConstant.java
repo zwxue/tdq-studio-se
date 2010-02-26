@@ -127,20 +127,20 @@ public enum EResourceConstant {
      * @param path
      * @return null if can't find.
      */
-    public static EResourceConstant getResourceConstant(IPath path) {
-        if (FactoriesUtil.isAnalysisFile(path)) {
+    public static EResourceConstant getResourceConstant(String fileExtension) {
+        if (FactoriesUtil.isAnalysisFile(fileExtension)) {
             return ANALYSIS;
-        } else if (FactoriesUtil.isDQRuleFile(path)) {
+        } else if (FactoriesUtil.isDQRuleFile(fileExtension)) {
             return RULES_SQL;
-        } else if (FactoriesUtil.isPatternFile(path)) {
+        } else if (FactoriesUtil.isPatternFile(fileExtension)) {
             return PATTERNS;
-        } else if (FactoriesUtil.isProvFile(path)) {
+        } else if (FactoriesUtil.isProvFile(fileExtension)) {
             return DB_CONNECTIONS;
-        } else if (FactoriesUtil.isReportFile(path)) {
+        } else if (FactoriesUtil.isReportFile(fileExtension)) {
             return REPORTS;
-        } else if (FactoriesUtil.isUDIFile(path)) {
+        } else if (FactoriesUtil.isUDIFile(fileExtension)) {
             return USER_DEFINED_INDICATORS;
-        } else if (FactoriesUtil.SQL.equals(path.getFileExtension())) {
+        } else if (FactoriesUtil.SQL.equals(fileExtension)) {
             return SOURCE_FILES;
         }
 
@@ -155,7 +155,7 @@ public enum EResourceConstant {
      * @return null if can't find.
      */
     public static EResourceConstant getResourceConstant(IFile file) {
-        return getResourceConstant(file.getFullPath());
+        return getResourceConstant(file.getFileExtension());
     }
 
     /**

@@ -55,7 +55,8 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
 
         if (element instanceof IFile) {
             IFile file = (IFile) element;
-            if (FactoriesUtil.isPatternFile(file)) {
+            String fileExtension = file.getFileExtension();
+            if (FactoriesUtil.isPatternFile(fileExtension)) {
                 image = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
 
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
@@ -64,9 +65,9 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                         image = ImageLib.createInvalidIcon(ImageLib.PATTERN_REG);
                     }
                 }
-            } else if (FactoriesUtil.isReportFile(file)) {
+            } else if (FactoriesUtil.isReportFile(fileExtension)) {
                 image = ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
-            } else if (FactoriesUtil.isUDIFile(file)) {
+            } else if (FactoriesUtil.isUDIFile(fileExtension)) {
                 image = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
 
                 IndicatorDefinition udi = UDIResourceFileHelper.getInstance().findUDI(file);
@@ -79,7 +80,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 }
             }
 
-            if (FactoriesUtil.isEmfFile(file)) {
+            if (FactoriesUtil.isEmfFile(fileExtension)) {
                 Property property = ModelElementFileFactory.getProperty(file);
                 if (property != null) {
                     Item item = property.getItem();

@@ -161,7 +161,7 @@ public class AnalysisEditor extends CommonFormEditor {
         FileEditorInput fileEditorInput = (FileEditorInput) input;
 
         IFile file = fileEditorInput.getFile();
-        if (FactoriesUtil.isAnalysisFile(file)) {
+        if (FactoriesUtil.isAnalysisFile(file.getFileExtension())) {
             Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
             if (findAnalysis != null) {
                 analysisType = findAnalysis.getParameters().getAnalysisType();

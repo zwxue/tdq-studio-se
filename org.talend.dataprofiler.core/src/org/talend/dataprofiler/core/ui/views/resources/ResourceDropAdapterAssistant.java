@@ -121,7 +121,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 String name = res.getName();
                 IFile fileRes = (IFile) res;
                 IFile movedIFile = folder.getFile(name);
-                if (!FactoriesUtil.isEmfFile(fileRes)) {
+                if (!FactoriesUtil.isEmfFile(fileRes.getFileExtension())) {
 
                     try {
                         fileRes.move(movedIFile.getFullPath(), false, null);
@@ -245,7 +245,8 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     break;
                 case IResource.FILE:
                     IFile targetFile = (IFile) targetRes;
-                    if (FactoriesUtil.isAnalysisFile(sourceFile) && FactoriesUtil.isReportFile(targetFile)) {
+                    if (FactoriesUtil.isAnalysisFile(sourceFile.getFileExtension())
+                            && FactoriesUtil.isReportFile(targetFile.getFileExtension())) {
                         return Status.OK_STATUS;
                     }
 

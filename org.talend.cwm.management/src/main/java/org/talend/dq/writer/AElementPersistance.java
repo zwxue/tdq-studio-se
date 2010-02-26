@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.writer;
 
-import java.io.File;
 import java.util.Date;
 
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -34,7 +33,6 @@ import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -42,7 +40,6 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -164,15 +161,10 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         Property property = initProperty(element);
         TDQItem item = initItem(element, property);
-        // Save item
         item.setFilename(fileName);
-        URI uri = element.eResource().getURI();
-        // serialize(item, uri);
-        // Save property
-        serialize(property, uri);
 
-        String propertyPath = property.eResource().getURI().toPlatformString(true);
-        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PROPERTY_FILE, propertyPath);
+        URI uri = element.eResource().getURI();
+        serialize(property, uri);
     }
 
     /*
@@ -183,9 +175,9 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
     public ReturnCode save(ModelElement element) {
         ReturnCode rc = new ReturnCode();
 
-        addResourceContent(element);
-
         addDependencies(element);
+
+        addResourceContent(element);
 
         savePerperties(element);
 
@@ -215,14 +207,11 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         String version = MetadataHelper.getVersion(element);
         String status = MetadataHelper.getDevStatus(element);
 
-        User user = null;
         RepositoryContext context = (RepositoryContext) CorePlugin.getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
         if (context != null) {
-            user = context.getUser();
+            User user = context.getUser();
             user.setLogin(author);
             property.setAuthor(user);
-        } else {
-            // user = PropertiesFactory.eINSTANCE.createUser();
         }
 
         property.setId(EcoreUtil.generateUUID());
@@ -263,37 +252,16 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      */
     public ReturnCode serialize(Property property, URI uri) {
         ReturnCode rc = new ReturnCode();
-        // Save property
 
         URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
         Resource propertyResource = util.createResource(propertiesURI);
 
-        // Create tagged value.
-        TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TDQ_ELEMENT_FILE, uri
-                .toPlatformString(true));
         propertyResource.getContents().add(property);
-        propertyResource.getContents().add(taggedValue);
         propertyResource.getContents().add(property.getItem());
         propertyResource.getContents().add(property.getItem().getState());
 
-        util.saveResource(propertyResource);
-        rc.setOk(true);
-        return rc;
-    }
+        rc.setOk(util.saveResource(propertyResource));
 
-    public ReturnCode serialize(TDQItem item, URI uri) {
-        ReturnCode rc = new ReturnCode();
-        // Save item
-        URI itemURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.ITEM_EXTENSION);
-        Resource itemResource = util.createResource(itemURI);
-        // item folder.
-        String itemPath = itemURI.trimSegments(1).toPlatformString(true);
-        itemPath = itemPath.substring(itemPath.indexOf(File.separatorChar, 2) + 1);
-        item.getState().setPath(itemPath);
-        // itemResource.getContents().add(item);
-        // itemResource.getContents().add(item.getState());
-        util.saveResource(itemResource);
-        rc.setOk(true);
         return rc;
     }
 

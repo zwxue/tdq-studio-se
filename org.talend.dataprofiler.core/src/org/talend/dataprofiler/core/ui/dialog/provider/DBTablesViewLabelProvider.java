@@ -86,7 +86,7 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
         } else if (element instanceof IFolderNode) {
             return ((IFolderNode) element).getName();
         } else if (element instanceof IFile) {
-            if (FactoriesUtil.isProvFile((IFile) element)) {
+            if (FactoriesUtil.isProvFile(((IFile) element).getFileExtension())) {
                 IFile file = (IFile) element;
                 TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(file);
                 String decorateText = PluginConstant.EMPTY_STRING;

@@ -61,9 +61,10 @@ public class TdAddTaskAction extends Action {
             IFile file = null;
             if (navObj instanceof IFile) {
                 file = (IFile) navObj;
-                if (FactoriesUtil.isAnalysisFile(file)) {
+                String fileExtension = file.getFileExtension();
+                if (FactoriesUtil.isAnalysisFile(fileExtension)) {
                     modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
-                } else if (FactoriesUtil.isReportFile(file)) {
+                } else if (FactoriesUtil.isReportFile(fileExtension)) {
                     modelElement = RepResourceFileHelper.getInstance().findReport(file);
                 }
 

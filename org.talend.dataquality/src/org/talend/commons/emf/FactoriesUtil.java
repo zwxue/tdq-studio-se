@@ -15,8 +15,7 @@ package org.talend.commons.emf;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
+import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.constants.ConstantsFactory;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.RelationalPackage;
@@ -226,121 +225,81 @@ public final class FactoriesUtil {
     /**
      * DOC bZhou Comment method "isAnalysisFile".
      * 
-     * @param file
+     * @param fileExtension
      * @return
      */
-    public static boolean isAnalysisFile(IFile file) {
-        if (file != null) {
-            return ANA.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
-    }
-
-    public static boolean isAnalysisFile(IPath file) {
-        if (file != null) {
-            return ANA.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
+    public static boolean isAnalysisFile(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(ANA, fileExtension);
     }
 
     /**
      * DOC bZhou Comment method "isReportFile".
      * 
-     * @param file
+     * @param fileExtension
      * @return
      */
-    public static boolean isReportFile(IFile file) {
-        if (file != null) {
-            return REP.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
-    }
-
-    public static boolean isReportFile(IPath file) {
-        if (file != null) {
-            return REP.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
+    public static boolean isReportFile(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(REP, fileExtension);
     }
 
     /**
      * DOC bZhou Comment method "isProvFile".
      * 
-     * @param file
+     * @param fileExtension
      * @return
      */
-    public static boolean isProvFile(IFile file) {
-        if (file != null) {
-            return PROV.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
-    }
-
-    public static boolean isProvFile(IPath file) {
-        if (file != null) {
-            return PROV.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
+    public static boolean isProvFile(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(PROV, fileExtension);
     }
 
     /**
      * DOC bZhou Comment method "isPatternFile".
      * 
-     * @param file
+     * @param fileExtension
      * @return
      */
-    public static boolean isPatternFile(IFile file) {
-        if (file != null) {
-            return PATTERN.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
-    }
-
-    public static boolean isPatternFile(IPath file) {
-        if (file != null) {
-            return PATTERN.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
+    public static boolean isPatternFile(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(PATTERN, fileExtension);
     }
 
     /**
      * DOC bZhou Comment method "isDQRuleFile".
      * 
-     * @param file
+     * @param fileExtension
      * @return
      */
-    public static boolean isDQRuleFile(IFile file) {
-        if (file != null) {
-            return DQRULE.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
-    }
-
-    public static boolean isDQRuleFile(IPath file) {
-        if (file != null) {
-            return DQRULE.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
+    public static boolean isDQRuleFile(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(DQRULE, fileExtension);
     }
 
     /**
      * DOC bZhou Comment method "isUDIFile".
      * 
-     * @param file
+     * @param fileExtension
      * @return
      */
-    public static boolean isUDIFile(IFile file) {
-        if (file != null) {
-            return UDI.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
+    public static boolean isUDIFile(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(UDI, fileExtension);
     }
 
-    public static boolean isUDIFile(IPath file) {
-        if (file != null) {
-            return UDI.equalsIgnoreCase(file.getFileExtension());
-        }
-        return false;
+    /**
+     * DOC bZhou Comment method "isSQLFile".
+     * 
+     * @param fileExtension
+     * @return
+     */
+    public static boolean isSQLFile(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(SQL, fileExtension);
+    }
+
+    /**
+     * DOC bZhou Comment method "isCATFile".
+     * 
+     * @param fileExtension
+     * @return
+     */
+    public static boolean isCATFile(String fileExtension) {
+        return StringUtils.equalsIgnoreCase(CAT, fileExtension);
     }
 
     /**
@@ -350,18 +309,5 @@ public final class FactoriesUtil {
      */
     public static boolean isEmfFile(String fileExt) {
         return getExtensions().contains(fileExt);
-    }
-
-    /**
-     * DOC bZhou Comment method "isEmfFile".
-     * 
-     * @param file
-     * @return
-     */
-    public static boolean isEmfFile(IFile file) {
-        if (file != null) {
-            return isEmfFile(file.getFileExtension());
-        }
-        return false;
     }
 }

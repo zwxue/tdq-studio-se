@@ -14,6 +14,7 @@ package org.talend.dq.helper;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -24,6 +25,8 @@ import org.talend.core.model.properties.TDQItem;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -115,5 +118,79 @@ public final class PropertyHelper {
         }
 
         return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getElementPath".
+     * 
+     * @param property
+     * @return
+     */
+    public static IPath getElementPath(Property property) {
+        TDQItem item = (TDQItem) property.getItem();
+
+        IPath proPath = getItemWorkspaceBasePath(item);
+        proPath = proPath.append(item.getState().getPath());
+        proPath = proPath.append(item.getFilename());
+
+        return proPath;
+    }
+
+    /**
+     * DOC bZhou Comment method "getItemBasePath".
+     * 
+     * @param item
+     * @return
+     */
+    public static IPath getItemBasePath(TDQItem item) {
+        final String filename = item.getFilename();
+        if (filename != null) {
+            String fileExtension = new Path(filename).getFileExtension();
+            return getItemBasePath(fileExtension);
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getItemBasePath".
+     * 
+     * @param fileExtension
+     * @return
+     */
+    public static IPath getItemBasePath(String fileExtension) {
+        EResourceConstant rc = EResourceConstant.getResourceConstant(fileExtension);
+        if (rc != null) {
+            return new Path(rc.getPath());
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getItemWorkspaceBasePath".
+     * 
+     * @param item
+     * @return
+     */
+    public static IPath getItemWorkspaceBasePath(TDQItem item) {
+        final String filename = item.getFilename();
+        if (filename != null) {
+            String fileExtension = new Path(filename).getFileExtension();
+            return getItemWorkspaceBasePath(fileExtension);
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getItemWorkspaceBasePath".
+     * 
+     * @param fileExtension
+     * @return
+     */
+    public static IPath getItemWorkspaceBasePath(String fileExtension) {
+        IPath itemBasePath = getItemBasePath(fileExtension);
+        return ResourceManager.getRootProject().getFolder(itemBasePath).getFullPath();
     }
 }

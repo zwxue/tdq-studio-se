@@ -24,7 +24,11 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -35,6 +39,7 @@ import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * This factory for getting the <code>ModelElement</code> from <code>IFile</code>.
@@ -55,18 +60,19 @@ public final class ModelElementFileFactory {
      */
     public static ModelElement getModelElement(IFile file) {
         ModelElement modelElement = null;
-        if (FactoriesUtil.isProvFile(file)) {
+        String fileExtension = file.getFileExtension();
+        if (FactoriesUtil.isProvFile(fileExtension)) {
             TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
             modelElement = returnValue.getObject();
-        } else if (FactoriesUtil.isAnalysisFile(file)) {
+        } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
             modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
-        } else if (FactoriesUtil.isReportFile(file)) {
+        } else if (FactoriesUtil.isReportFile(fileExtension)) {
             modelElement = RepResourceFileHelper.getInstance().findReport(file);
-        } else if (FactoriesUtil.isDQRuleFile(file)) {
+        } else if (FactoriesUtil.isDQRuleFile(fileExtension)) {
             modelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-        } else if (FactoriesUtil.isPatternFile(file)) {
+        } else if (FactoriesUtil.isPatternFile(fileExtension)) {
             modelElement = PatternResourceFileHelper.getInstance().findPattern(file);
-        } else if (FactoriesUtil.isUDIFile(file)) {
+        } else if (FactoriesUtil.isUDIFile(fileExtension)) {
             modelElement = UDIResourceFileHelper.getInstance().findUDI(file);
         }
 
@@ -81,20 +87,46 @@ public final class ModelElementFileFactory {
      */
     public static ResourceFileMap getResourceFileMap(IFile file) {
         ResourceFileMap modelElement = null;
-        if (FactoriesUtil.isProvFile(file)) {
+
+        String fileExtension = file.getFileExtension();
+        if (FactoriesUtil.isProvFile(fileExtension)) {
             modelElement = PrvResourceFileHelper.getInstance();
-        } else if (FactoriesUtil.isAnalysisFile(file)) {
+        } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
             modelElement = AnaResourceFileHelper.getInstance();
-        } else if (FactoriesUtil.isReportFile(file)) {
+        } else if (FactoriesUtil.isReportFile(fileExtension)) {
             modelElement = RepResourceFileHelper.getInstance();
-        } else if (FactoriesUtil.isDQRuleFile(file)) {
+        } else if (FactoriesUtil.isDQRuleFile(fileExtension)) {
             modelElement = DQRuleResourceFileHelper.getInstance();
-        } else if (FactoriesUtil.isPatternFile(file)) {
+        } else if (FactoriesUtil.isPatternFile(fileExtension)) {
             modelElement = PatternResourceFileHelper.getInstance();
-        } else if (FactoriesUtil.isUDIFile(file)) {
+        } else if (FactoriesUtil.isUDIFile(fileExtension)) {
             modelElement = UDIResourceFileHelper.getInstance();
         }
         return modelElement;
+    }
+
+    /**
+     * DOC bZhou Comment method "getResourceFileMap".
+     * 
+     * @param element
+     * @return
+     */
+    public static ResourceFileMap getResourceFileMap(ModelElement element) {
+        ResourceFileMap resourceMap = null;
+        if (element instanceof TdDataProvider) {
+            resourceMap = PrvResourceFileHelper.getInstance();
+        } else if (element instanceof Analysis) {
+            resourceMap = AnaResourceFileHelper.getInstance();
+        } else if (element instanceof Report) {
+            resourceMap = RepResourceFileHelper.getInstance();
+        } else if (element instanceof DQRule) {
+            resourceMap = DQRuleResourceFileHelper.getInstance();
+        } else if (element instanceof Pattern) {
+            resourceMap = PatternResourceFileHelper.getInstance();
+        } else if (element instanceof UserDefIndicator) {
+            resourceMap = UDIResourceFileHelper.getInstance();
+        }
+        return resourceMap;
     }
 
     /**

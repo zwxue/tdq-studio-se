@@ -15,7 +15,6 @@ package org.talend.dq.writer;
 import org.eclipse.emf.common.util.URI;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.properties.TDQItem;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -50,6 +49,4 @@ public interface IElementSerialize {
      * @return
      */
     public ReturnCode serialize(Property property, URI uri);
-    
-    public ReturnCode serialize(TDQItem item, URI uri);
 }
