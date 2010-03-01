@@ -393,8 +393,25 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @return the table name (within quotes)
      */
     private String getAnalyzedTable(Indicator indicator) {
+        // MOD mzhao bug 11481. get table name with catalog or schema prefix.
+        String analyzedTableName = null;
+        ColumnSet columnSetOwner = (ColumnSet) indicator.getAnalyzedElement();
+        if (columnSetOwner == null) {
+            log.error("ColumnSet Owner is null for indicator: " + indicator.getName());
+        } else {
+            String schemaName = getQuotedSchemaName(columnSetOwner);
+            String table = quote(columnSetOwner.getName());
+            String catalogName = getQuotedCatalogName(columnSetOwner);
+            if (catalogName == null && schemaName != null) {
+                // try to get catalog above schema
+                final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+                final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+                catalogName = parentCatalog != null ? parentCatalog.getName() : null;
+            }
+            analyzedTableName = dbms().toQualifiedName(catalogName, schemaName, table);
+        }
 
-        return quote(this.catalogOrSchema) + dbms().getDelimiter() + quote(indicator.getAnalyzedElement().getName());
+        return analyzedTableName;
     }
 
     protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {
