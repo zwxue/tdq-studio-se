@@ -24,8 +24,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
-import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -97,9 +97,7 @@ public class DeleteDQRuleAction extends Action {
         }
         if (modelElementList.size() > 0 && !otherFilesExistFlag) {
 
-            WhereRule wr = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-            dialogMessage = wr == null ? file.getName() : wr.getName();
-
+            dialogMessage = DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.followingAna");
             int showDialog = DeleteModelElementConfirmDialog.showDialog(null, modelElementList
                     .toArray(new ModelElement[modelElementList.size()]), dialogMessage);
             isDeleteContent = showDialog == Window.OK;
