@@ -12,11 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.help.ui.internal.views.HelpTray;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.pref.WebBrowserPreferencePage;
 import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
@@ -84,7 +89,10 @@ public class OpeningHelpWizardDialog extends WizardDialog {
      */
     public void showHelp() {
 
-        if (isValidHref(href)) {
+        boolean isBlock = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID,
+                WebBrowserPreferencePage.BLOCK_WEB_BROWSER, true, new IScopeContext[] { new InstanceScope() });
+
+        if (isValidHref(href) && !isBlock) {
             if (getTray() == null) {
                 openTray(new HelpTray());
             }
