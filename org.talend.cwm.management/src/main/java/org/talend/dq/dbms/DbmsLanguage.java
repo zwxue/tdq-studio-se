@@ -748,13 +748,21 @@ public class DbmsLanguage {
             }
         }
         Expression defaultExpression = null;
+        List<Expression> tempExpressions2 = new ArrayList<Expression>();
         for (Expression exp : tempExpressions) {
             if (exp.getVersion() == null || "".equals(exp.getVersion())) {
                 defaultExpression = exp;
             } else {
-                if (dbVersion.toString().startsWith(exp.getVersion()) || exp.getVersion().startsWith(dbVersion.toString())) {
+                if (dbVersion.toString().equals(exp.getVersion())) {
                     return exp;
+                } else {
+                    tempExpressions2.add(exp);
                 }
+            }
+        }
+        for (Expression exp : tempExpressions2) {
+            if (dbVersion.toString().startsWith(exp.getVersion()) || exp.getVersion().startsWith(dbVersion.toString())) {
+                return exp;
             }
         }
         return defaultExpression;
