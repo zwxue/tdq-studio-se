@@ -12,14 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 
 /**
  * DOC BZhou class global comment. Detailled comment
  */
-public class ColumnNumbericWizard extends ColumnWizard {
+public class ColumnNumbericWizard extends ColumnSetWizard {
 
     /**
      * DOC BZhou ColumnNumbericWizard constructor comment.
@@ -28,16 +27,6 @@ public class ColumnNumbericWizard extends ColumnWizard {
      */
     public ColumnNumbericWizard(AnalysisParameter parameter) {
         super(parameter);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard#getMatchedIndicator()
-     */
-    @Override
-    protected Indicator getMatchedIndicator() {
-
-        return ColumnsetFactory.eINSTANCE.createCountAvgNullIndicator();
+        setIndicator(ColumnsetFactory.eINSTANCE.createCountAvgNullIndicator());
     }
 }

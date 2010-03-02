@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 
@@ -20,19 +19,10 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
  * @author zqin
  * 
  */
-public class ColumnTimeWizard extends ColumnWizard {
+public class ColumnTimeWizard extends ColumnSetWizard {
 
     public ColumnTimeWizard(AnalysisParameter parameter) {
         super(parameter);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard#getMatchedIndicator()
-     */
-    @Override
-    protected Indicator getMatchedIndicator() {
-        return ColumnsetFactory.eINSTANCE.createMinMaxDateIndicator();
+        setIndicator(ColumnsetFactory.eINSTANCE.createMinMaxDateIndicator());
     }
 }

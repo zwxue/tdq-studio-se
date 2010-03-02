@@ -165,6 +165,9 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         URI uri = element.eResource().getURI();
         serialize(property, uri);
+
+        String propertyPath = property.eResource().getURI().toPlatformString(true);
+        MetadataHelper.setPropertyPath(propertyPath, element);
     }
 
     /*

@@ -29,6 +29,8 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     private WizardPage[] extenalPages;
 
+    private Indicator indicator;
+
     public WizardPage[] getExtenalPages() {
         if (extenalPages == null) {
             return new WizardPage[0];
@@ -53,8 +55,6 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     public ModelElement initCWMResourceBuilder() {
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
 
-        Indicator indicator = getMatchedIndicator();
-
         if (indicator != null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
             analysis.getResults().getIndicators().add(indicator);
@@ -77,7 +77,21 @@ public class ColumnWizard extends AbstractAnalysisWizard {
         }
     }
 
-    protected Indicator getMatchedIndicator() {
-        return null;
+    /**
+     * Sets the indicator.
+     * 
+     * @param indicator the indicator to set
+     */
+    public void setIndicator(Indicator indicator) {
+        this.indicator = indicator;
+    }
+
+    /**
+     * Getter for indicator.
+     * 
+     * @return the indicator
+     */
+    public Indicator getIndicator() {
+        return this.indicator;
     }
 }
