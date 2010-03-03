@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -141,10 +145,38 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             }
         }
         input = DQStructureMessage.getString(super.decorateText(input, element));
-        if (element instanceof IFolder && input.startsWith(DQStructureManager.PREFIX_TDQ)) {
-            input = input.replaceFirst(DQStructureManager.PREFIX_TDQ, ""); //$NON-NLS-1$
+
+        if (element instanceof IFolder) {
+            if (input.startsWith(DQStructureManager.PREFIX_TDQ)) {
+                input = input.replaceFirst(DQStructureManager.PREFIX_TDQ, ""); //$NON-NLS-1$
+            }
+
+            IFolder folder = (IFolder) element;
+            if (ResourceManager.isAnalysisFolder(folder)) {
+                input += "(" + getFileCount(folder, new String[] { "ana" }) + ")";
+            } else if (ResourceManager.isReportsFolder(folder)) {
+                input += "(" + getFileCount(folder, new String[] { "rep" }) + ")";
+            }
         }
 
         return super.decorateText(input, element);
     }
+
+    private int getFileCount(IFolder parent, String[] filterExtensions) {
+        int i = 0;
+        List<String> extensions = Arrays.asList(filterExtensions);
+        try {
+            IResource[] members = parent.members();
+            for (IResource resource : members) {
+                if (resource instanceof IFile) {
+                    if (extensions.contains(((IFile) resource).getFileExtension()))
+                        i++;
+                }
+            }
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+        return i;
+    }
+
 }
