@@ -20,6 +20,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -93,15 +96,18 @@ public final class PropertyHelper {
     public static Property getProperty(IFile propertyFile) {
         URI propURI = URI.createPlatformResourceURI(propertyFile.getFullPath().toString(), false);
         Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
-        EList<EObject> contents = resource.getContents();
-        if (contents != null) {
-            for (EObject obj : contents) {
-                if (obj instanceof Property) {
-                    return (Property) obj;
-                }
-            }
+
+        // in this case, we need to reload the content again.
+        if (resource.getContents().isEmpty()) {
+            resource = new ResourceSetImpl().getResource(propURI, true);
         }
 
+        if (resource.getContents() != null) {
+            Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
+            if (object != null) {
+                return (Property) object;
+            }
+        }
         return null;
     }
 
