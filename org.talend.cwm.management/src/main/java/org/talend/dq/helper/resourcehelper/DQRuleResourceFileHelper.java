@@ -14,6 +14,7 @@ package org.talend.dq.helper.resourcehelper;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
@@ -34,6 +36,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -201,5 +204,29 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
     @Override
     protected boolean checkFile(IFile file) {
         return file != null && FactoriesUtil.DQRULE.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.helper.resourcehelper.ResourceFileMap#findCorrespondingFile(orgomg.cwm.objectmodel.core.ModelElement
+     * )
+     */
+    @Override
+    public IFile findCorrespondingFile(ModelElement element) {
+        if (whereRulesMap == null || whereRulesMap.isEmpty()) {
+            getAllDQRules();
+        }
+
+        Iterator<IFile> iterator = whereRulesMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            IFile next = iterator.next();
+
+            if (ResourceHelper.areSame(element, whereRulesMap.get(next))) {
+                return next;
+            }
+        }
+        return null;
     }
 }

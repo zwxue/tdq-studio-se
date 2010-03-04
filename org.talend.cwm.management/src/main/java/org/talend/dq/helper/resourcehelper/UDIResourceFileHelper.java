@@ -14,6 +14,7 @@ package org.talend.dq.helper.resourcehelper;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -33,6 +35,7 @@ import org.talend.dq.writer.impl.UDIndicatorWriter;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -180,5 +183,29 @@ public class UDIResourceFileHelper extends ResourceFileMap {
     @Override
     protected boolean checkFile(IFile file) {
         return file != null && FactoriesUtil.UDI.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.helper.resourcehelper.ResourceFileMap#findCorrespondingFile(orgomg.cwm.objectmodel.core.ModelElement
+     * )
+     */
+    @Override
+    public IFile findCorrespondingFile(ModelElement element) {
+        if (idsMap == null || idsMap.isEmpty()) {
+            getAllUDIs();
+        }
+
+        Iterator<IFile> iterator = idsMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            IFile next = iterator.next();
+
+            if (ResourceHelper.areSame(element, idsMap.get(next))) {
+                return next;
+            }
+        }
+        return null;
     }
 }

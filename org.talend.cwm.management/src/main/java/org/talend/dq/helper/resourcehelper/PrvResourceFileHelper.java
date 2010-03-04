@@ -35,6 +35,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * This class help the '.prv' file to store the corresponding DataProvider value.
@@ -78,7 +79,15 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         return null;
     }
 
-    public IFile findCorrespondingFile(TdDataProvider provider) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.helper.resourcehelper.ResourceFileMap#findCorrespondingFile(orgomg.cwm.objectmodel.core.ModelElement
+     * )
+     */
+    @Override
+    public IFile findCorrespondingFile(ModelElement element) {
         if (providerMap.isEmpty()) {
             getAllDataProviders();
         }
@@ -91,7 +100,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
             // exception later...
             // if (ResourceHelper.areSame(provider,
             // typedReturnCode.getObject())) {
-            if (ResourceHelper.areSame(provider, typedReturnCode.getObject())) {
+            if (ResourceHelper.areSame(element, typedReturnCode.getObject())) {
                 return next;
             }
         }

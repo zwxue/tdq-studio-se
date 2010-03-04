@@ -26,12 +26,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.reports.util.ReportsSwitch;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.ReportWriter;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -163,23 +165,6 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         return saved;
     }
 
-    /**
-     * DOC bZhou Comment method "findFileByReport".
-     * 
-     * @param report
-     * @return
-     */
-    public IFile findFileByReport(TdReport report) {
-        for (IFile file : allRepMap.keySet()) {
-            TdReport findReport = findReport(file);
-            if (findReport != null && findReport == report) {
-                return file;
-            }
-        }
-
-        return null;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -188,5 +173,29 @@ public final class RepResourceFileHelper extends ResourceFileMap {
     @Override
     protected boolean checkFile(IFile file) {
         return file != null && FactoriesUtil.REP.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.helper.resourcehelper.ResourceFileMap#findCorrespondingFile(orgomg.cwm.objectmodel.core.ModelElement
+     * )
+     */
+    @Override
+    public IFile findCorrespondingFile(ModelElement element) {
+        if (allRepMap == null || allRepMap.isEmpty()) {
+            getAllReports();
+        }
+
+        Iterator<IFile> iterator = allRepMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            IFile next = iterator.next();
+
+            if (ResourceHelper.areSame(element, allRepMap.get(next))) {
+                return next;
+            }
+        }
+        return null;
     }
 }

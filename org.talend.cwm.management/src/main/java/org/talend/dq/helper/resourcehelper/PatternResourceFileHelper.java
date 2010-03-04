@@ -14,6 +14,7 @@ package org.talend.dq.helper.resourcehelper;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -37,6 +39,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -262,5 +265,29 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
     @Override
     protected boolean checkFile(IFile file) {
         return file != null && FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.helper.resourcehelper.ResourceFileMap#findCorrespondingFile(orgomg.cwm.objectmodel.core.ModelElement
+     * )
+     */
+    @Override
+    public IFile findCorrespondingFile(ModelElement element) {
+        if (patternsMap == null || patternsMap.isEmpty()) {
+            getAllPatternes();
+        }
+
+        Iterator<IFile> iterator = patternsMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            IFile next = iterator.next();
+
+            if (ResourceHelper.areSame(element, patternsMap.get(next))) {
+                return next;
+            }
+        }
+        return null;
     }
 }

@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.dq.writer.EMFSharedResources;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -82,5 +83,7 @@ public abstract class ResourceFileMap {
     }
 
     protected abstract boolean checkFile(IFile file);
+
+    public abstract IFile findCorrespondingFile(ModelElement element);
 
 }

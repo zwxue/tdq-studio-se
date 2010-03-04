@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -36,6 +37,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -148,6 +150,30 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
             // }
         }
         return fileList;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.helper.resourcehelper.ResourceFileMap#findCorrespondingFile(orgomg.cwm.objectmodel.core.ModelElement
+     * )
+     */
+    @Override
+    public IFile findCorrespondingFile(ModelElement element) {
+        if (allAnalysisMap == null || allAnalysisMap.isEmpty()) {
+            getAllAnalysis();
+        }
+
+        Iterator<IFile> iterator = allAnalysisMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            IFile next = iterator.next();
+
+            if (ResourceHelper.areSame(element, allAnalysisMap.get(next))) {
+                return next;
+            }
+        }
+        return null;
     }
 
     /**
