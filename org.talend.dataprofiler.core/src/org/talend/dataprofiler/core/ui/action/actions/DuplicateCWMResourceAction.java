@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
@@ -61,6 +62,7 @@ public class DuplicateCWMResourceAction extends Action {
                     ElementWriterFactory.getInstance().create(newFile.getFileExtension()).save(newObject, newFile);
                 }
             }
+            CorePlugin.getDefault().refreshDQView();
         }
     }
 
