@@ -78,6 +78,8 @@ public final class TaggedValueHelper {
 
     public static final String UNIVERSE = "universe";
 
+    public static final String RETRIEVE_ALL = "RETRIEVE_ALL";
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // report tagged values

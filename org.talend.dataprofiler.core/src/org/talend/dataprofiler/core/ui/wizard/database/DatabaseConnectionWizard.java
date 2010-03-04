@@ -197,6 +197,8 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                 DataProviderHelper.setPort(getParameter().getPort(), connection);
                 DataProviderHelper.setDBType(getParameter().getSqlTypeName(), connection);
                 DataProviderHelper.setDBName(getParameter().getDbName(), connection);
+                // ADD xqliu 2010-03-03 feature 11412
+                DataProviderHelper.setRetrieveAllMetadata(getParameter().isRetrieveAllMetadata(), connection);
             } else {
                 MessageUI.openError(rc.getMessage());
             }

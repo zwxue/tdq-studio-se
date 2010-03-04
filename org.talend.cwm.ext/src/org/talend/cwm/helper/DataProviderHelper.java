@@ -605,4 +605,28 @@ public final class DataProviderHelper {
     public static void setUniverse(String universe, ModelElement element) {
         TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.UNIVERSE, universe);
     }
+
+    /**
+     * DOC xqliu Comment method "setRetrieveAllMetadata". ADD xqliu 2010-03-03 feature 11412
+     * 
+     * @param retrieveAllMetadata
+     * @param element
+     */
+    public static void setRetrieveAllMetadata(boolean retrieveAllMetadata, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.RETRIEVE_ALL, String.valueOf(retrieveAllMetadata));
+    }
+
+    /**
+     * DOC xqliu Comment method "getRetrieveAllMetadata". ADD xqliu 2010-03-03 feature 11412
+     * 
+     * @param element
+     * @return
+     */
+    public static boolean getRetrieveAllMetadata(ModelElement element) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.RETRIEVE_ALL, element.getTaggedValue());
+        if (taggedValue == null) {
+            return true;
+        }
+        return Boolean.valueOf(taggedValue.getValue());
+    }
 }

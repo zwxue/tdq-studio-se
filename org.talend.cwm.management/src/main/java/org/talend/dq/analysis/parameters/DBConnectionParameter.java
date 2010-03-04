@@ -40,8 +40,32 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     private String dbName;
 
+    // ADD xqliu 2010-03-03 feature 11412
+    private boolean retrieveAllMetadata;
+
+    /**
+     * Getter for retrieveAllMetadata.
+     * 
+     * @return the retrieveAllMetadata
+     */
+    public boolean isRetrieveAllMetadata() {
+        return retrieveAllMetadata;
+    }
+
+    /**
+     * Sets the retrieveAllMetadata.
+     * 
+     * @param retrieveAllMetadata the retrieveAllMetadata to set
+     */
+    public void setRetrieveAllMetadata(boolean retrieveAllMetadata) {
+        this.retrieveAllMetadata = retrieveAllMetadata;
+    }
+
+    // ~11412
+
     public DBConnectionParameter() {
         super(EParameterType.DBCONNECTON);
+        retrieveAllMetadata = true;
     }
 
     public void setSqlTypeName(String sqlTypeName) {

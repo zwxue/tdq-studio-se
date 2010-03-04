@@ -83,6 +83,9 @@ public class DatabaseWizardPage extends AbstractWizardPage {
 
     private Button checkButton;
 
+    // ADD xqliu 2010-03-03 feature 11412
+    private Button retrieveAllButton;
+
     private DBConnectionParameter connectionParam;
 
     private boolean dbTypeSwitchFlag = false;
@@ -117,7 +120,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         GridLayout layout = new GridLayout();
         comp.setLayout(layout);
         layout.numColumns = 2;
-        layout.verticalSpacing = 9;
+        layout.verticalSpacing = 0;
 
         GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
         data.horizontalSpan = 1;
@@ -184,6 +187,23 @@ public class DatabaseWizardPage extends AbstractWizardPage {
 
         });
 
+        // ADD xqliu 2010-03-01 feature 11412
+        label = new Label(tempComp, SWT.NULL);
+        label.setText(""); //$NON-NLS-1$
+        retrieveAllButton = new Button(tempComp, SWT.CHECK);
+        retrieveAllButton.setLayoutData(new GridData(GridData.FILL_BOTH));
+        retrieveAllButton.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.retrieveAllMetadata")); //$NON-NLS-1$
+        retrieveAllButton.setToolTipText(DefaultMessagesImpl.getString("DatabaseWizardPage.retrieveAllMetadata")); //$NON-NLS-1$
+        retrieveAllButton.setSelection(connectionParam.isRetrieveAllMetadata());
+        retrieveAllButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                connectionParam.setRetrieveAllMetadata(retrieveAllButton.getSelection());
+            }
+
+        });
+        // ~11412
+
         String defalutItem = SupportDBUrlType.MYSQLDEFAULTURL.getDBKey();
         if (mdmFlag) {
             defalutItem = SupportDBUrlType.MDM.getDBKey();
@@ -225,25 +245,25 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         this.container = comp;
         setControl(comp);
 
-        if (mdmFlag) {
-            rebuildJDBCControls(SupportDBUrlType.MDM);
-        } else {
-            rebuildJDBCControls(SupportDBUrlType.MYSQLDEFAULTURL);
-        }
+        // MOD xqliu 2010-03-04 feature 11412
+        SupportDBUrlType defaultSupportDBUrlType = this.mdmFlag ? SupportDBUrlType.MDM : SupportDBUrlType.MYSQLDEFAULTURL;
+        rebuildJDBCControls(defaultSupportDBUrlType);
+        this.connectionParam.setDbName(defaultSupportDBUrlType.getDBName());
+        // ~11412
 
-        String tempUserid = connectionParam.getParameters().getProperty(TaggedValueHelper.USER);
+        String tempUserid = this.connectionParam.getParameters().getProperty(TaggedValueHelper.USER);
         if (tempUserid != null) {
-            userid = tempUserid;
-            username.setText(userid);
+            this.userid = tempUserid;
+            this.username.setText(this.userid);
         }
-        String tempPassword = connectionParam.getParameters().getProperty(TaggedValueHelper.PASSWORD);
+        String tempPassword = this.connectionParam.getParameters().getProperty(TaggedValueHelper.PASSWORD);
         if (tempPassword != null) {
-            password = tempPassword;
-            passwordText.setText(password);
+            this.password = tempPassword;
+            this.passwordText.setText(this.password);
         }
-        String tempURL = connectionParam.getJdbcUrl();
+        String tempURL = this.connectionParam.getJdbcUrl();
         if (tempURL != null) {
-            connectionURL = tempURL;
+            this.connectionURL = tempURL;
             // passwordText.setText(password);
         } else {
             // System.out.println("NULL URL");

@@ -272,6 +272,11 @@ public final class DQStructureComparer {
         connectionParameters.setJdbcUrl(urlString);
         connectionParameters.setDriverClassName(driverClassName);
         connectionParameters.setParameters(properties);
+        // ADD xqliu 2010-03-04 feature 11412
+        connectionParameters.setDbName(DataProviderHelper.getDBName(tdProviderConnection.getObject()));
+        connectionParameters.setRetrieveAllMetadata(DataProviderHelper
+                .getRetrieveAllMetadata(tdProviderConnection.getObject()));
+        // ~11412
         TypedReturnCode<TdDataProvider> returnProvider = ConnectionService.createConnection(connectionParameters);
         return returnProvider;
     }

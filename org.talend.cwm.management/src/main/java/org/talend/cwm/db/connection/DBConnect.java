@@ -68,6 +68,9 @@ public class DBConnect {
 
     private DataProviderBuilder dataProvBuilder;
 
+    // ADD xqliu 2010-03-03 feature 11412
+    private DBConnectionParameter dbConnectionParameter;
+
     // TODO scorreia errorMessage;
 
     /**
@@ -79,6 +82,8 @@ public class DBConnect {
     public DBConnect(DBConnectionParameter connParams) {
         this(connParams.getJdbcUrl(), connParams.getDriverClassName(), connParams.getParameters());
         this.emfUtil.setUsePlatformRelativePath(true);
+        // ADD xqliu 2010-03-03 feature 11412
+        this.dbConnectionParameter = connParams;
     }
 
     // public DBConnect(TdDataProvider dataprovider) {
@@ -282,7 +287,9 @@ public class DBConnect {
     public boolean retrieveDatabaseStructure() throws SQLException {
         boolean ok = checkConnection("Cannot retrieve database structure. ");
         if (ok && catalogBuilder == null) {
-            catalogBuilder = new CatalogBuilder(connection);
+            // MOD xqliu 2010-03-03 feature 11412
+            catalogBuilder = new CatalogBuilder(connection, dbConnectionParameter);
+            // ~11412
             // initialize database structure
             catalogBuilder.getCatalogs();
             catalogBuilder.getSchemata();

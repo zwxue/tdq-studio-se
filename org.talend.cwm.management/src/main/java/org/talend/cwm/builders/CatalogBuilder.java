@@ -31,6 +31,7 @@ import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sql.metadata.constants.MetaDataConstants;
 
 /**
@@ -52,6 +53,14 @@ public class CatalogBuilder extends CwmBuilder {
 
     private Map<String, TdCatalog> catalogsToUpdate = new HashMap<String, TdCatalog>();
 
+    // ADD xqliu 2010-03-03 feature 11412
+    protected DBConnectionParameter dbConnectionParameter;
+
+    public DBConnectionParameter getDbConnectionParameter() {
+        return dbConnectionParameter;
+    }
+    // ~11412
+
     /**
      * CatalogBuilder constructor. Catalogs and/or schemata are initialized, but not the lower structure such as the
      * table, trigger, procedures...
@@ -71,6 +80,17 @@ public class CatalogBuilder extends CwmBuilder {
             log.error(e, e);
         }
 
+    }
+
+    /**
+     * DOC xqliu CatalogBuilder constructor comment. ADD xqliu 2010-03-03 feature 11412
+     * 
+     * @param conn
+     * @param dbParam
+     */
+    public CatalogBuilder(Connection conn, DBConnectionParameter dbParam) {
+        this(conn);
+        this.dbConnectionParameter = dbParam;
     }
 
     public boolean refreshCatalogs(final Collection<TdCatalog> catalogs) {
@@ -179,6 +199,9 @@ public class CatalogBuilder extends CwmBuilder {
     }
 
     private void initializeCatalogLow() throws SQLException {
+        // ADD xqliu 2010-03-03 feature 11412
+        String dbName = getDbConnectionParameter() == null ? null : getDbConnectionParameter().getDbName();
+        // ~11412
         // MOD xqliu 2009-10-29 bug 9838
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDatabaseProductName() != null
@@ -229,13 +252,32 @@ public class CatalogBuilder extends CwmBuilder {
                 // ~
                 assert catalogName != null : Messages.getString("CatalogBuilder.CatalogNameNull",//$NON-NLS-1$
                         getConnectionInformations(connection));
-                TdCatalog catalog = createOrUpdateCatalog(catalogName);
-                name2catalog.put(catalogName, catalog);
+                // MOD xqliu 2010-03-03 feature 11412
+                if (retrieveCatalogSchema(dbName, catalogName)) {
+                    TdCatalog catalog = createOrUpdateCatalog(catalogName);
+                    name2catalog.put(catalogName, catalog);
+                }
+                // ~11412
             }
             // --- release the result set.
             catalogNames.close();
         }
         catalogsInitialized = true;
+    }
+
+    /**
+     * DOC xqliu Comment method "retrieveCatalogSchema".
+     * 
+     * @param dbName
+     * @param catalogSchemaName
+     * @return
+     */
+    private boolean retrieveCatalogSchema(String dbName, String catalogSchemaName) {
+        if (getDbConnectionParameter() == null || getDbConnectionParameter().isRetrieveAllMetadata() || dbName == null
+                || dbName.equals(catalogSchemaName)) {
+            return true;
+        }
+        return false;
     }
 
     private void initializeSchema() {
@@ -249,16 +291,16 @@ public class CatalogBuilder extends CwmBuilder {
     private void initializeSchemaLow() throws SQLException {
 
         // initialize the catalog if not already done
-        if (!catalogsInitialized) {
+        if (!this.catalogsInitialized) {
             initializeCatalog();
         }
 
         // MOD mzhao bug 8502 2009-10-29
         Map<String, List<TdSchema>> catalog2schemas = null;
-        if (connection.getMetaData().getDriverName().equals(DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0)) {
-            catalog2schemas = DatabaseContentRetriever.getMSSQLSchemas(connection);
+        if (this.connection.getMetaData().getDriverName().equals(DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0)) {
+            catalog2schemas = DatabaseContentRetriever.getMSSQLSchemas(this.connection);
         } else {
-            catalog2schemas = DatabaseContentRetriever.getSchemas(connection);
+            catalog2schemas = DatabaseContentRetriever.getSchemas(this.connection);
         }
 
         // store schemas in catalogs
@@ -267,7 +309,7 @@ public class CatalogBuilder extends CwmBuilder {
             List<TdSchema> schemas = catalog2schemas.get(catName);
             if (catName != null) { // a mapping between catalog and schema exist
                 if (schemas != null) {
-                    TdCatalog catalog = name2catalog.get(catName);
+                    TdCatalog catalog = this.name2catalog.get(catName);
                     // MOD mzhao bug 8502 2009-10-28, filter user for MSSQL 2005 and 2008.
                     if (catalog != null && schemas != null) {
                         if (!(schemas.size() == 1 && schemas.get(0) == null)) {
@@ -277,13 +319,13 @@ public class CatalogBuilder extends CwmBuilder {
                 }
             } else {
                 this.schemata.addAll(schemas);
+                // MOD xqliu 2010-03-04 feature 11412
                 // handle case when one catalog exist but no mapping between catalog and schemas exist (PostgreSQL)
-                if (catNames.size() == 1) {
-                    if (this.name2catalog.size() == 1) { // a catalog exists
-                        TdCatalog cat = this.name2catalog.values().iterator().next();
-                        CatalogHelper.addSchemas(schemas, cat);
-                    }
+                if (ConnectionUtils.isPostgresql(this.connection) && catNames.size() == 1 && this.name2catalog.size() == 1) {
+                    TdCatalog cat = this.name2catalog.values().iterator().next();
+                    CatalogHelper.addSchemas(schemas, cat);
                 }
+                // ~11412
                 // PTODO scorreia handle MS SQL schemata (dbo, root, guest) not related to catalogs.
             }
         }
