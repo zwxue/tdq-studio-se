@@ -461,8 +461,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @param columnIndex
      * @return
      */
-    private TreeEditor addColumnUdi(final TreeItem treeItem, final ModelElementIndicator meIndicator,
-            int columnIndex) {
+    private TreeEditor addColumnUdi(final TreeItem treeItem, final ModelElementIndicator meIndicator, int columnIndex) {
         TreeEditor addUdiEditor = new TreeEditor(tree);
         Label addUdiLabl = new Label(tree, SWT.NONE);
         addUdiLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
@@ -757,15 +756,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ //$NON-NLS-2$
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
-        }
-
-        Domain dataValidDomain = parameters.getDataValidDomain();
-        if (dataValidDomain != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0,
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.validDomain") + (dataValidDomain != null)); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
         }
         Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
         if (indicatorValidDomain != null) {
