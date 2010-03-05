@@ -724,6 +724,7 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      * @param objects
      * @return
      */
+    @SuppressWarnings("fallthrough")
     private boolean storeSqlResultsFrequency(List<Object[]> objects) {
         // handle case when frequencies are computed on dates.
         int nbColumns = 2;
@@ -842,8 +843,10 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      * 
      * @param value2freq
      * @return
+     * 
+     * FIXME avoid copy&paste
      */
-    protected Object getValueFields(Object[] value2freq) {
+    private Object getValueFields(Object[] value2freq) {
         int nbFields = value2freq.length;
         if (nbFields == 2) {
             return value2freq[0];

@@ -32,8 +32,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.sql.UserDefIndicator;
-import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
@@ -56,15 +54,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
 
     protected Map<ModelElement, Package> schemata = new HashMap<ModelElement, Package>();
-
-    private IndicatorSqlSwitch<UserDefIndicator> userDefIndSwitch = new IndicatorSqlSwitch<UserDefIndicator>() {
-
-        @Override
-        public UserDefIndicator caseUserDefIndicator(UserDefIndicator object) {
-            return object;
-        }
-
-    };
 
     protected boolean isAccessWith(TdDataProvider dp) {
         if (dataprovider == null) {

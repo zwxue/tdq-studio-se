@@ -87,7 +87,7 @@ public class DatePatternRetriever {
     }
 
     /**
-     * method to show results on screen console
+     * method to show results on screen console.
      */
     public void showResults() {
         this.getOrderedModelMatchers();
@@ -102,7 +102,7 @@ public class DatePatternRetriever {
 
     // method witch sort ModelMatchers according their scores
     /**
-     * sort pattern according to theirs score
+     * sort pattern according to theirs score.
      */
     @SuppressWarnings("unchecked")
     public void getOrderedModelMatchers() {
