@@ -261,30 +261,34 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
      * 
      * move the element of the columnList to up or down.
      */
-    private void moveElement(AnalysisColumnNominalIntervalTreeViewer columnsElementViewer, boolean isDown) {
+    private void moveElement(AnalysisColumnSetTreeViewer columnsElementViewer, boolean isDown) {
         Tree currentTree = columnsElementViewer.getTree();
         Object[] selectItem = currentTree.getSelection();
         List<Column> columnList = columnsElementViewer.getColumnSetMultiValueList();
         int index = 0;
-        for (int i = 0; i < selectItem.length; i++) {
-            index = currentTree.indexOf((TreeItem) selectItem[i]);
-            if (isDown) {
-                if ((index + 1) < columnList.size()) {
-                    Column moveElement = (Column) ((TreeItem) selectItem[i])
-                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
-                    columnList.remove(moveElement);
-                    columnList.add((index + 1), moveElement);
-                    index = (index + 1);
+        if (isDown) {
+            for (int i = selectItem.length - 1; i >= 0; i--) {
+                index = currentTree.indexOf((TreeItem) selectItem[i]);
+                if ((index + 1) >= columnList.size()) {
+                    break;
                 }
-            } else {
-                if ((index - 1) >= 0) {
-                    Column moveElement = (Column) ((TreeItem) selectItem[i])
-                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
-                    columnList.remove(moveElement);
-                    columnList.add((index - 1), moveElement);
-                    index = (index - 1);
+                Column moveElement = (Column) ((TreeItem) selectItem[i])
+                        .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                columnList.remove(moveElement);
+                columnList.add((index + 1), moveElement);
+                index = (index + 1);
+            }
+        } else {
+            for (int i = 0; i < selectItem.length; i++) {
+                index = currentTree.indexOf((TreeItem) selectItem[i]);
+                if ((index - 1) < 0) {
+                    break;
                 }
-
+                Column moveElement = (Column) ((TreeItem) selectItem[i])
+                        .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                columnList.remove(moveElement);
+                columnList.add((index - 1), moveElement);
+                index = (index - 1);
             }
         }
         columnsElementViewer.setInput(convertList(columnList).toArray());
