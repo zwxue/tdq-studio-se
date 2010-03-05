@@ -571,6 +571,19 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         dataFilterComp.setDirty(false);
     }
 
+    /**
+     * 
+     * DOC zshen Comment method "saveEditor".
+     * 
+     */
+    public void saveEditor() {
+        if (isDirty() && canSave().isOk()) {
+            getEditor().doSave(null);
+
+        }
+
+    }
+
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);

@@ -30,12 +30,17 @@ import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -99,6 +104,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private Tree tree;
 
+    private Button[] buttons;
+
     private List<Column> columnSetMultiValueList;
 
     // private final List<String> comboTextList = new ArrayList<String>();
@@ -119,6 +126,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     public AnalysisColumnSetTreeViewer(Composite parent, ColumnSetMasterPage masterPage) {
         this(parent);
         this.masterPage = masterPage;
+        this.createButtonSection(parent.getParent());
         // this.setElements(masterPage.getColumnSetMultiValueIndicator().
         // getAnalyzedColumns());
         this.setDirty(false);
@@ -162,6 +170,124 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
         addTreeListener(newTree);
         return newTree;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "createButtonSection".
+     * 
+     * @param topComp create the button with delButton,moveUpButton,moveDownButton
+     */
+    private void createButtonSection(Composite topComp) {
+        Composite buttonsComp = masterPage.getEditor().getToolkit().createComposite(topComp, SWT.NONE);
+        buttonsComp.setLayout(new GridLayout(3, true));
+        buttonsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        GridData buttonGridData = new GridData();
+        buttonGridData.heightHint = 25;
+        buttonGridData.horizontalAlignment = GridData.CENTER;
+        buttonGridData.verticalAlignment = GridData.FILL;
+        buttonGridData.grabExcessHorizontalSpace = true;
+        buttonGridData.grabExcessVerticalSpace = true;
+
+        final Button delButton = new Button(buttonsComp, SWT.NULL);
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        delButton.setLayoutData(buttonGridData);
+        final Button moveUpButton = new Button(buttonsComp, SWT.NULL);
+        moveUpButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
+        moveUpButton.setLayoutData(buttonGridData);
+        final Button moveDownButton = new Button(buttonsComp, SWT.NULL);
+        moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
+        moveDownButton.setLayoutData(buttonGridData);
+        buttons = new Button[] { delButton, moveUpButton, moveDownButton };
+        enabledButtons(false);
+        moveUpButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                masterPage.saveEditor();// save editor if the columnList has been added and not saved.
+                moveElement(masterPage.getTreeViewer(), false);
+            }
+
+        });
+        moveDownButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                masterPage.saveEditor();
+                moveElement(masterPage.getTreeViewer(), true);
+
+            }
+
+        });
+        delButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                masterPage.saveEditor();
+                Tree currentTree = tree;
+                Object[] selectItem = currentTree.getSelection();
+                List<Column> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
+                for (int i = 0; i < selectItem.length; i++) {
+                    Object removeElement = ((TreeItem) selectItem[i])
+                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                    columnList.remove(removeElement);
+                }
+                masterPage.getTreeViewer().setInput(columnList.toArray());
+                enabledButtons(false);
+            }
+        });
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "enabledButtons".
+     * 
+     * @param enabled the state of buttons .
+     * 
+     * change the state of buttons.
+     */
+    public void enabledButtons(boolean enabled) {
+        for (Button button : buttons) {
+            button.setEnabled(enabled);
+        }
+    }
+
+    private void moveElement(AnalysisColumnSetTreeViewer columnsElementViewer, boolean isDown) {
+        Tree currentTree = columnsElementViewer.getTree();
+        Object[] selectItem = currentTree.getSelection();
+        List<Column> columnList = columnsElementViewer.getColumnSetMultiValueList();
+        int index = 0;
+        for (int i = 0; i < selectItem.length; i++) {
+            index = currentTree.indexOf((TreeItem) selectItem[i]);
+
+            if (isDown) {
+                if ((index + 1) < columnList.size()) {
+                    Column moveElement = (Column) ((TreeItem) selectItem[i])
+                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                    columnList.remove(moveElement);
+                    columnList.add((index + 1), moveElement);
+                    index = (index + 1);
+                }
+            } else {
+                if ((index - 1) >= 0) {
+                    Column moveElement = (Column) ((TreeItem) selectItem[i])
+                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                    columnList.remove(moveElement);
+                    columnList.add((index - 1), moveElement);
+                    index = (index - 1);
+                }
+
+            }
+        }
+        columnsElementViewer.setInput(convertList(columnList).toArray());
+        currentTree = columnsElementViewer.getTree();
+        currentTree.select(currentTree.getItem(index));
+    }
+
+    private List<Column> convertList(List<Column> columnList) {
+        List<Column> resultList = new ArrayList();
+        for (int i = columnList.size() - 1; i >= 0; i--) {
+            resultList.add(columnList.get(i));
+        }
+        return resultList;
     }
 
     /**
@@ -379,6 +505,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 public void mouseDown(MouseEvent e) {
                     deleteColumnItems(column);
                     removeItemBranch(treeItem);
+                    enabledButtons(false);
                     // MOD mzhao 2005-05-05 bug 6587.
                     // MOD mzhao 2009-06-8, bug 5887.
                     updateBindConnection(masterPage, tree);
@@ -482,6 +609,30 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     private void addTreeListener(final Tree tree) {
+        tree.addFocusListener(new FocusListener() {
+
+            public void focusGained(FocusEvent e) {
+                if (e.getSource() instanceof Tree) {
+                    Tree currentTree = (Tree) e.getSource();
+
+                    if (currentTree.getSelection().length > 0) {
+                        enabledButtons(true);
+                    }
+                }
+
+            }
+
+            public void focusLost(FocusEvent e) {
+                if (e.getSource() instanceof Tree) {
+                    Tree currentTree = (Tree) e.getSource();
+
+                    if (currentTree.getSelection().length <= 0) {
+                        enabledButtons(false);
+                    }
+                }
+            }
+
+        });
         tree.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -489,6 +640,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 boolean con = false;
 
                 if (e.item instanceof TreeItem) {
+                    enabledButtons(true);
                     TreeItem item = (TreeItem) e.item;
                     if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
                         tree.setMenu(null);
