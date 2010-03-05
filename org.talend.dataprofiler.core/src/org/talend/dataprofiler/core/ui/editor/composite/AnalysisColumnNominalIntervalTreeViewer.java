@@ -261,7 +261,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
      * 
      * move the element of the columnList to up or down.
      */
-    private void moveElement(AnalysisColumnSetTreeViewer columnsElementViewer, boolean isDown) {
+    private void moveElement(AnalysisColumnNominalIntervalTreeViewer columnsElementViewer, boolean isDown) {
         Tree currentTree = columnsElementViewer.getTree();
         Object[] selectItem = currentTree.getSelection();
         List<Column> columnList = columnsElementViewer.getColumnSetMultiValueList();
