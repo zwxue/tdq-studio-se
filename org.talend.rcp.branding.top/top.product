@@ -4,7 +4,7 @@
 <product name="Talend Open Profiler" id="org.talend.rcp.branding.top.product" application="org.talend.rcp.branding.top.application" useFeatures="true">
 
    <aboutInfo>
-      <image path="icons/about.gif"/>
+      <image path="icons/about.jpg"/>
       <text>
          %aboutText
       </text>

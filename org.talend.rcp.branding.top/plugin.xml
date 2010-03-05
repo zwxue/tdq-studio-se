@@ -23,7 +23,7 @@
          </property>
          <property
             name="aboutImage"
-            value="icons/about.gif"/>
+            value="icons/about.jpg"/>
          <property
                name="appName"
                value="Talend Open Profiler">
