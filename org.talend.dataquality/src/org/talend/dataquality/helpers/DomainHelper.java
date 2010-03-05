@@ -143,7 +143,7 @@ public final class DomainHelper {
         if (patternComponent != null && patternComponent.eClass().equals(PatternPackage.eINSTANCE.getRegularExpression())) {
             RegularExpression regExp = (RegularExpression) patternComponent;
             Expression expr = regExp.getExpression();
-            if (language.equals(regExp.getExpression().getLanguage())) {
+            if (language.equalsIgnoreCase(regExp.getExpression().getLanguage())) {
                 return expr;
             }
         }
