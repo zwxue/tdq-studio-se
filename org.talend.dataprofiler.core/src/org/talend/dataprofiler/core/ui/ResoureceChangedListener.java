@@ -66,19 +66,18 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 
             public boolean visit(IResourceDelta delta) {
-                if (delta.getKind() == IResourceDelta.ADDED) {
-                    IResource resource = delta.getResource();
-                    if (resource.getType() == IResource.FILE && FactoriesUtil.isEmfFile(resource.getFileExtension())) {
+                IResource resource = delta.getResource();
+
+                if (FactoriesUtil.isEmfFile(resource.getFileExtension())) {
+                    if (delta.getKind() == IResourceDelta.ADDED) {
                         added.add((IFile) resource);
                     }
-                }
 
-                if (delta.getKind() == IResourceDelta.REMOVED) {
-                    IResource resource = delta.getResource();
-                    if (resource.getType() == IResource.FILE && FactoriesUtil.isEmfFile(resource.getFileExtension())) {
+                    if (delta.getKind() == IResourceDelta.REMOVED) {
                         removed.add((IFile) resource);
                     }
                 }
+
                 return true;
             }
 
@@ -197,25 +196,10 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
                     updateElement(resource, propertyResource);
 
-                    clear(propertyFile);
                 }
             }
 
         };
-    }
-
-    /**
-     * DOC bZhou Comment method "clear".
-     * 
-     * @param file
-     */
-    private void clear(IFile file) {
-        try {
-            // Delete previous property file.
-            file.delete(true, new NullProgressMonitor());
-        } catch (CoreException e) {
-            log.error(e);
-        }
     }
 
     /**
@@ -276,7 +260,9 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
                     .getModelElement());
             if (modelElement != null) {
                 String propertyPath = MetadataHelper.getPropertyPath(modelElement);
-                return (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
+                if (propertyPath != null) {
+                    return (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
+                }
             }
 
         }
