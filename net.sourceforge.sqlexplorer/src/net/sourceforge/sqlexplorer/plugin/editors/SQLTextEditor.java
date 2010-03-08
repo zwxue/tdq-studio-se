@@ -224,8 +224,21 @@ public class SQLTextEditor extends TextEditor {
             }
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IFile file = workspace.getRoot().getFile(filePath);
+
+            // MOD xqliu 2010-03-08 feature 10675
             // PTODO qzhang 4753: Ask for a new name when saving a file with an already existing name
-            if (file.exists() && SQLExplorerPlugin.isEditorSerialName(filePath.lastSegment())) {
+            // if (file.exists() && SQLExplorerPlugin.isEditorSerialName(filePath.lastSegment())) {
+            // InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name",
+            // "this file exists already, please input new file name: ", filePath.lastSegment(), null);
+            // if (inputDialog.open() == InputDialog.CANCEL) {
+            // return;
+            // } else {
+            // IPath lseg = filePath.removeLastSegments(1);
+            // IPath append = lseg.append(inputDialog.getValue());
+            // file = workspace.getRoot().getFile(append);
+            // }
+            // }
+            while (fileExist(file)) {
                 InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name",
                         "this file exists already, please input new file name: ", filePath.lastSegment(), null);
                 if (inputDialog.open() == InputDialog.CANCEL) {
@@ -236,6 +249,8 @@ public class SQLTextEditor extends TextEditor {
                     file = workspace.getRoot().getFile(append);
                 }
             }
+            // ~10675
+
             newInput = new FileEditorInput(file);
             if (provider == null) {
                 // editor has programmatically been closed while the dialog was open
@@ -264,6 +279,17 @@ public class SQLTextEditor extends TextEditor {
             if (progressMonitor != null)
                 progressMonitor.setCanceled(!success);
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "fileExist". ADD xqliu 2010-03-08 feature 10675
+     * 
+     * @param file
+     * @return
+     */
+    private boolean fileExist(IFile file) {
+        IPath filePath = file.getFullPath();
+        return file.exists() && SQLExplorerPlugin.isEditorSerialName(filePath.lastSegment());
     }
 
     /**

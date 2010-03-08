@@ -56,6 +56,9 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
 
     private static final String SQL_EDITOR = "SQL Editor (";
 
+    // ADD xqliu 2010-03-08 feature 10675
+    private static final String DOT_SQL = ".sql";
+
     private AliasManager aliasManager;
 
     private int count = 0;
@@ -413,7 +416,9 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      * @return
      */
     public static boolean isEditorSerialName(String name) {
-        return name.endsWith(SQL) && name.startsWith(SQL_EDITOR);
+        // MOD xqliu 2010-03-08 feature 10675
+        // return name.endsWith(SQL) && name.startsWith(SQL_EDITOR);
+        return name.endsWith(DOT_SQL);
     }
 
     /**
