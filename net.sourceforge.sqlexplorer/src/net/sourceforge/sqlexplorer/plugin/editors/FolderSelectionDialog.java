@@ -19,13 +19,21 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.views.navigator.ResourceComparator;
@@ -38,6 +46,11 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
  * 
  */
 public class FolderSelectionDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
+
+    // ADD xqliu 2010-03-08 feature 10675
+    private static final String DEFAULT_FILE_NAME = "SourceFile.sql";
+
+    private String fileName = DEFAULT_FILE_NAME;
 
     /**
      * qzhang FolderSelectionDialog constructor comment.
@@ -81,6 +94,29 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
     protected Control createDialogArea(Composite parent) {
         Composite result = (Composite) super.createDialogArea(parent);
 
+        // ADD xqliu 2010-03-08 feature 10675
+        Composite fileNameComp = new Composite(result, SWT.NULL);
+        fileNameComp.setLayout(new GridLayout(2, false));
+        fileNameComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        Label label = new Label(fileNameComp, SWT.NULL);
+        label.setText("Name:");
+        final Text text = new Text(fileNameComp, SWT.BORDER);
+        text.setText(this.getFileName());
+        text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        text.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                if (text.getText() == null || "".equals(text.getText().trim())) {
+                    MessageDialogWithToggle.openWarning(null, "Warning", "Invalid file name!!!");
+                    text.setText(DEFAULT_FILE_NAME);
+                    fileName = DEFAULT_FILE_NAME;
+                } else {
+                    fileName = text.getText();
+                }
+            }
+        });
+        // ~10675
+
         getTreeViewer().addSelectionChangedListener(this);
         getTreeViewer().expandAll();
         applyDialogFont(result);
@@ -98,4 +134,12 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     }
 
+    /**
+     * DOC xqliu Comment method "getFileName". ADD xqliu 2010-03-08 feature 10675
+     * 
+     * @return
+     */
+    public String getFileName() {
+        return this.fileName;
+    }
 }

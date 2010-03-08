@@ -211,10 +211,12 @@ public class SQLTextEditor extends TextEditor {
         }
 
         Object elements = dialog.getResult()[0];
+        // ADD xqliu 2010-03-08 feature 10675
+        String fileName = dialog.getFileName();
         IResource elem = (IResource) elements;
         if (elem instanceof IFolder) {
             IPath filePath = ((IFolder) elem).getFullPath();
-            filePath = filePath.append(getTitle());
+            filePath = filePath.append(fileName);
             if (filePath == null) {
                 if (progressMonitor != null)
                     progressMonitor.setCanceled(true);
