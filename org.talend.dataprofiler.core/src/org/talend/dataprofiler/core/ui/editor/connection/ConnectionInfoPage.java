@@ -12,13 +12,20 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.connection;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
 import java.util.Properties;
+
+import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -28,6 +35,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
@@ -36,6 +44,9 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.compare.factory.ComparisonLevelFactory;
+import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -43,14 +54,23 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.dialog.UrlEditDialog;
+import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -63,6 +83,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     private TdDataProvider tdDataProvider;
 
+    private DBConnectionParameter tmpParam;
+
     private Text loginText;
 
     private Text passwordText;
@@ -70,6 +92,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private Text urlText;
 
     private Section infomatioinSection = null;
+
+    private boolean isUrlChanged = false;
 
     public ConnectionInfoPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -93,7 +117,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
         Button checkBtn = toolkit.createButton(topComp, DefaultMessagesImpl.getString("ConnectionInfoPage.check"), SWT.NONE); //$NON-NLS-1$
         GridData gd = new GridData();
-        // gd.horizontalSpan = 2;
         gd.verticalSpan = 20;
         gd.horizontalAlignment = SWT.CENTER;
         checkBtn.setLayoutData(gd);
@@ -153,12 +176,31 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
         urlLabel.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.Url")); //$NON-NLS-1$
-        urlText = new Text(sectionClient, SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(urlText);
+
+        Composite urlComp = new Composite(sectionClient, SWT.NONE);
+        GridLayout gridLayout = new GridLayout(2, false);
+        gridLayout.marginWidth = 0;
+        gridLayout.marginHeight = 0;
+        urlComp.setLayout(gridLayout);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(urlComp);
+        urlText = new Text(urlComp, SWT.BORDER | SWT.READ_ONLY);
+        GridDataFactory.fillDefaults().hint(100, -1).grab(true, true).applyTo(urlText);
         TypedReturnCode<TdProviderConnection> trc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
         String urlValue = (trc.isOk()) ? trc.getObject().getConnectionString() : PluginConstant.EMPTY_STRING;
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
-        urlText.setEnabled(false);
+        // urlText.setEnabled(false);
+
+        Button editButton = new Button(urlComp, SWT.PUSH);
+        editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
+        editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
+        editButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                changeConnectionInformations();
+            }
+        });
+
         if (trc.getObject().getDriverClassName().startsWith("org.sqlite")) { //$NON-NLS-1$
             loginText.setEnabled(false);
             passwordText.setEnabled(false);
@@ -167,13 +209,93 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                saveTextChange();
+                // saveTextChange();
             }
 
         };
         loginText.addModifyListener(listener);
         passwordText.addModifyListener(listener);
+        urlText.addModifyListener(listener);
         infomatioinSection.setClient(sectionClient);
+    }
+
+    /**
+     * Change connection informations with server, port etc., and update related analyses.
+     * 
+     * MOD yyi 9082 2010-02-25
+     */
+    protected void changeConnectionInformations() {
+        UrlEditDialog urlDlg = new UrlEditDialog(null, tdDataProvider);
+
+        if (urlDlg.open() == Window.OK) {
+            tmpParam = urlDlg.getResult();
+
+            if (!tmpParam.getJdbcUrl().equals(urlText.getText())) {
+                urlText.setText(tmpParam.getJdbcUrl());
+                isUrlChanged = true;
+            }
+            // has new jar file for generic jdbc
+            if (!"".equals(tmpParam.getDriverPath())) {
+                setDirty(true);
+                isUrlChanged = true;
+            }
+        }
+    }
+
+    /**
+     * DOC yyi Comment method "storeDriverInfo".
+     * 
+     * @param dbConnectionParam
+     */
+    private void storeDriveInfoToPerference(DBConnectionParameter connectionParam) {
+        String driverPath = connectionParam.getDriverPath();
+        if (driverPath != null && !PluginConstant.EMPTY_STRING.equals(driverPath)) {
+            LinkedList<String> jars = new LinkedList<String>();
+            for (String driverpath : driverPath.split(";")) { //$NON-NLS-1$
+                jars.add(driverpath);
+            }
+
+            String jdbcUrl = connectionParam.getJdbcUrl();
+            if (jdbcUrl != null && jdbcUrl.length() > 12) {
+                String name = jdbcUrl.substring(0, 12);
+                ManagedDriver driver = new DataProviderBuilder().buildDriverForSQLExploer(name, connectionParam
+                        .getDriverClassName(), connectionParam.getJdbcUrl(), jars);
+                if (connectionParam == null || driver == null || tdDataProvider == null) {
+                    return;
+                }
+
+                StringBuilder driverPara = new StringBuilder();
+                if (CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") != null //$NON-NLS-1$
+                        && !CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+                    driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{" //$NON-NLS-1$ //$NON-NLS-2$
+                            + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
+                            + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
+                            + tdDataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
+                } else {
+                    driverPara.append("{" //$NON-NLS-1$
+                            + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
+                            + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
+                            + tdDataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+                CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString()); //$NON-NLS-1$
+
+            }
+        }
+
+    }
+
+    /**
+     * DOC yyi Comment method "updateConnection".
+     * 
+     * @param dbConnectionParameter
+     */
+    private void updateConnection(DBConnectionParameter targetParam) {
+        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+        if (connection != null) {
+            DataProviderHelper.setHost(targetParam.getHost(), connection);
+            DataProviderHelper.setPort(targetParam.getPort(), connection);
+            DataProviderHelper.setDBName(targetParam.getDbName(), connection);
+        }
     }
 
     private ReturnCode checkDBConnection() {
@@ -181,7 +303,17 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         props.put(TaggedValueHelper.USER, loginText.getText());
         props.put(TaggedValueHelper.PASSWORD, passwordText.getText());
         // MOD xqliu 2009-12-17 bug 10238
-        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+        DataProvider tdDataProvider2;
+        if (null == tmpParam)
+            tdDataProvider2 = tdDataProvider;
+        else {
+            TypedReturnCode<TdDataProvider> typedRC = ConnectionService.createConnection(tmpParam);
+            if (!typedRC.isOk())
+                return typedRC;
+            else
+                tdDataProvider2 = ConnectionService.createConnection(tmpParam).getObject();
+        }
+        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider2).getObject();
         TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.UNIVERSE, connection.getTaggedValue());
         if (tv != null && !"".equals(tv.getValue().trim())) {
             props.put(TaggedValueHelper.UNIVERSE, tv.getValue().trim());
@@ -191,6 +323,29 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 .getDriverClassName(), props);
         // ~
         return returnCode;
+    }
+
+    private ReturnCode checkDBConnectionWithProgress() {
+        final ReturnCode rc = new ReturnCode();
+        IRunnableWithProgress op = new IRunnableWithProgress() {
+
+            public void run(IProgressMonitor monitor) throws InvocationTargetException {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        rc.setOk(checkDBConnection().isOk());
+                    }
+                });
+            }
+        };
+        try {
+            ProgressUI.popProgressDialog(op);
+        } catch (InvocationTargetException e) {
+            log.error(e, e);
+        } catch (InterruptedException e) {
+            log.error(e, e);
+        }
+        return rc;
     }
 
     @Override
@@ -204,12 +359,79 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     @Override
     public void doSave(IProgressMonitor monitor) {
+        boolean checkDBConnection = checkDBConnectionWithProgress().isOk();
+        if (!checkDBConnection) {
+            String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");
+            String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");
+            if (Window.CANCEL == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
+                    new ModelElement[] { tdDataProvider }, dialogTitle, dialogMessage)) {
+                return;
+            }
+        } else {
+            if (!impactAnalyses().isOk()) {
+                return;
+            }
+        }
+
+        saveTextChange();
+
+        if (isUrlChanged) {
+            updateConnection(tmpParam);
+            storeDriveInfoToPerference(tmpParam);
+        }
+
         super.doSave(monitor);
         try {
             saveConnectionInfo();
+            if (checkDBConnection)
+                reloadDataProvider();
+            this.isUrlChanged = false;
             this.isDirty = false;
         } catch (DataprofilerCoreException e) {
             ExceptionHandler.process(e, Level.ERROR);
+            log.error(e, e);
+        }
+    }
+
+    /**
+     * DOC yyi Comment method "impactAnalyses".
+     */
+    private ReturnCode impactAnalyses() {
+
+        ReturnCode rc = new ReturnCode();
+        String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.impactAnalyses");
+        String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");
+        rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
+                new ModelElement[] { tdDataProvider }, dialogTitle, dialogMessage));
+
+        return rc;
+    }
+
+    private void reloadDataProvider() {
+        final IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
+        IRunnableWithProgress op = new IRunnableWithProgress() {
+
+            public void run(IProgressMonitor monitor) throws InvocationTargetException {
+                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(file);
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        try {
+                            creatComparisonLevel.reloadCurrentLevelElement();
+                        } catch (ReloadCompareException e) {
+                            log.error(e, e);
+                        }
+                    }
+                });
+            }
+        };
+        try {
+            ProgressUI.popProgressDialog(op);
+            CorePlugin.getDefault().refreshDQView();
+        } catch (InvocationTargetException e) {
+            MessageUI.openError(Messages.getString("ReloadDatabaseAction.checkConnectionFailured", e.getCause().getMessage())); //$NON-NLS-1$
+            log.error(e, e);
+        } catch (InterruptedException e) {
             log.error(e, e);
         }
     }
@@ -225,6 +447,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
         DataProviderHelper.setUser(loginText.getText(), connection);
         DataProviderHelper.encryptAndSetPassword(connection, passwordText.getText());
+        DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject().setConnectionString(urlText.getText());
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
