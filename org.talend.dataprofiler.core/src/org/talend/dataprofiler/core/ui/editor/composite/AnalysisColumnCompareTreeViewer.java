@@ -30,6 +30,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -112,9 +116,12 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private boolean allowColumnDupcation = false;
 
+    private Button columnReverseButtion;
+
     public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, List<Column> columnSetA,
             List<Column> columnSetB, String mainTitle, String description, boolean showCheckButton, boolean allowColumnDupcation) {
         this.masterPage = masterPage;
+        this.analysis = masterPage.getAnalysis();
         form = masterPage.getScrolledForm();
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
@@ -181,9 +188,49 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         Composite columnComp = toolkit.createComposite(sectionClient);
         columnComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         columnComp.setLayout(new GridLayout());
+
+        Composite compareToplevelComp = toolkit.createComposite(columnComp);
+        GridLayout compareToplevelLayout = new GridLayout();
+        compareToplevelLayout.numColumns = 2;
+        compareToplevelComp.setLayout(compareToplevelLayout);
         // ~ MOD mzhao 2009-05-05,Bug 6587.
-        masterPage.createConnBindWidget(columnComp);
+        masterPage.createConnBindWidget(compareToplevelComp);
         // ~
+        // !MOD mzhao 2010-03-08,Feature 11387. Add reverse action to make it easy for columns comparing on opposite
+        // way.
+        columnReverseButtion = new Button(compareToplevelComp, SWT.NONE);
+        // GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(compareToplevelComp);
+        columnReverseButtion.setText("Reverse columns");
+        columnReverseButtion.addMouseListener(new MouseListener() {
+
+            public void mouseDoubleClick(MouseEvent e) {
+
+            }
+
+            public void mouseDown(MouseEvent e) {
+                handleColumnReverseAction();
+            }
+
+            public void mouseUp(MouseEvent e) {
+
+            }
+
+        });
+        columnReverseButtion.addKeyListener(new KeyListener() {
+
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == 13) {
+                    handleColumnReverseAction();
+                }
+            }
+
+            public void keyReleased(KeyEvent e) {
+
+            }
+
+        });
+        // ~
+
         SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
         sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
         String hyperlinkTextLeft = null;
@@ -595,5 +642,49 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     public List<Column> getColumnListB() {
         return columnListB;
+    }
+
+    /**
+     * 
+     * DOC mzhao feature 11387, 2010-03-08, AnalysisColumnCompareTreeViewer class global comment. Detailled comment
+     */
+    private void handleColumnReverseAction() {
+        if (columnListA != null && columnListA.size() > 0) {
+            int idx = 0;
+            List<Integer> needToReverseIndex = new ArrayList<Integer>();
+            for (Column column : columnListA) {
+                if (canReverse(column, columnListB.get(idx))) {
+                    needToReverseIndex.add(idx);
+                }
+                idx++;
+            }
+            for (Integer index : needToReverseIndex) {
+                columnListB.add(columnListA.get(index));
+                columnListA.add(columnListB.get(index));
+                leftTable.add(columnListB.get(index));
+                rightTable.add(columnListA.get(index));
+                // Show on tree view
+                masterPage.setDirty(true);
+            }
+
+        }
+
+    }
+
+    private Boolean canReverse(Column colA, Column colB) {
+        int idx = 0;
+        for (Column col : columnListA) {
+            if (col == colB) {
+                if (idx > columnListB.size() - 1) {
+                    return false;
+                } else if (columnListB.get(idx) == colA) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            idx++;
+        }
+        return true;
     }
 }
