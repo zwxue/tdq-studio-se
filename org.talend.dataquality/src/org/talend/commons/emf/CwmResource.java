@@ -36,4 +36,11 @@ public class CwmResource extends XMIResourceImpl {
         return true;
     }
 
+    // overriding to force UTF-8 encoding for Cwm resources
+    @Override
+    protected void init() {
+        encoding = EMFUtil.ENCODING;
+        xmlVersion = "1.0";
+    }
+
 }

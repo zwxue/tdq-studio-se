@@ -21,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.ResourceManager;
@@ -54,10 +55,10 @@ public class SoundexIndicatorQueryTask extends AWorkspaceTask {
         if (definitionFile.exists()) {
             File file = new File(definitionFile.getLocationURI());
             try {
-                String content = FileUtils.readFileToString(file);
+                String content = FileUtils.readFileToString(file, EMFUtil.ENCODING);
                 content = StringUtils.replace(content, oldSoundexQuery, newSoundexQuery);
                 content = StringUtils.replace(content, oldPSoundexQuery, newPSoundexQuery);
-                FileUtils.writeStringToFile(file, content);
+                FileUtils.writeStringToFile(file, content, EMFUtil.ENCODING);
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
                 return false;

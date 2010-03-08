@@ -29,6 +29,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -113,7 +114,7 @@ public class TDCPFolderMergeTask extends AWorkspaceTask {
             File file = (File) iterator.next();
             if (file != null) {
                 try {
-                    String content = FileUtils.readFileToString(file);
+                    String content = FileUtils.readFileToString(file, EMFUtil.ENCODING);
                     content = StringUtils.replace(content, "/Metadata/", "/" + EResourceConstant.METADATA.getName() + "/");
                     content = StringUtils.replace(content, "/Libraries/", "/" + EResourceConstant.LIBRARIES.getName() + "/");
                     content = StringUtils.replace(content, "/resource/" + EResourceConstant.LIBRARIES.getName() + "/",
@@ -122,7 +123,7 @@ public class TDCPFolderMergeTask extends AWorkspaceTask {
                     content = StringUtils.replace(content, "/Data Profiling/", "/" + EResourceConstant.DATA_PROFILING.getName()
                             + "/");
 
-                    FileUtils.writeStringToFile(file, content);
+                    FileUtils.writeStringToFile(file, content, EMFUtil.ENCODING);
                 } catch (IOException e) {
                     ExceptionHandler.process(e);
                     return false;

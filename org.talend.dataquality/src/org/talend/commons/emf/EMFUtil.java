@@ -40,7 +40,7 @@ public final class EMFUtil {
     private static Logger log = Logger.getLogger(EMFUtil.class);
 
     /** the encoding for xml files. */
-    private static final String ENCODING = "UTF-8"; //$NON-NLS-1$
+    public static final String ENCODING = "UTF-8"; //$NON-NLS-1$
 
     /** the options needed for saving the resources. */
     private final Map<String, Object> options;
@@ -140,24 +140,6 @@ public final class EMFUtil {
         return res.getContents().add(eObject);
     }
 
-    // /**
-    // * Method "saveLastResource" saves the last resource added to the resource set.
-    // *
-    // * @return true when ok.
-    // */
-    // public boolean saveLastResource() {
-    // boolean ok = true;
-    // EList<Resource> resources = resourceSet.getResources();
-    // Resource ress = resources.get(resources.size() - 1);
-    // try {
-    // ress.save(options);
-    // } catch (IOException e) {
-    // log.error("Error during the saving of resource. Uri=" + ress.getURI().toString(), e);
-    // // possible cause is a missing factory initialization and filename extension.
-    // ok = false;
-    // }
-    // return ok;
-    // }
 
     /**
      * Saves each resource of the resource set.
@@ -173,20 +155,8 @@ public final class EMFUtil {
         while (r.hasNext()) {
             Resource ress = r.next();
             try {
-                boolean changeEncoding = (forceFileEncoding != null);
-
-                // set the current file encoding with utf-8
-                String oldProp = (changeEncoding) ? System.getProperty("file.encoding") : null;
-                if (changeEncoding) {
-                    System.setProperty("file.encoding", forceFileEncoding);
-                }
 
                 ress.save(options);
-
-                // restore previous property
-                if (changeEncoding) {
-                    System.setProperty("file.encoding", oldProp);
-                }
 
                 if (log.isDebugEnabled()) {
                     log.debug("Resource saved in:" + ress.getURI() + " with encoding " + forceFileEncoding);
@@ -289,14 +259,8 @@ public final class EMFUtil {
             options.put(XMIResource.OPTION_DECLARE_XML, Boolean.TRUE);
             options.put(XMIResource.OPTION_ENCODING, ENCODING);
 
-            // set the current file encoding with utf-8
-            String oldProp = System.getProperty("file.encoding");
-            System.setProperty("file.encoding", ENCODING);
-
             resource.save(options);
 
-            // restore previous property
-            System.setProperty("file.encoding", oldProp);
 
             if (log.isDebugEnabled()) {
                 log.debug("Resource saved in:" + resource.getURI());
