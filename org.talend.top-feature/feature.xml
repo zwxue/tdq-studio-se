@@ -456,6 +456,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.talend.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.talend.libraries.jfreechart"
          download-size="0"
          install-size="0"
@@ -548,6 +555,13 @@
 
    <plugin
          id="org.talend.libraries.jdbc.informix"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.libraries.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -743,6 +757,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.jdt.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.ui.workbench.texteditor"
          download-size="0"
          install-size="0"
@@ -856,6 +877,20 @@
 
    <plugin
          id="org.eclipse.update.scheduler"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.epic.perleditor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jdt.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1044,6 +1079,13 @@
          unpack="false"/>
 
    <plugin
+         id="javax.activation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.draw2d"
          download-size="0"
          install-size="0"
@@ -1177,7 +1219,21 @@
          unpack="false"/>
 
    <plugin
+         id="org.eclipse.jdt.launching"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.ui.console"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jdt.core.manipulation"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1227,6 +1283,13 @@
 
    <plugin
          id="javax.wsdl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.mail.glassfish"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1318,6 +1381,13 @@
 
    <plugin
          id="org.eclipse.emf.ecore.edit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jdt.debug"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1471,6 +1541,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.talend.commons.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.xsd"
          download-size="0"
          install-size="0"
@@ -1486,6 +1563,19 @@
 
    <plugin
          id="org.talend.dataquality.matching"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.junit4"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.hamcrest.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
