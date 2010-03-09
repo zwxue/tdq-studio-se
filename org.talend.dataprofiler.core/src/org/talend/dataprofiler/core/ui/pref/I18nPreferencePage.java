@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.talend.commons.i18n.BabiliInfo;
-import org.talend.commons.i18n.BabiliTool;
 import org.talend.commons.i18n.BabiliUpdateUtil;
 import org.talend.commons.i18n.ImportBabiliCancelException;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -161,7 +160,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
 
     public void runProgressMonitorDialog(final boolean validated, final String language) {
         updateCompleted = false;
-        BabiliTool.clear();
+        // BabiliTool.clear();
         ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(mainComposite.getShell());
         IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
@@ -182,7 +181,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
                                 pluginId = pluginId.replace(".nl", ""); //$NON-NLS-1$ //$NON-NLS-2$
                             }
                         }
-                        BabiliTool.storeBabiliTranslation(info.getKey(), pluginId, info.getLabel());
+                        // BabiliTool.storeBabiliTranslation(info.getKey(), pluginId, info.getLabel());
                         updateCompleted = true;
 
                     }
@@ -213,7 +212,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
                 }
             });
         } else {
-            BabiliTool.clear();
+            // BabiliTool.clear();
         }
     }
 

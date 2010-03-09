@@ -16,8 +16,6 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.talend.commons.i18n.BabiliTool;
-
 /**
  * Core of i18n management.<br/>
  * 
@@ -59,10 +57,10 @@ public abstract class MessagesCore {
         try {
             // modified by hcheng. when pluginId is not null
             if (pluginId != null) {
-                String babiliTranslation = BabiliTool.getBabiliTranslation(key, pluginId);
-                if (babiliTranslation != null) {
-                    return babiliTranslation;
-                }
+                // String babiliTranslation = BabiliTool.getBabiliTranslation(key, pluginId);
+                // if (babiliTranslation != null) {
+                // return babiliTranslation;
+                // }
             }
             return resourceBundle.getString(key);
         } catch (MissingResourceException e) {

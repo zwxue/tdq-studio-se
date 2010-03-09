@@ -16,8 +16,6 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.talend.commons.i18n.BabiliTool;
-
 /**
  * DOC rli class global comment. Detailled comment <br/>
  * 
@@ -74,10 +72,10 @@ public final class Messages {
         }
         try {
             if (pluginId != null) {
-                String babiliTranslation = BabiliTool.getBabiliTranslation(key, pluginId);
-                if (babiliTranslation != null) {
-                    return babiliTranslation;
-                }
+                // String babiliTranslation = BabiliTool.getBabiliTranslation(key, pluginId);
+                // if (babiliTranslation != null) {
+                // return babiliTranslation;
+                // }
             }
             return resourceBundle.getString(key);
         } catch (MissingResourceException e) {
