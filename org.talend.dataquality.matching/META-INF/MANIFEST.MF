@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.talend.dataquality.matching.Activator
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.eclipse.core.runtime,
- org.junit4;bundle-version="4.3.1",
+ org.junit4;bundle-version="4.3.1";resolution:=optional,
  org.apache.log4j;bundle-version="1.2.13"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy

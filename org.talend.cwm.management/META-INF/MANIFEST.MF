@@ -30,9 +30,9 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.talend.libraries.jdbc.teradata;resolution:=optional,
  org.talend.libraries.jdbc.as400;resolution:=optional,
  org.talend.top.repository,
- org.talend.core,
  org.eclipse.xsd,
- org.talend.libraries.eXist
+ org.talend.libraries.eXist,
+ org.talend.core;resolution:=optional
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.builders,
  org.talend.cwm.db.connection,

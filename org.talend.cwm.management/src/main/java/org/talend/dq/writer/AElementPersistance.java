@@ -18,6 +18,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -210,11 +211,14 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         String version = MetadataHelper.getVersion(element);
         String status = MetadataHelper.getDevStatus(element);
 
-        RepositoryContext context = (RepositoryContext) CorePlugin.getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
-        if (context != null) {
-            User user = context.getUser();
-            user.setLogin(author);
-            property.setAuthor(user);
+        // MOD 9/03/2010 SeB : we are using an optionnal dependency on org.talend.core to reduce TOP size
+        if (Platform.getBundle("org.talend.core") != null) {
+            RepositoryContext context = (RepositoryContext) CorePlugin.getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
+            if (context != null) {
+                User user = context.getUser();
+                user.setLogin(author);
+                property.setAuthor(user);
+            }
         }
 
         property.setId(EcoreUtil.generateUUID());
