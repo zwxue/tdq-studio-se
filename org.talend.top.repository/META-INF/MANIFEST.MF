@@ -4,7 +4,7 @@ Bundle-Name: Plug-in Repository
 Bundle-SymbolicName: org.talend.top.repository;singleton:=true
 Bundle-Version: 2.3.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
- org.apache.log4j;bundle-version="1.2.13",
- org.talend.core;bundle-version="2.2.0"
+ org.apache.log4j,
+ org.talend.model
 Export-Package: org.talend.top.repository
 Bundle-ClassPath: .
