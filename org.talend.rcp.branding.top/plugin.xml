@@ -3,7 +3,7 @@
 <plugin>
 
    <extension
-         id="application"
+         id="org.talend.rcp.branding.top.application"
          point="org.eclipse.core.runtime.applications">
       <application>
          <run
@@ -31,6 +31,22 @@
          <property
                name="aboutText"
                value="%aboutText">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="15,223,406,15">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="A74DE3">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="17,205,401,20">
          </property>
       </product>
    </extension>

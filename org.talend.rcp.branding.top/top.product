@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.4"?>
+<?pde version="3.5"?>
 
-<product name="Talend Open Profiler" id="org.talend.rcp.branding.top.product" application="org.talend.rcp.branding.top.application" useFeatures="true">
+<product name="Talend Open Profiler" id="org.talend.rcp.branding.top.product" application="org.talend.rcp.branding.top.application" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="icons/about.jpg"/>
@@ -19,7 +19,10 @@
 
    <windowImages i16="/org.talend.dataprofiler.rcp/icons/appli_16x16.gif" i32="/org.talend.dataprofiler.rcp/icons/appli_32x32.gif" i48="/org.talend.dataprofiler.rcp/icons/appli_48x48.gif"/>
 
-
+   <splash
+      startupProgressRect="15,223,406,15"
+      startupMessageRect="17,205,401,20"
+      startupForegroundColor="A74DE3" />
    <launcher>
       <solaris/>
       <win useIco="false">
@@ -49,7 +52,7 @@
       <plugin id="org.eclipse.jface.databinding"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86"/>
+      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.intro"/>
@@ -60,5 +63,6 @@
    <features>
       <feature id="org.talend.rcp.branding.top_feature" version="1.0.0.qualifier"/>
    </features>
+
 
 </product>
