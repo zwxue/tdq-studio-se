@@ -47,6 +47,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public static final String ANALYZED_ITEMS_PER_PAGE = "ANALYZED_ITEMS_PER_PAGE"; //$NON-NLS-1$
 
+    // ADD xqliu 2010-03-10 feature 10834
+    public static final String DQ_RULES_PER_PAGE = "DQ_RULES_PER_PAGE"; //$NON-NLS-1$
+
     // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section
     public static final int FOLDING_1 = 1;
 
@@ -58,6 +61,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     public static final String DEFAULT_PAGE_SIZE = "5"; //$NON-NLS-1$
 
     private Text pageSizeText;
+
+    // ADD xqliu 2010-03-10 feature 10834
+    private Text dqruleSizeText;
 
     // default folding setting.
     private static int currentFolding;
@@ -214,9 +220,23 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
-        Composite pageSizeComp = new Composite(mainComposite, SWT.NONE);
+        // MOD xqliu 2010-03-10 feature 10834
+        createPageSizeComp(mainComposite);
+        // ~10834
+
+        return mainComposite;
+    }
+
+    /**
+     * DOC xqliu Comment method "createPageSizeComp". ADD xqliu 2010-03-10 feature 10834
+     * 
+     * @param comp
+     */
+    private void createPageSizeComp(Composite comp) {
+        Composite pageSizeComp = new Composite(comp, SWT.NONE);
         pageSizeComp.setLayout(new GridLayout(2, false));
 
+        // Analyzed Items Per Page
         Label dfofLable = new Label(pageSizeComp, SWT.NONE);
         dfofLable.setText(DefaultMessagesImpl.getString("EditorPreferencePage.AnalyzePerPage")); //$NON-NLS-1$
 
@@ -227,9 +247,20 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         }
         pageSizeText.setText(pageSize);
         pageSizeText.setLayoutData(new GridData());
-        ((GridData) pageSizeText.getLayoutData()).widthHint = 100;
+        ((GridData) pageSizeText.getLayoutData()).widthHint = 50;
 
-        return mainComposite;
+        // DQ Rules Per Page
+        Label drorLable = new Label(pageSizeComp, SWT.NONE);
+        drorLable.setText(DefaultMessagesImpl.getString("EditorPreferencePage.DQRulePerPage")); //$NON-NLS-1$
+
+        dqruleSizeText = new Text(pageSizeComp, SWT.BORDER);
+        String dqruleSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(DQ_RULES_PER_PAGE);
+        if (dqruleSize == null || dqruleSize.equals("")) { //$NON-NLS-1$
+            dqruleSize = DEFAULT_PAGE_SIZE;
+        }
+        dqruleSizeText.setText(dqruleSize);
+        dqruleSizeText.setLayoutData(new GridData());
+        ((GridData) dqruleSizeText.getLayoutData()).widthHint = 50;
     }
 
     // MOD mzhao bug 8318 2009-07-30
@@ -275,21 +306,34 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
                 isCurrentAnalyzedElements() ? 0 : 1);
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
 
-        if (checkPageSize()) {
+        // MOD xqliu 2010-03-10 feature 10834
+        if (checkPageSize(this.pageSizeText.getText()) && checkPageSize(this.dqruleSizeText.getText())) {
             ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
+            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(DQ_RULES_PER_PAGE, dqruleSizeText.getText());
             ResourcesPlugin.getPlugin().savePluginPreferences();
             return super.performOk();
         } else {
+            String msg = DefaultMessagesImpl.getString("PerformancePreferencePage.pageSizeMsg");
+            if (!checkPageSize(this.dqruleSizeText.getText())) {
+                msg = DefaultMessagesImpl.getString("PerformancePreferencePage.dqruleSizeMsg");
+            }
             MessageDialogWithToggle.openInformation(getShell(), DefaultMessagesImpl
                     .getString("PerformancePreferencePage.information"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("PerformancePreferencePage.pageSizeMsg")); //$NON-NLS-1$ //$NON-NLS-2$
+                    msg); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
+        // ~10834
     }
 
-    private boolean checkPageSize() {
+    /**
+     * DOC xqliu Comment method "checkPageSize". ADD xqliu 2010-03-10 feature 10834
+     * 
+     * @param size
+     * @return
+     */
+    private boolean checkPageSize(String size) {
         try {
-            int pageSize = Integer.parseInt(this.pageSizeText.getText());
+            int pageSize = Integer.parseInt(size);
             if (pageSize < 1) {
                 return false;
             }
@@ -297,5 +341,14 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             return false;
         }
         return true;
+    }
+
+    /**
+     * DOC xqliu Comment method "getDQRuleSize". ADD xqliu 2010-03-10 feature 10834
+     * 
+     * @return
+     */
+    public static String getDQRuleSize() {
+        return ResourcesPlugin.getPlugin().getPluginPreferences().getString(DQ_RULES_PER_PAGE);
     }
 }

@@ -63,6 +63,30 @@ public class PatternChartDataEntity extends ChartDataEntity {
         if (isOutOfRange(getPerMatch())) {
             msg.append("This value is outside the expected indicator's thresholds in percent: " + range); //$NON-NLS-1$
         }
-        return msg.length() == 0 ? null : msg.toString();
+        // MOD xqliu 2010-03-10 feature 10834
+        return msg.length() == 0 ? getToolTip() : getToolTip() + "\n" + msg.toString();
     }
+
+    // ADD xqliu 2010-03-10 feature 10834
+    private String toolTip;
+
+    /**
+     * Getter for toolTip.
+     * 
+     * @return the toolTip
+     */
+    public String getToolTip() {
+        return toolTip;
+    }
+
+    /**
+     * Sets the toolTip.
+     * 
+     * @param toolTip the toolTip to set
+     */
+    public void setToolTip(String toolTip) {
+        this.toolTip = toolTip;
+    }
+    // ~10834
+
 }

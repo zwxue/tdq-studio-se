@@ -443,7 +443,7 @@ public final class TopChartFactory {
      */
     public static JFreeChart createStackedBarChart(String title, CategoryDataset dataset, boolean showLegend) {
         return createStackedBarChart(null, title, DefaultMessagesImpl.getString("TopChartFactory.value"), dataset, //$NON-NLS-1$
-                PlotOrientation.VERTICAL, showLegend, false, false);
+                PlotOrientation.VERTICAL, showLegend, true, false);
     }
 
     /**
@@ -487,6 +487,9 @@ public final class TopChartFactory {
         sbr.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(), //$NON-NLS-1$
                 new DecimalFormat("0.00%"))); //$NON-NLS-1$
         sbr.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
+        // ADD xqliu 2010-03-10 feature 10834
+        sbr.setBaseToolTipGenerator(new DQRuleToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat.getInstance()));
+        // ~10834
 
         NumberAxis axis = (NumberAxis) plot.getRangeAxis();
         axis.setNumberFormatOverride(NumberFormat.getPercentInstance());

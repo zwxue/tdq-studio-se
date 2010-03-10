@@ -18,7 +18,9 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.xy.XYSeries;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
@@ -30,10 +32,13 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerXYSe
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.PatternLabelProvider;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.explore.DQRuleExplorer;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -87,22 +92,33 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     }
 
     public ICustomerDataset getCustomerDataset() {
-        CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
+        // MOD xqliu 2010-03-10 feature 10834
+        CustomerDefaultCategoryDataset customerDataset = new CustomerDefaultCategoryDataset();
         for (TableIndicatorUnit unit : units) {
-            String columnKey = unit.getIndicatorName();
-            double value = Double.parseDouble(unit.getValue().toString());
-            customerdataset.addValue(getRowCount() - value, ROW_KEY_NOT_PASS, columnKey);
-            customerdataset.addValue(value, ROW_KEY_PASS, columnKey);
-
-            WhereRuleChartDataEntity entity = new WhereRuleChartDataEntity();
-            entity.setIndicator(unit.getIndicator());
-            entity.setLabel(columnKey);
-            entity.setNumMatch(String.valueOf(value));
-            entity.setNumNoMatch(String.valueOf(getRowCount() - value));
-
-            customerdataset.addDataEntity(entity);
+            addDataEntity2CustomerDataset(customerDataset, unit);
         }
-        return customerdataset;
+        return customerDataset;
+        // ~10834
+    }
+
+    /**
+     * DOC xqliu Comment method "getUnitToolTip". ADD xqliu 2010-03-10 feature 10834
+     * 
+     * @param unit
+     * @return
+     */
+    private String getUnitToolTip(TableIndicatorUnit unit) {
+        if (unit != null) {
+            if (unit.getIndicator() != null && unit.getIndicator().getIndicatorDefinition() != null) {
+                IndicatorDefinition indicatorDefinition = unit.getIndicator().getIndicatorDefinition();
+                TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DESCRIPTION, indicatorDefinition
+                        .getTaggedValue());
+                if (taggedValue != null) {
+                    return taggedValue.getValue();
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -155,7 +171,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     public List<JFreeChart> getChartList() {
         List<JFreeChart> ret = new ArrayList<JFreeChart>();
         JFreeChart stackChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getDataset(), true); //$NON-NLS-1$
+                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getOptimizeShowDataset(), true); //$NON-NLS-1$
         ChartDecorator.decorate(stackChart);
         ret.add(stackChart); //$NON-NLS-1$
         if (false) { // show line chart only in TDQ!!!
@@ -166,4 +182,60 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
         }
         return ret;
     }
+
+    /**
+     * DOC xqliu Comment method "getOptimizeShowDataset". ADD xqliu 2010-03-10 feature 10834
+     * 
+     * @return
+     */
+    private CategoryDataset getOptimizeShowDataset() {
+        CustomerDefaultCategoryDataset customerDataset = new CustomerDefaultCategoryDataset();
+
+        String dqruleSize = EditorPreferencePage.getDQRuleSize();
+        int maxSize = 999999;
+        int size = maxSize;
+        try {
+            size = Integer.parseInt(dqruleSize);
+            if (size < 1) {
+                size = maxSize;
+            }
+        } catch (NumberFormatException e) {
+            size = maxSize;
+        }
+
+        int i = 0;
+        for (TableIndicatorUnit unit : units) {
+            i++;
+            if (i > size) {
+                break;
+            }
+            addDataEntity2CustomerDataset(customerDataset, unit);
+        }
+        return customerDataset;
+    }
+
+    /**
+     * DOC xqliu Comment method "addDataEntity2CustomerDataset". ADD xqliu 2010-03-10 feature 10834
+     * 
+     * @param customerDataset
+     * @param unit
+     */
+    private void addDataEntity2CustomerDataset(CustomerDefaultCategoryDataset customerDataset, TableIndicatorUnit unit) {
+        String columnKey = unit.getIndicatorName();
+        double value = Double.parseDouble(unit.getValue().toString());
+        customerDataset.addValue(getRowCount() - value, ROW_KEY_NOT_PASS, columnKey);
+        customerDataset.addValue(value, ROW_KEY_PASS, columnKey);
+
+        WhereRuleChartDataEntity entity = new WhereRuleChartDataEntity();
+        entity.setIndicator(unit.getIndicator());
+        entity.setLabel(columnKey);
+        entity.setNumMatch(String.valueOf(value));
+        entity.setNumNoMatch(String.valueOf(getRowCount() - value));
+        // ADD xqliu 2010-03-10 feature 10834
+        entity.setToolTip(getUnitToolTip(unit));
+        // ~
+
+        customerDataset.addDataEntity(entity);
+    }
+
 }
