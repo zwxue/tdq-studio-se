@@ -54,4 +54,8 @@ public class TOPBrandingService implements IBrandingService {
         return "T.O.P"; //$NON-NLS-1$
     }
 
+    public String getAcronym() {
+        return "top";
+    }
+
 }

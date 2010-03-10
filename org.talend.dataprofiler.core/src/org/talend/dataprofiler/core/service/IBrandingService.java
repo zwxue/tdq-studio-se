@@ -37,4 +37,6 @@ public interface IBrandingService extends IService {
      * @return
      */
     public String getCorporationName();
+
+    public String getAcronym();
 }

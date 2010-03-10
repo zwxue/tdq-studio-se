@@ -13,14 +13,20 @@
 
 package org.talend.dataprofiler.rcp.register;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.update.core.SiteManager;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IBrandingService;
-import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.talend.repository.registeruser.proxy.RegisterUserPortTypeProxy;
 
 /**
@@ -84,7 +90,7 @@ public class RegisterManagement {
     public static boolean register(String email, String country, boolean isProxyEnabled, String proxyHost, String proxyPort,
             String designerVersion, String projectLanguage, String osName, String osVersion, String javaVersion,
             long totalMemory, Long memRAM, int nbProc) {
-        boolean result = false;
+        BigInteger result = BigInteger.valueOf(-1);
         // if proxy is enabled
         if (isProxyEnabled) {
             // get parameter and put them in System.properties.
@@ -102,11 +108,12 @@ public class RegisterManagement {
         try {
             IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
                     IBrandingService.class);
-            result = proxy.registerUserWithAllUserInformations(email, country, designerVersion, brandingService
+            result = proxy.registerUserWithAllUserInformationsAndReturnId(email, country, designerVersion, brandingService
                     .getShortProductName(), projectLanguage, osName, osVersion, javaVersion, totalMemory + "", memRAM + "", //$NON-NLS-1$ //$NON-NLS-2$
                     nbProc + ""); //$NON-NLS-1$
-            if (result) {
+            if (result.signum() > 0) {
                 PlatformUI.getPreferenceStore().setValue("REGISTRATION_DONE", 1); //$NON-NLS-1$
+                validateRegistration(brandingService.getAcronym(), result.longValue());
                 // PreferenceManipulator prefManipulator = new
                 // PreferenceManipulator(CorePlugin.getDefault().getPreferenceStore());
                 // // prefManipulator.addUser(email);
@@ -124,7 +131,34 @@ public class RegisterManagement {
         } catch (RemoteException e) {
             decrementTry();
         }
-        return result;
+        return result.signum() > 0;
+    }
+
+    public static void validateRegistration(String acronym, long registNumber) {
+        URL registURL = null;
+        try {
+            registURL = new URL("http://www.talend.com/designer_post_reg.php?prd=" + acronym + "&cid=" + registNumber);
+            PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(registURL);
+        } catch (PartInitException e) {
+            // if no default browser (like on linux), try to open directly with firefox.
+            try {
+                Runtime.getRuntime().exec("firefox " + registURL.toString());
+            } catch (IOException e2) {
+                if (PlatformUI.getWorkbench().getBrowserSupport().isInternalWebBrowserAvailable()) {
+                    IWebBrowser browser;
+                    try {
+                        browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser("registrationId");
+                        browser.openURL(registURL);
+                    } catch (PartInitException e1) {
+                        ExceptionHandler.process(e);
+                    }
+                } else {
+                    ExceptionHandler.process(e);
+                }
+            }
+        } catch (MalformedURLException e) {
+            ExceptionHandler.process(e);
+        }
     }
 
     /**
