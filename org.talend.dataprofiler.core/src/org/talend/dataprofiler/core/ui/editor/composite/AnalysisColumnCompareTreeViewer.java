@@ -649,6 +649,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * DOC mzhao feature 11387, 2010-03-08, AnalysisColumnCompareTreeViewer class global comment. Detailled comment
      */
     private void handleColumnReverseAction() {
+        if (columnListA.size() != columnListB.size()) {
+            return;
+        }
         if (columnListA != null && columnListA.size() > 0) {
             int idx = 0;
             List<Integer> needToReverseIndex = new ArrayList<Integer>();
