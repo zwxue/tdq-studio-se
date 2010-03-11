@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
@@ -58,6 +60,7 @@ import org.talend.dataquality.indicators.util.IndicatorsSwitch;
  */
 public final class IndicatorHelper {
 
+    private static Logger log = Logger.getLogger(IndicatorHelper.class);
     /**
      * The available threshold types.
      */
@@ -533,16 +536,22 @@ public final class IndicatorHelper {
     /**
      * DOC bZhou Comment method "getIndicatorPercentValue".
      * 
-     * @param indicator
-     * @return
+     * @param indicator, never null
+     * @return null in case of error
      */
     public static String getIndicatorPercentValue(Indicator indicator) {
 
         try {
-            double userCount = Double.valueOf(getIndicatorValue(indicator));
+            // MOD SeB 11/03/2010, bug 11751 : number format exception conveerting from string to double
+            // use NumberFormt instead of formatter.
+            double userCount = NumberFormat.getInstance().parse(getIndicatorValue(indicator)).doubleValue();
             double count = Double.valueOf(indicator.getCount());
             return computePercent(userCount, count);
-        } catch (NullPointerException e) {
+        } catch (NumberFormatException e) {
+            log.warn("could not parse indicator: " + indicator.getName(), e);
+            return null;
+        } catch (ParseException e) {
+            log.warn("could not parse indicator: " + indicator.getName(), e);
             return null;
         }
     }
@@ -560,13 +569,7 @@ public final class IndicatorHelper {
     }
 
     private static String createStandardNumber(Object input) {
-        DecimalFormat format = (DecimalFormat) DecimalFormat.getNumberInstance();
-        format.applyPattern("0.00"); //$NON-NLS-1$
-
-        try {
-            return format.format(new Double(input.toString()));
-        } catch (Exception ne) {
-            return ""; //$NON-NLS-1$
-        }
+        // MOD SeB 11/03/2010 bug 11751 : convert number to String using current locale
+        return NumberFormat.getInstance().format(input);
     }
 }
