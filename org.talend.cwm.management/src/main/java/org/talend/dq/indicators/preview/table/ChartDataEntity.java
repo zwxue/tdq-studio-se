@@ -243,8 +243,8 @@ public class ChartDataEntity {
                 }
 
             } else {
-                Double min = StringFormatUtil.formatDouble(definedRange[0]);
-                Double max = StringFormatUtil.formatDouble(definedRange[1]);
+                Double min = StringFormatUtil.formatFourDecimalDouble(definedRange[0]);
+                Double max = StringFormatUtil.formatFourDecimalDouble(definedRange[1]);
 
                 // handle min and max
                 Double dValue = inString != null ? StringFormatUtil.parseDouble(inString) : Double.NaN;
@@ -258,7 +258,6 @@ public class ChartDataEntity {
 
                 if (isPercent) {
                     return dValue < min * 100 || dValue > max * 100;
-
                 }
                 return dValue < min || dValue > max;
             }
