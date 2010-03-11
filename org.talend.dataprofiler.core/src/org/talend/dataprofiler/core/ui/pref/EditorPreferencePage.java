@@ -349,6 +349,10 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
      * @return
      */
     public static String getDQRuleSize() {
-        return ResourcesPlugin.getPlugin().getPluginPreferences().getString(DQ_RULES_PER_PAGE);
+        String result = ResourcesPlugin.getPlugin().getPluginPreferences().getString(DQ_RULES_PER_PAGE);
+        if (result == null || "".equals(result.trim())) {
+            result = DEFAULT_PAGE_SIZE;
+        }
+        return result;
     }
 }

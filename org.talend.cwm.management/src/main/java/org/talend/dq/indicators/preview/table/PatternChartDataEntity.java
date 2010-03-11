@@ -64,7 +64,14 @@ public class PatternChartDataEntity extends ChartDataEntity {
             msg.append("This value is outside the expected indicator's thresholds in percent: " + range); //$NON-NLS-1$
         }
         // MOD xqliu 2010-03-10 feature 10834
-        return msg.length() == 0 ? getToolTip() : getToolTip() + "\n" + msg.toString();
+        String result = null;
+        String temp = getToolTip();
+        if (temp == null || "".equals(temp.trim())) {
+            result = msg.length() == 0 ? null : msg.toString();
+        } else {
+            result = msg.length() == 0 ? "Desc: " + temp : "Desc: " + temp + "\n" + msg.toString();
+        }
+        return result;
     }
 
     // ADD xqliu 2010-03-10 feature 10834
