@@ -223,6 +223,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             public void widgetSelected(SelectionEvent e) {
                 masterPage.saveEditor();
                 Tree currentTree = tree;
+                // removeSelectedElements(currentTree);
+                // masterPage.getTreeViewer().setInput(columnSetMultiValueList.toArray());
+                // updateModelViewer();
                 Object[] selectItem = currentTree.getSelection();
                 List<Column> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
                 for (int i = 0; i < selectItem.length; i++) {
@@ -230,7 +233,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                             .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                     columnList.remove(removeElement);
                 }
-                masterPage.getTreeViewer().setInput(columnList.toArray());
+                masterPage.getTreeViewer().setInput(convertList(columnList).toArray());
                 enabledButtons(false);
             }
         });
@@ -264,34 +267,40 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         Object[] selectItem = currentTree.getSelection();
         List<Column> columnList = columnsElementViewer.getColumnSetMultiValueList();
         int index = 0;
+        boolean moveFlag = false;
+        List<Integer> indexArray = new ArrayList<Integer>();
         if (isDown) {
             for (int i = selectItem.length - 1; i >= 0; i--) {
                 index = currentTree.indexOf((TreeItem) selectItem[i]);
                 if ((index + 1) >= columnList.size()) {
-                    break;
+                    return;
+                } else {
+                    Column moveElement = (Column) ((TreeItem) selectItem[i])
+                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                    columnList.remove(moveElement);
+                    columnList.add((index + 1), moveElement);
+                    indexArray.add(index + 1);
                 }
-                Column moveElement = (Column) ((TreeItem) selectItem[i])
-                        .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
-                columnList.remove(moveElement);
-                columnList.add((index + 1), moveElement);
-                index = (index + 1);
             }
         } else {
             for (int i = 0; i < selectItem.length; i++) {
                 index = currentTree.indexOf((TreeItem) selectItem[i]);
                 if ((index - 1) < 0) {
-                    break;
+                    return;
+                } else {
+                    Column moveElement = (Column) ((TreeItem) selectItem[i])
+                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                    columnList.remove(moveElement);
+                    columnList.add((index - 1), moveElement);
+                    indexArray.add(index - 1);
                 }
-                Column moveElement = (Column) ((TreeItem) selectItem[i])
-                        .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
-                columnList.remove(moveElement);
-                columnList.add((index - 1), moveElement);
-                index = (index - 1);
             }
         }
         columnsElementViewer.setInput(convertList(columnList).toArray());
         currentTree = columnsElementViewer.getTree();
-        currentTree.select(currentTree.getItem(index));
+        for (int i = 0; i < indexArray.size(); i++) {
+            currentTree.select(currentTree.getItem(indexArray.get(i)));
+        }
     }
 
     private List<Column> convertList(List<Column> columnList) {
@@ -596,6 +605,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             deleteColumnItems(tdColumn);
             removeItemBranch(item);
         }
+
     }
 
     private void removeItemBranch(TreeItem item) {
@@ -631,7 +641,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                         enabledButtons(true);
                     }
                 }
-
             }
 
             public void focusLost(FocusEvent e) {
@@ -643,7 +652,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     }
                 }
             }
-
         });
         tree.addSelectionListener(new SelectionAdapter() {
 
@@ -666,7 +674,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 }
                 createTreeMenu(tree, con);
             }
-
         });
 
         tree.addTreeListener(new TreeAdapter() {

@@ -405,19 +405,44 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * @param columnsElementViewer
      */
     private void moveElement(List<Column> columnList, TableViewer columnsElementViewer, boolean isDown) {
-        Object firstElement = ((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement();
-        int index = columnList.indexOf(firstElement);
+        // Object firstElement = ((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement();
+        // int index = columnList.indexOf(firstElement);
+        // if (isDown) {
+        // if ((index + 1) < columnList.size()) {
+        // columnList.remove(firstElement);
+        // columnList.add((index + 1), (Column) firstElement);
+        // }
+        // } else {
+        // if ((index - 1) >= 0) {
+        // columnList.remove(firstElement);
+        // columnList.add((index - 1), (Column) firstElement);
+        // }
+        //
+        // }
+        // columnsElementViewer.setInput(columnList);
+        Object[] elementArray = ((IStructuredSelection) columnsElementViewer.getSelection()).toArray();
         if (isDown) {
-            if ((index + 1) < columnList.size()) {
-                columnList.remove(firstElement);
-                columnList.add((index + 1), (Column) firstElement);
+            for (int i = elementArray.length - 1; i >= 0; i--) {
+                Column currentElement = (Column) elementArray[i];
+                int index = columnList.indexOf(currentElement);
+                if ((index + 1) < columnList.size()) {
+                    columnList.remove(currentElement);
+                    columnList.add((index + 1), currentElement);
+                } else {
+                    break;
+                }
             }
         } else {
-            if ((index - 1) >= 0) {
-                columnList.remove(firstElement);
-                columnList.add((index - 1), (Column) firstElement);
+            for (int i = 0; i < elementArray.length; i++) {
+                Column currentElement = (Column) elementArray[i];
+                int index = columnList.indexOf(currentElement);
+                if ((index - 1) >= 0) {
+                    columnList.remove(currentElement);
+                    columnList.add((index - 1), currentElement);
+                } else {
+                    break;
+                }
             }
-
         }
         columnsElementViewer.setInput(columnList);
     }
@@ -466,7 +491,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     private TableViewer createTreeViewer(final List<Column> columnList, Composite columsComp) {
-        TableViewer columnsElementViewer = new TableViewer(columsComp, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        TableViewer columnsElementViewer = new TableViewer(columsComp, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
 
         Table table = columnsElementViewer.getTable();
         GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
