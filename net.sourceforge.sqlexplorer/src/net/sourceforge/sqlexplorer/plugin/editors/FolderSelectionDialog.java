@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -107,7 +106,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
             public void modifyText(ModifyEvent e) {
                 if (text.getText() == null || "".equals(text.getText().trim())) {
-                    MessageDialogWithToggle.openWarning(null, "Warning", "Invalid file name!!!");
+                    updateStatus(new Status(IStatus.INFO, SQLExplorerPlugin.PLUGIN_ID, "Invalid file name."));
                     text.setText(DEFAULT_FILE_NAME);
                     fileName = DEFAULT_FILE_NAME;
                 } else {
