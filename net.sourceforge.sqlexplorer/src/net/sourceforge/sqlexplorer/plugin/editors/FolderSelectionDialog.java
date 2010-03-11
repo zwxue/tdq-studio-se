@@ -51,6 +51,8 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     private String fileName = DEFAULT_FILE_NAME;
 
+    private IFolder selectedFolder;
+
     /**
      * qzhang FolderSelectionDialog constructor comment.
      * 
@@ -70,10 +72,10 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
             public IStatus validate(Object[] selection) {
                 if (selection.length == 1) {
                     if (selection[0] instanceof IFolder) {
-                        IFolder folder = (IFolder) selection[0];
-                        IPath projectRelativePath = folder.getProjectRelativePath();
-                        if ("Source Files".equals(folder.getName())
-                                || defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath())) {
+                        selectedFolder = (IFolder) selection[0];
+                        IPath projectRelativePath = selectedFolder.getProjectRelativePath();
+                        if ("Source Files".equals(selectedFolder.getName())
+                                || defaultValidFolder.getFullPath().isPrefixOf(selectedFolder.getFullPath())) {
                             return Status.OK_STATUS;
                         }
                     }
@@ -106,7 +108,15 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
             public void modifyText(ModifyEvent e) {
                 if (text.getText() == null || "".equals(text.getText().trim())) {
-                    updateStatus(new Status(IStatus.INFO, SQLExplorerPlugin.PLUGIN_ID, "Invalid file name."));
+                    int status = IStatus.ERROR;
+                    IProject rootProject = SQLExplorerPlugin.getDefault().getRootProject();
+                    final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
+                    if (selectedFolder != null
+                            && ("Source Files".equals(selectedFolder.getName()) || defaultValidFolder.getFullPath().isPrefixOf(
+                                    selectedFolder.getFullPath()))) {
+                        status = IStatus.INFO;
+                    }
+                    updateStatus(new Status(status, SQLExplorerPlugin.PLUGIN_ID, "Invalid file name."));
                     text.setText(DEFAULT_FILE_NAME);
                     fileName = DEFAULT_FILE_NAME;
                 } else {
