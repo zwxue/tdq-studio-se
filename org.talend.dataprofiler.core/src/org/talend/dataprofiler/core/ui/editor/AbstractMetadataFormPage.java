@@ -175,7 +175,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             for (DevelopmentStatus status : DevelopmentStatus.values()) {
                 statusCombo.add(status.getLiteral());
             }
-            statusCombo.remove(statusValue);
+            // statusCombo.remove(statusValue);
             statusCombo.add(statusValue, 0);
         }
 

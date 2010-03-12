@@ -118,7 +118,16 @@
             id="org.talend.dataprofiler.DataProfilingPerspective"
             name="%page.name.DataProfiler">
       </perspective>
-   </extension>   
+   </extension>
+     <extension
+           point="org.eclipse.ui.perspectiveExtensions">
+        <perspectiveExtension
+              targetID="org.talend.dataprofiler.DataProfilingPerspective">
+           <actionSet
+                 id="org.talend.dataprofiler.core.actionSet">
+           </actionSet>
+        </perspectiveExtension>
+     </extension>   
 <!-- Resource Content--> 
    <extension  
          point="org.eclipse.ui.navigator.navigatorContent">
@@ -1081,6 +1090,32 @@
            </constraint>
         </constraints>
      </constraintProvider>
+  </extension>
+  <extension
+        point="org.eclipse.ui.actionSets">
+     <actionSet
+           id="org.talend.dataprofiler.core.actionSet"
+           label="TOP Action Set"
+           visible="false">
+        <action
+              class="org.talend.dataprofiler.core.ui.imex.action.ImportItemAction"
+              icon="icons/import.gif"
+              id="org.talend.dataprofiler.core.ui.imex.action.ImportItemAction"
+              label="Import Item"
+              style="push"
+              toolbarPath="Default"
+              tooltip="import items">
+        </action>
+        <action
+              class="org.talend.dataprofiler.core.ui.imex.action.ExportItemAction"
+              icon="icons/export.gif"
+              id="org.talend.dataprofiler.core.ui.imex.action.ExportItemAction"
+              label="Export Item"
+              style="push"
+              toolbarPath="Default"
+              tooltip="export items">
+        </action>
+     </actionSet>
   </extension>
 
 </plugin>
