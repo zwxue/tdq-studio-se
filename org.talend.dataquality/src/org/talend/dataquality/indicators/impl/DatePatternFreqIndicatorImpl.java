@@ -8,11 +8,8 @@ package org.talend.dataquality.indicators.impl;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import oracle.sql.TIMESTAMP;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
@@ -84,7 +81,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     @Override
     public boolean handle(Object data) {
         if (data != null) {
-            dateRetriever.handle(filterDate(data));
+            dateRetriever.handle(String.valueOf(data));
         }
         return super.handle(data);
     }
@@ -147,28 +144,6 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         } else {
             return -1;
         }
-    }
-
-    /**
-     * 
-     * DOC zshen Comment method "filterDate".
-     * 
-     * @param data the data Object of database.
-     * @return Real String value .
-     * @Mean if the type is Timestamp,the value will add nanosecond by toString() return.but the nanosecond is not exist
-     * in the database and we will not pattern it,so filter the nanosecond in the case.
-     */
-    public String filterDate(Object data) {
-        if (data instanceof Timestamp) {
-            Timestamp timestamp = (Timestamp) data;
-            if (timestamp.getNanos() == 0) {
-                return timestamp.toString().split("\\.")[0];
-            }
-        } else if (data instanceof TIMESTAMP) {
-            TIMESTAMP tempdata = (TIMESTAMP) data;
-            tempdata.stringValue();
-        }
-        return String.valueOf(data);
     }
 
     /**

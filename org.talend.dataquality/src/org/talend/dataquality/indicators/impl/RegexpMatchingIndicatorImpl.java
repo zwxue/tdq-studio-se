@@ -7,6 +7,7 @@ package org.talend.dataquality.indicators.impl;
 
 import java.util.regex.Matcher;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.domain.Domain;
@@ -14,6 +15,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.i18n.Messages;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Regexp Matching Indicator</b></em>'. <!--
@@ -25,6 +27,7 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
  */
 public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements RegexpMatchingIndicator {
 
+    private static Logger log = Logger.getLogger(RegexpMatchingIndicatorImpl.class);
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
@@ -58,6 +61,9 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
             return false;
         }
         pattern = java.util.regex.Pattern.compile(regex);
+        if (log.isInfoEnabled()) {
+            log.info(Messages.getString("Using_regular_expression", this.getName(), regex));
+        }
         return super.prepare();
     }
 
@@ -74,12 +80,16 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                 for (Pattern p : patterns) {
                     if (p != null) {
                         // MOD yyi 2009-09-29 Feature: 9289
-                        final String r = null != DomainHelper.getJavaRegexp(p) ? DomainHelper.getJavaRegexp(p) : DomainHelper
-                                .getSQLRegexp(p);
+                        String r = DomainHelper.getJavaRegexp(p);
+                        if (r == null) { // get regex valid for all kind of database and engine
+                            r = DomainHelper.getSQLRegexp(p);
+                        }
                         if (r != null) {
-                            int startIdx = ('\'' == r.charAt(0)) ? 1 : 0;
-                            int endIdx = ('\'' == r.charAt(r.length() - 1)) ? r.length() - 1 : r.length();
-                            return r.substring(startIdx, endIdx);
+                            if (r.startsWith("'") && r.endsWith("'")) {
+                                // remove enclosing singles quotes which are used for SQL only (not java)
+                                r = r.substring(1, r.length() - 1);
+                            }
+                            return r;
                         }
                     }
                 }
