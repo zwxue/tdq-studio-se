@@ -160,7 +160,8 @@ public final class ChartTableFactory {
                                 @Override
                                 public void widgetSelected(SelectionEvent e) {
                                     DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                                    IFolder folder = ResourceManager.getPatternFolder();
+                                    IFolder folder = ResourceManager.getPatternRegexFolder();
+
                                     String model = dataEntity.getLabel();
                                     String regex = dateIndicator.getRegex(model);
                                     new CreatePatternAction(folder, ExpressionType.REGEXP,
