@@ -429,7 +429,6 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
         TableViewer columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
         Table table = columnsElementViewer.getTable();
-        table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         List<String> tableColumnNames = columnSetMultiIndicator.getColumnHeaders();
         for (String tableColumnName : tableColumnNames) {
@@ -447,7 +446,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             table.getColumn(i).pack();
         }
         columnSetElementSection.setClient(sectionTableComp);
-
+        //ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+        setupTableGridDataLimitedSize(table, tableRows.size());
         addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
         return columnSetElementSection;
     }

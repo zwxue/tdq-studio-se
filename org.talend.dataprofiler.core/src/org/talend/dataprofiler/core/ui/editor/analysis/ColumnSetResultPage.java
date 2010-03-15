@@ -144,7 +144,8 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     }
 
     private Section createSimpleStatisticsPart(Composite parentComp, String title, SimpleStatIndicator simpleStatIndicator) {
-        Section section = createSection(form, parentComp, title, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
+        //MOD sgandon 15/03/2010 bug 11769 : made descriotion null to remove empty space.
+        Section section = createSection(form, parentComp, title, null); //$NON-NLS-1$
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -205,8 +206,6 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
 
         TableViewer columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
         Table table = columnsElementViewer.getTable();
-        table.setLayoutData(new GridData(GridData.FILL_BOTH));
-
         List<String> tableColumnNames = ssIndicator.getColumnHeaders();
         for (String tableColumnName : tableColumnNames) {
             final TableColumn columnHeader = new TableColumn(table, SWT.NONE);
@@ -223,6 +222,9 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             table.getColumn(i).pack();
         }
         columnSetElementSection.setClient(sectionTableComp);
+
+        //ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+        setupTableGridDataLimitedSize(table, tableRows.size());
 
         addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
         return columnSetElementSection;

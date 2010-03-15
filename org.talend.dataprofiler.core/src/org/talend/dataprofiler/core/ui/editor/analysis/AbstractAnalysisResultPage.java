@@ -17,6 +17,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -33,6 +34,32 @@ import org.talend.dq.analysis.AnalysisHandler;
  * DOC rli class global comment. Detailled comment
  */
 public abstract class AbstractAnalysisResultPage extends AbstractFormPage implements IRuningStatusListener {
+
+    /**
+     * width hint for tables in data area.
+     * ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+     */
+    private static final int TABLE_WIDTH_HINT = 1100;
+
+    /**
+     * size in rows of a small table (that has less than TABLE_MIN_ROW_LIMIT rows).
+     * ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+     */
+    private static final int SMALL_TABLE_NUM_ROWS = 10;
+
+    /**
+     * size in rows of a big table (that has more than TABLE_MIN_ROW_LIMIT rows).
+     * ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+     */
+    private static final int BIG_TABLE_NUM_ROWS = 30;
+
+    /**
+     * limit of row to create a small table.
+     * ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+     */
+    private static final int TABLE_MIN_ROW_LIMIT = 10;
+
+
 
     protected ScrolledForm form;
 
@@ -137,5 +164,21 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
     public abstract void refresh(AbstractAnalysisMetadataPage masterPage);
 
     protected abstract void createResultSection(Composite parent);
+
+    /**
+     * setup the Grid Layout Data to limit the vertical size of the table according to the numOfRows. if (numOfRows <=
+     * 10) then table will be 10 rows height, if (numOfRows > 10) then the table will be 30 rows heigth
+     * 
+     * @param table the table to set the GridData value on
+     * @param numOfRows number of rows in the table
+     * ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+     */
+    protected void setupTableGridDataLimitedSize(Table table, int numOfRows) {
+        int itemHeight = table.getItemHeight();
+        GridData data = new GridData(SWT.FILL, SWT.FILL, false, false);
+        data.heightHint = numOfRows > TABLE_MIN_ROW_LIMIT ? BIG_TABLE_NUM_ROWS * itemHeight : SMALL_TABLE_NUM_ROWS * itemHeight;
+        data.widthHint = TABLE_WIDTH_HINT;
+        table.setLayoutData(data);
+    }
 
 }
