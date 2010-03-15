@@ -69,6 +69,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
@@ -809,20 +810,18 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, DefaultMessagesImpl
                 .getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators); //$NON-NLS-1$
         dialog.create();
-        dialog.getShell().addShellListener(new ShellAdapter() {
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.ShellAdapter#shellActivated(org.eclipse .swt.events.ShellEvent)
-             */
-            @Override
-            public void shellActivated(ShellEvent e) {
-                dialog.getShell().setFocus();
-                IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
-                PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
-            }
-        });
+        if (!DQPreferenceManager.isBlockWeb()) {
+            dialog.getShell().addShellListener(new ShellAdapter() {
+
+                @Override
+                public void shellActivated(ShellEvent e) {
+                    dialog.getShell().setFocus();
+                    IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
+                    PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
+                }
+            });
+        }
 
         if (dialog.open() == Window.OK) {
             ModelElementIndicator[] result = dialog.getResult();

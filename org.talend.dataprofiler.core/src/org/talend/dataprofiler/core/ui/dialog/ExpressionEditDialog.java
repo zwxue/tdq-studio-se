@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.dialog;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.help.ui.internal.views.HelpTray;
@@ -35,9 +32,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.pref.WebBrowserPreferencePage;
+import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
@@ -138,9 +134,7 @@ public class ExpressionEditDialog extends TrayDialog {
         super.create();
         getShell().setText(TITLE);
 
-        boolean isBlock = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID,
-                WebBrowserPreferencePage.BLOCK_WEB_BROWSER, true, new IScopeContext[] { new InstanceScope() });
-        if (!isBlock) {
+        if (!DQPreferenceManager.isBlockWeb()) {
             showHelp();
         }
     }
