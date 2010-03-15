@@ -34,6 +34,8 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
@@ -158,14 +160,26 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         // MOD Extract method findMatchedPackage to DQStructureComparer class
         // for common use.
         Package toReloadObj = DQStructureComparer.findMatchedPackage(selectedPackage, tempReloadProvider);
-        List<ColumnSet> columnSetList = reloadElementOfPackage(toReloadObj);
+
         Resource rightResource = null;
         rightResource = tempReloadProvider.eResource();
         rightResource.getContents().clear();
-        for (ColumnSet columnset : columnSetList) {
-            DQStructureComparer.clearSubNode(columnset);
-            rightResource.getContents().add(columnset);
+
+        List<ColumnSet> columnSetList = reloadElementOfPackage(toReloadObj);
+        if (isCompareTabel) {
+            for (ColumnSet columnset : TableHelper.getTables(columnSetList)) {
+                DQStructureComparer.clearSubNode(columnset);
+                rightResource.getContents().add(columnset);
+            }
         }
+
+        if (isCompareView) {
+            for (ColumnSet columnset : ViewHelper.getViews(columnSetList)) {
+                DQStructureComparer.clearSubNode(columnset);
+                rightResource.getContents().add(columnset);
+            }
+        }
+
         EMFSharedResources.getInstance().saveResource(rightResource);
         return rightResource;
     }
