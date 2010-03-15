@@ -168,23 +168,25 @@ public class ChartDataEntity {
 
         IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
 
-        switch (indicatorEnum) {
-        case ModeIndicatorEnum:
-            String expectedValue = IndicatorHelper.getExpectedValue(indicator);
-            if (expectedValue != null) {
+        if (indicatorEnum != null) {
+            switch (indicatorEnum) {
+            case ModeIndicatorEnum:
+                String expectedValue = IndicatorHelper.getExpectedValue(indicator);
+                if (expectedValue != null) {
 
-                Boolean ignoreCaseOption = IndicatorHelper.ignoreCaseOption(indicator);
+                    Boolean ignoreCaseOption = IndicatorHelper.ignoreCaseOption(indicator);
 
-                outOfRange = !StringUtils.equals(value, expectedValue);
+                    outOfRange = !StringUtils.equals(value, expectedValue);
 
-                if (ignoreCaseOption) {
-                    outOfRange = !(ignoreCaseOption && StringUtils.equalsIgnoreCase(value, expectedValue));
+                    if (ignoreCaseOption) {
+                        outOfRange = !(ignoreCaseOption && StringUtils.equalsIgnoreCase(value, expectedValue));
+                    }
                 }
-            }
-            break;
-        default:
+                break;
+            default:
 
-            outOfRange = checkRange(inputValue);
+                outOfRange = checkRange(inputValue);
+            }
         }
 
         return outOfRange;
