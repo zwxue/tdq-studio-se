@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -55,12 +56,6 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     private ManagedDriver driver;
 
-    private boolean mdmFlag = false;
-
-    public boolean isMdmFlag() {
-        return mdmFlag;
-    }
-
     /**
      * Constructor for DatabaseWizard. Analyse Iselection to extract DatabaseConnection and the pathToSave. Start the
      * Lock Strategy.
@@ -70,24 +65,24 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      */
     public DatabaseConnectionWizard(DBConnectionParameter connectionParam) {
         this.connectionParam = connectionParam;
-        mdmFlag = ResourceManager.isMdmConnectionFolder(connectionParam.getFolderProvider().getFolderResource());
+
     }
 
     /**
      * Adding the page to the wizard and set Title, Description and PageComplete.
      */
     public void addPages() {
-        String winTitle = mdmFlag ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.mdmConnection") : DefaultMessagesImpl
-                .getString("DatabaseConnectionWizard.databaseConnection");
+        String winTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.mdmConnection")
+                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.databaseConnection");
 
         setWindowTitle(winTitle); //$NON-NLS-1$
         setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
 
         propertiesWizardPage = new DatabaseMetadataWizardPage();
         databaseWizardPage = new DatabaseWizardPage();
-        databaseWizardPage.setMdmFlag(mdmFlag);
+        databaseWizardPage.setMdmFlag(isMdmFlag());
 
-        String propTitle = mdmFlag ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnection")
+        String propTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnection")
                 : DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnection");
         String propDesc = DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineProperties");
 
@@ -95,9 +90,9 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         propertiesWizardPage.setDescription(propDesc); //$NON-NLS-1$
         propertiesWizardPage.setPageComplete(false);
 
-        String dataTitle = mdmFlag ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnections")
+        String dataTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnections")
                 : DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnections");
-        String dataDesc = mdmFlag ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineMdm") : DefaultMessagesImpl
+        String dataDesc = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineMdm") : DefaultMessagesImpl
                 .getString("DatabaseConnectionWizard.defineDatabase");
 
         databaseWizardPage.setTitle(dataTitle); //$NON-NLS-1$
@@ -223,5 +218,10 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                     + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString()); //$NON-NLS-1$
+    }
+
+    private boolean isMdmFlag() {
+        FolderProvider folderProvider = connectionParam.getFolderProvider();
+        return folderProvider != null && ResourceManager.isMdmConnectionFolder(folderProvider.getFolderResource());
     }
 }
