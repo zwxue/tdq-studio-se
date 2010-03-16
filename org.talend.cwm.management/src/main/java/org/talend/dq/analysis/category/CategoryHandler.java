@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.category.AnalysisCategories;
 import org.talend.dataquality.analysis.category.util.CategorySwitch;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
@@ -32,6 +33,7 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.i18n.MessagesCore;
 
 /**
  * @author scorreia
@@ -239,5 +241,20 @@ public final class CategoryHandler {
         }
 
         return categories;
+    }
+
+    /**
+     * Get i18n label in resource bundle. 2010-03-16 yyi 11739
+     * 
+     * @param key
+     * @return
+     */
+    public static String getLabel(String categoryLabel) {
+
+        String messageKey = Messages.getString("AnalysisType." + categoryLabel.replaceAll("\\s*", ""));
+        if (messageKey.startsWith(MessagesCore.KEY_NOT_FOUND_PREFIX) && messageKey.endsWith(MessagesCore.KEY_NOT_FOUND_SUFFIX)) {
+            return categoryLabel;
+        }
+        return messageKey;
     }
 }

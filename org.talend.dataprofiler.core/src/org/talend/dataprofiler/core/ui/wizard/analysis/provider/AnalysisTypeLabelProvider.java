@@ -17,11 +17,11 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
-
+import org.talend.dq.analysis.category.CategoryHandler;
 
 /**
  * @author huangssssx
- *
+ * 
  */
 public class AnalysisTypeLabelProvider implements ILabelProvider {
 
@@ -32,7 +32,9 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
         // TODO Auto-generated constructor stub
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
     public Image getImage(Object element) {
@@ -43,17 +45,21 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
         } else {
             return ImageLib.getImage(ImageLib.PROJECT_ACTIVE);
         }
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
     public String getText(Object element) {
-        return ((AnalysisTypeNode) element).getName();
+        return CategoryHandler.getLabel(((AnalysisTypeNode) element).getName());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void addListener(ILabelProviderListener listener) {
@@ -61,7 +67,9 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
     public void dispose() {
@@ -69,7 +77,9 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
     public boolean isLabelProperty(Object element, String property) {
@@ -77,8 +87,11 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void removeListener(ILabelProviderListener listener) {
         // TODO Auto-generated method stub
