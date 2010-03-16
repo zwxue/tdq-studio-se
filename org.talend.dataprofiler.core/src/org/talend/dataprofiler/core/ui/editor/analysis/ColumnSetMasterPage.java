@@ -42,9 +42,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.Plot;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -60,18 +57,21 @@ import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
@@ -349,7 +349,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 form,
                 parentComp,
                 DefaultMessagesImpl.getString("ColumnSetResultPage.SimpleStatistics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
-        previewSection.setLayoutData(new GridData(480, 300));
+        previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(previewSection);
         sectionClient.setLayout(new GridLayout());
@@ -359,49 +359,33 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         simpleComposite.setLayout(new GridLayout(1, true));
         simpleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        createSimpleStatistics(form, simpleComposite, getSimpleStatIndicator());
+        createSimpleStatistics(form, simpleComposite);
         previewSection.setClient(sectionClient);
     }
 
-    private void createSimpleStatistics(final ScrolledForm form, final Composite composite,
-            final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(columnSetMultiValueIndicator.getRowCountIndicator().getCount(), DefaultMessagesImpl
-                .getString("ColumnSetMasterPage.Row_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(columnSetMultiValueIndicator.getDistinctCountIndicator().getDistinctValueCount(), DefaultMessagesImpl
-                .getString("ColumnSetMasterPage.Distinct_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(columnSetMultiValueIndicator.getDuplicateCountIndicator().getDuplicateValueCount(), DefaultMessagesImpl
-                .getString("ColumnSetMasterPage.Duplicate_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        dataset.addValue(columnSetMultiValueIndicator.getUniqueCountIndicator().getUniqueValueCount(), DefaultMessagesImpl
-                .getString("ColumnSetMasterPage.Unique_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+    private void createSimpleStatistics(final ScrolledForm form, final Composite composite) {
 
-        JFreeChart chart = TopChartFactory.createBarChart(
-                DefaultMessagesImpl.getString("ColumnSetMasterPage.SimpleStatistics"), dataset, true); //$NON-NLS-1$
+        List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
+        units.add(new IndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, simpleStatIndicator.getRowCountIndicator(), null));
+        units.add(new IndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator.getDistinctCountIndicator(),
+                null));
+        units.add(new IndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, simpleStatIndicator.getDuplicateCountIndicator(),
+                null));
+        units.add(new IndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, simpleStatIndicator.getUniqueCountIndicator(), null));
 
-        // MOD mzhao 2009-07-28 Bind the indicator with specific color.
+        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(EIndicatorChartType.SIMPLE_STATISTICS, units);
+
+        // create chart
+        JFreeChart chart = chartTypeState.getChart();
+        ChartDecorator.decorate(chart);
         if (chart != null) {
-            Plot plot = chart.getPlot();
-            if (plot instanceof CategoryPlot) {
-                ChartDecorator.decorateCategoryPlot(chart);
-                // Row Count
-                ((CategoryPlot) plot).getRenderer()
-                        .setSeriesPaint(0, ChartDecorator.IndiBindColor.INDICATOR_ROW_COUNT.getColor());
-                // Distinct Count
-                ((CategoryPlot) plot).getRenderer().setSeriesPaint(1,
-                        ChartDecorator.IndiBindColor.INDICATOR_DISTINCT_COUNT.getColor());
-                // Unique Count
-                ((CategoryPlot) plot).getRenderer().setSeriesPaint(2,
-                        ChartDecorator.IndiBindColor.INDICATOR_UNIQUE_COUNT.getColor());
-                // Duplicate Count
-                ((CategoryPlot) plot).getRenderer().setSeriesPaint(3,
-                        ChartDecorator.IndiBindColor.INDICATOR_DUPLICATE_COUNT.getColor());
+            ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
-            }
+            GridData gd = new GridData();
+            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+            cc.setLayoutData(gd);
         }
-
-        ChartComposite chartComp = new ChartComposite(composite, SWT.NONE, chart);
-        chartComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        // ChartUtils.createAWTSWTComp(composite, new GridData(GridData.FILL_BOTH), chart);
     }
 
     @Override
