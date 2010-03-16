@@ -23,7 +23,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
-import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -52,7 +52,6 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -64,7 +63,12 @@ public final class ChartTableFactory {
 
     public static void addMenuAndTip(final TableViewer tbViewer, final IDataExplorer explorer, final Analysis analysis) {
 
+        ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
+        final boolean isJAVALanguage = ExecutionLanguage.JAVA == currentEngine;
+
         final Table table = tbViewer.getTable();
+        final TdDataProvider tdDataProvider = (TdDataProvider) analysis.getContext().getConnection();
+        final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
 
         table.addMouseListener(new MouseAdapter() {
 
@@ -74,23 +78,17 @@ public final class ChartTableFactory {
                 if (table.getMenu() != null) {
                     table.getMenu().setVisible(false);
                 }
-                // ~
-                ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
 
                 if (e.button == 3) {
+
                     StructuredSelection selection = (StructuredSelection) tbViewer.getSelection();
-
                     final ChartDataEntity dataEntity = (ChartDataEntity) selection.getFirstElement();
+                    final Indicator indicator = dataEntity != null ? dataEntity.getIndicator() : null;
 
-                    if (dataEntity == null) {
-                        return;
-                    }
-
-                    final Indicator indicator = dataEntity.getIndicator();
-                    if (indicator != null) {
+                    if (indicator != null && dataEntity != null) {
                         Menu menu = new Menu(table.getShell(), SWT.POP_UP);
                         table.setMenu(menu);
-                        if (ExecutionLanguage.JAVA != currentEngine) {
+                        if (!isJAVALanguage) {
                             MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
                             for (final MenuItemEntity itemEntity : itemEntities) {
                                 MenuItem item = new MenuItem(menu, SWT.PUSH);
@@ -101,8 +99,6 @@ public final class ChartTableFactory {
 
                                     @Override
                                     public void widgetSelected(SelectionEvent e) {
-                                        DataManager connection = analysis.getContext().getConnection();
-                                        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(connection);
                                         String query = itemEntity.getQuery();
                                         String editorName = indicator.getName();
                                         CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
@@ -127,7 +123,7 @@ public final class ChartTableFactory {
                                 }
                             }
 
-                            if (PluginChecker.isTDCPLoaded()) {
+                            if (PluginChecker.isTDCPLoaded() && !isMDMAnalysis) {
                                 final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault()
                                         .getService(IJobService.class);
                                 if (service != null) {
@@ -150,7 +146,7 @@ public final class ChartTableFactory {
                                 }
                             }
                             // MOD by zshen feature 11574:add menu "Generate regular pattern" to date pattern
-                        } else if (isDatePatternFrequencyIndicator(indicator) && ExecutionLanguage.JAVA == currentEngine) {
+                        } else if (isDatePatternFrequencyIndicator(indicator) && isJAVALanguage) {
                             final DatePatternFreqIndicator dateIndicator = (DatePatternFreqIndicator) indicator;
                             MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
                             itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
