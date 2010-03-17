@@ -127,12 +127,10 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         return new String[] { "Connection failed: time out" };
                     }
                 } catch (SocketTimeoutException e) {
-                    log.error(e, e);
                     timeoutFlag = false;
                     return new String[] { "Connection failed:" + e.getMessage() };
 
                 } catch (Exception e) {
-                    log.error(e, e);
                     timeoutFlag = false;
                     return new String[] { e.getMessage() };
                 }
