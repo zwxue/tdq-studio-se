@@ -24,7 +24,7 @@ import orgomg.cwmx.resource.coboldata.Section;
  *     database records
  *     IMS segments
  * 
- * The internal structure of a RecordDef instance is constructed by adding Field instances as features (using the ElementOwnership association) and pointing each Field instance�s inherited type reference to the Classifier instance representing the Field�s data type. The referenced instance can be either a primitive data type (an instance of DataType, such as "integer") or a structured data type (such as a Group instance).
+ * The internal structure of a RecordDef instance is constructed by adding Field instances as features (using the ElementOwnership association) and pointing each Field instance?s inherited type reference to the Classifier instance representing the Field?s data type. The referenced instance can be either a primitive data type (an instance of DataType, such as "integer") or a structured data type (such as a Group instance).
  * 
  * Refer to the example for more details of the relationships between RecordDefs, Fields, Records, and their values.
  * <!-- end-model-doc -->

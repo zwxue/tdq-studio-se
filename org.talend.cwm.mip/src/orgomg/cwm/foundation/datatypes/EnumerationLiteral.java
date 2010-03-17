@@ -17,9 +17,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * <!-- begin-model-doc -->
  * EnumerationLiteral instances describe the enumeration identifiers, and possibly the
  * values, associated with an enumerated data type. Enumeration identifiers are contained
- * in the name attribute derived from the EnumerationLiteral instance�s ModelElement superclass.
+ * in the name attribute derived from the EnumerationLiteral instance?s ModelElement superclass.
  * 
- * EnumerationLiteral instances may also be used to define expression-based values such as ranges. To do so, simply state the membership expression in the instance�s value. For example, a range literal can be created by setting the value attribute to "m..n", where m represents the lower bound of the range, and n, the upper bound. In this way, ranges and other more complicated expressions can be intermixed with simple
+ * EnumerationLiteral instances may also be used to define expression-based values such as ranges. To do so, simply state the membership expression in the instance?s value. For example, a range literal can be created by setting the value attribute to "m..n", where m represents the lower bound of the range, and n, the upper bound. In this way, ranges and other more complicated expressions can be intermixed with simple
  * enumeration literals. For example, an enumeration might contain the literals "1", "2", "4..7", and "> 10".
  * 
  * Consequently, a simple range data type can be created with an Enumeration instance that owns a single EnumerationLiteral instance. For example, a data type for positive integers could be created as shown in the following instance diagram. A model attribute of this data type might then be declared as "posInt : PositiveInteger".

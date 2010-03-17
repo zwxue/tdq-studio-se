@@ -224,8 +224,8 @@ public class EssbaseAdapterFactory extends AdapterFactoryImpl {
                 return createClassAdapter();
             }
             @Override
-            public Adapter caseDimension_1(orgomg.cwm.resource.multidimensional.Dimension object) {
-                return createDimension_1Adapter();
+            public Adapter caseMultidimensional_Dimension(orgomg.cwm.resource.multidimensional.Dimension object) {
+                return createMultidimensional_DimensionAdapter();
             }
             @Override
             public Adapter caseDeployedComponent(DeployedComponent object) {
@@ -745,7 +745,7 @@ public class EssbaseAdapterFactory extends AdapterFactoryImpl {
      * @see orgomg.cwm.resource.multidimensional.Dimension
      * @generated
      */
-    public Adapter createDimension_1Adapter() {
+    public Adapter createMultidimensional_DimensionAdapter() {
         return null;
     }
 

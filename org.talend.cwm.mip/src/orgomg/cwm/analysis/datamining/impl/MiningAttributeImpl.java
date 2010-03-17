@@ -91,7 +91,7 @@ public class MiningAttributeImpl extends AttributeImpl implements MiningAttribut
      * @generated
      */
     public MiningDataSpecification getDataSpecification() {
-        if (eContainerFeatureID != DataminingPackage.MINING_ATTRIBUTE__DATA_SPECIFICATION) return null;
+        if (eContainerFeatureID() != DataminingPackage.MINING_ATTRIBUTE__DATA_SPECIFICATION) return null;
         return (MiningDataSpecification)eContainer();
     }
 
@@ -111,7 +111,7 @@ public class MiningAttributeImpl extends AttributeImpl implements MiningAttribut
      * @generated
      */
     public void setDataSpecification(MiningDataSpecification newDataSpecification) {
-        if (newDataSpecification != eInternalContainer() || (eContainerFeatureID != DataminingPackage.MINING_ATTRIBUTE__DATA_SPECIFICATION && newDataSpecification != null)) {
+        if (newDataSpecification != eInternalContainer() || (eContainerFeatureID() != DataminingPackage.MINING_ATTRIBUTE__DATA_SPECIFICATION && newDataSpecification != null)) {
             if (EcoreUtil.isAncestor(this, newDataSpecification))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -196,7 +196,7 @@ public class MiningAttributeImpl extends AttributeImpl implements MiningAttribut
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case DataminingPackage.MINING_ATTRIBUTE__DATA_SPECIFICATION:
                 return eInternalContainer().eInverseRemove(this, DataminingPackage.MINING_DATA_SPECIFICATION__ATTRIBUTE, MiningDataSpecification.class, msgs);
         }

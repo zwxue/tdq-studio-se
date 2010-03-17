@@ -61,7 +61,7 @@ public class MemberSetImpl extends ExtentImpl implements MemberSet {
      * @generated
      */
     public Dimension getDimension() {
-        if (eContainerFeatureID != MultidimensionalPackage.MEMBER_SET__DIMENSION) return null;
+        if (eContainerFeatureID() != MultidimensionalPackage.MEMBER_SET__DIMENSION) return null;
         return (Dimension)eContainer();
     }
 
@@ -81,7 +81,7 @@ public class MemberSetImpl extends ExtentImpl implements MemberSet {
      * @generated
      */
     public void setDimension(Dimension newDimension) {
-        if (newDimension != eInternalContainer() || (eContainerFeatureID != MultidimensionalPackage.MEMBER_SET__DIMENSION && newDimension != null)) {
+        if (newDimension != eInternalContainer() || (eContainerFeatureID() != MultidimensionalPackage.MEMBER_SET__DIMENSION && newDimension != null)) {
             if (EcoreUtil.isAncestor(this, newDimension))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -133,7 +133,7 @@ public class MemberSetImpl extends ExtentImpl implements MemberSet {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case MultidimensionalPackage.MEMBER_SET__DIMENSION:
                 return eInternalContainer().eInverseRemove(this, MultidimensionalPackage.DIMENSION__MEMBER_SET, Dimension.class, msgs);
         }

@@ -119,8 +119,8 @@ public class CwmmipAdapterFactory extends AdapterFactoryImpl {
                 return createBindingParameterAdapter();
             }
             @Override
-            public Adapter caseElement_1(orgomg.cwm.objectmodel.core.Element object) {
-                return createElement_1Adapter();
+            public Adapter caseCore_Element(orgomg.cwm.objectmodel.core.Element object) {
+                return createCore_ElementAdapter();
             }
             @Override
             public Adapter caseModelElement(ModelElement object) {
@@ -314,7 +314,7 @@ public class CwmmipAdapterFactory extends AdapterFactoryImpl {
      * @see orgomg.cwm.objectmodel.core.Element
      * @generated
      */
-    public Adapter createElement_1Adapter() {
+    public Adapter createCore_ElementAdapter() {
         return null;
     }
 

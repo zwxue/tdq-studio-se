@@ -321,7 +321,7 @@ public class TransformationImpl extends NamespaceImpl implements Transformation 
             case TransformationPackage.TRANSFORMATION__FUNCTION_DESCRIPTION:
                 return getFunctionDescription();
             case TransformationPackage.TRANSFORMATION__IS_PRIMARY:
-                return isIsPrimary() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsPrimary();
             case TransformationPackage.TRANSFORMATION__SOURCE:
                 return getSource();
             case TransformationPackage.TRANSFORMATION__TARGET:
@@ -348,7 +348,7 @@ public class TransformationImpl extends NamespaceImpl implements Transformation 
                 setFunctionDescription((String)newValue);
                 return;
             case TransformationPackage.TRANSFORMATION__IS_PRIMARY:
-                setIsPrimary(((Boolean)newValue).booleanValue());
+                setIsPrimary((Boolean)newValue);
                 return;
             case TransformationPackage.TRANSFORMATION__SOURCE:
                 getSource().clear();

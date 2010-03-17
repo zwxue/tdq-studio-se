@@ -162,7 +162,7 @@ public class EnumerationImpl extends DataTypeImpl implements Enumeration {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DatatypesPackage.ENUMERATION__IS_ORDERED:
-                return isIsOrdered() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsOrdered();
             case DatatypesPackage.ENUMERATION__LITERAL:
                 return getLiteral();
         }
@@ -179,7 +179,7 @@ public class EnumerationImpl extends DataTypeImpl implements Enumeration {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DatatypesPackage.ENUMERATION__IS_ORDERED:
-                setIsOrdered(((Boolean)newValue).booleanValue());
+                setIsOrdered((Boolean)newValue);
                 return;
             case DatatypesPackage.ENUMERATION__LITERAL:
                 getLiteral().clear();

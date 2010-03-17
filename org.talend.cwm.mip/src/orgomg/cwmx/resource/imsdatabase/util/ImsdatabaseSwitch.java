@@ -174,7 +174,7 @@ public class ImsdatabaseSwitch<T> {
                 Field field = (Field)theEObject;
                 T result = caseField(field);
                 if (result == null) result = caseFixedOffsetField(field);
-                if (result == null) result = caseField_1(field);
+                if (result == null) result = caseRecord_Field(field);
                 if (result == null) result = caseAttribute(field);
                 if (result == null) result = caseStructuralFeature(field);
                 if (result == null) result = caseFeature(field);
@@ -207,7 +207,7 @@ public class ImsdatabaseSwitch<T> {
                 SenField senField = (SenField)theEObject;
                 T result = caseSenField(senField);
                 if (result == null) result = caseFixedOffsetField(senField);
-                if (result == null) result = caseField_1(senField);
+                if (result == null) result = caseRecord_Field(senField);
                 if (result == null) result = caseAttribute(senField);
                 if (result == null) result = caseStructuralFeature(senField);
                 if (result == null) result = caseFeature(senField);
@@ -833,7 +833,7 @@ public class ImsdatabaseSwitch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseField_1(orgomg.cwm.resource.record.Field object) {
+    public T caseRecord_Field(orgomg.cwm.resource.record.Field object) {
         return null;
     }
 

@@ -494,9 +494,9 @@ public class DBDImpl extends RecordFileImpl implements DBD {
             case ImsdatabasePackage.DBD__DLI_ACCESS:
                 return getDliAccess();
             case ImsdatabasePackage.DBD__IS_VSAM:
-                return isIsVSAM() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsVSAM();
             case ImsdatabasePackage.DBD__PASSWORD_FLAG:
-                return isPasswordFlag() ? Boolean.TRUE : Boolean.FALSE;
+                return isPasswordFlag();
             case ImsdatabasePackage.DBD__VERSION_STRING:
                 return getVersionString();
             case ImsdatabasePackage.DBD__ACCESS_METHOD:
@@ -530,10 +530,10 @@ public class DBDImpl extends RecordFileImpl implements DBD {
                 setDliAccess((AccessMethodType)newValue);
                 return;
             case ImsdatabasePackage.DBD__IS_VSAM:
-                setIsVSAM(((Boolean)newValue).booleanValue());
+                setIsVSAM((Boolean)newValue);
                 return;
             case ImsdatabasePackage.DBD__PASSWORD_FLAG:
-                setPasswordFlag(((Boolean)newValue).booleanValue());
+                setPasswordFlag((Boolean)newValue);
                 return;
             case ImsdatabasePackage.DBD__VERSION_STRING:
                 setVersionString((String)newValue);

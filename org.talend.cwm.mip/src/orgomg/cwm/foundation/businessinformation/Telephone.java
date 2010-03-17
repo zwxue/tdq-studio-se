@@ -18,7 +18,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * <!-- begin-model-doc -->
  * Instances of the Telephone class represent telephone contact information.
  * 
- * Because telephones are first class objects within the CWM, they can be used for purposes beyond those associated with the CWM Foundation�s Business Information concepts.
+ * Because telephones are first class objects within the CWM, they can be used for purposes beyond those associated with the CWM Foundation?s Business Information concepts.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -40,7 +40,7 @@ public interface Telephone extends ModelElement {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * A textual representation of the telephone�s number.
+     * A textual representation of the telephone?s number.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Phone Number</em>' attribute.
      * @see #setPhoneNumber(String)
@@ -65,7 +65,7 @@ public interface Telephone extends ModelElement {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * A textual representation of the telephone�s type, such as "multi-line", or its usage,
+     * A textual representation of the telephone?s type, such as "multi-line", or its usage,
      * such as "home", "work", "fax", or "mobile".
      * <!-- end-model-doc -->
      * @return the value of the '<em>Phone Type</em>' attribute.

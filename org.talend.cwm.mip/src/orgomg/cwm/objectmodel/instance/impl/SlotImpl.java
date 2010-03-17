@@ -146,7 +146,7 @@ public class SlotImpl extends ModelElementImpl implements Slot {
      * @generated
      */
     public orgomg.cwm.objectmodel.instance.Object getObject() {
-        if (eContainerFeatureID != InstancePackage.SLOT__OBJECT) return null;
+        if (eContainerFeatureID() != InstancePackage.SLOT__OBJECT) return null;
         return (orgomg.cwm.objectmodel.instance.Object)eContainer();
     }
 
@@ -166,7 +166,7 @@ public class SlotImpl extends ModelElementImpl implements Slot {
      * @generated
      */
     public void setObject(orgomg.cwm.objectmodel.instance.Object newObject) {
-        if (newObject != eInternalContainer() || (eContainerFeatureID != InstancePackage.SLOT__OBJECT && newObject != null)) {
+        if (newObject != eInternalContainer() || (eContainerFeatureID() != InstancePackage.SLOT__OBJECT && newObject != null)) {
             if (EcoreUtil.isAncestor(this, newObject))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -290,7 +290,7 @@ public class SlotImpl extends ModelElementImpl implements Slot {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case InstancePackage.SLOT__OBJECT:
                 return eInternalContainer().eInverseRemove(this, InstancePackage.OBJECT__SLOT, orgomg.cwm.objectmodel.instance.Object.class, msgs);
         }

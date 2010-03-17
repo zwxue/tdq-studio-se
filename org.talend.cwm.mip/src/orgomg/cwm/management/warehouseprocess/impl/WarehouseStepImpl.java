@@ -133,7 +133,7 @@ public class WarehouseStepImpl extends WarehouseProcessImpl implements Warehouse
      * @generated
      */
     public WarehouseActivity getWarehouseActivity() {
-        if (eContainerFeatureID != WarehouseprocessPackage.WAREHOUSE_STEP__WAREHOUSE_ACTIVITY) return null;
+        if (eContainerFeatureID() != WarehouseprocessPackage.WAREHOUSE_STEP__WAREHOUSE_ACTIVITY) return null;
         return (WarehouseActivity)eContainer();
     }
 
@@ -153,7 +153,7 @@ public class WarehouseStepImpl extends WarehouseProcessImpl implements Warehouse
      * @generated
      */
     public void setWarehouseActivity(WarehouseActivity newWarehouseActivity) {
-        if (newWarehouseActivity != eInternalContainer() || (eContainerFeatureID != WarehouseprocessPackage.WAREHOUSE_STEP__WAREHOUSE_ACTIVITY && newWarehouseActivity != null)) {
+        if (newWarehouseActivity != eInternalContainer() || (eContainerFeatureID() != WarehouseprocessPackage.WAREHOUSE_STEP__WAREHOUSE_ACTIVITY && newWarehouseActivity != null)) {
             if (EcoreUtil.isAncestor(this, newWarehouseActivity))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -211,7 +211,7 @@ public class WarehouseStepImpl extends WarehouseProcessImpl implements Warehouse
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case WarehouseprocessPackage.WAREHOUSE_STEP__WAREHOUSE_ACTIVITY:
                 return eInternalContainer().eInverseRemove(this, WarehouseprocessPackage.WAREHOUSE_ACTIVITY__WAREHOUSE_STEP, WarehouseActivity.class, msgs);
         }

@@ -133,7 +133,7 @@ public class DeployedComponentImpl extends PackageImpl implements DeployedCompon
      * @generated
      */
     public Machine getMachine() {
-        if (eContainerFeatureID != SoftwaredeploymentPackage.DEPLOYED_COMPONENT__MACHINE) return null;
+        if (eContainerFeatureID() != SoftwaredeploymentPackage.DEPLOYED_COMPONENT__MACHINE) return null;
         return (Machine)eContainer();
     }
 
@@ -153,7 +153,7 @@ public class DeployedComponentImpl extends PackageImpl implements DeployedCompon
      * @generated
      */
     public void setMachine(Machine newMachine) {
-        if (newMachine != eInternalContainer() || (eContainerFeatureID != SoftwaredeploymentPackage.DEPLOYED_COMPONENT__MACHINE && newMachine != null)) {
+        if (newMachine != eInternalContainer() || (eContainerFeatureID() != SoftwaredeploymentPackage.DEPLOYED_COMPONENT__MACHINE && newMachine != null)) {
             if (EcoreUtil.isAncestor(this, newMachine))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -288,7 +288,7 @@ public class DeployedComponentImpl extends PackageImpl implements DeployedCompon
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case SoftwaredeploymentPackage.DEPLOYED_COMPONENT__MACHINE:
                 return eInternalContainer().eInverseRemove(this, SoftwaredeploymentPackage.MACHINE__DEPLOYED_COMPONENT, Machine.class, msgs);
         }

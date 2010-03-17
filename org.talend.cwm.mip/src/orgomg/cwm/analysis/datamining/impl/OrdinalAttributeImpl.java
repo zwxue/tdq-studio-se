@@ -141,7 +141,7 @@ public class OrdinalAttributeImpl extends CategoricalAttributeImpl implements Or
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DataminingPackage.ORDINAL_ATTRIBUTE__IS_CYCLIC:
-                return isIsCyclic() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsCyclic();
             case DataminingPackage.ORDINAL_ATTRIBUTE__ORDERING_TYPE:
                 return getOrderingType();
         }
@@ -157,7 +157,7 @@ public class OrdinalAttributeImpl extends CategoricalAttributeImpl implements Or
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DataminingPackage.ORDINAL_ATTRIBUTE__IS_CYCLIC:
-                setIsCyclic(((Boolean)newValue).booleanValue());
+                setIsCyclic((Boolean)newValue);
                 return;
             case DataminingPackage.ORDINAL_ATTRIBUTE__ORDERING_TYPE:
                 setOrderingType((OrderType)newValue);

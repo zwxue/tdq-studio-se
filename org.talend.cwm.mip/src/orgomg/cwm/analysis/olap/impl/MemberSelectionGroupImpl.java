@@ -91,7 +91,7 @@ public class MemberSelectionGroupImpl extends ClassImpl implements MemberSelecti
      * @generated
      */
     public CubeRegion getCubeRegion() {
-        if (eContainerFeatureID != OlapPackage.MEMBER_SELECTION_GROUP__CUBE_REGION) return null;
+        if (eContainerFeatureID() != OlapPackage.MEMBER_SELECTION_GROUP__CUBE_REGION) return null;
         return (CubeRegion)eContainer();
     }
 
@@ -111,7 +111,7 @@ public class MemberSelectionGroupImpl extends ClassImpl implements MemberSelecti
      * @generated
      */
     public void setCubeRegion(CubeRegion newCubeRegion) {
-        if (newCubeRegion != eInternalContainer() || (eContainerFeatureID != OlapPackage.MEMBER_SELECTION_GROUP__CUBE_REGION && newCubeRegion != null)) {
+        if (newCubeRegion != eInternalContainer() || (eContainerFeatureID() != OlapPackage.MEMBER_SELECTION_GROUP__CUBE_REGION && newCubeRegion != null)) {
             if (EcoreUtil.isAncestor(this, newCubeRegion))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -168,7 +168,7 @@ public class MemberSelectionGroupImpl extends ClassImpl implements MemberSelecti
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.MEMBER_SELECTION_GROUP__CUBE_REGION:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.CUBE_REGION__MEMBER_SELECTION_GROUP, CubeRegion.class, msgs);
         }

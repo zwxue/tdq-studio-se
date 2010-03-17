@@ -519,7 +519,7 @@ public interface COBOLFD extends orgomg.cwm.objectmodel.core.Class, RecordFile {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Identifies the COBOLItem instance that contains the current size of the COBOLFD instance�s records.
+     * Identifies the COBOLItem instance that contains the current size of the COBOLFD instance?s records.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Depends On</em>' reference.
      * @see #setDependsOn(COBOLItem)

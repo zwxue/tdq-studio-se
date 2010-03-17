@@ -50,7 +50,7 @@ public interface InstanceFactory extends EFactory {
      * @return a new object of class '<em>Object</em>'.
      * @generated
      */
-    orgomg.cwm.objectmodel.instance.Object createObject();
+    Object createObject();
 
     /**
      * Returns a new object of class '<em>Extent</em>'.

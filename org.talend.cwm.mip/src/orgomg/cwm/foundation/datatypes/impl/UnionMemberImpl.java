@@ -174,7 +174,7 @@ public class UnionMemberImpl extends AttributeImpl implements UnionMember {
             case DatatypesPackage.UNION_MEMBER__MEMBER_CASE:
                 return getMemberCase();
             case DatatypesPackage.UNION_MEMBER__IS_DEFAULT:
-                return isIsDefault() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsDefault();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -191,7 +191,7 @@ public class UnionMemberImpl extends AttributeImpl implements UnionMember {
                 setMemberCase((Expression)newValue);
                 return;
             case DatatypesPackage.UNION_MEMBER__IS_DEFAULT:
-                setIsDefault(((Boolean)newValue).booleanValue());
+                setIsDefault((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

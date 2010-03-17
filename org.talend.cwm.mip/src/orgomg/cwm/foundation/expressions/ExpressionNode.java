@@ -18,11 +18,11 @@ import orgomg.cwm.objectmodel.core.Expression;
  * <!-- begin-model-doc -->
  * All node types within an expression are derived from the ExpressionNode type.
  * 
- * An expression is stored as a collection of instances of the subtypes of ExpressionNode arranged in a hierarchical fashion. The ExpressionNode instance at the top (or �root�) of the hierarchy represents the value of the expression and serves as a starting point for expression evaluation. Refer to the descriptions of the subtypes of ExpressionNode (ElementNode, ConstantNode, and FeatureNode) for additional information about the representation of expressions.
+ * An expression is stored as a collection of instances of the subtypes of ExpressionNode arranged in a hierarchical fashion. The ExpressionNode instance at the top (or ?root?) of the hierarchy represents the value of the expression and serves as a starting point for expression evaluation. Refer to the descriptions of the subtypes of ExpressionNode (ElementNode, ConstantNode, and FeatureNode) for additional information about the representation of expressions.
  * 
  * One important purpose for providing storage of expressions as a general feature of the CWM is to promote sharing them between tools and to provide a means for recording lineage relationships between components within expressions. Specific details of the implementation of expression operators are left to the implementing tools.
  * 
- * When ExpressionNode is used as the type of an Attribute, an instance of the Attribute can contain either an expression tree as described here or a textual representation of the expression in body and language values of in an attribute of type Expression (defined ObjectModel). The expression attribute is provided for the latter usage. To obtain CWM�s sharing and lineage tracking features for elements within an expression, the expression must be represented as an expression hierarcy.
+ * When ExpressionNode is used as the type of an Attribute, an instance of the Attribute can contain either an expression tree as described here or a textual representation of the expression in body and language values of in an attribute of type Expression (defined ObjectModel). The expression attribute is provided for the latter usage. To obtain CWM?s sharing and lineage tracking features for elements within an expression, the expression must be represented as an expression hierarcy.
  * <!-- end-model-doc -->
  *
  * <p>

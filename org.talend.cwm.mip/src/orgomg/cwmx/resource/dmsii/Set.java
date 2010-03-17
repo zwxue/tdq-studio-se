@@ -91,7 +91,7 @@ public interface Set extends SetStructure {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Identifies the DataItem instances that participate in the Set instance�s key data.
+     * Identifies the DataItem instances that participate in the Set instance?s key data.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Key Data Item</em>' reference list.
      * @see orgomg.cwmx.resource.dmsii.DmsiiPackage#getSet_KeyDataItem()

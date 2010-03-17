@@ -462,9 +462,9 @@ public class INDEXImpl extends AccessMethodImpl implements INDEX {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ImsdatabasePackage.INDEX__DOS_COMPATIBILITY:
-                return isDosCompatibility() ? Boolean.TRUE : Boolean.FALSE;
+                return isDosCompatibility();
             case ImsdatabasePackage.INDEX__PROTECT:
-                return isProtect() ? Boolean.TRUE : Boolean.FALSE;
+                return isProtect();
             case ImsdatabasePackage.INDEX__PRIMARY_TARGET:
                 if (resolve) return getPrimaryTarget();
                 return basicGetPrimaryTarget();
@@ -492,10 +492,10 @@ public class INDEXImpl extends AccessMethodImpl implements INDEX {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ImsdatabasePackage.INDEX__DOS_COMPATIBILITY:
-                setDosCompatibility(((Boolean)newValue).booleanValue());
+                setDosCompatibility((Boolean)newValue);
                 return;
             case ImsdatabasePackage.INDEX__PROTECT:
-                setProtect(((Boolean)newValue).booleanValue());
+                setProtect((Boolean)newValue);
                 return;
             case ImsdatabasePackage.INDEX__PRIMARY_TARGET:
                 setPrimaryTarget((HIDAM)newValue);

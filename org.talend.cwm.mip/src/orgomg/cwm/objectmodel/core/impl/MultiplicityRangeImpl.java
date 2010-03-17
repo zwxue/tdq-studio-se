@@ -143,7 +143,7 @@ public class MultiplicityRangeImpl extends ElementImpl implements MultiplicityRa
      * @generated
      */
     public Multiplicity getMultiplicity() {
-        if (eContainerFeatureID != CorePackage.MULTIPLICITY_RANGE__MULTIPLICITY) return null;
+        if (eContainerFeatureID() != CorePackage.MULTIPLICITY_RANGE__MULTIPLICITY) return null;
         return (Multiplicity)eContainer();
     }
 
@@ -163,7 +163,7 @@ public class MultiplicityRangeImpl extends ElementImpl implements MultiplicityRa
      * @generated
      */
     public void setMultiplicity(Multiplicity newMultiplicity) {
-        if (newMultiplicity != eInternalContainer() || (eContainerFeatureID != CorePackage.MULTIPLICITY_RANGE__MULTIPLICITY && newMultiplicity != null)) {
+        if (newMultiplicity != eInternalContainer() || (eContainerFeatureID() != CorePackage.MULTIPLICITY_RANGE__MULTIPLICITY && newMultiplicity != null)) {
             if (EcoreUtil.isAncestor(this, newMultiplicity))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -215,7 +215,7 @@ public class MultiplicityRangeImpl extends ElementImpl implements MultiplicityRa
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case CorePackage.MULTIPLICITY_RANGE__MULTIPLICITY:
                 return eInternalContainer().eInverseRemove(this, CorePackage.MULTIPLICITY__RANGE, Multiplicity.class, msgs);
         }
@@ -231,9 +231,9 @@ public class MultiplicityRangeImpl extends ElementImpl implements MultiplicityRa
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case CorePackage.MULTIPLICITY_RANGE__LOWER:
-                return new Long(getLower());
+                return getLower();
             case CorePackage.MULTIPLICITY_RANGE__UPPER:
-                return new Long(getUpper());
+                return getUpper();
             case CorePackage.MULTIPLICITY_RANGE__MULTIPLICITY:
                 return getMultiplicity();
         }
@@ -249,10 +249,10 @@ public class MultiplicityRangeImpl extends ElementImpl implements MultiplicityRa
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case CorePackage.MULTIPLICITY_RANGE__LOWER:
-                setLower(((Long)newValue).longValue());
+                setLower((Long)newValue);
                 return;
             case CorePackage.MULTIPLICITY_RANGE__UPPER:
-                setUpper(((Long)newValue).longValue());
+                setUpper((Long)newValue);
                 return;
             case CorePackage.MULTIPLICITY_RANGE__MULTIPLICITY:
                 setMultiplicity((Multiplicity)newValue);

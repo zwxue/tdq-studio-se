@@ -90,7 +90,7 @@ public abstract class HierarchyImpl extends ClassImpl implements Hierarchy {
      * @generated
      */
     public Dimension getDimension() {
-        if (eContainerFeatureID != OlapPackage.HIERARCHY__DIMENSION) return null;
+        if (eContainerFeatureID() != OlapPackage.HIERARCHY__DIMENSION) return null;
         return (Dimension)eContainer();
     }
 
@@ -110,7 +110,7 @@ public abstract class HierarchyImpl extends ClassImpl implements Hierarchy {
      * @generated
      */
     public void setDimension(Dimension newDimension) {
-        if (newDimension != eInternalContainer() || (eContainerFeatureID != OlapPackage.HIERARCHY__DIMENSION && newDimension != null)) {
+        if (newDimension != eInternalContainer() || (eContainerFeatureID() != OlapPackage.HIERARCHY__DIMENSION && newDimension != null)) {
             if (EcoreUtil.isAncestor(this, newDimension))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -245,7 +245,7 @@ public abstract class HierarchyImpl extends ClassImpl implements Hierarchy {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.HIERARCHY__DIMENSION:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.DIMENSION__HIERARCHY, Dimension.class, msgs);
         }

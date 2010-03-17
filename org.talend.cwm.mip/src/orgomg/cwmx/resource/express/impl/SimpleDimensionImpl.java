@@ -492,11 +492,11 @@ public class SimpleDimensionImpl extends DimensionImpl implements SimpleDimensio
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ExpressPackage.SIMPLE_DIMENSION__WIDTH:
-                return new Long(getWidth());
+                return getWidth();
             case ExpressPackage.SIMPLE_DIMENSION__IS_TIME:
-                return isIsTime() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsTime();
             case ExpressPackage.SIMPLE_DIMENSION__MULTIPLE:
-                return new Long(getMultiple());
+                return getMultiple();
             case ExpressPackage.SIMPLE_DIMENSION__BEGINNING_PHASE:
                 return getBeginningPhase();
             case ExpressPackage.SIMPLE_DIMENSION__ENDING_PHASE:
@@ -524,13 +524,13 @@ public class SimpleDimensionImpl extends DimensionImpl implements SimpleDimensio
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ExpressPackage.SIMPLE_DIMENSION__WIDTH:
-                setWidth(((Long)newValue).longValue());
+                setWidth((Long)newValue);
                 return;
             case ExpressPackage.SIMPLE_DIMENSION__IS_TIME:
-                setIsTime(((Boolean)newValue).booleanValue());
+                setIsTime((Boolean)newValue);
                 return;
             case ExpressPackage.SIMPLE_DIMENSION__MULTIPLE:
-                setMultiple(((Long)newValue).longValue());
+                setMultiple((Long)newValue);
                 return;
             case ExpressPackage.SIMPLE_DIMENSION__BEGINNING_PHASE:
                 setBeginningPhase((String)newValue);

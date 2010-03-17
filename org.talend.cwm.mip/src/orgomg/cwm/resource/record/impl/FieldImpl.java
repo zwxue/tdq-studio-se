@@ -184,11 +184,11 @@ public class FieldImpl extends AttributeImpl implements Field {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RecordPackage.FIELD__LENGTH:
-                return new Long(getLength());
+                return getLength();
             case RecordPackage.FIELD__PRECISION:
-                return new Long(getPrecision());
+                return getPrecision();
             case RecordPackage.FIELD__SCALE:
-                return new Long(getScale());
+                return getScale();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -202,13 +202,13 @@ public class FieldImpl extends AttributeImpl implements Field {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RecordPackage.FIELD__LENGTH:
-                setLength(((Long)newValue).longValue());
+                setLength((Long)newValue);
                 return;
             case RecordPackage.FIELD__PRECISION:
-                setPrecision(((Long)newValue).longValue());
+                setPrecision((Long)newValue);
                 return;
             case RecordPackage.FIELD__SCALE:
-                setScale(((Long)newValue).longValue());
+                setScale((Long)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

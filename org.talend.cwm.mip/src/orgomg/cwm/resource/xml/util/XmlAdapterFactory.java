@@ -121,8 +121,8 @@ public class XmlAdapterFactory extends AdapterFactoryImpl {
                 return createDocumentAdapter();
             }
             @Override
-            public Adapter caseElement_1(orgomg.cwm.objectmodel.core.Element object) {
-                return createElement_1Adapter();
+            public Adapter caseCore_Element(orgomg.cwm.objectmodel.core.Element object) {
+                return createCore_ElementAdapter();
             }
             @Override
             public Adapter caseModelElement(ModelElement object) {
@@ -153,8 +153,8 @@ public class XmlAdapterFactory extends AdapterFactoryImpl {
                 return createStructuralFeatureAdapter();
             }
             @Override
-            public Adapter caseAttribute_1(orgomg.cwm.objectmodel.core.Attribute object) {
-                return createAttribute_1Adapter();
+            public Adapter caseCore_Attribute(orgomg.cwm.objectmodel.core.Attribute object) {
+                return createCore_AttributeAdapter();
             }
             @Override
             public Adapter caseInstance(Instance object) {
@@ -338,7 +338,7 @@ public class XmlAdapterFactory extends AdapterFactoryImpl {
      * @see orgomg.cwm.objectmodel.core.Element
      * @generated
      */
-    public Adapter createElement_1Adapter() {
+    public Adapter createCore_ElementAdapter() {
         return null;
     }
 
@@ -450,7 +450,7 @@ public class XmlAdapterFactory extends AdapterFactoryImpl {
      * @see orgomg.cwm.objectmodel.core.Attribute
      * @generated
      */
-    public Adapter createAttribute_1Adapter() {
+    public Adapter createCore_AttributeAdapter() {
         return null;
     }
 

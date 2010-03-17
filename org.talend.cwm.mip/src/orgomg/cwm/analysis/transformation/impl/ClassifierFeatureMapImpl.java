@@ -232,7 +232,7 @@ public class ClassifierFeatureMapImpl extends ModelElementImpl implements Classi
      * @generated
      */
     public ClassifierMap getClassifierMap() {
-        if (eContainerFeatureID != TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_MAP) return null;
+        if (eContainerFeatureID() != TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_MAP) return null;
         return (ClassifierMap)eContainer();
     }
 
@@ -252,7 +252,7 @@ public class ClassifierFeatureMapImpl extends ModelElementImpl implements Classi
      * @generated
      */
     public void setClassifierMap(ClassifierMap newClassifierMap) {
-        if (newClassifierMap != eInternalContainer() || (eContainerFeatureID != TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_MAP && newClassifierMap != null)) {
+        if (newClassifierMap != eInternalContainer() || (eContainerFeatureID() != TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_MAP && newClassifierMap != null)) {
             if (EcoreUtil.isAncestor(this, newClassifierMap))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -339,7 +339,7 @@ public class ClassifierFeatureMapImpl extends ModelElementImpl implements Classi
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_MAP:
                 return eInternalContainer().eInverseRemove(this, TransformationPackage.CLASSIFIER_MAP__CF_MAP, ClassifierMap.class, msgs);
         }
@@ -359,7 +359,7 @@ public class ClassifierFeatureMapImpl extends ModelElementImpl implements Classi
             case TransformationPackage.CLASSIFIER_FEATURE_MAP__FUNCTION_DESCRIPTION:
                 return getFunctionDescription();
             case TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_TO_FEATURE:
-                return isClassifierToFeature() ? Boolean.TRUE : Boolean.FALSE;
+                return isClassifierToFeature();
             case TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_MAP:
                 return getClassifierMap();
             case TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER:
@@ -386,7 +386,7 @@ public class ClassifierFeatureMapImpl extends ModelElementImpl implements Classi
                 setFunctionDescription((String)newValue);
                 return;
             case TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_TO_FEATURE:
-                setClassifierToFeature(((Boolean)newValue).booleanValue());
+                setClassifierToFeature((Boolean)newValue);
                 return;
             case TransformationPackage.CLASSIFIER_FEATURE_MAP__CLASSIFIER_MAP:
                 setClassifierMap((ClassifierMap)newValue);

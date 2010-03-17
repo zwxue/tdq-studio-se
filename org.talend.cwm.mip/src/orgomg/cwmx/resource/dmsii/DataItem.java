@@ -20,9 +20,9 @@ import orgomg.cwm.resource.record.Field;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * Instances of DataItem represent the individual data fields within a DataSet. The Group class in the CWM Foundation�s DataTypes package is also available for constructing collections of fields in a DataSet.
+ * Instances of DataItem represent the individual data fields within a DataSet. The Group class in the CWM Foundation?s DataTypes package is also available for constructing collections of fields in a DataSet.
  * 
- * The interpretation of the contents of some attributes of a DataItem instance are dependent upon the DataItem�s type. For example, the size attribute represents the maximum number of characters in ALPHA and KANJI items, the number of digits of
+ * The interpretation of the contents of some attributes of a DataItem instance are dependent upon the DataItem?s type. For example, the size attribute represents the maximum number of characters in ALPHA and KANJI items, the number of digits of
  * precision in a NUMERIC or REAL items, and the number of bits in a FIELD item. Refer to the definition of individual attributes for specifics.
  * <!-- end-model-doc -->
  *

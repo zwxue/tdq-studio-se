@@ -184,9 +184,9 @@ public class DEDBImpl extends AccessMethodImpl implements DEDB {
             case ImsdatabasePackage.DEDB__RM_NAME:
                 return getRmName();
             case ImsdatabasePackage.DEDB__STAGE:
-                return new Long(getStage());
+                return getStage();
             case ImsdatabasePackage.DEDB__EXTENDED_CALL:
-                return isExtendedCall() ? Boolean.TRUE : Boolean.FALSE;
+                return isExtendedCall();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -203,10 +203,10 @@ public class DEDBImpl extends AccessMethodImpl implements DEDB {
                 setRmName((String)newValue);
                 return;
             case ImsdatabasePackage.DEDB__STAGE:
-                setStage(((Long)newValue).longValue());
+                setStage((Long)newValue);
                 return;
             case ImsdatabasePackage.DEDB__EXTENDED_CALL:
-                setExtendedCall(((Boolean)newValue).booleanValue());
+                setExtendedCall((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

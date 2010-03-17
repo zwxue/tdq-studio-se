@@ -100,7 +100,7 @@ public class COBOLFDIndexImpl extends IndexImpl implements COBOLFDIndex {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case CoboldataPackage.COBOLFD_INDEX__IS_ALTERNATE:
-                return isIsAlternate() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsAlternate();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -114,7 +114,7 @@ public class COBOLFDIndexImpl extends IndexImpl implements COBOLFDIndex {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case CoboldataPackage.COBOLFD_INDEX__IS_ALTERNATE:
-                setIsAlternate(((Boolean)newValue).booleanValue());
+                setIsAlternate((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

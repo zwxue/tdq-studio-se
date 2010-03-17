@@ -115,7 +115,7 @@ public class ProviderConnectionImpl extends ModelElementImpl implements Provider
      * @generated
      */
     public DataProvider getDataProvider() {
-        if (eContainerFeatureID != SoftwaredeploymentPackage.PROVIDER_CONNECTION__DATA_PROVIDER) return null;
+        if (eContainerFeatureID() != SoftwaredeploymentPackage.PROVIDER_CONNECTION__DATA_PROVIDER) return null;
         return (DataProvider)eContainer();
     }
 
@@ -135,7 +135,7 @@ public class ProviderConnectionImpl extends ModelElementImpl implements Provider
      * @generated
      */
     public void setDataProvider(DataProvider newDataProvider) {
-        if (newDataProvider != eInternalContainer() || (eContainerFeatureID != SoftwaredeploymentPackage.PROVIDER_CONNECTION__DATA_PROVIDER && newDataProvider != null)) {
+        if (newDataProvider != eInternalContainer() || (eContainerFeatureID() != SoftwaredeploymentPackage.PROVIDER_CONNECTION__DATA_PROVIDER && newDataProvider != null)) {
             if (EcoreUtil.isAncestor(this, newDataProvider))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -253,7 +253,7 @@ public class ProviderConnectionImpl extends ModelElementImpl implements Provider
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case SoftwaredeploymentPackage.PROVIDER_CONNECTION__DATA_PROVIDER:
                 return eInternalContainer().eInverseRemove(this, SoftwaredeploymentPackage.DATA_PROVIDER__RESOURCE_CONNECTION, DataProvider.class, msgs);
         }
@@ -269,7 +269,7 @@ public class ProviderConnectionImpl extends ModelElementImpl implements Provider
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case SoftwaredeploymentPackage.PROVIDER_CONNECTION__IS_READ_ONLY:
-                return isIsReadOnly() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsReadOnly();
             case SoftwaredeploymentPackage.PROVIDER_CONNECTION__DATA_PROVIDER:
                 return getDataProvider();
             case SoftwaredeploymentPackage.PROVIDER_CONNECTION__DATA_MANAGER:
@@ -288,7 +288,7 @@ public class ProviderConnectionImpl extends ModelElementImpl implements Provider
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case SoftwaredeploymentPackage.PROVIDER_CONNECTION__IS_READ_ONLY:
-                setIsReadOnly(((Boolean)newValue).booleanValue());
+                setIsReadOnly((Boolean)newValue);
                 return;
             case SoftwaredeploymentPackage.PROVIDER_CONNECTION__DATA_PROVIDER:
                 setDataProvider((DataProvider)newValue);

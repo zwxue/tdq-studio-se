@@ -214,9 +214,9 @@ public abstract class PartitionImpl extends CubeRegionImpl implements Partition 
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case EssbasePackage.PARTITION__IS_SOURCE:
-                return isIsSource() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsSource();
             case EssbasePackage.PARTITION__IS_SHARED:
-                return isIsShared() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsShared();
             case EssbasePackage.PARTITION__FORMULA:
                 return getFormula();
         }
@@ -232,10 +232,10 @@ public abstract class PartitionImpl extends CubeRegionImpl implements Partition 
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case EssbasePackage.PARTITION__IS_SOURCE:
-                setIsSource(((Boolean)newValue).booleanValue());
+                setIsSource((Boolean)newValue);
                 return;
             case EssbasePackage.PARTITION__IS_SHARED:
-                setIsShared(((Boolean)newValue).booleanValue());
+                setIsShared((Boolean)newValue);
                 return;
             case EssbasePackage.PARTITION__FORMULA:
                 setFormula((ExpressionNode)newValue);

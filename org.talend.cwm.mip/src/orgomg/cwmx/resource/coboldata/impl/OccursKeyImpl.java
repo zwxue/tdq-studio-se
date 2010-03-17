@@ -114,7 +114,7 @@ public class OccursKeyImpl extends ModelElementImpl implements OccursKey {
      * @generated
      */
     public COBOLField getOccursKeyOf() {
-        if (eContainerFeatureID != CoboldataPackage.OCCURS_KEY__OCCURS_KEY_OF) return null;
+        if (eContainerFeatureID() != CoboldataPackage.OCCURS_KEY__OCCURS_KEY_OF) return null;
         return (COBOLField)eContainer();
     }
 
@@ -134,7 +134,7 @@ public class OccursKeyImpl extends ModelElementImpl implements OccursKey {
      * @generated
      */
     public void setOccursKeyOf(COBOLField newOccursKeyOf) {
-        if (newOccursKeyOf != eInternalContainer() || (eContainerFeatureID != CoboldataPackage.OCCURS_KEY__OCCURS_KEY_OF && newOccursKeyOf != null)) {
+        if (newOccursKeyOf != eInternalContainer() || (eContainerFeatureID() != CoboldataPackage.OCCURS_KEY__OCCURS_KEY_OF && newOccursKeyOf != null)) {
             if (EcoreUtil.isAncestor(this, newOccursKeyOf))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -252,7 +252,7 @@ public class OccursKeyImpl extends ModelElementImpl implements OccursKey {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case CoboldataPackage.OCCURS_KEY__OCCURS_KEY_OF:
                 return eInternalContainer().eInverseRemove(this, CoboldataPackage.COBOL_FIELD__OCCURS_KEY_INFO, COBOLField.class, msgs);
         }
@@ -268,7 +268,7 @@ public class OccursKeyImpl extends ModelElementImpl implements OccursKey {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case CoboldataPackage.OCCURS_KEY__IS_ASCENDING:
-                return isIsAscending() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsAscending();
             case CoboldataPackage.OCCURS_KEY__OCCURS_KEY_OF:
                 return getOccursKeyOf();
             case CoboldataPackage.OCCURS_KEY__OCCURS_KEY_FIELD:
@@ -287,7 +287,7 @@ public class OccursKeyImpl extends ModelElementImpl implements OccursKey {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case CoboldataPackage.OCCURS_KEY__IS_ASCENDING:
-                setIsAscending(((Boolean)newValue).booleanValue());
+                setIsAscending((Boolean)newValue);
                 return;
             case CoboldataPackage.OCCURS_KEY__OCCURS_KEY_OF:
                 setOccursKeyOf((COBOLField)newValue);

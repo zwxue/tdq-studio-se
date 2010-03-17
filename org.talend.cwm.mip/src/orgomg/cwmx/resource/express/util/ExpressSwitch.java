@@ -103,7 +103,7 @@ public class ExpressSwitch<T> {
             case ExpressPackage.DIMENSION: {
                 Dimension dimension = (Dimension)theEObject;
                 T result = caseDimension(dimension);
-                if (result == null) result = caseDimension_1(dimension);
+                if (result == null) result = caseMultidimensional_Dimension(dimension);
                 if (result == null) result = caseClass(dimension);
                 if (result == null) result = caseClassifier(dimension);
                 if (result == null) result = caseNamespace(dimension);
@@ -127,7 +127,7 @@ public class ExpressSwitch<T> {
                 Conjoint conjoint = (Conjoint)theEObject;
                 T result = caseConjoint(conjoint);
                 if (result == null) result = caseDimension(conjoint);
-                if (result == null) result = caseDimension_1(conjoint);
+                if (result == null) result = caseMultidimensional_Dimension(conjoint);
                 if (result == null) result = caseClass(conjoint);
                 if (result == null) result = caseClassifier(conjoint);
                 if (result == null) result = caseNamespace(conjoint);
@@ -221,7 +221,7 @@ public class ExpressSwitch<T> {
                 Composite composite = (Composite)theEObject;
                 T result = caseComposite(composite);
                 if (result == null) result = caseDimension(composite);
-                if (result == null) result = caseDimension_1(composite);
+                if (result == null) result = caseMultidimensional_Dimension(composite);
                 if (result == null) result = caseClass(composite);
                 if (result == null) result = caseClassifier(composite);
                 if (result == null) result = caseNamespace(composite);
@@ -234,7 +234,7 @@ public class ExpressSwitch<T> {
                 SimpleDimension simpleDimension = (SimpleDimension)theEObject;
                 T result = caseSimpleDimension(simpleDimension);
                 if (result == null) result = caseDimension(simpleDimension);
-                if (result == null) result = caseDimension_1(simpleDimension);
+                if (result == null) result = caseMultidimensional_Dimension(simpleDimension);
                 if (result == null) result = caseClass(simpleDimension);
                 if (result == null) result = caseClassifier(simpleDimension);
                 if (result == null) result = caseNamespace(simpleDimension);
@@ -247,7 +247,7 @@ public class ExpressSwitch<T> {
                 AliasDimension aliasDimension = (AliasDimension)theEObject;
                 T result = caseAliasDimension(aliasDimension);
                 if (result == null) result = caseDimension(aliasDimension);
-                if (result == null) result = caseDimension_1(aliasDimension);
+                if (result == null) result = caseMultidimensional_Dimension(aliasDimension);
                 if (result == null) result = caseClass(aliasDimension);
                 if (result == null) result = caseClassifier(aliasDimension);
                 if (result == null) result = caseNamespace(aliasDimension);
@@ -613,7 +613,7 @@ public class ExpressSwitch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseDimension_1(orgomg.cwm.resource.multidimensional.Dimension object) {
+    public T caseMultidimensional_Dimension(orgomg.cwm.resource.multidimensional.Dimension object) {
         return null;
     }
 

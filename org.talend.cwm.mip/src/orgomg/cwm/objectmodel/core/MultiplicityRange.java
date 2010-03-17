@@ -61,7 +61,7 @@ public interface MultiplicityRange extends Element {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Specifies the upper bound of the range, which is a positive integer or the special value �unlimited� indicating no upper bound is defined.
+     * Specifies the upper bound of the range, which is a positive integer or the special value ?unlimited? indicating no upper bound is defined.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Upper</em>' attribute.
      * @see #setUpper(long)

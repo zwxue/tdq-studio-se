@@ -120,7 +120,7 @@ public interface Index extends ModelElement {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Identifies the IndexedFeature instance that associates this Index with one of the StructuralFeature elements of the Index�s key. The ordered constraint on this reference can be used to represent the sequential order of elements of the Index�s key.
+     * Identifies the IndexedFeature instance that associates this Index with one of the StructuralFeature elements of the Index?s key. The ordered constraint on this reference can be used to represent the sequential order of elements of the Index?s key.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Indexed Feature</em>' containment reference list.
      * @see orgomg.cwm.foundation.keysindexes.KeysindexesPackage#getIndex_IndexedFeature()

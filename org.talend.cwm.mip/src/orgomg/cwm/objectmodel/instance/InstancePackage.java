@@ -29,7 +29,7 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * 
  *     org.omg::CWM::ObjectModel::Core
  * 
- * In addition to the metadata normally interchanged with CWM, it is sometimes useful to interchange specific data instances as well. The ObjectModel�s Instance metamodel allows the inclusion of data instances with the metadata.
+ * In addition to the metadata normally interchanged with CWM, it is sometimes useful to interchange specific data instances as well. The ObjectModel?s Instance metamodel allows the inclusion of data instances with the metadata.
  * 
  * OCL Representation of Instance Constraints
  * 

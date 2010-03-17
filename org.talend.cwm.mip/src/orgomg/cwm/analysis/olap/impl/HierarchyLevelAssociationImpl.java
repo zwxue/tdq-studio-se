@@ -91,7 +91,7 @@ public class HierarchyLevelAssociationImpl extends ClassImpl implements Hierarch
      * @generated
      */
     public LevelBasedHierarchy getLevelBasedHierarchy() {
-        if (eContainerFeatureID != OlapPackage.HIERARCHY_LEVEL_ASSOCIATION__LEVEL_BASED_HIERARCHY) return null;
+        if (eContainerFeatureID() != OlapPackage.HIERARCHY_LEVEL_ASSOCIATION__LEVEL_BASED_HIERARCHY) return null;
         return (LevelBasedHierarchy)eContainer();
     }
 
@@ -111,7 +111,7 @@ public class HierarchyLevelAssociationImpl extends ClassImpl implements Hierarch
      * @generated
      */
     public void setLevelBasedHierarchy(LevelBasedHierarchy newLevelBasedHierarchy) {
-        if (newLevelBasedHierarchy != eInternalContainer() || (eContainerFeatureID != OlapPackage.HIERARCHY_LEVEL_ASSOCIATION__LEVEL_BASED_HIERARCHY && newLevelBasedHierarchy != null)) {
+        if (newLevelBasedHierarchy != eInternalContainer() || (eContainerFeatureID() != OlapPackage.HIERARCHY_LEVEL_ASSOCIATION__LEVEL_BASED_HIERARCHY && newLevelBasedHierarchy != null)) {
             if (EcoreUtil.isAncestor(this, newLevelBasedHierarchy))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -246,7 +246,7 @@ public class HierarchyLevelAssociationImpl extends ClassImpl implements Hierarch
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.HIERARCHY_LEVEL_ASSOCIATION__LEVEL_BASED_HIERARCHY:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.LEVEL_BASED_HIERARCHY__HIERARCHY_LEVEL_ASSOCIATION, LevelBasedHierarchy.class, msgs);
         }

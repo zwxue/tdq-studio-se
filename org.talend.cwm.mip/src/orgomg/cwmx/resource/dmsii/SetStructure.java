@@ -14,7 +14,7 @@ import orgomg.cwm.objectmodel.core.StructuralFeature;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * SetStructure instances represent access paths in DMS II. SetStructures are connected to the DataSet instances that they span via the ElementOwnership association inherited from the Index class in the CWM Foundation�s KeysIndexes package.
+ * SetStructure instances represent access paths in DMS II. SetStructures are connected to the DataSet instances that they span via the ElementOwnership association inherited from the Index class in the CWM Foundation?s KeysIndexes package.
  * 
  * <!-- end-model-doc -->
  *

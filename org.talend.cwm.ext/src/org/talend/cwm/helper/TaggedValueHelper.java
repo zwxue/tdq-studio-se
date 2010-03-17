@@ -14,8 +14,13 @@ package org.talend.cwm.helper;
 
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAnnotation;
+import org.talend.commons.emf.EmfHelper;
 import orgomg.cwm.objectmodel.core.CoreFactory;
+import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -26,6 +31,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public final class TaggedValueHelper {
 
+    private static Logger log = Logger.getLogger(TaggedValueHelper.class);
     /**
      * The tag used when setting a column content type.
      */
@@ -194,5 +200,30 @@ public final class TaggedValueHelper {
             return false;
         }
         return Boolean.valueOf(taggedValue.getValue());
+    }
+
+    /**
+     * return the String size limit for the given ecore attribute. This looks for an annotation url :
+     * htttp://talend.org/UiConstraints and search for the key string.max.size
+     * 
+     * @param tag the tag value to get the size limit from.
+     * @param defaultValue the default value returned if limit not found in feature
+     * @return the string limit found or the default value
+     * ADDED sgandon 16/03/2010 bug 11760
+     */
+    public static int getStringMaxSize(String tag, int defaultValue) {
+        Assert.isNotNull(tag);
+        int result = defaultValue;
+        EAnnotation guiAnnotation = CorePackage.Literals.MODEL_ELEMENT__TAGGED_VALUE
+                .getEAnnotation(EmfHelper.UI_CONSTRAINTS_ANNOTATION_URL);
+        if (guiAnnotation != null) {
+            String docuValue = guiAnnotation.getDetails().get(EmfHelper.STRING_MAX_SIZE_ANNOTATION_KEY + "." + tag);
+            try {
+                result = Integer.parseInt(docuValue);
+            } catch (Exception e) { // if conversion fail return default value
+                log.error("Could not get max size for tag " + tag, e);
+            }
+        } // else return default value
+        return result;
     }
 }

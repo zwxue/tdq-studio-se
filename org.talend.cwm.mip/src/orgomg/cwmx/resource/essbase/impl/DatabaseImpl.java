@@ -187,7 +187,7 @@ public class DatabaseImpl extends SchemaImpl implements Database {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case EssbasePackage.DATABASE__IS_CURRENCY:
-                return isIsCurrency() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsCurrency();
             case EssbasePackage.DATABASE__OUTLINE:
                 return getOutline();
         }
@@ -203,7 +203,7 @@ public class DatabaseImpl extends SchemaImpl implements Database {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case EssbasePackage.DATABASE__IS_CURRENCY:
-                setIsCurrency(((Boolean)newValue).booleanValue());
+                setIsCurrency((Boolean)newValue);
                 return;
             case EssbasePackage.DATABASE__OUTLINE:
                 setOutline((Outline)newValue);

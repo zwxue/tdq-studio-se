@@ -244,11 +244,11 @@ public class TableImpl extends NamedColumnSetImpl implements Table {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RelationalPackage.TABLE__IS_TEMPORARY:
-                return isIsTemporary() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsTemporary();
             case RelationalPackage.TABLE__TEMPORARY_SCOPE:
                 return getTemporaryScope();
             case RelationalPackage.TABLE__IS_SYSTEM:
-                return isIsSystem() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsSystem();
             case RelationalPackage.TABLE__TRIGGER:
                 return getTrigger();
         }
@@ -265,13 +265,13 @@ public class TableImpl extends NamedColumnSetImpl implements Table {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RelationalPackage.TABLE__IS_TEMPORARY:
-                setIsTemporary(((Boolean)newValue).booleanValue());
+                setIsTemporary((Boolean)newValue);
                 return;
             case RelationalPackage.TABLE__TEMPORARY_SCOPE:
                 setTemporaryScope((String)newValue);
                 return;
             case RelationalPackage.TABLE__IS_SYSTEM:
-                setIsSystem(((Boolean)newValue).booleanValue());
+                setIsSystem((Boolean)newValue);
                 return;
             case RelationalPackage.TABLE__TRIGGER:
                 getTrigger().clear();

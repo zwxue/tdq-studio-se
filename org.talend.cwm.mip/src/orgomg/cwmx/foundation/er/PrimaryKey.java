@@ -13,7 +13,7 @@ package orgomg.cwmx.foundation.er;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * PrimaryKey instances identify a key that uniquely identifies each instance of an Entity and that is distinguished by the modeler as the Entity�s primary key.
+ * PrimaryKey instances identify a key that uniquely identifies each instance of an Entity and that is distinguished by the modeler as the Entity?s primary key.
  * <!-- end-model-doc -->
  *
  *

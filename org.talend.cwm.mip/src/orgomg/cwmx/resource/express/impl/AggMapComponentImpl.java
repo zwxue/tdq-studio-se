@@ -302,7 +302,7 @@ public class AggMapComponentImpl extends ModelElementImpl implements AggMapCompo
      * @generated
      */
     public AggMap getAggMap() {
-        if (eContainerFeatureID != ExpressPackage.AGG_MAP_COMPONENT__AGG_MAP) return null;
+        if (eContainerFeatureID() != ExpressPackage.AGG_MAP_COMPONENT__AGG_MAP) return null;
         return (AggMap)eContainer();
     }
 
@@ -322,7 +322,7 @@ public class AggMapComponentImpl extends ModelElementImpl implements AggMapCompo
      * @generated
      */
     public void setAggMap(AggMap newAggMap) {
-        if (newAggMap != eInternalContainer() || (eContainerFeatureID != ExpressPackage.AGG_MAP_COMPONENT__AGG_MAP && newAggMap != null)) {
+        if (newAggMap != eInternalContainer() || (eContainerFeatureID() != ExpressPackage.AGG_MAP_COMPONENT__AGG_MAP && newAggMap != null)) {
             if (EcoreUtil.isAncestor(this, newAggMap))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -392,7 +392,7 @@ public class AggMapComponentImpl extends ModelElementImpl implements AggMapCompo
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ExpressPackage.AGG_MAP_COMPONENT__AGG_MAP:
                 return eInternalContainer().eInverseRemove(this, ExpressPackage.AGG_MAP__AGG_MAP_COMPONENT, AggMap.class, msgs);
         }

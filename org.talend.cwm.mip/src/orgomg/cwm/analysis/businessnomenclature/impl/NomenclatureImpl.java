@@ -77,7 +77,7 @@ public class NomenclatureImpl extends PackageImpl implements Nomenclature {
      * @generated
      */
     public Nomenclature getParent() {
-        if (eContainerFeatureID != BusinessnomenclaturePackage.NOMENCLATURE__PARENT) return null;
+        if (eContainerFeatureID() != BusinessnomenclaturePackage.NOMENCLATURE__PARENT) return null;
         return (Nomenclature)eContainer();
     }
 
@@ -97,7 +97,7 @@ public class NomenclatureImpl extends PackageImpl implements Nomenclature {
      * @generated
      */
     public void setParent(Nomenclature newParent) {
-        if (newParent != eInternalContainer() || (eContainerFeatureID != BusinessnomenclaturePackage.NOMENCLATURE__PARENT && newParent != null)) {
+        if (newParent != eInternalContainer() || (eContainerFeatureID() != BusinessnomenclaturePackage.NOMENCLATURE__PARENT && newParent != null)) {
             if (EcoreUtil.isAncestor(this, newParent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -166,7 +166,7 @@ public class NomenclatureImpl extends PackageImpl implements Nomenclature {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BusinessnomenclaturePackage.NOMENCLATURE__PARENT:
                 return eInternalContainer().eInverseRemove(this, BusinessnomenclaturePackage.NOMENCLATURE__CHILD, Nomenclature.class, msgs);
         }

@@ -343,7 +343,7 @@ public interface PCB extends RecordFile {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * This attribute specifies the name of the actual destination of the message and is either a logical terminal name or a transaction-code name. When the name is a transaction-code name, output messages to this PCB are queued for input to the program used to process the transaction-code named by the NAME attribute. The name must be specified in the user�s IMS/VS system definition as a logical terminal name or transaction code. This attribute maps to the LTERM/NAME keyword on the PCB macro statement.
+     * This attribute specifies the name of the actual destination of the message and is either a logical terminal name or a transaction-code name. When the name is a transaction-code name, output messages to this PCB are queued for input to the program used to process the transaction-code named by the NAME attribute. The name must be specified in the user?s IMS/VS system definition as a logical terminal name or transaction code. This attribute maps to the LTERM/NAME keyword on the PCB macro statement.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Lterm Name</em>' attribute.
      * @see #setLtermName(String)

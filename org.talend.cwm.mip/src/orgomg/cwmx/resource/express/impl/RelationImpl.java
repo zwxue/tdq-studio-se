@@ -282,7 +282,7 @@ public class RelationImpl extends DimensionedObjectImpl implements Relation {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ExpressPackage.RELATION__IS_TEMP:
-                return isIsTemp() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsTemp();
             case ExpressPackage.RELATION__PAGE_SPACE:
                 return getPageSpace();
             case ExpressPackage.RELATION__REFERENCE_DIMENSION:
@@ -304,7 +304,7 @@ public class RelationImpl extends DimensionedObjectImpl implements Relation {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ExpressPackage.RELATION__IS_TEMP:
-                setIsTemp(((Boolean)newValue).booleanValue());
+                setIsTemp((Boolean)newValue);
                 return;
             case ExpressPackage.RELATION__PAGE_SPACE:
                 setPageSpace((String)newValue);

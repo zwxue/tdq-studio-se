@@ -61,7 +61,7 @@ public class FieldBitImpl extends ModelElementImpl implements FieldBit {
      * @generated
      */
     public DataItem getDataItem() {
-        if (eContainerFeatureID != DmsiiPackage.FIELD_BIT__DATA_ITEM) return null;
+        if (eContainerFeatureID() != DmsiiPackage.FIELD_BIT__DATA_ITEM) return null;
         return (DataItem)eContainer();
     }
 
@@ -81,7 +81,7 @@ public class FieldBitImpl extends ModelElementImpl implements FieldBit {
      * @generated
      */
     public void setDataItem(DataItem newDataItem) {
-        if (newDataItem != eInternalContainer() || (eContainerFeatureID != DmsiiPackage.FIELD_BIT__DATA_ITEM && newDataItem != null)) {
+        if (newDataItem != eInternalContainer() || (eContainerFeatureID() != DmsiiPackage.FIELD_BIT__DATA_ITEM && newDataItem != null)) {
             if (EcoreUtil.isAncestor(this, newDataItem))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -133,7 +133,7 @@ public class FieldBitImpl extends ModelElementImpl implements FieldBit {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case DmsiiPackage.FIELD_BIT__DATA_ITEM:
                 return eInternalContainer().eInverseRemove(this, DmsiiPackage.DATA_ITEM__FIELD_BIT, DataItem.class, msgs);
         }

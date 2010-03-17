@@ -144,7 +144,7 @@ public class ConstraintImpl extends ModelElementImpl implements Constraint {
      * @generated
      */
     public Stereotype getConstrainedStereotype() {
-        if (eContainerFeatureID != CorePackage.CONSTRAINT__CONSTRAINED_STEREOTYPE) return null;
+        if (eContainerFeatureID() != CorePackage.CONSTRAINT__CONSTRAINED_STEREOTYPE) return null;
         return (Stereotype)eContainer();
     }
 
@@ -164,7 +164,7 @@ public class ConstraintImpl extends ModelElementImpl implements Constraint {
      * @generated
      */
     public void setConstrainedStereotype(Stereotype newConstrainedStereotype) {
-        if (newConstrainedStereotype != eInternalContainer() || (eContainerFeatureID != CorePackage.CONSTRAINT__CONSTRAINED_STEREOTYPE && newConstrainedStereotype != null)) {
+        if (newConstrainedStereotype != eInternalContainer() || (eContainerFeatureID() != CorePackage.CONSTRAINT__CONSTRAINED_STEREOTYPE && newConstrainedStereotype != null)) {
             if (EcoreUtil.isAncestor(this, newConstrainedStereotype))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -223,7 +223,7 @@ public class ConstraintImpl extends ModelElementImpl implements Constraint {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case CorePackage.CONSTRAINT__CONSTRAINED_STEREOTYPE:
                 return eInternalContainer().eInverseRemove(this, CorePackage.STEREOTYPE__STEREOTYPE_CONSTRAINT, Stereotype.class, msgs);
         }

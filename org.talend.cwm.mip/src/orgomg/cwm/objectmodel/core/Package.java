@@ -24,7 +24,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
  * 
  * A package owns a set of model elements, with the implication that if the package is removed from the model, so are the elements owned by the package. Elements with names, such as classifiers, that are owned by the same package must have unique names within the package, although elements in different packages may have the same name.
  * 
- * There may be relationships between elements contained in the same package, and between an element in one package and an element in a surrounding package at any level. In other words, elements �see� all the way out through nested levels of packages.
+ * There may be relationships between elements contained in the same package, and between an element in one package and an element in a surrounding package at any level. In other words, elements ?see? all the way out through nested levels of packages.
  * 
  * Elements in peer packages, however, are encapsulated and are not a priori visible to each other. The same goes for elements in contained packages, i.e. packages do not see "inwards".
  * 

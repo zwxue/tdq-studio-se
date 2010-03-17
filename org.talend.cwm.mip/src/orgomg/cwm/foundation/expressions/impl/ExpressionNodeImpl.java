@@ -190,7 +190,7 @@ public class ExpressionNodeImpl extends ElementImpl implements ExpressionNode {
      * @generated
      */
     public FeatureNode getFeatureNode() {
-        if (eContainerFeatureID != ExpressionsPackage.EXPRESSION_NODE__FEATURE_NODE) return null;
+        if (eContainerFeatureID() != ExpressionsPackage.EXPRESSION_NODE__FEATURE_NODE) return null;
         return (FeatureNode)eContainer();
     }
 
@@ -210,7 +210,7 @@ public class ExpressionNodeImpl extends ElementImpl implements ExpressionNode {
      * @generated
      */
     public void setFeatureNode(FeatureNode newFeatureNode) {
-        if (newFeatureNode != eInternalContainer() || (eContainerFeatureID != ExpressionsPackage.EXPRESSION_NODE__FEATURE_NODE && newFeatureNode != null)) {
+        if (newFeatureNode != eInternalContainer() || (eContainerFeatureID() != ExpressionsPackage.EXPRESSION_NODE__FEATURE_NODE && newFeatureNode != null)) {
             if (EcoreUtil.isAncestor(this, newFeatureNode))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -270,7 +270,7 @@ public class ExpressionNodeImpl extends ElementImpl implements ExpressionNode {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ExpressionsPackage.EXPRESSION_NODE__FEATURE_NODE:
                 return eInternalContainer().eInverseRemove(this, ExpressionsPackage.FEATURE_NODE__ARGUMENT, FeatureNode.class, msgs);
         }

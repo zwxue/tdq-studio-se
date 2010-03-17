@@ -14,7 +14,7 @@ import org.eclipse.emf.common.util.EList;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * A Cube is a collection of analytic values (i.e., measures) that share the same dimensionality.  This dimensionality is specified by a set of unique Dimensions from the Schema.  Each unique combination of members in the Cartesian product of the Cube�s Dimensions identifies precisely one data cell within a multidimensional structure.
+ * A Cube is a collection of analytic values (i.e., measures) that share the same dimensionality.  This dimensionality is specified by a set of unique Dimensions from the Schema.  Each unique combination of members in the Cartesian product of the Cube?s Dimensions identifies precisely one data cell within a multidimensional structure.
  * 
  * Synonyms: Multidimensional Array, Hypercube, Hypervolume.
  * 

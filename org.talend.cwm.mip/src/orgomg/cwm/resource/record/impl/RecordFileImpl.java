@@ -246,11 +246,11 @@ public class RecordFileImpl extends PackageImpl implements RecordFile {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RecordPackage.RECORD_FILE__IS_SELF_DESCRIBING:
-                return isIsSelfDescribing() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsSelfDescribing();
             case RecordPackage.RECORD_FILE__RECORD_DELIMITER:
-                return new Long(getRecordDelimiter());
+                return getRecordDelimiter();
             case RecordPackage.RECORD_FILE__SKIP_RECORDS:
-                return new Long(getSkipRecords());
+                return getSkipRecords();
             case RecordPackage.RECORD_FILE__RECORD:
                 return getRecord();
         }
@@ -267,13 +267,13 @@ public class RecordFileImpl extends PackageImpl implements RecordFile {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RecordPackage.RECORD_FILE__IS_SELF_DESCRIBING:
-                setIsSelfDescribing(((Boolean)newValue).booleanValue());
+                setIsSelfDescribing((Boolean)newValue);
                 return;
             case RecordPackage.RECORD_FILE__RECORD_DELIMITER:
-                setRecordDelimiter(((Long)newValue).longValue());
+                setRecordDelimiter((Long)newValue);
                 return;
             case RecordPackage.RECORD_FILE__SKIP_RECORDS:
-                setSkipRecords(((Long)newValue).longValue());
+                setSkipRecords((Long)newValue);
                 return;
             case RecordPackage.RECORD_FILE__RECORD:
                 getRecord().clear();

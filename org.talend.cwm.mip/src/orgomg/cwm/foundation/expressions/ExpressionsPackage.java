@@ -31,9 +31,9 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * 
  * The CWM Expressions metamodel provides basic support for the definition of expression trees within the CWM. The intent of the Expressions metamodel is to provide a place for other CWM packages (such as Transformation) and CWM compliant tools to record shared expressions in a common form that can be used for interchange and lineage tracking.
  * 
- * The expression concept in the CWM Foundation takes a functional view of expression trees, resulting in the ability of relatively few expression types to represent a broad range of expressions. Every function or traditional mathematical operator that appears in an expression hierarchy is represented as a FeatureNode. For example, the arithmetic plus operation �a + b� can be thought of as the function �sum(a, b).� The semantics of a particular function or operation are left to specific tool implementations and are not captured by the CWM. 
+ * The expression concept in the CWM Foundation takes a functional view of expression trees, resulting in the ability of relatively few expression types to represent a broad range of expressions. Every function or traditional mathematical operator that appears in an expression hierarchy is represented as a FeatureNode. For example, the arithmetic plus operation ?a + b? can be thought of as the function ?sum(a, b).? The semantics of a particular function or operation are left to specific tool implementations and are not captured by the CWM. 
  * 
- * The hierarchical nature of the CWM�s representation of expressions is achieved by the recursive nature of the OperationArgument association. This association allows the sub-hierarchies within an expression to be treated as actual parameters of their parent nodes.
+ * The hierarchical nature of the CWM?s representation of expressions is achieved by the recursive nature of the OperationArgument association. This association allows the sub-hierarchies within an expression to be treated as actual parameters of their parent nodes.
  * 
  * OCL Representation of Expressions Constraints
  * 
@@ -51,7 +51,7 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * self.feature.ownerScope = #instance implies
  * self.argument->first.type.allFeatures->includes(self.feature)
  * 
- * [C-5-3] If the FeatureNode represents a BehavioralFeature, the number of arguments must be equal to the number of the BehavioralFeature�s parameters, plus one for the �this� parameter if the BehavioralFeature is of instance scope.
+ * [C-5-3] If the FeatureNode represents a BehavioralFeature, the number of arguments must be equal to the number of the BehavioralFeature?s parameters, plus one for the ?this? parameter if the BehavioralFeature is of instance scope.
  * context FeatureNode inv:
  * self.feature.oclIsKindOf(BehavioralFeature) implies
  * (if self.feature.ownerScope = #instance

@@ -64,7 +64,7 @@ public interface Variable extends DimensionedObject {
      * If specified, this defines the type of page space in which data associated with the Variable will be stored:
      * 
      *     OWNSPACE specifies that the data will be stored in private page space associated with the Variable.
-     *     SHAREDSPACE specifies that the data will be stored in the database�s global page space.
+     *     SHAREDSPACE specifies that the data will be stored in the database?s global page space.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Page Space</em>' attribute.
      * @see #setPageSpace(String)

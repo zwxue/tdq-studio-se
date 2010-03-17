@@ -202,9 +202,9 @@ public class SegmentLogicalImpl extends SegmentImpl implements SegmentLogical {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ImsdatabasePackage.SEGMENT_LOGICAL__KEY_DATA1:
-                return isKeyData1() ? Boolean.TRUE : Boolean.FALSE;
+                return isKeyData1();
             case ImsdatabasePackage.SEGMENT_LOGICAL__KEY_DATA2:
-                return isKeyData2() ? Boolean.TRUE : Boolean.FALSE;
+                return isKeyData2();
             case ImsdatabasePackage.SEGMENT_LOGICAL__PHYSICAL:
                 return getPhysical();
         }
@@ -221,10 +221,10 @@ public class SegmentLogicalImpl extends SegmentImpl implements SegmentLogical {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ImsdatabasePackage.SEGMENT_LOGICAL__KEY_DATA1:
-                setKeyData1(((Boolean)newValue).booleanValue());
+                setKeyData1((Boolean)newValue);
                 return;
             case ImsdatabasePackage.SEGMENT_LOGICAL__KEY_DATA2:
-                setKeyData2(((Boolean)newValue).booleanValue());
+                setKeyData2((Boolean)newValue);
                 return;
             case ImsdatabasePackage.SEGMENT_LOGICAL__PHYSICAL:
                 getPhysical().clear();

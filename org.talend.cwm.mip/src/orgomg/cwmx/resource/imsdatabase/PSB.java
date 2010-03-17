@@ -18,7 +18,7 @@ import orgomg.cwmx.resource.imsdatabase.imstypes.PSBLanguageType;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * An instance of this object class represents the root entity of a PSB user object. Within IMS, a PSB (Program Specification Block) is a series of PCB macro instructions that describe an application program�s I/O operations and its view and use of segments and fields in IMS databases. The types of PCBs are TP PCB which describes interactions with logical terminals, GSAM PCB which is based on a GSAM DBD used as an input or output dataset, and DB PCB which can relate to segments and fields in its base DBD.
+ * An instance of this object class represents the root entity of a PSB user object. Within IMS, a PSB (Program Specification Block) is a series of PCB macro instructions that describe an application program?s I/O operations and its view and use of segments and fields in IMS databases. The types of PCBs are TP PCB which describes interactions with logical terminals, GSAM PCB which is based on a GSAM DBD used as an input or output dataset, and DB PCB which can relate to segments and fields in its base DBD.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -99,7 +99,7 @@ public interface PSB extends RecordFile {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * This attribute holds the size of the largest I/O area to be used by the application program. The size specification is used to determine the amount of main storage reserved in the PSB pool to hold the control region�s copy of the user�s I/O area data during scheduling of this application program. If this value is not specified, the ACB utility program calculates a maximum I/O area size to be used as a
+     * This attribute holds the size of the largest I/O area to be used by the application program. The size specification is used to determine the amount of main storage reserved in the PSB pool to hold the control region?s copy of the user?s I/O area data during scheduling of this application program. If this value is not specified, the ACB utility program calculates a maximum I/O area size to be used as a
      * default. The size calculated is the total length of all sensitive segments in the longest possible path call. The value specified is in bytes.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Ioa Size</em>' attribute.
@@ -228,7 +228,7 @@ public interface PSB extends RecordFile {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * The value in this attribute represents the maximum total length of all SSAs to be used by the application program. The size specification is used to determine the amount of main storage reserved in the PSB pool to hold the control region�s copy of the user�s SSA string during scheduling of this application program. If not specified, the ACB utility program calculates the maximum SSA size to be used as a default. The size calculated is the maximum number of levels in any PCB within this PSB times 280. The value specified is in bytes.
+     * The value in this attribute represents the maximum total length of all SSAs to be used by the application program. The size specification is used to determine the amount of main storage reserved in the PSB pool to hold the control region?s copy of the user?s SSA string during scheduling of this application program. If not specified, the ACB utility program calculates the maximum SSA size to be used as a default. The size calculated is the maximum number of levels in any PCB within this PSB times 280. The value specified is in bytes.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Ssa Size</em>' attribute.
      * @see #setSsaSize(long)

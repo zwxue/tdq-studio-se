@@ -281,7 +281,7 @@ public class WorksheetImpl extends ClassImpl implements Worksheet {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ExpressPackage.WORKSHEET__IS_TEMP:
-                return isIsTemp() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsTemp();
             case ExpressPackage.WORKSHEET__COLUMN_DIMENSION:
                 if (resolve) return getColumnDimension();
                 return basicGetColumnDimension();
@@ -301,7 +301,7 @@ public class WorksheetImpl extends ClassImpl implements Worksheet {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ExpressPackage.WORKSHEET__IS_TEMP:
-                setIsTemp(((Boolean)newValue).booleanValue());
+                setIsTemp((Boolean)newValue);
                 return;
             case ExpressPackage.WORKSHEET__COLUMN_DIMENSION:
                 setColumnDimension((Dimension)newValue);

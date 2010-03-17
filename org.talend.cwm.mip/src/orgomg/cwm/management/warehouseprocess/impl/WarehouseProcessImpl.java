@@ -235,9 +235,9 @@ public abstract class WarehouseProcessImpl extends ModelElementImpl implements W
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case WarehouseprocessPackage.WAREHOUSE_PROCESS__STATIC_DEFINITION:
-                return isStaticDefinition() ? Boolean.TRUE : Boolean.FALSE;
+                return isStaticDefinition();
             case WarehouseprocessPackage.WAREHOUSE_PROCESS__IS_SEQUENTIAL:
-                return isIsSequential() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsSequential();
             case WarehouseprocessPackage.WAREHOUSE_PROCESS__WAREHOUSE_EVENT:
                 return getWarehouseEvent();
             case WarehouseprocessPackage.WAREHOUSE_PROCESS__INTERNAL_EVENT:
@@ -256,10 +256,10 @@ public abstract class WarehouseProcessImpl extends ModelElementImpl implements W
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case WarehouseprocessPackage.WAREHOUSE_PROCESS__STATIC_DEFINITION:
-                setStaticDefinition(((Boolean)newValue).booleanValue());
+                setStaticDefinition((Boolean)newValue);
                 return;
             case WarehouseprocessPackage.WAREHOUSE_PROCESS__IS_SEQUENTIAL:
-                setIsSequential(((Boolean)newValue).booleanValue());
+                setIsSequential((Boolean)newValue);
                 return;
             case WarehouseprocessPackage.WAREHOUSE_PROCESS__WAREHOUSE_EVENT:
                 getWarehouseEvent().clear();

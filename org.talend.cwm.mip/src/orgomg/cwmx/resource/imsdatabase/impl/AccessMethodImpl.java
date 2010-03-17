@@ -61,7 +61,7 @@ public class AccessMethodImpl extends ModelElementImpl implements AccessMethod {
      * @generated
      */
     public DBD getDbd() {
-        if (eContainerFeatureID != ImsdatabasePackage.ACCESS_METHOD__DBD) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.ACCESS_METHOD__DBD) return null;
         return (DBD)eContainer();
     }
 
@@ -81,7 +81,7 @@ public class AccessMethodImpl extends ModelElementImpl implements AccessMethod {
      * @generated
      */
     public void setDbd(DBD newDbd) {
-        if (newDbd != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.ACCESS_METHOD__DBD && newDbd != null)) {
+        if (newDbd != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.ACCESS_METHOD__DBD && newDbd != null)) {
             if (EcoreUtil.isAncestor(this, newDbd))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -133,7 +133,7 @@ public class AccessMethodImpl extends ModelElementImpl implements AccessMethod {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ImsdatabasePackage.ACCESS_METHOD__DBD:
                 return eInternalContainer().eInverseRemove(this, ImsdatabasePackage.DBD__ACCESS_METHOD, DBD.class, msgs);
         }

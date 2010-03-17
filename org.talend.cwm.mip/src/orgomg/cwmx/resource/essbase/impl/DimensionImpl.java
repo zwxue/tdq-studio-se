@@ -247,7 +247,7 @@ public class DimensionImpl extends orgomg.cwm.resource.multidimensional.impl.Dim
             case EssbasePackage.DIMENSION__TYPE:
                 return getType();
             case EssbasePackage.DIMENSION__IS_DENSE:
-                return isIsDense() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsDense();
             case EssbasePackage.DIMENSION__OUTLINE:
                 if (resolve) return getOutline();
                 return basicGetOutline();
@@ -267,7 +267,7 @@ public class DimensionImpl extends orgomg.cwm.resource.multidimensional.impl.Dim
                 setType((DimensionType)newValue);
                 return;
             case EssbasePackage.DIMENSION__IS_DENSE:
-                setIsDense(((Boolean)newValue).booleanValue());
+                setIsDense((Boolean)newValue);
                 return;
             case EssbasePackage.DIMENSION__OUTLINE:
                 setOutline((Outline)newValue);

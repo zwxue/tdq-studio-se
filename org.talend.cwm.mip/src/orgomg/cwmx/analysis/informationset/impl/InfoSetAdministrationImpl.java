@@ -163,7 +163,7 @@ public class InfoSetAdministrationImpl extends ModelElementImpl implements InfoS
      * @generated
      */
     public InformationSet getInformationSet() {
-        if (eContainerFeatureID != InformationsetPackage.INFO_SET_ADMINISTRATION__INFORMATION_SET) return null;
+        if (eContainerFeatureID() != InformationsetPackage.INFO_SET_ADMINISTRATION__INFORMATION_SET) return null;
         return (InformationSet)eContainer();
     }
 
@@ -183,7 +183,7 @@ public class InfoSetAdministrationImpl extends ModelElementImpl implements InfoS
      * @generated
      */
     public void setInformationSet(InformationSet newInformationSet) {
-        if (newInformationSet != eInternalContainer() || (eContainerFeatureID != InformationsetPackage.INFO_SET_ADMINISTRATION__INFORMATION_SET && newInformationSet != null)) {
+        if (newInformationSet != eInternalContainer() || (eContainerFeatureID() != InformationsetPackage.INFO_SET_ADMINISTRATION__INFORMATION_SET && newInformationSet != null)) {
             if (EcoreUtil.isAncestor(this, newInformationSet))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -252,7 +252,7 @@ public class InfoSetAdministrationImpl extends ModelElementImpl implements InfoS
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case InformationsetPackage.INFO_SET_ADMINISTRATION__INFORMATION_SET:
                 return eInternalContainer().eInverseRemove(this, InformationsetPackage.INFORMATION_SET__INFO_SET_ADMIN, InformationSet.class, msgs);
         }
@@ -270,7 +270,7 @@ public class InfoSetAdministrationImpl extends ModelElementImpl implements InfoS
             case InformationsetPackage.INFO_SET_ADMINISTRATION__PRIORITY:
                 return getPriority();
             case InformationsetPackage.INFO_SET_ADMINISTRATION__ACKNOWLEDGEMENT:
-                return isAcknowledgement() ? Boolean.TRUE : Boolean.FALSE;
+                return isAcknowledgement();
             case InformationsetPackage.INFO_SET_ADMINISTRATION__INFORMATION_SET:
                 return getInformationSet();
             case InformationsetPackage.INFO_SET_ADMINISTRATION__DATE:
@@ -292,7 +292,7 @@ public class InfoSetAdministrationImpl extends ModelElementImpl implements InfoS
                 setPriority((String)newValue);
                 return;
             case InformationsetPackage.INFO_SET_ADMINISTRATION__ACKNOWLEDGEMENT:
-                setAcknowledgement(((Boolean)newValue).booleanValue());
+                setAcknowledgement((Boolean)newValue);
                 return;
             case InformationsetPackage.INFO_SET_ADMINISTRATION__INFORMATION_SET:
                 setInformationSet((InformationSet)newValue);

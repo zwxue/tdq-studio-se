@@ -187,7 +187,7 @@ public class EssbaseSwitch<T> {
             case EssbasePackage.DIMENSION: {
                 Dimension dimension = (Dimension)theEObject;
                 T result = caseDimension(dimension);
-                if (result == null) result = caseDimension_1(dimension);
+                if (result == null) result = caseMultidimensional_Dimension(dimension);
                 if (result == null) result = caseClass(dimension);
                 if (result == null) result = caseClassifier(dimension);
                 if (result == null) result = caseNamespace(dimension);
@@ -901,7 +901,7 @@ public class EssbaseSwitch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseDimension_1(orgomg.cwm.resource.multidimensional.Dimension object) {
+    public T caseMultidimensional_Dimension(orgomg.cwm.resource.multidimensional.Dimension object) {
         return null;
     }
 

@@ -1955,6 +1955,33 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
 
         // Create resource
         createResource(eNS_URI);
+
+        // Create annotations
+        // htttp://talend.org/UiConstraints
+        createUiConstraintsAnnotations();
+    }
+
+    /**
+     * Initializes the annotations for <b>htttp://talend.org/UiConstraints</b>.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void createUiConstraintsAnnotations() {
+        String source = "htttp://talend.org/UiConstraints";						
+        addAnnotation
+          (getModelElement_Name(), 
+           source, 
+           new String[] {
+             "string.max.size", "200"
+           });										
+        addAnnotation
+          (getModelElement_TaggedValue(), 
+           source, 
+           new String[] {
+             "string.max.size.Description", "1000",
+             "string.max.size.Purpose", "1000"
+           });																																																																																																													
     }
 
 } //CorePackageImpl

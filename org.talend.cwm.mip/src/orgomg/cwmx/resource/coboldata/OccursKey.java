@@ -14,7 +14,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This intersection class identifies the COBOLField instances that are parts of occurs keys and contains attributes relevant to the fields� roles in the occurs key.
+ * This intersection class identifies the COBOLField instances that are parts of occurs keys and contains attributes relevant to the fields? roles in the occurs key.
  * <!-- end-model-doc -->
  *
  * <p>

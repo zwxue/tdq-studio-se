@@ -117,7 +117,7 @@ public class ArgumentImpl extends ModelElementImpl implements Argument {
      * @generated
      */
     public CallAction getCallAction() {
-        if (eContainerFeatureID != BehavioralPackage.ARGUMENT__CALL_ACTION) return null;
+        if (eContainerFeatureID() != BehavioralPackage.ARGUMENT__CALL_ACTION) return null;
         return (CallAction)eContainer();
     }
 
@@ -137,7 +137,7 @@ public class ArgumentImpl extends ModelElementImpl implements Argument {
      * @generated
      */
     public void setCallAction(CallAction newCallAction) {
-        if (newCallAction != eInternalContainer() || (eContainerFeatureID != BehavioralPackage.ARGUMENT__CALL_ACTION && newCallAction != null)) {
+        if (newCallAction != eInternalContainer() || (eContainerFeatureID() != BehavioralPackage.ARGUMENT__CALL_ACTION && newCallAction != null)) {
             if (EcoreUtil.isAncestor(this, newCallAction))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -191,7 +191,7 @@ public class ArgumentImpl extends ModelElementImpl implements Argument {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BehavioralPackage.ARGUMENT__CALL_ACTION:
                 return eInternalContainer().eInverseRemove(this, BehavioralPackage.CALL_ACTION__ACTUAL_ARGUMENT, CallAction.class, msgs);
         }

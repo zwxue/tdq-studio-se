@@ -16,7 +16,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This represents the content model of an ElementType. In XML, each document contains one or more elements, the boundaries of which are normally delimited by start-tags and end-tags. The body between the start-tag and end-tag is called the element�s content. An element type declaration constrains the element�s content.
+ * This represents the content model of an ElementType. In XML, each document contains one or more elements, the boundaries of which are normally delimited by start-tags and end-tags. The body between the start-tag and end-tag is called the element?s content. An element type declaration constrains the element?s content.
  * <!-- end-model-doc -->
  *
  * <p>

@@ -201,7 +201,7 @@ public interface Column extends Attribute {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * The column, used in an SQLStructuredType is a REF to a type. This references the REF�ed SQLStructuredType. 
+     * The column, used in an SQLStructuredType is a REF to a type. This references the REF?ed SQLStructuredType. 
      * <!-- end-model-doc -->
      * @return the value of the '<em>Referenced Table Type</em>' reference.
      * @see #setReferencedTableType(SQLStructuredType)

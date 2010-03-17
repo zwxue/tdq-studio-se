@@ -325,9 +325,9 @@ public class TypeMappingImpl extends ModelElementImpl implements TypeMapping {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case TypemappingPackage.TYPE_MAPPING__IS_BEST_MATCH:
-                return isIsBestMatch() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsBestMatch();
             case TypemappingPackage.TYPE_MAPPING__IS_LOSSY:
-                return isIsLossy() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsLossy();
             case TypemappingPackage.TYPE_MAPPING__SOURCE_TYPE:
                 if (resolve) return getSourceType();
                 return basicGetSourceType();
@@ -347,10 +347,10 @@ public class TypeMappingImpl extends ModelElementImpl implements TypeMapping {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case TypemappingPackage.TYPE_MAPPING__IS_BEST_MATCH:
-                setIsBestMatch(((Boolean)newValue).booleanValue());
+                setIsBestMatch((Boolean)newValue);
                 return;
             case TypemappingPackage.TYPE_MAPPING__IS_LOSSY:
-                setIsLossy(((Boolean)newValue).booleanValue());
+                setIsLossy((Boolean)newValue);
                 return;
             case TypemappingPackage.TYPE_MAPPING__SOURCE_TYPE:
                 setSourceType((Classifier)newValue);

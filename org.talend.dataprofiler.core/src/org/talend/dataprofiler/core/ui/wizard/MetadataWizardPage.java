@@ -32,7 +32,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.emf.EmfHelper;
 import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
@@ -45,6 +47,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -107,6 +110,9 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         nameText = new Text(container, SWT.BORDER);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        // set the max number of characters to be entered in the text field
+        //ADDED sgandon 16/03/2010 bug 11760
+        nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME, 200));
 
         // Purpose
         Label purposeLab = new Label(container, SWT.NONE);
@@ -114,6 +120,9 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         purposeText = new Text(container, SWT.BORDER);
         purposeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        // set the max number of characters to be entered in the text field
+        //ADDED sgandon 16/03/2010 bug 11760
+        purposeText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE, 200));
 
         // Description
         Label descriptionLab = new Label(container, SWT.NONE);
@@ -124,6 +133,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 60;
         descriptionText.setLayoutData(data);
+        // set the max number of characters to be entered in the text field
+        descriptionText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.DESCRIPTION, 200));
 
         // Author
         Label authorLab = new Label(container, SWT.NONE);

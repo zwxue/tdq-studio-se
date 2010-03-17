@@ -145,7 +145,7 @@ public class CubeImpl extends ClassImpl implements Cube {
      * @generated
      */
     public Schema getSchema() {
-        if (eContainerFeatureID != OlapPackage.CUBE__SCHEMA) return null;
+        if (eContainerFeatureID() != OlapPackage.CUBE__SCHEMA) return null;
         return (Schema)eContainer();
     }
 
@@ -165,7 +165,7 @@ public class CubeImpl extends ClassImpl implements Cube {
      * @generated
      */
     public void setSchema(Schema newSchema) {
-        if (newSchema != eInternalContainer() || (eContainerFeatureID != OlapPackage.CUBE__SCHEMA && newSchema != null)) {
+        if (newSchema != eInternalContainer() || (eContainerFeatureID() != OlapPackage.CUBE__SCHEMA && newSchema != null)) {
             if (EcoreUtil.isAncestor(this, newSchema))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -238,7 +238,7 @@ public class CubeImpl extends ClassImpl implements Cube {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.CUBE__SCHEMA:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.SCHEMA__CUBE, Schema.class, msgs);
         }
@@ -254,7 +254,7 @@ public class CubeImpl extends ClassImpl implements Cube {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case OlapPackage.CUBE__IS_VIRTUAL:
-                return isIsVirtual() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsVirtual();
             case OlapPackage.CUBE__CUBE_DIMENSION_ASSOCIATION:
                 return getCubeDimensionAssociation();
             case OlapPackage.CUBE__SCHEMA:
@@ -275,7 +275,7 @@ public class CubeImpl extends ClassImpl implements Cube {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case OlapPackage.CUBE__IS_VIRTUAL:
-                setIsVirtual(((Boolean)newValue).booleanValue());
+                setIsVirtual((Boolean)newValue);
                 return;
             case OlapPackage.CUBE__CUBE_DIMENSION_ASSOCIATION:
                 getCubeDimensionAssociation().clear();

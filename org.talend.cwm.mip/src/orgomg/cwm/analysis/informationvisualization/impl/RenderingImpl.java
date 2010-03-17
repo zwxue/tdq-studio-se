@@ -315,7 +315,7 @@ public class RenderingImpl extends FeatureImpl implements Rendering {
      * @generated
      */
     public RenderedObjectSet getRenderedObjectSet() {
-        if (eContainerFeatureID != InformationvisualizationPackage.RENDERING__RENDERED_OBJECT_SET) return null;
+        if (eContainerFeatureID() != InformationvisualizationPackage.RENDERING__RENDERED_OBJECT_SET) return null;
         return (RenderedObjectSet)eContainer();
     }
 
@@ -335,7 +335,7 @@ public class RenderingImpl extends FeatureImpl implements Rendering {
      * @generated
      */
     public void setRenderedObjectSet(RenderedObjectSet newRenderedObjectSet) {
-        if (newRenderedObjectSet != eInternalContainer() || (eContainerFeatureID != InformationvisualizationPackage.RENDERING__RENDERED_OBJECT_SET && newRenderedObjectSet != null)) {
+        if (newRenderedObjectSet != eInternalContainer() || (eContainerFeatureID() != InformationvisualizationPackage.RENDERING__RENDERED_OBJECT_SET && newRenderedObjectSet != null)) {
             if (EcoreUtil.isAncestor(this, newRenderedObjectSet))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -394,7 +394,7 @@ public class RenderingImpl extends FeatureImpl implements Rendering {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case InformationvisualizationPackage.RENDERING__RENDERED_OBJECT_SET:
                 return eInternalContainer().eInverseRemove(this, InformationvisualizationPackage.RENDERED_OBJECT_SET__RENDERING, RenderedObjectSet.class, msgs);
         }

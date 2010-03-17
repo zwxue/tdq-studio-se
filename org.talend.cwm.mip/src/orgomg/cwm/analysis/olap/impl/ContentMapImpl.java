@@ -61,7 +61,7 @@ public class ContentMapImpl extends TransformationMapImpl implements ContentMap 
      * @generated
      */
     public CubeDeployment getCubeDeployment() {
-        if (eContainerFeatureID != OlapPackage.CONTENT_MAP__CUBE_DEPLOYMENT) return null;
+        if (eContainerFeatureID() != OlapPackage.CONTENT_MAP__CUBE_DEPLOYMENT) return null;
         return (CubeDeployment)eContainer();
     }
 
@@ -81,7 +81,7 @@ public class ContentMapImpl extends TransformationMapImpl implements ContentMap 
      * @generated
      */
     public void setCubeDeployment(CubeDeployment newCubeDeployment) {
-        if (newCubeDeployment != eInternalContainer() || (eContainerFeatureID != OlapPackage.CONTENT_MAP__CUBE_DEPLOYMENT && newCubeDeployment != null)) {
+        if (newCubeDeployment != eInternalContainer() || (eContainerFeatureID() != OlapPackage.CONTENT_MAP__CUBE_DEPLOYMENT && newCubeDeployment != null)) {
             if (EcoreUtil.isAncestor(this, newCubeDeployment))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -133,7 +133,7 @@ public class ContentMapImpl extends TransformationMapImpl implements ContentMap 
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.CONTENT_MAP__CUBE_DEPLOYMENT:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.CUBE_DEPLOYMENT__CONTENT_MAP, CubeDeployment.class, msgs);
         }

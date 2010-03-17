@@ -1036,7 +1036,7 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
      * @generated
      */
     public FileSection getFileSection() {
-        if (eContainerFeatureID != CoboldataPackage.COBOLFD__FILE_SECTION) return null;
+        if (eContainerFeatureID() != CoboldataPackage.COBOLFD__FILE_SECTION) return null;
         return (FileSection)eContainer();
     }
 
@@ -1056,7 +1056,7 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
      * @generated
      */
     public void setFileSection(FileSection newFileSection) {
-        if (newFileSection != eInternalContainer() || (eContainerFeatureID != CoboldataPackage.COBOLFD__FILE_SECTION && newFileSection != null)) {
+        if (newFileSection != eInternalContainer() || (eContainerFeatureID() != CoboldataPackage.COBOLFD__FILE_SECTION && newFileSection != null)) {
             if (EcoreUtil.isAncestor(this, newFileSection))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -1329,7 +1329,7 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case CoboldataPackage.COBOLFD__FILE_SECTION:
                 return eInternalContainer().eInverseRemove(this, CoboldataPackage.FILE_SECTION__COBOL_FD, FileSection.class, msgs);
         }
@@ -1349,11 +1349,11 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
             case CoboldataPackage.COBOLFD__DATA_MANAGER:
                 return getDataManager();
             case CoboldataPackage.COBOLFD__IS_SELF_DESCRIBING:
-                return isIsSelfDescribing() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsSelfDescribing();
             case CoboldataPackage.COBOLFD__RECORD_DELIMITER:
-                return new Long(getRecordDelimiter());
+                return getRecordDelimiter();
             case CoboldataPackage.COBOLFD__SKIP_RECORDS:
-                return new Long(getSkipRecords());
+                return getSkipRecords();
             case CoboldataPackage.COBOLFD__RECORD:
                 return getRecord();
             case CoboldataPackage.COBOLFD__ORGANIZATION:
@@ -1361,9 +1361,9 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
             case CoboldataPackage.COBOLFD__ACCESS_MODE:
                 return getAccessMode();
             case CoboldataPackage.COBOLFD__IS_OPTIONAL:
-                return isIsOptional() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsOptional();
             case CoboldataPackage.COBOLFD__RESERVE_AREAS:
-                return new Long(getReserveAreas());
+                return getReserveAreas();
             case CoboldataPackage.COBOLFD__ASSIGN_TO:
                 return getAssignTo();
             case CoboldataPackage.COBOLFD__CODE_SET_LIT:
@@ -1371,19 +1371,19 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
             case CoboldataPackage.COBOLFD__BLOCK_SIZE_UNIT:
                 return getBlockSizeUnit();
             case CoboldataPackage.COBOLFD__MIN_BLOCKS:
-                return new Long(getMinBlocks());
+                return getMinBlocks();
             case CoboldataPackage.COBOLFD__MAX_BLOCKS:
-                return new Long(getMaxBlocks());
+                return getMaxBlocks();
             case CoboldataPackage.COBOLFD__MIN_RECORDS:
-                return new Long(getMinRecords());
+                return getMinRecords();
             case CoboldataPackage.COBOLFD__MAX_RECORDS:
-                return new Long(getMaxRecords());
+                return getMaxRecords();
             case CoboldataPackage.COBOLFD__LABEL_KIND:
                 return getLabelKind();
             case CoboldataPackage.COBOLFD__IS_EXTERNAL:
-                return isIsExternal() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsExternal();
             case CoboldataPackage.COBOLFD__IS_GLOBAL:
-                return isIsGlobal() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGlobal();
             case CoboldataPackage.COBOLFD__PAD_LITERAL:
                 return getPadLiteral();
             case CoboldataPackage.COBOLFD__STATUS_ID:
@@ -1424,13 +1424,13 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
                 getDataManager().addAll((Collection<? extends DataManager>)newValue);
                 return;
             case CoboldataPackage.COBOLFD__IS_SELF_DESCRIBING:
-                setIsSelfDescribing(((Boolean)newValue).booleanValue());
+                setIsSelfDescribing((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOLFD__RECORD_DELIMITER:
-                setRecordDelimiter(((Long)newValue).longValue());
+                setRecordDelimiter((Long)newValue);
                 return;
             case CoboldataPackage.COBOLFD__SKIP_RECORDS:
-                setSkipRecords(((Long)newValue).longValue());
+                setSkipRecords((Long)newValue);
                 return;
             case CoboldataPackage.COBOLFD__RECORD:
                 getRecord().clear();
@@ -1443,10 +1443,10 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
                 setAccessMode((AccessType)newValue);
                 return;
             case CoboldataPackage.COBOLFD__IS_OPTIONAL:
-                setIsOptional(((Boolean)newValue).booleanValue());
+                setIsOptional((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOLFD__RESERVE_AREAS:
-                setReserveAreas(((Long)newValue).longValue());
+                setReserveAreas((Long)newValue);
                 return;
             case CoboldataPackage.COBOLFD__ASSIGN_TO:
                 setAssignTo((String)newValue);
@@ -1458,25 +1458,25 @@ public class COBOLFDImpl extends ClassImpl implements COBOLFD {
                 setBlockSizeUnit((BlockKind)newValue);
                 return;
             case CoboldataPackage.COBOLFD__MIN_BLOCKS:
-                setMinBlocks(((Long)newValue).longValue());
+                setMinBlocks((Long)newValue);
                 return;
             case CoboldataPackage.COBOLFD__MAX_BLOCKS:
-                setMaxBlocks(((Long)newValue).longValue());
+                setMaxBlocks((Long)newValue);
                 return;
             case CoboldataPackage.COBOLFD__MIN_RECORDS:
-                setMinRecords(((Long)newValue).longValue());
+                setMinRecords((Long)newValue);
                 return;
             case CoboldataPackage.COBOLFD__MAX_RECORDS:
-                setMaxRecords(((Long)newValue).longValue());
+                setMaxRecords((Long)newValue);
                 return;
             case CoboldataPackage.COBOLFD__LABEL_KIND:
                 setLabelKind((LabelKind)newValue);
                 return;
             case CoboldataPackage.COBOLFD__IS_EXTERNAL:
-                setIsExternal(((Boolean)newValue).booleanValue());
+                setIsExternal((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOLFD__IS_GLOBAL:
-                setIsGlobal(((Boolean)newValue).booleanValue());
+                setIsGlobal((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOLFD__PAD_LITERAL:
                 setPadLiteral((String)newValue);

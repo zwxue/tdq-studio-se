@@ -153,7 +153,7 @@ public class ErSwitch<T> {
             case ErPackage.ATTRIBUTE: {
                 Attribute attribute = (Attribute)theEObject;
                 T result = caseAttribute(attribute);
-                if (result == null) result = caseAttribute_1(attribute);
+                if (result == null) result = caseCore_Attribute(attribute);
                 if (result == null) result = caseStructuralFeature(attribute);
                 if (result == null) result = caseFeature(attribute);
                 if (result == null) result = caseModelElement(attribute);
@@ -199,7 +199,7 @@ public class ErSwitch<T> {
             case ErPackage.MODEL: {
                 Model model = (Model)theEObject;
                 T result = caseModel(model);
-                if (result == null) result = caseModel_1(model);
+                if (result == null) result = caseCore_Model(model);
                 if (result == null) result = casePackage(model);
                 if (result == null) result = caseNamespace(model);
                 if (result == null) result = caseModelElement(model);
@@ -572,7 +572,7 @@ public class ErSwitch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseAttribute_1(orgomg.cwm.objectmodel.core.Attribute object) {
+    public T caseCore_Attribute(orgomg.cwm.objectmodel.core.Attribute object) {
         return null;
     }
 
@@ -647,7 +647,7 @@ public class ErSwitch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseModel_1(orgomg.cwm.objectmodel.core.Model object) {
+    public T caseCore_Model(orgomg.cwm.objectmodel.core.Model object) {
         return null;
     }
 

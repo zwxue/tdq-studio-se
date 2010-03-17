@@ -340,7 +340,7 @@ public class LCHILDImpl extends ModelElementImpl implements LCHILD {
      * @generated
      */
     public SegmentComplex getLparent() {
-        if (eContainerFeatureID != ImsdatabasePackage.LCHILD__LPARENT) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.LCHILD__LPARENT) return null;
         return (SegmentComplex)eContainer();
     }
 
@@ -360,7 +360,7 @@ public class LCHILDImpl extends ModelElementImpl implements LCHILD {
      * @generated
      */
     public void setLparent(SegmentComplex newLparent) {
-        if (newLparent != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.LCHILD__LPARENT && newLparent != null)) {
+        if (newLparent != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.LCHILD__LPARENT && newLparent != null)) {
             if (EcoreUtil.isAncestor(this, newLparent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -544,7 +544,7 @@ public class LCHILDImpl extends ModelElementImpl implements LCHILD {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ImsdatabasePackage.LCHILD__LPARENT:
                 return eInternalContainer().eInverseRemove(this, ImsdatabasePackage.SEGMENT_COMPLEX__LCHILD, SegmentComplex.class, msgs);
         }
@@ -560,11 +560,11 @@ public class LCHILDImpl extends ModelElementImpl implements LCHILD {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ImsdatabasePackage.LCHILD__COUNTER:
-                return isCounter() ? Boolean.TRUE : Boolean.FALSE;
+                return isCounter();
             case ImsdatabasePackage.LCHILD__LC_POINTER:
                 return getLcPointer();
             case ImsdatabasePackage.LCHILD__LPARENT_FLAG:
-                return isLparentFlag() ? Boolean.TRUE : Boolean.FALSE;
+                return isLparentFlag();
             case ImsdatabasePackage.LCHILD__LTWIN:
                 return getLtwin();
             case ImsdatabasePackage.LCHILD__RULES:
@@ -592,13 +592,13 @@ public class LCHILDImpl extends ModelElementImpl implements LCHILD {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ImsdatabasePackage.LCHILD__COUNTER:
-                setCounter(((Boolean)newValue).booleanValue());
+                setCounter((Boolean)newValue);
                 return;
             case ImsdatabasePackage.LCHILD__LC_POINTER:
                 setLcPointer((ChildPointerType)newValue);
                 return;
             case ImsdatabasePackage.LCHILD__LPARENT_FLAG:
-                setLparentFlag(((Boolean)newValue).booleanValue());
+                setLparentFlag((Boolean)newValue);
                 return;
             case ImsdatabasePackage.LCHILD__LTWIN:
                 setLtwin((LPointerType)newValue);

@@ -162,7 +162,7 @@ public abstract class BehavioralFeatureImpl extends FeatureImpl implements Behav
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case BehavioralPackage.BEHAVIORAL_FEATURE__IS_QUERY:
-                return isIsQuery() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsQuery();
             case BehavioralPackage.BEHAVIORAL_FEATURE__PARAMETER:
                 return getParameter();
         }
@@ -179,7 +179,7 @@ public abstract class BehavioralFeatureImpl extends FeatureImpl implements Behav
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case BehavioralPackage.BEHAVIORAL_FEATURE__IS_QUERY:
-                setIsQuery(((Boolean)newValue).booleanValue());
+                setIsQuery((Boolean)newValue);
                 return;
             case BehavioralPackage.BEHAVIORAL_FEATURE__PARAMETER:
                 getParameter().clear();

@@ -242,7 +242,7 @@ public class AttributeUsageRelationImpl extends ModelElementImpl implements Attr
      * @generated
      */
     public MiningSettings getSettings() {
-        if (eContainerFeatureID != DataminingPackage.ATTRIBUTE_USAGE_RELATION__SETTINGS) return null;
+        if (eContainerFeatureID() != DataminingPackage.ATTRIBUTE_USAGE_RELATION__SETTINGS) return null;
         return (MiningSettings)eContainer();
     }
 
@@ -262,7 +262,7 @@ public class AttributeUsageRelationImpl extends ModelElementImpl implements Attr
      * @generated
      */
     public void setSettings(MiningSettings newSettings) {
-        if (newSettings != eInternalContainer() || (eContainerFeatureID != DataminingPackage.ATTRIBUTE_USAGE_RELATION__SETTINGS && newSettings != null)) {
+        if (newSettings != eInternalContainer() || (eContainerFeatureID() != DataminingPackage.ATTRIBUTE_USAGE_RELATION__SETTINGS && newSettings != null)) {
             if (EcoreUtil.isAncestor(this, newSettings))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -380,7 +380,7 @@ public class AttributeUsageRelationImpl extends ModelElementImpl implements Attr
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__SETTINGS:
                 return eInternalContainer().eInverseRemove(this, DataminingPackage.MINING_SETTINGS__ATTRIBUTE_USAGE, MiningSettings.class, msgs);
         }
@@ -398,11 +398,11 @@ public class AttributeUsageRelationImpl extends ModelElementImpl implements Attr
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__USAGE_TYPE:
                 return getUsageType();
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__INCLUDE_IN_APPLY_RESULT:
-                return isIncludeInApplyResult() ? Boolean.TRUE : Boolean.FALSE;
+                return isIncludeInApplyResult();
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__WEIGHT:
                 return getWeight();
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__SUPPRESS_NORMALIZATION:
-                return isSuppressNormalization() ? Boolean.TRUE : Boolean.FALSE;
+                return isSuppressNormalization();
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__SETTINGS:
                 return getSettings();
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__ATTRIBUTE:
@@ -424,13 +424,13 @@ public class AttributeUsageRelationImpl extends ModelElementImpl implements Attr
                 setUsageType((AttributeUsage)newValue);
                 return;
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__INCLUDE_IN_APPLY_RESULT:
-                setIncludeInApplyResult(((Boolean)newValue).booleanValue());
+                setIncludeInApplyResult((Boolean)newValue);
                 return;
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__WEIGHT:
                 setWeight((String)newValue);
                 return;
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__SUPPRESS_NORMALIZATION:
-                setSuppressNormalization(((Boolean)newValue).booleanValue());
+                setSuppressNormalization((Boolean)newValue);
                 return;
             case DataminingPackage.ATTRIBUTE_USAGE_RELATION__SETTINGS:
                 setSettings((MiningSettings)newValue);

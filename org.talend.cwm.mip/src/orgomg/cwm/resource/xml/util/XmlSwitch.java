@@ -102,7 +102,7 @@ public class XmlSwitch<T> {
                 if (result == null) result = casePackage(schema);
                 if (result == null) result = caseNamespace(schema);
                 if (result == null) result = caseModelElement(schema);
-                if (result == null) result = caseElement_1(schema);
+                if (result == null) result = caseCore_Element(schema);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -113,18 +113,18 @@ public class XmlSwitch<T> {
                 if (result == null) result = caseClassifier(elementType);
                 if (result == null) result = caseNamespace(elementType);
                 if (result == null) result = caseModelElement(elementType);
-                if (result == null) result = caseElement_1(elementType);
+                if (result == null) result = caseCore_Element(elementType);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
             case XmlPackage.ATTRIBUTE: {
                 Attribute attribute = (Attribute)theEObject;
                 T result = caseAttribute(attribute);
-                if (result == null) result = caseAttribute_1(attribute);
+                if (result == null) result = caseCore_Attribute(attribute);
                 if (result == null) result = caseStructuralFeature(attribute);
                 if (result == null) result = caseFeature(attribute);
                 if (result == null) result = caseModelElement(attribute);
-                if (result == null) result = caseElement_1(attribute);
+                if (result == null) result = caseCore_Element(attribute);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -132,7 +132,7 @@ public class XmlSwitch<T> {
                 Content content = (Content)theEObject;
                 T result = caseContent(content);
                 if (result == null) result = caseModelElement(content);
-                if (result == null) result = caseElement_1(content);
+                if (result == null) result = caseCore_Element(content);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -141,7 +141,7 @@ public class XmlSwitch<T> {
                 T result = caseElementContent(elementContent);
                 if (result == null) result = caseContent(elementContent);
                 if (result == null) result = caseModelElement(elementContent);
-                if (result == null) result = caseElement_1(elementContent);
+                if (result == null) result = caseCore_Element(elementContent);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -150,29 +150,29 @@ public class XmlSwitch<T> {
                 T result = caseMixedContent(mixedContent);
                 if (result == null) result = caseContent(mixedContent);
                 if (result == null) result = caseModelElement(mixedContent);
-                if (result == null) result = caseElement_1(mixedContent);
+                if (result == null) result = caseCore_Element(mixedContent);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
             case XmlPackage.ELEMENT_TYPE_REFERENCE: {
                 ElementTypeReference elementTypeReference = (ElementTypeReference)theEObject;
                 T result = caseElementTypeReference(elementTypeReference);
-                if (result == null) result = caseAttribute_1(elementTypeReference);
+                if (result == null) result = caseCore_Attribute(elementTypeReference);
                 if (result == null) result = caseStructuralFeature(elementTypeReference);
                 if (result == null) result = caseFeature(elementTypeReference);
                 if (result == null) result = caseModelElement(elementTypeReference);
-                if (result == null) result = caseElement_1(elementTypeReference);
+                if (result == null) result = caseCore_Element(elementTypeReference);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
             case XmlPackage.TEXT: {
                 Text text = (Text)theEObject;
                 T result = caseText(text);
-                if (result == null) result = caseAttribute_1(text);
+                if (result == null) result = caseCore_Attribute(text);
                 if (result == null) result = caseStructuralFeature(text);
                 if (result == null) result = caseFeature(text);
                 if (result == null) result = caseModelElement(text);
-                if (result == null) result = caseElement_1(text);
+                if (result == null) result = caseCore_Element(text);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -182,7 +182,7 @@ public class XmlSwitch<T> {
                 if (result == null) result = caseObject(element);
                 if (result == null) result = caseInstance(element);
                 if (result == null) result = caseModelElement(element);
-                if (result == null) result = caseElement_1(element);
+                if (result == null) result = caseCore_Element(element);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -193,7 +193,7 @@ public class XmlSwitch<T> {
                 if (result == null) result = casePackage(document);
                 if (result == null) result = caseNamespace(document);
                 if (result == null) result = caseModelElement(document);
-                if (result == null) result = caseElement_1(document);
+                if (result == null) result = caseCore_Element(document);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -362,7 +362,7 @@ public class XmlSwitch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseElement_1(orgomg.cwm.objectmodel.core.Element object) {
+    public T caseCore_Element(orgomg.cwm.objectmodel.core.Element object) {
         return null;
     }
 
@@ -482,7 +482,7 @@ public class XmlSwitch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseAttribute_1(orgomg.cwm.objectmodel.core.Attribute object) {
+    public T caseCore_Attribute(orgomg.cwm.objectmodel.core.Attribute object) {
         return null;
     }
 

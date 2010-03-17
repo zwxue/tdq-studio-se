@@ -83,7 +83,7 @@ public class StructureMapImpl extends TransformationMapImpl implements Structure
      * @generated
      */
     public DimensionDeployment getDimensionDeployment() {
-        if (eContainerFeatureID != OlapPackage.STRUCTURE_MAP__DIMENSION_DEPLOYMENT) return null;
+        if (eContainerFeatureID() != OlapPackage.STRUCTURE_MAP__DIMENSION_DEPLOYMENT) return null;
         return (DimensionDeployment)eContainer();
     }
 
@@ -103,7 +103,7 @@ public class StructureMapImpl extends TransformationMapImpl implements Structure
      * @generated
      */
     public void setDimensionDeployment(DimensionDeployment newDimensionDeployment) {
-        if (newDimensionDeployment != eInternalContainer() || (eContainerFeatureID != OlapPackage.STRUCTURE_MAP__DIMENSION_DEPLOYMENT && newDimensionDeployment != null)) {
+        if (newDimensionDeployment != eInternalContainer() || (eContainerFeatureID() != OlapPackage.STRUCTURE_MAP__DIMENSION_DEPLOYMENT && newDimensionDeployment != null)) {
             if (EcoreUtil.isAncestor(this, newDimensionDeployment))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -287,7 +287,7 @@ public class StructureMapImpl extends TransformationMapImpl implements Structure
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.STRUCTURE_MAP__DIMENSION_DEPLOYMENT:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.DIMENSION_DEPLOYMENT__STRUCTURE_MAP, DimensionDeployment.class, msgs);
         }

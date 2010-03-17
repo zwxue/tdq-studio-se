@@ -191,7 +191,7 @@ public class SQLStructuredTypeImpl extends ClassImpl implements SQLStructuredTyp
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RelationalPackage.SQL_STRUCTURED_TYPE__TYPE_NUMBER:
-                return new Long(getTypeNumber());
+                return getTypeNumber();
             case RelationalPackage.SQL_STRUCTURED_TYPE__COLUMN_SET:
                 return getColumnSet();
             case RelationalPackage.SQL_STRUCTURED_TYPE__REFERENCING_COLUMN:
@@ -210,7 +210,7 @@ public class SQLStructuredTypeImpl extends ClassImpl implements SQLStructuredTyp
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RelationalPackage.SQL_STRUCTURED_TYPE__TYPE_NUMBER:
-                setTypeNumber(((Long)newValue).longValue());
+                setTypeNumber((Long)newValue);
                 return;
             case RelationalPackage.SQL_STRUCTURED_TYPE__COLUMN_SET:
                 getColumnSet().clear();

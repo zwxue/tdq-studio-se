@@ -16,11 +16,11 @@ import orgomg.cwm.resource.record.Field;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * Maps a Remap instance�s field to its source, which may be some DataItem or an expression.
+ * Maps a Remap instance?s field to its source, which may be some DataItem or an expression.
  * 
  * The name attribute of a RemapItem instance defaults to the name attribute of the associated DataItem instance. If changed in the Remap definition by a "<identifier> =" clause, the name attribute of the Remap instance is simply set to <identifier>.
  * 
- * The RemapItem instance�s initial value is stored in the initialValue attribute inherited from the CWM ObjectModel�s Attribute class.
+ * The RemapItem instance?s initial value is stored in the initialValue attribute inherited from the CWM ObjectModel?s Attribute class.
  * <!-- end-model-doc -->
  *
  * <p>

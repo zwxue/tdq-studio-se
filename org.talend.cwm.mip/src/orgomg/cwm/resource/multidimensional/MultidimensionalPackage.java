@@ -49,7 +49,7 @@ import orgomg.cwm.objectmodel.instance.InstancePackage;
  * 
  * Schema is the container of all elements comprising a Multidimensional model. It also represents the logical unit of deployment of a Multidimensional database instance.
  * Dimension represents a physical dimension in a Multidimensional database. Whereas
- * the OLAP metamodel defines �dimension� as a purely conceptual entity, this
+ * the OLAP metamodel defines ?dimension? as a purely conceptual entity, this
  * Dimension represents the dimension object exposed by the programming model of a
  * Multidimensional database.
  * A Dimension may reference other instances of Dimension to form arbitrarily complex

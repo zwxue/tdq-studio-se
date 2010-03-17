@@ -79,7 +79,7 @@ public class MemberSelectionImpl extends ClassImpl implements MemberSelection {
      * @generated
      */
     public Dimension getDimension() {
-        if (eContainerFeatureID != OlapPackage.MEMBER_SELECTION__DIMENSION) return null;
+        if (eContainerFeatureID() != OlapPackage.MEMBER_SELECTION__DIMENSION) return null;
         return (Dimension)eContainer();
     }
 
@@ -99,7 +99,7 @@ public class MemberSelectionImpl extends ClassImpl implements MemberSelection {
      * @generated
      */
     public void setDimension(Dimension newDimension) {
-        if (newDimension != eInternalContainer() || (eContainerFeatureID != OlapPackage.MEMBER_SELECTION__DIMENSION && newDimension != null)) {
+        if (newDimension != eInternalContainer() || (eContainerFeatureID() != OlapPackage.MEMBER_SELECTION__DIMENSION && newDimension != null)) {
             if (EcoreUtil.isAncestor(this, newDimension))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -168,7 +168,7 @@ public class MemberSelectionImpl extends ClassImpl implements MemberSelection {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.MEMBER_SELECTION__DIMENSION:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.DIMENSION__MEMBER_SELECTION, Dimension.class, msgs);
         }

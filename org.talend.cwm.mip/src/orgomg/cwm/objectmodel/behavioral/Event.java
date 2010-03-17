@@ -38,7 +38,7 @@ public interface Event extends ModelElement {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Identifies the ordered set of Parameter instances owned by an Event that describe the Event�s parameters.
+     * Identifies the ordered set of Parameter instances owned by an Event that describe the Event?s parameters.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Parameter</em>' containment reference list.
      * @see orgomg.cwm.objectmodel.behavioral.BehavioralPackage#getEvent_Parameter()

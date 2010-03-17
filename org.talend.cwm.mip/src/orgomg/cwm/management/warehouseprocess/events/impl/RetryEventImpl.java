@@ -142,7 +142,7 @@ public class RetryEventImpl extends InternalEventImpl implements RetryEvent {
             case EventsPackage.RETRY_EVENT__WAIT_DURATION:
                 return getWaitDuration();
             case EventsPackage.RETRY_EVENT__MAX_COUNT:
-                return new Long(getMaxCount());
+                return getMaxCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -159,7 +159,7 @@ public class RetryEventImpl extends InternalEventImpl implements RetryEvent {
                 setWaitDuration((String)newValue);
                 return;
             case EventsPackage.RETRY_EVENT__MAX_COUNT:
-                setMaxCount(((Long)newValue).longValue());
+                setMaxCount((Long)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

@@ -18,7 +18,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * <!-- begin-model-doc -->
  * Instances of the Location class represent physical locations. Note that the name of a Location is derived from its superclass, ModelElement.
  * 
- * Because Locations are first class objects within the CWM, they can be used for purposes beyond those associated with the CWM Foundation�s Business Information concepts. If additional attributes about Location instances are required, they should be added by creating subtypes of the Location class and placing the additional attributes therein.
+ * Because Locations are first class objects within the CWM, they can be used for purposes beyond those associated with the CWM Foundation?s Business Information concepts. If additional attributes about Location instances are required, they should be added by creating subtypes of the Location class and placing the additional attributes therein.
  * <!-- end-model-doc -->
  *
  * <p>

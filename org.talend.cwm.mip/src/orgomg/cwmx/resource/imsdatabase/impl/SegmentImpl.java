@@ -477,7 +477,7 @@ public class SegmentImpl extends RecordDefImpl implements Segment {
      * @generated
      */
     public DBD getDbd() {
-        if (eContainerFeatureID != ImsdatabasePackage.SEGMENT__DBD) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.SEGMENT__DBD) return null;
         return (DBD)eContainer();
     }
 
@@ -497,7 +497,7 @@ public class SegmentImpl extends RecordDefImpl implements Segment {
      * @generated
      */
     public void setDbd(DBD newDbd) {
-        if (newDbd != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.SEGMENT__DBD && newDbd != null)) {
+        if (newDbd != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.SEGMENT__DBD && newDbd != null)) {
             if (EcoreUtil.isAncestor(this, newDbd))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -668,7 +668,7 @@ public class SegmentImpl extends RecordDefImpl implements Segment {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ImsdatabasePackage.SEGMENT__DBD:
                 return eInternalContainer().eInverseRemove(this, ImsdatabasePackage.DBD__SEGMENT, DBD.class, msgs);
         }
@@ -684,19 +684,19 @@ public class SegmentImpl extends RecordDefImpl implements Segment {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ImsdatabasePackage.SEGMENT__EXIT_FLAG:
-                return isExitFlag() ? Boolean.TRUE : Boolean.FALSE;
+                return isExitFlag();
             case ImsdatabasePackage.SEGMENT__FREQUENCY:
                 return getFrequency();
             case ImsdatabasePackage.SEGMENT__MAXIMUM_LENGTH:
-                return new Long(getMaximumLength());
+                return getMaximumLength();
             case ImsdatabasePackage.SEGMENT__MINIMUM_LENGTH:
-                return new Long(getMinimumLength());
+                return getMinimumLength();
             case ImsdatabasePackage.SEGMENT__RULES:
                 return getRules();
             case ImsdatabasePackage.SEGMENT__SUBSET_POINTERS:
                 return getSubsetPointers();
             case ImsdatabasePackage.SEGMENT__DIRECT_DEPENDENT:
-                return isDirectDependent() ? Boolean.TRUE : Boolean.FALSE;
+                return isDirectDependent();
             case ImsdatabasePackage.SEGMENT__PC_POINTER:
                 return getPcPointer();
             case ImsdatabasePackage.SEGMENT__LOGICAL:
@@ -726,16 +726,16 @@ public class SegmentImpl extends RecordDefImpl implements Segment {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ImsdatabasePackage.SEGMENT__EXIT_FLAG:
-                setExitFlag(((Boolean)newValue).booleanValue());
+                setExitFlag((Boolean)newValue);
                 return;
             case ImsdatabasePackage.SEGMENT__FREQUENCY:
                 setFrequency((String)newValue);
                 return;
             case ImsdatabasePackage.SEGMENT__MAXIMUM_LENGTH:
-                setMaximumLength(((Long)newValue).longValue());
+                setMaximumLength((Long)newValue);
                 return;
             case ImsdatabasePackage.SEGMENT__MINIMUM_LENGTH:
-                setMinimumLength(((Long)newValue).longValue());
+                setMinimumLength((Long)newValue);
                 return;
             case ImsdatabasePackage.SEGMENT__RULES:
                 setRules((RulesType)newValue);
@@ -744,7 +744,7 @@ public class SegmentImpl extends RecordDefImpl implements Segment {
                 setSubsetPointers((String)newValue);
                 return;
             case ImsdatabasePackage.SEGMENT__DIRECT_DEPENDENT:
-                setDirectDependent(((Boolean)newValue).booleanValue());
+                setDirectDependent((Boolean)newValue);
                 return;
             case ImsdatabasePackage.SEGMENT__PC_POINTER:
                 setPcPointer((ChildPointerType)newValue);

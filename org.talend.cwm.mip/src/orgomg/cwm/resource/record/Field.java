@@ -14,7 +14,7 @@ import orgomg.cwm.objectmodel.core.Attribute;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * A Field is the fundamental information container within a RecordDef. It holds one piece of information, which may itself have structure. The inherited associations StructuralFeatureType and ElementOwnership provide access to a Field instance�s type and owning classifier, respectively.
+ * A Field is the fundamental information container within a RecordDef. It holds one piece of information, which may itself have structure. The inherited associations StructuralFeatureType and ElementOwnership provide access to a Field instance?s type and owning classifier, respectively.
  * <!-- end-model-doc -->
  *
  * <p>

@@ -208,8 +208,8 @@ public class RelationalSwitch<T> {
                 T result = caseSQLDistinctType(sqlDistinctType);
                 if (result == null) result = caseSQLDataType(sqlDistinctType);
                 if (result == null) result = caseTypeAlias(sqlDistinctType);
-                if (result == null) result = caseClassifier(sqlDistinctType);
                 if (result == null) result = caseDataType(sqlDistinctType);
+                if (result == null) result = caseClassifier(sqlDistinctType);
                 if (result == null) result = caseNamespace(sqlDistinctType);
                 if (result == null) result = caseModelElement(sqlDistinctType);
                 if (result == null) result = caseElement(sqlDistinctType);

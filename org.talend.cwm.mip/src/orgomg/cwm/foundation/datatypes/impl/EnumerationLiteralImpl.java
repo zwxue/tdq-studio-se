@@ -117,7 +117,7 @@ public class EnumerationLiteralImpl extends ModelElementImpl implements Enumerat
      * @generated
      */
     public Enumeration getEnumeration() {
-        if (eContainerFeatureID != DatatypesPackage.ENUMERATION_LITERAL__ENUMERATION) return null;
+        if (eContainerFeatureID() != DatatypesPackage.ENUMERATION_LITERAL__ENUMERATION) return null;
         return (Enumeration)eContainer();
     }
 
@@ -137,7 +137,7 @@ public class EnumerationLiteralImpl extends ModelElementImpl implements Enumerat
      * @generated
      */
     public void setEnumeration(Enumeration newEnumeration) {
-        if (newEnumeration != eInternalContainer() || (eContainerFeatureID != DatatypesPackage.ENUMERATION_LITERAL__ENUMERATION && newEnumeration != null)) {
+        if (newEnumeration != eInternalContainer() || (eContainerFeatureID() != DatatypesPackage.ENUMERATION_LITERAL__ENUMERATION && newEnumeration != null)) {
             if (EcoreUtil.isAncestor(this, newEnumeration))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -191,7 +191,7 @@ public class EnumerationLiteralImpl extends ModelElementImpl implements Enumerat
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case DatatypesPackage.ENUMERATION_LITERAL__ENUMERATION:
                 return eInternalContainer().eInverseRemove(this, DatatypesPackage.ENUMERATION__LITERAL, Enumeration.class, msgs);
         }

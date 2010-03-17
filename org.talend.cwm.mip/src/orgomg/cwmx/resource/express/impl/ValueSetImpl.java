@@ -204,7 +204,7 @@ public class ValueSetImpl extends DimensionedObjectImpl implements ValueSet {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ExpressPackage.VALUE_SET__IS_TEMP:
-                return isIsTemp() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsTemp();
             case ExpressPackage.VALUE_SET__REFERENCE_DIMENSION:
                 if (resolve) return getReferenceDimension();
                 return basicGetReferenceDimension();
@@ -221,7 +221,7 @@ public class ValueSetImpl extends DimensionedObjectImpl implements ValueSet {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ExpressPackage.VALUE_SET__IS_TEMP:
-                setIsTemp(((Boolean)newValue).booleanValue());
+                setIsTemp((Boolean)newValue);
                 return;
             case ExpressPackage.VALUE_SET__REFERENCE_DIMENSION:
                 setReferenceDimension((Dimension)newValue);

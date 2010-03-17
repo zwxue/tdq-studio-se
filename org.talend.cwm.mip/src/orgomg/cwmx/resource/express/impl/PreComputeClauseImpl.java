@@ -103,7 +103,7 @@ public class PreComputeClauseImpl extends ModelElementImpl implements PreCompute
      * @generated
      */
     public AggMapComponent getAggMapComponent() {
-        if (eContainerFeatureID != ExpressPackage.PRE_COMPUTE_CLAUSE__AGG_MAP_COMPONENT) return null;
+        if (eContainerFeatureID() != ExpressPackage.PRE_COMPUTE_CLAUSE__AGG_MAP_COMPONENT) return null;
         return (AggMapComponent)eContainer();
     }
 
@@ -123,7 +123,7 @@ public class PreComputeClauseImpl extends ModelElementImpl implements PreCompute
      * @generated
      */
     public void setAggMapComponent(AggMapComponent newAggMapComponent) {
-        if (newAggMapComponent != eInternalContainer() || (eContainerFeatureID != ExpressPackage.PRE_COMPUTE_CLAUSE__AGG_MAP_COMPONENT && newAggMapComponent != null)) {
+        if (newAggMapComponent != eInternalContainer() || (eContainerFeatureID() != ExpressPackage.PRE_COMPUTE_CLAUSE__AGG_MAP_COMPONENT && newAggMapComponent != null)) {
             if (EcoreUtil.isAncestor(this, newAggMapComponent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -175,7 +175,7 @@ public class PreComputeClauseImpl extends ModelElementImpl implements PreCompute
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ExpressPackage.PRE_COMPUTE_CLAUSE__AGG_MAP_COMPONENT:
                 return eInternalContainer().eInverseRemove(this, ExpressPackage.AGG_MAP_COMPONENT__COMPUTE_CLAUSE, AggMapComponent.class, msgs);
         }

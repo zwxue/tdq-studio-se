@@ -295,7 +295,7 @@ public class DimensionImpl extends ClassImpl implements Dimension {
      * @generated
      */
     public Schema getSchema() {
-        if (eContainerFeatureID != OlapPackage.DIMENSION__SCHEMA) return null;
+        if (eContainerFeatureID() != OlapPackage.DIMENSION__SCHEMA) return null;
         return (Schema)eContainer();
     }
 
@@ -315,7 +315,7 @@ public class DimensionImpl extends ClassImpl implements Dimension {
      * @generated
      */
     public void setSchema(Schema newSchema) {
-        if (newSchema != eInternalContainer() || (eContainerFeatureID != OlapPackage.DIMENSION__SCHEMA && newSchema != null)) {
+        if (newSchema != eInternalContainer() || (eContainerFeatureID() != OlapPackage.DIMENSION__SCHEMA && newSchema != null)) {
             if (EcoreUtil.isAncestor(this, newSchema))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -386,7 +386,7 @@ public class DimensionImpl extends ClassImpl implements Dimension {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.DIMENSION__SCHEMA:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.SCHEMA__DIMENSION, Schema.class, msgs);
         }
@@ -402,9 +402,9 @@ public class DimensionImpl extends ClassImpl implements Dimension {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case OlapPackage.DIMENSION__IS_TIME:
-                return isIsTime() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsTime();
             case OlapPackage.DIMENSION__IS_MEASURE:
-                return isIsMeasure() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsMeasure();
             case OlapPackage.DIMENSION__MEMBER_SELECTION:
                 return getMemberSelection();
             case OlapPackage.DIMENSION__CUBE_DIMENSION_ASSOCIATION:
@@ -430,10 +430,10 @@ public class DimensionImpl extends ClassImpl implements Dimension {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case OlapPackage.DIMENSION__IS_TIME:
-                setIsTime(((Boolean)newValue).booleanValue());
+                setIsTime((Boolean)newValue);
                 return;
             case OlapPackage.DIMENSION__IS_MEASURE:
-                setIsMeasure(((Boolean)newValue).booleanValue());
+                setIsMeasure((Boolean)newValue);
                 return;
             case OlapPackage.DIMENSION__MEMBER_SELECTION:
                 getMemberSelection().clear();

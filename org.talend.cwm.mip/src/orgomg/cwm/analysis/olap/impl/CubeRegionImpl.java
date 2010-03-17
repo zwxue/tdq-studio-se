@@ -175,7 +175,7 @@ public class CubeRegionImpl extends ClassImpl implements CubeRegion {
      * @generated
      */
     public Cube getCube() {
-        if (eContainerFeatureID != OlapPackage.CUBE_REGION__CUBE) return null;
+        if (eContainerFeatureID() != OlapPackage.CUBE_REGION__CUBE) return null;
         return (Cube)eContainer();
     }
 
@@ -195,7 +195,7 @@ public class CubeRegionImpl extends ClassImpl implements CubeRegion {
      * @generated
      */
     public void setCube(Cube newCube) {
-        if (newCube != eInternalContainer() || (eContainerFeatureID != OlapPackage.CUBE_REGION__CUBE && newCube != null)) {
+        if (newCube != eInternalContainer() || (eContainerFeatureID() != OlapPackage.CUBE_REGION__CUBE && newCube != null)) {
             if (EcoreUtil.isAncestor(this, newCube))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -280,7 +280,7 @@ public class CubeRegionImpl extends ClassImpl implements CubeRegion {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.CUBE_REGION__CUBE:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.CUBE__CUBE_REGION, Cube.class, msgs);
         }
@@ -296,9 +296,9 @@ public class CubeRegionImpl extends ClassImpl implements CubeRegion {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case OlapPackage.CUBE_REGION__IS_READ_ONLY:
-                return isIsReadOnly() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsReadOnly();
             case OlapPackage.CUBE_REGION__IS_FULLY_REALIZED:
-                return isIsFullyRealized() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsFullyRealized();
             case OlapPackage.CUBE_REGION__CUBE:
                 return getCube();
             case OlapPackage.CUBE_REGION__MEMBER_SELECTION_GROUP:
@@ -319,10 +319,10 @@ public class CubeRegionImpl extends ClassImpl implements CubeRegion {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case OlapPackage.CUBE_REGION__IS_READ_ONLY:
-                setIsReadOnly(((Boolean)newValue).booleanValue());
+                setIsReadOnly((Boolean)newValue);
                 return;
             case OlapPackage.CUBE_REGION__IS_FULLY_REALIZED:
-                setIsFullyRealized(((Boolean)newValue).booleanValue());
+                setIsFullyRealized((Boolean)newValue);
                 return;
             case OlapPackage.CUBE_REGION__CUBE:
                 setCube((Cube)newValue);

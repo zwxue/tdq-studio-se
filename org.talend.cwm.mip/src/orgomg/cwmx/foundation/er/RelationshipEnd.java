@@ -16,7 +16,7 @@ import orgomg.cwm.objectmodel.relationships.AssociationEnd;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * The RelationshipEnd class extends CWM�s AssociationEnd class to permit the definition of separate delete, update, and insert rules on each end of a Relationship.
+ * The RelationshipEnd class extends CWM?s AssociationEnd class to permit the definition of separate delete, update, and insert rules on each end of a Relationship.
  * 
  * An ER model Relationship instance owns two or more RelationshipEnds via an inherited CWM association between the Association and AssociationEnd classes.
  * <!-- end-model-doc -->

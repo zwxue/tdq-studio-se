@@ -228,9 +228,9 @@ public class NumericAttributeImpl extends MiningAttributeImpl implements Numeric
             case DataminingPackage.NUMERIC_ATTRIBUTE__UPPER_BOUND:
                 return getUpperBound();
             case DataminingPackage.NUMERIC_ATTRIBUTE__IS_CYCLIC:
-                return isIsCyclic() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsCyclic();
             case DataminingPackage.NUMERIC_ATTRIBUTE__IS_DISCRETE:
-                return isIsDiscrete() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsDiscrete();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -250,10 +250,10 @@ public class NumericAttributeImpl extends MiningAttributeImpl implements Numeric
                 setUpperBound((String)newValue);
                 return;
             case DataminingPackage.NUMERIC_ATTRIBUTE__IS_CYCLIC:
-                setIsCyclic(((Boolean)newValue).booleanValue());
+                setIsCyclic((Boolean)newValue);
                 return;
             case DataminingPackage.NUMERIC_ATTRIBUTE__IS_DISCRETE:
-                setIsDiscrete(((Boolean)newValue).booleanValue());
+                setIsDiscrete((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

@@ -373,11 +373,11 @@ public class SQLDistinctTypeImpl extends SQLDataTypeImpl implements SQLDistinctT
                 if (resolve) return getType();
                 return basicGetType();
             case RelationalPackage.SQL_DISTINCT_TYPE__LENGTH:
-                return new Long(getLength());
+                return getLength();
             case RelationalPackage.SQL_DISTINCT_TYPE__PRECISION:
-                return new Long(getPrecision());
+                return getPrecision();
             case RelationalPackage.SQL_DISTINCT_TYPE__SCALE:
-                return new Long(getScale());
+                return getScale();
             case RelationalPackage.SQL_DISTINCT_TYPE__SQL_SIMPLE_TYPE:
                 if (resolve) return getSqlSimpleType();
                 return basicGetSqlSimpleType();
@@ -397,13 +397,13 @@ public class SQLDistinctTypeImpl extends SQLDataTypeImpl implements SQLDistinctT
                 setType((Classifier)newValue);
                 return;
             case RelationalPackage.SQL_DISTINCT_TYPE__LENGTH:
-                setLength(((Long)newValue).longValue());
+                setLength((Long)newValue);
                 return;
             case RelationalPackage.SQL_DISTINCT_TYPE__PRECISION:
-                setPrecision(((Long)newValue).longValue());
+                setPrecision((Long)newValue);
                 return;
             case RelationalPackage.SQL_DISTINCT_TYPE__SCALE:
-                setScale(((Long)newValue).longValue());
+                setScale((Long)newValue);
                 return;
             case RelationalPackage.SQL_DISTINCT_TYPE__SQL_SIMPLE_TYPE:
                 setSqlSimpleType((SQLSimpleType)newValue);

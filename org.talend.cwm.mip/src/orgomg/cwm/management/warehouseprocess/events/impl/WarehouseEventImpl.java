@@ -63,7 +63,7 @@ public abstract class WarehouseEventImpl extends EventImpl implements WarehouseE
      * @generated
      */
     public WarehouseProcess getWarehouseProcess() {
-        if (eContainerFeatureID != EventsPackage.WAREHOUSE_EVENT__WAREHOUSE_PROCESS) return null;
+        if (eContainerFeatureID() != EventsPackage.WAREHOUSE_EVENT__WAREHOUSE_PROCESS) return null;
         return (WarehouseProcess)eContainer();
     }
 
@@ -83,7 +83,7 @@ public abstract class WarehouseEventImpl extends EventImpl implements WarehouseE
      * @generated
      */
     public void setWarehouseProcess(WarehouseProcess newWarehouseProcess) {
-        if (newWarehouseProcess != eInternalContainer() || (eContainerFeatureID != EventsPackage.WAREHOUSE_EVENT__WAREHOUSE_PROCESS && newWarehouseProcess != null)) {
+        if (newWarehouseProcess != eInternalContainer() || (eContainerFeatureID() != EventsPackage.WAREHOUSE_EVENT__WAREHOUSE_PROCESS && newWarehouseProcess != null)) {
             if (EcoreUtil.isAncestor(this, newWarehouseProcess))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -135,7 +135,7 @@ public abstract class WarehouseEventImpl extends EventImpl implements WarehouseE
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case EventsPackage.WAREHOUSE_EVENT__WAREHOUSE_PROCESS:
                 return eInternalContainer().eInverseRemove(this, WarehouseprocessPackage.WAREHOUSE_PROCESS__WAREHOUSE_EVENT, WarehouseProcess.class, msgs);
         }

@@ -186,9 +186,9 @@ public class SQLIndexImpl extends IndexImpl implements SQLIndex {
             case RelationalPackage.SQL_INDEX__FILTER_CONDITION:
                 return getFilterCondition();
             case RelationalPackage.SQL_INDEX__IS_NULLABLE:
-                return isIsNullable() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsNullable();
             case RelationalPackage.SQL_INDEX__AUTO_UPDATE:
-                return isAutoUpdate() ? Boolean.TRUE : Boolean.FALSE;
+                return isAutoUpdate();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -205,10 +205,10 @@ public class SQLIndexImpl extends IndexImpl implements SQLIndex {
                 setFilterCondition((String)newValue);
                 return;
             case RelationalPackage.SQL_INDEX__IS_NULLABLE:
-                setIsNullable(((Boolean)newValue).booleanValue());
+                setIsNullable((Boolean)newValue);
                 return;
             case RelationalPackage.SQL_INDEX__AUTO_UPDATE:
-                setAutoUpdate(((Boolean)newValue).booleanValue());
+                setAutoUpdate((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

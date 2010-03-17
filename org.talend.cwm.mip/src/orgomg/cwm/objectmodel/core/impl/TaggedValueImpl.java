@@ -145,7 +145,7 @@ public class TaggedValueImpl extends ElementImpl implements TaggedValue {
      * @generated
      */
     public Stereotype getStereotype() {
-        if (eContainerFeatureID != CorePackage.TAGGED_VALUE__STEREOTYPE) return null;
+        if (eContainerFeatureID() != CorePackage.TAGGED_VALUE__STEREOTYPE) return null;
         return (Stereotype)eContainer();
     }
 
@@ -165,7 +165,7 @@ public class TaggedValueImpl extends ElementImpl implements TaggedValue {
      * @generated
      */
     public void setStereotype(Stereotype newStereotype) {
-        if (newStereotype != eInternalContainer() || (eContainerFeatureID != CorePackage.TAGGED_VALUE__STEREOTYPE && newStereotype != null)) {
+        if (newStereotype != eInternalContainer() || (eContainerFeatureID() != CorePackage.TAGGED_VALUE__STEREOTYPE && newStereotype != null)) {
             if (EcoreUtil.isAncestor(this, newStereotype))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -186,7 +186,7 @@ public class TaggedValueImpl extends ElementImpl implements TaggedValue {
      * @generated
      */
     public ModelElement getModelElement() {
-        if (eContainerFeatureID != CorePackage.TAGGED_VALUE__MODEL_ELEMENT) return null;
+        if (eContainerFeatureID() != CorePackage.TAGGED_VALUE__MODEL_ELEMENT) return null;
         return (ModelElement)eContainer();
     }
 
@@ -206,7 +206,7 @@ public class TaggedValueImpl extends ElementImpl implements TaggedValue {
      * @generated
      */
     public void setModelElement(ModelElement newModelElement) {
-        if (newModelElement != eInternalContainer() || (eContainerFeatureID != CorePackage.TAGGED_VALUE__MODEL_ELEMENT && newModelElement != null)) {
+        if (newModelElement != eInternalContainer() || (eContainerFeatureID() != CorePackage.TAGGED_VALUE__MODEL_ELEMENT && newModelElement != null)) {
             if (EcoreUtil.isAncestor(this, newModelElement))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -264,7 +264,7 @@ public class TaggedValueImpl extends ElementImpl implements TaggedValue {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case CorePackage.TAGGED_VALUE__STEREOTYPE:
                 return eInternalContainer().eInverseRemove(this, CorePackage.STEREOTYPE__REQUIRED_TAG, Stereotype.class, msgs);
             case CorePackage.TAGGED_VALUE__MODEL_ELEMENT:

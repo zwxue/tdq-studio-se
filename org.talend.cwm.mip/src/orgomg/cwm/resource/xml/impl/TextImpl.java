@@ -61,7 +61,7 @@ public class TextImpl extends AttributeImpl implements Text {
      * @generated
      */
     public MixedContent getOwnerContent() {
-        if (eContainerFeatureID != XmlPackage.TEXT__OWNER_CONTENT) return null;
+        if (eContainerFeatureID() != XmlPackage.TEXT__OWNER_CONTENT) return null;
         return (MixedContent)eContainer();
     }
 
@@ -81,7 +81,7 @@ public class TextImpl extends AttributeImpl implements Text {
      * @generated
      */
     public void setOwnerContent(MixedContent newOwnerContent) {
-        if (newOwnerContent != eInternalContainer() || (eContainerFeatureID != XmlPackage.TEXT__OWNER_CONTENT && newOwnerContent != null)) {
+        if (newOwnerContent != eInternalContainer() || (eContainerFeatureID() != XmlPackage.TEXT__OWNER_CONTENT && newOwnerContent != null)) {
             if (EcoreUtil.isAncestor(this, newOwnerContent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -133,7 +133,7 @@ public class TextImpl extends AttributeImpl implements Text {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case XmlPackage.TEXT__OWNER_CONTENT:
                 return eInternalContainer().eInverseRemove(this, XmlPackage.MIXED_CONTENT__TEXT, MixedContent.class, msgs);
         }

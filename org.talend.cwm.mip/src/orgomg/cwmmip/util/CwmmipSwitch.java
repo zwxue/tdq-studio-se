@@ -95,14 +95,14 @@ public class CwmmipSwitch<T> {
                 T result = caseUnitOfInterchange(unitOfInterchange);
                 if (result == null) result = caseNamespace(unitOfInterchange);
                 if (result == null) result = caseModelElement(unitOfInterchange);
-                if (result == null) result = caseElement_1(unitOfInterchange);
+                if (result == null) result = caseCore_Element(unitOfInterchange);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
             case CwmmipPackage.INTERCHANGE_PATTERN: {
                 InterchangePattern interchangePattern = (InterchangePattern)theEObject;
                 T result = caseInterchangePattern(interchangePattern);
-                if (result == null) result = caseElement_1(interchangePattern);
+                if (result == null) result = caseCore_Element(interchangePattern);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -111,14 +111,14 @@ public class CwmmipSwitch<T> {
                 T result = caseModeledSemanticContext(modeledSemanticContext);
                 if (result == null) result = caseSemanticContext(modeledSemanticContext);
                 if (result == null) result = caseProjection(modeledSemanticContext);
-                if (result == null) result = caseElement_1(modeledSemanticContext);
+                if (result == null) result = caseCore_Element(modeledSemanticContext);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
             case CwmmipPackage.PROJECTION: {
                 Projection projection = (Projection)theEObject;
                 T result = caseProjection(projection);
-                if (result == null) result = caseElement_1(projection);
+                if (result == null) result = caseCore_Element(projection);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -126,7 +126,7 @@ public class CwmmipSwitch<T> {
                 SemanticContext semanticContext = (SemanticContext)theEObject;
                 T result = caseSemanticContext(semanticContext);
                 if (result == null) result = caseProjection(semanticContext);
-                if (result == null) result = caseElement_1(semanticContext);
+                if (result == null) result = caseCore_Element(semanticContext);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -140,14 +140,14 @@ public class CwmmipSwitch<T> {
                 GraphSubset graphSubset = (GraphSubset)theEObject;
                 T result = caseGraphSubset(graphSubset);
                 if (result == null) result = caseProjection(graphSubset);
-                if (result == null) result = caseElement_1(graphSubset);
+                if (result == null) result = caseCore_Element(graphSubset);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
             case CwmmipPackage.PATTERN_CONSTRAINT: {
                 PatternConstraint patternConstraint = (PatternConstraint)theEObject;
                 T result = casePatternConstraint(patternConstraint);
-                if (result == null) result = caseElement_1(patternConstraint);
+                if (result == null) result = caseCore_Element(patternConstraint);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -156,7 +156,7 @@ public class CwmmipSwitch<T> {
                 T result = caseModeledGraphSubset(modeledGraphSubset);
                 if (result == null) result = caseGraphSubset(modeledGraphSubset);
                 if (result == null) result = caseProjection(modeledGraphSubset);
-                if (result == null) result = caseElement_1(modeledGraphSubset);
+                if (result == null) result = caseCore_Element(modeledGraphSubset);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -164,7 +164,7 @@ public class CwmmipSwitch<T> {
                 Restriction restriction = (Restriction)theEObject;
                 T result = caseRestriction(restriction);
                 if (result == null) result = casePatternConstraint(restriction);
-                if (result == null) result = caseElement_1(restriction);
+                if (result == null) result = caseCore_Element(restriction);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -172,7 +172,7 @@ public class CwmmipSwitch<T> {
                 BindingParameter bindingParameter = (BindingParameter)theEObject;
                 T result = caseBindingParameter(bindingParameter);
                 if (result == null) result = casePatternConstraint(bindingParameter);
-                if (result == null) result = caseElement_1(bindingParameter);
+                if (result == null) result = caseCore_Element(bindingParameter);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -356,7 +356,7 @@ public class CwmmipSwitch<T> {
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseElement_1(orgomg.cwm.objectmodel.core.Element object) {
+    public T caseCore_Element(orgomg.cwm.objectmodel.core.Element object) {
         return null;
     }
 

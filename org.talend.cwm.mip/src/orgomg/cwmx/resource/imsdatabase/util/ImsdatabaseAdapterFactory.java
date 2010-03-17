@@ -216,8 +216,8 @@ public class ImsdatabaseAdapterFactory extends AdapterFactoryImpl {
                 return createAttributeAdapter();
             }
             @Override
-            public Adapter caseField_1(orgomg.cwm.resource.record.Field object) {
-                return createField_1Adapter();
+            public Adapter caseRecord_Field(orgomg.cwm.resource.record.Field object) {
+                return createRecord_FieldAdapter();
             }
             @Override
             public Adapter caseFixedOffsetField(FixedOffsetField object) {
@@ -715,7 +715,7 @@ public class ImsdatabaseAdapterFactory extends AdapterFactoryImpl {
      * @see orgomg.cwm.resource.record.Field
      * @generated
      */
-    public Adapter createField_1Adapter() {
+    public Adapter createRecord_FieldAdapter() {
         return null;
     }
 

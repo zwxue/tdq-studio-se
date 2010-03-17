@@ -188,7 +188,7 @@ public class VariableImpl extends DimensionedObjectImpl implements Variable {
             case ExpressPackage.VARIABLE__PAGE_SPACE:
                 return getPageSpace();
             case ExpressPackage.VARIABLE__WIDTH:
-                return new Long(getWidth());
+                return getWidth();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -208,7 +208,7 @@ public class VariableImpl extends DimensionedObjectImpl implements Variable {
                 setPageSpace((String)newValue);
                 return;
             case ExpressPackage.VARIABLE__WIDTH:
-                setWidth(((Long)newValue).longValue());
+                setWidth((Long)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

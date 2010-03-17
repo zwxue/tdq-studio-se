@@ -347,11 +347,11 @@ public class RemapImpl extends RecordDefImpl implements Remap {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DmsiiPackage.REMAP__IS_REQUIRED_ALL:
-                return isIsRequiredAll() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsRequiredAll();
             case DmsiiPackage.REMAP__IS_READ_ONLY_ALL:
-                return isIsReadOnlyAll() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsReadOnlyAll();
             case DmsiiPackage.REMAP__IS_GIVING_EXCEPTION:
-                return isIsGivingException() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGivingException();
             case DmsiiPackage.REMAP__SELECT_CONDITION:
                 return getSelectCondition();
             case DmsiiPackage.REMAP__STRUCTURE:
@@ -370,13 +370,13 @@ public class RemapImpl extends RecordDefImpl implements Remap {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DmsiiPackage.REMAP__IS_REQUIRED_ALL:
-                setIsRequiredAll(((Boolean)newValue).booleanValue());
+                setIsRequiredAll((Boolean)newValue);
                 return;
             case DmsiiPackage.REMAP__IS_READ_ONLY_ALL:
-                setIsReadOnlyAll(((Boolean)newValue).booleanValue());
+                setIsReadOnlyAll((Boolean)newValue);
                 return;
             case DmsiiPackage.REMAP__IS_GIVING_EXCEPTION:
-                setIsGivingException(((Boolean)newValue).booleanValue());
+                setIsGivingException((Boolean)newValue);
                 return;
             case DmsiiPackage.REMAP__SELECT_CONDITION:
                 setSelectCondition((Expression)newValue);

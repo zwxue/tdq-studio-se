@@ -40,7 +40,7 @@ public interface DataSet extends RecordDef {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * If isGlobal = True, the DataSet instance represents the database�s global data record. There can be at most one DataSet instance with isGlobal = True for a given database, but multiple with isGlobal = False.
+     * If isGlobal = True, the DataSet instance represents the database?s global data record. There can be at most one DataSet instance with isGlobal = True for a given database, but multiple with isGlobal = False.
      * 
      * <!-- end-model-doc -->
      * @return the value of the '<em>Is Global</em>' attribute.

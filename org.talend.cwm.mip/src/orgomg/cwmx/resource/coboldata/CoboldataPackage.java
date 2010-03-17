@@ -30,7 +30,7 @@ import orgomg.cwm.resource.record.RecordPackage;
  * </ul>
  * <!-- end-user-doc -->
  * <!-- begin-model-doc -->
- * The concepts and ideas implicit in the definition of the COBOL language�s DATA DIVISION were one of the earliest (if not the first) formalizations of the ubiquitous record model. A COBOL program contains much more than just record descriptions.
+ * The concepts and ideas implicit in the definition of the COBOL language?s DATA DIVISION were one of the earliest (if not the first) formalizations of the ubiquitous record model. A COBOL program contains much more than just record descriptions.
  * 
  * However, because neither CWM nor UML attempt to describe programming languages directly, only the DATA DIVISION is described here. The model presented here is  compliant to the COBOL 85 language standard [COBOL].
  * 

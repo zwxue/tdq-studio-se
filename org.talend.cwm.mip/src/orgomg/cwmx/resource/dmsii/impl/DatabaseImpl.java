@@ -313,7 +313,7 @@ public class DatabaseImpl extends StructuralFeatureImpl implements Database {
             case DmsiiPackage.DATABASE__DATA_MANAGER:
                 return getDataManager();
             case DmsiiPackage.DATABASE__IS_LOGICAL:
-                return isIsLogical() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsLogical();
             case DmsiiPackage.DATABASE__GUARD_FILE:
                 return getGuardFile();
             case DmsiiPackage.DATABASE__SOURCE:
@@ -344,7 +344,7 @@ public class DatabaseImpl extends StructuralFeatureImpl implements Database {
                 getDataManager().addAll((Collection<? extends DataManager>)newValue);
                 return;
             case DmsiiPackage.DATABASE__IS_LOGICAL:
-                setIsLogical(((Boolean)newValue).booleanValue());
+                setIsLogical((Boolean)newValue);
                 return;
             case DmsiiPackage.DATABASE__GUARD_FILE:
                 setGuardFile((String)newValue);

@@ -34,6 +34,9 @@
             <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
               <details key="documentation" value="An identifier for the ModelElement within its containing Namespace."/>
             </eAnnotations>
+            <eAnnotations source="htttp://talend.org/UiConstraints">
+              <details key="string.max.size" value="200"/>
+            </eAnnotations>
           </eStructuralFeatures>
           <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" eType="#//cwm/objectmodel/core/VisibilityKind">
             <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -80,6 +83,10 @@
               eType="#//cwm/objectmodel/core/TaggedValue" containment="true" eOpposite="#//cwm/objectmodel/core/TaggedValue/modelElement">
             <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
               <details key="documentation" value="Identifies the set of TaggedValue instances that extend a ModelElement."/>
+            </eAnnotations>
+            <eAnnotations source="htttp://talend.org/UiConstraints">
+              <details key="string.max.size.Description" value="1000"/>
+              <details key="string.max.size.Purpose" value="1000"/>
             </eAnnotations>
           </eStructuralFeatures>
           <eStructuralFeatures xsi:type="ecore:EReference" name="document" upperBound="-1"

@@ -18,7 +18,7 @@ import orgomg.cwm.objectmodel.core.ProcedureExpression;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * Segment represents a multidimensional structure. A Segment is defined by a collection of unique Dimensions from the InformationSet. Each unique combination of members in the Cartesian product of the Segment�s Dimensions identifies precisely one data cell within the multidimensional structure.
+ * Segment represents a multidimensional structure. A Segment is defined by a collection of unique Dimensions from the InformationSet. Each unique combination of members in the Cartesian product of the Segment?s Dimensions identifies precisely one data cell within the multidimensional structure.
  * 
  * Note that a logical segment is "defined" by a collection of unique Dimensions from the InformationSet, and is "described" by a collection of one or more Segment Regions.
  * <!-- end-model-doc -->

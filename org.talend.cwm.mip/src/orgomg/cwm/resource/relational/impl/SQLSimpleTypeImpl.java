@@ -370,17 +370,17 @@ public class SQLSimpleTypeImpl extends SQLDataTypeImpl implements SQLSimpleType 
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RelationalPackage.SQL_SIMPLE_TYPE__CHARACTER_MAXIMUM_LENGTH:
-                return new Long(getCharacterMaximumLength());
+                return getCharacterMaximumLength();
             case RelationalPackage.SQL_SIMPLE_TYPE__CHARACTER_OCTET_LENGTH:
-                return new Long(getCharacterOctetLength());
+                return getCharacterOctetLength();
             case RelationalPackage.SQL_SIMPLE_TYPE__NUMERIC_PRECISION:
-                return new Long(getNumericPrecision());
+                return getNumericPrecision();
             case RelationalPackage.SQL_SIMPLE_TYPE__NUMERIC_PRECISION_RADIX:
-                return new Long(getNumericPrecisionRadix());
+                return getNumericPrecisionRadix();
             case RelationalPackage.SQL_SIMPLE_TYPE__NUMERIC_SCALE:
-                return new Long(getNumericScale());
+                return getNumericScale();
             case RelationalPackage.SQL_SIMPLE_TYPE__DATE_TIME_PRECISION:
-                return new Long(getDateTimePrecision());
+                return getDateTimePrecision();
             case RelationalPackage.SQL_SIMPLE_TYPE__SQL_DISTINCT_TYPE:
                 return getSqlDistinctType();
         }
@@ -397,22 +397,22 @@ public class SQLSimpleTypeImpl extends SQLDataTypeImpl implements SQLSimpleType 
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RelationalPackage.SQL_SIMPLE_TYPE__CHARACTER_MAXIMUM_LENGTH:
-                setCharacterMaximumLength(((Long)newValue).longValue());
+                setCharacterMaximumLength((Long)newValue);
                 return;
             case RelationalPackage.SQL_SIMPLE_TYPE__CHARACTER_OCTET_LENGTH:
-                setCharacterOctetLength(((Long)newValue).longValue());
+                setCharacterOctetLength((Long)newValue);
                 return;
             case RelationalPackage.SQL_SIMPLE_TYPE__NUMERIC_PRECISION:
-                setNumericPrecision(((Long)newValue).longValue());
+                setNumericPrecision((Long)newValue);
                 return;
             case RelationalPackage.SQL_SIMPLE_TYPE__NUMERIC_PRECISION_RADIX:
-                setNumericPrecisionRadix(((Long)newValue).longValue());
+                setNumericPrecisionRadix((Long)newValue);
                 return;
             case RelationalPackage.SQL_SIMPLE_TYPE__NUMERIC_SCALE:
-                setNumericScale(((Long)newValue).longValue());
+                setNumericScale((Long)newValue);
                 return;
             case RelationalPackage.SQL_SIMPLE_TYPE__DATE_TIME_PRECISION:
-                setDateTimePrecision(((Long)newValue).longValue());
+                setDateTimePrecision((Long)newValue);
                 return;
             case RelationalPackage.SQL_SIMPLE_TYPE__SQL_DISTINCT_TYPE:
                 getSqlDistinctType().clear();

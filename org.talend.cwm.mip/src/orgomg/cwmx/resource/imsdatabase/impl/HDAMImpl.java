@@ -226,11 +226,11 @@ public class HDAMImpl extends AccessMethodImpl implements HDAM {
             case ImsdatabasePackage.HDAM__RM_NAME:
                 return getRmName();
             case ImsdatabasePackage.HDAM__RELATIVE_BLOCK_NUMBER:
-                return new Long(getRelativeBlockNumber());
+                return getRelativeBlockNumber();
             case ImsdatabasePackage.HDAM__ROOT_ANCHOR_POINTS:
-                return new Long(getRootAnchorPoints());
+                return getRootAnchorPoints();
             case ImsdatabasePackage.HDAM__ROOT_MAX_BYTES:
-                return new Long(getRootMaxBytes());
+                return getRootMaxBytes();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -247,13 +247,13 @@ public class HDAMImpl extends AccessMethodImpl implements HDAM {
                 setRmName((String)newValue);
                 return;
             case ImsdatabasePackage.HDAM__RELATIVE_BLOCK_NUMBER:
-                setRelativeBlockNumber(((Long)newValue).longValue());
+                setRelativeBlockNumber((Long)newValue);
                 return;
             case ImsdatabasePackage.HDAM__ROOT_ANCHOR_POINTS:
-                setRootAnchorPoints(((Long)newValue).longValue());
+                setRootAnchorPoints((Long)newValue);
                 return;
             case ImsdatabasePackage.HDAM__ROOT_MAX_BYTES:
-                setRootMaxBytes(((Long)newValue).longValue());
+                setRootMaxBytes((Long)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

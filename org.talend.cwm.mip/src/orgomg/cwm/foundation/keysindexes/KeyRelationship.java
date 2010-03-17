@@ -40,7 +40,7 @@ public interface KeyRelationship extends ModelElement {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Identifies the StructuralFeature instances that make up the unique key. The ordered constraint is used to represent the sequence of StructuralFeature instances that make up the UniqueKey instance�s key. In the relational model case, these StructuralFeature instances identify the columns that make up a table�s primary key.
+     * Identifies the StructuralFeature instances that make up the unique key. The ordered constraint is used to represent the sequence of StructuralFeature instances that make up the UniqueKey instance?s key. In the relational model case, these StructuralFeature instances identify the columns that make up a table?s primary key.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Feature</em>' reference list.
      * @see orgomg.cwm.foundation.keysindexes.KeysindexesPackage#getKeyRelationship_Feature()

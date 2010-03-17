@@ -175,7 +175,7 @@ public class SenSegmentImpl extends RecordDefImpl implements SenSegment {
      * @generated
      */
     public PCB getPcb() {
-        if (eContainerFeatureID != ImsdatabasePackage.SEN_SEGMENT__PCB) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.SEN_SEGMENT__PCB) return null;
         return (PCB)eContainer();
     }
 
@@ -195,7 +195,7 @@ public class SenSegmentImpl extends RecordDefImpl implements SenSegment {
      * @generated
      */
     public void setPcb(PCB newPcb) {
-        if (newPcb != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.SEN_SEGMENT__PCB && newPcb != null)) {
+        if (newPcb != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.SEN_SEGMENT__PCB && newPcb != null)) {
             if (EcoreUtil.isAncestor(this, newPcb))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -330,7 +330,7 @@ public class SenSegmentImpl extends RecordDefImpl implements SenSegment {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ImsdatabasePackage.SEN_SEGMENT__PCB:
                 return eInternalContainer().eInverseRemove(this, ImsdatabasePackage.PCB__SEN_SEGMENT, PCB.class, msgs);
         }

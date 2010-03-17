@@ -140,7 +140,7 @@ public class ClusteringSettingsImpl extends MiningSettingsImpl implements Cluste
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DataminingPackage.CLUSTERING_SETTINGS__MAX_NUMBER_OF_CLUSTERS:
-                return new Long(getMaxNumberOfClusters());
+                return getMaxNumberOfClusters();
             case DataminingPackage.CLUSTERING_SETTINGS__CLUSTER_ID_ATTRIBUTE_NAME:
                 return getClusterIdAttributeName();
         }
@@ -156,7 +156,7 @@ public class ClusteringSettingsImpl extends MiningSettingsImpl implements Cluste
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DataminingPackage.CLUSTERING_SETTINGS__MAX_NUMBER_OF_CLUSTERS:
-                setMaxNumberOfClusters(((Long)newValue).longValue());
+                setMaxNumberOfClusters((Long)newValue);
                 return;
             case DataminingPackage.CLUSTERING_SETTINGS__CLUSTER_ID_ATTRIBUTE_NAME:
                 setClusterIdAttributeName((String)newValue);

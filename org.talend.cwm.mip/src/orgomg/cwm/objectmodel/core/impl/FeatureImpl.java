@@ -148,7 +148,7 @@ public abstract class FeatureImpl extends ModelElementImpl implements Feature {
      * @generated
      */
     public Classifier getOwner() {
-        if (eContainerFeatureID != CorePackage.FEATURE__OWNER) return null;
+        if (eContainerFeatureID() != CorePackage.FEATURE__OWNER) return null;
         return (Classifier)eContainer();
     }
 
@@ -168,7 +168,7 @@ public abstract class FeatureImpl extends ModelElementImpl implements Feature {
      * @generated
      */
     public void setOwner(Classifier newOwner) {
-        if (newOwner != eInternalContainer() || (eContainerFeatureID != CorePackage.FEATURE__OWNER && newOwner != null)) {
+        if (newOwner != eInternalContainer() || (eContainerFeatureID() != CorePackage.FEATURE__OWNER && newOwner != null)) {
             if (EcoreUtil.isAncestor(this, newOwner))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -269,7 +269,7 @@ public abstract class FeatureImpl extends ModelElementImpl implements Feature {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case CorePackage.FEATURE__OWNER:
                 return eInternalContainer().eInverseRemove(this, CorePackage.CLASSIFIER__FEATURE, Classifier.class, msgs);
         }

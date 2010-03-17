@@ -17,7 +17,7 @@ package orgomg.cwm.objectmodel.relationships;
  * upon its multiplicity, connects to zero or more instances of some classifier.
  * 
  * In the metamodel, an Association is a declaration of a semantic relationship between Classifiers, such as Classes. Associations must have two, and may have more, association ends. Each end is connected to a Classifier; the same Classifier may be 
- * connected to more than one association end in the same association. (Refer to the ObjectModel�s Instance package, below, for a description of how Associations are instantiated.)
+ * connected to more than one association end in the same association. (Refer to the ObjectModel?s Instance package, below, for a description of how Associations are instantiated.)
  * 
  * Because Associations are classifiers, they own and order their association ends (which are Attributes) via the ClassifierFeature association. In addition, because Associations are Classes, they can also own more traditional StructuralFeatures such as Attributes. Consequently, they may act in a manner similar to "association classes" described by
  * some other object models.

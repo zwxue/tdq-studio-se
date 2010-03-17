@@ -62,7 +62,7 @@ public interface Conjoint extends Dimension {
      * If specified, this defines the type of page space to be allocated to data relating specific values of the Conjoint to values of its base Dimensions:
      * 
      *     OWNSPACE specifies that the data will be stored in private page space.
-     *     SHAREDSPACE specifies that the data will be stored in the database�s global page space.
+     *     SHAREDSPACE specifies that the data will be stored in the database?s global page space.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Page Space</em>' attribute.
      * @see #setPageSpace(String)

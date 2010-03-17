@@ -35,7 +35,7 @@ public interface Method extends BehavioralFeature {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * A specification of the Method in some appropriate form (such as a programming language). The exact form of a Method�s specification and knowledge of the language in which it is described is outside the scope of the CWM.
+     * A specification of the Method in some appropriate form (such as a programming language). The exact form of a Method?s specification and knowledge of the language in which it is described is outside the scope of the CWM.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Body</em>' containment reference.
      * @see #setBody(ProcedureExpression)

@@ -815,23 +815,23 @@ public class PCBImpl extends RecordFileImpl implements PCB {
             case ImsdatabasePackage.PCB__PCB_TYPE:
                 return getPcbType();
             case ImsdatabasePackage.PCB__LIST:
-                return isList() ? Boolean.TRUE : Boolean.FALSE;
+                return isList();
             case ImsdatabasePackage.PCB__KEY_LENGTH:
-                return new Long(getKeyLength());
+                return getKeyLength();
             case ImsdatabasePackage.PCB__PROCESSING_OPTIONS:
                 return getProcessingOptions();
             case ImsdatabasePackage.PCB__POSITIONING:
                 return getPositioning();
             case ImsdatabasePackage.PCB__SEQUENTIAL_BUFFERING:
-                return isSequentialBuffering() ? Boolean.TRUE : Boolean.FALSE;
+                return isSequentialBuffering();
             case ImsdatabasePackage.PCB__ALTERNATE_RESPONSE:
-                return isAlternateResponse() ? Boolean.TRUE : Boolean.FALSE;
+                return isAlternateResponse();
             case ImsdatabasePackage.PCB__EXPRESS:
-                return isExpress() ? Boolean.TRUE : Boolean.FALSE;
+                return isExpress();
             case ImsdatabasePackage.PCB__MODIFY:
-                return isModify() ? Boolean.TRUE : Boolean.FALSE;
+                return isModify();
             case ImsdatabasePackage.PCB__SAME_TERMINAL:
-                return isSameTerminal() ? Boolean.TRUE : Boolean.FALSE;
+                return isSameTerminal();
             case ImsdatabasePackage.PCB__DESTINATION_TYPE:
                 return getDestinationType();
             case ImsdatabasePackage.PCB__LTERM_NAME:
@@ -863,10 +863,10 @@ public class PCBImpl extends RecordFileImpl implements PCB {
                 setPcbType((PCBType)newValue);
                 return;
             case ImsdatabasePackage.PCB__LIST:
-                setList(((Boolean)newValue).booleanValue());
+                setList((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PCB__KEY_LENGTH:
-                setKeyLength(((Long)newValue).longValue());
+                setKeyLength((Long)newValue);
                 return;
             case ImsdatabasePackage.PCB__PROCESSING_OPTIONS:
                 setProcessingOptions((String)newValue);
@@ -875,19 +875,19 @@ public class PCBImpl extends RecordFileImpl implements PCB {
                 setPositioning((PositioningType)newValue);
                 return;
             case ImsdatabasePackage.PCB__SEQUENTIAL_BUFFERING:
-                setSequentialBuffering(((Boolean)newValue).booleanValue());
+                setSequentialBuffering((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PCB__ALTERNATE_RESPONSE:
-                setAlternateResponse(((Boolean)newValue).booleanValue());
+                setAlternateResponse((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PCB__EXPRESS:
-                setExpress(((Boolean)newValue).booleanValue());
+                setExpress((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PCB__MODIFY:
-                setModify(((Boolean)newValue).booleanValue());
+                setModify((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PCB__SAME_TERMINAL:
-                setSameTerminal(((Boolean)newValue).booleanValue());
+                setSameTerminal((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PCB__DESTINATION_TYPE:
                 setDestinationType((LTermType)newValue);

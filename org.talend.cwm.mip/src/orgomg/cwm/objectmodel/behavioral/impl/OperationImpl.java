@@ -188,7 +188,7 @@ public class OperationImpl extends BehavioralFeatureImpl implements Operation {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case BehavioralPackage.OPERATION__IS_ABSTRACT:
-                return isIsAbstract() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsAbstract();
             case BehavioralPackage.OPERATION__CALL_ACTION:
                 return getCallAction();
             case BehavioralPackage.OPERATION__METHOD:
@@ -207,7 +207,7 @@ public class OperationImpl extends BehavioralFeatureImpl implements Operation {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case BehavioralPackage.OPERATION__IS_ABSTRACT:
-                setIsAbstract(((Boolean)newValue).booleanValue());
+                setIsAbstract((Boolean)newValue);
                 return;
             case BehavioralPackage.OPERATION__CALL_ACTION:
                 getCallAction().clear();

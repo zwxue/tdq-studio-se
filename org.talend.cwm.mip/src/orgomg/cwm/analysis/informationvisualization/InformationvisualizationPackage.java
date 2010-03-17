@@ -48,7 +48,7 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * 
  * Possible types of Renderings include: Screen, paper, voice, Web, HTML documents, XML/XSL, languages based on extensions to XML, SVG, visual objects, responses to keying (e.g., keying interception plus rules), etc. 
  * 
- * XSLRendering represents a useful subtype of Rendering that�s based on XSL (e.g., this subtype�s formula might contain a procedure that uses XSL to create an HTML document).
+ * XSLRendering represents a useful subtype of Rendering that?s based on XSL (e.g., this subtype?s formula might contain a procedure that uses XSL to create an HTML document).
  * 
  * Finally, RenderedObjectSet represents a simple container of both logical RenderedObjects and available Renderings.
  * 

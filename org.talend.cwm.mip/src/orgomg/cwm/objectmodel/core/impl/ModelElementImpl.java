@@ -391,7 +391,7 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
      * @generated
      */
     public Namespace getNamespace() {
-        if (eContainerFeatureID != CorePackage.MODEL_ELEMENT__NAMESPACE) return null;
+        if (eContainerFeatureID() != CorePackage.MODEL_ELEMENT__NAMESPACE) return null;
         return (Namespace)eContainer();
     }
 
@@ -411,7 +411,7 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
      * @generated
      */
     public void setNamespace(Namespace newNamespace) {
-        if (newNamespace != eInternalContainer() || (eContainerFeatureID != CorePackage.MODEL_ELEMENT__NAMESPACE && newNamespace != null)) {
+        if (newNamespace != eInternalContainer() || (eContainerFeatureID() != CorePackage.MODEL_ELEMENT__NAMESPACE && newNamespace != null)) {
             if (EcoreUtil.isAncestor(this, newNamespace))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -734,7 +734,7 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case CorePackage.MODEL_ELEMENT__NAMESPACE:
                 return eInternalContainer().eInverseRemove(this, CorePackage.NAMESPACE__OWNED_ELEMENT, Namespace.class, msgs);
         }

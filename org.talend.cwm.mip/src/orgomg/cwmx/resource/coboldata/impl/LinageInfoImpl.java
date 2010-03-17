@@ -218,7 +218,7 @@ public class LinageInfoImpl extends ModelElementImpl implements LinageInfo {
      * @generated
      */
     public COBOLFD getCobolFD() {
-        if (eContainerFeatureID != CoboldataPackage.LINAGE_INFO__COBOL_FD) return null;
+        if (eContainerFeatureID() != CoboldataPackage.LINAGE_INFO__COBOL_FD) return null;
         return (COBOLFD)eContainer();
     }
 
@@ -238,7 +238,7 @@ public class LinageInfoImpl extends ModelElementImpl implements LinageInfo {
      * @generated
      */
     public void setCobolFD(COBOLFD newCobolFD) {
-        if (newCobolFD != eInternalContainer() || (eContainerFeatureID != CoboldataPackage.LINAGE_INFO__COBOL_FD && newCobolFD != null)) {
+        if (newCobolFD != eInternalContainer() || (eContainerFeatureID() != CoboldataPackage.LINAGE_INFO__COBOL_FD && newCobolFD != null)) {
             if (EcoreUtil.isAncestor(this, newCobolFD))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -296,7 +296,7 @@ public class LinageInfoImpl extends ModelElementImpl implements LinageInfo {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case CoboldataPackage.LINAGE_INFO__COBOL_FD:
                 return eInternalContainer().eInverseRemove(this, CoboldataPackage.COBOLFD__LINAGE_INFO, COBOLFD.class, msgs);
         }
@@ -312,7 +312,7 @@ public class LinageInfoImpl extends ModelElementImpl implements LinageInfo {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case CoboldataPackage.LINAGE_INFO__VALUE:
-                return new Long(getValue());
+                return getValue();
             case CoboldataPackage.LINAGE_INFO__TYPE:
                 return getType();
             case CoboldataPackage.LINAGE_INFO__COBOL_ITEM:
@@ -333,7 +333,7 @@ public class LinageInfoImpl extends ModelElementImpl implements LinageInfo {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case CoboldataPackage.LINAGE_INFO__VALUE:
-                setValue(((Long)newValue).longValue());
+                setValue((Long)newValue);
                 return;
             case CoboldataPackage.LINAGE_INFO__TYPE:
                 setType((LinageInfoType)newValue);

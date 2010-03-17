@@ -380,7 +380,7 @@ public class ChangeRequestImpl extends ModelElementImpl implements ChangeRequest
             case WarehouseoperationPackage.CHANGE_REQUEST__STATUS:
                 return getStatus();
             case WarehouseoperationPackage.CHANGE_REQUEST__COMPLETED:
-                return isCompleted() ? Boolean.TRUE : Boolean.FALSE;
+                return isCompleted();
             case WarehouseoperationPackage.CHANGE_REQUEST__REQUEST_DATE:
                 return getRequestDate();
             case WarehouseoperationPackage.CHANGE_REQUEST__COMPLETION_DATE:
@@ -410,7 +410,7 @@ public class ChangeRequestImpl extends ModelElementImpl implements ChangeRequest
                 setStatus((String)newValue);
                 return;
             case WarehouseoperationPackage.CHANGE_REQUEST__COMPLETED:
-                setCompleted(((Boolean)newValue).booleanValue());
+                setCompleted((Boolean)newValue);
                 return;
             case WarehouseoperationPackage.CHANGE_REQUEST__REQUEST_DATE:
                 setRequestDate((String)newValue);

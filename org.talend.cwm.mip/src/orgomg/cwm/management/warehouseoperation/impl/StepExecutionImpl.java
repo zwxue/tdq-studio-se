@@ -147,7 +147,7 @@ public class StepExecutionImpl extends TransformationExecutionImpl implements St
      * @generated
      */
     public ActivityExecution getActivityExecution() {
-        if (eContainerFeatureID != WarehouseoperationPackage.STEP_EXECUTION__ACTIVITY_EXECUTION) return null;
+        if (eContainerFeatureID() != WarehouseoperationPackage.STEP_EXECUTION__ACTIVITY_EXECUTION) return null;
         return (ActivityExecution)eContainer();
     }
 
@@ -167,7 +167,7 @@ public class StepExecutionImpl extends TransformationExecutionImpl implements St
      * @generated
      */
     public void setActivityExecution(ActivityExecution newActivityExecution) {
-        if (newActivityExecution != eInternalContainer() || (eContainerFeatureID != WarehouseoperationPackage.STEP_EXECUTION__ACTIVITY_EXECUTION && newActivityExecution != null)) {
+        if (newActivityExecution != eInternalContainer() || (eContainerFeatureID() != WarehouseoperationPackage.STEP_EXECUTION__ACTIVITY_EXECUTION && newActivityExecution != null)) {
             if (EcoreUtil.isAncestor(this, newActivityExecution))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -291,7 +291,7 @@ public class StepExecutionImpl extends TransformationExecutionImpl implements St
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case WarehouseoperationPackage.STEP_EXECUTION__ACTIVITY_EXECUTION:
                 return eInternalContainer().eInverseRemove(this, WarehouseoperationPackage.ACTIVITY_EXECUTION__STEP_EXECUTION, ActivityExecution.class, msgs);
         }

@@ -38,7 +38,7 @@ public interface SegmentLogical extends Segment {
      * <!-- begin-model-doc -->
      * This attribute indicates how segment data will be handled when the logical DBD is processed.
      * 
-     * A value of TRUE specifies use of "DATA" as the type in the first parameter of the SOURCE keyword in the generated DBD, which directs the segment key to be placed in the key feedback area and the segment data to be placed in the user�s I/O area.
+     * A value of TRUE specifies use of "DATA" as the type in the first parameter of the SOURCE keyword in the generated DBD, which directs the segment key to be placed in the key feedback area and the segment data to be placed in the user?s I/O area.
      * 
      * A value of FALSE specified use of "KEY" as the type, which directs only the key to be placed in the key feedback area.
      * <!-- end-model-doc -->
@@ -67,7 +67,7 @@ public interface SegmentLogical extends Segment {
      * <!-- begin-model-doc -->
      * This attribute indicates how segment data will be handled when the logical DBD is processed.
      * 
-     * A value of TRUE specifies use of "DATA" as the type in the second parameter of the SOURCE keyword in the generated DBD, which directs the segment key to be placed in the key feedback area and the segment data to be placed in the user�s I/O area.
+     * A value of TRUE specifies use of "DATA" as the type in the second parameter of the SOURCE keyword in the generated DBD, which directs the segment key to be placed in the key feedback area and the segment data to be placed in the user?s I/O area.
      * 
      * A value of FALSE specified use of "KEY" as the type, which directs only the key to be placed in the key feedback area. A value of NULL indicates that there is no second SOURCE parameter.
      * <!-- end-model-doc -->

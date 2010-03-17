@@ -370,13 +370,13 @@ public class FieldImpl extends FixedOffsetFieldImpl implements Field {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ImsdatabasePackage.FIELD__SEQUENCE_FIELD:
-                return isSequenceField() ? Boolean.TRUE : Boolean.FALSE;
+                return isSequenceField();
             case ImsdatabasePackage.FIELD__UNIQUE_SEQUENCE:
-                return isUniqueSequence() ? Boolean.TRUE : Boolean.FALSE;
+                return isUniqueSequence();
             case ImsdatabasePackage.FIELD__FIELD_LENGTH:
-                return new Long(getFieldLength());
+                return getFieldLength();
             case ImsdatabasePackage.FIELD__GENERATED:
-                return isGenerated() ? Boolean.TRUE : Boolean.FALSE;
+                return isGenerated();
             case ImsdatabasePackage.FIELD__SEARCH_INDEX:
                 return getSearchIndex();
             case ImsdatabasePackage.FIELD__DDATA_INDEX:
@@ -399,16 +399,16 @@ public class FieldImpl extends FixedOffsetFieldImpl implements Field {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ImsdatabasePackage.FIELD__SEQUENCE_FIELD:
-                setSequenceField(((Boolean)newValue).booleanValue());
+                setSequenceField((Boolean)newValue);
                 return;
             case ImsdatabasePackage.FIELD__UNIQUE_SEQUENCE:
-                setUniqueSequence(((Boolean)newValue).booleanValue());
+                setUniqueSequence((Boolean)newValue);
                 return;
             case ImsdatabasePackage.FIELD__FIELD_LENGTH:
-                setFieldLength(((Long)newValue).longValue());
+                setFieldLength((Long)newValue);
                 return;
             case ImsdatabasePackage.FIELD__GENERATED:
-                setGenerated(((Boolean)newValue).booleanValue());
+                setGenerated((Boolean)newValue);
                 return;
             case ImsdatabasePackage.FIELD__SEARCH_INDEX:
                 getSearchIndex().clear();

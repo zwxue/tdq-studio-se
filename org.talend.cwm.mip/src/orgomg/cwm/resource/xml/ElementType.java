@@ -13,7 +13,7 @@ package orgomg.cwm.resource.xml;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This represents an XML element type definition. In XML, each document contains one or more elements. The element structure may, for validation purposes, be constrained using element type and attribute declarations. An element type declaration constrains the element�s content.
+ * This represents an XML element type definition. In XML, each document contains one or more elements. The element structure may, for validation purposes, be constrained using element type and attribute declarations. An element type declaration constrains the element?s content.
  * <!-- end-model-doc -->
  *
  * <p>

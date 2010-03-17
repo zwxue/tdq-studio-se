@@ -85,7 +85,7 @@ public class CubeDimensionAssociationImpl extends ClassImpl implements CubeDimen
      * @generated
      */
     public Cube getCube() {
-        if (eContainerFeatureID != OlapPackage.CUBE_DIMENSION_ASSOCIATION__CUBE) return null;
+        if (eContainerFeatureID() != OlapPackage.CUBE_DIMENSION_ASSOCIATION__CUBE) return null;
         return (Cube)eContainer();
     }
 
@@ -105,7 +105,7 @@ public class CubeDimensionAssociationImpl extends ClassImpl implements CubeDimen
      * @generated
      */
     public void setCube(Cube newCube) {
-        if (newCube != eInternalContainer() || (eContainerFeatureID != OlapPackage.CUBE_DIMENSION_ASSOCIATION__CUBE && newCube != null)) {
+        if (newCube != eInternalContainer() || (eContainerFeatureID() != OlapPackage.CUBE_DIMENSION_ASSOCIATION__CUBE && newCube != null)) {
             if (EcoreUtil.isAncestor(this, newCube))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -289,7 +289,7 @@ public class CubeDimensionAssociationImpl extends ClassImpl implements CubeDimen
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.CUBE_DIMENSION_ASSOCIATION__CUBE:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.CUBE__CUBE_DIMENSION_ASSOCIATION, Cube.class, msgs);
         }

@@ -121,7 +121,7 @@ public class OutlineImpl extends NamespaceImpl implements Outline {
      * @generated
      */
     public Database getDatabase() {
-        if (eContainerFeatureID != EssbasePackage.OUTLINE__DATABASE) return null;
+        if (eContainerFeatureID() != EssbasePackage.OUTLINE__DATABASE) return null;
         return (Database)eContainer();
     }
 
@@ -141,7 +141,7 @@ public class OutlineImpl extends NamespaceImpl implements Outline {
      * @generated
      */
     public void setDatabase(Database newDatabase) {
-        if (newDatabase != eInternalContainer() || (eContainerFeatureID != EssbasePackage.OUTLINE__DATABASE && newDatabase != null)) {
+        if (newDatabase != eInternalContainer() || (eContainerFeatureID() != EssbasePackage.OUTLINE__DATABASE && newDatabase != null)) {
             if (EcoreUtil.isAncestor(this, newDatabase))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -210,7 +210,7 @@ public class OutlineImpl extends NamespaceImpl implements Outline {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case EssbasePackage.OUTLINE__DATABASE:
                 return eInternalContainer().eInverseRemove(this, EssbasePackage.DATABASE__OUTLINE, Database.class, msgs);
         }

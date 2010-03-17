@@ -18,7 +18,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * <!-- begin-model-doc -->
  * An Email instance identifies a single email address. Via a Contact instance, an email address can be associated with one or more ResponsibleParty instances. Email instances might, for example, be used by an automated tool to send an automatically generated email message to a ResponsibleParty instance responsible about some change of state for a particular ModelElement. Multiple Email instances may be associated with a single Contact instance and the ordering of the association between them may be used to represent the sequence in which the Email instances should be contacted.
  * 
- * Because email addresses are first class objects within the CWM, they can be used for purposes beyond those associated with the CWMFoundation�s Business Information concepts.
+ * Because email addresses are first class objects within the CWM, they can be used for purposes beyond those associated with the CWMFoundation?s Business Information concepts.
  * <!-- end-model-doc -->
  *
  * <p>

@@ -397,19 +397,19 @@ public class RecurringPointInTimeEventImpl extends PointInTimeEventImpl implemen
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__RECURRING_TYPE:
                 return getRecurringType();
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__FREQUENCY_FACTOR:
-                return new Long(getFrequencyFactor());
+                return getFrequencyFactor();
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__MONTH:
-                return new Long(getMonth());
+                return getMonth();
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__DAY_OF_MONTH:
-                return new Long(getDayOfMonth());
+                return getDayOfMonth();
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__DAY_OF_WEEK:
                 return getDayOfWeek();
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__HOUR:
-                return new Long(getHour());
+                return getHour();
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__MINUTE:
-                return new Long(getMinute());
+                return getMinute();
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__SECOND:
-                return new Long(getSecond());
+                return getSecond();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -426,25 +426,25 @@ public class RecurringPointInTimeEventImpl extends PointInTimeEventImpl implemen
                 setRecurringType((RecurringType)newValue);
                 return;
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__FREQUENCY_FACTOR:
-                setFrequencyFactor(((Long)newValue).longValue());
+                setFrequencyFactor((Long)newValue);
                 return;
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__MONTH:
-                setMonth(((Long)newValue).longValue());
+                setMonth((Long)newValue);
                 return;
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__DAY_OF_MONTH:
-                setDayOfMonth(((Long)newValue).longValue());
+                setDayOfMonth((Long)newValue);
                 return;
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__DAY_OF_WEEK:
                 setDayOfWeek((DayOfWeek)newValue);
                 return;
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__HOUR:
-                setHour(((Long)newValue).longValue());
+                setHour((Long)newValue);
                 return;
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__MINUTE:
-                setMinute(((Long)newValue).longValue());
+                setMinute((Long)newValue);
                 return;
             case EventsPackage.RECURRING_POINT_IN_TIME_EVENT__SECOND:
-                setSecond(((Long)newValue).longValue());
+                setSecond((Long)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

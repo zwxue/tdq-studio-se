@@ -16,7 +16,7 @@ import orgomg.cwm.resource.multidimensional.DimensionedObject;
  * <!-- begin-model-doc -->
  * This is a tag specifying that a derived (calculated) Accounts member needs to be re-computed following the global calculation of an Essbase Database.
  * 
- * This is done to provide a derived Accounts member that�s dependent on other account members with a final, correct value, following the sequential calculation of both the Accounts and Time Dimensions (e.g., Profit % Sales).
+ * This is done to provide a derived Accounts member that?s dependent on other account members with a final, correct value, following the sequential calculation of both the Accounts and Time Dimensions (e.g., Profit % Sales).
  * <!-- end-model-doc -->
  *
  *

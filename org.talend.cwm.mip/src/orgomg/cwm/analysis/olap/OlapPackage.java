@@ -60,7 +60,7 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * 
  * A Schema contains Dimensions and Cubes. A Dimension is an ordinate within a multidimensional structure and consists of a list of unique values (i.e., members) that share a common semantic meaning within the domain being modeled. Each member designates a unique position along its ordinate.
  * 
- * A Cube is a collection of analytic values (i.e., measures) that share the same dimensionality. This dimensionality is specified by a set of unique Dimensions from the Schema. Each unique combination of members in the Cartesian product of the Cube�s Dimensions identifies precisely one data cell within a multidimensional structure.
+ * A Cube is a collection of analytic values (i.e., measures) that share the same dimensionality. This dimensionality is specified by a set of unique Dimensions from the Schema. Each unique combination of members in the Cartesian product of the Cube?s Dimensions identifies precisely one data cell within a multidimensional structure.
  * 
  * CubeDimensionAssociation relates a Cube to its defining Dimensions. Features relevant to Cube-Dimension relationships (e.g., calcHierarchy) are exposed by this class.
  * 
@@ -69,9 +69,9 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * 
  * A specific Hierarchy may be designated as the default Hierarchy for display purposes (e.g., a user interface that displays the Dimension as a hierarchical tree of members).  CubeDimensionAssociation can also identify a particular Hierarchy as the default Hierarchy for consolidation calculations performed on the Cube.
  * 
- * MemberSelection models mechanisms capable of partitioning a Dimension�s collection of members. For example, consider a Geography Dimension with members representing cities, states, and regions. An OLAP client interested specifically in cities might define an instance of MemberSelection that extracts the city members.
+ * MemberSelection models mechanisms capable of partitioning a Dimension?s collection of members. For example, consider a Geography Dimension with members representing cities, states, and regions. An OLAP client interested specifically in cities might define an instance of MemberSelection that extracts the city members.
  * 
- * CubeRegion models a sub-unit of a Cube that is of the same dimensionality as the Cube itself. Each "dimension" of a CubeRegion is represented by a MemberSelection of the corresponding Dimension  of the Cube. Each MemberSelection may define some subset of its Dimension�s members.
+ * CubeRegion models a sub-unit of a Cube that is of the same dimensionality as the Cube itself. Each "dimension" of a CubeRegion is represented by a MemberSelection of the corresponding Dimension  of the Cube. Each MemberSelection may define some subset of its Dimension?s members.
  * 
  * CubeRegions are used to implement Cubes. A Cube may be realized by a set of CubeRegions that map portions of the logical Cube to physical data sources. The MemberSelections defining CubeRegions can also be grouped together via MemberSelectionGroups, enabling the definition of CubeRegions with specific semantics. For example, one can specify a CubeRegion containing only the "input level" data cells of a Cube.
  * 
@@ -83,7 +83,7 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * 
  * The OLAP metamodel specifies two subclasses of Hierarchy: LevelBasedHierarchy and ValueBasedHierarchy.
  * 
- * LevelBasedHierarchy describes hierarchical relationships between specific levels of a Dimension. LevelBasedHierarchy is used to model both "pure level" hierarchies (e.g., dimension-level tables) and "mixed" hierarchies (i.e., levels plus linked nodes). Dimensional levels are modeled by the Level class, a subclass of MemberSelection that partitions a Dimension�s members into disjoint subsets, each representing a distinct level.
+ * LevelBasedHierarchy describes hierarchical relationships between specific levels of a Dimension. LevelBasedHierarchy is used to model both "pure level" hierarchies (e.g., dimension-level tables) and "mixed" hierarchies (i.e., levels plus linked nodes). Dimensional levels are modeled by the Level class, a subclass of MemberSelection that partitions a Dimension?s members into disjoint subsets, each representing a distinct level.
  * 
  * For example, the Geography Dimension cited earlier contains members representing cities, states, and regions, such as "Stamford", "Connecticut", and "NorthEast". It might also contain a single member called "USA" representing all regions of the United States. Therefore, the Geography Dimension could have four Levels named "City", "State", 'Region", and "ALL", respectively. Each Level specifies the subset of members belonging to it: All cities belong to the "City" Level, all states belong to the "State" Level, all regions belong to the "Region" Level, and the single "USA" member belongs to the "ALL" Level.
  * 
@@ -122,9 +122,9 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * 
  * On the other hand, relatively simple TransformationMaps can be defined within any OLAP model to represent attribute-oriented transformations (e.g., mapping Dimension Attributes to Table Columns that store attribute values).
  * 
- * ContentMap is a subclass of TransformationMap that models content-oriented transformaton mappings (i.e., cell data or measure values). For example, an instance of ContentMap might be used to map each of a CubeRegion�s Measures to Columns of an underlying Fact Table.
+ * ContentMap is a subclass of TransformationMap that models content-oriented transformaton mappings (i.e., cell data or measure values). For example, an instance of ContentMap might be used to map each of a CubeRegion?s Measures to Columns of an underlying Fact Table.
  * 
- * Note that, in either case (structural mapping or content mapping), the traversal patterns used by any CWM OLAP implementation are always the same, since both deployment mappings are based on the same usage of CWM TransformationMaps. In addition to representing structural mappings, instances of TransformationMap and its subclasses are also capable of storing implementation-dependent functions or procedures that yield the instance values associated with mapped model elements. For example, a "list of values" StructureMap might store an SQL statement such as "select memberName from Product where productFamily = �consumerElectronics� ", as the value of its formula attribute.
+ * Note that, in either case (structural mapping or content mapping), the traversal patterns used by any CWM OLAP implementation are always the same, since both deployment mappings are based on the same usage of CWM TransformationMaps. In addition to representing structural mappings, instances of TransformationMap and its subclasses are also capable of storing implementation-dependent functions or procedures that yield the instance values associated with mapped model elements. For example, a "list of values" StructureMap might store an SQL statement such as "select memberName from Product where productFamily = ?consumerElectronics? ", as the value of its formula attribute.
  * 
  * Figure 14-4 illustrates the CWM metaclasses and associations that describe deployment mappings between logical OLAP models and physical resource models. Note that it is possible to combine both Cube (content) and Dimension (structure) deployments together within the context of a single OLAP Schema (via the DeploymentGroup metaclass). Thus, an OLAP Schema can have several possible deployments that users may select based on implementation-specific considerations (e.g., physical optimizations).
  * 
@@ -180,11 +180,11 @@ import orgomg.cwm.objectmodel.core.CorePackage;
  * self.immediateParent->notEmpty implies
  * ( self.listOfValues->notEmpty and self.listOfValues <> self.immediateParent )
  * 
- * [C-11] A StructureMap referenced as a "list of values" StructureMap must not reside outside of the DimensionDeployment�s collection of StructureMaps.
+ * [C-11] A StructureMap referenced as a "list of values" StructureMap must not reside outside of the DimensionDeployment?s collection of StructureMaps.
  * context DimensionDeployment inv:
  * self.listOfValues->notEmpty implies self.structureMap->includes( self.listOfValues )
  * 
- * [C-12] A StructureMap referenced as an "immediate parent" StructureMap must not reside outside of the DimensionDeployment�s collection of StructureMaps.
+ * [C-12] A StructureMap referenced as an "immediate parent" StructureMap must not reside outside of the DimensionDeployment?s collection of StructureMaps.
  * context DimensionDeployment inv:
  * self.immediateParent->notEmpty implies
  * self.structureMap->includes( self.immediateParent )

@@ -28,7 +28,7 @@ import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
  * </ul>
  * <!-- end-user-doc -->
  * <!-- begin-model-doc -->
- * Entity Relationship (ER) models are used frequently as a means of describing business processes and the data on which they operate. The ER model was a precursor of today�s object models and is probably the first data model to have the adjective "semantic" applied to it.
+ * Entity Relationship (ER) models are used frequently as a means of describing business processes and the data on which they operate. The ER model was a precursor of today?s object models and is probably the first data model to have the adjective "semantic" applied to it.
  * 
  * Although the ER model is widely used to capture some aspects of application logic and data structure, there have been surprisingly few implementations of the model as data resources. Most development teams have preferred to map their ER models to existing data systems such as relational database management systems. This dearth of physical implementations has meant that modelers have been free to elaborate the basic ER model in any (and all) convenient directions with little or no impact on deployed information systems. Consequently, variants of the ER model abound.
  * 

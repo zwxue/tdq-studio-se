@@ -556,23 +556,23 @@ public class PSBImpl extends RecordFileImpl implements PSB {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ImsdatabasePackage.PSB__COMPATIBILITY:
-                return isCompatibility() ? Boolean.TRUE : Boolean.FALSE;
+                return isCompatibility();
             case ImsdatabasePackage.PSB__IO_ERROR_OPTION:
-                return new Long(getIoErrorOption());
+                return getIoErrorOption();
             case ImsdatabasePackage.PSB__IOA_SIZE:
-                return new Long(getIoaSize());
+                return getIoaSize();
             case ImsdatabasePackage.PSB__LANGUAGE:
                 return getLanguage();
             case ImsdatabasePackage.PSB__LOCK_MAXIMUM:
-                return new Long(getLockMaximum());
+                return getLockMaximum();
             case ImsdatabasePackage.PSB__MAXIMUM_QX_CALLS:
-                return new Long(getMaximumQxCalls());
+                return getMaximumQxCalls();
             case ImsdatabasePackage.PSB__ONLINE_IMAGE_COPY:
-                return isOnlineImageCopy() ? Boolean.TRUE : Boolean.FALSE;
+                return isOnlineImageCopy();
             case ImsdatabasePackage.PSB__SSA_SIZE:
-                return new Long(getSsaSize());
+                return getSsaSize();
             case ImsdatabasePackage.PSB__WRITE_TO_OPERATOR:
-                return isWriteToOperator() ? Boolean.TRUE : Boolean.FALSE;
+                return isWriteToOperator();
             case ImsdatabasePackage.PSB__ACBLIB:
                 return getAcblib();
             case ImsdatabasePackage.PSB__PCB:
@@ -593,31 +593,31 @@ public class PSBImpl extends RecordFileImpl implements PSB {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ImsdatabasePackage.PSB__COMPATIBILITY:
-                setCompatibility(((Boolean)newValue).booleanValue());
+                setCompatibility((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PSB__IO_ERROR_OPTION:
-                setIoErrorOption(((Long)newValue).longValue());
+                setIoErrorOption((Long)newValue);
                 return;
             case ImsdatabasePackage.PSB__IOA_SIZE:
-                setIoaSize(((Long)newValue).longValue());
+                setIoaSize((Long)newValue);
                 return;
             case ImsdatabasePackage.PSB__LANGUAGE:
                 setLanguage((PSBLanguageType)newValue);
                 return;
             case ImsdatabasePackage.PSB__LOCK_MAXIMUM:
-                setLockMaximum(((Long)newValue).longValue());
+                setLockMaximum((Long)newValue);
                 return;
             case ImsdatabasePackage.PSB__MAXIMUM_QX_CALLS:
-                setMaximumQxCalls(((Long)newValue).longValue());
+                setMaximumQxCalls((Long)newValue);
                 return;
             case ImsdatabasePackage.PSB__ONLINE_IMAGE_COPY:
-                setOnlineImageCopy(((Boolean)newValue).booleanValue());
+                setOnlineImageCopy((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PSB__SSA_SIZE:
-                setSsaSize(((Long)newValue).longValue());
+                setSsaSize((Long)newValue);
                 return;
             case ImsdatabasePackage.PSB__WRITE_TO_OPERATOR:
-                setWriteToOperator(((Boolean)newValue).booleanValue());
+                setWriteToOperator((Boolean)newValue);
                 return;
             case ImsdatabasePackage.PSB__ACBLIB:
                 getAcblib().clear();

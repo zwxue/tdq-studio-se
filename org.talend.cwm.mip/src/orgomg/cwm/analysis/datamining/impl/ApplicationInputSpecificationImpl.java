@@ -91,7 +91,7 @@ public class ApplicationInputSpecificationImpl extends ClassImpl implements Appl
      * @generated
      */
     public MiningModel getMiningModel() {
-        if (eContainerFeatureID != DataminingPackage.APPLICATION_INPUT_SPECIFICATION__MINING_MODEL) return null;
+        if (eContainerFeatureID() != DataminingPackage.APPLICATION_INPUT_SPECIFICATION__MINING_MODEL) return null;
         return (MiningModel)eContainer();
     }
 
@@ -111,7 +111,7 @@ public class ApplicationInputSpecificationImpl extends ClassImpl implements Appl
      * @generated
      */
     public void setMiningModel(MiningModel newMiningModel) {
-        if (newMiningModel != eInternalContainer() || (eContainerFeatureID != DataminingPackage.APPLICATION_INPUT_SPECIFICATION__MINING_MODEL && newMiningModel != null)) {
+        if (newMiningModel != eInternalContainer() || (eContainerFeatureID() != DataminingPackage.APPLICATION_INPUT_SPECIFICATION__MINING_MODEL && newMiningModel != null)) {
             if (EcoreUtil.isAncestor(this, newMiningModel))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -168,7 +168,7 @@ public class ApplicationInputSpecificationImpl extends ClassImpl implements Appl
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case DataminingPackage.APPLICATION_INPUT_SPECIFICATION__MINING_MODEL:
                 return eInternalContainer().eInverseRemove(this, DataminingPackage.MINING_MODEL__INPUT_SPEC, MiningModel.class, msgs);
         }

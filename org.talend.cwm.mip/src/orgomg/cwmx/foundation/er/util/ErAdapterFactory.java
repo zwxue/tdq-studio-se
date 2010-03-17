@@ -175,8 +175,8 @@ public class ErAdapterFactory extends AdapterFactoryImpl {
                 return createStructuralFeatureAdapter();
             }
             @Override
-            public Adapter caseAttribute_1(orgomg.cwm.objectmodel.core.Attribute object) {
-                return createAttribute_1Adapter();
+            public Adapter caseCore_Attribute(orgomg.cwm.objectmodel.core.Attribute object) {
+                return createCore_AttributeAdapter();
             }
             @Override
             public Adapter caseAssociation(Association object) {
@@ -195,8 +195,8 @@ public class ErAdapterFactory extends AdapterFactoryImpl {
                 return createSubsystemAdapter();
             }
             @Override
-            public Adapter caseModel_1(orgomg.cwm.objectmodel.core.Model object) {
-                return createModel_1Adapter();
+            public Adapter caseCore_Model(orgomg.cwm.objectmodel.core.Model object) {
+                return createCore_ModelAdapter();
             }
             @Override
             public Adapter defaultCase(EObject object) {
@@ -536,7 +536,7 @@ public class ErAdapterFactory extends AdapterFactoryImpl {
      * @see orgomg.cwm.objectmodel.core.Attribute
      * @generated
      */
-    public Adapter createAttribute_1Adapter() {
+    public Adapter createCore_AttributeAdapter() {
         return null;
     }
 
@@ -606,7 +606,7 @@ public class ErAdapterFactory extends AdapterFactoryImpl {
      * @see orgomg.cwm.objectmodel.core.Model
      * @generated
      */
-    public Adapter createModel_1Adapter() {
+    public Adapter createCore_ModelAdapter() {
         return null;
     }
 

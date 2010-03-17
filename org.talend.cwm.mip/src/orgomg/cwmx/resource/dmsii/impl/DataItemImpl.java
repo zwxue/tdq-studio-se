@@ -1121,39 +1121,39 @@ public class DataItemImpl extends FieldImpl implements DataItem {
             case DmsiiPackage.DATA_ITEM__NULL_VALUE:
                 return getNullValue();
             case DmsiiPackage.DATA_ITEM__IS_REQUIRED:
-                return isIsRequired() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsRequired();
             case DmsiiPackage.DATA_ITEM__SIZE:
-                return new Long(getSize());
+                return getSize();
             case DmsiiPackage.DATA_ITEM__SCALE_FACTOR:
-                return new Long(getScaleFactor());
+                return getScaleFactor();
             case DmsiiPackage.DATA_ITEM__IS_SIGNED:
-                return isIsSigned() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsSigned();
             case DmsiiPackage.DATA_ITEM__OCCURS:
-                return new Long(getOccurs());
+                return getOccurs();
             case DmsiiPackage.DATA_ITEM__IS_VIRTUAL:
-                return isIsVirtual() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsVirtual();
             case DmsiiPackage.DATA_ITEM__VIRTUAL_EXPRESSION:
                 return getVirtualExpression();
             case DmsiiPackage.DATA_ITEM__IS_KANJI:
-                return isIsKanji() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsKanji();
             case DmsiiPackage.DATA_ITEM__CCS_VERSION:
                 return getCcsVersion();
             case DmsiiPackage.DATA_ITEM__IS_GEMCOS_LITERAL:
-                return isIsGemcosLiteral() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGemcosLiteral();
             case DmsiiPackage.DATA_ITEM__IS_GEMCOS_DATA:
-                return isIsGemcosData() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGemcosData();
             case DmsiiPackage.DATA_ITEM__IS_GEMCOS_SSN:
-                return isIsGemcosSSN() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGemcosSSN();
             case DmsiiPackage.DATA_ITEM__IS_GEMCOS_DBSN:
-                return isIsGemcosDBSN() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGemcosDBSN();
             case DmsiiPackage.DATA_ITEM__IS_COMS_PROGRAM:
-                return isIsComsProgram() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsComsProgram();
             case DmsiiPackage.DATA_ITEM__IS_COMS_ID:
-                return isIsComsID() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsComsID();
             case DmsiiPackage.DATA_ITEM__IS_COMS_LOCATOR:
-                return isIsComsLocator() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsComsLocator();
             case DmsiiPackage.DATA_ITEM__IS_COMS_OUTP_Q:
-                return isIsComsOutpQ() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsComsOutpQ();
             case DmsiiPackage.DATA_ITEM__OCCURING_DATA_ITEM:
                 return getOccuringDataItem();
             case DmsiiPackage.DATA_ITEM__OCCURS_DATA_ITEM:
@@ -1183,55 +1183,55 @@ public class DataItemImpl extends FieldImpl implements DataItem {
                 setNullValue((ExpressionNode)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_REQUIRED:
-                setIsRequired(((Boolean)newValue).booleanValue());
+                setIsRequired((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__SIZE:
-                setSize(((Long)newValue).longValue());
+                setSize((Long)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__SCALE_FACTOR:
-                setScaleFactor(((Long)newValue).longValue());
+                setScaleFactor((Long)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_SIGNED:
-                setIsSigned(((Boolean)newValue).booleanValue());
+                setIsSigned((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__OCCURS:
-                setOccurs(((Long)newValue).longValue());
+                setOccurs((Long)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_VIRTUAL:
-                setIsVirtual(((Boolean)newValue).booleanValue());
+                setIsVirtual((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__VIRTUAL_EXPRESSION:
                 setVirtualExpression((ExpressionNode)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_KANJI:
-                setIsKanji(((Boolean)newValue).booleanValue());
+                setIsKanji((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__CCS_VERSION:
                 setCcsVersion((String)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_GEMCOS_LITERAL:
-                setIsGemcosLiteral(((Boolean)newValue).booleanValue());
+                setIsGemcosLiteral((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_GEMCOS_DATA:
-                setIsGemcosData(((Boolean)newValue).booleanValue());
+                setIsGemcosData((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_GEMCOS_SSN:
-                setIsGemcosSSN(((Boolean)newValue).booleanValue());
+                setIsGemcosSSN((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_GEMCOS_DBSN:
-                setIsGemcosDBSN(((Boolean)newValue).booleanValue());
+                setIsGemcosDBSN((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_COMS_PROGRAM:
-                setIsComsProgram(((Boolean)newValue).booleanValue());
+                setIsComsProgram((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_COMS_ID:
-                setIsComsID(((Boolean)newValue).booleanValue());
+                setIsComsID((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_COMS_LOCATOR:
-                setIsComsLocator(((Boolean)newValue).booleanValue());
+                setIsComsLocator((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__IS_COMS_OUTP_Q:
-                setIsComsOutpQ(((Boolean)newValue).booleanValue());
+                setIsComsOutpQ((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_ITEM__OCCURING_DATA_ITEM:
                 getOccuringDataItem().clear();

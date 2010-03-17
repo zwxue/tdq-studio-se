@@ -16,7 +16,7 @@ import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * Instances of the TypeSystem class collect together the data types (subclasses of Classifier) defined by a software system and the TypeMapping instances defining how they are mapped to data types in other TypeSystems. TypeMapping instances collected by a TypeSystem instance include both those in which the software system�s data types act as sources and as targets of mappings. Classifiers and TapeMappings are
+ * Instances of the TypeSystem class collect together the data types (subclasses of Classifier) defined by a software system and the TypeMapping instances defining how they are mapped to data types in other TypeSystems. TypeMapping instances collected by a TypeSystem instance include both those in which the software system?s data types act as sources and as targets of mappings. Classifiers and TapeMappings are
  * maintained in a single collection via the ElementOwnership association but can be distinguished by their respective types.
  * 
  * Because it is a Package, a TypeSystem can also serve to collect together the Classifier instances for a particular software system.

@@ -924,7 +924,7 @@ public class DatasetImpl extends ModelElementImpl implements Dataset {
      * @generated
      */
     public DBD getDbd() {
-        if (eContainerFeatureID != ImsdatabasePackage.DATASET__DBD) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.DATASET__DBD) return null;
         return (DBD)eContainer();
     }
 
@@ -944,7 +944,7 @@ public class DatasetImpl extends ModelElementImpl implements Dataset {
      * @generated
      */
     public void setDbd(DBD newDbd) {
-        if (newDbd != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.DATASET__DBD && newDbd != null)) {
+        if (newDbd != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.DATASET__DBD && newDbd != null)) {
             if (EcoreUtil.isAncestor(this, newDbd))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -1013,7 +1013,7 @@ public class DatasetImpl extends ModelElementImpl implements Dataset {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ImsdatabasePackage.DATASET__DBD:
                 return eInternalContainer().eInverseRemove(this, ImsdatabasePackage.DBD__DATASET, DBD.class, msgs);
         }
@@ -1037,37 +1037,37 @@ public class DatasetImpl extends ModelElementImpl implements Dataset {
             case ImsdatabasePackage.DATASET__DD2NAME:
                 return getDd2name();
             case ImsdatabasePackage.DATASET__SIZE1:
-                return new Long(getSize1());
+                return getSize1();
             case ImsdatabasePackage.DATASET__SIZE2:
-                return new Long(getSize2());
+                return getSize2();
             case ImsdatabasePackage.DATASET__RECORD_LENGTH1:
-                return new Long(getRecordLength1());
+                return getRecordLength1();
             case ImsdatabasePackage.DATASET__RECORD_LENGTH2:
-                return new Long(getRecordLength2());
+                return getRecordLength2();
             case ImsdatabasePackage.DATASET__BLOCKING_FACTOR1:
-                return new Long(getBlockingFactor1());
+                return getBlockingFactor1();
             case ImsdatabasePackage.DATASET__BLOCKING_FACTOR2:
-                return new Long(getBlockingFactor2());
+                return getBlockingFactor2();
             case ImsdatabasePackage.DATASET__DATASET_LABEL:
                 return getDatasetLabel();
             case ImsdatabasePackage.DATASET__FREE_BLOCK_FREQUENCY:
-                return new Long(getFreeBlockFrequency());
+                return getFreeBlockFrequency();
             case ImsdatabasePackage.DATASET__FREE_SPACE_PERCENTAGE:
-                return new Long(getFreeSpacePercentage());
+                return getFreeSpacePercentage();
             case ImsdatabasePackage.DATASET__RECORD_FORMAT:
                 return getRecordFormat();
             case ImsdatabasePackage.DATASET__SCAN_CYLINDERS:
-                return new Long(getScanCylinders());
+                return getScanCylinders();
             case ImsdatabasePackage.DATASET__SEARCH_ALGORITHM:
                 return getSearchAlgorithm();
             case ImsdatabasePackage.DATASET__ROOT:
-                return new Long(getRoot());
+                return getRoot();
             case ImsdatabasePackage.DATASET__ROOT_OVERFLOW:
-                return new Long(getRootOverflow());
+                return getRootOverflow();
             case ImsdatabasePackage.DATASET__UOW:
-                return new Long(getUow());
+                return getUow();
             case ImsdatabasePackage.DATASET__UOW_OVERFLOW:
-                return new Long(getUowOverflow());
+                return getUowOverflow();
             case ImsdatabasePackage.DATASET__DBD:
                 return getDbd();
             case ImsdatabasePackage.DATASET__SEGMENT:
@@ -1098,52 +1098,52 @@ public class DatasetImpl extends ModelElementImpl implements Dataset {
                 setDd2name((String)newValue);
                 return;
             case ImsdatabasePackage.DATASET__SIZE1:
-                setSize1(((Long)newValue).longValue());
+                setSize1((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__SIZE2:
-                setSize2(((Long)newValue).longValue());
+                setSize2((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__RECORD_LENGTH1:
-                setRecordLength1(((Long)newValue).longValue());
+                setRecordLength1((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__RECORD_LENGTH2:
-                setRecordLength2(((Long)newValue).longValue());
+                setRecordLength2((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__BLOCKING_FACTOR1:
-                setBlockingFactor1(((Long)newValue).longValue());
+                setBlockingFactor1((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__BLOCKING_FACTOR2:
-                setBlockingFactor2(((Long)newValue).longValue());
+                setBlockingFactor2((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__DATASET_LABEL:
                 setDatasetLabel((String)newValue);
                 return;
             case ImsdatabasePackage.DATASET__FREE_BLOCK_FREQUENCY:
-                setFreeBlockFrequency(((Long)newValue).longValue());
+                setFreeBlockFrequency((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__FREE_SPACE_PERCENTAGE:
-                setFreeSpacePercentage(((Long)newValue).longValue());
+                setFreeSpacePercentage((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__RECORD_FORMAT:
                 setRecordFormat((RECFMType)newValue);
                 return;
             case ImsdatabasePackage.DATASET__SCAN_CYLINDERS:
-                setScanCylinders(((Long)newValue).longValue());
+                setScanCylinders((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__SEARCH_ALGORITHM:
                 setSearchAlgorithm((AlgorithmType)newValue);
                 return;
             case ImsdatabasePackage.DATASET__ROOT:
-                setRoot(((Long)newValue).longValue());
+                setRoot((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__ROOT_OVERFLOW:
-                setRootOverflow(((Long)newValue).longValue());
+                setRootOverflow((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__UOW:
-                setUow(((Long)newValue).longValue());
+                setUow((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__UOW_OVERFLOW:
-                setUowOverflow(((Long)newValue).longValue());
+                setUowOverflow((Long)newValue);
                 return;
             case ImsdatabasePackage.DATASET__DBD:
                 setDbd((DBD)newValue);

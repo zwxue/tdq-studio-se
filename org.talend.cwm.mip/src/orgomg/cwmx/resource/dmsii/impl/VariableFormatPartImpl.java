@@ -172,7 +172,7 @@ public class VariableFormatPartImpl extends RecordDefImpl implements VariableFor
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DmsiiPackage.VARIABLE_FORMAT_PART__VF_LABEL:
-                return new Long(getVfLabel());
+                return getVfLabel();
             case DmsiiPackage.VARIABLE_FORMAT_PART__SELECT_CONDITION:
                 return getSelectCondition();
         }
@@ -188,7 +188,7 @@ public class VariableFormatPartImpl extends RecordDefImpl implements VariableFor
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DmsiiPackage.VARIABLE_FORMAT_PART__VF_LABEL:
-                setVfLabel(((Long)newValue).longValue());
+                setVfLabel((Long)newValue);
                 return;
             case DmsiiPackage.VARIABLE_FORMAT_PART__SELECT_CONDITION:
                 setSelectCondition((BooleanExpression)newValue);

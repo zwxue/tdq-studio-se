@@ -175,7 +175,7 @@ public class ParameterImpl extends ModelElementImpl implements Parameter {
      * @generated
      */
     public BehavioralFeature getBehavioralFeature() {
-        if (eContainerFeatureID != BehavioralPackage.PARAMETER__BEHAVIORAL_FEATURE) return null;
+        if (eContainerFeatureID() != BehavioralPackage.PARAMETER__BEHAVIORAL_FEATURE) return null;
         return (BehavioralFeature)eContainer();
     }
 
@@ -195,7 +195,7 @@ public class ParameterImpl extends ModelElementImpl implements Parameter {
      * @generated
      */
     public void setBehavioralFeature(BehavioralFeature newBehavioralFeature) {
-        if (newBehavioralFeature != eInternalContainer() || (eContainerFeatureID != BehavioralPackage.PARAMETER__BEHAVIORAL_FEATURE && newBehavioralFeature != null)) {
+        if (newBehavioralFeature != eInternalContainer() || (eContainerFeatureID() != BehavioralPackage.PARAMETER__BEHAVIORAL_FEATURE && newBehavioralFeature != null)) {
             if (EcoreUtil.isAncestor(this, newBehavioralFeature))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -216,7 +216,7 @@ public class ParameterImpl extends ModelElementImpl implements Parameter {
      * @generated
      */
     public Event getEvent() {
-        if (eContainerFeatureID != BehavioralPackage.PARAMETER__EVENT) return null;
+        if (eContainerFeatureID() != BehavioralPackage.PARAMETER__EVENT) return null;
         return (Event)eContainer();
     }
 
@@ -236,7 +236,7 @@ public class ParameterImpl extends ModelElementImpl implements Parameter {
      * @generated
      */
     public void setEvent(Event newEvent) {
-        if (newEvent != eInternalContainer() || (eContainerFeatureID != BehavioralPackage.PARAMETER__EVENT && newEvent != null)) {
+        if (newEvent != eInternalContainer() || (eContainerFeatureID() != BehavioralPackage.PARAMETER__EVENT && newEvent != null)) {
             if (EcoreUtil.isAncestor(this, newEvent))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -362,7 +362,7 @@ public class ParameterImpl extends ModelElementImpl implements Parameter {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BehavioralPackage.PARAMETER__BEHAVIORAL_FEATURE:
                 return eInternalContainer().eInverseRemove(this, BehavioralPackage.BEHAVIORAL_FEATURE__PARAMETER, BehavioralFeature.class, msgs);
             case BehavioralPackage.PARAMETER__EVENT:

@@ -399,7 +399,7 @@ public class ExitImpl extends ModelElementImpl implements Exit {
      * @generated
      */
     public DBD getDbd() {
-        if (eContainerFeatureID != ImsdatabasePackage.EXIT__DBD) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.EXIT__DBD) return null;
         return (DBD)eContainer();
     }
 
@@ -419,7 +419,7 @@ public class ExitImpl extends ModelElementImpl implements Exit {
      * @generated
      */
     public void setDbd(DBD newDbd) {
-        if (newDbd != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.EXIT__DBD && newDbd != null)) {
+        if (newDbd != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.EXIT__DBD && newDbd != null)) {
             if (EcoreUtil.isAncestor(this, newDbd))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -440,7 +440,7 @@ public class ExitImpl extends ModelElementImpl implements Exit {
      * @generated
      */
     public Segment getSegment() {
-        if (eContainerFeatureID != ImsdatabasePackage.EXIT__SEGMENT) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.EXIT__SEGMENT) return null;
         return (Segment)eContainer();
     }
 
@@ -460,7 +460,7 @@ public class ExitImpl extends ModelElementImpl implements Exit {
      * @generated
      */
     public void setSegment(Segment newSegment) {
-        if (newSegment != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.EXIT__SEGMENT && newSegment != null)) {
+        if (newSegment != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.EXIT__SEGMENT && newSegment != null)) {
             if (EcoreUtil.isAncestor(this, newSegment))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -518,7 +518,7 @@ public class ExitImpl extends ModelElementImpl implements Exit {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ImsdatabasePackage.EXIT__DBD:
                 return eInternalContainer().eInverseRemove(this, ImsdatabasePackage.DBD__EXIT, DBD.class, msgs);
             case ImsdatabasePackage.EXIT__SEGMENT:
@@ -536,21 +536,21 @@ public class ExitImpl extends ModelElementImpl implements Exit {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ImsdatabasePackage.EXIT__KEY:
-                return isKey() ? Boolean.TRUE : Boolean.FALSE;
+                return isKey();
             case ImsdatabasePackage.EXIT__DATA:
-                return isData() ? Boolean.TRUE : Boolean.FALSE;
+                return isData();
             case ImsdatabasePackage.EXIT__PATH:
-                return isPath() ? Boolean.TRUE : Boolean.FALSE;
+                return isPath();
             case ImsdatabasePackage.EXIT__LOG:
-                return isLog() ? Boolean.TRUE : Boolean.FALSE;
+                return isLog();
             case ImsdatabasePackage.EXIT__CASCADE:
-                return isCascade() ? Boolean.TRUE : Boolean.FALSE;
+                return isCascade();
             case ImsdatabasePackage.EXIT__CASCADE_KEY:
-                return isCascadeKey() ? Boolean.TRUE : Boolean.FALSE;
+                return isCascadeKey();
             case ImsdatabasePackage.EXIT__CASCADE_DATA:
-                return isCascadeData() ? Boolean.TRUE : Boolean.FALSE;
+                return isCascadeData();
             case ImsdatabasePackage.EXIT__CASCADE_PATH:
-                return isCascadePath() ? Boolean.TRUE : Boolean.FALSE;
+                return isCascadePath();
             case ImsdatabasePackage.EXIT__DBD:
                 return getDbd();
             case ImsdatabasePackage.EXIT__SEGMENT:
@@ -568,28 +568,28 @@ public class ExitImpl extends ModelElementImpl implements Exit {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ImsdatabasePackage.EXIT__KEY:
-                setKey(((Boolean)newValue).booleanValue());
+                setKey((Boolean)newValue);
                 return;
             case ImsdatabasePackage.EXIT__DATA:
-                setData(((Boolean)newValue).booleanValue());
+                setData((Boolean)newValue);
                 return;
             case ImsdatabasePackage.EXIT__PATH:
-                setPath(((Boolean)newValue).booleanValue());
+                setPath((Boolean)newValue);
                 return;
             case ImsdatabasePackage.EXIT__LOG:
-                setLog(((Boolean)newValue).booleanValue());
+                setLog((Boolean)newValue);
                 return;
             case ImsdatabasePackage.EXIT__CASCADE:
-                setCascade(((Boolean)newValue).booleanValue());
+                setCascade((Boolean)newValue);
                 return;
             case ImsdatabasePackage.EXIT__CASCADE_KEY:
-                setCascadeKey(((Boolean)newValue).booleanValue());
+                setCascadeKey((Boolean)newValue);
                 return;
             case ImsdatabasePackage.EXIT__CASCADE_DATA:
-                setCascadeData(((Boolean)newValue).booleanValue());
+                setCascadeData((Boolean)newValue);
                 return;
             case ImsdatabasePackage.EXIT__CASCADE_PATH:
-                setCascadePath(((Boolean)newValue).booleanValue());
+                setCascadePath((Boolean)newValue);
                 return;
             case ImsdatabasePackage.EXIT__DBD:
                 setDbd((DBD)newValue);

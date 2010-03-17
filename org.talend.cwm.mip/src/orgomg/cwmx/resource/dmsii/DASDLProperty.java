@@ -15,7 +15,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *
  * <!-- begin-model-doc -->
  * The DASDL language source file from which DMS II databases are built contains a large number (>100) of options related primarily to the physical characteristics or deployment of DMS II databases and the data and set structures they contain.
- * Generally, these �DASDL properties� are of the form <name> = <string>, where the meaning of the contents of <string> is specific to the property that is being described (i.e., knowing the content of <name>). Also, new DASDL properties are added from time to time. Capturing these DASDL properties as <name>/<string> pairs has several important side-effects, including 
+ * Generally, these ?DASDL properties? are of the form <name> = <string>, where the meaning of the contents of <string> is specific to the property that is being described (i.e., knowing the content of <name>). Also, new DASDL properties are added from time to time. Capturing these DASDL properties as <name>/<string> pairs has several important side-effects, including 
  * 
  *     a much simplified DMS II model overall,
  *     addition of new properties without having to change the model, and

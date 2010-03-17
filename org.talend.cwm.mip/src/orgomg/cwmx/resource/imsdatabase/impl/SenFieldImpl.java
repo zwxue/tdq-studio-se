@@ -115,7 +115,7 @@ public class SenFieldImpl extends FixedOffsetFieldImpl implements SenField {
      * @generated
      */
     public SenSegment getSenSegment() {
-        if (eContainerFeatureID != ImsdatabasePackage.SEN_FIELD__SEN_SEGMENT) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.SEN_FIELD__SEN_SEGMENT) return null;
         return (SenSegment)eContainer();
     }
 
@@ -135,7 +135,7 @@ public class SenFieldImpl extends FixedOffsetFieldImpl implements SenField {
      * @generated
      */
     public void setSenSegment(SenSegment newSenSegment) {
-        if (newSenSegment != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.SEN_FIELD__SEN_SEGMENT && newSenSegment != null)) {
+        if (newSenSegment != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.SEN_FIELD__SEN_SEGMENT && newSenSegment != null)) {
             if (EcoreUtil.isAncestor(this, newSenSegment))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -253,7 +253,7 @@ public class SenFieldImpl extends FixedOffsetFieldImpl implements SenField {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ImsdatabasePackage.SEN_FIELD__SEN_SEGMENT:
                 return eInternalContainer().eInverseRemove(this, ImsdatabasePackage.SEN_SEGMENT__SEN_FIELD, SenSegment.class, msgs);
         }
@@ -269,7 +269,7 @@ public class SenFieldImpl extends FixedOffsetFieldImpl implements SenField {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case ImsdatabasePackage.SEN_FIELD__REPLACE:
-                return isReplace() ? Boolean.TRUE : Boolean.FALSE;
+                return isReplace();
             case ImsdatabasePackage.SEN_FIELD__SEN_SEGMENT:
                 return getSenSegment();
             case ImsdatabasePackage.SEN_FIELD__FIELD:
@@ -288,7 +288,7 @@ public class SenFieldImpl extends FixedOffsetFieldImpl implements SenField {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ImsdatabasePackage.SEN_FIELD__REPLACE:
-                setReplace(((Boolean)newValue).booleanValue());
+                setReplace((Boolean)newValue);
                 return;
             case ImsdatabasePackage.SEN_FIELD__SEN_SEGMENT:
                 setSenSegment((SenSegment)newValue);

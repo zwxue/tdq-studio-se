@@ -91,7 +91,7 @@ public class CubeDeploymentImpl extends ClassImpl implements CubeDeployment {
      * @generated
      */
     public CubeRegion getCubeRegion() {
-        if (eContainerFeatureID != OlapPackage.CUBE_DEPLOYMENT__CUBE_REGION) return null;
+        if (eContainerFeatureID() != OlapPackage.CUBE_DEPLOYMENT__CUBE_REGION) return null;
         return (CubeRegion)eContainer();
     }
 
@@ -111,7 +111,7 @@ public class CubeDeploymentImpl extends ClassImpl implements CubeDeployment {
      * @generated
      */
     public void setCubeRegion(CubeRegion newCubeRegion) {
-        if (newCubeRegion != eInternalContainer() || (eContainerFeatureID != OlapPackage.CUBE_DEPLOYMENT__CUBE_REGION && newCubeRegion != null)) {
+        if (newCubeRegion != eInternalContainer() || (eContainerFeatureID() != OlapPackage.CUBE_DEPLOYMENT__CUBE_REGION && newCubeRegion != null)) {
             if (EcoreUtil.isAncestor(this, newCubeRegion))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -246,7 +246,7 @@ public class CubeDeploymentImpl extends ClassImpl implements CubeDeployment {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.CUBE_DEPLOYMENT__CUBE_REGION:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.CUBE_REGION__CUBE_DEPLOYMENT, CubeRegion.class, msgs);
         }

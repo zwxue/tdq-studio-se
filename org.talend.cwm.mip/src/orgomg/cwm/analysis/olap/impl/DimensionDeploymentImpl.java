@@ -115,7 +115,7 @@ public class DimensionDeploymentImpl extends ClassImpl implements DimensionDeplo
      * @generated
      */
     public HierarchyLevelAssociation getHierarchyLevelAssociation() {
-        if (eContainerFeatureID != OlapPackage.DIMENSION_DEPLOYMENT__HIERARCHY_LEVEL_ASSOCIATION) return null;
+        if (eContainerFeatureID() != OlapPackage.DIMENSION_DEPLOYMENT__HIERARCHY_LEVEL_ASSOCIATION) return null;
         return (HierarchyLevelAssociation)eContainer();
     }
 
@@ -135,7 +135,7 @@ public class DimensionDeploymentImpl extends ClassImpl implements DimensionDeplo
      * @generated
      */
     public void setHierarchyLevelAssociation(HierarchyLevelAssociation newHierarchyLevelAssociation) {
-        if (newHierarchyLevelAssociation != eInternalContainer() || (eContainerFeatureID != OlapPackage.DIMENSION_DEPLOYMENT__HIERARCHY_LEVEL_ASSOCIATION && newHierarchyLevelAssociation != null)) {
+        if (newHierarchyLevelAssociation != eInternalContainer() || (eContainerFeatureID() != OlapPackage.DIMENSION_DEPLOYMENT__HIERARCHY_LEVEL_ASSOCIATION && newHierarchyLevelAssociation != null)) {
             if (EcoreUtil.isAncestor(this, newHierarchyLevelAssociation))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -156,7 +156,7 @@ public class DimensionDeploymentImpl extends ClassImpl implements DimensionDeplo
      * @generated
      */
     public ValueBasedHierarchy getValueBasedHierarchy() {
-        if (eContainerFeatureID != OlapPackage.DIMENSION_DEPLOYMENT__VALUE_BASED_HIERARCHY) return null;
+        if (eContainerFeatureID() != OlapPackage.DIMENSION_DEPLOYMENT__VALUE_BASED_HIERARCHY) return null;
         return (ValueBasedHierarchy)eContainer();
     }
 
@@ -176,7 +176,7 @@ public class DimensionDeploymentImpl extends ClassImpl implements DimensionDeplo
      * @generated
      */
     public void setValueBasedHierarchy(ValueBasedHierarchy newValueBasedHierarchy) {
-        if (newValueBasedHierarchy != eInternalContainer() || (eContainerFeatureID != OlapPackage.DIMENSION_DEPLOYMENT__VALUE_BASED_HIERARCHY && newValueBasedHierarchy != null)) {
+        if (newValueBasedHierarchy != eInternalContainer() || (eContainerFeatureID() != OlapPackage.DIMENSION_DEPLOYMENT__VALUE_BASED_HIERARCHY && newValueBasedHierarchy != null)) {
             if (EcoreUtil.isAncestor(this, newValueBasedHierarchy))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -449,7 +449,7 @@ public class DimensionDeploymentImpl extends ClassImpl implements DimensionDeplo
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.DIMENSION_DEPLOYMENT__HIERARCHY_LEVEL_ASSOCIATION:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.HIERARCHY_LEVEL_ASSOCIATION__DIMENSION_DEPLOYMENT, HierarchyLevelAssociation.class, msgs);
             case OlapPackage.DIMENSION_DEPLOYMENT__VALUE_BASED_HIERARCHY:

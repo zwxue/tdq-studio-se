@@ -188,7 +188,7 @@ public class CategoryImpl extends ModelElementImpl implements Category {
      * @generated
      */
     public CategoricalAttribute getCategoricalAttribute() {
-        if (eContainerFeatureID != DataminingPackage.CATEGORY__CATEGORICAL_ATTRIBUTE) return null;
+        if (eContainerFeatureID() != DataminingPackage.CATEGORY__CATEGORICAL_ATTRIBUTE) return null;
         return (CategoricalAttribute)eContainer();
     }
 
@@ -208,7 +208,7 @@ public class CategoryImpl extends ModelElementImpl implements Category {
      * @generated
      */
     public void setCategoricalAttribute(CategoricalAttribute newCategoricalAttribute) {
-        if (newCategoricalAttribute != eInternalContainer() || (eContainerFeatureID != DataminingPackage.CATEGORY__CATEGORICAL_ATTRIBUTE && newCategoricalAttribute != null)) {
+        if (newCategoricalAttribute != eInternalContainer() || (eContainerFeatureID() != DataminingPackage.CATEGORY__CATEGORICAL_ATTRIBUTE && newCategoricalAttribute != null)) {
             if (EcoreUtil.isAncestor(this, newCategoricalAttribute))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -260,7 +260,7 @@ public class CategoryImpl extends ModelElementImpl implements Category {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case DataminingPackage.CATEGORY__CATEGORICAL_ATTRIBUTE:
                 return eInternalContainer().eInverseRemove(this, DataminingPackage.CATEGORICAL_ATTRIBUTE__CATEGORY, CategoricalAttribute.class, msgs);
         }

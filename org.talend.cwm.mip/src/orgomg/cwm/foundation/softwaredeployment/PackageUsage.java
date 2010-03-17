@@ -16,7 +16,7 @@ import orgomg.cwm.objectmodel.core.Dependency;
  * <!-- begin-model-doc -->
  * A PackageUsage represents a usage of a Package. It is particularly relevant in situations where a specific usage uses an alternative name for the Package, as this alternative name can be recorded using the packageAlias attribute.
  * 
- * For example, if a DataProvider representing an ODBC or JDBC client uses a name for a relational database that is different from the dataPackage name used by the RDBMS server, a PackageUsage that has the relevant ProviderConnection as client and the server�s data Package as supplier can be added. Its packageAlias attribute can be used to record the name by which the data Package is known to the DataProvider.
+ * For example, if a DataProvider representing an ODBC or JDBC client uses a name for a relational database that is different from the dataPackage name used by the RDBMS server, a PackageUsage that has the relevant ProviderConnection as client and the server?s data Package as supplier can be added. Its packageAlias attribute can be used to record the name by which the data Package is known to the DataProvider.
  * <!-- end-model-doc -->
  *
  * <p>

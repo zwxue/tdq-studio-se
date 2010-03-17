@@ -77,6 +77,7 @@ public interface ModelElement extends Element {
      * @see #setName(String)
      * @see orgomg.cwm.objectmodel.core.CorePackage#getModelElement_Name()
      * @model dataType="orgomg.cwm.objectmodel.core.Name"
+     *        annotation="htttp://talend.org/UiConstraints string.max.size='200'"
      * @generated
      */
     String getName();
@@ -254,6 +255,7 @@ public interface ModelElement extends Element {
      * @see orgomg.cwm.objectmodel.core.CorePackage#getModelElement_TaggedValue()
      * @see orgomg.cwm.objectmodel.core.TaggedValue#getModelElement
      * @model opposite="modelElement" containment="true"
+     *        annotation="htttp://talend.org/UiConstraints string.max.size.Description='1000' string.max.size.Purpose='1000'"
      * @generated
      */
     EList<TaggedValue> getTaggedValue();

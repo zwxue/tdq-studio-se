@@ -16,7 +16,7 @@ import orgomg.cwm.resource.record.RecordDef;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * The type holds the attributes that apply to a PCB�s use of a specific segment within a DBD. Application programs using a PCB can only access the segments to which that PCB is sensitive, protecting an hiding some of the data covered by the DBD.
+ * The type holds the attributes that apply to a PCB?s use of a specific segment within a DBD. Application programs using a PCB can only access the segments to which that PCB is sensitive, protecting an hiding some of the data covered by the DBD.
  * <!-- end-model-doc -->
  *
  * <p>

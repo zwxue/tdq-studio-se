@@ -145,7 +145,7 @@ public class AssociationEndImpl extends StructuralFeatureImpl implements Associa
             case RelationshipsPackage.ASSOCIATION_END__AGGREGATION:
                 return getAggregation();
             case RelationshipsPackage.ASSOCIATION_END__IS_NAVIGABLE:
-                return isIsNavigable() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsNavigable();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -162,7 +162,7 @@ public class AssociationEndImpl extends StructuralFeatureImpl implements Associa
                 setAggregation((AggregationKind)newValue);
                 return;
             case RelationshipsPackage.ASSOCIATION_END__IS_NAVIGABLE:
-                setIsNavigable(((Boolean)newValue).booleanValue());
+                setIsNavigable((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

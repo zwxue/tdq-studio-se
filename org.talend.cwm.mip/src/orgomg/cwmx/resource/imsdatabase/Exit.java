@@ -93,7 +93,7 @@ public interface Exit extends ModelElement {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * This attribute specifies whether the data from each segment in the physical root�s hierarchical path must be passed to the exit routine for an updated segment. A value of TRUE maps to PATH; a value of FALSE maps to NOPATH.
+     * This attribute specifies whether the data from each segment in the physical root?s hierarchical path must be passed to the exit routine for an updated segment. A value of TRUE maps to PATH; a value of FALSE maps to NOPATH.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Path</em>' attribute.
      * @see #setPath(boolean)

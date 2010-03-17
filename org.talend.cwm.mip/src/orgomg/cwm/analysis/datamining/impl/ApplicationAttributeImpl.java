@@ -165,7 +165,7 @@ public class ApplicationAttributeImpl extends AttributeImpl implements Applicati
      * @generated
      */
     public ApplicationInputSpecification getInputSpec() {
-        if (eContainerFeatureID != DataminingPackage.APPLICATION_ATTRIBUTE__INPUT_SPEC) return null;
+        if (eContainerFeatureID() != DataminingPackage.APPLICATION_ATTRIBUTE__INPUT_SPEC) return null;
         return (ApplicationInputSpecification)eContainer();
     }
 
@@ -185,7 +185,7 @@ public class ApplicationAttributeImpl extends AttributeImpl implements Applicati
      * @generated
      */
     public void setInputSpec(ApplicationInputSpecification newInputSpec) {
-        if (newInputSpec != eInternalContainer() || (eContainerFeatureID != DataminingPackage.APPLICATION_ATTRIBUTE__INPUT_SPEC && newInputSpec != null)) {
+        if (newInputSpec != eInternalContainer() || (eContainerFeatureID() != DataminingPackage.APPLICATION_ATTRIBUTE__INPUT_SPEC && newInputSpec != null)) {
             if (EcoreUtil.isAncestor(this, newInputSpec))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -254,7 +254,7 @@ public class ApplicationAttributeImpl extends AttributeImpl implements Applicati
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case DataminingPackage.APPLICATION_ATTRIBUTE__INPUT_SPEC:
                 return eInternalContainer().eInverseRemove(this, DataminingPackage.APPLICATION_INPUT_SPECIFICATION__INPUT_ATTRIBUTE, ApplicationInputSpecification.class, msgs);
         }

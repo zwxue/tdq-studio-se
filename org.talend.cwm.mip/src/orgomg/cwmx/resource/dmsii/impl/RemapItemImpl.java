@@ -382,17 +382,17 @@ public class RemapItemImpl extends FieldImpl implements RemapItem {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DmsiiPackage.REMAP_ITEM__OCCURS:
-                return new Long(getOccurs());
+                return getOccurs();
             case DmsiiPackage.REMAP_ITEM__IS_REQUIRED:
-                return isIsRequired() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsRequired();
             case DmsiiPackage.REMAP_ITEM__IS_HIDDEN:
-                return isIsHidden() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsHidden();
             case DmsiiPackage.REMAP_ITEM__IS_READ_ONLY:
-                return isIsReadOnly() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsReadOnly();
             case DmsiiPackage.REMAP_ITEM__IS_GIVING_EXCEPTION:
-                return isIsGivingException() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGivingException();
             case DmsiiPackage.REMAP_ITEM__IS_VIRTUAL:
-                return isIsVirtual() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsVirtual();
             case DmsiiPackage.REMAP_ITEM__VIRTUAL_EXPRESSION:
                 return getVirtualExpression();
         }
@@ -408,22 +408,22 @@ public class RemapItemImpl extends FieldImpl implements RemapItem {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DmsiiPackage.REMAP_ITEM__OCCURS:
-                setOccurs(((Long)newValue).longValue());
+                setOccurs((Long)newValue);
                 return;
             case DmsiiPackage.REMAP_ITEM__IS_REQUIRED:
-                setIsRequired(((Boolean)newValue).booleanValue());
+                setIsRequired((Boolean)newValue);
                 return;
             case DmsiiPackage.REMAP_ITEM__IS_HIDDEN:
-                setIsHidden(((Boolean)newValue).booleanValue());
+                setIsHidden((Boolean)newValue);
                 return;
             case DmsiiPackage.REMAP_ITEM__IS_READ_ONLY:
-                setIsReadOnly(((Boolean)newValue).booleanValue());
+                setIsReadOnly((Boolean)newValue);
                 return;
             case DmsiiPackage.REMAP_ITEM__IS_GIVING_EXCEPTION:
-                setIsGivingException(((Boolean)newValue).booleanValue());
+                setIsGivingException((Boolean)newValue);
                 return;
             case DmsiiPackage.REMAP_ITEM__IS_VIRTUAL:
-                setIsVirtual(((Boolean)newValue).booleanValue());
+                setIsVirtual((Boolean)newValue);
                 return;
             case DmsiiPackage.REMAP_ITEM__VIRTUAL_EXPRESSION:
                 setVirtualExpression((ExpressionNode)newValue);

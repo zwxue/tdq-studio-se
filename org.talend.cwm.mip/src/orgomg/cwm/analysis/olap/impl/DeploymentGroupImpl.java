@@ -91,7 +91,7 @@ public class DeploymentGroupImpl extends PackageImpl implements DeploymentGroup 
      * @generated
      */
     public Schema getSchema() {
-        if (eContainerFeatureID != OlapPackage.DEPLOYMENT_GROUP__SCHEMA) return null;
+        if (eContainerFeatureID() != OlapPackage.DEPLOYMENT_GROUP__SCHEMA) return null;
         return (Schema)eContainer();
     }
 
@@ -111,7 +111,7 @@ public class DeploymentGroupImpl extends PackageImpl implements DeploymentGroup 
      * @generated
      */
     public void setSchema(Schema newSchema) {
-        if (newSchema != eInternalContainer() || (eContainerFeatureID != OlapPackage.DEPLOYMENT_GROUP__SCHEMA && newSchema != null)) {
+        if (newSchema != eInternalContainer() || (eContainerFeatureID() != OlapPackage.DEPLOYMENT_GROUP__SCHEMA && newSchema != null)) {
             if (EcoreUtil.isAncestor(this, newSchema))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -196,7 +196,7 @@ public class DeploymentGroupImpl extends PackageImpl implements DeploymentGroup 
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case OlapPackage.DEPLOYMENT_GROUP__SCHEMA:
                 return eInternalContainer().eInverseRemove(this, OlapPackage.SCHEMA__DEPLOYMENT_GROUP, Schema.class, msgs);
         }

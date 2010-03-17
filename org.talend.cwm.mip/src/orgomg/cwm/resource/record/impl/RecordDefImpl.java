@@ -278,7 +278,7 @@ public class RecordDefImpl extends ClassImpl implements RecordDef {
             case RecordPackage.RECORD_DEF__FIELD_DELIMITER:
                 return getFieldDelimiter();
             case RecordPackage.RECORD_DEF__IS_FIXED_WIDTH:
-                return isIsFixedWidth() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsFixedWidth();
             case RecordPackage.RECORD_DEF__TEXT_DELIMITER:
                 return getTextDelimiter();
             case RecordPackage.RECORD_DEF__FILE:
@@ -302,7 +302,7 @@ public class RecordDefImpl extends ClassImpl implements RecordDef {
                 setFieldDelimiter((String)newValue);
                 return;
             case RecordPackage.RECORD_DEF__IS_FIXED_WIDTH:
-                setIsFixedWidth(((Boolean)newValue).booleanValue());
+                setIsFixedWidth((Boolean)newValue);
                 return;
             case RecordPackage.RECORD_DEF__TEXT_DELIMITER:
                 setTextDelimiter((String)newValue);

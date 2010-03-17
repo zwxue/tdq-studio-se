@@ -189,7 +189,7 @@ public class DataManagerImpl extends DeployedComponentImpl implements DataManage
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case SoftwaredeploymentPackage.DATA_MANAGER__IS_CASE_SENSITIVE:
-                return isIsCaseSensitive() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsCaseSensitive();
             case SoftwaredeploymentPackage.DATA_MANAGER__CLIENT_CONNECTION:
                 return getClientConnection();
             case SoftwaredeploymentPackage.DATA_MANAGER__DATA_PACKAGE:
@@ -208,7 +208,7 @@ public class DataManagerImpl extends DeployedComponentImpl implements DataManage
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case SoftwaredeploymentPackage.DATA_MANAGER__IS_CASE_SENSITIVE:
-                setIsCaseSensitive(((Boolean)newValue).booleanValue());
+                setIsCaseSensitive((Boolean)newValue);
                 return;
             case SoftwaredeploymentPackage.DATA_MANAGER__CLIENT_CONNECTION:
                 getClientConnection().clear();

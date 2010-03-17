@@ -32,7 +32,7 @@ import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
  * </ul>
  * <!-- end-user-doc -->
  * <!-- begin-model-doc -->
- * The Hyperion Essbase package represents the physical data model for a Hyperion Essbase Database. This package extends the Multidimensional package and provides a specific metadata representation for Hyperion�s Essbase multidimensional database.
+ * The Hyperion Essbase package represents the physical data model for a Hyperion Essbase Database. This package extends the Multidimensional package and provides a specific metadata representation for Hyperion?s Essbase multidimensional database.
  * 
  * The classes in this package can be used as either sources or targets of data in the data warehouse, and are available to provide a physical implementation of the OLAP data model.
  * 

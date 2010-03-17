@@ -268,13 +268,13 @@ public class GraphSubsetImpl extends ProjectionImpl implements GraphSubset {
             case CwmmipPackage.GRAPH_SUBSET__ELEMENT:
                 return getElement();
             case CwmmipPackage.GRAPH_SUBSET__DEEP_COPY:
-                return isDeepCopy() ? Boolean.TRUE : Boolean.FALSE;
+                return isDeepCopy();
             case CwmmipPackage.GRAPH_SUBSET__COPY_DEPTH:
-                return new Long(getCopyDepth());
+                return getCopyDepth();
             case CwmmipPackage.GRAPH_SUBSET__AGGREGATIONS_ONLY:
-                return isAggregationsOnly() ? Boolean.TRUE : Boolean.FALSE;
+                return isAggregationsOnly();
             case CwmmipPackage.GRAPH_SUBSET__INCLUDE_ASSOCIATIONS:
-                return isIncludeAssociations() ? Boolean.TRUE : Boolean.FALSE;
+                return isIncludeAssociations();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -291,16 +291,16 @@ public class GraphSubsetImpl extends ProjectionImpl implements GraphSubset {
                 setElement((String)newValue);
                 return;
             case CwmmipPackage.GRAPH_SUBSET__DEEP_COPY:
-                setDeepCopy(((Boolean)newValue).booleanValue());
+                setDeepCopy((Boolean)newValue);
                 return;
             case CwmmipPackage.GRAPH_SUBSET__COPY_DEPTH:
-                setCopyDepth(((Long)newValue).longValue());
+                setCopyDepth((Long)newValue);
                 return;
             case CwmmipPackage.GRAPH_SUBSET__AGGREGATIONS_ONLY:
-                setAggregationsOnly(((Boolean)newValue).booleanValue());
+                setAggregationsOnly((Boolean)newValue);
                 return;
             case CwmmipPackage.GRAPH_SUBSET__INCLUDE_ASSOCIATIONS:
-                setIncludeAssociations(((Boolean)newValue).booleanValue());
+                setIncludeAssociations((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

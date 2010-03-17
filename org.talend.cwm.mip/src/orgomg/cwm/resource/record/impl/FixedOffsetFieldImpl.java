@@ -140,9 +140,9 @@ public class FixedOffsetFieldImpl extends FieldImpl implements FixedOffsetField 
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RecordPackage.FIXED_OFFSET_FIELD__OFFSET:
-                return new Long(getOffset());
+                return getOffset();
             case RecordPackage.FIXED_OFFSET_FIELD__OFFSET_UNIT_BITS:
-                return new Long(getOffsetUnitBits());
+                return getOffsetUnitBits();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -156,10 +156,10 @@ public class FixedOffsetFieldImpl extends FieldImpl implements FixedOffsetField 
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RecordPackage.FIXED_OFFSET_FIELD__OFFSET:
-                setOffset(((Long)newValue).longValue());
+                setOffset((Long)newValue);
                 return;
             case RecordPackage.FIXED_OFFSET_FIELD__OFFSET_UNIT_BITS:
-                setOffsetUnitBits(((Long)newValue).longValue());
+                setOffsetUnitBits((Long)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

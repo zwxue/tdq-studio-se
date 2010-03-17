@@ -302,9 +302,9 @@ public class TransformationExecutionImpl extends ModelElementImpl implements Tra
             case WarehouseoperationPackage.TRANSFORMATION_EXECUTION__END_DATE:
                 return getEndDate();
             case WarehouseoperationPackage.TRANSFORMATION_EXECUTION__IN_PROGRESS:
-                return isInProgress() ? Boolean.TRUE : Boolean.FALSE;
+                return isInProgress();
             case WarehouseoperationPackage.TRANSFORMATION_EXECUTION__SUCCESSFUL:
-                return isSuccessful() ? Boolean.TRUE : Boolean.FALSE;
+                return isSuccessful();
             case WarehouseoperationPackage.TRANSFORMATION_EXECUTION__STATUS:
                 return getStatus();
         }
@@ -326,10 +326,10 @@ public class TransformationExecutionImpl extends ModelElementImpl implements Tra
                 setEndDate((String)newValue);
                 return;
             case WarehouseoperationPackage.TRANSFORMATION_EXECUTION__IN_PROGRESS:
-                setInProgress(((Boolean)newValue).booleanValue());
+                setInProgress((Boolean)newValue);
                 return;
             case WarehouseoperationPackage.TRANSFORMATION_EXECUTION__SUCCESSFUL:
-                setSuccessful(((Boolean)newValue).booleanValue());
+                setSuccessful((Boolean)newValue);
                 return;
             case WarehouseoperationPackage.TRANSFORMATION_EXECUTION__STATUS:
                 setStatus((Expression)newValue);

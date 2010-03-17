@@ -69,7 +69,7 @@ public interface Enumeration extends DataType {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Identifies the EnumerationLiteral instances relevant for a particular Enumeration instance. If the Enumeration�s isOrdered attribute is True, the ordering constraint on this association end can be used to determine a logical ordering for the EnumerationLiteral instances. Otherwise, ordering is ignored.
+     * Identifies the EnumerationLiteral instances relevant for a particular Enumeration instance. If the Enumeration?s isOrdered attribute is True, the ordering constraint on this association end can be used to determine a logical ordering for the EnumerationLiteral instances. Otherwise, ordering is ignored.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Literal</em>' containment reference list.
      * @see orgomg.cwm.foundation.datatypes.DatatypesPackage#getEnumeration_Literal()

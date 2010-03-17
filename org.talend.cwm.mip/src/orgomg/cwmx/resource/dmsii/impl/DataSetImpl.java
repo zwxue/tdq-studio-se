@@ -330,13 +330,13 @@ public class DataSetImpl extends RecordDefImpl implements DataSet {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DmsiiPackage.DATA_SET__IS_GLOBAL:
-                return isIsGlobal() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGlobal();
             case DmsiiPackage.DATA_SET__ORGANIZATION:
                 return getOrganization();
             case DmsiiPackage.DATA_SET__REORGANIZE:
                 return getReorganize();
             case DmsiiPackage.DATA_SET__IS_REQUIRED_ALL:
-                return isIsRequiredAll() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsRequiredAll();
             case DmsiiPackage.DATA_SET__PARTITIONING_SET:
                 if (resolve) return getPartitioningSet();
                 return basicGetPartitioningSet();
@@ -353,7 +353,7 @@ public class DataSetImpl extends RecordDefImpl implements DataSet {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DmsiiPackage.DATA_SET__IS_GLOBAL:
-                setIsGlobal(((Boolean)newValue).booleanValue());
+                setIsGlobal((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_SET__ORGANIZATION:
                 setOrganization((String)newValue);
@@ -362,7 +362,7 @@ public class DataSetImpl extends RecordDefImpl implements DataSet {
                 setReorganize((String)newValue);
                 return;
             case DmsiiPackage.DATA_SET__IS_REQUIRED_ALL:
-                setIsRequiredAll(((Boolean)newValue).booleanValue());
+                setIsRequiredAll((Boolean)newValue);
                 return;
             case DmsiiPackage.DATA_SET__PARTITIONING_SET:
                 setPartitioningSet((Set)newValue);

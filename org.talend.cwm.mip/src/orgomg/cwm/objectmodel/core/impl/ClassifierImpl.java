@@ -541,7 +541,7 @@ public abstract class ClassifierImpl extends NamespaceImpl implements Classifier
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case CorePackage.CLASSIFIER__IS_ABSTRACT:
-                return isIsAbstract() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsAbstract();
             case CorePackage.CLASSIFIER__FEATURE:
                 return getFeature();
             case CorePackage.CLASSIFIER__STRUCTURAL_FEATURE:
@@ -584,7 +584,7 @@ public abstract class ClassifierImpl extends NamespaceImpl implements Classifier
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case CorePackage.CLASSIFIER__IS_ABSTRACT:
-                setIsAbstract(((Boolean)newValue).booleanValue());
+                setIsAbstract((Boolean)newValue);
                 return;
             case CorePackage.CLASSIFIER__FEATURE:
                 getFeature().clear();

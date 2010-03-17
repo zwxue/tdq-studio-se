@@ -34,10 +34,10 @@ import orgomg.cwm.resource.record.RecordPackage;
  * The CWM DMSII extension package contains classes supporting the description of DMS II database schemata and their deployment. DMS II is a database system available on Unisys ClearPath NX servers. DMS II is a non-CODASYL, network model database management system. The DMS II extension package is provided as example demonstrating appropriate usage of CWM classes in modeling this and similar DBMS environments.
  * 
  * Because DMSII database schemas are normally stored in record-based source files written in a data definition language called DASDL, the CWM DMSII extension package contains constructs allowing the declaration-order sequence of the DASDL source file to be preserved in the model. The goal of this is to allow a DASDL source to be stored into the DMSII model and subsequently regenerated from the model by a
- * suitably designed utility program. To achieve this ordering, the DMSII model represents ownership using the CWM ClassifierFeature association which is ordered, rather than the alternate technique using the ElementOwnership association which is unordered. A side-effect of this choice is that any DMSII class that can be ordered must be subclass of the CWM ObjectModel�s Feature class; this is the reason for the
+ * suitably designed utility program. To achieve this ordering, the DMSII model represents ownership using the CWM ClassifierFeature association which is ordered, rather than the alternate technique using the ElementOwnership association which is unordered. A side-effect of this choice is that any DMSII class that can be ordered must be subclass of the CWM ObjectModel?s Feature class; this is the reason for the
  * multiple inheritance required to define the SetStructure, DataSet, Database and Remap classes.
  * 
- * For convenience, utilities may chose to store the text of the DASDL file from which the database was created in a CWM Description instance attached to particular instances of DMSII model classes. The names of DMSII model elements are stored in the name attribute that every DMSII instance inherits from CWM�s ModelElement class.
+ * For convenience, utilities may chose to store the text of the DASDL file from which the database was created in a CWM Description instance attached to particular instances of DMSII model classes. The names of DMSII model elements are stored in the name attribute that every DMSII instance inherits from CWM?s ModelElement class.
  * 
  * The DMS II package depends on the following packages:
  * 
@@ -182,7 +182,7 @@ import orgomg.cwm.resource.record.RecordPackage;
  * self.reorganize <> "" implies self.reorganize = "KEY CHANGED" or
  * self.reorganize = "KEY SAME"
  * 
- * [C-27] The items in the Set�s key data must be owned by the DataSet that the Set
+ * [C-27] The items in the Set?s key data must be owned by the DataSet that the Set
  * spans.
  * context Set inv:
  * self.keyDataItem->forAll(self.keyDataItem.namespace = self.spannedClass)

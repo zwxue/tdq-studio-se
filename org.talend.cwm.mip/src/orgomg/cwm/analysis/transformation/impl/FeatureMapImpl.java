@@ -178,7 +178,7 @@ public class FeatureMapImpl extends ModelElementImpl implements FeatureMap {
      * @generated
      */
     public ClassifierMap getClassifierMap() {
-        if (eContainerFeatureID != TransformationPackage.FEATURE_MAP__CLASSIFIER_MAP) return null;
+        if (eContainerFeatureID() != TransformationPackage.FEATURE_MAP__CLASSIFIER_MAP) return null;
         return (ClassifierMap)eContainer();
     }
 
@@ -198,7 +198,7 @@ public class FeatureMapImpl extends ModelElementImpl implements FeatureMap {
      * @generated
      */
     public void setClassifierMap(ClassifierMap newClassifierMap) {
-        if (newClassifierMap != eInternalContainer() || (eContainerFeatureID != TransformationPackage.FEATURE_MAP__CLASSIFIER_MAP && newClassifierMap != null)) {
+        if (newClassifierMap != eInternalContainer() || (eContainerFeatureID() != TransformationPackage.FEATURE_MAP__CLASSIFIER_MAP && newClassifierMap != null)) {
             if (EcoreUtil.isAncestor(this, newClassifierMap))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -269,7 +269,7 @@ public class FeatureMapImpl extends ModelElementImpl implements FeatureMap {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case TransformationPackage.FEATURE_MAP__CLASSIFIER_MAP:
                 return eInternalContainer().eInverseRemove(this, TransformationPackage.CLASSIFIER_MAP__FEATURE_MAP, ClassifierMap.class, msgs);
         }

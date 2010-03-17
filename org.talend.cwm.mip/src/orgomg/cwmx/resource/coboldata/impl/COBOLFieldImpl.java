@@ -888,29 +888,29 @@ public class COBOLFieldImpl extends COBOLItemImpl implements COBOLField {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case CoboldataPackage.COBOL_FIELD__LEVEL:
-                return new Long(getLevel());
+                return getLevel();
             case CoboldataPackage.COBOL_FIELD__SIGN_KIND:
                 return getSignKind();
             case CoboldataPackage.COBOL_FIELD__IS_FILLER:
-                return isIsFiller() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsFiller();
             case CoboldataPackage.COBOL_FIELD__IS_JUSTIFIED_RIGHT:
-                return isIsJustifiedRight() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsJustifiedRight();
             case CoboldataPackage.COBOL_FIELD__IS_BLANK_WHEN_ZERO:
-                return isIsBlankWhenZero() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsBlankWhenZero();
             case CoboldataPackage.COBOL_FIELD__IS_SYNCHRONIZED:
-                return isIsSynchronized() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsSynchronized();
             case CoboldataPackage.COBOL_FIELD__PICTURE:
                 return getPicture();
             case CoboldataPackage.COBOL_FIELD__OCCURS_LOWER:
-                return new Long(getOccursLower());
+                return getOccursLower();
             case CoboldataPackage.COBOL_FIELD__OCCURS_UPPER:
-                return new Long(getOccursUpper());
+                return getOccursUpper();
             case CoboldataPackage.COBOL_FIELD__INDEX_NAME:
                 return getIndexName();
             case CoboldataPackage.COBOL_FIELD__IS_EXTERNAL:
-                return isIsExternal() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsExternal();
             case CoboldataPackage.COBOL_FIELD__IS_GLOBAL:
-                return isIsGlobal() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsGlobal();
             case CoboldataPackage.COBOL_FIELD__DEPENDING_ON_FIELD:
                 if (resolve) return getDependingOnField();
                 return basicGetDependingOnField();
@@ -941,40 +941,40 @@ public class COBOLFieldImpl extends COBOLItemImpl implements COBOLField {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case CoboldataPackage.COBOL_FIELD__LEVEL:
-                setLevel(((Long)newValue).longValue());
+                setLevel((Long)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__SIGN_KIND:
                 setSignKind((SignKindType)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__IS_FILLER:
-                setIsFiller(((Boolean)newValue).booleanValue());
+                setIsFiller((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__IS_JUSTIFIED_RIGHT:
-                setIsJustifiedRight(((Boolean)newValue).booleanValue());
+                setIsJustifiedRight((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__IS_BLANK_WHEN_ZERO:
-                setIsBlankWhenZero(((Boolean)newValue).booleanValue());
+                setIsBlankWhenZero((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__IS_SYNCHRONIZED:
-                setIsSynchronized(((Boolean)newValue).booleanValue());
+                setIsSynchronized((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__PICTURE:
                 setPicture((String)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__OCCURS_LOWER:
-                setOccursLower(((Long)newValue).longValue());
+                setOccursLower((Long)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__OCCURS_UPPER:
-                setOccursUpper(((Long)newValue).longValue());
+                setOccursUpper((Long)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__INDEX_NAME:
                 setIndexName((String)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__IS_EXTERNAL:
-                setIsExternal(((Boolean)newValue).booleanValue());
+                setIsExternal((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__IS_GLOBAL:
-                setIsGlobal(((Boolean)newValue).booleanValue());
+                setIsGlobal((Boolean)newValue);
                 return;
             case CoboldataPackage.COBOL_FIELD__DEPENDING_ON_FIELD:
                 setDependingOnField((COBOLItem)newValue);

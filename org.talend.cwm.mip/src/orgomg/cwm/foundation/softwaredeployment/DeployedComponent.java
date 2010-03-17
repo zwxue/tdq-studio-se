@@ -41,7 +41,7 @@ public interface DeployedComponent extends orgomg.cwm.objectmodel.core.Package {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * A pathname for the DeployedComponent within the Machine�s file system.
+     * A pathname for the DeployedComponent within the Machine?s file system.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Pathname</em>' attribute.
      * @see #setPathname(String)

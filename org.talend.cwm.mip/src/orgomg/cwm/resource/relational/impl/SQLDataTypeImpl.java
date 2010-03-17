@@ -100,7 +100,7 @@ public abstract class SQLDataTypeImpl extends ClassifierImpl implements SQLDataT
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RelationalPackage.SQL_DATA_TYPE__TYPE_NUMBER:
-                return new Long(getTypeNumber());
+                return getTypeNumber();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -114,7 +114,7 @@ public abstract class SQLDataTypeImpl extends ClassifierImpl implements SQLDataT
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RelationalPackage.SQL_DATA_TYPE__TYPE_NUMBER:
-                setTypeNumber(((Long)newValue).longValue());
+                setTypeNumber((Long)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

@@ -212,9 +212,9 @@ public class ViewImpl extends NamedColumnSetImpl implements View {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RelationalPackage.VIEW__IS_READ_ONLY:
-                return isIsReadOnly() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsReadOnly();
             case RelationalPackage.VIEW__CHECK_OPTION:
-                return isCheckOption() ? Boolean.TRUE : Boolean.FALSE;
+                return isCheckOption();
             case RelationalPackage.VIEW__QUERY_EXPRESSION:
                 return getQueryExpression();
         }
@@ -230,10 +230,10 @@ public class ViewImpl extends NamedColumnSetImpl implements View {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RelationalPackage.VIEW__IS_READ_ONLY:
-                setIsReadOnly(((Boolean)newValue).booleanValue());
+                setIsReadOnly((Boolean)newValue);
                 return;
             case RelationalPackage.VIEW__CHECK_OPTION:
-                setCheckOption(((Boolean)newValue).booleanValue());
+                setCheckOption((Boolean)newValue);
                 return;
             case RelationalPackage.VIEW__QUERY_EXPRESSION:
                 setQueryExpression((QueryExpression)newValue);

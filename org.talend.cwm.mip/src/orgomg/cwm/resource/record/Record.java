@@ -13,7 +13,7 @@ package orgomg.cwm.resource.record;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * A Record, a subclass of Object, represents a single data record. Each Record is described by a RecordDef instance found via the Object�s InstanceClassifier association.
+ * A Record, a subclass of Object, represents a single data record. Each Record is described by a RecordDef instance found via the Object?s InstanceClassifier association.
  * <!-- end-model-doc -->
  *
  *

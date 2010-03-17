@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -41,6 +42,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
+import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -48,6 +50,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * DOC rli class global comment. Detailled comment
  */
 public abstract class AbstractMetadataFormPage extends AbstractFormPage {
+
 
     public static final String ACTION_HANDLER = "ACTION_HANDLER"; //$NON-NLS-1$
 
@@ -134,13 +137,27 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         Composite parent = toolkit.createComposite(section);
         parent.setLayout(new GridLayout(2, false));
 
-        nameText = createMetadataTextFiled(NAME_LABEL, nameText, parent);
+        nameText = createMetadataTextFiled(NAME_LABEL, parent);
+        // set the max number of characters to be entered in the text field
+        //ADDED sgandon 16/03/2010 bug 11760
+        nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME, 200));
 
-        purposeText = createMetadataTextFiled(PURPOSE_LABEL, purposeText, parent);
 
-        descriptionText = createMetadataTextFiled(DESCRIPTION_LABEL, descriptionText, parent);
+        purposeText = createMetadataTextFiled(PURPOSE_LABEL, parent);
+        // set the max number of characters to be entered in the text field
+        //ADDED sgandon 16/03/2010 bug 11760
+        purposeText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE, 200));
 
-        authorText = createMetadataTextFiled(AUTHOR_LABEL, authorText, parent);
+        // description fields
+        //ADDED sgandon 16/03/2010 bug 11760
+        toolkit.createLabel(parent, DESCRIPTION_LABEL);
+
+        descriptionText = toolkit.createText(parent, null, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        GridDataFactory.fillDefaults().hint(META_FIELD_WIDTH, 60).applyTo(descriptionText);
+        // set the max number of characters to be entered in the text field
+        descriptionText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.DESCRIPTION, 200));
+
+        authorText = createMetadataTextFiled(AUTHOR_LABEL, parent);
 
         // MOD 2009-09-08 yyi Feature: 8870.
         if (!isDefaultProject()) {
@@ -301,11 +318,13 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * @param text
      * @param parent
      * @return
+     * MOD sgandon 16/03/2010 bug 11760 : unecessary parameter removed
+
      */
-    private Text createMetadataTextFiled(String label, Text text, Composite parent) {
+    private Text createMetadataTextFiled(String label, Composite parent) {
         toolkit.createLabel(parent, label);
 
-        text = toolkit.createText(parent, null, SWT.BORDER);
+        Text text = toolkit.createText(parent, null, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(text);
         ((GridData) text.getLayoutData()).widthHint = META_FIELD_WIDTH;
         return text;

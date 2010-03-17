@@ -177,7 +177,7 @@ public class IndexedFeatureImpl extends ModelElementImpl implements IndexedFeatu
      * @generated
      */
     public Index getIndex() {
-        if (eContainerFeatureID != KeysindexesPackage.INDEXED_FEATURE__INDEX) return null;
+        if (eContainerFeatureID() != KeysindexesPackage.INDEXED_FEATURE__INDEX) return null;
         return (Index)eContainer();
     }
 
@@ -197,7 +197,7 @@ public class IndexedFeatureImpl extends ModelElementImpl implements IndexedFeatu
      * @generated
      */
     public void setIndex(Index newIndex) {
-        if (newIndex != eInternalContainer() || (eContainerFeatureID != KeysindexesPackage.INDEXED_FEATURE__INDEX && newIndex != null)) {
+        if (newIndex != eInternalContainer() || (eContainerFeatureID() != KeysindexesPackage.INDEXED_FEATURE__INDEX && newIndex != null)) {
             if (EcoreUtil.isAncestor(this, newIndex))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -255,7 +255,7 @@ public class IndexedFeatureImpl extends ModelElementImpl implements IndexedFeatu
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case KeysindexesPackage.INDEXED_FEATURE__INDEX:
                 return eInternalContainer().eInverseRemove(this, KeysindexesPackage.INDEX__INDEXED_FEATURE, Index.class, msgs);
         }
@@ -271,7 +271,7 @@ public class IndexedFeatureImpl extends ModelElementImpl implements IndexedFeatu
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case KeysindexesPackage.INDEXED_FEATURE__IS_ASCENDING:
-                return isIsAscending() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsAscending();
             case KeysindexesPackage.INDEXED_FEATURE__FEATURE:
                 if (resolve) return getFeature();
                 return basicGetFeature();
@@ -290,7 +290,7 @@ public class IndexedFeatureImpl extends ModelElementImpl implements IndexedFeatu
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case KeysindexesPackage.INDEXED_FEATURE__IS_ASCENDING:
-                setIsAscending(((Boolean)newValue).booleanValue());
+                setIsAscending((Boolean)newValue);
                 return;
             case KeysindexesPackage.INDEXED_FEATURE__FEATURE:
                 setFeature((StructuralFeature)newValue);

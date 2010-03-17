@@ -310,7 +310,7 @@ public class SecondaryIndexImpl extends ModelElementImpl implements SecondaryInd
      * @generated
      */
     public SegmentComplex getSegment() {
-        if (eContainerFeatureID != ImsdatabasePackage.SECONDARY_INDEX__SEGMENT) return null;
+        if (eContainerFeatureID() != ImsdatabasePackage.SECONDARY_INDEX__SEGMENT) return null;
         return (SegmentComplex)eContainer();
     }
 
@@ -330,7 +330,7 @@ public class SecondaryIndexImpl extends ModelElementImpl implements SecondaryInd
      * @generated
      */
     public void setSegment(SegmentComplex newSegment) {
-        if (newSegment != eInternalContainer() || (eContainerFeatureID != ImsdatabasePackage.SECONDARY_INDEX__SEGMENT && newSegment != null)) {
+        if (newSegment != eInternalContainer() || (eContainerFeatureID() != ImsdatabasePackage.SECONDARY_INDEX__SEGMENT && newSegment != null)) {
             if (EcoreUtil.isAncestor(this, newSegment))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -503,7 +503,7 @@ public class SecondaryIndexImpl extends ModelElementImpl implements SecondaryInd
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case ImsdatabasePackage.SECONDARY_INDEX__SEGMENT:
                 return eInternalContainer().eInverseRemove(this, ImsdatabasePackage.SEGMENT_COMPLEX__SECONDARY_INDEX, SegmentComplex.class, msgs);
         }

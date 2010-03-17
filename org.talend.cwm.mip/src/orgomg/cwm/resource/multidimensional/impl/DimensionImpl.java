@@ -150,7 +150,7 @@ public class DimensionImpl extends ClassImpl implements Dimension {
      * @generated
      */
     public Schema getSchema() {
-        if (eContainerFeatureID != MultidimensionalPackage.DIMENSION__SCHEMA) return null;
+        if (eContainerFeatureID() != MultidimensionalPackage.DIMENSION__SCHEMA) return null;
         return (Schema)eContainer();
     }
 
@@ -170,7 +170,7 @@ public class DimensionImpl extends ClassImpl implements Dimension {
      * @generated
      */
     public void setSchema(Schema newSchema) {
-        if (newSchema != eInternalContainer() || (eContainerFeatureID != MultidimensionalPackage.DIMENSION__SCHEMA && newSchema != null)) {
+        if (newSchema != eInternalContainer() || (eContainerFeatureID() != MultidimensionalPackage.DIMENSION__SCHEMA && newSchema != null)) {
             if (EcoreUtil.isAncestor(this, newSchema))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -251,7 +251,7 @@ public class DimensionImpl extends ClassImpl implements Dimension {
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case MultidimensionalPackage.DIMENSION__SCHEMA:
                 return eInternalContainer().eInverseRemove(this, MultidimensionalPackage.SCHEMA__DIMENSION, Schema.class, msgs);
         }

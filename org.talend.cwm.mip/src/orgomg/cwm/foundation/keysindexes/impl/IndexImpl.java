@@ -325,11 +325,11 @@ public class IndexImpl extends ModelElementImpl implements Index {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case KeysindexesPackage.INDEX__IS_PARTITIONING:
-                return isIsPartitioning() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsPartitioning();
             case KeysindexesPackage.INDEX__IS_SORTED:
-                return isIsSorted() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsSorted();
             case KeysindexesPackage.INDEX__IS_UNIQUE:
-                return isIsUnique() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsUnique();
             case KeysindexesPackage.INDEX__INDEXED_FEATURE:
                 return getIndexedFeature();
             case KeysindexesPackage.INDEX__SPANNED_CLASS:
@@ -349,13 +349,13 @@ public class IndexImpl extends ModelElementImpl implements Index {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case KeysindexesPackage.INDEX__IS_PARTITIONING:
-                setIsPartitioning(((Boolean)newValue).booleanValue());
+                setIsPartitioning((Boolean)newValue);
                 return;
             case KeysindexesPackage.INDEX__IS_SORTED:
-                setIsSorted(((Boolean)newValue).booleanValue());
+                setIsSorted((Boolean)newValue);
                 return;
             case KeysindexesPackage.INDEX__IS_UNIQUE:
-                setIsUnique(((Boolean)newValue).booleanValue());
+                setIsUnique((Boolean)newValue);
                 return;
             case KeysindexesPackage.INDEX__INDEXED_FEATURE:
                 getIndexedFeature().clear();

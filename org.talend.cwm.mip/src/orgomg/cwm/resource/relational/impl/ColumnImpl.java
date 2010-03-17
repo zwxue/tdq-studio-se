@@ -494,13 +494,13 @@ public class ColumnImpl extends AttributeImpl implements Column {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RelationalPackage.COLUMN__PRECISION:
-                return new Long(getPrecision());
+                return getPrecision();
             case RelationalPackage.COLUMN__SCALE:
-                return new Long(getScale());
+                return getScale();
             case RelationalPackage.COLUMN__IS_NULLABLE:
                 return getIsNullable();
             case RelationalPackage.COLUMN__LENGTH:
-                return new Long(getLength());
+                return getLength();
             case RelationalPackage.COLUMN__COLLATION_NAME:
                 return getCollationName();
             case RelationalPackage.COLUMN__CHARACTER_SET_NAME:
@@ -524,16 +524,16 @@ public class ColumnImpl extends AttributeImpl implements Column {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RelationalPackage.COLUMN__PRECISION:
-                setPrecision(((Long)newValue).longValue());
+                setPrecision((Long)newValue);
                 return;
             case RelationalPackage.COLUMN__SCALE:
-                setScale(((Long)newValue).longValue());
+                setScale((Long)newValue);
                 return;
             case RelationalPackage.COLUMN__IS_NULLABLE:
                 setIsNullable((NullableType)newValue);
                 return;
             case RelationalPackage.COLUMN__LENGTH:
-                setLength(((Long)newValue).longValue());
+                setLength((Long)newValue);
                 return;
             case RelationalPackage.COLUMN__COLLATION_NAME:
                 setCollationName((String)newValue);
