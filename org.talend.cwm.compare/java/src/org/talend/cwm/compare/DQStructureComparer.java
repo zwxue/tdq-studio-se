@@ -25,15 +25,20 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
@@ -274,8 +279,7 @@ public final class DQStructureComparer {
         connectionParameters.setParameters(properties);
         // ADD xqliu 2010-03-04 feature 11412
         connectionParameters.setDbName(DataProviderHelper.getDBName(tdProviderConnection.getObject()));
-        connectionParameters.setRetrieveAllMetadata(DataProviderHelper
-                .getRetrieveAllMetadata(tdProviderConnection.getObject()));
+        connectionParameters.setRetrieveAllMetadata(DataProviderHelper.getRetrieveAllMetadata(tdProviderConnection.getObject()));
         // ~11412
         TypedReturnCode<TdDataProvider> returnProvider = ConnectionService.createConnection(connectionParameters);
         return returnProvider;
@@ -491,6 +495,24 @@ public final class DQStructureComparer {
             throw new ReloadCompareException(e);
         }
         final DiffModel diff = DiffService.doDiff(match);
+        // ~ MOD mzhao bug 11449. 2010-03-16
+        if (leftResource.getContents() == null || leftResource.getContents().size() == 0) {
+            // Could not merge this.
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Could not merge this",
+                    "left roots of diff model is empty");
+            return null;
+        }
+        EList<DiffElement> ownedElements = diff.getOwnedElements();
+        for (DiffElement de : ownedElements) {
+            EList<DiffElement> subDiffElements = de.getSubDiffElements();
+            for (DiffElement difElement : subDiffElements) {
+                if (difElement instanceof ModelElementChangeRightTarget) {
+                    ((ModelElementChangeRightTarget) difElement).setLeftParent(leftResource.getContents().get(0));
+
+                }
+            }
+        }
+        // ~
 
         // Open UI for different comparison
         final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
