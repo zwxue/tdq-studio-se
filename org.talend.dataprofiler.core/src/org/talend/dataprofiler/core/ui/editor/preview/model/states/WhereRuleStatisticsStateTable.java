@@ -169,17 +169,22 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     @Override
     public List<JFreeChart> getChartList() {
+        // MOD xqliu 2010-03-17 feature 10834
         List<JFreeChart> ret = new ArrayList<JFreeChart>();
-        JFreeChart stackChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getOptimizeShowDataset(), true); //$NON-NLS-1$
-        ChartDecorator.decorate(stackChart);
-        ret.add(stackChart); //$NON-NLS-1$
-        if (false) { // show line chart only in TDQ!!!
-            JFreeChart lineChart = TopChartFactory.createLineChart(DefaultMessagesImpl
-                    .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false); //$NON-NLS-1$
-            ChartDecorator.decorate(lineChart);
-            ret.add(lineChart); //$NON-NLS-1$
+        List<CategoryDataset> optimizeShowDataset = getOptimizeShowDataset();
+        for (CategoryDataset dataset : optimizeShowDataset) {
+            JFreeChart stackChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
+                    .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), dataset, true); //$NON-NLS-1$
+            ChartDecorator.decorate(stackChart);
+            ret.add(stackChart); //$NON-NLS-1$
         }
+        // if (false) { // show line chart only in TDQ!!!
+        // JFreeChart lineChart = TopChartFactory.createLineChart(DefaultMessagesImpl
+        //                            .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false); //$NON-NLS-1$
+        // ChartDecorator.decorate(lineChart);
+        //                    ret.add(lineChart); //$NON-NLS-1$
+        // }
+        // ~10834
         return ret;
     }
 
@@ -188,9 +193,9 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      * 
      * @return
      */
-    private CategoryDataset getOptimizeShowDataset() {
-        CustomerDefaultCategoryDataset customerDataset = new CustomerDefaultCategoryDataset();
-
+    private List<CategoryDataset> getOptimizeShowDataset() {
+        List<CategoryDataset> result = new ArrayList<CategoryDataset>();
+        // get the page size
         String dqruleSize = EditorPreferencePage.getDQRuleSize();
         int maxSize = 999999;
         int size = maxSize;
@@ -202,16 +207,23 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
         } catch (NumberFormatException e) {
             size = maxSize;
         }
-
-        int i = 0;
-        for (TableIndicatorUnit unit : units) {
-            i++;
-            if (i > size) {
-                break;
+        // build the customer dataset list
+        int totalNum = units.size();
+        int pageNum = totalNum % size == 0 ? totalNum / size : totalNum / size + 1;
+        for (int i = 0; i < pageNum; i++) {
+            CustomerDefaultCategoryDataset customerDataset = new CustomerDefaultCategoryDataset();
+            for (int j = 0; j < size; ++j) {
+                int index = i * size + j;
+                if (index < totalNum) {
+                    addDataEntity2CustomerDataset(customerDataset, units.get(index));
+                } else {
+                    break;
+                }
             }
-            addDataEntity2CustomerDataset(customerDataset, unit);
+            result.add(customerDataset);
         }
-        return customerDataset;
+
+        return result;
     }
 
     /**
