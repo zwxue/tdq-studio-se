@@ -40,13 +40,15 @@ import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
@@ -388,10 +390,24 @@ public final class ConnectionUtils {
      * @param connection
      * @return
      */
-    public static boolean isMdmConnection(TdProviderConnection connection) {
+    public static boolean isMdmConnection(ProviderConnection connection) {
         TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBTYPE, connection.getTaggedValue());
         if (tv != null) {
             return SupportDBUrlType.MDM.getDBKey().equals(tv.getValue());
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "isMdmConnection".
+     * 
+     * @param connection
+     * @return
+     */
+    public static boolean isMdmConnection(DataProvider dataprovider) {
+        ProviderConnection providerConnection = DataProviderHelper.getTdProviderConnection(dataprovider).getObject();
+        if (providerConnection != null) {
+            return isMdmConnection(providerConnection);
         }
         return false;
     }
