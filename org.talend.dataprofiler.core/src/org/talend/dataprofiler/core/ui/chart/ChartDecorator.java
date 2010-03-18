@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.Plot;
@@ -30,7 +29,6 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -103,13 +101,12 @@ public final class ChartDecorator {
      */
     public static void decorateCategoryPlot(JFreeChart chart) {
 
-        Font font = null;
         CategoryPlot plot = chart.getCategoryPlot();
         CategoryItemRenderer render = plot.getRenderer();
         CategoryAxis domainAxis = plot.getDomainAxis();
         ValueAxis valueAxis = plot.getRangeAxis();
 
-        font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);
+        Font font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);
 
         render.setBaseItemLabelFont(font);
         // MOD zshen 10998: change the font name 2010-01-16
@@ -137,15 +134,13 @@ public final class ChartDecorator {
 
         font = null;
 
-        String label = chart.getCategoryPlot().getDomainAxis().getLabel();
-        if (DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics").equals(label)
-                || DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics").equals(label)) {
+        if (render instanceof BarRenderer) {
 
             int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
-            domainAxis.setTickLabelFont(new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE));
-            domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createDownRotationLabelPositions(Math.PI / 10.0));
+            domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));
             domainAxis.setUpperMargin(0.1);
-            ((BarRenderer) plot.getRenderer()).setItemMargin(-0.50 * rowCount);
+            domainAxis.setMaximumCategoryLabelLines(2);
+            ((BarRenderer) render).setItemMargin(-0.50 * rowCount);
         }
         // ~10998
     }

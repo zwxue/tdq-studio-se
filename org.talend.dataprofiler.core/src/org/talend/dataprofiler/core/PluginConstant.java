@@ -77,7 +77,7 @@ public final class PluginConstant {
 
     public static final String VERSION_FILE_PATH = ".version.txt"; //$NON-NLS-1$
 
-    public static final int CHART_STANDARD_WIDHT = 550;
+    public static final int CHART_STANDARD_WIDHT = 600;
 
     public static final int CHART_STANDARD_HEIGHT = 275;
 
