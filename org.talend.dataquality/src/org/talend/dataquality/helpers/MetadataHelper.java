@@ -101,7 +101,8 @@ public final class MetadataHelper {
                 && (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column))) {
             return DataminingType.NOMINAL;
         } else {
-            return DataminingType.get(contentType);
+            // MOD xqliu 2010-03-18 bug 12014
+            return getDefaultDataminingType(column.getJavaType());
         }
     }
 
