@@ -71,7 +71,10 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -79,6 +82,7 @@ import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -148,10 +152,15 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         if (correlationAnalysisHandler.getIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             currentCountAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
+            currentCountAvgNullIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
+            currentCountAvgNullIndicator.setDistinctCountIndicator(IndicatorsFactory.eINSTANCE.createDistinctCountIndicator());
+            currentCountAvgNullIndicator.setDuplicateCountIndicator(IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator());
+            currentCountAvgNullIndicator.setUniqueCountIndicator(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
             columnSetMultiIndicator = currentCountAvgNullIndicator;
         } else {
             columnSetMultiIndicator = (ColumnSetMultiValueIndicator) correlationAnalysisHandler.getIndicator();
         }
+        initializeIndicator(columnSetMultiIndicator);
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             if (tdColumn == null) {
@@ -160,6 +169,17 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             // currentColumnIndicator = new ColumnIndicator(tdColumn);
             DataminingType dataminingType = correlationAnalysisHandler.getDatamingType(tdColumn);
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, tdColumn);
+        }
+    }
+
+    private void initializeIndicator(Indicator indicator) {
+        if (indicator.getIndicatorDefinition() == null) {
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
+        }
+        if (indicator instanceof CompositeIndicator) {
+            for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
+                initializeIndicator(child); // recurse
+            }
         }
     }
 

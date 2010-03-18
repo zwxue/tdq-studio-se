@@ -64,12 +64,16 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.ReturnCode;
@@ -139,14 +143,19 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         columnSetAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = columnSetAnalysisHandler.getStringDataFilter();
         analyzedColumns = columnSetAnalysisHandler.getAnalyzedColumns();
-        SimpleStatIndicator ssIndicator;
         if (columnSetAnalysisHandler.getIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
-            ssIndicator = columnsetFactory.createSimpleStatIndicator();
-            simpleStatIndicator = ssIndicator;
+            simpleStatIndicator = columnsetFactory.createSimpleStatIndicator();
+            simpleStatIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
+            simpleStatIndicator.setDistinctCountIndicator(IndicatorsFactory.eINSTANCE.createDistinctCountIndicator());
+            simpleStatIndicator.setDuplicateCountIndicator(IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator());
+            simpleStatIndicator.setUniqueCountIndicator(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
         } else {
             simpleStatIndicator = (SimpleStatIndicator) columnSetAnalysisHandler.getIndicator();
         }
+
+        initializeIndicator(simpleStatIndicator);
+
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             if (tdColumn == null) {
@@ -155,6 +164,17 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, tdColumn);
         }
 
+    }
+
+    private void initializeIndicator(Indicator indicator) {
+        if (indicator.getIndicatorDefinition() == null) {
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
+        }
+        if (indicator instanceof CompositeIndicator) {
+            for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
+                initializeIndicator(child); // recurse
+            }
+        }
     }
 
     @Override
