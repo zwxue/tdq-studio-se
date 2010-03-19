@@ -22,14 +22,16 @@ import org.talend.i18n.Messages;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements RegexpMatchingIndicator {
 
     private static Logger log = Logger.getLogger(RegexpMatchingIndicatorImpl.class);
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RegexpMatchingIndicatorImpl() {
@@ -38,6 +40,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -119,7 +122,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
     @Override
     public boolean handle(Object data) {
         if (data != null) {
-            String body = String.valueOf(data);
+            String body = String.valueOf(data).trim();
             Matcher matcher = pattern.matcher(body);
             if (matcher.find()) {
                 this.matchingValueCount++;

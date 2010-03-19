@@ -38,11 +38,11 @@ public class GenericSQLHandler {
     private static final String LIMIT_OFFSET = "<%=__LIMIT_OFFSET__%>"; //$NON-NLS-1$
 
     private static final String LIMIT_ROW_PLUS_OFFSET = "<%=__LIMIT_ROW_PLUS_OFFSET__%>"; //$NON-NLS-1$
-   
+
     public static final String COLUMN_NAMES_A = "<%=__COLUMN_NAME_A__%>";
 
     public static final String COLUMN_NAMES_B = "<%=__COLUMN_NAME_B__%>";
- 
+
     private final String originalSQL;
 
     private String sqlString;
@@ -122,8 +122,8 @@ public class GenericSQLHandler {
     public GenericSQLHandler replaceLimitOffset(String colName, String table, String limitRow, String offset,
             String limitRowPlusOffset) {
         this.replaceColumnTable(colName, table);
-        sqlString = this.sqlString.replace(LIMIT_ROW, limitRow).replace(LIMIT_OFFSET, offset).replace(
-                LIMIT_ROW_PLUS_OFFSET, limitRowPlusOffset);
+        sqlString = this.sqlString.replace(LIMIT_ROW, limitRow).replace(LIMIT_OFFSET, offset).replace(LIMIT_ROW_PLUS_OFFSET,
+                limitRowPlusOffset);
         return this;
     }
 
@@ -131,12 +131,12 @@ public class GenericSQLHandler {
         sqlString = sqlString.replace(PATTERN_EXPRESSION, regexp);
         return this;
     }
-    
+
     public GenericSQLHandler replaceColumnA(String regexp) {
         sqlString = sqlString.replace(COLUMN_NAMES_A, regexp);
         return this;
     }
-    
+
     public GenericSQLHandler replaceColumnB(String regexp) {
         sqlString = sqlString.replace(COLUMN_NAMES_B, regexp);
         return this;
@@ -154,7 +154,7 @@ public class GenericSQLHandler {
     public String getSqlString() {
         return this.sqlString;
     }
-    
+
     /**
      *Method "createGenericSqlWithRegexFunction".
      * 

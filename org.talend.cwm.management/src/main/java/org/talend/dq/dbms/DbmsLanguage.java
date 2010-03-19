@@ -1002,27 +1002,29 @@ public class DbmsLanguage {
      * @return the generic query to get the invalid detailed values in the functional dependency analysis
      */
     public String getFDGenericInvalidDetailedValues() {
-        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
     }
 
     public String getFDGenericValidDetailedValues() {
-        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
     }
 
     public String getFDGenericInvalidValues() {
-        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
     }
 
     public String getFDGenericValidValues() {
-        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*)  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
     }
 
     public String getFDGenericValidRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as D  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%>, A,D ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as countNum  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        // GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%>, A,D
     }
 
     public String getFDGenericInvalidRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as D  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%>,A,D ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as countNum  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        // GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%>,A,D
     }
 
     /**

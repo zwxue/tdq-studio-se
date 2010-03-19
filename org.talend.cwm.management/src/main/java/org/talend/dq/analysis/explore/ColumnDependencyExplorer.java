@@ -32,7 +32,6 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnDependencyExplorer extends DataExplorer {
 
-
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         map.put("View valid values", this.getValidValuesStatement());
@@ -54,13 +53,35 @@ public class ColumnDependencyExplorer extends DataExplorer {
     }
 
     private String getDetailedInvalidValuesStatement() {
-        return getStatement(dbmsLanguage.getFDGenericInvalidDetailedValues());
+        // MOD by zshen fixed 12039 to distinguish the same name of column.
+        String genericSQL = dbmsLanguage.getFDGenericInvalidDetailedValues();
+        ColumnDependencyIndicator cdIndicator = ((ColumnDependencyIndicator) this.indicator);
+        Column columnA = cdIndicator.getColumnA();
+        Column columnB = cdIndicator.getColumnB();
+        if (columnA.getName().equals(columnB.getName())) {
+            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_A, dbmsLanguage.quote(columnA.getName()) + " AS "
+                    + columnA.getName() + "_A");
+            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_B, dbmsLanguage.quote(columnB.getName()) + " AS "
+                    + columnA.getName() + "_B");
+        }
+        return getStatement(genericSQL);
     }
 
     private String getDetailedValidValuesStatement() {
-        return getStatement(dbmsLanguage.getFDGenericValidDetailedValues());
+        // MOD by zshen fixed 12039 to distinguish the same name of column.
+        String genericSQL = dbmsLanguage.getFDGenericValidDetailedValues();
+        ColumnDependencyIndicator cdIndicator = ((ColumnDependencyIndicator) this.indicator);
+        Column columnA = cdIndicator.getColumnA();
+        Column columnB = cdIndicator.getColumnB();
+        if (columnA.getName().equals(columnB.getName())) {
+            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_A, dbmsLanguage.quote(columnA.getName()) + " AS "
+                    + columnA.getName() + "_A");
+            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_B, dbmsLanguage.quote(columnB.getName()) + " AS "
+                    + columnA.getName() + "_B");
+        }
+        return getStatement(genericSQL);
     }
-    
+
     private String getInvalidValuesStatement() {
         return getStatement(dbmsLanguage.getFDGenericInvalidValues());
     }
@@ -69,7 +90,6 @@ public class ColumnDependencyExplorer extends DataExplorer {
         return getStatement(dbmsLanguage.getFDGenericValidValues());
     }
 
-    
     /**
      * DOC xqliu Comment method "getValidRowsStatement".
      * 
@@ -91,6 +111,7 @@ public class ColumnDependencyExplorer extends DataExplorer {
         Column columnB = cdIndicator.getColumnB();
 
         GenericSQLHandler sqlHandler = new GenericSQLHandler(genericSQL);
+
         sqlHandler.replaceColumnA(dbmsLanguage.quote(columnA.getName())).replaceColumnB(dbmsLanguage.quote(columnB.getName()))
                 .replaceTable(dbmsLanguage.quote(getFullyQualifiedTableName(columnA)));
 
