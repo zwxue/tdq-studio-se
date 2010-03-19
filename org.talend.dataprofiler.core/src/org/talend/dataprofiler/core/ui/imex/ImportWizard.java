@@ -52,15 +52,16 @@ public class ImportWizard extends Wizard {
     @Override
     public boolean performFinish() {
         File[] files = importPage.getElements();
+        IImexWriter writer = ImportWriterFactory.create(type);
 
         try {
             for (File file : files) {
 
-                IImexWriter writer = ImportWriterFactory.create(type);
                 writer.initPath(new ItemRecord(file), null);
                 writer.write();
-                writer.finish();
             }
+            writer.finish();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

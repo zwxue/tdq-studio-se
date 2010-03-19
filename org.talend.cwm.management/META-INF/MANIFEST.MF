@@ -13,7 +13,6 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.talend.sqltools,
  org.talend.utils,
  net.sourceforge.sqlexplorer,
- org.talend.model,
  org.talend.commons,
  org.talend.libraries.apache,
  org.talend.libraries.jung;resolution:=optional,
@@ -32,7 +31,7 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.talend.top.repository,
  org.eclipse.xsd,
  org.talend.libraries.eXist,
- org.talend.core;resolution:=optional
+ org.talend.core
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.builders,
  org.talend.cwm.db.connection,

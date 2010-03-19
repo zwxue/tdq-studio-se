@@ -59,7 +59,6 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.talend.core.prefs"
             class="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"
             id="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"
             name="%page.name.DataExplorer">
