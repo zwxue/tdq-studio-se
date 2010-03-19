@@ -755,7 +755,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD xqliu 2010-01-04 bug 10190
-        AnalysisHelper.setReloadDatabases(analysis, reloadDatabasesBtn.getSelection());
+        if (isConnectionAnalysis()) {
+            AnalysisHelper.setReloadDatabases(analysis, reloadDatabasesBtn.getSelection());
+        }
         // ~
         EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
         if (!this.tableFilterText.getText().equals(latestTableFilterValue)) {

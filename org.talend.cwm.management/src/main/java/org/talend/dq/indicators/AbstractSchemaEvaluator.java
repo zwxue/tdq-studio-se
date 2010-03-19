@@ -418,7 +418,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         final String[] tablePatterns = tablePattern != null && tablePattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
                 .split(this.tablePattern, FILTER_SEP) : new String[] { this.tablePattern };
         for (String pat : tablePatterns) {
-            String trimPat = pat != null ? pat.trim() : pat;
+            // MOD zshen bug 12041: the variable trimPat must be null(not a "") if it isn't a table name.
+            String trimPat = pat != null && !"".equals(pat) ? pat.trim() : null;
+            // ~12041
             List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(catName, schemaName, trimPat);
             for (NamedColumnSet t : tables) {
                 tableCount++;
@@ -433,7 +435,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         final String[] viewPatterns = viewPattern != null && viewPattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
                 .split(this.viewPattern, FILTER_SEP) : new String[] { this.viewPattern };
         for (String pat : viewPatterns) {
-            String trimPat = pat != null ? pat.trim() : pat;
+            // MOD zshen bug 12041: the variable trimPat must be null(not a "") if it isn't a view name.
+            String trimPat = pat != null && !"".equals(pat) ? pat.trim() : pat;
+            // ~12041
             List<? extends NamedColumnSet> views = viewBuilder.getColumnSets(catName, schemaName, trimPat);
             for (NamedColumnSet t : views) {
                 viewCount++;
