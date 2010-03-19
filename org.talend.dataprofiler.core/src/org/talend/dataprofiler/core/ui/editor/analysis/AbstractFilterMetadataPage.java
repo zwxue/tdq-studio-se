@@ -755,7 +755,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD xqliu 2010-01-04 bug 10190
-        if (isConnectionAnalysis()) {
+        if (isConnectionAnalysis()) { // MOD zshen 2010-03-19 bug 12041
             AnalysisHelper.setReloadDatabases(analysis, reloadDatabasesBtn.getSelection());
         }
         // ~
