@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -42,7 +41,10 @@ public class FileTreeContentProvider implements ITreeContentProvider {
             File[] files = ((File) parentElement).listFiles();
             if (files != null) {
                 for (File file : files) {
-                    if (isValidFile(file) && isTOPFile(file)) {
+                    if (file.isDirectory() && isValidDirectory(file)) {
+                        objects.add(file);
+                    }
+                    if (file.isFile() && isValidFile(file)) {
                         objects.add(file);
                     }
                 }
@@ -58,10 +60,12 @@ public class FileTreeContentProvider implements ITreeContentProvider {
      * @return
      */
     private boolean isValidFile(File file) {
-        IPath path = new Path(file.getName());
+        IPath path = new Path(file.getAbsolutePath());
+        IPath propPath = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-        return !StringUtils.equals(path.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)
-                && !file.getName().startsWith(".");
+        File propFile = propPath.toFile();
+
+        return propFile.exists() && !StringUtils.equals(path.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION);
     }
 
     /**
@@ -70,20 +74,9 @@ public class FileTreeContentProvider implements ITreeContentProvider {
      * @param file
      * @return
      */
-    private boolean isTOPFile(File file) {
+    private boolean isValidDirectory(File file) {
         String absolutePath = file.getAbsolutePath();
-        return isValidProject(file) || absolutePath.indexOf(EResourceConstant.DATA_PROFILING.getName()) > 0
-                || absolutePath.indexOf(EResourceConstant.LIBRARIES.getName()) > 0
-                || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0;
-    }
 
-    /**
-     * DOC bZhou Comment method "isValidProject".
-     * 
-     * @param file
-     * @return
-     */
-    private boolean isValidProject(File file) {
         boolean tdqProject = false;
 
         File[] listFiles = file.listFiles();
@@ -95,7 +88,11 @@ public class FileTreeContentProvider implements ITreeContentProvider {
                 }
             }
         }
-        return StringUtils.equals(file.getName(), ResourceManager.getRootProjectName()) || tdqProject;
+
+        return absolutePath.indexOf(EResourceConstant.DATA_PROFILING.getName()) > 0
+                || absolutePath.indexOf(EResourceConstant.LIBRARIES.getName()) > 0
+                || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0
+                || StringUtils.equals(file.getName(), "TOP_DEFAULT_PRJ") || tdqProject;
     }
 
     /*

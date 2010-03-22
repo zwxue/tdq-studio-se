@@ -37,6 +37,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.resource.relational.Column;
 
 import common.Logger;
@@ -115,19 +116,19 @@ public abstract class AbstractPagePart {
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, Tree tree) {
         if (!isAnalyzedColumnsEmpty(tree)) {
-            TdDataProvider tdProvider = (TdDataProvider) masterPage.getAnalysis().getContext().getConnection();
-            if (tdProvider == null) {
+            DataManager dataManager = masterPage.getAnalysis().getContext().getConnection();
+            if (dataManager == null) {
                 if (tree.getData() instanceof AnalysisColumnNominalIntervalTreeViewer) {
                     AnalysisColumnNominalIntervalTreeViewer treeViewer = (AnalysisColumnNominalIntervalTreeViewer) tree.getData();
                     Column column = treeViewer.getColumnSetMultiValueList().get(0);
-                    tdProvider = DataProviderHelper.getTdDataProvider(column);
+                    dataManager = DataProviderHelper.getTdDataProvider(column);
                 } else if (tree.getData() instanceof AnalysisColumnSetTreeViewer) {
                     AnalysisColumnSetTreeViewer treeViewer = (AnalysisColumnSetTreeViewer) tree.getData();
                     Column column = treeViewer.getColumnSetMultiValueList().get(0);
-                    tdProvider = DataProviderHelper.getTdDataProvider(column);
+                    dataManager = DataProviderHelper.getTdDataProvider(column);
                 }
             }
-            setConnectionState(masterPage, tdProvider);
+            setConnectionState(masterPage, dataManager);
         }
     }
 
@@ -160,34 +161,38 @@ public abstract class AbstractPagePart {
         }
     }
 
-    private void setConnectionState(final AbstractAnalysisMetadataPage masterPage, final TdDataProvider tdProvider) {
-        final IFile prvFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdProvider);
-        String prvFileName = prvFile.getName();
+    private void setConnectionState(final AbstractAnalysisMetadataPage masterPage, final DataManager dataManager) {
+        final IFile prvFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(dataManager);
+        if (prvFile != null && prvFile.exists()) {
+            String prvFileName = prvFile.getName();
 
-        Object value = masterPage.getConnCombo().getData(prvFileName);
-        Integer index = 0;
-        if (value != null && value instanceof Integer) {
-            index = (Integer) value;
-        }
-        masterPage.getConnCombo().select(index);
-        // MOD mzhao 2009-06-09 feature 5887
-        if (selectionListener == null) {
-            selectionListener = new SelectionListener() {
+            Object value = masterPage.getConnCombo().getData(prvFileName);
+            Integer index = 0;
+            if (value != null && value instanceof Integer) {
+                index = (Integer) value;
+            }
+            masterPage.getConnCombo().select(index);
+            // MOD mzhao 2009-06-09 feature 5887
+            if (selectionListener == null) {
+                selectionListener = new SelectionListener() {
 
-                private int prevSelect = masterPage.getConnCombo().getSelectionIndex();
+                    private int prevSelect = masterPage.getConnCombo().getSelectionIndex();
 
-                private TdDataProvider dataProvider = tdProvider;
+                    private TdDataProvider dataProvider = (TdDataProvider) dataManager;
 
-                public void widgetDefaultSelected(SelectionEvent e) {
-                }
+                    public void widgetDefaultSelected(SelectionEvent e) {
+                    }
 
-                public void widgetSelected(SelectionEvent e) {
-                    dataProvider = callChangeConnectionAction(masterPage, prevSelect, dataProvider);
-                    prevSelect = masterPage.getConnCombo().getSelectionIndex();
-                }
+                    public void widgetSelected(SelectionEvent e) {
+                        dataProvider = callChangeConnectionAction(masterPage, prevSelect, dataProvider);
+                        prevSelect = masterPage.getConnCombo().getSelectionIndex();
+                    }
 
-            };
-            masterPage.getConnCombo().addSelectionListener(selectionListener);
+                };
+                masterPage.getConnCombo().addSelectionListener(selectionListener);
+            }
+        } else {
+            masterPage.getConnCombo().setText("unknown connection");
         }
 
         // MOD mzhao 2009-06-09 feature 5887

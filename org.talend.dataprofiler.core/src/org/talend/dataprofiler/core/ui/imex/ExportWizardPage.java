@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
@@ -49,6 +50,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ExportWizardPage extends WizardPage {
 
+    private static final int EXPAND_LEVEL = 3;
+
     private CheckboxTreeViewer repositoryTree;
 
     private Button dirBTN, archBTN;
@@ -56,8 +59,6 @@ public class ExportWizardPage extends WizardPage {
     private Button browseDirBTN, browseArchBTN;
 
     private Text dirTxt, archTxt;
-
-    private Button dependBTN;
 
     private String specifiedPath;
 
@@ -81,7 +82,7 @@ public class ExportWizardPage extends WizardPage {
 
         createSelectComposite(top);
 
-        createOptionComposite(top);
+        // createOptionComposite(top);
 
         createRepositoryTree(top);
 
@@ -198,25 +199,23 @@ public class ExportWizardPage extends WizardPage {
             }
         });
 
-        dependBTN.addSelectionListener(new SelectionAdapter() {
+        repositoryTree.getTree().addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                File[] dependencies = computeDependencies(getElements());
-                if (dependBTN.getSelection()) {
+                TreeItem item = (TreeItem) e.item;
+                File sfile = (File) item.getData();
+                IFile sIFile = file2IFile(sfile);
+                if (sIFile != null) {
+                    File[] dependencies = computeDependencies(sIFile);
 
                     for (File file : dependencies) {
-                        repositoryTree.setChecked(file, true);
+                        repositoryTree.setChecked(file, item.getChecked());
                     }
 
-                } else {
-                    for (File file : dependencies) {
-                        repositoryTree.setChecked(file, false);
-                    }
+                    // repositoryTree.setExpandedElements(repositoryTree.getCheckedElements());
+                    repositoryTree.refresh();
                 }
-
-                repositoryTree.setExpandedElements(repositoryTree.getCheckedElements());
-                repositoryTree.refresh();
             }
         });
     }
@@ -227,7 +226,7 @@ public class ExportWizardPage extends WizardPage {
      * @param elements
      * @return
      */
-    protected File[] computeDependencies(IFile[] elements) {
+    protected File[] computeDependencies(IFile... elements) {
         List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
         List<File> dependencyFiles = new ArrayList<File>();
 
@@ -256,9 +255,6 @@ public class ExportWizardPage extends WizardPage {
         optionGroup.setLayout(new RowLayout());
         optionGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         optionGroup.setText("Option");
-
-        dependBTN = new Button(optionGroup, SWT.CHECK);
-        dependBTN.setText("Export Dependencies");
     }
 
     /**
@@ -271,6 +267,7 @@ public class ExportWizardPage extends WizardPage {
         repositoryTree.setContentProvider(new FileTreeContentProvider());
         repositoryTree.setLabelProvider(new FileTreeLabelProvider());
         repositoryTree.setInput(computInput());
+        // repositoryTree.expandToLevel(EXPAND_LEVEL);
         repositoryTree.expandAll();
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(repositoryTree.getTree());
@@ -334,15 +331,30 @@ public class ExportWizardPage extends WizardPage {
             for (Object obj : checkedElements) {
                 if (obj instanceof File) {
                     File file = (File) obj;
-                    if (file.isFile()) {
-                        IPath path = new Path(file.getAbsolutePath());
-                        path = path.makeRelativeTo(ResourceManager.getRootProject().getLocation());
-                        files.add(ResourceManager.getRootProject().getFile(path));
+                    IFile file2iFile = file2IFile(file);
+                    if (file2iFile != null) {
+                        files.add(file2iFile);
                     }
                 }
             }
         }
         return files.toArray(new IFile[files.size()]);
+    }
+
+    /**
+     * DOC bZhou Comment method "file2IFile".
+     * 
+     * @param file
+     * @return
+     */
+    private IFile file2IFile(File file) {
+        if (file.isFile()) {
+            IPath path = new Path(file.getAbsolutePath());
+            path = path.makeRelativeTo(ResourceManager.getRootProject().getLocation());
+            return ResourceManager.getRootProject().getFile(path);
+        }
+
+        return null;
     }
 
     /**

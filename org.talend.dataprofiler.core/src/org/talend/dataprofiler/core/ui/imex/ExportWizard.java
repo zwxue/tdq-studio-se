@@ -40,7 +40,7 @@ public class ExportWizard extends Wizard {
      */
     public ExportWizard(String specifiedPath) {
         exportPage = new ExportWizardPage(specifiedPath);
-        setWindowTitle("Import Item");
+        setWindowTitle("Export Item");
     }
 
     /*
