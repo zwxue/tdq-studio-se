@@ -139,7 +139,7 @@ public final class ChartDecorator {
             int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
             domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));
             domainAxis.setUpperMargin(0.1);
-            domainAxis.setMaximumCategoryLabelLines(2);
+            domainAxis.setMaximumCategoryLabelLines(3);
             ((BarRenderer) render).setItemMargin(-0.50 * rowCount);
         }
         // ~10998
