@@ -49,8 +49,6 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
     // ADD xqliu 2010-03-08 feature 10675
     private static final String DEFAULT_FILE_NAME = "SourceFile.sql";
 
-    private static final String DEFAULT_FILE_EXTENSION = ".sql";
-
     private String fileName = DEFAULT_FILE_NAME;
 
     private IFolder selectedFolder;
@@ -109,8 +107,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
         text.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                if (text.getText() == null || "".equals(text.getText().trim())
-                        || !text.getText().trim().endsWith(DEFAULT_FILE_EXTENSION)) {
+                if (text.getText() == null || "".equals(text.getText().trim())) {
                     int status = IStatus.ERROR;
                     IProject rootProject = SQLExplorerPlugin.getDefault().getRootProject();
                     final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");

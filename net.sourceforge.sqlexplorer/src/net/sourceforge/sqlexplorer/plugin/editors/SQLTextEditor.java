@@ -107,6 +107,9 @@ public class SQLTextEditor extends TextEditor {
 
     private static final String SVN_FOLDER_NAME = ".svn";
 
+    // ADD xqliu 2010-03-23 feature 10675
+    private static final String DEFAULT_FILE_EXTENSION = ".sql";
+
     public SQLTextEditor(SQLEditor editor) {
         super();
         this.editor = editor;
@@ -212,7 +215,7 @@ public class SQLTextEditor extends TextEditor {
 
         Object elements = dialog.getResult()[0];
         // ADD xqliu 2010-03-08 feature 10675
-        String fileName = dialog.getFileName();
+        String fileName = getValidFileName(dialog.getFileName());
         IResource elem = (IResource) elements;
         if (elem instanceof IFolder) {
             IPath filePath = ((IFolder) elem).getFullPath();
@@ -279,6 +282,19 @@ public class SQLTextEditor extends TextEditor {
             if (progressMonitor != null)
                 progressMonitor.setCanceled(!success);
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "getValidFileName". ADD xqliu 2010-03-23 feature 10675
+     * 
+     * @param fileName
+     * @return
+     */
+    private String getValidFileName(String fileName) {
+        if (!fileName.toLowerCase().endsWith(DEFAULT_FILE_EXTENSION)) {
+            return fileName + DEFAULT_FILE_EXTENSION;
+        }
+        return fileName;
     }
 
     /**
