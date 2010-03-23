@@ -36,6 +36,9 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -148,6 +151,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     // ADD xqliu 2009-08-24 bug 8776
     private ExecutionLanguage language;
 
+    private Composite buttonsComp;
+
     public ExecutionLanguage getLanguage() {
         return language;
     }
@@ -167,6 +172,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         this(parent);
         this.masterPage = masterPage;
         this.setElements(masterPage.getCurrentModelElementIndicators());
+        this.createUpDownButtons(parent);
         this.setDirty(false);
     }
 
@@ -239,6 +245,121 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return newTree;
     }
 
+    /**
+     * DOC yyi create Up Down and Delete Buttons
+     * 
+     * @param parent
+     */
+    private void createUpDownButtons(Composite parent) {
+        if (null != buttonsComp) {
+            buttonsComp.dispose();
+        }
+        buttonsComp = masterPage.getEditor().getToolkit().createComposite(parent, SWT.NONE);
+        buttonsComp.setLayout(new GridLayout(3, true));
+        buttonsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        GridData buttonGridData = new GridData();
+        buttonGridData.heightHint = 25;
+        buttonGridData.horizontalAlignment = GridData.CENTER;
+        buttonGridData.verticalAlignment = GridData.FILL;
+        buttonGridData.grabExcessHorizontalSpace = true;
+        buttonGridData.grabExcessVerticalSpace = true;
+
+        Button delButton = new Button(buttonsComp, SWT.NULL);
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        delButton.setLayoutData(buttonGridData);
+        Button moveUpButton = new Button(buttonsComp, SWT.NULL);
+        moveUpButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
+        moveUpButton.setLayoutData(buttonGridData);
+        Button moveDownButton = new Button(buttonsComp, SWT.NULL);
+        moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
+        moveDownButton.setLayoutData(buttonGridData);
+
+        delButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                removeSelectedElements(tree);
+            }
+        });
+
+        moveUpButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                moveSelectedElements(tree, -1);
+            }
+        });
+
+        moveDownButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                moveSelectedElements(tree, 1);
+            }
+        });
+
+        parent.layout();
+    }
+
+    /**
+     * DOC yyi to set the Up Down and Delete Buttons is visible.
+     * 
+     * @param isShow
+     */
+    public void setControlButtonsVisible(boolean isShow) {
+        buttonsComp.setVisible(isShow);
+    }
+
+    /**
+     * DOC yyi 7466 2010-03-22 change the order of appearence of indicators
+     * 
+     * @param newTree
+     * @param step
+     */
+    protected void moveSelectedElements(Tree newTree, int step) {
+        TreeItem[] selection = newTree.getSelection();
+        boolean moved = false;
+        for (TreeItem item : selection) {
+            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+            if (indicatorUnit != null) {
+                ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                IndicatorUnit[] units = data.getIndicatorUnits();
+                int index = -1;
+                for (int i = 0; i < units.length; i++) {
+                    if (indicatorUnit == units[i]) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index + step > -1 && index + step < modelElementIndicators.length) {
+                    Indicator[] inds = new Indicator[units.length];
+                    for (int i = 0; i < units.length; i++) {
+                        inds[i] = units[i].getIndicator();
+                    }
+                    Indicator tmpIndicator = inds[index + step];
+                    inds[index + step] = inds[index];
+                    inds[index] = tmpIndicator;
+                    data.setIndicators(inds);
+                    moved = true;
+                }
+            } else {
+                ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                int index = -1;
+                for (int i = 0; i < modelElementIndicators.length; i++) {
+                    if (data == modelElementIndicators[i]) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index + step > -1 && index + step < modelElementIndicators.length) {
+                    ModelElementIndicator tmpElement = modelElementIndicators[index + step];
+                    modelElementIndicators[index + step] = modelElementIndicators[index];
+                    modelElementIndicators[index] = tmpElement;
+                    moved = true;
+                }
+            }
+        }
+        if (moved)
+            setElements(modelElementIndicators);
+    }
+
     public void setInput(Object[] objs) {
         boolean isMdm = false;
         if (objs != null && objs.length != 0) {
@@ -280,6 +401,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         initializedConnection(elements);
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
+
+        createUpDownButtons(this.parentComp);
     }
 
     /**
@@ -943,6 +1066,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 } else {
                     new ModelElementTreeMenuProvider(tree).createTreeMenu();
                 }
+                System.out.println(1);
             }
 
         });
