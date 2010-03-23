@@ -94,7 +94,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private List<String> allDBTypeList;
 
-    private List<String> remainDBTypeList;
+    // MOD xqliu 2010-03-23 feature 11201
+    // private List<String> remainDBTypeList;
 
     private Map<CCombo, Expression> tempExpressionMap;
 
@@ -123,6 +124,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private boolean hasAggregateExpression, hasDateExpression, hasCharactersMapping;
 
     private boolean systemIndicator;
+
+    // ADD xqliu 2010-03-23 feature 11201
+    private List<Expression> tempExpressionList;
 
     public boolean isSystemIndicator() {
         return systemIndicator;
@@ -179,8 +183,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(supportTypes));
 
-        remainDBTypeList = new ArrayList<String>();
-        remainDBTypeList.addAll(allDBTypeList);
+        // MOD xqliu 2010-03-23 feature 11201
+        // remainDBTypeList = new ArrayList<String>();
+        // remainDBTypeList.addAll(allDBTypeList);
 
         remainDBTypeListAF = new ArrayList<String>();
         remainDBTypeListAF.addAll(allDBTypeList);
@@ -188,11 +193,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         remainDBTypeListCM = new ArrayList<String>();
         remainDBTypeListCM.addAll(allDBTypeList);
 
-        if (tempExpressionMap == null) {
-            tempExpressionMap = new HashMap<CCombo, Expression>();
-        } else {
-            tempExpressionMap.clear();
-        }
+        // MOD xqliu 2010-03-23 feature 11201
+        initTempExpressionMap();
+
         if (widgetMap == null) {
             widgetMap = new HashMap<CCombo, Composite>();
         } else {
@@ -221,6 +224,39 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         charactersMappingMap = new HashMap<String, CharactersMapping>();
         charactersMappingMapTemp = new HashMap<String, CharactersMapping>();
+
+        // ADD xqliu 2010-03-23 feature 11201
+        initTempExpressionList(definition);
+    }
+
+    /**
+     * DOC xqliu Comment method "initTempExpressionMap". ADD xqliu 2010-03-23 feature 11201
+     */
+    private void initTempExpressionMap() {
+        if (tempExpressionMap == null) {
+            tempExpressionMap = new HashMap<CCombo, Expression>();
+        } else {
+            tempExpressionMap.clear();
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "initTempExpressionList". ADD xqliu 2010-03-23 feature 11201
+     */
+    private void initTempExpressionList(IndicatorDefinition definition) {
+        if (tempExpressionList == null) {
+            tempExpressionList = new ArrayList<Expression>();
+        } else {
+            tempExpressionList.clear();
+        }
+        if (definition != null) {
+            EList<Expression> expressions = definition.getSqlGenericExpression();
+            for (Expression exp : expressions) {
+                Expression newExp = BooleanExpressionHelper.createExpression(exp.getLanguage(), exp.getBody());
+                newExp.setVersion(exp.getVersion());
+                tempExpressionList.add(newExp);
+            }
+        }
     }
 
     /*
@@ -859,10 +895,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         if (tempExpressionMap.size() == 0) {
             if (definition != null) {
-                EList<Expression> expList = definition.getSqlGenericExpression();
-                for (Expression expression : expList) {
+                // MOD xqliu 2010-03-23 feature 11201
+                // EList<Expression> expList = definition.getSqlGenericExpression();
+                // for (Expression expression : expList) {
+                for (Expression expression : tempExpressionList) {
                     createNewLineWithExpression(expression);
                 }
+                // ~11201
                 // Whether Java UDI exists.
                 createNewLineWithJavaUDI();
             }
@@ -918,7 +957,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
         combo.setEditable(false);
-        combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+        // MOD xqliu 2010-03-23 feature 11201
+        // combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+        combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
+        // ~11201
         combo.setText(PatternLanguageType.JAVA.getName());
         combo.addSelectionListener(new LangCombSelectionListener());
         tempExpressionMap.put(combo, BooleanExpressionHelper.createExpression(combo.getText(), null));
@@ -1055,7 +1097,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
             updateLineForJava(combo);
         } else {
-            updateLineForExpression(combo);
+            // MOD xqliu 2010-03-23 feature 11201
+            updateLineForExpression(combo, expression);
+            // ~11201
         }
         updateOtherCombos(combo);
     }
@@ -1133,19 +1177,29 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             } else {
                 expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
             }
-            if (!lang.equals(PatternLanguageType.JAVA.getName())) {
-                updateLineForExpression(combo);
-            } else {
-                // Handle java UID.
-                updateLineForJava(combo);
-            }
-            // Update other combos.
-            updateOtherCombos(combo);
+            // MOD xqliu 2010-03-23 feature 11201
+            // if (!lang.equals(PatternLanguageType.JAVA.getName())) {
+            // // MOD xqliu 2010-03-23 feature 11201
+            // updateLineForExpression(combo, expression);
+            // // ~11201
+            // } else {
+            // // Handle java UID.
+            // updateLineForJava(combo);
+            // }
+            // // Update other combos.
+            // updateOtherCombos(combo);
+            // ~
             setDirty(true);
         }
     }
 
-    private void updateLineForExpression(final CCombo combo) {
+    /**
+     * DOC xqliu Comment method "updateLineForExpression". // MOD xqliu 2010-03-23 feature 11201
+     * 
+     * @param combo
+     * @param expression
+     */
+    private void updateLineForExpression(final CCombo combo, Expression expression) {
         Composite detailComp = widgetMap.get(combo);
         if (detailComp != null) {
             detailComp.dispose();
@@ -1157,6 +1211,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) patternText.getLayoutData()).widthHint = 600;
         patternText.addModifyListener(new ExpressTextModListener(combo));
+        // MOD xqliu 2010-03-23 feature 11201
+        patternText.setText(expression.getBody() == null ? "" : expression.getBody());
+        // ~11201
         createExpressionEditButton(detailComp, patternText);
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
@@ -1165,6 +1222,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         definitionSection.setExpanded(true);
     }
 
+    /**
+     * DOC mzhao Comment method "updateLineForJava".
+     * 
+     * @param combo
+     */
     private void updateLineForJava(final CCombo combo) {
         Composite detailComp = widgetMap.get(combo);
         if (detailComp != null) {
@@ -1202,13 +1264,23 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         definitionSection.setExpanded(true);
     }
 
+    /**
+     * DOC xqliu Comment method "updateOtherCombos". MOD xqliu 2010-03-23 feature 11201
+     * 
+     * @param combo
+     */
     private void updateOtherCombos(CCombo combo) {
-        rebuildRemainDBTypeList();
+        // MOD xqliu 2010-03-23 feature 11201
+        // rebuildRemainDBTypeList();
+        // ~11201
         Collection<CCombo> allCombos = tempExpressionMap.keySet();
         for (CCombo cb : allCombos) {
             if (combo != cb) {
                 String tx = cb.getText();
-                cb.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+                // MOD xqliu 2010-03-23 feature 11201
+                // cb.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
+                cb.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
+                // ~11201
                 cb.setText(tx);
             }
         }
@@ -1284,7 +1356,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             // MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-27
             public void widgetSelected(SelectionEvent e) {
-                rebuildRemainDBTypeList();
+                // MOD xqliu 2010-03-23 feature 11201
+                // rebuildRemainDBTypeList();
+                // ~11201
                 // String language = PatternLanguageType.findLanguageByName(remainDBTypeList.get(0));
                 // Expression expression = BooleanExpressionHelper.createExpression(language, null);
                 createNewLine();
@@ -1295,26 +1369,26 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         });
     }
 
-    /**
-     * DOC xqliu Comment method "rebuildRemainDBTypeList". MOD mzhao feature 11128 Be able to add Java UDI.
-     */
-    private void rebuildRemainDBTypeList() {
-        remainDBTypeList.clear();
-        remainDBTypeList.addAll(allDBTypeList);
-        Collection<Expression> expValues = tempExpressionMap.values();
-        for (Expression expression : expValues) {
-            String language = expression.getLanguage();
-            String languageName = PatternLanguageType.findNameByLanguage(language);
-            remainDBTypeList.remove(languageName);
-        }
-        if (remainDBTypeList.size() == 0) {
-            MessageDialog
-                    .openWarning(
-                            null,
-                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
-            return;
-        }
-    }
+    // MOD xqliu 2010-03-23 feature 11201
+    // /**
+    // * DOC xqliu Comment method "rebuildRemainDBTypeList". MOD mzhao feature 11128 Be able to add Java UDI.
+    // */
+    // private void rebuildRemainDBTypeList() {
+    // remainDBTypeList.clear();
+    // remainDBTypeList.addAll(allDBTypeList);
+    // Collection<Expression> expValues = tempExpressionMap.values();
+    // for (Expression expression : expValues) {
+    // String language = expression.getLanguage();
+    // String languageName = PatternLanguageType.findNameByLanguage(language);
+    // remainDBTypeList.remove(languageName);
+    // }
+    // if (remainDBTypeList.size() == 0) {
+    // MessageDialog.openWarning(null,
+    // DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
+    // return;
+    // }
+    // }
+    // ~11201
 
     /*
      * (non-Javadoc)
@@ -1466,6 +1540,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (rc.isOk()) {
             // EMFUtil.saveSingleResource(definition.eResource());
             UDIResourceFileHelper.getInstance().save(definition);
+            // ADD xqliu 2010-03-23 feature 11201
+            initTempExpressionList(definition);
+            initTempExpressionMap();
+            definitionComp = createDefinitionComp(definitionSection);
+            definitionSection.setClient(definitionComp);
+            definitionSection.pack();
+            definitionSection.redraw();
+            // ~11201
             this.isDirty = false;
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
