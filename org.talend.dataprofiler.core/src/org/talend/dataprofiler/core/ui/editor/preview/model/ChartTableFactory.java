@@ -157,7 +157,6 @@ public final class ChartTableFactory {
                                 public void widgetSelected(SelectionEvent e) {
                                     DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
                                     IFolder folder = ResourceManager.getPatternRegexFolder();
-
                                     String model = dataEntity.getLabel();
                                     String regex = dateIndicator.getRegex(model);
                                     new CreatePatternAction(folder, ExpressionType.REGEXP,
@@ -198,7 +197,7 @@ public final class ChartTableFactory {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
         String query = itemEntity.getQuery();
         String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
-        IFolder folder = ResourceManager.getPatternFolder();
+        IFolder folder = ResourceManager.getPatternRegexFolder();
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
