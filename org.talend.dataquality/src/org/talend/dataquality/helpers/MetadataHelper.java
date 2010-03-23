@@ -96,13 +96,16 @@ public final class MetadataHelper {
      */
     public static DataminingType getDataminingType(TdColumn column) {
         // MOD xqliu 2009-11-27 bug 8690
+        // MOD xqliu 2010-03-23 bug 12014
         String contentType = column.getContentType();
-        if ((contentType == null || contentType.equals(""))
-                && (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column))) {
-            return DataminingType.NOMINAL;
+        if (contentType == null || contentType.equals("")) {
+            if (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column)) {
+                return DataminingType.NOMINAL;
+            } else {
+                return getDefaultDataminingType(column.getJavaType());
+            }
         } else {
-            // MOD xqliu 2010-03-18 bug 12014
-            return getDefaultDataminingType(column.getJavaType());
+            return DataminingType.get(contentType);
         }
     }
 
