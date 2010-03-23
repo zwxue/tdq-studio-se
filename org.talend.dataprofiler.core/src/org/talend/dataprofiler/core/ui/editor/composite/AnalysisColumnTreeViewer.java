@@ -328,7 +328,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         break;
                     }
                 }
-                if (index + step > -1 && index + step < modelElementIndicators.length) {
+                if (index + step > -1 && index + step < units.length) {
                     Indicator[] inds = new Indicator[units.length];
                     for (int i = 0; i < units.length; i++) {
                         inds[i] = units[i].getIndicator();
@@ -1066,7 +1066,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 } else {
                     new ModelElementTreeMenuProvider(tree).createTreeMenu();
                 }
-                System.out.println(1);
             }
 
         });
