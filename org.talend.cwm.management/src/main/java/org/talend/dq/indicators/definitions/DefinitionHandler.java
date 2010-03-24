@@ -22,11 +22,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
@@ -146,10 +146,6 @@ public final class DefinitionHandler {
 
     private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME; //$NON-NLS-1$
 
-    // MOD mzhao 2009-03-13 Feature:6066 Move all folders into one single
-    // project.
-    private static final String WORKSPACE_PATH = ReponsitoryContextBridge.getProjectName() + "/TDQ_Libraries/"; //$NON-NLS-1$
-
     public static DefinitionHandler getInstance() {
         if (instance == null) {
             instance = new DefinitionHandler();
@@ -198,7 +194,9 @@ public final class DefinitionHandler {
         // for development purposes)
         EMFUtil util = new EMFUtil();
         Resource definitionsFile = null;
-        URI uri = URI.createPlatformResourceURI(WORKSPACE_PATH + FILENAME, false);
+
+        IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(FILENAME);
+        URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
         try { // load from workspace path
             // do not create it here if it does not exist.
             definitionsFile = util.getResourceSet().getResource(uri, true);
@@ -268,7 +266,6 @@ public final class DefinitionHandler {
         }
         return indicatorDefinitions;
     }
-
 
     /**
      * DOC bZhou Comment method "copyDefinitionsIntoFolder".

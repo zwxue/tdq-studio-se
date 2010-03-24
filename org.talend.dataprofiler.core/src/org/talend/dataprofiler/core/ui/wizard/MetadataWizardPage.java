@@ -111,7 +111,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         nameText = new Text(container, SWT.BORDER);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         // set the max number of characters to be entered in the text field
-        //ADDED sgandon 16/03/2010 bug 11760
+        // ADDED sgandon 16/03/2010 bug 11760
         nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME, 200));
 
         // Purpose
@@ -121,7 +121,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         purposeText = new Text(container, SWT.BORDER);
         purposeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         // set the max number of characters to be entered in the text field
-        //ADDED sgandon 16/03/2010 bug 11760
+        // ADDED sgandon 16/03/2010 bug 11760
         purposeText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE, 200));
 
         // Description
@@ -147,7 +147,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         authorText.setText(author);
         getParameter().setAuthor(author);
         // MOD 2009-09-08 yyi Feature: 8870.
-        authorText.setEnabled(isDefaultProject());
+        authorText.setEnabled(ReponsitoryContextBridge.isDefautProject());
         // Version
         // Label versionLab = new Label(container, SWT.NONE);
         // versionLab.setText("Version");
@@ -215,17 +215,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         addListeners();
 
         setControl(container);
-    }
-
-    /**
-     * DOC yyi Comment method "setAuthorTextEditable" Feature: 8870.
-     */
-    private boolean isDefaultProject() {
-        if (null != ReponsitoryContextBridge.getProjectName()
-                && "TOP_DEFAULT_PRJ".equals(ReponsitoryContextBridge.getProjectName())) { //$NON-NLS-1$
-            return true;
-        }
-        return false;
     }
 
     /**

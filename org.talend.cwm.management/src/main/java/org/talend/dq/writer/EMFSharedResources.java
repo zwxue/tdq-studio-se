@@ -23,10 +23,10 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -69,9 +69,9 @@ public final class EMFSharedResources {
      */
     private Resource initSoftwareDeploymentResource() {
         // MOD mzhao 2009-03-23,Feature 6066
-        URI sUri = URI
-                .createPlatformResourceURI(
-                        "/"     + ReponsitoryContextBridge.getProjectName() + "/TDQ_Libraries/.softwaresystem." + SoftwaredeploymentPackage.eNAME, false); //$NON-NLS-1$
+        String softwareFile = ".softwaresystem." + SoftwaredeploymentPackage.eNAME;
+        String softwarePath = ResourceManager.getLibrariesFolder().getFullPath().append(softwareFile).toString();
+        URI sUri = URI.createPlatformResourceURI(softwarePath, false); //$NON-NLS-1$
         Resource resource = resourceSet.getResource(sUri, false);
 
         if (resource == null) {
@@ -206,7 +206,6 @@ public final class EMFSharedResources {
         }
         return changeUri;
     }
-
 
     /**
      * DOC scorreia Comment method "getSharedEmfUtil".

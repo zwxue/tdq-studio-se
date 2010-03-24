@@ -51,7 +51,6 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
-
     public static final String ACTION_HANDLER = "ACTION_HANDLER"; //$NON-NLS-1$
 
     private static final int META_FIELD_WIDTH = 200;
@@ -139,17 +138,16 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         nameText = createMetadataTextFiled(NAME_LABEL, parent);
         // set the max number of characters to be entered in the text field
-        //ADDED sgandon 16/03/2010 bug 11760
+        // ADDED sgandon 16/03/2010 bug 11760
         nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME, 200));
-
 
         purposeText = createMetadataTextFiled(PURPOSE_LABEL, parent);
         // set the max number of characters to be entered in the text field
-        //ADDED sgandon 16/03/2010 bug 11760
+        // ADDED sgandon 16/03/2010 bug 11760
         purposeText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE, 200));
 
         // description fields
-        //ADDED sgandon 16/03/2010 bug 11760
+        // ADDED sgandon 16/03/2010 bug 11760
         toolkit.createLabel(parent, DESCRIPTION_LABEL);
 
         descriptionText = toolkit.createText(parent, null, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -160,7 +158,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         authorText = createMetadataTextFiled(AUTHOR_LABEL, parent);
 
         // MOD 2009-09-08 yyi Feature: 8870.
-        if (!isDefaultProject()) {
+        if (!ReponsitoryContextBridge.isDefautProject()) {
             authorText.setEnabled(false);
             authorText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         }
@@ -257,17 +255,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     /**
-     * DOC yyi Comment method "setAuthorTextEditable" Feature: 8870.
-     */
-    private boolean isDefaultProject() {
-        if (null != ReponsitoryContextBridge.getProjectName()
-                && "TOP_DEFAULT_PRJ".equals(ReponsitoryContextBridge.getProjectName())) { //$NON-NLS-1$
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * DOC bZhou Comment method "createVersionUI".
      * 
      * @param parent
@@ -317,9 +304,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * 
      * @param text
      * @param parent
-     * @return
-     * MOD sgandon 16/03/2010 bug 11760 : unecessary parameter removed
-
+     * @return MOD sgandon 16/03/2010 bug 11760 : unecessary parameter removed
      */
     private Text createMetadataTextFiled(String label, Composite parent) {
         toolkit.createLabel(parent, label);
