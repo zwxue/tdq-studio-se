@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.Project;
@@ -109,7 +110,8 @@ public class FileSystemImportWriter implements IImexWriter {
             if (!desFile.exists()) {
                 FilesUtils.copyFile(resFile, desFile);
 
-                String oldProjectLabel = resource.getProjectName() == null ? "TOP_DEFAULT_PRJ" : resource.getProjectName();
+                String oldProjectLabel = resource.getProjectName() == null ? ReponsitoryContextBridge.PROJECT_DEFAULT_NAME
+                        : resource.getProjectName();
                 String curProjectLabel = ResourceManager.getRootProjectName();
                 if (!StringUtils.equals(oldProjectLabel, curProjectLabel)) {
                     String content = FileUtils.readFileToString(desFile);

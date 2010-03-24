@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.resource.EResourceConstant;
 
@@ -92,7 +93,7 @@ public class FileTreeContentProvider implements ITreeContentProvider {
         return absolutePath.indexOf(EResourceConstant.DATA_PROFILING.getName()) > 0
                 || absolutePath.indexOf(EResourceConstant.LIBRARIES.getName()) > 0
                 || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0
-                || StringUtils.equals(file.getName(), "TOP_DEFAULT_PRJ") || tdqProject;
+                || StringUtils.equals(file.getName(), ReponsitoryContextBridge.PROJECT_DEFAULT_NAME) || tdqProject;
     }
 
     /*
