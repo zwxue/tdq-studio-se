@@ -318,7 +318,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         delButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement());
+                columnList.removeAll(((IStructuredSelection) columnsElementViewer.getSelection()).toList());
                 columnsElementViewer.setInput(columnList);
                 enabledButtons(buttons, false);
                 masterPage.setDirty(true);
