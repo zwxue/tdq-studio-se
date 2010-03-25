@@ -8,6 +8,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-discovery-0.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jaxrpc.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mdm_webservice.jar"/>
-	<classpathentry kind="lib" path="lib/axis.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
