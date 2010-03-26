@@ -589,7 +589,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         TreeEditor addUdiEditor = new TreeEditor(tree);
         Label addUdiLabl = new Label(tree, SWT.NONE);
         addUdiLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        addUdiLabl.setImage(ImageLib.getImage(ImageLib.IND_DEFINITION));
+        addUdiLabl.setImage(ImageLib.getImage(ImageLib.ADD_IND_DEFINITION));
         addUdiLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addUdi")); //$NON-NLS-1$
         addUdiLabl.pack();
 
