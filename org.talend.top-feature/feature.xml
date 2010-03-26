@@ -456,13 +456,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.talend.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.talend.libraries.jfreechart"
          download-size="0"
          install-size="0"
@@ -555,13 +548,6 @@
 
    <plugin
          id="org.talend.libraries.jdbc.informix"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.talend.libraries.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -799,13 +785,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.gef"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="net.sourceforge.sqlexplorer"
          download-size="0"
          install-size="0"
@@ -891,13 +870,6 @@
 
    <plugin
          id="org.eclipse.jdt.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.diagram.ui.properties"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1240,48 +1212,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.gmf.runtime.common.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.emf.commands.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.emf.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.emf.ui.properties"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.diagram.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.common.ui.services.properties"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="javax.wsdl"
          download-size="0"
          install-size="0"
@@ -1394,56 +1324,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.gmf.runtime.common.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.emf.workspace"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.emf.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.common.ui.action"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.common.ui.services"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.emf.type.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.gef.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.diagram.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1492,27 +1373,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.gmf.runtime.emf.clipboard.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.common.ui.services.action"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.gmf.runtime.draw2d.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.ecf.identity"
          download-size="0"
          install-size="0"
@@ -1535,13 +1395,6 @@
 
    <plugin
          id="org.eclipse.emf.validation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.talend.commons.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
