@@ -204,7 +204,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                masterPage.saveEditor();// save editor if the columnList has been added and not saved.
                 moveElement(masterPage.getTreeViewer(), false);
             }
 
@@ -212,20 +211,14 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                masterPage.saveEditor();
                 moveElement(masterPage.getTreeViewer(), true);
-
             }
 
         });
         delButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                masterPage.saveEditor();
                 Tree currentTree = tree;
-                // removeSelectedElements(currentTree);
-                // masterPage.getTreeViewer().setInput(columnSetMultiValueList.toArray());
-                // updateModelViewer();
                 Object[] selectItem = currentTree.getSelection();
                 List<Column> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
                 for (int i = 0; i < selectItem.length; i++) {

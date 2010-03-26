@@ -205,15 +205,12 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                masterPage.saveEditor();// save editor if the columnList has been added and not saved.
                 moveElement(masterPage.getTreeViewer(), false);
             }
-
         });
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                masterPage.saveEditor();
                 moveElement(masterPage.getTreeViewer(), true);
             }
 
@@ -221,7 +218,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         delButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                masterPage.saveEditor();
                 Tree currentTree = tree;
                 Object[] selectItem = currentTree.getSelection();
                 List<Column> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();

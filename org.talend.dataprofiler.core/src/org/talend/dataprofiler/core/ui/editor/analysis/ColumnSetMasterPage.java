@@ -494,19 +494,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         dataFilterComp.setDirty(false);
     }
 
-    /**
-     * 
-     * DOC zshen Comment method "saveEditor".
-     * 
-     */
-    public void saveEditor() {
-        if (isDirty() && canSave().isOk()) {
-            getEditor().doSave(null);
-
-        }
-
-    }
-
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
