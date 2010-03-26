@@ -862,20 +862,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.epic.perleditor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.axis"
          download-size="0"
          install-size="0"
@@ -1058,13 +1044,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.draw2d"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.apache.lucene"
          download-size="0"
          install-size="0"
@@ -1177,13 +1156,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.debug.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.search"
          download-size="0"
          install-size="0"
@@ -1199,13 +1171,6 @@
 
    <plugin
          id="org.eclipse.ui.console"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.core.manipulation"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1432,6 +1397,30 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.sourceforge.sqlexplorer.nl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataprofiler.ecos.nl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.model.nl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
