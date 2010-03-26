@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
@@ -27,8 +27,6 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.writer.AElementPersistance;
-import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -52,20 +50,21 @@ public class AnalysisWriter extends AElementPersistance {
      */
     @Override
     protected void addDependencies(ModelElement element) {
-        // DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(elementFromRemove, elementToRemove)
         Analysis analysis = (Analysis) element;
-        List<IndicatorDefinition> userDefinedIndicators = AnalysisHelper.getUserDefinedIndicators(analysis);
-        for (IndicatorDefinition udi : userDefinedIndicators) {
-            TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis, udi);
-            if (dependencyReturn.isOk()) {
-                EMFUtil.saveSingleResource(udi.eResource());
+
+        List<IndicatorDefinition> udis = AnalysisHelper.getUserDefinedIndicators(analysis);
+        for (IndicatorDefinition udi : udis) {
+            InternalEObject iudi = (InternalEObject) udi;
+            if (!iudi.eIsProxy()) {
+                DependenciesHandler.getInstance().setDependencyOn(analysis, udi);
             }
         }
+
         List<Pattern> patterns = AnalysisHelper.getPatterns(analysis);
         for (Pattern pattern : patterns) {
-            TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis, pattern);
-            if (dependencyReturn.isOk()) {
-                EMFUtil.saveSingleResource(pattern.eResource());
+            InternalEObject iptn = (InternalEObject) pattern;
+            if (!iptn.eIsProxy()) {
+                DependenciesHandler.getInstance().setDependencyOn(analysis, pattern);
             }
         }
     }
