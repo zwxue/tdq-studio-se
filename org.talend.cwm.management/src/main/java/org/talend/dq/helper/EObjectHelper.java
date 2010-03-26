@@ -17,9 +17,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -90,7 +94,7 @@ public final class EObjectHelper {
 
     public static void removeDependencys(IResource[] resources) {
         for (IResource selectedObj : resources) {
-            
+
             IFile file = ((IFile) selectedObj);
             // String fileName = file.getName();
             if (file.getFileExtension() == null) {
@@ -104,7 +108,7 @@ public final class EObjectHelper {
                 for (Resource resource : modifiedResources) {
                     EMFUtil.saveSingleResource(resource);
                 }
-                
+
             }
         }
     }
@@ -191,4 +195,16 @@ public final class EObjectHelper {
         }
     }
 
+    /**
+     * DOC bZhou Comment method "retrieveEObject".
+     * 
+     * @param filePath
+     * @param classfier
+     * @return
+     */
+    public static Object retrieveEObject(IPath filePath, EClass classfier) {
+        URI uri = URI.createFileURI(filePath.toOSString());
+        Resource res = new ResourceSetImpl().getResource(uri, true);
+        return EcoreUtil.getObjectByType(res.getContents(), classfier);
+    }
 }

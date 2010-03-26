@@ -52,8 +52,11 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -239,7 +242,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 switch (targetRes.getType()) {
                 case IResource.FOLDER:
                     IFolder targetFolder = (IFolder) targetRes;
-                    if (ResourceService.allowDND(sourceFile, targetFolder)) {
+                    if (allowDND(sourceFile, targetFolder)) {
                         return Status.OK_STATUS;
                     }
                     break;
@@ -258,5 +261,24 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
             }
         }
         return Status.CANCEL_STATUS;
+    }
+
+    /**
+     * DOC bZhou Comment method "allowDND".
+     * 
+     * @param sourceFile
+     * @param targetFolder
+     * @return
+     */
+    private boolean allowDND(IFile sourceFile, IFolder targetFolder) {
+        ModelElement modelElement = ModelElementFileFactory.getModelElement(sourceFile);
+
+        EResourceConstant typedConstant = EResourceConstant.getTypedConstant(modelElement);
+        if (typedConstant != null) {
+            IFolder oneFolder = ResourceManager.getOneFolder(typedConstant);
+            return oneFolder == null ? false : ResourceService.isSubFolder(oneFolder, targetFolder);
+        }
+
+        return false;
     }
 }

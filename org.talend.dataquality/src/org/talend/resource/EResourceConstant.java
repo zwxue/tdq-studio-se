@@ -16,11 +16,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
-import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.rules.DQRule;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -121,41 +130,61 @@ public enum EResourceConstant {
     }
 
     /**
+     * DOC bZhou Comment method "getTypedConstant".
      * 
-     * This method is to find the matched resource constant by path.
-     * 
-     * @param path
-     * @return null if can't find.
+     * @param element
+     * @return
      */
-    public static EResourceConstant getResourceConstant(String fileExtension) {
-        if (FactoriesUtil.isAnalysisFile(fileExtension)) {
+    public static EResourceConstant getTypedConstant(ModelElement element) {
+
+        if (element instanceof Analysis) {
             return ANALYSIS;
-        } else if (FactoriesUtil.isDQRuleFile(fileExtension)) {
-            return RULES_SQL;
-        } else if (FactoriesUtil.isPatternFile(fileExtension)) {
-            return PATTERNS;
-        } else if (FactoriesUtil.isProvFile(fileExtension)) {
-            return DB_CONNECTIONS;
-        } else if (FactoriesUtil.isReportFile(fileExtension)) {
+        }
+
+        if (element instanceof Report) {
             return REPORTS;
-        } else if (FactoriesUtil.isUDIFile(fileExtension)) {
+        }
+
+        if (element instanceof UserDefIndicator) {
             return USER_DEFINED_INDICATORS;
-        } else if (FactoriesUtil.SQL.equals(fileExtension)) {
-            return SOURCE_FILES;
+        }
+
+        if (element instanceof Pattern) {
+            return PATTERNS;
+        }
+
+        if (element instanceof DQRule) {
+            return RULES_SQL;
+        }
+
+        if (element instanceof DataProvider) {
+            DataProvider provider = (DataProvider) element;
+
+            if (isMDMConnection(provider)) {
+                return MDM_CONNECTIONS;
+            }
+
+            return DB_CONNECTIONS;
         }
 
         return null;
     }
 
     /**
+     * DOC bZhou Comment method "isMDMConnection".
      * 
-     * This method is to find the matched resource constant by file.
-     * 
-     * @param file
-     * @return null if can't find.
+     * @param provider
+     * @return
      */
-    public static EResourceConstant getResourceConstant(IFile file) {
-        return getResourceConstant(file.getFileExtension());
+    private static boolean isMDMConnection(DataProvider provider) {
+        ProviderConnection connection = DataProviderHelper.getTdProviderConnection(provider).getObject();
+
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBTYPE, connection.getTaggedValue());
+        if (tv != null) {
+            return StringUtils.equalsIgnoreCase("MDM", tv.getValue());
+        }
+
+        return false;
     }
 
     /**

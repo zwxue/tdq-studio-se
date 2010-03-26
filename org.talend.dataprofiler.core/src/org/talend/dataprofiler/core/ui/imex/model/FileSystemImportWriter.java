@@ -25,11 +25,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
@@ -37,6 +34,7 @@ import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
 
@@ -65,7 +63,7 @@ public class FileSystemImportWriter implements IImexWriter {
             IPath itemResPath = new Path(resource.getFile().getAbsolutePath());
             IPath propResPath = new Path(resource.getPropertyFilePath());
 
-            Object propOBJ = retrieveEObject(propResPath, PropertiesPackage.eINSTANCE.getProperty());
+            Object propOBJ = EObjectHelper.retrieveEObject(propResPath, PropertiesPackage.eINSTANCE.getProperty());
             if (propOBJ != null) {
                 Property property = (Property) propOBJ;
                 InternalEObject author = (InternalEObject) property.getAuthor();
@@ -75,7 +73,7 @@ public class FileSystemImportWriter implements IImexWriter {
                         URI projectUri = projResource.getURI();
                         IPath projectPath = new Path(projectUri.toFileString());
                         if (projectPath.toFile().exists()) {
-                            Object projOBJ = retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
+                            Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
                             if (projOBJ != null) {
                                 Project project = (Project) projOBJ;
                                 resource.setProjectName(project.getLabel());
@@ -131,18 +129,5 @@ public class FileSystemImportWriter implements IImexWriter {
      */
     public void finish() throws IOException {
         CorePlugin.getDefault().refreshWorkSpace();
-    }
-
-    /**
-     * DOC bZhou Comment method "retrieveEObject".
-     * 
-     * @param filePath
-     * @param classfier
-     * @return
-     */
-    private Object retrieveEObject(IPath filePath, EClass classfier) {
-        URI uri = URI.createFileURI(filePath.toOSString());
-        Resource res = new ResourceSetImpl().getResource(uri, true);
-        return EcoreUtil.getObjectByType(res.getContents(), classfier);
     }
 }

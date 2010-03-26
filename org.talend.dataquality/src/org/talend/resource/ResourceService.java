@@ -14,7 +14,6 @@ package org.talend.resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -181,21 +180,6 @@ public final class ResourceService {
         IWorkspaceRoot root = ResourceManager.getRoot();
 
         return root.getProject(dpProject).exists() && root.getProject(lbProject).exists() && root.getProject(mtProject).exists();
-    }
-
-    /**
-     * DOC bZhou Comment method "allowDND".
-     * 
-     * @param sourceFile
-     * @param targetFolder
-     * @return
-     */
-    public static boolean allowDND(IFile sourceFile, IFolder targetFolder) {
-
-        IFolder oneFolder = ResourceManager.getOneFolder(sourceFile);
-
-        return oneFolder == null ? false : isSubFolder(oneFolder, targetFolder);
-
     }
 
     /**

@@ -232,10 +232,9 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
         if (property != null) {
             URI elementURI = elementResource.getURI();
-            String fileExtension = elementURI.fileExtension();
 
             IPath path = new Path(elementURI.toPlatformString(true));
-            path = path.makeRelativeTo(PropertyHelper.getItemWorkspaceBasePath(fileExtension));
+            path = path.makeRelativeTo(PropertyHelper.getItemWorkspaceBasePath(property));
             path = path.removeLastSegments(1);
             property.getItem().getState().setPath(path.toString());
         }

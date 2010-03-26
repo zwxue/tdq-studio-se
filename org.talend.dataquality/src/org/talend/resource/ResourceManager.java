@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.resource;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -426,19 +425,6 @@ public final class ResourceManager {
         assert constant != null;
 
         return getRootProject().getFolder(new Path(constant.getPath()));
-    }
-
-    /**
-     * DOC bZhou Comment method "getOneFolder".
-     * 
-     * @param file
-     * @return null if can't find.
-     */
-    static IFolder getOneFolder(IFile file) {
-        assert file != null;
-
-        EResourceConstant constant = EResourceConstant.getResourceConstant(file);
-        return constant == null ? null : getOneFolder(constant);
     }
 
     /**

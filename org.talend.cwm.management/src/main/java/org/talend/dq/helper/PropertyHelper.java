@@ -135,7 +135,7 @@ public final class PropertyHelper {
     public static IPath getElementPath(Property property) {
         TDQItem item = (TDQItem) property.getItem();
 
-        IPath proPath = getItemWorkspaceBasePath(item);
+        IPath proPath = getItemWorkspaceBasePath(property);
         proPath = proPath.append(item.getState().getPath());
         proPath = proPath.append(item.getFilename());
 
@@ -143,60 +143,46 @@ public final class PropertyHelper {
     }
 
     /**
-     * DOC bZhou Comment method "getItemBasePath".
+     * DOC bZhou Comment method "getItemTypedPath".
      * 
      * @param item
      * @return
      */
-    public static IPath getItemBasePath(TDQItem item) {
-        final String filename = item.getFilename();
-        if (filename != null) {
-            String fileExtension = new Path(filename).getFileExtension();
-            return getItemBasePath(fileExtension);
-        }
+    public static IPath getItemTypedPath(Property property) {
+        ModelElement element = retrieveElement((TDQItem) property.getItem());
 
-        return null;
-    }
-
-    /**
-     * DOC bZhou Comment method "getItemBasePath".
-     * 
-     * @param fileExtension
-     * @return
-     */
-    public static IPath getItemBasePath(String fileExtension) {
-        EResourceConstant rc = EResourceConstant.getResourceConstant(fileExtension);
-        if (rc != null) {
-            return new Path(rc.getPath());
-        }
-
-        return null;
+        EResourceConstant rc = EResourceConstant.getTypedConstant(element);
+        return rc != null ? new Path(rc.getPath()) : null;
     }
 
     /**
      * DOC bZhou Comment method "getItemWorkspaceBasePath".
      * 
-     * @param item
+     * @param property
      * @return
      */
-    public static IPath getItemWorkspaceBasePath(TDQItem item) {
-        final String filename = item.getFilename();
-        if (filename != null) {
-            String fileExtension = new Path(filename).getFileExtension();
-            return getItemWorkspaceBasePath(fileExtension);
-        }
-
-        return null;
-    }
-
-    /**
-     * DOC bZhou Comment method "getItemWorkspaceBasePath".
-     * 
-     * @param fileExtension
-     * @return
-     */
-    public static IPath getItemWorkspaceBasePath(String fileExtension) {
-        IPath itemBasePath = getItemBasePath(fileExtension);
+    public static IPath getItemWorkspaceBasePath(Property property) {
+        IPath itemBasePath = getItemTypedPath(property);
         return ResourceManager.getRootProject().getFolder(itemBasePath).getFullPath();
+    }
+
+    /**
+     * DOC bZhou Comment method "retrieveElement".
+     * 
+     * @param item
+     * @return
+     */
+    public static ModelElement retrieveElement(TDQItem item) {
+        URI itemURI = item.eResource().getURI();
+        URI elementURI = itemURI.trimSegments(1).appendSegment(item.getFilename());
+
+        Resource elementResource = item.eResource().getResourceSet().getResource(elementURI, false);
+        if (elementResource == null) {
+            elementResource = EMFSharedResources.getInstance().getResource(elementURI, true);
+            // ResourceSet resourceSet = new EMFUtil().getResourceSet();
+            // elementResource = resourceSet.getResource(elementURI, true);
+        }
+
+        return (ModelElement) elementResource.getContents().get(0);
     }
 }
