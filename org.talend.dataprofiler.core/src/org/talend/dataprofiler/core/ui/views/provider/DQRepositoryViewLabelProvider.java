@@ -55,6 +55,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.EXCHANGE);
         } else if (element instanceof IEcosCategory) {
             return ImageLib.getImage(ImageLib.EXCHANGE);
+        } else if (element instanceof IndicatorCategory) {
+            return ImageLib.getImage(ImageLib.IND_CATEGORY);
         } else if (element instanceof IndicatorDefinition) {
             return ImageLib.getImage(ImageLib.IND_DEFINITION);
         } else if (element instanceof TdView) {

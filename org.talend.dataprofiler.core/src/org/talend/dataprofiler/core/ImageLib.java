@@ -154,6 +154,9 @@ public final class ImageLib {
     /** Icon of indicator's definition. */
     public static final String IND_DEFINITION = "IndicatorDefinition.gif"; //$NON-NLS-1$
 
+    /** Icon of indicator's category. */
+    public static final String IND_CATEGORY = "IndicatorCategory.gif"; //$NON-NLS-1$
+
     /** Icon for Pagination. */
     public static final String ICON_PAGE_LAST_LNK = "bottomb.gif"; //$NON-NLS-1$
 
