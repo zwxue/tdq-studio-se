@@ -729,21 +729,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.debug.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.jface.text"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -849,13 +835,6 @@
 
    <plugin
          id="org.eclipse.emf.compare.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.update.scheduler"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -1163,13 +1142,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jdt.launching"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.ui.console"
          download-size="0"
          install-size="0"
@@ -1282,20 +1254,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jdt.debug"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.workspace"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.databinding"
          download-size="0"
          install-size="0"
@@ -1331,13 +1289,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.transaction"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.ecf.identity"
          download-size="0"
          install-size="0"
@@ -1353,13 +1304,6 @@
 
    <plugin
          id="org.eclipse.emf.ecore.change"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.validation"
          download-size="0"
          install-size="0"
          version="0.0.0"
