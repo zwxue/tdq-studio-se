@@ -14,11 +14,14 @@ package org.talend.dataprofiler.core.ui.dialog;
 
 import java.util.Properties;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
@@ -26,6 +29,8 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControlFactory;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -63,15 +68,23 @@ public class UrlEditDialog extends TrayDialog {
         comp.setLayoutData(data);
 
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
-        SupportDBUrlType dbUrlType = SupportDBUrlStore.getInstance().getDBUrlType(DataProviderHelper.getDBType(connection));
+        String type = DataProviderHelper.getDBType(connection);
+        if (null != type && PluginConstant.EMPTY_STRING.equals(type)) {
+            CLabel msgLabel = new CLabel(comp, SWT.SHADOW_NONE);
+            msgLabel.setImage(Display.getCurrent().getSystemImage(SWT.ICON_WARNING));
+            msgLabel.setText(DefaultMessagesImpl.getString("UrlEditDialog.CanNotEdit"));
+            data = new GridData(SWT.FILL, SWT.CENTER, true, false);
+            msgLabel.setLayoutData(data);
+        } else {
+            SupportDBUrlType dbUrlType = SupportDBUrlStore.getInstance().getDBUrlType(type);
 
-        urlSetupControl = URLSetupControlFactory.createEditControl(dbUrlType, comp, connection,
-                createConnectionParam(tdDataProvider));
-        urlSetupControl.setConnectionURL(connection.getConnectionString());
+            urlSetupControl = URLSetupControlFactory.createEditControl(dbUrlType, comp, connection,
+                    createConnectionParam(tdDataProvider));
+            urlSetupControl.setConnectionURL(connection.getConnectionString());
 
-        data = new GridData(SWT.FILL, SWT.FILL, true, true);
-        this.urlSetupControl.setLayoutData(data);
-
+            data = new GridData(SWT.FILL, SWT.FILL, true, true);
+            this.urlSetupControl.setLayoutData(data);
+        }
         comp.layout();
         return comp;
     }
@@ -108,6 +121,9 @@ public class UrlEditDialog extends TrayDialog {
     public void create() {
         super.create();
         getShell().setText("Edit Connection URL");
+        if (null == urlSetupControl)
+            getButton(MessageDialog.OK).setEnabled(false);
+
     }
 
     public DBConnectionParameter getResult() {
