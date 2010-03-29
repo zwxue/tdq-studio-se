@@ -32,7 +32,8 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.talend.top.repository,
  org.eclipse.xsd,
  org.talend.model,
- org.apache.axis
+ org.apache.axis,
+ javax.xml.rpc
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.builders,
  org.talend.cwm.db.connection,
@@ -66,10 +67,8 @@ Export-Package: org.talend.cwm.builders,
  org.talend.dq.writer.impl
 Bundle-ClassPath: .,
  lib/commons-discovery-0.2.jar,
- lib/jaxrpc.jar,
  lib/mdm_webservice.jar,
- lib/mail.jar,
- lib/axis.jar
+ lib/mail.jar
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
