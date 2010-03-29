@@ -31,11 +31,14 @@ import org.talend.resource.ResourceManager;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
+
 public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
     protected static Logger log = Logger.getLogger(CreatePatternWizardPage1.class);
 
     protected HashMap<String, String> metadata;
+
+    private String purpose;
 
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
@@ -54,7 +57,9 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
         super.createControl(parent);
         pathText.setText(getParameter().getFolderProvider().getFolderURI());
-
+        if (purpose != null) {
+            purposeText.setText(purpose);
+        }
         button.addSelectionListener(new SelectionAdapter() {
 
             /*
@@ -95,6 +100,15 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
      */
     public Text getPathText() {
         return this.pathText;
+    }
+
+    /**
+     * Setter for purpose.
+     * 
+     * @return the purpose
+     */
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 
     @Override

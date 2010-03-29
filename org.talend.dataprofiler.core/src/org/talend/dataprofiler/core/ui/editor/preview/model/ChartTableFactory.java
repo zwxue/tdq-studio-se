@@ -159,8 +159,10 @@ public final class ChartTableFactory {
                                     IFolder folder = ResourceManager.getPatternRegexFolder();
                                     String model = dataEntity.getLabel();
                                     String regex = dateIndicator.getRegex(model);
-                                    new CreatePatternAction(folder, ExpressionType.REGEXP,
-                                            "'" + regex + "'", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$
+                                    new CreatePatternAction(
+                                            folder,
+                                            ExpressionType.REGEXP,
+                                            "'" + regex + "'", model == null ? "" : "match \"" + model + "\"", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$
                                 }
 
                             });

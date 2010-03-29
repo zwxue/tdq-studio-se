@@ -52,6 +52,8 @@ public class CreatePatternWizard extends AbstractWizard {
 
     private String language;
 
+    private String purpose;
+
     private PatternBuilder patternBuilder;
 
     /**
@@ -89,7 +91,7 @@ public class CreatePatternWizard extends AbstractWizard {
         mPage.setTitle(s + DefaultMessagesImpl.getString("CreatePatternWizard.createPage1_2")); //$NON-NLS-1$
         mPage.setDescription(DefaultMessagesImpl.getString("CreatePatternWizard.defProp")); //$NON-NLS-1$
         mPage.setPageComplete(false);
-
+        mPage.setPurpose(purpose);
         if (expression != null && language != null) {
             mPage2 = new CreatePatternWizardPage2(type, expression, language);
         } else {
@@ -153,6 +155,11 @@ public class CreatePatternWizard extends AbstractWizard {
     @Override
     protected String getEditorName() {
         return PatternEditor.class.getName();
+    }
+
+    public void setPurpose(String purpose) {
+
+        this.purpose = purpose;
     }
 
     @Override
