@@ -51,7 +51,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -893,15 +895,18 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 }
 
             });
-            cursor.addSelectionListener(new SelectionAdapter() {
+            // MOD yyi 2010-03-29 12177 this menu should appear with a right-click only.
+            cursor.addListener(SWT.MouseUp, new Listener() {
 
-                public void widgetSelected(SelectionEvent e) {
-                    int column = cursor.getColumn();
-                    if (column == TABLE_COLUMN_INDEX) {
-                        cursor.setMenu(menu2);
-                        menu2.setVisible(true);
-                    } else {
-                        cursor.setMenu(null);
+                public void handleEvent(Event e) {
+                    if (1 < e.button) {
+                        int column = cursor.getColumn();
+                        if (column == TABLE_COLUMN_INDEX) {
+                            cursor.setMenu(menu2);
+                            menu2.setVisible(true);
+                        } else {
+                            cursor.setMenu(null);
+                        }
                     }
                 }
             });
