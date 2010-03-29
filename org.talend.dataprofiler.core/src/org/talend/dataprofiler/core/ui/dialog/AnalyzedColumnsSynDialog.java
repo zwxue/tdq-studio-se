@@ -92,6 +92,8 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
                 if (connPackage instanceof TdCatalog && anaPackage instanceof TdSchema) {
                     for (TdSchema sche : CatalogHelper.getSchemas((TdCatalog) connPackage)) {
                         if (sche.getName().equalsIgnoreCase(anaPackage.getName())) {
+                            // MOD mzhao bug 8567. 2010-03-29.
+                            connPackage = sche;
                             if (anaColumnSet instanceof TdTable) {
                                 connColumnSetList = PackageHelper.getTables(sche);
                             } else {

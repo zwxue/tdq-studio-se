@@ -237,8 +237,9 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         } else {
             return;
         }
-
-        IFolderNode reloadFolder = FolderNodeHelper.getFolderNode(treeModelLs.get(0).getNewDataProvElement(), columnset);
+        // MOD mzhao bug 8567 2010-03-29
+        IFolderNode reloadFolder = FolderNodeHelper
+                .getFolderNode((Package) treeModelLs.get(0).getNewDataProvElement(), columnset);
         if (reloadFolder != null) {
             IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reloadFolder);
             newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
@@ -261,8 +262,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         } else {
             return;
         }
-        IFolderNode reloadFolder = FolderNodeHelper.getFolderNode(newDataProviderModel, columnset);
-
+        // MOD mzhao bug 8567 2010-03-29
+        IFolderNode reloadFolder = FolderNodeHelper.getFolderNodes(columnset)[0];
         if (reloadFolder != null) {
             IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reloadFolder);
             newDataProv = creatComparisonLevel.reloadCurrentLevelElement();

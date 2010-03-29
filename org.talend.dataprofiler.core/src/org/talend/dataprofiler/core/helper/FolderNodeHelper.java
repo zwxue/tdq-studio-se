@@ -60,7 +60,15 @@ public final class FolderNodeHelper {
         return folderNodes == null ? new IFolderNode[] {} : folderNodes;
     }
 
-    public static IFolderNode getFolderNode(EObject eObject, ColumnSet columnSet) {
+    /**
+     * 
+     * MOD mzhao bug 8567, 2010-03-29 Alter the first parameter type from EObject to Package.
+     * 
+     * @param eObject
+     * @param columnSet
+     * @return
+     */
+    public static IFolderNode getFolderNode(orgomg.cwm.objectmodel.core.Package eObject, ColumnSet columnSet) {
         IFolderNode[] folderNodes = catalogFolderNodeMap.get(eObject);
         if (folderNodes == null) {
             folderNodes = createTableViewNodes(eObject);

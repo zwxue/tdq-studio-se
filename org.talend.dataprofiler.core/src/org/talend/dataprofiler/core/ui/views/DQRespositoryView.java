@@ -446,6 +446,9 @@ public class DQRespositoryView extends CommonNavigator {
             boolean isFind = false;
             IFolderNode fn = null;
             for (Object folderNode : tbFolderNodes) {
+                if (!(folderNode instanceof IFolderNode)) {
+                    continue;
+                }
                 fn = (IFolderNode) folderNode;
                 Object[] folderChilds = contentProvider.getChildren(fn);
                 for (Object child : folderChilds) {
