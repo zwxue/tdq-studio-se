@@ -140,13 +140,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.codegen"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.gmf.runtime.notation"
          download-size="0"
          install-size="0"
@@ -225,27 +218,6 @@
 
    <plugin
          id="org.eclipse.emf.common"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.launching"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.debug.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -365,13 +337,6 @@
 
    <plugin
          id="org.eclipse.core.filesystem"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.debug"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -504,6 +469,20 @@
 
    <plugin
          id="org.talend.libraries.jdom"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.lucene.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.lucene"
          download-size="0"
          install-size="0"
          version="0.0.0"
