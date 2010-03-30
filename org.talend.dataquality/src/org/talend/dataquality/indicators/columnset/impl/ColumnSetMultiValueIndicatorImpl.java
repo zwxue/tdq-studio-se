@@ -727,10 +727,20 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         }
 
         computeCounts(objects);
-        getRowCountIndicator().setCount(getCount());
-        getUniqueCountIndicator().setUniqueValueCount(getUniqueCount());
-        getDistinctCountIndicator().setDistinctValueCount(getDistinctCount());
-        getDuplicateCountIndicator().setDuplicateValueCount(getDuplicateCount());
+        // MOD xqliu 2010-03-30 bug 12161
+        if (getRowCountIndicator() != null) {
+            getRowCountIndicator().setCount(getCount());
+        }
+        if (getUniqueCountIndicator() != null) {
+            getUniqueCountIndicator().setUniqueValueCount(getUniqueCount());
+        }
+        if (getDistinctCountIndicator() != null) {
+            getDistinctCountIndicator().setDistinctValueCount(getDistinctCount());
+        }
+        if (getDuplicateCountIndicator() != null) {
+            getDuplicateCountIndicator().setDuplicateValueCount(getDuplicateCount());
+        }
+        // ~12161
         return true;
     }
 
