@@ -246,7 +246,9 @@ public class CorePlugin extends AbstractUIPlugin {
                 alias.setUrl(url);
                 ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
                         EDriverName.getId(providerConnection.getDriverClassName()));
-                alias.setDriver(manDr);
+                if (manDr != null) {
+                    alias.setDriver(manDr);
+                }
 
                 if (!aliasManager.contains(alias)) {
                     aliasManager.addAlias(alias);

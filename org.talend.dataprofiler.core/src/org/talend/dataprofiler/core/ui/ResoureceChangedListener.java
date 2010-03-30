@@ -234,9 +234,12 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
             URI elementURI = elementResource.getURI();
 
             IPath path = new Path(elementURI.toPlatformString(true));
-            path = path.makeRelativeTo(PropertyHelper.getItemWorkspaceBasePath(property));
-            path = path.removeLastSegments(1);
-            property.getItem().getState().setPath(path.toString());
+            IPath rootPath = PropertyHelper.getItemWorkspaceBasePath(property);
+            if (rootPath != null) {
+                path = path.makeRelativeTo(rootPath);
+                path = path.removeLastSegments(1);
+                property.getItem().getState().setPath(path.toString());
+            }
         }
 
         URI desUri = elementResource.getURI().trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);

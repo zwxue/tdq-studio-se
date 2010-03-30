@@ -163,7 +163,7 @@ public final class PropertyHelper {
      */
     public static IPath getItemWorkspaceBasePath(Property property) {
         IPath itemBasePath = getItemTypedPath(property);
-        return ResourceManager.getRootProject().getFolder(itemBasePath).getFullPath();
+        return itemBasePath != null ? ResourceManager.getRootProject().getFolder(itemBasePath).getFullPath() : null;
     }
 
     /**

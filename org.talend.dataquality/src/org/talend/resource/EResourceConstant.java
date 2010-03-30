@@ -23,7 +23,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.DQRule;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
@@ -145,7 +145,7 @@ public enum EResourceConstant {
             return REPORTS;
         }
 
-        if (element instanceof UserDefIndicator) {
+        if (element instanceof IndicatorDefinition) {
             return USER_DEFINED_INDICATORS;
         }
 
