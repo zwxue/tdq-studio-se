@@ -32,18 +32,20 @@ public abstract class ResourceFileMap {
     // default value is 'true'.
     protected boolean resourcesNumberChanged = true;
 
-    // private ResourceFileMapHelper instance = new ResourceFileMapHelper();
-
     public void register(IFile fileString, Resource resource) {
         registedResourceMap.put(fileString, resource);
     }
 
+    public boolean exist(IFile file) {
+        return registedResourceMap.get(file) != null;
+    }
+
     public void remove(IFile file) {
-        this.registedResourceMap.remove(file);
+        registedResourceMap.remove(file);
     }
 
     public void clear() {
-        this.registedResourceMap.clear();
+        registedResourceMap.clear();
     }
 
     /**
@@ -53,15 +55,17 @@ public abstract class ResourceFileMap {
      * @return
      */
     public Resource getFileResource(IFile file) {
+        Resource res;
 
-        Resource res = registedResourceMap.get(file);
-        if (res != null) {
-            return res;
+        if (exist(file)) {
+            res = registedResourceMap.get(file);
+        } else {
+            URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+            res = EMFSharedResources.getInstance().getResource(uri, true);
+            register(file, res);
         }
-        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
-        Resource rs = EMFSharedResources.getInstance().getResource(uri, true);
-        this.registedResourceMap.put(file, rs);
-        return rs;
+
+        return res;
     }
 
     /**

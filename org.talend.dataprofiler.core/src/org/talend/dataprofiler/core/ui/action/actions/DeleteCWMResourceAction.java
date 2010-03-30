@@ -43,11 +43,13 @@ import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmD
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -103,27 +105,41 @@ public class DeleteCWMResourceAction extends Action {
         delRelatedResource(isDeleteContent, resources);
         EObjectHelper.removeDependencys(resources);
 
-
         // refresh the parent resource in order to avoid unsynchronized resources
         for (IResource res : resources) {
-            try {
-                if (res.isLinked()) {
-                    File file = new File(res.getRawLocation().toOSString());
-                    if (file.exists()) {
-                        file.delete();
-                    }
-                }
-                res.delete(true, new NullProgressMonitor());
-                res.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
-            } catch (CoreException e) {
-                log.error(e, e);
-            }
+            unload(res);
+
+            delete(res);
         }
 
         CorePlugin.getDefault().refreshDQView();
     }
 
+    private void delete(IResource res) {
+        try {
+            if (res.isLinked()) {
+                File file = new File(res.getRawLocation().toOSString());
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
+            res.delete(true, new NullProgressMonitor());
+            res.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+    }
 
+    private void unload(IResource res) {
+        if (res instanceof IFile) {
+            IFile resFile = (IFile) res;
+            ResourceFileMap fileMap = ModelElementFileFactory.getResourceFileMap(resFile);
+            String uriStr = fileMap.getFileResource(resFile).getURI().toString();
+
+            fileMap.remove(resFile);
+            EMFSharedResources.getInstance().unloadResource(uriStr);
+        }
+    }
 
     public boolean isFilesDeleted() {
         return isDeleteContent;
