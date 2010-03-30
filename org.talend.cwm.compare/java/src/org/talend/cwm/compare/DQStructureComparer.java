@@ -42,6 +42,8 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
+import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -260,6 +262,10 @@ public final class DQStructureComparer {
     }
 
     public static TypedReturnCode<TdDataProvider> getRefreshedDataProvider(TdDataProvider prevDataProvider) {
+        // ADD xqliu 2010-03-29 bug 11951
+        TypedReturnCode<TdDataProvider> returnProvider = new TypedReturnCode<TdDataProvider>();
+        boolean mdm = ConnectionUtils.isMdmConnection(prevDataProvider);
+        // ~11951
         TypedReturnCode<TdProviderConnection> tdProviderConnection = DataProviderHelper.getTdProviderConnection(prevDataProvider);
         String urlString = tdProviderConnection.getObject().getConnectionString();
         String driverClassName = tdProviderConnection.getObject().getDriverClassName();
@@ -281,7 +287,13 @@ public final class DQStructureComparer {
         connectionParameters.setDbName(DataProviderHelper.getDBName(tdProviderConnection.getObject()));
         connectionParameters.setRetrieveAllMetadata(DataProviderHelper.getRetrieveAllMetadata(tdProviderConnection.getObject()));
         // ~11412
-        TypedReturnCode<TdDataProvider> returnProvider = ConnectionService.createConnection(connectionParameters);
+        // MOD xqliu 2010-03-29 bug 11951
+        if (mdm) {
+            returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
+        } else {
+            returnProvider = ConnectionService.createConnection(connectionParameters);
+        }
+        // ~11951
         return returnProvider;
     }
 
