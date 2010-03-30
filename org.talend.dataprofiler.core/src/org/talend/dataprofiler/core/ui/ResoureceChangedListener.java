@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -233,17 +234,21 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
         if (property != null) {
             URI elementURI = elementResource.getURI();
 
-            IPath path = new Path(elementURI.toPlatformString(true));
+            IPath newPath = new Path(elementURI.toPlatformString(true));
             IPath rootPath = PropertyHelper.getItemWorkspaceBasePath(property);
             if (rootPath != null) {
-                path = path.makeRelativeTo(rootPath);
-                path = path.removeLastSegments(1);
-                property.getItem().getState().setPath(path.toString());
+                newPath = newPath.makeRelativeTo(rootPath);
+                newPath = newPath.removeLastSegments(1);
+
+                String oldPath = property.getItem().getState().getPath();
+                if (!StringUtils.equals(oldPath, newPath.toString())) {
+                    property.getItem().getState().setPath(newPath.toString());
+                    URI desUri = elementResource.getURI().trimFileExtension().appendFileExtension(
+                            FactoriesUtil.PROPERTIES_EXTENSION);
+                    EMFSharedResources.getInstance().saveToUri(propertyResource, desUri.trimSegments(1));
+                }
             }
         }
-
-        URI desUri = elementResource.getURI().trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        EMFSharedResources.getInstance().saveToUri(propertyResource, desUri.trimSegments(1));
     }
 
     /**

@@ -129,5 +129,6 @@ public class FileSystemImportWriter implements IImexWriter {
      */
     public void finish() throws IOException {
         CorePlugin.getDefault().refreshWorkSpace();
+        CorePlugin.getDefault().refreshDQView();
     }
 }
