@@ -479,12 +479,14 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         if (indicatorPersentThreshold != null && isContainRowCount) {
             if (StringUtils.isNotEmpty(indicatorPersentThreshold[0])) {
                 Double min = StringFormatUtil.parseDouble(indicatorPersentThreshold[0]);
-                pLowerText.setText(String.valueOf(min * 100));
+                min = min > 1 ? min : min * 100;
+                pLowerText.setText(String.valueOf(min));
             }
 
             if (StringUtils.isNotEmpty(indicatorPersentThreshold[1])) {
                 Double max = StringFormatUtil.parseDouble(indicatorPersentThreshold[1]);
-                pHigherText.setText(String.valueOf(max * 100));
+                max = max > 1 ? max : max * 100;
+                pHigherText.setText(String.valueOf(max));
             }
         }
     }
