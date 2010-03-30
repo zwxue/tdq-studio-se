@@ -1063,59 +1063,7 @@
         <package
               namespaceUri="http://dataquality.analysis">
         </package>
-        <constraints
-              categories="org.talend.dataprofiler.core.constraint.analysis">
-           <constraint
-                 class="org.talend.dataprofiler.core.model.nodes.analysis.validator.ContainIndicatorConstraint"
-                 id="org.talend.dataprofiler.core.noresults"
-                 lang="Java"
-                 mode="Batch"
-                 name="%validator.analysis.noresult.name"
-                 severity="ERROR"
-                 statusCode="101">
-              <message>
-                 %validator.analysis.noresult.msg
-              </message>
-              <description>
-                 description body text
-              </description>
-              <target
-                    class="Analysis">
-              </target>
-              
-               <!-- Analysis should include one or more indicator. -->
-               <![CDATA[
-                  self.results.indicators->size() > 0
-               ]]>
-           </constraint>
-        </constraints>
      </constraintProvider>
-  </extension>
-  <extension
-        point="org.eclipse.ui.actionSets">
-     <actionSet
-           id="org.talend.dataprofiler.core.actionSet"
-           label="TOP Action Set"
-           visible="false">
-        <action
-              class="org.talend.dataprofiler.core.ui.imex.action.ImportItemAction"
-              icon="icons/import.gif"
-              id="org.talend.dataprofiler.core.ui.imex.action.ImportItemAction"
-              label="Import Item"
-              style="push"
-              toolbarPath="Default"
-              tooltip="import items">
-        </action>
-        <action
-              class="org.talend.dataprofiler.core.ui.imex.action.ExportItemAction"
-              icon="icons/export.gif"
-              id="org.talend.dataprofiler.core.ui.imex.action.ExportItemAction"
-              label="Export Item"
-              style="push"
-              toolbarPath="Default"
-              tooltip="export items">
-        </action>
-     </actionSet>
   </extension>
 
 </plugin>
