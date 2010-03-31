@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
@@ -75,6 +76,13 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 AnalysisFilterParameter connPanameter = (AnalysisFilterParameter) getConnectionParams();
                 if (object instanceof IFile) {
                     IFile file = (IFile) object;
+                    // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview
+                    // analysis.
+                    if (ConnectionUtils.isMdmConnection(file)) {
+                        setPageComplete(false);
+                        return;
+                    }
+
                     TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
 
                     if (tdProvider != null && connPanameter != null) {
