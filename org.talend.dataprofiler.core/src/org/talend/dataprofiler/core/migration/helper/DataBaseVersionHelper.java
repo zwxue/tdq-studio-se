@@ -213,10 +213,10 @@ public final class DataBaseVersionHelper {
             connection = ConnectionUtils.createConnection(url, driver, props);
             if (connection != null) {
                 Statement stat = connection.createStatement();
-                ResultSet result = stat.executeQuery("select PR_VERSION from " + getDbName() + ".TDQ_PRODUCT");
+                ResultSet result = stat.executeQuery("select PR_VERSION from " + getDbName() + ".TDQ_PRODUCT"); //$NON-NLS-1$ //$NON-NLS-2$
                 result.next();
                 String versionStr = result.getString(1);
-                return ProductVersion.fromString(versionStr);//$NON-NLS-1$
+                return ProductVersion.fromString(versionStr);
             }
         } catch (Exception e) {
             log.error(e, e);

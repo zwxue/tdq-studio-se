@@ -955,12 +955,14 @@
            id="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            name="%page.name.DataProfiler">
      </page>
+     <!--
      <page
            category="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            class="org.talend.dataprofiler.core.ui.pref.I18nPreferencePage"
            id="org.talend.dataprofiler.core.ui.pref.I18nPreferencePage"
            name="%page.name.I18nPreferencePage">
      </page>
+     -->     
      <page
            category="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            class="org.talend.dataprofiler.core.ui.pref.EditorPreferencePage"
