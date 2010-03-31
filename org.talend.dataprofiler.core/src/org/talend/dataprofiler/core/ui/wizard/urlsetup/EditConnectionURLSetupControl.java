@@ -195,6 +195,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
 
                 public void modifyText(ModifyEvent e) {
                     connectionParam.setJdbcUrl(urlText.getText());
+                    setConnectionURL(urlText.getText());
                     if (abstractWizardPage instanceof DatabaseWizardPage) {
                         ((DatabaseWizardPage) abstractWizardPage).updateButtonState();
                     }

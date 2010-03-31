@@ -448,6 +448,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         DataProviderHelper.setUser(loginText.getText(), connection);
         DataProviderHelper.encryptAndSetPassword(connection, passwordText.getText());
         DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject().setConnectionString(urlText.getText());
+        // MOD zshen for bug 12327:to save driverClassName.
+        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {
+            DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject().setDriverClassName(
+                    tmpParam.getDriverClassName());
+        }
+        // ~12327
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
