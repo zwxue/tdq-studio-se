@@ -950,6 +950,7 @@
   <extension
         point="org.eclipse.ui.preferencePages">
      <page
+           category="org.talend.core.prefs"
            class="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            id="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            name="%page.name.DataProfiler">
