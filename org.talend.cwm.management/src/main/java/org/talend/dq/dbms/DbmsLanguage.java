@@ -1019,12 +1019,10 @@ public class DbmsLanguage {
 
     public String getFDGenericValidRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as countNum  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
-        // GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%>, A,D
     }
 
     public String getFDGenericInvalidRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as countNum  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
-        // GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%>,A,D
     }
 
     /**
