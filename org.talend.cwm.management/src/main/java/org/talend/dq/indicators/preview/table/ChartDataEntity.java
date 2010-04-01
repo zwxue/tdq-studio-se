@@ -175,11 +175,11 @@ public class ChartDataEntity {
                 if (expectedValue != null) {
 
                     Boolean ignoreCaseOption = IndicatorHelper.ignoreCaseOption(indicator);
-
-                    outOfRange = !StringUtils.equals(value, expectedValue);
-
-                    if (ignoreCaseOption) {
+                    // MOD sgandon 01/04/2010 bug 12086 : ignoreCaseOption was not checked for null value
+                    if (ignoreCaseOption != null && ignoreCaseOption) {
                         outOfRange = !(ignoreCaseOption && StringUtils.equalsIgnoreCase(value, expectedValue));
+                    } else {
+                        outOfRange = !StringUtils.equals(value, expectedValue);
                     }
                 }
                 break;
