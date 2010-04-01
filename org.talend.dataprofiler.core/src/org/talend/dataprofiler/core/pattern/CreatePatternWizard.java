@@ -81,10 +81,10 @@ public class CreatePatternWizard extends AbstractWizard {
      */
     @Override
     public void addPages() {
-        String s = DefaultMessagesImpl.getString("CreatePatternWizard.regularExpression"); //$NON-NLS-1$
+        String s = DefaultMessagesImpl.getString("CreatePatternWizard.regularExression"); //$NON-NLS-1$
 
         if (type == ExpressionType.SQL_LIKE) {
-            s = DefaultMessagesImpl.getString("CreatePatternWizard.otherSQLExpression"); //$NON-NLS-1$
+            s = DefaultMessagesImpl.getString("CreatePatternWizard.sqlExpression"); //$NON-NLS-1$
         }
 
         mPage = new CreatePatternWizardPage1();

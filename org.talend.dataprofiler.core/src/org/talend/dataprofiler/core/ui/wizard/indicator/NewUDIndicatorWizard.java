@@ -52,7 +52,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     @Override
     public void addPages() {
-        String s = DefaultMessagesImpl.getString("NewUDIndicatorWizard.userDefinedIndicator"); //$NON-NLS-1$
+        String s = DefaultMessagesImpl.getString("NewUDIndicatorWizard.udi"); //$NON-NLS-1$
 
         mPage1 = new NewUDIndicatorWizardPage1();
         mPage1.setTitle(s + DefaultMessagesImpl.getString("NewUDIndicatorWizard.createPage1_2")); //$NON-NLS-1$
@@ -73,8 +73,8 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         if (!getParameter().getLanguage().equals(PatternLanguageType.JAVA.getName())) {
             indicatorDefinition.getSqlGenericExpression().add(getExpression());
         } else {
-            TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(PluginConstant.CLASS_NAME_TEXT, "");
-            TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(PluginConstant.JAR_FILE_PATH, "");
+            TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(PluginConstant.CLASS_NAME_TEXT, ""); //$NON-NLS-1$
+            TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(PluginConstant.JAR_FILE_PATH, ""); //$NON-NLS-1$
             indicatorDefinition.getTaggedValue().add(classNameTV);
             indicatorDefinition.getTaggedValue().add(jarPathTV);
         }
