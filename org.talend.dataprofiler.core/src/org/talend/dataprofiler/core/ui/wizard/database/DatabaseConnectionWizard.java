@@ -224,4 +224,21 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         FolderProvider folderProvider = connectionParam.getFolderProvider();
         return folderProvider != null && ResourceManager.isMdmConnectionFolder(folderProvider.getFolderResource());
     }
+
+    /**
+     * ADD xqliu 2010-04-01 bug 12379.
+     */
+    public ReturnCode checkMetadata() {
+        if (getParameter() != null) {
+            String dbName = getParameter().getDbName();
+            boolean retrieveAll = getParameter().isRetrieveAllMetadata();
+            if (!retrieveAll && (dbName == null || "".equals(dbName.trim()))) {
+                ReturnCode rc = new ReturnCode();
+                rc.setMessage(DefaultMessagesImpl.getString("DatabaseConnectionWizard.dbnameEmpty")); //$NON-NLS-1$
+                rc.setOk(false);
+                return rc;
+            }
+        }
+        return super.checkMetadata();
+    }
 }
