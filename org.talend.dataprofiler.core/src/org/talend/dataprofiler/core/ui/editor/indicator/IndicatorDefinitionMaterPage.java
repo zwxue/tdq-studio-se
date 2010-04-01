@@ -252,9 +252,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (definition != null) {
             EList<Expression> expressions = definition.getSqlGenericExpression();
             for (Expression exp : expressions) {
-                Expression newExp = BooleanExpressionHelper.createExpression(exp.getLanguage(), exp.getBody());
-                newExp.setVersion(exp.getVersion());
-                tempExpressionList.add(newExp);
+                tempExpressionList.add(cloneExpression(exp));
             }
         }
     }
@@ -1153,10 +1151,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         public void modifyText(ModifyEvent e) {
-            Text dbVersionText = (Text) e.getSource();
-            Expression expression = tempExpressionMap.get(combo);
-            expression.setVersion(dbVersionText.getText().trim());
+            // MOD xqliu 2010-04-01 bug 11892
             setDirty(true);
+            Text dbVersionText = null;
+            if (e.getSource() != null && e.getSource() instanceof Text) {
+                dbVersionText = (Text) e.getSource();
+            }
+            Expression expression = tempExpressionMap.get(this.combo);
+            if (expression != null && dbVersionText != null) {
+                expression.setVersion(dbVersionText.getText().trim());
+            }
+            // ~11892
         }
 
     }
@@ -1451,7 +1456,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 javaUIDCombo = cb;
             } else if (tempExpressionMap.get(cb).getBody() != null
                     && !PluginConstant.EMPTY_STRING.equals(tempExpressionMap.get(cb).getBody())) {
-                expressions.add(tempExpressionMap.get(cb));
+                // MOD xqliu 2010-04-01 bug 11892
+                expressions.add(cloneExpression(tempExpressionMap.get(cb)));
+                // ~11892
             }
         }
 
@@ -1540,14 +1547,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (rc.isOk()) {
             // EMFUtil.saveSingleResource(definition.eResource());
             UDIResourceFileHelper.getInstance().save(definition);
-            // ADD xqliu 2010-03-23 feature 11201
-            initTempExpressionList(definition);
-            initTempExpressionMap();
-            definitionComp = createDefinitionComp(definitionSection);
-            definitionSection.setClient(definitionComp);
-            definitionSection.pack();
-            definitionSection.redraw();
-            // ~11201
             this.isDirty = false;
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
@@ -2214,5 +2213,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return result;
         }
 
+    }
+
+    /**
+     * DOC xqliu Comment method "cloneExpression". ADD xqliu 2010-04-01 bug 11892
+     * 
+     * @param exp
+     * @return
+     */
+    public static final Expression cloneExpression(Expression exp) {
+        Expression newExp = BooleanExpressionHelper.createExpression(exp.getLanguage(), exp.getBody());
+        newExp.setVersion(exp.getVersion());
+        return newExp;
     }
 }
