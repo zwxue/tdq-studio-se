@@ -20,6 +20,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -36,6 +37,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -128,6 +130,11 @@ public class FileSystemImportWriter implements IImexWriter {
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#finish()
      */
     public void finish() throws IOException {
+        IFile defintionFile = ResourceManager.getLibrariesFolder().getFile(".Talend.definition");
+        if (!defintionFile.exists()) {
+            DefinitionHandler.getInstance();
+        }
+
         CorePlugin.getDefault().refreshWorkSpace();
         CorePlugin.getDefault().refreshDQView();
     }
