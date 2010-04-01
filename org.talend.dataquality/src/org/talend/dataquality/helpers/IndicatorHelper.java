@@ -544,16 +544,18 @@ public final class IndicatorHelper {
         try {
             // MOD SeB 11/03/2010, bug 11751 : number format exception conveerting from string to double
             // use NumberFormt instead of formatter.
-            double userCount = NumberFormat.getInstance().parse(getIndicatorValue(indicator)).doubleValue();
-            double count = Double.valueOf(indicator.getCount());
-            return computePercent(userCount, count);
+            String indicatorValue = getIndicatorValue(indicator);
+            if (indicatorValue != null) { // MOD scorreia fixing NPE in bug 12250
+                double userCount = NumberFormat.getInstance().parse(indicatorValue).doubleValue();
+                double count = Double.valueOf(indicator.getCount());
+                return computePercent(userCount, count);
+            }
         } catch (NumberFormatException e) {
             log.warn("could not parse indicator: " + indicator.getName(), e);
-            return null;
         } catch (ParseException e) {
             log.warn("could not parse indicator: " + indicator.getName(), e);
-            return null;
         }
+        return null;
     }
 
     /**
