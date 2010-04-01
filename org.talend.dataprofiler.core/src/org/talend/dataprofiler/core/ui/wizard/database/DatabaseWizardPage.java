@@ -293,6 +293,18 @@ public class DatabaseWizardPage extends AbstractWizardPage {
     }
 
     private ReturnCode checkDBConnection() {
+        // ADD xqliu 2010-04-01 bug 12379
+        if (connectionParam != null) {
+            String dbName = connectionParam.getDbName();
+            boolean retrieveAll = connectionParam.isRetrieveAllMetadata();
+            if (!retrieveAll && (dbName == null || "".equals(dbName.trim()))) {
+                ReturnCode rc = new ReturnCode();
+                rc.setMessage(DefaultMessagesImpl.getString("DatabaseConnectionWizard.dbnameEmpty")); //$NON-NLS-1$
+                rc.setOk(false);
+                return rc;
+            }
+        }
+        // ~12379
         // MOD xqliu 2009-12-17 check for a mdm database
         if (mdmFlag) {
             IXMLDBConnection mdmConnection = new MdmConnection(connectionParam.getJdbcUrl(), connectionParam.getParameters());
