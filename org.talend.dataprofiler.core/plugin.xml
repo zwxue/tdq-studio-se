@@ -1055,20 +1055,6 @@
      </projecttask>
   </extension>
   <extension
-        point="org.eclipse.emf.validation.constraintProviders">
-     <category
-           id="org.talend.dataprofiler.core.constraint.analysis"
-           name="%validator.analysis.name">
-     </category>
-     <constraintProvider
-           cache="true"
-           mode="Batch">
-        <package
-              namespaceUri="http://dataquality.analysis">
-        </package>
-     </constraintProvider>
-  </extension>
-  <extension
         point="org.eclipse.ui.actionSets">
      <actionSet
            id="org.talend.dataprofiler.core.actionSet"
