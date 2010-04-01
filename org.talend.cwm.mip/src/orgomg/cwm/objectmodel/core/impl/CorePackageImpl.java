@@ -1980,7 +1980,8 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
            source, 
            new String[] {
              "string.max.size.Description", "1000",
-             "string.max.size.Purpose", "1000"
+             "string.max.size.Purpose", "1000",
+             "string.max.size.Author", "200"
            });																																																																																																													
     }
 

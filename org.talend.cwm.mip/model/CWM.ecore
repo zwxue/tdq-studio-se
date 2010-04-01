@@ -87,6 +87,7 @@
             <eAnnotations source="htttp://talend.org/UiConstraints">
               <details key="string.max.size.Description" value="1000"/>
               <details key="string.max.size.Purpose" value="1000"/>
+              <details key="string.max.size.Author" value="200"/>
             </eAnnotations>
           </eStructuralFeatures>
           <eStructuralFeatures xsi:type="ecore:EReference" name="document" upperBound="-1"

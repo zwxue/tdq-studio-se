@@ -51,6 +51,11 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
+    /**
+     * 
+     */
+    private static final int MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING = 200;
+
     public static final String ACTION_HANDLER = "ACTION_HANDLER"; //$NON-NLS-1$
 
     private static final int META_FIELD_WIDTH = 200;
@@ -139,12 +144,14 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         nameText = createMetadataTextFiled(NAME_LABEL, parent);
         // set the max number of characters to be entered in the text field
         // ADDED sgandon 16/03/2010 bug 11760
-        nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME, 200));
+        nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME,
+                MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
 
         purposeText = createMetadataTextFiled(PURPOSE_LABEL, parent);
         // set the max number of characters to be entered in the text field
         // ADDED sgandon 16/03/2010 bug 11760
-        purposeText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE, 200));
+        purposeText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE,
+                MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
 
         // description fields
         // ADDED sgandon 16/03/2010 bug 11760
@@ -153,9 +160,13 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         descriptionText = toolkit.createText(parent, null, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         GridDataFactory.fillDefaults().hint(META_FIELD_WIDTH, 60).applyTo(descriptionText);
         // set the max number of characters to be entered in the text field
-        descriptionText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.DESCRIPTION, 200));
+        descriptionText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.DESCRIPTION,
+                MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
 
         authorText = createMetadataTextFiled(AUTHOR_LABEL, parent);
+        //ADDED 2010-04-01 sgandon bug 11760 : author size limitation
+        authorText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.AUTHOR,
+                MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
 
         // MOD 2009-09-08 yyi Feature: 8870.
         if (!ReponsitoryContextBridge.isDefautProject()) {

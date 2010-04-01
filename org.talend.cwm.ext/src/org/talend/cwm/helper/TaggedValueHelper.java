@@ -32,6 +32,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 public final class TaggedValueHelper {
 
     private static Logger log = Logger.getLogger(TaggedValueHelper.class);
+
     /**
      * The tag used when setting a column content type.
      */
@@ -110,10 +111,12 @@ public final class TaggedValueHelper {
     public static final String PROPERTY_FILE = "Property File"; //$NON-NLS-1$
 
     public static final String TDQ_ELEMENT_FILE = "TDQ Element File"; //$NON-NLS-1$
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // overview analysis tagged values
     public static final String RELOAD_DATABASES = "Reload Databases";
+
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
     private TaggedValueHelper() {
@@ -208,8 +211,7 @@ public final class TaggedValueHelper {
      * 
      * @param tag the tag value to get the size limit from.
      * @param defaultValue the default value returned if limit not found in feature
-     * @return the string limit found or the default value
-     * ADDED sgandon 16/03/2010 bug 11760
+     * @return the string limit found or the default value ADDED sgandon 16/03/2010 bug 11760
      */
     public static int getStringMaxSize(String tag, int defaultValue) {
         Assert.isNotNull(tag);
@@ -221,7 +223,8 @@ public final class TaggedValueHelper {
             try {
                 result = Integer.parseInt(docuValue);
             } catch (Exception e) { // if conversion fail return default value
-                log.error("Could not get max size for tag " + tag, e);
+            //MOD sgandon 1/04/2010 bug 11760 : change error to warning cause there is a fallback
+                log.warn("Could not get max size for tag " + tag, e);
             }
         } // else return default value
         return result;
