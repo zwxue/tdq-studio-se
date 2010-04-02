@@ -173,9 +173,7 @@ public class ImportWizardPage extends WizardPage {
                     for (ItemRecord record : invalidRecords) {
                         File file = record.getFile();
 
-                        if (repositoryTree.getChecked(file)) {
-                            repositoryTree.setChecked(file, !removeInvalidBTN.getSelection());
-                        }
+                        repositoryTree.setChecked(file, false);
                     }
 
                     repositoryTree.refresh();
@@ -222,11 +220,8 @@ public class ImportWizardPage extends WizardPage {
         gridData.heightHint = 150;
         errorGroup.setLayoutData(gridData);
 
-        removeInvalidBTN = new Button(errorGroup, SWT.CHECK);
-        removeInvalidBTN.setText("Automatically filter invalid element");
-
         errorsList = new TableViewer(errorGroup, SWT.BORDER);
-        errorsList.getControl().setLayoutData(gridData);
+        errorsList.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 
         errorsList.setContentProvider(new IStructuredContentProvider() {
 
@@ -248,11 +243,6 @@ public class ImportWizardPage extends WizardPage {
                 return element.toString();
             }
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-             */
             @Override
             public Image getImage(Object element) {
                 return ImageLib.getImage(ImageLib.ICON_ERROR_INFO);
@@ -261,6 +251,11 @@ public class ImportWizardPage extends WizardPage {
 
         errorsList.setInput(this);
         errorsList.setSorter(new ViewerSorter());
+
+        removeInvalidBTN = new Button(errorGroup, SWT.PUSH);
+        removeInvalidBTN.setText("Filter invalid element");
+        removeInvalidBTN.setEnabled(false);
+        removeInvalidBTN.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
     }
 
     /**
@@ -373,5 +368,7 @@ public class ImportWizardPage extends WizardPage {
 
         errorsList.setInput(errors);
         errorsList.refresh();
+
+        removeInvalidBTN.setEnabled(true);
     }
 }
