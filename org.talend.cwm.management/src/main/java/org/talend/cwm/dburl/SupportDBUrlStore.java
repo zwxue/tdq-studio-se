@@ -39,6 +39,10 @@ public final class SupportDBUrlStore {
 
     private static Map<String, SupportDBUrlType> supportDBUrlMap = new HashMap<String, SupportDBUrlType>();
 
+    // MOD mzhao bug 12313, 2010-04-02 There is not dbType in prv files before 4.0 release, here use driver class name
+    // to get db type.
+    private static Map<String, SupportDBUrlType> supportDiverNameDBUrlMap = new HashMap<String, SupportDBUrlType>();
+
     private static SupportDBUrlStore dbUrlStore = new SupportDBUrlStore();
 
     public static SupportDBUrlStore getInstance() {
@@ -84,6 +88,38 @@ public final class SupportDBUrlStore {
         supportDBUrlMap.put(SupportDBUrlType.AS400DEFAULTURL.getDBKey(), SupportDBUrlType.AS400DEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.XML_eXist.getDBKey(), SupportDBUrlType.XML_eXist);
         supportDBUrlMap.put(SupportDBUrlType.MDM.getDBKey(), SupportDBUrlType.MDM);
+
+        // MOD mzhao bug 12313, 2010-04-02 There is not dbType in prv files before 4.0 release, here use driver class
+        // name
+        // to get db type.
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.ODBCDEFAULTURL.getDbDriver(), SupportDBUrlType.ODBCDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.MYSQLDEFAULTURL.getDbDriver(), SupportDBUrlType.MYSQLDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getDbDriver(),
+                SupportDBUrlType.ORACLEWITHSIDDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL.getDbDriver(),
+                SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.MSSQLDEFAULTURL.getDbDriver(), SupportDBUrlType.MSSQLDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.MSSQL2008URL.getDbDriver(), SupportDBUrlType.MSSQL2008URL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.DB2DEFAULTURL.getDbDriver(), SupportDBUrlType.DB2DEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.DB2ZOSDEFAULTURL.getDbDriver(), SupportDBUrlType.DB2ZOSDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.POSTGRESQLEFAULTURL.getDbDriver(), SupportDBUrlType.POSTGRESQLEFAULTURL);
+        // supportDiverNameDBUrlMap.put(SupportDBUrlType.INTERBASEDEFAULTURL.getDbDriver(),
+        // SupportDBUrlType.INTERBASEDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.SYBASEDEFAULTURL.getDbDriver(), SupportDBUrlType.SYBASEDEFAULTURL);
+        // supportDiverNameDBUrlMap.put(SupportDBUrlType.INFORMIXDEFAULTURL.getDbDriver(),
+        // SupportDBUrlType.INFORMIXDEFAULTURL);
+        // supportDiverNameDBUrlMap.put(SupportDBUrlType.FIREBIRDDEFAULTURL.getDbDriver(),
+        // SupportDBUrlType.FIREBIRDDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.INGRESDEFAULTURL.getDbDriver(), SupportDBUrlType.INGRESDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.INFORMIXDEFAULTURL.getDbDriver(), SupportDBUrlType.INFORMIXDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver(), SupportDBUrlType.SQLITE3DEFAULTURL);
+        supportDiverNameDBUrlMap
+                .put(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDbDriver(), SupportDBUrlType.GENERICJDBCDEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.TERADATADEFAULTURL.getDbDriver(), SupportDBUrlType.TERADATADEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.AS400DEFAULTURL.getDbDriver(), SupportDBUrlType.AS400DEFAULTURL);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.XML_eXist.getDbDriver(), SupportDBUrlType.XML_eXist);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.MDM.getDbDriver(), SupportDBUrlType.MDM);
+        // ~12313
     }
 
     public void changeAllDBNmae(String dbName) {
@@ -181,6 +217,16 @@ public final class SupportDBUrlStore {
         return dbUrlDefaultType == null ? SupportDBUrlType.ODBCDEFAULTURL : dbUrlDefaultType;
     }
 
+    /**
+     * MOD mzhao bug 12313, 2010-04-02 There is not dbType in prv files before 4.0 release, here use driver class name.
+     * 
+     * @param dbType
+     * @return
+     */
+    public SupportDBUrlType getDBUrlTypeByDriverName(String dbDriver) {
+        SupportDBUrlType dbUrlDefaultType = supportDiverNameDBUrlMap.get(dbDriver);
+        return dbUrlDefaultType == null ? SupportDBUrlType.ODBCDEFAULTURL : dbUrlDefaultType;
+    }
     public Properties getDBPameterProperties(String connectionStr) {
         Properties paramProperties = new Properties();
         String matchSubStr = connectionStr.substring(0, 8);
