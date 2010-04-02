@@ -25,17 +25,17 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
@@ -46,7 +46,7 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC bZhou class global comment. Detailled comment
+ * This class defines the UI for the export feature in TOP and TQ for the Data profile perspective.
  */
 public class ExportWizardPage extends WizardPage {
 
@@ -62,11 +62,11 @@ public class ExportWizardPage extends WizardPage {
 
     private String specifiedPath;
 
-    private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" };
+    private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
     public ExportWizardPage(String specifiedPath) {
-        super("Export Item");
-        setMessage("Export item to document or directory.");
+        super(Messages.getString("ExportWizardPage.2")); //$NON-NLS-1$
+        setMessage(Messages.getString("ExportWizardPage.3")); //$NON-NLS-1$
         this.specifiedPath = specifiedPath;
     }
 
@@ -90,7 +90,22 @@ public class ExportWizardPage extends WizardPage {
 
         initControlState();
 
+        temporaryDisableTreeSelection();
+
         setControl(top);
+    }
+
+    /**
+     * This method is created right before 4.0 release to avoid exporting a non consistent repository. this should be
+     * removed when implementing consistency check on the export. This will disable selection on the reposiroty tree and
+     * check all the items to force complete selection and avoid partial unchecked selection.
+     */
+    private void temporaryDisableTreeSelection() {
+        TreeItem topItem = repositoryTree.getTree().getTopItem();
+        if (topItem != null) { // check all items
+            repositoryTree.setSubtreeChecked(topItem.getData(), true);
+        } // else no item to export so no need to check anything
+        repositoryTree.getTree().setEnabled(false);
     }
 
     /**
@@ -98,6 +113,7 @@ public class ExportWizardPage extends WizardPage {
      */
     protected void initControlState() {
         setArchState(false);
+        setPageComplete(false);
     }
 
     /**
@@ -142,6 +158,7 @@ public class ExportWizardPage extends WizardPage {
      * DOC bZhou Comment method "addListeners".
      */
     private void addListeners() {
+
         dirBTN.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -218,6 +235,32 @@ public class ExportWizardPage extends WizardPage {
                 }
             }
         });
+        dirTxt.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                checkForErrors();
+                updatePageStatus();
+            }
+        });
+    }
+
+    /**
+     * this check that the folder entered in the target export location exist otherwhise set an erro message and disable
+     * export.
+     */
+    protected void checkForErrors() {
+        if (!new File(dirTxt.getText()).exists()) {
+            setErrorMessage(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
+        } else {
+            setErrorMessage(null);
+        }
+    }
+
+    /**
+     * update the page state that is the finish button enable state according to the error message being present or not.
+     */
+    protected void updatePageStatus() {
+        setPageComplete(getErrorMessage() == null);
     }
 
     /**
@@ -250,12 +293,12 @@ public class ExportWizardPage extends WizardPage {
      * 
      * @param top
      */
-    private void createOptionComposite(Composite top) {
-        Group optionGroup = new Group(top, SWT.NONE);
-        optionGroup.setLayout(new RowLayout());
-        optionGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        optionGroup.setText("Option");
-    }
+    // private void createOptionComposite(Composite top) {
+    // Group optionGroup = new Group(top, SWT.NONE);
+    // optionGroup.setLayout(new RowLayout());
+    // optionGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    //        optionGroup.setText(Messages.getString("ExportWizardPage.5")); //$NON-NLS-1$
+    // }
 
     /**
      * DOC bZhou Comment method "createRepositoryTree".
@@ -295,18 +338,18 @@ public class ExportWizardPage extends WizardPage {
         selectComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         dirBTN = new Button(selectComp, SWT.RADIO);
-        dirBTN.setText("Select root directory:");
+        dirBTN.setText(Messages.getString("ExportWizardPage.6")); //$NON-NLS-1$
         setButtonLayoutData(dirBTN);
 
         dirTxt = new Text(selectComp, SWT.BORDER);
         dirTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         browseDirBTN = new Button(selectComp, SWT.PUSH);
-        browseDirBTN.setText("Browse");
+        browseDirBTN.setText(Messages.getString("ExportWizardPage.7")); //$NON-NLS-1$
         setButtonLayoutData(browseDirBTN);
 
         archBTN = new Button(selectComp, SWT.RADIO);
-        archBTN.setText("Select archive file:");
+        archBTN.setText(Messages.getString("ExportWizardPage.8")); //$NON-NLS-1$
         archBTN.setEnabled(false); // TODO make it enable after implemence.
         setButtonLayoutData(archBTN);
 
@@ -314,7 +357,7 @@ public class ExportWizardPage extends WizardPage {
         archTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         browseArchBTN = new Button(selectComp, SWT.PUSH);
-        browseArchBTN.setText("Browse");
+        browseArchBTN.setText(Messages.getString("ExportWizardPage.9")); //$NON-NLS-1$
         setButtonLayoutData(browseArchBTN);
     }
 

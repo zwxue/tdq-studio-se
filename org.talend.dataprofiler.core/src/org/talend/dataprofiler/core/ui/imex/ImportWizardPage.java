@@ -25,6 +25,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -37,6 +39,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
@@ -59,19 +62,15 @@ public class ImportWizardPage extends WizardPage {
 
     private Text dirTxt, archTxt;
 
-    private IImexWriter writer;
-
     private List<String> errors = new ArrayList<String>();
 
     private ItemRecord[] invalidRecords;
 
-    private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" };
+    private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
     public ImportWizardPage(IImexWriter writer) {
-        super("Import Item");
-        setMessage("Import item to current projecdt.");
-
-        this.writer = writer;
+        super(Messages.getString("ImportWizardPage.2")); //$NON-NLS-1$
+        setMessage(Messages.getString("ImportWizardPage.3")); //$NON-NLS-1$
     }
 
     /*
@@ -125,11 +124,6 @@ public class ImportWizardPage extends WizardPage {
                 String result = openDirectoryDialog();
                 if (result != null) {
                     dirTxt.setText(result);
-                    File file = new File(result);
-                    repositoryTree.setInput(file);
-                    repositoryTree.setAllChecked(true);
-                    repositoryTree.expandAll();
-                    repositoryTree.refresh();
                 }
             }
 
@@ -182,6 +176,59 @@ public class ImportWizardPage extends WizardPage {
                 super.widgetSelected(e);
             }
         });
+        dirTxt.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                dirTextModified();
+            }
+        });
+    }
+
+    /**
+     * DOC sgandon Comment method "dirTextModified".
+     */
+    protected void dirTextModified() {
+        File file = new File(dirTxt.getText());
+        if (file.exists()) {
+            repositoryTree.setInput(file);
+            repositoryTree.expandAll();
+            TreeItem topItem = repositoryTree.getTree().getTopItem();
+            if (topItem != null) {
+                repositoryTree.setSubtreeChecked(topItem.getData(), true);
+            } // else tree is empty so do nothing
+            // temporary disable the tree edition right before 4.0 release to avoid exporting a non consistent
+            // repository.
+            repositoryTree.getTree().setEnabled(false);
+            repositoryTree.refresh();
+        } else {
+            repositoryTree.setInput(null);
+        }
+        checkforErrors();
+        updatePageStatus();
+    }
+
+    /**
+     * update the page state that is the finish button enable state according to the error message being present or not.
+     */
+    private void updatePageStatus() {
+        setPageComplete(getErrorMessage() == null);
+    }
+
+    /**
+     * check that directory exist and issue an error message if not. <br>
+     * check that the folder is a data quality repository or issue an error.<br>
+     * check that anything is check in the tree or issue an error.<br>
+     */
+    private void checkforErrors() {
+        if (!new File(dirTxt.getText()).exists()) {
+            setErrorMessage(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
+        } else if (repositoryTree.getTree().getTopItem() == null) {
+            setErrorMessage(Messages.getString("ImportWizardPage.0")); //$NON-NLS-1$
+        } else if (repositoryTree.getCheckedElements().length == 0) {
+            setErrorMessage(Messages.getString("ImportWizardPage.1")); //$NON-NLS-1$
+        } else {
+            setErrorMessage(null);
+        }
     }
 
     /**
@@ -189,6 +236,7 @@ public class ImportWizardPage extends WizardPage {
      */
     private void initControlState() {
         setArchState(false);
+        setPageComplete(false);
     }
 
     /**
@@ -200,7 +248,7 @@ public class ImportWizardPage extends WizardPage {
         repositoryTree = new ContainerCheckedTreeViewer(top);
         repositoryTree.setContentProvider(new FileTreeContentProvider());
         repositoryTree.setLabelProvider(new FileTreeLabelProvider());
-        repositoryTree.setInput("");
+        repositoryTree.setInput(""); //$NON-NLS-1$
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(repositoryTree.getTree());
     }
@@ -214,11 +262,12 @@ public class ImportWizardPage extends WizardPage {
 
         Group errorGroup = new Group(top, SWT.NONE);
         errorGroup.setLayout(new GridLayout());
-        errorGroup.setText("Error And Warning");
+        errorGroup.setText(Messages.getString("ImportWizardPage.5")); //$NON-NLS-1$
 
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.heightHint = 150;
         errorGroup.setLayoutData(gridData);
+
 
         errorsList = new TableViewer(errorGroup, SWT.BORDER);
         errorsList.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -243,6 +292,11 @@ public class ImportWizardPage extends WizardPage {
                 return element.toString();
             }
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+             */
             @Override
             public Image getImage(Object element) {
                 return ImageLib.getImage(ImageLib.ICON_ERROR_INFO);
@@ -307,18 +361,18 @@ public class ImportWizardPage extends WizardPage {
         selectComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         dirBTN = new Button(selectComp, SWT.RADIO);
-        dirBTN.setText("Select root directory:");
+        dirBTN.setText(Messages.getString("ImportWizardPage.7")); //$NON-NLS-1$
         setButtonLayoutData(dirBTN);
 
         dirTxt = new Text(selectComp, SWT.BORDER);
         dirTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         browseDirBTN = new Button(selectComp, SWT.PUSH);
-        browseDirBTN.setText("Browse");
+        browseDirBTN.setText(Messages.getString("ImportWizardPage.8")); //$NON-NLS-1$
         setButtonLayoutData(browseDirBTN);
 
         archBTN = new Button(selectComp, SWT.RADIO);
-        archBTN.setText("Select archive file:");
+        archBTN.setText(Messages.getString("ImportWizardPage.9")); //$NON-NLS-1$
         archBTN.setEnabled(false); // TODO make it enable after implemence.
         setButtonLayoutData(archBTN);
 
@@ -326,7 +380,7 @@ public class ImportWizardPage extends WizardPage {
         archTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         browseArchBTN = new Button(selectComp, SWT.PUSH);
-        browseArchBTN.setText("Browse");
+        browseArchBTN.setText(Messages.getString("ImportWizardPage.10")); //$NON-NLS-1$
         setButtonLayoutData(browseArchBTN);
 
     }
