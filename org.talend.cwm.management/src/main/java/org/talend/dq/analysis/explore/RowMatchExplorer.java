@@ -166,11 +166,7 @@ public class RowMatchExplorer extends DataExplorer {
                             : AnalysisHelper.DATA_FILTER_A)) : whereDataFilter(tableB, null))
                     + ") B";
 
-            query = "select * from "
-                    + getFullyQualifiedTableName(tablea)
-                    + (tableA.equals(tableB) ? whereDataFilter(tableA,
-                            (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
-                                    : AnalysisHelper.DATA_FILTER_B)) : whereDataFilter(tableA, null));
+            query = "select * from " + getFullyQualifiedTableName(tablea);
 
             for (int i = 0; i < columnSetA.size(); i++) {
                 String clause = "";
@@ -180,13 +176,17 @@ public class RowMatchExplorer extends DataExplorer {
                 clause = "(select " + columnNameByAlias + dbmsLanguage.from() + clauseA + " LEFT JOIN " + clauseB + onClause
                         + realWhereClause + ")";
                 if (i == 0) {
-                    clause = " and (" + fullColumnAName + "not in " + clause;
+                    clause = " where (" + fullColumnAName + "not in " + clause;
                 } else {
                     clause = " or " + fullColumnAName + "not in " + clause;
                 }
                 query += clause;
             }
-            query += ")";
+            query += ") "
+                    + (tableA.equals(tableB) ? andDataFilter(tableA,
+                            (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
+                                    : AnalysisHelper.DATA_FILTER_B)) : andDataFilter(tableA, null));
+            ;
         }
 
         return query;
