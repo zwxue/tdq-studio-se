@@ -54,7 +54,6 @@ public class RowMatchExplorer extends DataExplorer {
 
         Table tablea = (Table) indicator.getAnalyzedElement();
         String tableA = tablea.getName();
-        //        String query = "SELECT *" + dbmsLanguage.from() ;//+ getFullyQualifiedTableName(tablea); //$NON-NLS-1$
         String query = "SELECT A.*" + dbmsLanguage.from();
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
             Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
@@ -65,14 +64,11 @@ public class RowMatchExplorer extends DataExplorer {
             String clauseA = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea);
             String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);
             String where = null;
-            String onClause = " on ";
-            String realWhereClause = " where ";
+            String onClause = " ON ";
+            String realWhereClause = dbmsLanguage.where();
             String columnsName = "";
-            String columnsName2 = "";
 
             for (int i = 0; i < columnSetA.size(); i++) {
-                String fullColumnBName = getFullyQualifiedTableName(tableb) + "."
-                        + dbmsLanguage.quote(columnSetB.get(i).getName());
                 String fullColumnAName = getFullyQualifiedTableName(tablea) + "."
                         + dbmsLanguage.quote(columnSetA.get(i).getName());
 
@@ -80,12 +76,10 @@ public class RowMatchExplorer extends DataExplorer {
                 if (i == 0) {
                     where = dbmsLanguage.where();
                     columnsName += " (" + fullColumnAName + " ";
-                    columnsName2 += " A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName());
                 } else {
                     onClause += where;
                     realWhereClause += where;
                     columnsName += ", " + fullColumnAName + " ";
-                    columnsName2 += ",A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName()) + " ";
                 }
 
                 realWhereClause += " B" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName())
@@ -127,10 +121,9 @@ public class RowMatchExplorer extends DataExplorer {
             String clauseA = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea);
             String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);
             String where = null;
-            String onClause = " on ";
-            String realWhereClause = " where ";
+            String onClause = " ON ";
+            String realWhereClause = dbmsLanguage.where();
             String columnsName = "";
-            String columnsName2 = "";
 
             for (int i = 0; i < columnSetA.size(); i++) {
                 String fullColumnAName = getFullyQualifiedTableName(tablea) + "."
@@ -140,12 +133,10 @@ public class RowMatchExplorer extends DataExplorer {
                 if (i == 0) {
                     where = dbmsLanguage.where();
                     columnsName += " (" + fullColumnAName + " ";
-                    columnsName2 += " A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName());
                 } else {
                     onClause += where;
                     realWhereClause += where;
                     columnsName += ", " + fullColumnAName + " ";
-                    columnsName2 += ",A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName()) + " ";
                 }
 
                 realWhereClause += " B" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName())
@@ -166,19 +157,20 @@ public class RowMatchExplorer extends DataExplorer {
                             : AnalysisHelper.DATA_FILTER_A)) : whereDataFilter(tableB, null))
                     + ") B";
 
-            query = "select * from " + getFullyQualifiedTableName(tablea);
+            query = "SELECT * FROM " + getFullyQualifiedTableName(tablea);
 
             for (int i = 0; i < columnSetA.size(); i++) {
                 String clause = "";
                 String fullColumnAName = getFullyQualifiedTableName(tablea) + "."
                         + dbmsLanguage.quote(columnSetA.get(i).getName());
                 String columnNameByAlias = " A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName());
-                clause = "(select " + columnNameByAlias + dbmsLanguage.from() + clauseA + " LEFT JOIN " + clauseB + onClause
+                clause = "(SELECT " + columnNameByAlias + dbmsLanguage.from() + clauseA + " LEFT JOIN " + clauseB + onClause
                         + realWhereClause + ")";
                 if (i == 0) {
-                    clause = " where (" + fullColumnAName + "not in " + clause;
+
+                    clause = dbmsLanguage.where() + "(" + fullColumnAName + dbmsLanguage.notIn() + clause;
                 } else {
-                    clause = " or " + fullColumnAName + "not in " + clause;
+                    clause = dbmsLanguage.or() + fullColumnAName + dbmsLanguage.notIn() + clause;
                 }
                 query += clause;
             }
@@ -186,7 +178,6 @@ public class RowMatchExplorer extends DataExplorer {
                     + (tableA.equals(tableB) ? andDataFilter(tableA,
                             (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
                                     : AnalysisHelper.DATA_FILTER_B)) : andDataFilter(tableA, null));
-            ;
         }
 
         return query;
