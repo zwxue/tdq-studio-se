@@ -92,10 +92,6 @@ public class ImportWizard extends Wizard {
                             log.info("Start importing " + record.getFile().getAbsolutePath());
                             writer.initPath(record, null);
                             writer.write();
-                        } else {
-                            for (String error : record.getErrors()) {
-                                log.error(error);
-                            }
                         }
 
                         monitor.worked(1);

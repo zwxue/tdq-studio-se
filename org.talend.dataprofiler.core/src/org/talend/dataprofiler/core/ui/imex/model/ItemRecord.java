@@ -107,7 +107,7 @@ public class ItemRecord {
         if (file.isFile()) {
             IPath path = new Path(file.getAbsolutePath());
             path = path.makeRelativeTo(ResourceManager.getRootProject().getLocation());
-            return path.removeLastSegments(1);
+            return path;
         }
         return null;
     }

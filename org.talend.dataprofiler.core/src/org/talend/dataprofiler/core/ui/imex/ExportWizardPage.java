@@ -330,7 +330,10 @@ public class ExportWizardPage extends WizardPage {
         if (checkedElements != null) {
             for (Object obj : checkedElements) {
                 if (obj instanceof File) {
-                    files.add((File) obj);
+                    File file = (File) obj;
+                    if (file.isFile()) {
+                        files.add(file);
+                    }
                 }
             }
         }

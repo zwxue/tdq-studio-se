@@ -13,35 +13,44 @@
 package org.talend.dataprofiler.core.ui.imex;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class ExportWizard extends Wizard {
 
+    private static Logger log = Logger.getLogger(ExportWizard.class);
+
     private ExportWizardPage exportPage;
 
-    private EImexType type;
+    private IImexWriter writer;
 
     /**
      * DOC bZhou ExportWizard constructor comment.
      */
-    public ExportWizard() {
-        this(null);
+    public ExportWizard(EImexType type) {
+        this(type, null);
     }
 
     /**
      * DOC bZhou ExportWizard constructor comment.
      */
-    public ExportWizard(String specifiedPath) {
-        exportPage = new ExportWizardPage(specifiedPath);
+    public ExportWizard(EImexType type, String specifiedPath) {
         setWindowTitle("Export Item");
+
+        this.exportPage = new ExportWizardPage(specifiedPath);
+        this.writer = ExportWriterFactory.create(type);
     }
 
     /*
@@ -63,37 +72,56 @@ public class ExportWizard extends Wizard {
     public boolean performFinish() {
         File[] files = exportPage.getElements();
 
-        IImexWriter writer = ExportWriterFactory.create(type);
+        final String destPath = exportPage.getFilePath();
+        final ItemRecord[] records = new ItemRecord[files.length];
+        for (int i = 0; i < files.length; i++) {
+            records[i] = new ItemRecord(files[i]);
+        }
+
+        IRunnableWithProgress op = new IRunnableWithProgress() {
+
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                monitor.beginTask("Export Item", records.length);
+
+                try {
+                    for (ItemRecord record : records) {
+
+                        if (monitor.isCanceled()) {
+                            break;
+                        }
+
+                        monitor.subTask("Exporting " + record.getElement().getName());
+
+                        if (record.isValid()) {
+                            log.info("Start exporting " + record.getFile().getAbsolutePath());
+                            writer.initPath(record, destPath);
+                            writer.write();
+                        } else {
+                            for (String error : record.getErrors()) {
+                                log.error(error);
+                            }
+                        }
+
+                        monitor.worked(1);
+                    }
+
+                    writer.finish(records);
+
+                } catch (Exception e) {
+                    log.error(e, e);
+                }
+
+                monitor.done();
+
+            }
+        };
 
         try {
-            for (File file : files) {
-                writer.initPath(new ItemRecord(file), exportPage.getFilePath());
-                writer.write();
-            }
-
-            writer.finish(null);
+            ProgressUI.popProgressDialog(op);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return true;
-    }
-
-    /**
-     * Sets the type.
-     * 
-     * @param type the type to set
-     */
-    public void setType(EImexType type) {
-        this.type = type;
-    }
-
-    /**
-     * Getter for type.
-     * 
-     * @return the type
-     */
-    public EImexType getType() {
-        return this.type;
     }
 }
