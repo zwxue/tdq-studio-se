@@ -108,7 +108,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer((AbstractAnalysisMetadataPage) this, topComp,
                 getColumnLeftSet(), getColumnRightSet(), DefaultMessagesImpl
                         .getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$
-                        .getString(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.1")), false, true); //$NON-NLS-1$
+                        .getString("FunctionalDependencyMasterDetailsPage.Description"), false, true); //$NON-NLS-1$
 
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
