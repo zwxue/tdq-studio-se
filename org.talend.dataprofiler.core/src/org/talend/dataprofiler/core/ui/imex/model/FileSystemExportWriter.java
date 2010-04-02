@@ -61,6 +61,18 @@ public class FileSystemExportWriter implements IImexWriter {
     /*
      * (non-Javadoc)
      * 
+     * @see
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#populate(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * [])
+     */
+    public ItemRecord[] populate(ItemRecord[] elements) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write()
      */
     public void write() throws IOException, CoreException {
@@ -74,9 +86,11 @@ public class FileSystemExportWriter implements IImexWriter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.imex.model.IExportWriter#finish()
+     * @see
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#finish(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * [])
      */
-    public void finish() throws IOException {
+    public void finish(ItemRecord[] records) throws IOException {
         if (PluginChecker.isTDCPLoaded()) {
             IPath projResPath = ResourceManager.getRootProject().getLocation().append("talend.project");
             IPath projDesPath = new Path(destination).append(ResourceManager.getRootProjectName()).append("talend.project");

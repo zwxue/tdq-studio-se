@@ -90,10 +90,11 @@ public class FileTreeContentProvider implements ITreeContentProvider {
             }
         }
 
-        return absolutePath.indexOf(EResourceConstant.DATA_PROFILING.getName()) > 0
+        return (absolutePath.indexOf(EResourceConstant.DATA_PROFILING.getName()) > 0
                 || absolutePath.indexOf(EResourceConstant.LIBRARIES.getName()) > 0
                 || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0
-                || StringUtils.equals(file.getName(), ReponsitoryContextBridge.PROJECT_DEFAULT_NAME) || tdqProject;
+                || StringUtils.equals(file.getName(), ReponsitoryContextBridge.PROJECT_DEFAULT_NAME) || tdqProject)
+                && !file.getName().startsWith(".");
     }
 
     /*

@@ -134,10 +134,12 @@ public class DeleteCWMResourceAction extends Action {
         if (res instanceof IFile) {
             IFile resFile = (IFile) res;
             ResourceFileMap fileMap = ModelElementFileFactory.getResourceFileMap(resFile);
-            String uriStr = fileMap.getFileResource(resFile).getURI().toString();
+            if (fileMap != null) {
+                String uriStr = fileMap.getFileResource(resFile).getURI().toString();
 
-            fileMap.remove(resFile);
-            EMFSharedResources.getInstance().unloadResource(uriStr);
+                fileMap.remove(resFile);
+                EMFSharedResources.getInstance().unloadResource(uriStr);
+            }
         }
     }
 

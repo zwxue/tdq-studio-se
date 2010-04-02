@@ -30,6 +30,14 @@ public interface IImexWriter {
     public void initPath(ItemRecord resource, String destination);
 
     /**
+     * DOC bZhou Comment method "populate".
+     * 
+     * @param elements
+     * @return
+     */
+    public ItemRecord[] populate(ItemRecord[] elements);
+
+    /**
      * DOC bZhou Comment method "write".
      * 
      * @throws IOException
@@ -42,5 +50,5 @@ public interface IImexWriter {
      * 
      * @throws IOException
      */
-    public void finish() throws IOException;
+    public void finish(ItemRecord[] records) throws IOException;
 }

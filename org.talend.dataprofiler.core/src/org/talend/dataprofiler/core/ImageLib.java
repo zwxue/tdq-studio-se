@@ -180,6 +180,8 @@ public final class ImageLib {
 
     public static final String ICON_PROCESS_WIZARD = "process_wiz.png";
 
+    public static final String ICON_ERROR_INFO = "error.gif";
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */

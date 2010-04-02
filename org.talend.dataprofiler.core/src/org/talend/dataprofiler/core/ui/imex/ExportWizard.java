@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.imex;
 
-import org.eclipse.core.resources.IFile;
+import java.io.File;
+
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
@@ -60,17 +61,17 @@ public class ExportWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-        IFile[] files = exportPage.getElements();
+        File[] files = exportPage.getElements();
 
         IImexWriter writer = ExportWriterFactory.create(type);
 
         try {
-            for (IFile file : files) {
+            for (File file : files) {
                 writer.initPath(new ItemRecord(file), exportPage.getFilePath());
                 writer.write();
             }
 
-            writer.finish();
+            writer.finish(null);
         } catch (Exception e) {
             e.printStackTrace();
         }

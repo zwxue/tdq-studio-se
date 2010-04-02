@@ -13,11 +13,22 @@
 package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -28,15 +39,54 @@ public class ItemRecord {
 
     private String projectName;
 
-    private IPath fullPath;
+    private ModelElement element;
+
+    private List<String> errors = new ArrayList<String>();
+
+    private static ResourceSet resourceSet;
 
     public ItemRecord(File file) {
         this.file = file;
+
+        init();
     }
 
-    public ItemRecord(IFile file) {
-        this(file.getLocation().toFile());
-        this.fullPath = file.getFullPath();
+    /**
+     * DOC bZhou Comment method "init".
+     */
+    private void init() {
+        if (resourceSet == null) {
+            resourceSet = new ResourceSetImpl();
+        }
+
+        if (element == null && file != null) {
+            URI fileURI = URI.createFileURI(file.getAbsolutePath());
+            Resource resource = resourceSet.getResource(fileURI, true);
+            EList<EObject> contents = resource.getContents();
+            if (contents != null && !contents.isEmpty()) {
+                EObject object = contents.get(0);
+                if (object instanceof ModelElement) {
+                    element = (ModelElement) object;
+                }
+            }
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "computeDependencies".
+     */
+    public void computeDependencies() {
+        List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
+
+        if (resourceSet != null) {
+            ModelElementHelper.iterateClientDependencies(element, dependencyElements);
+            for (ModelElement melement : dependencyElements) {
+                if (melement.eIsProxy()) {
+                    InternalEObject inObject = (InternalEObject) melement;
+                    addError("\"" + element.getName() + "\" missing dependented file : " + inObject.eProxyURI().toString());
+                }
+            }
+        }
     }
 
     /**
@@ -54,7 +104,12 @@ public class ItemRecord {
      * @return the fullPath
      */
     public IPath getFullPath() {
-        return this.fullPath;
+        if (file.isFile()) {
+            IPath path = new Path(file.getAbsolutePath());
+            path = path.makeRelativeTo(ResourceManager.getRootProject().getLocation());
+            return path.removeLastSegments(1);
+        }
+        return null;
     }
 
     /**
@@ -69,6 +124,49 @@ public class ItemRecord {
             return propResPath.toOSString();
         }
         return null;
+    }
+
+    /**
+     * clear the resource set.
+     */
+    public void clear() {
+
+        if (resourceSet != null) {
+            for (Resource resource : resourceSet.getResources()) {
+                resource.unload();
+            }
+            resourceSet.getResources().clear();
+            resourceSet = null;
+        }
+
+        element = null;
+    }
+
+    /**
+     * DOC bZhou Comment method "addError".
+     * 
+     * @param error
+     */
+    public void addError(String error) {
+        this.errors.add(error);
+    }
+
+    /**
+     * Getter for errors.
+     * 
+     * @return the errors
+     */
+    public List<String> getErrors() {
+        return this.errors;
+    }
+
+    /**
+     * DOC bZhou Comment method "isValid".
+     * 
+     * @return
+     */
+    public boolean isValid() {
+        return errors.isEmpty();
     }
 
     /**
@@ -87,5 +185,23 @@ public class ItemRecord {
      */
     public String getProjectName() {
         return this.projectName;
+    }
+
+    /**
+     * Getter for resourceSet.
+     * 
+     * @return the resourceSet
+     */
+    public ResourceSet getResourceSet() {
+        return resourceSet;
+    }
+
+    /**
+     * Getter for element.
+     * 
+     * @return the element
+     */
+    public ModelElement getElement() {
+        return this.element;
     }
 }

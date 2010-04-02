@@ -24,6 +24,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.rules.WhereRule;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
@@ -151,6 +152,10 @@ public enum EResourceConstant {
             }
 
             return USER_DEFINED_INDICATORS;
+        }
+
+        if (element instanceof IndicatorsDefinitions) {
+            return LIBRARIES;
         }
 
         if (element instanceof Pattern) {

@@ -52,11 +52,10 @@ public class ImportItemAction extends Action implements IWorkbenchWindowActionDe
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     public void run(IAction action) {
-        ImportWizard wizard = new ImportWizard();
-        wizard.setType(EImexType.FILE);
+        ImportWizard wizard = new ImportWizard(EImexType.FILE);
 
         WizardDialog dialog = new WizardDialog(null, wizard);
-        dialog.setPageSize(550, 400);
+        dialog.setPageSize(550, 500);
         dialog.open();
     }
 

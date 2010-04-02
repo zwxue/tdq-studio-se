@@ -18,10 +18,16 @@ import java.util.List;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,8 +35,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
+import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
+import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -39,17 +49,29 @@ public class ImportWizardPage extends WizardPage {
 
     private CheckboxTreeViewer repositoryTree;
 
+    private TableViewer errorsList;
+
     private Button dirBTN, archBTN;
 
     private Button browseDirBTN, browseArchBTN;
 
+    private Button removeInvalidBTN;
+
     private Text dirTxt, archTxt;
+
+    private IImexWriter writer;
+
+    private List<String> errors = new ArrayList<String>();
+
+    private ItemRecord[] invalidRecords;
 
     private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" };
 
-    public ImportWizardPage() {
+    public ImportWizardPage(IImexWriter writer) {
         super("Import Item");
         setMessage("Import item to current projecdt.");
+
+        this.writer = writer;
     }
 
     /*
@@ -65,6 +87,8 @@ public class ImportWizardPage extends WizardPage {
         createSelectComposite(top);
 
         createRepositoryTree(top);
+
+        createErrorsList(top);
 
         initControlState();
 
@@ -139,6 +163,27 @@ public class ImportWizardPage extends WizardPage {
                 return dialog.open();
             }
         });
+
+        removeInvalidBTN.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+
+                if (invalidRecords != null) {
+                    for (ItemRecord record : invalidRecords) {
+                        File file = record.getFile();
+
+                        if (repositoryTree.getChecked(file)) {
+                            repositoryTree.setChecked(file, !removeInvalidBTN.getSelection());
+                        }
+                    }
+
+                    repositoryTree.refresh();
+                }
+
+                super.widgetSelected(e);
+            }
+        });
     }
 
     /**
@@ -160,6 +205,62 @@ public class ImportWizardPage extends WizardPage {
         repositoryTree.setInput("");
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(repositoryTree.getTree());
+    }
+
+    /**
+     * DOC bZhou Comment method "createErrorsList".
+     * 
+     * @param top
+     */
+    private void createErrorsList(Composite top) {
+
+        Group errorGroup = new Group(top, SWT.NONE);
+        errorGroup.setLayout(new GridLayout());
+        errorGroup.setText("Error And Warning");
+
+        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+        gridData.heightHint = 150;
+        errorGroup.setLayoutData(gridData);
+
+        removeInvalidBTN = new Button(errorGroup, SWT.CHECK);
+        removeInvalidBTN.setText("Automatically filter invalid element");
+
+        errorsList = new TableViewer(errorGroup, SWT.BORDER);
+        errorsList.getControl().setLayoutData(gridData);
+
+        errorsList.setContentProvider(new IStructuredContentProvider() {
+
+            public void dispose() {
+            }
+
+            public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            }
+
+            public Object[] getElements(Object inputElement) {
+                return errors.toArray();
+            }
+        });
+
+        errorsList.setLabelProvider(new LabelProvider() {
+
+            @Override
+            public String getText(Object element) {
+                return element.toString();
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+             */
+            @Override
+            public Image getImage(Object element) {
+                return ImageLib.getImage(ImageLib.ICON_ERROR_INFO);
+            }
+        });
+
+        errorsList.setInput(this);
+        errorsList.setSorter(new ViewerSorter());
     }
 
     /**
@@ -255,5 +356,22 @@ public class ImportWizardPage extends WizardPage {
             }
         }
         return files.toArray(new File[files.size()]);
+    }
+
+    /**
+     * DOC bZhou Comment method "updateErrorList".
+     * 
+     * @param records
+     */
+    public void updateErrorList(ItemRecord[] records) {
+        errors.clear();
+        invalidRecords = records;
+
+        for (ItemRecord record : records) {
+            errors.addAll(record.getErrors());
+        }
+
+        errorsList.setInput(errors);
+        errorsList.refresh();
     }
 }

@@ -14,7 +14,9 @@ package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -28,6 +30,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.swt.widgets.Display;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
@@ -49,7 +52,7 @@ public class FileSystemImportWriter implements IImexWriter {
 
     private ItemRecord resource;
 
-    protected Map<IPath, IPath> resMap = new HashMap<IPath, IPath>();
+    protected Map<IPath, IPath> resMap;
 
     /*
      * (non-Javadoc)
@@ -60,6 +63,7 @@ public class FileSystemImportWriter implements IImexWriter {
      */
     public void initPath(ItemRecord resource, String destination) {
         this.resource = resource;
+        this.resMap = new HashMap<IPath, IPath>();
 
         if (resource != null) {
             IPath itemResPath = new Path(resource.getFile().getAbsolutePath());
@@ -100,6 +104,31 @@ public class FileSystemImportWriter implements IImexWriter {
     /*
      * (non-Javadoc)
      * 
+     * @see
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#populate(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * [])
+     */
+    public ItemRecord[] populate(ItemRecord[] elements) {
+        List<ItemRecord> inValidRecords = new ArrayList<ItemRecord>();
+
+        if (elements instanceof ItemRecord[]) {
+            ItemRecord[] recoreds = (ItemRecord[]) elements;
+
+            for (ItemRecord record : recoreds) {
+                record.computeDependencies();
+
+                if (!record.isValid()) {
+                    inValidRecords.add(record);
+                }
+            }
+        }
+
+        return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write()
      */
     public void write() throws IOException, CoreException {
@@ -127,15 +156,26 @@ public class FileSystemImportWriter implements IImexWriter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#finish()
+     * @see
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#finish(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * [])
      */
-    public void finish() throws IOException {
+    public void finish(ItemRecord[] records) throws IOException {
+        for (ItemRecord record : records) {
+            record.clear();
+        }
+
         IFile defintionFile = ResourceManager.getLibrariesFolder().getFile(".Talend.definition");
         if (!defintionFile.exists()) {
             DefinitionHandler.getInstance();
         }
 
-        CorePlugin.getDefault().refreshWorkSpace();
-        CorePlugin.getDefault().refreshDQView();
+        Display.getDefault().syncExec(new Runnable() {
+
+            public void run() {
+                CorePlugin.getDefault().refreshWorkSpace();
+                CorePlugin.getDefault().refreshDQView();
+            }
+        });
     }
 }

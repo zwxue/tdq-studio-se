@@ -13,25 +13,34 @@
 package org.talend.dataprofiler.core.ui.imex;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class ImportWizard extends Wizard {
 
+    private static Logger log = Logger.getLogger(ImportWizard.class);
+
     private ImportWizardPage importPage;
 
-    private EImexType type;
+    private IImexWriter writer;
 
-    public ImportWizard() {
-        this.importPage = new ImportWizardPage();
+    public ImportWizard(EImexType type) {
         setWindowTitle("Import Item");
+
+        this.writer = ImportWriterFactory.create(type);
+        this.importPage = new ImportWizardPage(writer);
     }
 
     /*
@@ -52,38 +61,63 @@ public class ImportWizard extends Wizard {
     @Override
     public boolean performFinish() {
         File[] files = importPage.getElements();
-        IImexWriter writer = ImportWriterFactory.create(type);
+
+        final ItemRecord[] records = new ItemRecord[files.length];
+        for (int i = 0; i < files.length; i++) {
+            records[i] = new ItemRecord(files[i]);
+        }
+
+        ItemRecord[] invalidRecords = writer.populate(records);
+        importPage.updateErrorList(invalidRecords);
+
+        if (invalidRecords.length > 0) {
+            return false;
+        }
+
+        IRunnableWithProgress op = new IRunnableWithProgress() {
+
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                monitor.beginTask("Import Item", records.length);
+
+                try {
+                    for (ItemRecord record : records) {
+
+                        if (monitor.isCanceled()) {
+                            break;
+                        }
+
+                        monitor.subTask("Importing " + record.getElement().getName());
+
+                        if (record.isValid()) {
+                            log.info("Start importing " + record.getFile().getAbsolutePath());
+                            writer.initPath(record, null);
+                            writer.write();
+                        } else {
+                            for (String error : record.getErrors()) {
+                                log.error(error);
+                            }
+                        }
+
+                        monitor.worked(1);
+                    }
+
+                    writer.finish(records);
+
+                } catch (Exception e) {
+                    log.error(e, e);
+                }
+
+                monitor.done();
+
+            }
+        };
 
         try {
-            for (File file : files) {
-
-                writer.initPath(new ItemRecord(file), null);
-                writer.write();
-            }
-            writer.finish();
-
+            ProgressUI.popProgressDialog(op);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return true;
-    }
-
-    /**
-     * Sets the type.
-     * 
-     * @param type the type to set
-     */
-    public void setType(EImexType type) {
-        this.type = type;
-    }
-
-    /**
-     * Getter for type.
-     * 
-     * @return the type
-     */
-    public EImexType getType() {
-        return this.type;
     }
 }

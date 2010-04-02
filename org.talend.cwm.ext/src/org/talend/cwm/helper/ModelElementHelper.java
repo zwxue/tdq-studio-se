@@ -142,6 +142,11 @@ public final class ModelElementHelper {
         if (returnElements != null) {
             for (Dependency dependency : element.getClientDependency()) {
 
+                if (dependency.eIsProxy()) {
+                    returnElements.add(dependency);
+                    continue;
+                }
+
                 EList<ModelElement> supplier = dependency.getSupplier();
                 if (supplier != null) {
                     for (ModelElement subElement : supplier) {

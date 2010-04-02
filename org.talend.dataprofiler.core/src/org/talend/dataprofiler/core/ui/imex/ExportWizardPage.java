@@ -323,22 +323,18 @@ public class ExportWizardPage extends WizardPage {
      * 
      * @return
      */
-    public IFile[] getElements() {
+    public File[] getElements() {
         Object[] checkedElements = repositoryTree.getCheckedElements();
 
-        List<IFile> files = new ArrayList<IFile>();
+        List<File> files = new ArrayList<File>();
         if (checkedElements != null) {
             for (Object obj : checkedElements) {
                 if (obj instanceof File) {
-                    File file = (File) obj;
-                    IFile file2iFile = file2IFile(file);
-                    if (file2iFile != null) {
-                        files.add(file2iFile);
-                    }
+                    files.add((File) obj);
                 }
             }
         }
-        return files.toArray(new IFile[files.size()]);
+        return files.toArray(new File[files.size()]);
     }
 
     /**
