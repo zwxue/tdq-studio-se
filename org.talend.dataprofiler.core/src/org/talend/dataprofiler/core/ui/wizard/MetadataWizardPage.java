@@ -56,6 +56,11 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public abstract class MetadataWizardPage extends AbstractWizardPage {
 
+    /**
+     * 
+     */
+    private static final int TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT = 200;
+
     private static Logger log = Logger.getLogger(MetadataWizardPage.class);
 
     // protected members
@@ -112,7 +117,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         // set the max number of characters to be entered in the text field
         // ADDED sgandon 16/03/2010 bug 11760
-        nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME, 200));
+        nameText.setTextLimit(EmfHelper.getStringMaxSize(CorePackage.Literals.MODEL_ELEMENT__NAME,
+                TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT));
 
         // Purpose
         Label purposeLab = new Label(container, SWT.NONE);
@@ -122,7 +128,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         purposeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         // set the max number of characters to be entered in the text field
         // ADDED sgandon 16/03/2010 bug 11760
-        purposeText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE, 200));
+        purposeText
+                .setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.PURPOSE, TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT));
 
         // Description
         Label descriptionLab = new Label(container, SWT.NONE);
@@ -134,7 +141,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         data.heightHint = 60;
         descriptionText.setLayoutData(data);
         // set the max number of characters to be entered in the text field
-        descriptionText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.DESCRIPTION, 200));
+        descriptionText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.DESCRIPTION,
+                TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT));
 
         // Author
         Label authorLab = new Label(container, SWT.NONE);
@@ -142,6 +150,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         authorText = new Text(container, SWT.BORDER);
         authorText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        authorText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.AUTHOR, TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT));
 
         String author = ReponsitoryContextBridge.getAuthor();
         authorText.setText(author);

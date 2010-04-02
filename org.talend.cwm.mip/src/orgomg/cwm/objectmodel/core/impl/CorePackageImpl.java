@@ -1973,15 +1973,15 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
           (getModelElement_Name(), 
            source, 
            new String[] {
-             "string.max.size", "200"
+             "string.max.size", "255"
            });										
         addAnnotation
           (getModelElement_TaggedValue(), 
            source, 
            new String[] {
              "string.max.size.Description", "1000",
-             "string.max.size.Purpose", "1000",
-             "string.max.size.Author", "200"
+             "string.max.size.Purpose", "255",
+             "string.max.size.Author", "255"
            });																																																																																																													
     }
 
