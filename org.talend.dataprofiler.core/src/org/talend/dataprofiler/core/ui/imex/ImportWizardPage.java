@@ -101,6 +101,7 @@ public class ImportWizardPage extends WizardPage {
      * DOC bZhou Comment method "addListeners".
      */
     private void addListeners() {
+
         dirBTN.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -222,7 +223,7 @@ public class ImportWizardPage extends WizardPage {
     private void checkforErrors() {
         if (!new File(dirTxt.getText()).exists()) {
             setErrorMessage(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
-        } else if (repositoryTree.getTree().getTopItem() == null) {
+        } else if (repositoryTree.getTree().getItems().length == 0) {
             setErrorMessage(Messages.getString("ImportWizardPage.0")); //$NON-NLS-1$
         } else if (repositoryTree.getCheckedElements().length == 0) {
             setErrorMessage(Messages.getString("ImportWizardPage.1")); //$NON-NLS-1$
