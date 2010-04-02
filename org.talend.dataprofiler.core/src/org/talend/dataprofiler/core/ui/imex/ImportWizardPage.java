@@ -192,9 +192,9 @@ public class ImportWizardPage extends WizardPage {
         if (file.exists()) {
             repositoryTree.setInput(file);
             repositoryTree.expandAll();
-            TreeItem topItem = repositoryTree.getTree().getTopItem();
-            if (topItem != null) {
-                repositoryTree.setSubtreeChecked(topItem.getData(), true);
+            TreeItem[] topItems = repositoryTree.getTree().getItems();
+            for (TreeItem treeItem : topItems) {
+                repositoryTree.setSubtreeChecked(treeItem.getData(), true);
             } // else tree is empty so do nothing
             // temporary disable the tree edition right before 4.0 release to avoid exporting a non consistent
             // repository.
@@ -267,7 +267,6 @@ public class ImportWizardPage extends WizardPage {
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.heightHint = 150;
         errorGroup.setLayoutData(gridData);
-
 
         errorsList = new TableViewer(errorGroup, SWT.BORDER);
         errorsList.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));

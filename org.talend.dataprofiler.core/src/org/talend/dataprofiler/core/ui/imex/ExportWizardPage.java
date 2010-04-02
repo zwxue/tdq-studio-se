@@ -102,9 +102,10 @@ public class ExportWizardPage extends WizardPage {
      */
     private void temporaryDisableTreeSelection() {
         TreeItem topItem = repositoryTree.getTree().getTopItem();
-        if (topItem != null) { // check all items
-            repositoryTree.setSubtreeChecked(topItem.getData(), true);
-        } // else no item to export so no need to check anything
+        TreeItem[] topItems = repositoryTree.getTree().getItems();
+        for (TreeItem treeItem : topItems) {
+            repositoryTree.setSubtreeChecked(treeItem.getData(), true);
+        } // else tree is empty so do nothing
         repositoryTree.getTree().setEnabled(false);
     }
 
