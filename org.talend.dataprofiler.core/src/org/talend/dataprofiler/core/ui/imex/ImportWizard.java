@@ -71,6 +71,7 @@ public class ImportWizard extends Wizard {
         importPage.updateErrorList(invalidRecords);
 
         if (invalidRecords.length > 0) {
+            importPage.removeInvalidRecords();
             return false;
         }
 
