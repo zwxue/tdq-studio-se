@@ -315,7 +315,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      */
     protected void moveSelectedElements(Tree newTree, int step) {
         TreeItem[] selection = newTree.getSelection();
-        boolean moved = false;
+        List<Integer> indexElement = new ArrayList<Integer>();
+        List<Integer> indexIndicator = new ArrayList<Integer>();
+        int indexColumn = -1;
+        String movedType = null;
         for (TreeItem item : selection) {
             IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
             if (indicatorUnit != null) {
@@ -337,7 +340,14 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     inds[index + step] = inds[index];
                     inds[index] = tmpIndicator;
                     data.setIndicators(inds);
-                    moved = true;
+                    movedType = "column";
+                    indexIndicator.add(index + step);
+
+                    for (int ic = 0; ic < modelElementIndicators.length; ic++) {
+                        if (modelElementIndicators[ic] == data) {
+                            indexColumn = ic;
+                        }
+                    }
                 }
             } else {
                 ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
@@ -352,12 +362,25 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     ModelElementIndicator tmpElement = modelElementIndicators[index + step];
                     modelElementIndicators[index + step] = modelElementIndicators[index];
                     modelElementIndicators[index] = tmpElement;
-                    moved = true;
+                    movedType = "indicator";
+                    indexElement.add(index + step);
                 }
             }
         }
-        if (moved)
+        if (null != movedType) {
             setElements(modelElementIndicators);
+            if (movedType.equals("indicator")) {
+                for (int i : indexElement) {
+                    tree.select(tree.getItem(i));
+                }
+            } else if (movedType.equals("column")) {
+                for (int i : indexIndicator) {
+                    tree.select(tree.getItem(indexColumn).getItem(i));
+                }
+            }
+
+        }
+
     }
 
     public void setInput(Object[] objs) {
