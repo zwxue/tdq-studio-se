@@ -1035,11 +1035,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             combo.setText(PatternLanguageType.findNameByLanguage(language));
         }
         combo.addSelectionListener(new LangCombSelectionListener());
-        // ADD xqliu 2010-02-25 feature 11201
-        createDbVersionText(combo, lineComp, version, 30);
-        // ~
         Composite detailComp = new Composite(lineComp, SWT.NONE);
-        detailComp.setLayout(new GridLayout(3, false));
+        detailComp.setLayout(new GridLayout(4, false));
+        // ADD xqliu 2010-02-25 feature 11201
+        createDbVersionText(combo, detailComp, version, 30);
+        // ~
         final Text patternText = new Text(detailComp, SWT.BORDER);
         patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
         patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -1088,7 +1088,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // }
         // });
         // ADD xqliu 2010-02-25 feature 11201
-        createDbVersionText(combo, lineComp, null, 30);
+        // createDbVersionText(combo, lineComp, null, 30);
         // ~
         Expression expression = BooleanExpressionHelper.createExpression(combo.getText(), null);
         tempExpressionMap.put(combo, expression);
@@ -1182,17 +1182,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             } else {
                 expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
             }
-            // MOD xqliu 2010-03-23 feature 11201
-            // if (!lang.equals(PatternLanguageType.JAVA.getName())) {
-            // // MOD xqliu 2010-03-23 feature 11201
-            // updateLineForExpression(combo, expression);
-            // // ~11201
-            // } else {
-            // // Handle java UID.
-            // updateLineForJava(combo);
-            // }
-            // // Update other combos.
-            // updateOtherCombos(combo);
+            if (!lang.equals(PatternLanguageType.JAVA.getName())) {
+                // MOD xqliu 2010-03-23 feature 11201
+                updateLineForExpression(combo, expression);
+                // ~11201
+            } else {
+                // Handle java UID.
+                updateLineForJava(combo);
+            }
+            // Update other combos.
+            updateOtherCombos(combo);
             // ~
             setDirty(true);
         }
@@ -1211,7 +1210,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         detailComp = new Composite(combo.getParent(), SWT.NONE);
         widgetMap.put(combo, detailComp);
-        detailComp.setLayout(new GridLayout(3, false));
+        detailComp.setLayout(new GridLayout(4, false));
+        // ADD xqliu 2010-04-02 feature 11201
+        createDbVersionText(combo, detailComp, expression.getVersion(), 30);
+        // ~
         final Text patternText = new Text(detailComp, SWT.BORDER);
         patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) patternText.getLayoutData()).widthHint = 600;
