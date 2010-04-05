@@ -79,7 +79,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
 
         propertiesWizardPage = new DatabaseMetadataWizardPage();
-        databaseWizardPage = new DatabaseWizardPage();
+        databaseWizardPage = new DatabaseWizardPage(this);
         databaseWizardPage.setMdmFlag(isMdmFlag());
 
         String propTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnection")

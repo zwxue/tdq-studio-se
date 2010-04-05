@@ -96,6 +96,14 @@ public class DatabaseWizardPage extends AbstractWizardPage {
 
     private boolean mdmFlag = false;
 
+    // MOD mzhao bug 12379, 2010-04-05, avoid replicated codes for the same functionality.
+    private DatabaseConnectionWizard databaseConnectionWizard = null;
+
+    public DatabaseWizardPage(DatabaseConnectionWizard databaseConnectionWizard) {
+        this.databaseConnectionWizard = databaseConnectionWizard;
+    }
+
+    // ~bug 12379
     public void setMdmFlag(boolean mdm) {
         this.mdmFlag = mdm;
     }
@@ -293,16 +301,10 @@ public class DatabaseWizardPage extends AbstractWizardPage {
     }
 
     private ReturnCode checkDBConnection() {
-        // ADD xqliu 2010-04-01 bug 12379
-        if (connectionParam != null) {
-            String dbName = connectionParam.getDbName();
-            boolean retrieveAll = connectionParam.isRetrieveAllMetadata();
-            if (!retrieveAll && (dbName == null || "".equals(dbName.trim()))) {
-                ReturnCode rc = new ReturnCode();
-                rc.setMessage(DefaultMessagesImpl.getString("DatabaseConnectionWizard.dbnameEmpty")); //$NON-NLS-1$
-                rc.setOk(false);
-                return rc;
-            }
+        // ADD xqliu 2010-04-01 bug 12379. MOD mzhao 2010-04-05, avoid replicated codes for same function.
+        ReturnCode rt = databaseConnectionWizard.checkMetadata();
+        if (!rt.isOk()) {
+            return rt;
         }
         // ~12379
         // MOD xqliu 2009-12-17 check for a mdm database
