@@ -176,7 +176,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * 
      * @param countAvgNullIndicator
      */
-    private void fillSimpleIndicators(CountAvgNullIndicator countAvgNullIndicator) {
+    private void fillSimpleIndicators(ColumnSetMultiValueIndicator countAvgNullIndicator) {
         countAvgNullIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
         countAvgNullIndicator.setDistinctCountIndicator(IndicatorsFactory.eINSTANCE.createDistinctCountIndicator());
         countAvgNullIndicator.setDuplicateCountIndicator(IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator());
@@ -583,6 +583,25 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             correlationAnalysisHandler.addIndicator(columnList, columnSetMultiIndicator);
         } else {
             analysis.getContext().setConnection(null);
+            analysis.getResults().getIndicators().clear();
+            // MOD by zshen for bug 12042.
+            ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
+            ColumnSetMultiValueIndicator columnSetMultiValueIndicator = null;
+            if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
+                columnSetMultiValueIndicator = columnsetFactory.createCountAvgNullIndicator();
+            }
+
+            if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
+                columnSetMultiValueIndicator = columnsetFactory.createMinMaxDateIndicator();
+            }
+
+            if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
+                columnSetMultiValueIndicator = columnsetFactory.createWeakCorrelationIndicator();
+            }
+
+            fillSimpleIndicators(columnSetMultiValueIndicator);
+            analysis.getResults().getIndicators().add(columnSetMultiValueIndicator);
+            // ~12042
             analysis.getClientDependency().clear();
         }
 
