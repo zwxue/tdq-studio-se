@@ -176,7 +176,11 @@ public final class IndicatorCommonUtil {
                 indicatorUnit.setValue(tempObject);
             }
         } catch (Exception e) {
-            indicator.setComputed(false);
+            // MOD xqliu 2010-04-06 bug 12161
+            if (indicator != null) {
+                indicator.setComputed(false);
+            }
+            // ~12161
         }
     }
 

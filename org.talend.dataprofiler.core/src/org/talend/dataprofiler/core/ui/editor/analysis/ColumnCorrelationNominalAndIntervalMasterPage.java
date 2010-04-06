@@ -152,10 +152,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         if (correlationAnalysisHandler.getIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             currentCountAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
-            currentCountAvgNullIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
-            currentCountAvgNullIndicator.setDistinctCountIndicator(IndicatorsFactory.eINSTANCE.createDistinctCountIndicator());
-            currentCountAvgNullIndicator.setDuplicateCountIndicator(IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator());
-            currentCountAvgNullIndicator.setUniqueCountIndicator(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
+            // MOD xqliu 2010-04-06 bug 12161
+            fillSimpleIndicators(currentCountAvgNullIndicator);
+            // ~12161
             columnSetMultiIndicator = currentCountAvgNullIndicator;
         } else {
             columnSetMultiIndicator = (ColumnSetMultiValueIndicator) correlationAnalysisHandler.getIndicator();
@@ -172,15 +171,33 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         }
     }
 
+    /**
+     * DOC xqliu Comment method "fillSimpleIndicators". ADD xqliu 2010-04-06 bug 12161
+     * 
+     * @param countAvgNullIndicator
+     */
+    private void fillSimpleIndicators(CountAvgNullIndicator countAvgNullIndicator) {
+        countAvgNullIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
+        countAvgNullIndicator.setDistinctCountIndicator(IndicatorsFactory.eINSTANCE.createDistinctCountIndicator());
+        countAvgNullIndicator.setDuplicateCountIndicator(IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator());
+        countAvgNullIndicator.setUniqueCountIndicator(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
+    }
+
     private void initializeIndicator(Indicator indicator) {
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }
-        if (indicator instanceof CompositeIndicator) {
+        // MOD xqliu 2010-04-06 bug 12161
+        if (indicator instanceof CountAvgNullIndicator) {
+            if (((CountAvgNullIndicator) indicator).getChildIndicators().size() == 0) {
+                CountAvgNullIndicator countAvgNullIndicator = (CountAvgNullIndicator) indicator;
+                fillSimpleIndicators(countAvgNullIndicator);
+            }
             for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
                 initializeIndicator(child); // recurse
             }
         }
+        // ~12161
     }
 
     @Override
