@@ -38,6 +38,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -51,9 +53,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
@@ -842,18 +842,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 }
 
             });
-            cursor.addSelectionListener(new SelectionAdapter() {
-
-                public void widgetSelected(SelectionEvent e) {
-                    int column = cursor.getColumn();
-                    if (column == VIEW_COLUMN_INDEX) {
-                        cursor.setMenu(menu);
-                        menu.setVisible(true);
-                    } else {
-                        cursor.setMenu(null);
-                    }
-                }
-            });
 
             indexitem.addSelectionListener(new SelectionAdapter() {
 
@@ -874,18 +862,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 }
 
             });
-            cursor.addSelectionListener(new SelectionAdapter() {
-
-                public void widgetSelected(SelectionEvent e) {
-                    int column = cursor.getColumn();
-                    if (column == VIEW_COLUMN_INDEXES) {
-                        cursor.setMenu(menu1);
-                        menu1.setVisible(true);
-                    } else {
-                        cursor.setMenu(null);
-                    }
-                }
-            });
 
             tableAnalysisitem.addSelectionListener(new SelectionAdapter() {
 
@@ -895,18 +871,20 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 }
 
             });
-            // MOD yyi 2010-03-29 12177 this menu should appear with a right-click only.
-            cursor.addListener(SWT.MouseUp, new Listener() {
 
-                public void handleEvent(Event e) {
-                    if (1 < e.button) {
-                        int column = cursor.getColumn();
-                        if (column == TABLE_COLUMN_INDEX) {
-                            cursor.setMenu(menu2);
-                            menu2.setVisible(true);
-                        } else {
-                            cursor.setMenu(null);
-                        }
+            cursor.addMenuDetectListener(new MenuDetectListener() {
+
+                public void menuDetected(MenuDetectEvent e) {
+                    int column = cursor.getColumn();
+                    if (column == TABLE_COLUMN_INDEX) {
+                        cursor.setMenu(menu2);
+                        menu2.setVisible(true);
+                    } else if (column == VIEW_COLUMN_INDEXES) {
+                        cursor.setMenu(menu1);
+                        menu1.setVisible(true);
+                    } else if (column == VIEW_COLUMN_INDEX) {
+                        cursor.setMenu(menu);
+                        menu.setVisible(true);
                     }
                 }
             });
