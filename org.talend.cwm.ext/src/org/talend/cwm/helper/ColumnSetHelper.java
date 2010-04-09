@@ -295,6 +295,20 @@ public final class ColumnSetHelper {
     }
 
     /**
+     * DOC zshen Comment method "getTableOwner".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getTableOwner(ModelElement element) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TABLE_OWNER, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
      * DOC bZhou Comment method "setTableFilter".
      * 
      * @param filter
@@ -326,6 +340,16 @@ public final class ColumnSetHelper {
      */
     public static void setViewFilter(String filter, ModelElement element) {
         TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.VIEW_FILTER, filter);
+    }
+
+    /**
+     * DOC zshen Comment method "setTableOwner".
+     * 
+     * @param filter
+     * @param element
+     */
+    public static void setTableOwner(String filter, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.TABLE_OWNER, filter);
     }
 
     /**

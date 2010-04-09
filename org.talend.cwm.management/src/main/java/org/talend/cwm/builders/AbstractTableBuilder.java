@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
@@ -33,7 +34,9 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  * @param <T> the type of table to create (TdTable, TdView)
  */
 public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends CwmBuilder {
+
     private static Logger log = Logger.getLogger(AbstractTableBuilder.class);
+
     private String[] tableType;
 
     private boolean columnsRequested = false;
@@ -118,8 +121,15 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
      */
     protected T createTable(String catalogName, String schemaPattern, ResultSet tablesSet) throws SQLException {
         String tableName = null;
+        String tableOwner = null;
         try {
+            // MOD zshen for bug 11934 add the name of table's owner into tableName to differentiate the tables which
+            // have same name.
             tableName = tablesSet.getString(GetTable.TABLE_NAME.name());
+            if (ConnectionUtils.isSybase(connection)) {
+                tableOwner = tablesSet.getString(GetTable.TABLE_SCHEM.name());
+            }
+
         } catch (Exception e) {
             log.error("Table name not found. " + e, e);
         }
@@ -136,6 +146,9 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
         // --- create a table and add columns
         T table = createTable();
         table.setName(tableName);
+        if (tableOwner != null) {
+            ColumnSetHelper.setTableOwner(tableOwner, table);
+        }
         if (tableComment != null) {
             ColumnSetHelper.setComment(tableComment, table);
         }

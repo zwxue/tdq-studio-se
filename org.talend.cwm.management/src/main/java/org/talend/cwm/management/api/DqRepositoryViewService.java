@@ -480,6 +480,11 @@ public final class DqRepositoryViewService {
         String tablePattern = getName(table);
 
         try {
+            // MOD zshen bug 11934 to add schemaPattern by owner of table
+            if (ConnectionUtils.isSybase(connection)) {
+                schemaPattern = ColumnSetHelper.getTableOwner(table);
+            }
+            // ~
             columns = colBuilder.getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
             ColumnSetHelper.addColumns(table, columns);
             // MOD scorreia 2009-01-29 get primary keys of the table
