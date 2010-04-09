@@ -237,21 +237,44 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         EObject rightElement = addElement.getRightElement();
         ColumnSet columnSetSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
         if (columnSetSwitch != null) {
-            Package catalog = (Package) selectedObj;
-            PackageHelper.addColumnSet(columnSetSwitch, catalog);
-        }
 
+            if (isValidTableHandle(columnSetSwitch) || isValidViewHandle(columnSetSwitch)) {
+                PackageHelper.addColumnSet(columnSetSwitch, (Package) selectedObj);
+            }
+        }
     }
 
     @Override
     protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
         ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(removeElement.getLeftElement());
-        if (removeColumnSet == null) {
-            return;
-        }
-        popRemoveElementConfirm();
-        PackageHelper.removeColumnSet(removeColumnSet, (Package) selectedObj);
+        if (removeColumnSet != null) {
+            popRemoveElementConfirm();
 
+            if (isValidTableHandle(removeColumnSet) || isValidViewHandle(removeColumnSet)) {
+                PackageHelper.removeColumnSet(removeColumnSet, (Package) selectedObj);
+            }
+        }
     }
 
+    /**
+     * DOC bZhou Comment method "isValidViewHandle".
+     * 
+     * @param columnSetSwitch
+     * @return
+     */
+    private boolean isValidViewHandle(ColumnSet columnSetSwitch) {
+        TdView view = SwitchHelpers.VIEW_SWITCH.doSwitch(columnSetSwitch);
+        return isCompareView && view != null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isValidTableHandle".
+     * 
+     * @param columnSetSwitch
+     * @return
+     */
+    private boolean isValidTableHandle(ColumnSet columnSetSwitch) {
+        TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(columnSetSwitch);
+        return isCompareTabel && table != null;
+    }
 }
