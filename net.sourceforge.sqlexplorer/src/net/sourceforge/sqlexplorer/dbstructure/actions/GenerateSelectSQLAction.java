@@ -1,30 +1,27 @@
 /*
- * Copyright (C) 2006 Davy Vanherbergen
- * dvanherbergen@users.sourceforge.net
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2006 Davy Vanherbergen dvanherbergen@users.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 package net.sourceforge.sqlexplorer.dbstructure.actions;
 
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
 import net.sourceforge.sqlexplorer.Messages;
-import net.sourceforge.sqlexplorer.dbstructure.nodes.INode;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.ColumnNode;
+import net.sourceforge.sqlexplorer.dbstructure.nodes.INode;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.TableNode;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
@@ -45,7 +42,6 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
 
     private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.SqlEditorIcon");
 
-
     /**
      * @return query string for full table select
      */
@@ -62,7 +58,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
             if (node instanceof ColumnNode) {
 
                 ColumnNode column = (ColumnNode) node;
-                
+
                 if (table.length() == 0) {
                     table = column.getQualifiedParentTableName();
                 }
@@ -70,7 +66,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
                 if (column.getQualifiedParentTableName().equals(table)) {
 
                     query.append(sep);
-                    query.append(column.getName());
+                    query.append(quote(column.getName(), getQuoteString(column)));
                     sep = ", ";
                 }
             }
@@ -82,7 +78,6 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
         return query.toString();
 
     }
-
 
     /**
      * @return query string for full table select
@@ -101,7 +96,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
 
             query.append(sep);
             String column = (String) it.next();
-            query.append(column);
+            query.append(quote(column, getQuoteString(node)));
             sep = ", ";
         }
 
@@ -110,7 +105,6 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
 
         return query.toString();
     }
-
 
     /**
      * Custom image for generate SQL action
@@ -122,7 +116,6 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
         return _image;
     }
 
-
     /**
      * Set the text for the menu entry.
      * 
@@ -132,7 +125,6 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
 
         return Messages.getString("DatabaseStructureView.Actions.GenerateSelectSQL");
     }
-
 
     /**
      * Action is always available.
@@ -155,7 +147,6 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
 
         return false;
     }
-
 
     /**
      * Generate select statement
@@ -191,5 +182,35 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
         } catch (Throwable e) {
             SQLExplorerPlugin.error("Could generate sql.", e);
         }
+    }
+
+    /**
+     * Put name in quotation marks
+     * 
+     * @param name
+     * @param quote
+     * @return quote + name + quote
+     */
+    private String quote(String name, String quote) {
+        StringBuffer buf = new StringBuffer();
+        buf.append(quote);
+        buf.append(name);
+        buf.append(quote);
+        return buf.toString();
+    }
+
+    /**
+     * Get specific quotation marks
+     * 
+     * @param node
+     * @return qutoe string
+     */
+    private String getQuoteString(INode node) {
+        try {
+            return node.getSession().getMetaData().getIdentifierQuoteString();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
