@@ -303,7 +303,7 @@ public final class ColumnSetHelper {
     public static String getTableOwner(ModelElement element) {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TABLE_OWNER, element.getTaggedValue());
         if (taggedValue == null) {
-            return "";
+            return null;
         }
         return taggedValue.getValue();
     }

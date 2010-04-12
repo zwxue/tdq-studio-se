@@ -25,6 +25,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -119,6 +120,12 @@ public class PreviewViewAction extends Action {
         } else {
             catalogName = catalogOrSchema.getName();
         }
+
+        // MOD by zshen: change schemaName of sybase database to Table's owner.
+        if (dbmsLanguage.getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+            schemaName = ColumnSetHelper.getTableOwner(view);
+        }
+        // ~11934
 
         return dbmsLanguage.toQualifiedName(catalogName, schemaName, view.getName());
     }

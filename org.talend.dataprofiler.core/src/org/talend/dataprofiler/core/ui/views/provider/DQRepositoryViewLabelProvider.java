@@ -16,7 +16,9 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLDocument;
@@ -30,6 +32,7 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
@@ -70,7 +73,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
     }
 
     public String getText(Object element) {
-
+        String tableOwner = null;
+        if (element instanceof ModelElement) {
+            tableOwner = ColumnSetHelper.getTableOwner((ModelElement) element);
+        }
         if (element instanceof AbstractFolderNode) {
             if (((IFolderNode) element).getChildren() != null) {
                 return ((IFolderNode) element).getName() + "(" + ((IFolderNode) element).getChildren().length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -106,6 +112,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 elemLabe += " (" + elementType + ")";
             }
             return elemLabe;
+        } else if (element instanceof TdTable && tableOwner != null && !"".equals(tableOwner)) {
+            return super.getText(element) + "(" + tableOwner + ")";
         }
         String text = super.getText(element);
         return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;

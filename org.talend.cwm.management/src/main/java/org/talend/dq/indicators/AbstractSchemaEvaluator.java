@@ -28,6 +28,8 @@ import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
@@ -128,7 +130,11 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (isTable) {
             long rowCount = getRowCounts(quCatalog, quSchema, quTable);
             schemaIndic.setTableRowCount(schemaIndic.getTableRowCount() + rowCount);
-
+            // MOD by zshen: change schemaName of sybase database to Table's owner.
+            if (dbmsLanguage.getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+                schema = ColumnSetHelper.getTableOwner(t);
+            }
+            // ~11934
             // ---- pk
             int pkCount = getPKCount(catalog, schema, table);
             schemaIndic.setKeyCount(schemaIndic.getKeyCount() + pkCount);

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.RelationalPackage;
@@ -54,7 +55,14 @@ public final class ColumnSetNameHelper {
             }
         } else {
             catalogName = catalogOrSchema.getName();
+
         }
+
+        // MOD by zshen: change schemaName of sybase database to Table's owner.
+        if (dbmsLanguage.getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+            schemaName = ColumnSetHelper.getTableOwner(columnset);
+        }
+        // ~11934
 
         return dbmsLanguage.toQualifiedName(catalogName, schemaName, columnset.getName());
     }

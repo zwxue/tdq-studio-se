@@ -21,6 +21,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
@@ -30,6 +32,7 @@ import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
@@ -81,6 +84,10 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
     }
 
     public String getText(Object element) {
+        String tableOwner = null;
+        if (element instanceof ModelElement) {
+            tableOwner = ColumnSetHelper.getTableOwner((ModelElement) element);
+        }
         if (element instanceof IContainer) {
             return ((IContainer) element).getName();
         } else if (element instanceof IFolderNode) {
@@ -106,6 +113,8 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
                 elemLabe += " (" + elementType + ")";
             }
             return elemLabe;
+        } else if (element instanceof TdTable && tableOwner != null && !"".equals(tableOwner)) {
+            return super.getText(element) + "(" + tableOwner + ")";
         }
 
         return super.getText(element);

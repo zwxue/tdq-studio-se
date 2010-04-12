@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -1152,12 +1153,22 @@ public class DbmsLanguage {
             if (joinClauseStartsWithWrongTable(leftTable, getTable(colB)) && !hasTableAliasA && !hasTableAliasB) {
                 // we need to exchange the table names otherwise we could get "tableA join tableA" which would cause
                 // an SQL exception.
+                // MOD by zshen: change schemaName of sybase database to Table's owner.
+                if (getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+                    schemaName = ColumnSetHelper.getTableOwner(colA);
+                }
+                // ~11934
                 // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
                 tableA = toQualifiedName(catalogName, schemaName, tableA);
                 // ~
                 buildJoinClause(builder, tableB, tableAliasB, columnBName, hasTableAliasB, tableA, tableAliasA, columnAName,
                         hasTableAliasA, operator);
             } else {
+                // MOD by zshen: change schemaName of sybase database to Table's owner.
+                if (getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+                    schemaName = ColumnSetHelper.getTableOwner(colA);
+                }
+                // ~11934
                 // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
                 tableB = toQualifiedName(catalogName, schemaName, tableB);
                 // ~

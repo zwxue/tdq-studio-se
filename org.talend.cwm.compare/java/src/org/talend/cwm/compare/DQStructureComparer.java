@@ -344,7 +344,11 @@ public final class DQStructureComparer {
         if (oldTable != null) {
             List<TdTable> tables = PackageHelper.getTables(toReloadPackage);
             for (TdTable table : tables) {
-                if (oldTable.getName().equals(table.getName())) {
+                // bug 11934 MOD zshen judge the tableOwner when database is sybase.
+                if (oldTable.getName().equals(table.getName())
+                        && (ColumnSetHelper.getTableOwner(oldTable) == null || ColumnSetHelper.getTableOwner(oldTable).equals(
+                                ColumnSetHelper.getTableOwner(table)))) {
+                    // ~11934
                     toReloadcolumnSet = table;
                 }
             }

@@ -20,9 +20,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
@@ -270,6 +272,11 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                         final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
                         catalogName = parentCatalog != null ? parentCatalog.getName() : null;
                     }
+                    // MOD by zshen: change schemaName of sybase database to Table's owner.
+                    if (dbms().getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+                        schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
+                    }
+                    // ~11934
                     tableName = dbms().toQualifiedName(catalogName, schemaName, table);
                     // ~11005
                     this.catalogOrSchema = getCatalogOrSchemaName(column);
@@ -408,6 +415,11 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
                 catalogName = parentCatalog != null ? parentCatalog.getName() : null;
             }
+            // MOD by zshen: change schemaName of sybase database to Table's owner.
+            if (dbms().getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+                schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
+            }
+            // ~11934
             analyzedTableName = dbms().toQualifiedName(catalogName, schemaName, table);
         }
 
