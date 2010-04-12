@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
@@ -113,7 +114,7 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
                 elemLabe += " (" + elementType + ")";
             }
             return elemLabe;
-        } else if (element instanceof TdTable && tableOwner != null && !"".equals(tableOwner)) {
+        } else if ((element instanceof TdTable || element instanceof TdView) && tableOwner != null && !"".equals(tableOwner)) {
             return super.getText(element) + "(" + tableOwner + ")";
         }
 

@@ -112,7 +112,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 elemLabe += " (" + elementType + ")";
             }
             return elemLabe;
-        } else if (element instanceof TdTable && tableOwner != null && !"".equals(tableOwner)) {
+        } else if ((element instanceof TdTable || element instanceof TdView) && tableOwner != null && !"".equals(tableOwner)) {
             return super.getText(element) + "(" + tableOwner + ")";
         }
         String text = super.getText(element);

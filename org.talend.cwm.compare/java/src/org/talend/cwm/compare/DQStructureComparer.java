@@ -356,7 +356,11 @@ public final class DQStructureComparer {
         } else {
             List<TdView> views = PackageHelper.getViews(toReloadPackage);
             for (TdView view : views) {
-                if (selectedColumnSet.getName().equals(view.getName())) {
+                // bug 11934 MOD zshen judge the viewOwner when database is sybase.
+                if (selectedColumnSet.getName().equals(view.getName())
+                        && (ColumnSetHelper.getTableOwner(selectedColumnSet) == null || ColumnSetHelper.getTableOwner(
+                                selectedColumnSet).equals(ColumnSetHelper.getTableOwner(view)))) {
+                    // ~11934
                     toReloadcolumnSet = view;
                 }
             }
