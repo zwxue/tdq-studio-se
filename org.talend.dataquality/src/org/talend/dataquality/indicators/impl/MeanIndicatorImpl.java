@@ -11,13 +11,14 @@ import org.talend.dataquality.indicators.MeanIndicator;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Mean Indicator</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MeanIndicatorImpl() {
@@ -26,6 +27,7 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -41,9 +43,8 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
     public Double getMean() {
         Long c = getCount(); // - getNullCount(); MOD scorreia removed in order to fix bug 10222
         if (c.compareTo(0L) == 0) {
-            // FIXME scorreia this error should send a warning to the user that he does not have a mean instead of
-            // displaying a chart with 0.
-            throw new RuntimeException("Invalid mean!!");
+            // MOD yyi 2010-04-13 10549: Cannot save analysis data into database because of NumberFormatException
+            return Double.NaN;
         }
         // MOD xqliu 2009-06-29 bug 7068
         Double sum = null;
@@ -75,6 +76,7 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Double getMeanWithNulls(double valueForNull) {
