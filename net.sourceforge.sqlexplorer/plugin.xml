@@ -105,76 +105,6 @@
             id="net.sourceforge.sqlexplorer.filelist.FileListEditor"
             name="%editor.name.FileListEditor"/>
    </extension>
-   <extension point="org.eclipse.ui.viewActions">
-      <viewContribution
-            id="net.sourceforge.sqlexplorer.connections.actions.commit"
-            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView">
-         <action
-               class="net.sourceforge.sqlexplorer.connections.actions.CommitAction"
-               enablesFor="1"
-               icon="icons/commit.gif"
-               id="net.sourceforge.sqlexplorer.actions.commit"
-               label="%action.label.Commit"
-               toolbarPath="additions"
-               tooltip="%action.tooltip.Commit">
-         </action>
-      </viewContribution>     
-      <viewContribution
-            id="net.sourceforge.sqlexplorer.connections.actions.rollback"
-            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView">
-         <action
-               class="net.sourceforge.sqlexplorer.connections.actions.RollbackAction"
-               enablesFor="1"
-               icon="icons/rollback.gif"
-               id="net.sourceforge.sqlexplorer.actions.rollback"
-               label="%action.label.RollBack"
-               toolbarPath="additions"
-               tooltip="%action.tooltip.Rollback">
-         </action>
-      </viewContribution>
-      <viewContribution
-            id="net.sourceforge.sqlexplorer.connections.actions.closeAll"
-            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView">
-         <action
-               class="net.sourceforge.sqlexplorer.connections.actions.CloseAllConnectionsAction"
-               disabledIcon="icons/removeall_dis.gif"
-               enablesFor="*"
-               icon="icons/removeAll_co.gif"
-               id="net.sourceforge.sqlexplorer.actions.closeAll"
-               label="%action.label.CloseAllConnections"
-               toolbarPath="additions"
-               tooltip="%action.tooltip.CloseAllConnections">
-         </action>
-      </viewContribution>
-      <viewContribution
-            id="net.sourceforge.sqlexplorer.connections.actions.close"
-            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView">
-         <action
-               class="net.sourceforge.sqlexplorer.connections.actions.CloseConnectionAction"
-               disabledIcon="icons/remove_dis.gif"
-               enablesFor="*"
-               icon="icons/remove_att.gif"
-               id="net.sourceforge.sqlexplorer.actions.close"
-               label="%action.label.CloseConnection"
-               toolbarPath="additions"
-               tooltip="%action.tooltip.CloseConnection">
-         </action>
-      </viewContribution>
-
-      <viewContribution
-            id="net.sourceforge.sqlexplorer.connections.actions.NewEditor"
-            targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView">
-         <action
-               label="%action.label.NewSQLEditor"
-               icon="icons/new_editor.gif"
-               class="net.sourceforge.sqlexplorer.connections.actions.NewEditorAction"
-               tooltip="%action.tooltip.NewSQLEditor"
-               enablesFor="*"
-               toolbarPath="additions"
-               id="net.sourceforge.sqlexplorer.actions.newEditor">
-         </action>
-      </viewContribution>
-   </extension>
    <extension
          point="org.eclipse.ui.newWizards">
       <category
@@ -209,7 +139,6 @@
    <extension-point id="nodeDetailTab" name="Database Structure Node Detail Tab" schema="schema/nodeDetailTab.exsd"/>
    <extension-point id="dataSetTableContextAction" name="Table Context Menu Action" schema="schema/dataSetTableContextAction.exsd"/>
    <extension-point id="editorAction" name="SQL Editor Action" schema="schema/editorAction.exsd"/>
-   <extension-point id="explainPlanContextAction" name="Explain Plan Context Action" schema="schema/explainPlanContextAction.exsd"/>
    
    <extension
          id="nodeContextAction"
