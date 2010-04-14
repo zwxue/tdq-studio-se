@@ -820,13 +820,13 @@
            name="Getting started">
      </cheatsheet>
      <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/ColumnAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet1"
            name="Multiple Column Analysis Creation">
      </cheatsheet>
      <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.database"
+           category="org.talend.dataprofiler.core.category.database"
            contentFile="cheatsheets/DBconnection_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet2"
            name="Database Connection Creation">
@@ -842,7 +842,7 @@
            parentCategory="org.talend.dataprofiler.core.category">
      </category>
      <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/ConnectionAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.connection.analysis"
            name="Connection Analysis Creation">
@@ -853,43 +853,43 @@
            parentCategory="org.talend.dataprofiler.core.category">
      </category>
      <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/CatalogAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.catalog.analysis"
            name="Catalog Analysis Creation">
      </cheatsheet>
           <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/SchemaAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.schema.analysis"
            name="Schema Analysis Creation">
      </cheatsheet>
           <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/ColumnsComparisonAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.columnComparison.analysis"
            name="Column Comparison Analysis Creation">
      </cheatsheet>
           <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/NumericalColumnCorrelationAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.numericalColulmnCorrelation.analysis"
            name="Numerical Column Correlation Analysis Creation">
      </cheatsheet>
           <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/TimeColumnCorrelationAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.timeCorrelationColumnAnalysis.analysis"
            name="Time Column Correlation Analysis Creation">
      </cheatsheet>
           <cheatsheet
-                category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.indicator"
+                category="org.talend.dataprofiler.core.category.indicator"
                 contentFile="cheatsheets/UDI_cheat.xml"
                 id="org.talend.dataprofiler.core.userdefinedindicator"
                 name="User Defined Indicator Creation">
           </cheatsheet>
     <cheatsheet
-           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/NominalCorrelationAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.nominalCorrelation.analysis"
            name="Nominal Correlation Analysis Creation">

@@ -18,8 +18,8 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="workspacetask" minOccurs="1" maxOccurs="unbounded"/>
-            <element ref="projecttask" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="workspacetask" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="projecttask" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
