@@ -116,6 +116,7 @@ import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -180,7 +181,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @param parent
      */
     private Tree createTree(Composite parent) {
-        final Tree newTree = new TooltipTree(parent, SWT.MULTI | SWT.BORDER) {
+        final Tree newTree = new TooltipTree(parent, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION) {
 
             @Override
             protected boolean isValidItem(TreeItem item) {
@@ -315,42 +316,26 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      */
     protected void moveSelectedElements(Tree newTree, int step) {
         TreeItem[] selection = newTree.getSelection();
-        List<Integer> indexElement = new ArrayList<Integer>();
-        List<Integer> indexIndicator = new ArrayList<Integer>();
-        int indexColumn = -1;
-        String movedType = null;
-        for (TreeItem item : selection) {
+        if (selection.length > 0) {
+            TreeItem item = selection[0];
             IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+            ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
             if (indicatorUnit != null) {
-                ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-                IndicatorUnit[] units = data.getIndicatorUnits();
-                int index = -1;
-                for (int i = 0; i < units.length; i++) {
-                    if (indicatorUnit == units[i]) {
-                        index = i;
-                        break;
-                    }
-                }
-                if (index + step > -1 && index + step < units.length) {
-                    Indicator[] inds = new Indicator[units.length];
-                    for (int i = 0; i < units.length; i++) {
-                        inds[i] = units[i].getIndicator();
-                    }
-                    Indicator tmpIndicator = inds[index + step];
-                    inds[index + step] = inds[index];
-                    inds[index] = tmpIndicator;
-                    data.setIndicators(inds);
-                    movedType = "column";
-                    indexIndicator.add(index + step);
-
-                    for (int ic = 0; ic < modelElementIndicators.length; ic++) {
-                        if (modelElementIndicators[ic] == data) {
-                            indexColumn = ic;
+                data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                TypedReturnCode<IndicatorUnit[]> code = sortIndicatorUnits(data.getIndicatorUnits(), indicatorUnit, step);
+                if (code.isOk()) {
+                    if (null != code.getObject()) {
+                        Indicator[] inds = new Indicator[code.getObject().length];
+                        for (int i = 0; i < code.getObject().length; i++) {
+                            inds[i] = code.getObject()[i].getIndicator();
                         }
+                        data.setIndicators(inds);
                     }
+                    setElements(modelElementIndicators);
+                    selectElement(tree.getItems(), indicatorUnit);
                 }
             } else {
-                ModelElementIndicator data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                data = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
                 int index = -1;
                 for (int i = 0; i < modelElementIndicators.length; i++) {
                     if (data == modelElementIndicators[i]) {
@@ -362,25 +347,73 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     ModelElementIndicator tmpElement = modelElementIndicators[index + step];
                     modelElementIndicators[index + step] = modelElementIndicators[index];
                     modelElementIndicators[index] = tmpElement;
-                    movedType = "indicator";
-                    indexElement.add(index + step);
+                    setElements(modelElementIndicators);
+                    selectElement(tree.getItems(), data);
                 }
             }
         }
-        if (null != movedType) {
-            setElements(modelElementIndicators);
-            if (movedType.equals("indicator")) {
-                for (int i : indexElement) {
-                    tree.select(tree.getItem(i));
-                }
-            } else if (movedType.equals("column")) {
-                for (int i : indexIndicator) {
-                    tree.select(tree.getItem(indexColumn).getItem(i));
+    }
+
+    /**
+     * DOC yyi select element after moved.
+     * 
+     * @param items
+     * @param data
+     */
+    private void selectElement(TreeItem[] items, Object data) {
+
+        if (data instanceof ModelElementIndicator) {
+            for (TreeItem item : items) {
+                ModelElementIndicator model = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+                if (model == data) {
+                    tree.setSelection(item);
+                } else {
+                    selectElement(item.getItems(), data);
                 }
             }
-
+        } else if (data instanceof IndicatorUnit) {
+            for (TreeItem item : items) {
+                IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                if (unit != null && ((IndicatorUnit) data).getIndicator() == unit.getIndicator()) {
+                    tree.setSelection(item);
+                } else
+                    selectElement(item.getItems(), data);
+            }
         }
+    }
 
+    /**
+     * DOC yyi Sort indicators
+     * 
+     * @param units
+     * @param targetUnit
+     * @param step
+     * @return
+     */
+    private TypedReturnCode<IndicatorUnit[]> sortIndicatorUnits(IndicatorUnit[] units, IndicatorUnit targetUnit, int step) {
+
+        TypedReturnCode<IndicatorUnit[]> code = new TypedReturnCode<IndicatorUnit[]>();
+        int index = -1;
+        for (int i = 0; i < units.length; i++) {
+            if (targetUnit.getIndicator() == units[i].getIndicator()) {
+                index = i;
+                break;
+            } else if (null != units[i].getChildren()) {
+                TypedReturnCode<IndicatorUnit[]> code2 = sortIndicatorUnits(units[i].getChildren(), targetUnit, step);
+                if (null != code2.getObject()) {
+                    units[i].setChildren(code2.getObject());
+                    code.setOk(true);
+                    break;
+                }
+            }
+        }
+        if (-1 != index && index + step > -1 && index + step < units.length) {
+            IndicatorUnit tmpUnit = units[index + step];
+            units[index + step] = units[index];
+            units[index] = tmpUnit;
+            code.setReturnCode("", true, units);
+        }
+        return code;
     }
 
     public void setInput(Object[] objs) {
