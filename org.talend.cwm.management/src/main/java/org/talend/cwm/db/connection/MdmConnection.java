@@ -44,6 +44,7 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.XmlFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.mdm.webservice.WSDataClusterPK;
 import org.talend.mdm.webservice.WSDataModelPK;
 import org.talend.mdm.webservice.WSGetDataModel;
 import org.talend.mdm.webservice.WSPing;
@@ -243,8 +244,25 @@ public class MdmConnection implements IXMLDBConnection {
      * @throws RemoteException
      */
     public String[] runQuery(String xmlSql) throws ServiceException, RemoteException {
+        // MOD xqliu 2010-04-15 bug 12568
+        return runQuery(null, xmlSql);
+    }
+
+    /**
+     * DOC xqliu Comment method "runQuery". Add xqliu 2010-04-15 bug 12568
+     * 
+     * @param xmlSql
+     * @return
+     * @throws ServiceException
+     * @throws RemoteException
+     */
+    public String[] runQuery(TdXMLDocument xmlDocument, String xmlSql) throws ServiceException, RemoteException {
+        WSDataClusterPK wsdcPK = null;
+        if (xmlDocument != null) {
+            wsdcPK = new WSDataClusterPK(xmlDocument.getName());
+        }
         XtentisBindingStub stub = getXtentisBindingStub();
-        return stub.runQuery(new WSRunQuery(null, null, xmlSql, null));
+        return stub.runQuery(new WSRunQuery(null, wsdcPK, xmlSql, null));
     }
 
     public String getVersion() {

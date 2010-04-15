@@ -16,6 +16,7 @@ import java.rmi.RemoteException;
 
 import javax.xml.rpc.ServiceException;
 
+import org.talend.cwm.xml.TdXMLDocument;
 
 /**
  * DOC xqliu  class global comment. Detailled comment
@@ -30,9 +31,23 @@ public class MdmStatement {
         this.connection = connection;
     }
 
-    public boolean execute(String xmlSql) throws RemoteException, ServiceException {
-        resultSet = connection.runQuery(xmlSql);
+    /**
+     * DOC xqliu Comment method "execute". ADD xqliu 2010-04-15 bug 12568
+     * 
+     * @param xmlDocument
+     * @param xmlSql
+     * @return
+     * @throws RemoteException
+     * @throws ServiceException
+     */
+    public boolean execute(TdXMLDocument xmlDocument, String xmlSql) throws RemoteException, ServiceException {
+        resultSet = connection.runQuery(xmlDocument, xmlSql);
         return true;
+    }
+
+    public boolean execute(String xmlSql) throws RemoteException, ServiceException {
+        // MOD xqliu 2010-04-15 bug 12568
+        return execute(null, xmlSql);
     }
 
     public String[] getResultSet() {

@@ -296,7 +296,8 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         }
 
         if (continueRun()) {
-            statement.execute(queryStmt);
+            // MOD xqliu 2010-04-15 bug 12568
+            statement.execute(xmlDocument, queryStmt);
         }
 
         // TODO should support several columns result
