@@ -258,20 +258,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         buttonsComp = masterPage.getEditor().getToolkit().createComposite(parent, SWT.NONE);
         buttonsComp.setLayout(new GridLayout(3, true));
         buttonsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        GridData buttonGridData = new GridData();
-        buttonGridData.heightHint = 25;
-        buttonGridData.horizontalAlignment = GridData.CENTER;
-        buttonGridData.verticalAlignment = GridData.FILL;
-        buttonGridData.grabExcessHorizontalSpace = true;
-        buttonGridData.grabExcessVerticalSpace = true;
+        GridData buttonGridData = new GridData(SWT.CENTER, SWT.CENTER, true, false);
 
-        Button delButton = new Button(buttonsComp, SWT.NULL);
+        Button delButton = new Button(buttonsComp, SWT.NONE);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setLayoutData(buttonGridData);
-        Button moveUpButton = new Button(buttonsComp, SWT.NULL);
+        Button moveUpButton = new Button(buttonsComp, SWT.NONE);
         moveUpButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
         moveUpButton.setLayoutData(buttonGridData);
-        Button moveDownButton = new Button(buttonsComp, SWT.NULL);
+        Button moveDownButton = new Button(buttonsComp, SWT.NONE);
         moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
         moveDownButton.setLayoutData(buttonGridData);
 
