@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -572,6 +573,7 @@ public final class IndicatorHelper {
 
     private static String createStandardNumber(Object input) {
         // MOD SeB 11/03/2010 bug 11751 : convert number to String using current locale
-        return NumberFormat.getInstance().format(input);
+        // MOD yyi 2010-04-15 bug 12483 : Unify the decimal format as US.
+        return NumberFormat.getInstance(Locale.US).format(input);
     }
 }
