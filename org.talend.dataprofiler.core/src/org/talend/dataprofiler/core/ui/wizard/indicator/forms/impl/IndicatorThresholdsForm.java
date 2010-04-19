@@ -340,6 +340,18 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
                 rc.setOk(false);
                 statusLabelText += MSG_ONLY_NUMBER + System.getProperty("line.separator");
+            } else {
+                // MOD yyi 2010-04-15 bug 12483 : check the value is out of range
+                try {
+                    if (!CheckValueUtils.isEmpty(max))
+                        Long.valueOf(max);
+                    if (!CheckValueUtils.isEmpty(min))
+                        Long.valueOf(min);
+                } catch (NumberFormatException e) {
+                    rc.setOk(false);
+                    statusLabelText += UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE_LONG + System.getProperty("line.separator");
+                }
+
             }
         }
 

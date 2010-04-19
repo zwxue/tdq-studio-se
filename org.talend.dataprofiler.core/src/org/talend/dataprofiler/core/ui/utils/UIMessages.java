@@ -44,6 +44,8 @@ public final class UIMessages {
 
     public static final String MSG_INDICATOR_VALUE_OUT_OF_RANGE = DefaultMessagesImpl.getString("UIMessages.PercentValue"); //$NON-NLS-1$
 
+    public static final String MSG_INDICATOR_VALUE_OUT_OF_RANGE_LONG = DefaultMessagesImpl.getString("UIMessages.LongValue"); //$NON-NLS-1$
+
     public static final String MSG_SELECT_GENERIC_JDBC = DefaultMessagesImpl.getString("UIMessages.GenericConnection") //$NON-NLS-1$
             + DefaultMessagesImpl.getString("UIMessages.CustomDriver"); //$NON-NLS-1$
 
