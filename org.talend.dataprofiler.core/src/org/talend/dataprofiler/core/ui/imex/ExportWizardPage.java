@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.resource.ResourceManager;
@@ -236,6 +237,7 @@ public class ExportWizardPage extends WizardPage {
                 }
             }
         });
+
         dirTxt.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -281,9 +283,11 @@ public class ExportWizardPage extends WizardPage {
 
         for (ModelElement element : dependencyElements) {
             ResourceFileMap fileMap = ModelElementFileFactory.getResourceFileMap(element);
-            IFile file = fileMap.findCorrespondingFile(element);
-            if (file != null && file.exists()) {
-                dependencyFiles.add(file.getLocation().toFile());
+            if (fileMap != null) {
+                IFile file = fileMap.findCorrespondingFile(element);
+                if (file != null && file.exists()) {
+                    dependencyFiles.add(file.getLocation().toFile());
+                }
             }
         }
         return dependencyFiles.toArray(new File[dependencyFiles.size()]);
@@ -324,7 +328,7 @@ public class ExportWizardPage extends WizardPage {
      */
     private Object computInput() {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        return specifiedPath == null ? workspace.getRoot().getLocation().toFile() : workspace.getRoot().getFolder(
+        return specifiedPath == null ? ResourceManager.getRootProject().getLocation().toFile() : workspace.getRoot().getFolder(
                 new Path(specifiedPath)).getLocation().toFile();
     }
 
@@ -367,21 +371,19 @@ public class ExportWizardPage extends WizardPage {
      * 
      * @return
      */
-    public File[] getElements() {
-        Object[] checkedElements = repositoryTree.getCheckedElements();
+    public ItemRecord[] getElements() {
+        List<ItemRecord> itemRecords = new ArrayList<ItemRecord>();
 
-        List<File> files = new ArrayList<File>();
-        if (checkedElements != null) {
-            for (Object obj : checkedElements) {
-                if (obj instanceof File) {
-                    File file = (File) obj;
-                    if (file.isFile()) {
-                        files.add(file);
-                    }
+        Object[] checkedElements = repositoryTree.getCheckedElements();
+        for (Object obj : checkedElements) {
+            if (obj instanceof File) {
+                File file = (File) obj;
+                if (file.isFile()) {
+                    itemRecords.add(new ItemRecord(file));
                 }
             }
         }
-        return files.toArray(new File[files.size()]);
+        return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
     }
 
     /**

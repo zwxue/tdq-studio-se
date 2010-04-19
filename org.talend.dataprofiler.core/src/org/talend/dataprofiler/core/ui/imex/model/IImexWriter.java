@@ -22,28 +22,23 @@ import org.eclipse.core.runtime.CoreException;
 public interface IImexWriter {
 
     /**
-     * DOC bZhou Comment method "init".
-     * 
-     * @param resource
-     * @param destination
-     */
-    public void initPath(ItemRecord resource, String destination);
-
-    /**
      * DOC bZhou Comment method "populate".
      * 
      * @param elements
+     * @param checkExisted
      * @return
      */
-    public ItemRecord[] populate(ItemRecord[] elements);
+    public ItemRecord[] populate(ItemRecord[] elements, boolean checkExisted);
 
     /**
      * DOC bZhou Comment method "write".
      * 
+     * @param recored
+     * @param destination
      * @throws IOException
      * @throws CoreException
      */
-    public void write() throws IOException, CoreException;
+    public void write(ItemRecord recored, String destination) throws IOException, CoreException;
 
     /**
      * DOC bZhou Comment method "finish".

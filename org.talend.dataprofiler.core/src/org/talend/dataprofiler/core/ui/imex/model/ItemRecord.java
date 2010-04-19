@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -25,9 +26,12 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.resource.ResourceManager;
+import org.talend.core.model.properties.Project;
+import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.core.model.properties.Property;
+import org.talend.dq.helper.EObjectHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -40,6 +44,8 @@ public class ItemRecord {
     private String projectName;
 
     private ModelElement element;
+
+    private Property property;
 
     private List<String> errors = new ArrayList<String>();
 
@@ -70,60 +76,73 @@ public class ItemRecord {
                 }
             }
         }
-    }
 
-    /**
-     * DOC bZhou Comment method "computeDependencies".
-     */
-    public void computeDependencies() {
-        List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
-
-        if (resourceSet != null) {
-            ModelElementHelper.iterateClientDependencies(element, dependencyElements);
-            for (ModelElement melement : dependencyElements) {
-                if (melement.eIsProxy()) {
-                    InternalEObject inObject = (InternalEObject) melement;
-                    addError("\"" + element.getName() + "\" missing dependented file : " + inObject.eProxyURI().toString());
-                }
-            }
+        if (property == null && file != null) {
+            property = (Property) EObjectHelper.retrieveEObject(getPropertyPath(), PropertiesPackage.eINSTANCE.getProperty());
         }
     }
 
     /**
-     * Getter for file.
+     * DOC bZhou Comment method "getFilePath".
      * 
-     * @return the file
+     * @return
      */
-    public File getFile() {
-        return this.file;
+    public IPath getFilePath() {
+        return new Path(file.getAbsolutePath());
     }
 
     /**
-     * Getter for fullPath.
+     * DOC bZhou Comment method "getPropertyPath".
      * 
-     * @return the fullPath
+     * @return
+     */
+    public IPath getPropertyPath() {
+        if (file != null) {
+            IPath itemResPath = new Path(file.getAbsolutePath());
+            return itemResPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        }
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getFullPath".
+     * 
+     * @return
      */
     public IPath getFullPath() {
         if (file.isFile()) {
             IPath path = new Path(file.getAbsolutePath());
-            path = path.makeRelativeTo(ResourceManager.getRootProject().getLocation());
+            path = path.makeRelativeTo(ResourcesPlugin.getWorkspace().getRoot().getLocation());
             return path;
         }
         return null;
     }
 
     /**
-     * Getter for propertyFilePath.
+     * DOC bZhou Comment method "getProjectName".
      * 
-     * @return the propertyFilePath
+     * @return
      */
-    public String getPropertyFilePath() {
-        if (file != null) {
-            IPath itemResPath = new Path(file.getAbsolutePath());
-            IPath propResPath = itemResPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-            return propResPath.toOSString();
+    public String getProjectName() {
+        if (projectName == null && property != null) {
+
+            InternalEObject author = (InternalEObject) property.getAuthor();
+            if (author != null) {
+                Resource projResource = author.eResource();
+                if (projResource != null) {
+                    URI projectUri = projResource.getURI();
+                    IPath projectPath = new Path(projectUri.toFileString());
+                    if (projectPath.toFile().exists()) {
+                        Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
+                        if (projOBJ != null) {
+                            Project project = (Project) projOBJ;
+                            this.projectName = project.getLabel();
+                        }
+                    }
+                }
+            }
         }
-        return null;
+        return this.projectName == null ? ReponsitoryContextBridge.PROJECT_DEFAULT_NAME : this.projectName;
     }
 
     /**
@@ -152,6 +171,15 @@ public class ItemRecord {
     }
 
     /**
+     * Getter for file.
+     * 
+     * @return the file
+     */
+    public File getFile() {
+        return this.file;
+    }
+
+    /**
      * Getter for errors.
      * 
      * @return the errors
@@ -170,21 +198,12 @@ public class ItemRecord {
     }
 
     /**
-     * Sets the projectName.
+     * Getter for property.
      * 
-     * @param projectName the projectName to set
+     * @return the property
      */
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    /**
-     * Getter for projectName.
-     * 
-     * @return the projectName
-     */
-    public String getProjectName() {
-        return this.projectName;
+    public Property getProperty() {
+        return this.property;
     }
 
     /**

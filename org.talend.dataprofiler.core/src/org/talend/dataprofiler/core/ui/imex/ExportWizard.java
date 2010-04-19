@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.imex;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.log4j.Logger;
@@ -70,13 +69,9 @@ public class ExportWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-        File[] files = exportPage.getElements();
 
         final String destPath = exportPage.getFilePath();
-        final ItemRecord[] records = new ItemRecord[files.length];
-        for (int i = 0; i < files.length; i++) {
-            records[i] = new ItemRecord(files[i]);
-        }
+        final ItemRecord[] records = exportPage.getElements();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
@@ -94,8 +89,7 @@ public class ExportWizard extends Wizard {
 
                         if (record.isValid()) {
                             log.info("Start exporting " + record.getFile().getAbsolutePath());
-                            writer.initPath(record, destPath);
-                            writer.write();
+                            writer.write(record, destPath);
                         } else {
                             for (String error : record.getErrors()) {
                                 log.error(error);

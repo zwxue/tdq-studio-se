@@ -58,17 +58,21 @@ public class ImportWizardPage extends WizardPage {
 
     private Button browseDirBTN, browseArchBTN;
 
+    private Button overwriteBTN;
+
     private Text dirTxt, archTxt;
 
-    private List<String> errors = new ArrayList<String>();
+    private IImexWriter writer;
 
-    private ItemRecord[] invalidRecords;
+    private List<String> errors = new ArrayList<String>();
 
     private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
     public ImportWizardPage(IImexWriter writer) {
         super(Messages.getString("ImportWizardPage.2")); //$NON-NLS-1$
         setMessage(Messages.getString("ImportWizardPage.3")); //$NON-NLS-1$
+
+        this.writer = writer;
     }
 
     /*
@@ -86,6 +90,8 @@ public class ImportWizardPage extends WizardPage {
         createRepositoryTree(top);
 
         createErrorsList(top);
+
+        createOptionComposite(top);
 
         initControlState();
 
@@ -123,6 +129,8 @@ public class ImportWizardPage extends WizardPage {
                 String result = openDirectoryDialog();
                 if (result != null) {
                     dirTxt.setText(result);
+
+                    populateElement();
                 }
             }
 
@@ -157,6 +165,16 @@ public class ImportWizardPage extends WizardPage {
             }
         });
 
+        overwriteBTN.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                dirTxt.setText(dirTxt.getText());
+
+                populateElement();
+            }
+        });
+
         dirTxt.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -166,9 +184,23 @@ public class ImportWizardPage extends WizardPage {
     }
 
     /**
-     * DOC sgandon Comment method "removeInvalidRecords".
+     * DOC bZhou Comment method "populateElement".
      */
-    public void removeInvalidRecords() {
+    private void populateElement() {
+        ItemRecord[] invalidRecords = writer.populate(getElements(), !overwriteBTN.getSelection());
+        updateErrorList(invalidRecords);
+
+        if (invalidRecords.length > 0) {
+            removeInvalidRecords(invalidRecords);
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "removeInvalidRecords".
+     * 
+     * @param invalidRecords
+     */
+    public void removeInvalidRecords(ItemRecord[] invalidRecords) {
         if (invalidRecords != null) {
             for (ItemRecord record : invalidRecords) {
                 File file = record.getFile();
@@ -261,7 +293,7 @@ public class ImportWizardPage extends WizardPage {
         errorGroup.setText(Messages.getString("ImportWizardPage.5")); //$NON-NLS-1$
 
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.heightHint = 150;
+        gridData.heightHint = 100;
         errorGroup.setLayoutData(gridData);
 
         errorsList = new TableViewer(errorGroup, SWT.BORDER);
@@ -301,6 +333,16 @@ public class ImportWizardPage extends WizardPage {
         errorsList.setInput(this);
         errorsList.setSorter(new ViewerSorter());
 
+    }
+
+    /**
+     * DOC bZhou Comment method "createOptionComposite".
+     * 
+     * @param top
+     */
+    private void createOptionComposite(Composite top) {
+        overwriteBTN = new Button(top, SWT.CHECK);
+        overwriteBTN.setText(Messages.getString("ImportWizardPage.4")); //$NON-NLS-1$
     }
 
     /**
@@ -381,21 +423,19 @@ public class ImportWizardPage extends WizardPage {
      * 
      * @return
      */
-    public File[] getElements() {
-        Object[] checkedElements = repositoryTree.getCheckedElements();
+    public ItemRecord[] getElements() {
+        List<ItemRecord> itemRecords = new ArrayList<ItemRecord>();
 
-        List<File> files = new ArrayList<File>();
-        if (checkedElements != null) {
-            for (Object obj : checkedElements) {
-                if (obj instanceof File) {
-                    File file = (File) obj;
-                    if (file.isFile()) {
-                        files.add(file);
-                    }
+        Object[] checkedElements = repositoryTree.getCheckedElements();
+        for (Object obj : checkedElements) {
+            if (obj instanceof File) {
+                File file = (File) obj;
+                if (file.isFile()) {
+                    itemRecords.add(new ItemRecord(file));
                 }
             }
         }
-        return files.toArray(new File[files.size()]);
+        return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
     }
 
     /**
@@ -405,7 +445,6 @@ public class ImportWizardPage extends WizardPage {
      */
     public void updateErrorList(ItemRecord[] records) {
         errors.clear();
-        invalidRecords = records;
 
         for (ItemRecord record : records) {
             errors.addAll(record.getErrors());

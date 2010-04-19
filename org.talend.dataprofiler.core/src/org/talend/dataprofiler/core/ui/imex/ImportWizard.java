@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.imex;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.log4j.Logger;
@@ -60,20 +59,8 @@ public class ImportWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-        File[] files = importPage.getElements();
 
-        final ItemRecord[] records = new ItemRecord[files.length];
-        for (int i = 0; i < files.length; i++) {
-            records[i] = new ItemRecord(files[i]);
-        }
-
-        ItemRecord[] invalidRecords = writer.populate(records);
-        importPage.updateErrorList(invalidRecords);
-
-        if (invalidRecords.length > 0) {
-            importPage.removeInvalidRecords();
-            return false;
-        }
+        final ItemRecord[] records = importPage.getElements();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
@@ -91,8 +78,7 @@ public class ImportWizard extends Wizard {
 
                         if (record.isValid()) {
                             log.info("Start importing " + record.getFile().getAbsolutePath());
-                            writer.initPath(record, null);
-                            writer.write();
+                            writer.write(record, null);
                         }
 
                         monitor.worked(1);

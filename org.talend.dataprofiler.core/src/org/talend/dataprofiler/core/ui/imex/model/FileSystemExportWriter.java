@@ -14,8 +14,6 @@ package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
@@ -33,39 +31,16 @@ public class FileSystemExportWriter implements IImexWriter {
 
     private static Logger log = Logger.getLogger(FileSystemExportWriter.class);
 
-    protected Map<IPath, IPath> resMap;
-
     private String destination;
 
     /*
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#initPath(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
-     * , java.lang.String)
-     */
-    public void initPath(ItemRecord resource, String destination) {
-        this.destination = destination;
-
-        IPath itemResPath = new Path(resource.getFile().getAbsolutePath());
-        IPath propResPath = new Path(resource.getPropertyFilePath());
-
-        IPath itemDesPath = new Path(destination).append(resource.getFullPath());
-        IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-
-        resMap = new HashMap<IPath, IPath>();
-        resMap.put(itemResPath, itemDesPath);
-        resMap.put(propResPath, propDesPath);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#populate(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
-     * [])
+     * [], boolean)
      */
-    public ItemRecord[] populate(ItemRecord[] elements) {
+    public ItemRecord[] populate(ItemRecord[] elements, boolean checkExisted) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -73,14 +48,27 @@ public class FileSystemExportWriter implements IImexWriter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write()
+     * @see
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * , java.lang.String)
      */
-    public void write() throws IOException, CoreException {
-        if (resMap != null) {
-            for (IPath resPath : resMap.keySet()) {
-                copyFile(resPath.toFile(), resMap.get(resPath).toFile());
-            }
-        }
+    public void write(ItemRecord recored, String destination) throws IOException, CoreException {
+        this.destination = destination;
+
+        IPath itemDesPath = new Path(destination).append(recored.getFullPath());
+        IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+        // export item file
+        File resItemFile = recored.getFile();
+        File desItemFile = itemDesPath.toFile();
+
+        copyFile(resItemFile, desItemFile);
+
+        // export property file
+        File resPropFile = recored.getPropertyPath().toFile();
+        File desPropFile = propDesPath.toFile();
+
+        copyFile(resPropFile, desPropFile);
     }
 
     /*
