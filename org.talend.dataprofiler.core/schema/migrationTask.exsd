@@ -1,3 +1,4 @@
+<<<<<<< .mine
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.talend.dataprofiler.core" xmlns="http://www.w3.org/2001/XMLSchema">
@@ -99,6 +100,8 @@
                   <enumeration value="3.2.5">
                   </enumeration>
                   <enumeration value="4.0.0">
+                  </enumeration>
+                  <enumeration value="4.0.1">
                   </enumeration>
                </restriction>
             </simpleType>
