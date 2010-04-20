@@ -122,7 +122,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
     @Override
     public boolean handle(Object data) {
         if (data != null) {
-            String body = String.valueOf(data).trim();
+            String body = String.valueOf(data);
             Matcher matcher = pattern.matcher(body);
             if (matcher.find()) {
                 this.matchingValueCount++;

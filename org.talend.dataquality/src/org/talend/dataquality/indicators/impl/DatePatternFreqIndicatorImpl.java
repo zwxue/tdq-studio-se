@@ -81,7 +81,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     @Override
     public boolean handle(Object data) {
         if (data != null) {
-            dateRetriever.handle(String.valueOf(data).trim());
+            dateRetriever.handle(String.valueOf(data));
         }
         return super.handle(data);
     }
