@@ -110,7 +110,7 @@ public final class ChartDecorator {
 
         render.setBaseItemLabelFont(font);
         // MOD zshen 10998: change the font name 2010-01-16
-        font = new Font("Verdana", Font.BOLD, BASE_LABEL_SIZE);
+        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
         domainAxis.setLabelFont(font);
 
         font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
@@ -162,7 +162,7 @@ public final class ChartDecorator {
 
         render.setBaseItemLabelFont(font);
 
-        font = new Font("Verdana", Font.BOLD, BASE_LABEL_SIZE);
+        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
         domainAxis.setLabelFont(font);
 
         font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
