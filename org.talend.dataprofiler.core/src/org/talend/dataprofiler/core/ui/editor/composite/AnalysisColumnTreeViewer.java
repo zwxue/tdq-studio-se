@@ -753,6 +753,24 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
+     * ADD yyi 2010-04-20 12173:update indicator name
+     * 
+     * @param unit
+     * @return
+     */
+    private String getIndicatorName(IndicatorUnit unit) {
+        IndicatorEnum indicatorType = unit.getType();
+        if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
+                || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
+            Pattern pattern = unit.getIndicator().getParameters().getDataValidDomain().getPatterns().get(0);
+            return pattern.getName();
+        } else if (indicatorType == IndicatorEnum.UserDefinedIndicatorEnum) {
+            return unit.getIndicator().getIndicatorDefinition().getName();
+        }
+        return unit.getIndicatorName();
+    }
+
+    /**
      * DOC qzhang Comment method "createOneUnit".
      * 
      * @param treeItem
@@ -769,7 +787,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         indicatorItem.setImage(0, getIndicatorIamge(unit));
 
-        String indicatorName = indicatorUnit.getIndicatorName();
+        String indicatorName = getIndicatorName(indicatorUnit);
         String label = indicatorName == null ? "unknown indicator" : indicatorName;
         indicatorItem.setText(0, label);
 
