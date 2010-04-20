@@ -62,6 +62,18 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
     }
 
     /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getIntegerValue()
+     * 
+     * ADDED yyi 2010-04-20 getIntegerValue()
+     */
+    @Override
+    public Long getIntegerValue() {
+        return this.getMean().longValue();
+    }
+
+    /*
      * ADDED
      * 
      * (non-Javadoc)
