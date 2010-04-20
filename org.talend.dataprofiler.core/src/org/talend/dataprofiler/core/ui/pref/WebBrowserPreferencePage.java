@@ -71,7 +71,7 @@ public class WebBrowserPreferencePage extends PreferencePage implements IWorkben
      * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
     public void init(IWorkbench workbench) {
-        isBlockWeb = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, BLOCK_WEB_BROWSER, true,
+        isBlockWeb = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, BLOCK_WEB_BROWSER, false,
                 new IScopeContext[] { new InstanceScope() });
     }
 
@@ -82,7 +82,7 @@ public class WebBrowserPreferencePage extends PreferencePage implements IWorkben
      */
     @Override
     protected void performDefaults() {
-        blockWebBtn.setSelection(true);
+        blockWebBtn.setSelection(false);
         isBlockWeb = true;
     }
 
