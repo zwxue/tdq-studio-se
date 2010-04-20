@@ -34,7 +34,6 @@ public class SoundexFrequencyTableState extends FrequencyTypeStates {
         super(units);
     }
 
-    @Override
     public DataExplorer getDataExplorer() {
         return new SoundexFrequencyExplorer();
     }

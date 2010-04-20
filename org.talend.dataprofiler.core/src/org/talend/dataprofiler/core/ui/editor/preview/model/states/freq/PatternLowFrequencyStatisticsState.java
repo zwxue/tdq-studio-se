@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorer;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -31,5 +33,9 @@ public class PatternLowFrequencyStatisticsState extends LowFrequencyStatisticsSt
     protected String getTitle() {
         // MOD hcheng 2009-06-16,0007725: missed indicator name in pattern graphics.
         return DefaultMessagesImpl.getString("FrequencyTypeStates.PatternLowFreqyebctStatistics"); //$NON-NLS-1$
+    }
+    public DataExplorer getDataExplorer() {
+        // TODO Auto-generated method stub
+        return new FunctionFrequencyStatExplorer();
     }
 }

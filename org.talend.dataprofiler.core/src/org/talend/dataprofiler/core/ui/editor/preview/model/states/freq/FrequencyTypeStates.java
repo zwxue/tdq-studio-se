@@ -92,11 +92,6 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
         return customerdataset;
     }
 
-    public DataExplorer getDataExplorer() {
-        // TODO Auto-generated method stub
-        return new FrequencyStatisticsExplorer();
-    }
-
     public JFreeChart getExampleChart() {
         // TODO Auto-generated method stub
         return null;
@@ -132,5 +127,6 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     protected abstract void sortIndicator(FrequencyExt[] frequencyExt);
 
     protected abstract String getTitle();
+
 
 }

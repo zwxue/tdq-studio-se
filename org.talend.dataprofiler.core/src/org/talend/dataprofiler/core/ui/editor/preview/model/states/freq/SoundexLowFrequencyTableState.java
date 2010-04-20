@@ -59,7 +59,6 @@ public class SoundexLowFrequencyTableState extends FrequencyTypeStates {
         return entity;
     }
 
-    @Override
     public DataExplorer getDataExplorer() {
         return new SoundexFrequencyExplorer();
     }

@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorer;
 
 /**
  * DOC zshen class global comment. Detailled comment
@@ -35,6 +37,10 @@ public class DatePatternFrequencyStatisticsState extends FrequencyStatisticsStat
     protected String getTitle() {
         // TODO Auto-generated method stub
         return DefaultMessagesImpl.getString("FrequencyTypeStates.DatePatternFreqyebctStatistics"); //$NON-NLS-1$
+    }
+    public DataExplorer getDataExplorer() {
+        // TODO Auto-generated method stub
+        return new FunctionFrequencyStatExplorer();
     }
 
 }

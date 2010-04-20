@@ -18,6 +18,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -38,5 +40,10 @@ public class LowFrequencyStatisticsState extends FrequencyTypeStates {
     @Override
     protected String getTitle() {
         return DefaultMessagesImpl.getString("FrequencyTypeStates.LowFreqyebctStatistics"); //$NON-NLS-1$
+    }
+    
+    public DataExplorer getDataExplorer() {
+        // TODO Auto-generated method stub
+        return new FrequencyStatisticsExplorer();
     }
 }

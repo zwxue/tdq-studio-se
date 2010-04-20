@@ -34,9 +34,6 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class FrequencyStatisticsExplorer extends DataExplorer {
 
-    // MOD mzhao 2010-04-12 bug 11554
-    private static final String REGEX = ".*\\s*SELECT (REPLACE.*|TRANSLATE.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
-    private static final String REGEX_INFORMIX = ".*\\s*SELECT (REPLACE.*)\\s*(AS|as)+\\s*\\w+\\s* FROM"; //$NON-NLS-1$
 
     protected String getFreqRowsStatement() {
 
@@ -236,20 +233,19 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      */
     protected String getInstantiatedClause() {
         // get function which convert data into a pattern
-        String function = null;
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         int javaType = column.getJavaType();
-        if (!Java2SqlType.isNumbericInSQL(javaType)) {
-        	function=getFunction();
-        }
+//        if (!Java2SqlType.isNumbericInSQL(javaType)) {
+//        	function=getFunction();
+//        }
         // MOD zshen bug 11005 sometimes(when instead of soundex() with some sql),the Variable named "function" is not
         // is
         // colName.
-        if (function != null
-                && (DbmsLanguageFactory.isInfomix(this.dbmsLanguage.getDbmsName()) || DbmsLanguageFactory
-                        .isOracle(this.dbmsLanguage.getDbmsName()))) {
-            function = columnName;
-        }
+//        if (function != null
+//                && (DbmsLanguageFactory.isInfomix(this.dbmsLanguage.getDbmsName()) || DbmsLanguageFactory
+//                        .isOracle(this.dbmsLanguage.getDbmsName()))) {
+//            function = columnName;
+//        }
         // ~11005
         // MOD mzhao bug 9681 2009-11-09
         
@@ -260,27 +256,11 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             value = "'" + entity.getKey() + "'";
         }
 
-        String clause = entity.isLabelNull()? columnName + dbmsLanguage.isNull(): ((function == null ? columnName : function)
-                + dbmsLanguage.equal() + value); //$NON-NLS-1$ //$NON-NLS-2$
+		String clause = entity.isLabelNull() ? columnName
+				+ dbmsLanguage.isNull() : columnName + dbmsLanguage.equal()
+				+ value; //$NON-NLS-1$ //$NON-NLS-2$
         return clause;
     }
 
-    private String getFunction() {
-        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
-        final String body = instantiatedExpression.getBody();
-        Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
-
-        // MOD mzhao 2010-04-12 bug 11554 
-        String dbmsName = this.dbmsLanguage.getDbmsName();
-        if (DbmsLanguageFactory.isInfomix(dbmsName)) {
-            p = Pattern.compile(REGEX_INFORMIX, Pattern.CASE_INSENSITIVE);
-        }
-        // ~
-        Matcher matcher = p.matcher(body);
-        matcher.find();
-        // MOD mzhao 2009-11-09 bug 9681: Catch the possibility that the sql body contains "TOP" keywords.
-        //MOD MOD mzhao 2010-04-12 bug 11554
-        String group = matcher.group(1);
-        return group;
-    }
+    
 }

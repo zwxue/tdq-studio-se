@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -52,6 +53,17 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
         String function = getFunction();
 
+        // MOD zshen bug 11005 sometimes(when instead of soundex() with some sql),the Variable named "function" is not
+        // is
+        // colName.
+        if (function != null
+                && (DbmsLanguageFactory.isInfomix(this.dbmsLanguage.getDbmsName()) || DbmsLanguageFactory
+                        .isOracle(this.dbmsLanguage.getDbmsName()))) {
+            function = columnName;
+        }
+        // ~11005
+        
+        
         // MOD mzhao bug 9740 2009-11-10
 
         String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : SOUNDEX_PREFIX + "("//$NON-NLS-1$ 
