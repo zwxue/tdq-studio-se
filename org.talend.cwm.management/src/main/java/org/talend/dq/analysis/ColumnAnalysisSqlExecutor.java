@@ -231,7 +231,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (textParameter.isIgnoreCase()) {
                     colName = dbms().toUpperCase(colName);
                 }
-                if (!textParameter.isUseBlank() && IndicatorsPackage.eINSTANCE.getTextIndicator().isSuperTypeOf(indicatorEclass)) {
+                if (!textParameter.isUseBlank()
+                        && IndicatorsPackage.eINSTANCE.getLengthIndicator().isSuperTypeOf(indicatorEclass)) {
                     whereExpression.add(dbms().isNotBlank(colName));
                 } else if (textParameter.isUseBlank()
                         && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {

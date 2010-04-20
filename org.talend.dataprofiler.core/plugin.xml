@@ -1059,6 +1059,12 @@
            name="Thresholds Values Task"
            version="4.0.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateOracleTextIndicatorQueryTask"
+           id="org.talend.dataprofiler.core.updateOracleTextIndicators"
+           name="Update Oracle Text Indicators"
+           version="4.0.1">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

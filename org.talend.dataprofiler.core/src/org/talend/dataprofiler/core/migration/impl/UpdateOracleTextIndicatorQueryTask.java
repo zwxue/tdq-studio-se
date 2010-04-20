@@ -19,18 +19,11 @@ import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
 
 /**
- * DOC bZhou class global comment. Detailled comment
+ * @author scorreia
+ * 
+ * This migration task removes the call to the Oracle TRIM function when computing the length indicators
  */
-public class SoundexIndicatorQueryTask extends AWorkspaceTask {
-
-
-    private final String oldSoundexQuery = "ORDER BY d,c DESC";
-
-    private final String newSoundexQuery = "ORDER BY d DESC,c DESC";
-
-    private final String oldPSoundexQuery = "ORDER BY COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) , COUNT(*) DESC";
-
-    private final String newPSoundexQuery = "ORDER BY COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) DESC , COUNT(*) DESC";
+public class UpdateOracleTextIndicatorQueryTask extends AWorkspaceTask {
 
     /*
      * (non-Javadoc)
@@ -39,8 +32,14 @@ public class SoundexIndicatorQueryTask extends AWorkspaceTask {
      */
     public boolean execute() {
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
-        talendDefinitionFileUpdate.add(this.oldSoundexQuery, this.newSoundexQuery);
-        talendDefinitionFileUpdate.add(this.oldPSoundexQuery, this.newPSoundexQuery);
+        talendDefinitionFileUpdate
+                .add(
+                        "<sqlGenericExpression xmi:id=\"_ybtTIDh8Ed2XmO7pl5Yuyg\" body=\"SELECT MIN(LENGTH(TRIM('XX' || &lt;%=__COLUMN_NAMES__%>))) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>",
+                        "<sqlGenericExpression xmi:id=\"_ybtTIDh8Ed2XmO7pl5Yuyg\" body=\"SELECT MIN(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>");
+        talendDefinitionFileUpdate
+                .add(
+                        "<sqlGenericExpression xmi:id=\"_ybt6Mjh8Ed2XmO7pl5Yuyg\" body=\"SELECT MAX(LENGTH(TRIM('XX' || &lt;%=__COLUMN_NAMES__%>))) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>",
+                        "<sqlGenericExpression xmi:id=\"_ybt6Mjh8Ed2XmO7pl5Yuyg\" body=\"SELECT MAX(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>");
         return talendDefinitionFileUpdate.replace(this.getClass().getName());
     }
 
@@ -60,7 +59,7 @@ public class SoundexIndicatorQueryTask extends AWorkspaceTask {
      */
     public Date getOrder() {
         Calendar calender = Calendar.getInstance();
-        calender.set(2009, 10, 23);
+        calender.set(2010, 04, 19);
         return calender.getTime();
     }
 
