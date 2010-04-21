@@ -734,7 +734,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @param indicatorUnit
      * @return
      */
-    private Image getIndicatorIamge(IndicatorUnit indicatorUnit) {
+    private Image getIndicatorImage(IndicatorUnit indicatorUnit) {
         IndicatorEnum indicatorType = indicatorUnit.getType();
         if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
                 || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
@@ -743,7 +743,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             // TODO use different image for user defined indicator
             if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(
                     UDIHelper.getUDICategory(indicatorUnit.getIndicator().getIndicatorDefinition()))) {
-                return ImageLib.getImage(ImageLib.PATTERN_REG);
+                // MOD yyi 2010-04-21 12724,unify the UDI icon as "IndicatorDefinition.gif"
+                // return ImageLib.getImage(ImageLib.PATTERN_REG);
+                return ImageLib.getImage(ImageLib.IND_DEFINITION);
             } else {
                 return ImageLib.getImage(ImageLib.IND_DEFINITION);
             }
@@ -785,7 +787,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
 
-        indicatorItem.setImage(0, getIndicatorIamge(unit));
+        indicatorItem.setImage(0, getIndicatorImage(unit));
 
         String indicatorName = getIndicatorName(indicatorUnit);
         String label = indicatorName == null ? "unknown indicator" : indicatorName;
