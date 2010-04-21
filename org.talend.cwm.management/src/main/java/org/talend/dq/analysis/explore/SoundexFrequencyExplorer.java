@@ -25,7 +25,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
-    private static final String REGEX = "SELECT MAX\\((.*)\\)\\s*, SOUNDEX\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
+    private static final String REGEX = "SELECT.*\\s*MAX\\((.*)\\)\\s*, SOUNDEX\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
     private static final String SOUNDEX_PREFIX = "SOUNDEX";
 
@@ -62,8 +62,7 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
             function = columnName;
         }
         // ~11005
-        
-        
+
         // MOD mzhao bug 9740 2009-11-10
 
         String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : SOUNDEX_PREFIX + "("//$NON-NLS-1$ 
