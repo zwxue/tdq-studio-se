@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -289,7 +290,9 @@ public class CatalogBuilder extends CwmBuilder {
     }
 
     private void initializeSchemaLow() throws SQLException {
-
+        // ADD xqliu 2010-03-03 feature 11412
+        String dbName = getDbConnectionParameter() == null ? null : getDbConnectionParameter().getDbName();
+        // ~11412
         // initialize the catalog if not already done
         if (!this.catalogsInitialized) {
             initializeCatalog();
@@ -318,12 +321,24 @@ public class CatalogBuilder extends CwmBuilder {
                     }
                 }
             } else {
-                this.schemata.addAll(schemas);
+                // ADD xqliu 2010-04-21 bug 12452
+                List<TdSchema> retrievedSchemas = new ArrayList<TdSchema>();
+                for (TdSchema schema : schemas) {
+                    if (retrieveCatalogSchema(dbName, schema.getName())) {
+                        retrievedSchemas.add(schema);
+                    }
+                }
+                // this.schemata.addAll(schemas);
+                this.schemata.addAll(retrievedSchemas);
+                // ~12452
                 // MOD xqliu 2010-03-04 feature 11412
                 // handle case when one catalog exist but no mapping between catalog and schemas exist (PostgreSQL)
                 if (ConnectionUtils.isPostgresql(this.connection) && catNames.size() == 1 && this.name2catalog.size() == 1) {
                     TdCatalog cat = this.name2catalog.values().iterator().next();
-                    CatalogHelper.addSchemas(schemas, cat);
+                    // MOD xqliu 2010-04-21 bug 12452
+                    // CatalogHelper.addSchemas(schemas, cat);
+                    CatalogHelper.addSchemas(retrievedSchemas, cat);
+                    // ~12452
                 }
                 // ~11412
                 // PTODO scorreia handle MS SQL schemata (dbo, root, guest) not related to catalogs.
@@ -360,5 +375,4 @@ public class CatalogBuilder extends CwmBuilder {
         cat = CatalogHelper.createCatalog(name);
         return cat;
     }
-
 }
