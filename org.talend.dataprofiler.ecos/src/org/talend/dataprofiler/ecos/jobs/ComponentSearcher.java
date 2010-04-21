@@ -40,6 +40,8 @@ public class ComponentSearcher {
 
     private static DateFormat formatter = new SimpleDateFormat(RELEASE_DATE_FORMAT);
 
+    private static List<IEcosCategory> ecosCategories;
+
     // private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
 
     /**
@@ -50,7 +52,10 @@ public class ComponentSearcher {
      * @throws Exception
      */
     public static List<IEcosCategory> getAvailableCategory(String version) throws Exception {
-        return EcosystemService.getCategoryList(version);
+        if (ecosCategories == null) {
+            ecosCategories = EcosystemService.getCategoryList(version);
+        }
+        return ecosCategories;
     }
 
     /**

@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -228,15 +227,7 @@ public class ImportRemotePatternAction extends Action {
                         if (localZipFile.exists() && checkIfExisted(extension.getInstalledLocation())) {
                             monitor.done();
 
-                            Display.getDefault().asyncExec(new Runnable() {
-
-                                public void run() {
-                                    MessageDialogWithToggle
-                                            .openInformation(
-                                                    null,
-                                                    DefaultMessagesImpl.getString("ImportRemotePatternAction.Infor"), DefaultMessagesImpl.getString("ImportRemotePatternAction.FileExist")); //$NON-NLS-1$ //$NON-NLS-2$
-                                }
-                            });
+                            extensionDownloadCompleted(extension);
 
                             return;
                         }
