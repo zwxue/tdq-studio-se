@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -39,6 +40,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ItemRecord {
 
+    private static Logger log = Logger.getLogger(ItemRecord.class);
+
     private File file;
 
     private String projectName;
@@ -54,7 +57,11 @@ public class ItemRecord {
     public ItemRecord(File file) {
         this.file = file;
 
-        init();
+        try {
+            init();
+        } catch (Exception e) {
+            addError(e.getMessage());
+        }
     }
 
     /**

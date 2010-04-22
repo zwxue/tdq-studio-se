@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dq.helper.PropertyHelper;
@@ -80,11 +81,14 @@ public class FileSystemImportWriter implements IImexWriter {
      * @param record
      */
     private void checkExisted(ItemRecord record) {
-        IPath itemPath = PropertyHelper.getElementPath(record.getProperty());
-        IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
-        ModelElement element = record.getElement();
-        if (element != null && itemFile.exists()) {
-            record.addError("\"" + element.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());
+        Property property = record.getProperty();
+        if (property != null) {
+            IPath itemPath = PropertyHelper.getElementPath(property);
+            IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
+            ModelElement element = record.getElement();
+            if (element != null && itemFile.exists()) {
+                record.addError("\"" + element.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());
+            }
         }
     }
 
@@ -163,9 +167,9 @@ public class FileSystemImportWriter implements IImexWriter {
         if (!defintionFile.exists()) {
             DefinitionHandler.getInstance();
         }
-        
+
         Display.getDefault().asyncExec(new Runnable() {
-            
+
             public void run() {
                 CorePlugin.getDefault().refreshWorkSpace();
                 CorePlugin.getDefault().refreshDQView();
