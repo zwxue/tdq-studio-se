@@ -649,6 +649,11 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             columnListB.clear();
             columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
             tableViewerPosStack.get(1).setInput(columnListB);
+        } else {
+            // MOD mzhao bug 12766, 2010-04-22 refresh the viewer.
+            tableViewerPosStack.get(0).setInput(null);
+            tableViewerPosStack.get(1).setInput(null);
+            // ~
         }
 
     }

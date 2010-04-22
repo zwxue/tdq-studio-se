@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.events.SelectionEvent;
@@ -232,6 +233,9 @@ public abstract class AbstractPagePart {
             // The newest dataprovider now would be the old one for next
             // time connection changes.
             tdProvider = (TdDataProvider) masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
+            // MOD mzhao bug 12766, 2010-04-22 save the editor automatically.
+            masterPage.doSave(new NullProgressMonitor());
+            //
         } else {
             cancelSelection(masterPage, oldSelect);
         }
