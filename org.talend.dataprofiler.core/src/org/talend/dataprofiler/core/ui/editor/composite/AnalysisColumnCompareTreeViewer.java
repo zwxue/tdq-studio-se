@@ -651,6 +651,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             tableViewerPosStack.get(1).setInput(columnListB);
         } else {
             // MOD mzhao bug 12766, 2010-04-22 refresh the viewer.
+        	columnListA.clear();
+        	columnListB.clear();
             tableViewerPosStack.get(0).setInput(null);
             tableViewerPosStack.get(1).setInput(null);
             // ~
