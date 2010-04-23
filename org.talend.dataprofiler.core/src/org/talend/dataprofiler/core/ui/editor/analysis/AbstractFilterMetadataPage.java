@@ -885,6 +885,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     } else if (column == VIEW_COLUMN_INDEX) {
                         cursor.setMenu(menu);
                         menu.setVisible(true);
+                    } else {
+                        cursor.setMenu(null);
                     }
                 }
             });
