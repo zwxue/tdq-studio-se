@@ -85,8 +85,7 @@ public enum EDriverName {
                        "com.ncr.teradata.TeraDriver",
                        "-50",
                        "lib/terajdbc4.jar",
-                       "lib/tdgssconfig.jar",
-                       "lib/tdgssjava.jar"),
+                       "lib/tdgssconfig.jar"),
     SQLITE3DEFAULTURL("SQLite3", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar"),
     AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar");
 
