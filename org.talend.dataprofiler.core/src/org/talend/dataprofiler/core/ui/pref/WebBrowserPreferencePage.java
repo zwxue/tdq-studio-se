@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -71,7 +72,8 @@ public class WebBrowserPreferencePage extends PreferencePage implements IWorkben
      * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
     public void init(IWorkbench workbench) {
-        isBlockWeb = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, BLOCK_WEB_BROWSER, false,
+        isBlockWeb = Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, BLOCK_WEB_BROWSER,
+                DQPreferenceManager.BLOCK_HELP_DEFAULT,
                 new IScopeContext[] { new InstanceScope() });
     }
 
@@ -83,7 +85,7 @@ public class WebBrowserPreferencePage extends PreferencePage implements IWorkben
     @Override
     protected void performDefaults() {
         blockWebBtn.setSelection(false);
-        isBlockWeb = true;
+        isBlockWeb = DQPreferenceManager.BLOCK_HELP_DEFAULT;
     }
 
     /*

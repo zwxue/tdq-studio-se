@@ -24,6 +24,11 @@ import org.talend.dataprofiler.core.ui.pref.WebBrowserPreferencePage;
 public final class DQPreferenceManager {
 
     /**
+     * the default value for the "block help" option.
+     */
+    public static final boolean BLOCK_HELP_DEFAULT = false;
+
+    /**
      * DOC bZhou DQPreferenceManager constructor comment.
      */
     private DQPreferenceManager() {
@@ -37,6 +42,6 @@ public final class DQPreferenceManager {
      */
     public static boolean isBlockWeb() {
         return Platform.getPreferencesService().getBoolean(CorePlugin.PLUGIN_ID, WebBrowserPreferencePage.BLOCK_WEB_BROWSER,
-                true, new IScopeContext[] { new InstanceScope() });
+                BLOCK_HELP_DEFAULT, new IScopeContext[] { new InstanceScope() });
     }
 }
