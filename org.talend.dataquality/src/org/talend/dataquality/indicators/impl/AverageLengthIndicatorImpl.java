@@ -240,7 +240,10 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
      */
     @Override
     public Long getIntegerValue() {
-        return this.getSumLength().longValue(); // FIXME scorreia use getRealValue method instead
+        // MOD xqliu 2010-04-26 bug 12772
+        // return this.getSumLength().longValue(); // FIXME scorreia use getRealValue method instead
+        return this.getSumLength() == null ? new Long(0) : this.getSumLength().longValue();
+        // ~12772
     }
 
     @Override
