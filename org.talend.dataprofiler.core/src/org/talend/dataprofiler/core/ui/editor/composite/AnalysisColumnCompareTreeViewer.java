@@ -123,6 +123,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         this.masterPage = masterPage;
         this.analysis = masterPage.getAnalysis();
         form = masterPage.getScrolledForm();
+        this.analysis = masterPage.getAnalysis();
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
 
@@ -141,11 +142,18 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, Analysis analysis,
             boolean allowColumnDupcation) {
-
-        this(masterPage, topComp, new ArrayList<Column>(), new ArrayList<Column>(), DefaultMessagesImpl
-                .getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), DefaultMessagesImpl //$NON-NLS-1$
-                .getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare"), true, allowColumnDupcation); //$NON-NLS-1$
-
+        // MOD mzhao bug:12766 2010-04-27. Initialize the coloumnListA and columnListB.
+        this.masterPage = masterPage;
+        form = masterPage.getScrolledForm();
+        toolkit = masterPage.getEditor().getToolkit();
+        this.parentComp = topComp;
+        columnListA = new ArrayList<Column>();
+        columnListB = new ArrayList<Column>();
+        tableViewerPosStack = new ArrayList<TableViewer>();
+        this.showCheckButton = true;
+        this.allowColumnDupcation = allowColumnDupcation;
+        mainTitle = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets");//$NON-NLS-1$
+        String description = DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare");//$NON-NLS-1$
         if (analysis.getResults().getIndicators().size() > 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
@@ -154,6 +162,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
 
         }
+        createAnalyzedColumnSetsSection(mainTitle, description);
+        // ~
 
         this.analysis = analysis;
         checkComputButton = analysis.getParameters().getDeactivatedIndicators().size() != 0;
