@@ -352,10 +352,18 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 ColumnSet oldColSetA = ColumnHelper.getColumnSetOwner((Column) mesA[0]);
                 ColumnSet oldColSetB = ColumnHelper.getColumnSetOwner((Column) mesB[0]);
                 if (oldColSetA == oldAnaEle) {
-                    compInd.setAnalyzedElement(ColumnHelper.getColumnSetOwner((Column) synEleMap.get(mesA[0])));
+                	if(synEleMap.get(mesA[0])!=null){
+						compInd.setAnalyzedElement(ColumnHelper
+								.getColumnSetOwner((Column) synEleMap
+										.get(mesA[0])));
+                	}
                 }
                 if (oldColSetB == oldAnaEle) {
-                    compInd.setAnalyzedElement(ColumnHelper.getColumnSetOwner((Column) synEleMap.get(mesB[0])));
+                	if(synEleMap.get(mesB[0])!=null){
+						compInd.setAnalyzedElement(ColumnHelper
+								.getColumnSetOwner((Column) synEleMap
+										.get(mesB[0])));
+                	}
                 }
 
             } else {
