@@ -144,12 +144,9 @@ public final class EMFUtil {
     /**
      * Saves each resource of the resource set.
      * 
-     * @param forceFileEncoding the encoding to be used when saving the file. Can be null when the encoding does not
-     * need to be changed.
-     * 
      * @return true if ok
      */
-    public boolean save(String forceFileEncoding) {
+    public boolean save() {
         boolean ok = true;
         Iterator<Resource> r = resourceSet.getResources().iterator();
         while (r.hasNext()) {
@@ -159,7 +156,7 @@ public final class EMFUtil {
                 ress.save(options);
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Resource saved in:" + ress.getURI() + " with encoding " + forceFileEncoding);
+                    log.debug("Resource saved in:" + ress.getURI());
                 }
             } catch (IOException e) {
                 log.error("Error during the saving of resource. Uri=" + ress.getURI().toString(), e);
@@ -168,15 +165,6 @@ public final class EMFUtil {
             }
         }
         return ok;
-    }
-
-    /**
-     * Saves each resource of the resource set, using "UTF-8" filesystem encoding.
-     * 
-     * @return true if ok
-     */
-    public boolean save() {
-        return save(ENCODING);
     }
 
     /**
