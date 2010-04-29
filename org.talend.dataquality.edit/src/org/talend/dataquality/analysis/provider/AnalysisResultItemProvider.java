@@ -121,7 +121,7 @@ public class AnalysisResultItemProvider
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
             childrenFeatures.add(AnalysisPackage.Literals.ANALYSIS_RESULT__RESULT_METADATA);
-            childrenFeatures.add(AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES);
+            childrenFeatures.add(AnalysisPackage.Literals.ANALYSIS_RESULT__INDIC_TO_ROW_MAP);
         }
         return childrenFeatures;
     }
@@ -177,7 +177,7 @@ public class AnalysisResultItemProvider
 
         switch (notification.getFeatureID(AnalysisResult.class)) {
             case AnalysisPackage.ANALYSIS_RESULT__RESULT_METADATA:
-            case AnalysisPackage.ANALYSIS_RESULT__INDICATOR_VALUES:
+            case AnalysisPackage.ANALYSIS_RESULT__INDIC_TO_ROW_MAP:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -468,6 +468,11 @@ public class AnalysisResultItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  ColumnsetFactory.eINSTANCE.createValueMatchingIndicator()));
 
         newChildDescriptors.add
@@ -557,33 +562,8 @@ public class AnalysisResultItemProvider
 
         newChildDescriptors.add
             (createChildParameter
-                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES,
-                 DomainFactory.eINSTANCE.createLiteralValue()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES,
-                 DomainFactory.eINSTANCE.createNumericValue()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES,
-                 DomainFactory.eINSTANCE.createTextValue()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES,
-                 DomainFactory.eINSTANCE.createIntegerValue()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES,
-                 DomainFactory.eINSTANCE.createRealNumberValue()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDICATOR_VALUES,
-                 DomainFactory.eINSTANCE.createDateValue()));
+                (AnalysisPackage.Literals.ANALYSIS_RESULT__INDIC_TO_ROW_MAP,
+                 AnalysisFactory.eINSTANCE.create(AnalysisPackage.Literals.INDIC_TO_ROWS_MAP)));
     }
 
     /**

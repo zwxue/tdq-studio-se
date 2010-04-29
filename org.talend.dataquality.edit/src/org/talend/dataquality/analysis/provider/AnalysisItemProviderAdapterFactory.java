@@ -191,6 +191,52 @@ public class AnalysisItemProviderAdapterFactory extends AnalysisAdapterFactory i
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link java.util.Map.Entry} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected IndicToRowsMapItemProvider indicToRowsMapItemProvider;
+
+    /**
+     * This creates an adapter for a {@link java.util.Map.Entry}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createIndicToRowsMapAdapter() {
+        if (indicToRowsMapItemProvider == null) {
+            indicToRowsMapItemProvider = new IndicToRowsMapItemProvider(this);
+        }
+
+        return indicToRowsMapItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.analysis.AnalyzedDataSet} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AnalyzedDataSetItemProvider analyzedDataSetItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.analysis.AnalyzedDataSet}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAnalyzedDataSetAdapter() {
+        if (analyzedDataSetItemProvider == null) {
+            analyzedDataSetItemProvider = new AnalyzedDataSetItemProvider(this);
+        }
+
+        return analyzedDataSetItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -294,6 +340,8 @@ public class AnalysisItemProviderAdapterFactory extends AnalysisAdapterFactory i
         if (analysisParametersItemProvider != null) analysisParametersItemProvider.dispose();
         if (analysisResultItemProvider != null) analysisResultItemProvider.dispose();
         if (executionInformationsItemProvider != null) executionInformationsItemProvider.dispose();
+        if (indicToRowsMapItemProvider != null) indicToRowsMapItemProvider.dispose();
+        if (analyzedDataSetItemProvider != null) analyzedDataSetItemProvider.dispose();
     }
 
 }

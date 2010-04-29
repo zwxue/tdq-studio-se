@@ -477,6 +477,11 @@ public class AnalysisItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  ColumnsetFactory.eINSTANCE.createValueMatchingIndicator()));
 
         newChildDescriptors.add

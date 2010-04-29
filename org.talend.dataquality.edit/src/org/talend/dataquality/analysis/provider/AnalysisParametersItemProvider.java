@@ -85,6 +85,8 @@ public class AnalysisParametersItemProvider
             addAnalysisTypePropertyDescriptor(object);
             addDeactivatedIndicatorsPropertyDescriptor(object);
             addExecutionLanguagePropertyDescriptor(object);
+            addStoreDataPropertyDescriptor(object);
+            addMaxNumberRowsPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -222,6 +224,50 @@ public class AnalysisParametersItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Store Data feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addStoreDataPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AnalysisParameters_storeData_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AnalysisParameters_storeData_feature", "_UI_AnalysisParameters_type"),
+                 AnalysisPackage.Literals.ANALYSIS_PARAMETERS__STORE_DATA,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Max Number Rows feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addMaxNumberRowsPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AnalysisParameters_maxNumberRows_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AnalysisParameters_maxNumberRows_feature", "_UI_AnalysisParameters_type"),
+                 AnalysisPackage.Literals.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns AnalysisParameters.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -260,6 +306,8 @@ public class AnalysisParametersItemProvider
         switch (notification.getFeatureID(AnalysisParameters.class)) {
             case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
             case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }
@@ -546,6 +594,11 @@ public class AnalysisParametersItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator()));
 
         newChildDescriptors.add
             (createChildParameter

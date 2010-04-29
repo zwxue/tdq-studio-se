@@ -11,15 +11,19 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.indicators.Indicator;
@@ -34,8 +38,8 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
  * <ul>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl#getAnalysis <em>Analysis</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl#getResultMetadata <em>Result Metadata</em>}</li>
- *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl#getIndicatorValues <em>Indicator Values</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl#getIndicators <em>Indicators</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl#getIndicToRowMap <em>Indic To Row Map</em>}</li>
  * </ul>
  * </p>
  *
@@ -53,16 +57,6 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
     protected ExecutionInformations resultMetadata;
 
     /**
-     * The cached value of the '{@link #getIndicatorValues() <em>Indicator Values</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getIndicatorValues()
-     * @generated
-     * @ordered
-     */
-    protected EList<LiteralValue> indicatorValues;
-
-    /**
      * The cached value of the '{@link #getIndicators() <em>Indicators</em>}' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -71,6 +65,16 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      * @ordered
      */
     protected EList<Indicator> indicators;
+
+    /**
+     * The cached value of the '{@link #getIndicToRowMap() <em>Indic To Row Map</em>}' map.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getIndicToRowMap()
+     * @generated
+     * @ordered
+     */
+    protected EMap<Indicator, AnalyzedDataSet> indicToRowMap;
 
     /**
      * <!-- begin-user-doc -->
@@ -180,11 +184,11 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList<LiteralValue> getIndicatorValues() {
-        if (indicatorValues == null) {
-            indicatorValues = new EObjectContainmentEList<LiteralValue>(LiteralValue.class, this, AnalysisPackage.ANALYSIS_RESULT__INDICATOR_VALUES);
+    public EList<Indicator> getIndicators() {
+        if (indicators == null) {
+            indicators = new EObjectContainmentEList<Indicator>(Indicator.class, this, AnalysisPackage.ANALYSIS_RESULT__INDICATORS);
         }
-        return indicatorValues;
+        return indicators;
     }
 
     /**
@@ -192,11 +196,11 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList<Indicator> getIndicators() {
-        if (indicators == null) {
-            indicators = new EObjectContainmentEList<Indicator>(Indicator.class, this, AnalysisPackage.ANALYSIS_RESULT__INDICATORS);
+    public EMap<Indicator, AnalyzedDataSet> getIndicToRowMap() {
+        if (indicToRowMap == null) {
+            indicToRowMap = new EcoreEMap<Indicator,AnalyzedDataSet>(AnalysisPackage.Literals.INDIC_TO_ROWS_MAP, IndicToRowsMapImpl.class, this, AnalysisPackage.ANALYSIS_RESULT__INDIC_TO_ROW_MAP);
         }
-        return indicators;
+        return indicToRowMap;
     }
 
     /**
@@ -227,10 +231,10 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
                 return basicSetAnalysis(null, msgs);
             case AnalysisPackage.ANALYSIS_RESULT__RESULT_METADATA:
                 return basicSetResultMetadata(null, msgs);
-            case AnalysisPackage.ANALYSIS_RESULT__INDICATOR_VALUES:
-                return ((InternalEList<?>)getIndicatorValues()).basicRemove(otherEnd, msgs);
             case AnalysisPackage.ANALYSIS_RESULT__INDICATORS:
                 return ((InternalEList<?>)getIndicators()).basicRemove(otherEnd, msgs);
+            case AnalysisPackage.ANALYSIS_RESULT__INDIC_TO_ROW_MAP:
+                return ((InternalEList<?>)getIndicToRowMap()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -261,10 +265,11 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
                 return getAnalysis();
             case AnalysisPackage.ANALYSIS_RESULT__RESULT_METADATA:
                 return getResultMetadata();
-            case AnalysisPackage.ANALYSIS_RESULT__INDICATOR_VALUES:
-                return getIndicatorValues();
             case AnalysisPackage.ANALYSIS_RESULT__INDICATORS:
                 return getIndicators();
+            case AnalysisPackage.ANALYSIS_RESULT__INDIC_TO_ROW_MAP:
+                if (coreType) return getIndicToRowMap();
+                else return getIndicToRowMap().map();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -284,13 +289,12 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
             case AnalysisPackage.ANALYSIS_RESULT__RESULT_METADATA:
                 setResultMetadata((ExecutionInformations)newValue);
                 return;
-            case AnalysisPackage.ANALYSIS_RESULT__INDICATOR_VALUES:
-                getIndicatorValues().clear();
-                getIndicatorValues().addAll((Collection<? extends LiteralValue>)newValue);
-                return;
             case AnalysisPackage.ANALYSIS_RESULT__INDICATORS:
                 getIndicators().clear();
                 getIndicators().addAll((Collection<? extends Indicator>)newValue);
+                return;
+            case AnalysisPackage.ANALYSIS_RESULT__INDIC_TO_ROW_MAP:
+                ((EStructuralFeature.Setting)getIndicToRowMap()).set(newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -310,11 +314,11 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
             case AnalysisPackage.ANALYSIS_RESULT__RESULT_METADATA:
                 setResultMetadata((ExecutionInformations)null);
                 return;
-            case AnalysisPackage.ANALYSIS_RESULT__INDICATOR_VALUES:
-                getIndicatorValues().clear();
-                return;
             case AnalysisPackage.ANALYSIS_RESULT__INDICATORS:
                 getIndicators().clear();
+                return;
+            case AnalysisPackage.ANALYSIS_RESULT__INDIC_TO_ROW_MAP:
+                getIndicToRowMap().clear();
                 return;
         }
         super.eUnset(featureID);
@@ -332,10 +336,10 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
                 return getAnalysis() != null;
             case AnalysisPackage.ANALYSIS_RESULT__RESULT_METADATA:
                 return resultMetadata != null;
-            case AnalysisPackage.ANALYSIS_RESULT__INDICATOR_VALUES:
-                return indicatorValues != null && !indicatorValues.isEmpty();
             case AnalysisPackage.ANALYSIS_RESULT__INDICATORS:
                 return indicators != null && !indicators.isEmpty();
+            case AnalysisPackage.ANALYSIS_RESULT__INDIC_TO_ROW_MAP:
+                return indicToRowMap != null && !indicToRowMap.isEmpty();
         }
         return super.eIsSet(featureID);
     }

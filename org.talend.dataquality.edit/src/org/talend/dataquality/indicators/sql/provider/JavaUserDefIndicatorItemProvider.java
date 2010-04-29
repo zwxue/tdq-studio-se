@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.talend.dataquality.indicators.provider;
+package org.talend.dataquality.indicators.sql.provider;
 
 
 import java.util.Collection;
@@ -20,16 +20,16 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
-import org.talend.dataquality.indicators.DatePatternFreqIndicator;
+import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 
 /**
- * This is the item provider adapter for a {@link org.talend.dataquality.indicators.DatePatternFreqIndicator} object.
+ * This is the item provider adapter for a {@link org.talend.dataquality.indicators.sql.JavaUserDefIndicator} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class DatePatternFreqIndicatorItemProvider
-    extends FrequencyIndicatorItemProvider
+public class JavaUserDefIndicatorItemProvider
+    extends UserDefIndicatorItemProvider
     implements
         IEditingDomainItemProvider,
         IStructuredItemContentProvider,
@@ -42,7 +42,7 @@ public class DatePatternFreqIndicatorItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public DatePatternFreqIndicatorItemProvider(AdapterFactory adapterFactory) {
+    public JavaUserDefIndicatorItemProvider(AdapterFactory adapterFactory) {
         super(adapterFactory);
     }
 
@@ -62,14 +62,14 @@ public class DatePatternFreqIndicatorItemProvider
     }
 
     /**
-     * This returns DatePatternFreqIndicator.gif.
+     * This returns JavaUserDefIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/DatePatternFreqIndicator"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/JavaUserDefIndicator"));
     }
 
     /**
@@ -80,10 +80,10 @@ public class DatePatternFreqIndicatorItemProvider
      */
     @Override
     public String getText(Object object) {
-        String label = ((DatePatternFreqIndicator)object).getName();
+        String label = ((JavaUserDefIndicator)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_DatePatternFreqIndicator_type") :
-            getString("_UI_DatePatternFreqIndicator_type") + " " + label;
+            getString("_UI_JavaUserDefIndicator_type") :
+            getString("_UI_JavaUserDefIndicator_type") + " " + label;
     }
 
     /**

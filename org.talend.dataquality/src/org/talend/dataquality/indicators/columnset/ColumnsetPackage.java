@@ -324,6 +324,15 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMNS_COMPARE_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.MATCHING_INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMNS_COMPARE_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.MATCHING_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -630,6 +639,15 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int VALUE_MATCHING_INDICATOR__JOIN_CONDITIONS = COLUMNS_COMPARE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALUE_MATCHING_INDICATOR__MAX_NUMBER_ROWS = COLUMNS_COMPARE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
@@ -939,6 +957,15 @@ public interface ColumnsetPackage extends EPackage {
     int ROW_MATCHING_INDICATOR__JOIN_CONDITIONS = COLUMNS_COMPARE_INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ROW_MATCHING_INDICATOR__MAX_NUMBER_ROWS = COLUMNS_COMPARE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1245,6 +1272,15 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.COMPOSITE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.COMPOSITE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
@@ -1654,6 +1690,15 @@ public interface ColumnsetPackage extends EPackage {
     int COUNT_AVG_NULL_INDICATOR__JOIN_CONDITIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2058,6 +2103,15 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int MIN_MAX_DATE_INDICATOR__JOIN_CONDITIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
@@ -2466,6 +2520,15 @@ public interface ColumnsetPackage extends EPackage {
     int WEAK_CORRELATION_INDICATOR__JOIN_CONDITIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2872,6 +2935,15 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMN_DEPENDENCY_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
      * The feature id for the '<em><b>Column A</b></em>' reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3186,6 +3258,15 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int SIMPLE_STAT_INDICATOR__JOIN_CONDITIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SIMPLE_STAT_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.

@@ -25,6 +25,8 @@ import orgomg.cwmx.analysis.informationreporting.ReportGroup;
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getAnalysisType <em>Analysis Type</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getDeactivatedIndicators <em>Deactivated Indicators</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getExecutionLanguage <em>Execution Language</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#isStoreData <em>Store Data</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getMaxNumberRows <em>Max Number Rows</em>}</li>
  * </ul>
  * </p>
  *
@@ -155,5 +157,56 @@ public interface AnalysisParameters extends ReportGroup {
      * @generated
      */
     void setExecutionLanguage(ExecutionLanguage value);
+
+    /**
+     * Returns the value of the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * when true, the data must be stored in the analyzedDataSets.
+     * when false, the data are not kept during the analysis with the java engine.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Store Data</em>' attribute.
+     * @see #setStoreData(boolean)
+     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisParameters_StoreData()
+     * @model
+     * @generated
+     */
+    boolean isStoreData();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.analysis.AnalysisParameters#isStoreData <em>Store Data</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Store Data</em>' attribute.
+     * @see #isStoreData()
+     * @generated
+     */
+    void setStoreData(boolean value);
+
+    /**
+     * Returns the value of the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The maximum number of rows kept in each indicator when analyzing data with the Java engine. 
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Max Number Rows</em>' attribute.
+     * @see #setMaxNumberRows(int)
+     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisParameters_MaxNumberRows()
+     * @model
+     * @generated
+     */
+    int getMaxNumberRows();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.analysis.AnalysisParameters#getMaxNumberRows <em>Max Number Rows</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Max Number Rows</em>' attribute.
+     * @see #getMaxNumberRows()
+     * @generated
+     */
+    void setMaxNumberRows(int value);
 
 } // AnalysisParameters

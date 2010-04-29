@@ -29,6 +29,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getJoinConditions <em>Join Conditions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.Indicator#getMaxNumberRows <em>Max Number Rows</em>}</li>
  * </ul>
  * </p>
  *
@@ -253,6 +254,31 @@ public interface Indicator extends ModelElement {
     EList<JoinElement> getJoinConditions();
 
     /**
+     * Returns the value of the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The maximum number of rows kept in each indicator when analyzing data with the Java engine. 
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Max Number Rows</em>' attribute.
+     * @see #setMaxNumberRows(int)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_MaxNumberRows()
+     * @model
+     * @generated
+     */
+    int getMaxNumberRows();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#getMaxNumberRows <em>Max Number Rows</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Max Number Rows</em>' attribute.
+     * @see #getMaxNumberRows()
+     * @generated
+     */
+    void setMaxNumberRows(int value);
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @model
      * @generated
@@ -370,5 +396,16 @@ public interface Indicator extends ModelElement {
      * @generated
      */
     String getInstanceValue();
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * Returns true if the previously handled data must be added to the list of data to be viewable. For example, if this indicator is the null count indicator and the previous data passed to the handle(data) method was null, then this method must return true because the row containing this null value must be stored in order the user to be able to drill down in the rows which contain nulls.
+     * <!-- end-model-doc -->
+     * @model
+     * @generated
+     */
+    boolean mustStoreRow();
 
 } // Indicator

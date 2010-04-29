@@ -54,20 +54,26 @@
           <details key="documentation" value="The execution language: either analysis is computed by using SQL queries or by using Java code."/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="when true, the data must be stored in the analyzedDataSets.&#xA;when false, the data are not kept during the analysis with the java engine."/>
+        </eAnnotations>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxNumberRows" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The maximum number of rows kept in each indicator when analyzing data with the Java engine. "/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AnalysisResult" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwmx/analysis/informationreporting/ReportGroup">
       <eStructuralFeatures xsi:type="ecore:EReference" name="analysis" eType="#//analysis/Analysis"
           eOpposite="#//analysis/Analysis/results"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="resultMetadata" eType="#//analysis/ExecutionInformations"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="indicatorValues" upperBound="-1"
-          eType="#//domain/LiteralValue" containment="true">
-        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-          <details key="documentation" value="TODO scorreia remove?&#xA;@deprecated will be removed from the model."/>
-        </eAnnotations>
-      </eStructuralFeatures>
       <eStructuralFeatures xsi:type="ecore:EReference" name="indicators" upperBound="-1"
           eType="#//indicators/Indicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="indicToRowMap" upperBound="-1"
+          eType="#//analysis/IndicToRowsMap" transient="true" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="ExecutionInformations">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
@@ -106,6 +112,37 @@
     <eClassifiers xsi:type="ecore:EEnum" name="ExecutionLanguage">
       <eLiterals name="SQL"/>
       <eLiterals name="JAVA" value="1" literal="Java"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IndicToRowsMap" instanceClassName="java.util.Map$Entry">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The map between the indicator and the rows of data."/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="key" lowerBound="1" eType="#//indicators/Indicator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//analysis/AnalyzedDataSet">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="the set of analyzed data which the user may want to access to."/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AnalyzedDataSet">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The data analyzed by an indicator."/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The number of data which are concerned by the indicator's result. This number may be greater than the size of the records stored in this analyzed data set. The reason is that not all record may be stored here."/>
+        </eAnnotations>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="recordSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The size of the record (e.g. the number of analyzed columns)"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="data" eType="#//indicators/ObjectArray">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="the analyzed data."/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
     <eSubpackages name="category" nsURI="http://org.talend.dataquality.category" nsPrefix="dataquality.category">
       <eClassifiers xsi:type="ecore:EClass" name="AnalysisCategory">
@@ -242,6 +279,11 @@
           <details key="documentation" value="Return the instance value of the indicator or null when not applicable."/>
         </eAnnotations>
       </eOperations>
+      <eOperations name="mustStoreRow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="Returns true if the previously handled data must be added to the list of data to be viewable. For example, if this indicator is the null count indicator and the previous data passed to the handle(data) method was null, then this method must return true because the row containing this null value must be stored in order the user to be able to drill down in the rows which contain nulls."/>
+        </eAnnotations>
+      </eOperations>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
           defaultValueLiteral="0"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="nullCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
@@ -262,6 +304,11 @@
       </eStructuralFeatures>
       <eStructuralFeatures xsi:type="ecore:EReference" name="joinConditions" upperBound="-1"
           eType="#//rules/JoinElement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxNumberRows" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The maximum number of rows kept in each indicator when analyzing data with the Java engine. "/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="RowCountIndicator" eSuperTypes="#//indicators/Indicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MeanIndicator" eSuperTypes="#//indicators/SumIndicator">

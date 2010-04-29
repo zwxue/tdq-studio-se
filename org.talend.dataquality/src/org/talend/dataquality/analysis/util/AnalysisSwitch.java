@@ -8,9 +8,11 @@ package org.talend.dataquality.analysis.util;
 
 import java.util.List;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.analysis.*;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisPackage;
@@ -152,6 +154,18 @@ public class AnalysisSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case AnalysisPackage.INDIC_TO_ROWS_MAP: {
+                @SuppressWarnings("unchecked") Map.Entry<Indicator, AnalyzedDataSet> indicToRowsMap = (Map.Entry<Indicator, AnalyzedDataSet>)theEObject;
+                T result = caseIndicToRowsMap(indicToRowsMap);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case AnalysisPackage.ANALYZED_DATA_SET: {
+                AnalyzedDataSet analyzedDataSet = (AnalyzedDataSet)theEObject;
+                T result = caseAnalyzedDataSet(analyzedDataSet);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -228,6 +242,36 @@ public class AnalysisSwitch<T> {
      * @generated
      */
     public T caseExecutionInformations(ExecutionInformations object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Indic To Rows Map</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Indic To Rows Map</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseIndicToRowsMap(Map.Entry<Indicator, AnalyzedDataSet> object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Analyzed Data Set</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Analyzed Data Set</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAnalyzedDataSet(AnalyzedDataSet object) {
         return null;
     }
 

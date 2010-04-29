@@ -47,6 +47,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isComputed <em>Computed</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getJoinConditions <em>Join Conditions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getMaxNumberRows <em>Max Number Rows</em>}</li>
  * </ul>
  * </p>
  *
@@ -184,6 +185,26 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @ordered
      */
     protected EList<JoinElement> joinConditions;
+
+    /**
+     * The default value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getMaxNumberRows()
+     * @generated
+     * @ordered
+     */
+    protected static final int MAX_NUMBER_ROWS_EDEFAULT = 0;
+
+    /**
+     * The cached value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getMaxNumberRows()
+     * @generated
+     * @ordered
+     */
+    protected int maxNumberRows = MAX_NUMBER_ROWS_EDEFAULT;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -433,6 +454,27 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public int getMaxNumberRows() {
+        return maxNumberRows;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setMaxNumberRows(int newMaxNumberRows) {
+        int oldMaxNumberRows = maxNumberRows;
+        maxNumberRows = newMaxNumberRows;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS, oldMaxNumberRows, maxNumberRows));
+    }
+
+    /**
      * <!-- begin-user-doc --> Increments counts for each given data. <!-- end-user-doc -->
      * 
      * @generated NOT
@@ -586,6 +628,17 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public boolean mustStoreRow() {
+        // TODO: implement this method
+        // Ensure that you remove @generated or mark it @generated NOT
+        throw new UnsupportedOperationException();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -686,6 +739,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return isComputed();
             case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
                 return getJoinConditions();
+            case IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS:
+                return getMaxNumberRows();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -727,6 +782,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 getJoinConditions().clear();
                 getJoinConditions().addAll((Collection<? extends JoinElement>)newValue);
                 return;
+            case IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS:
+                setMaxNumberRows((Integer)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -765,6 +823,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
                 getJoinConditions().clear();
                 return;
+            case IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS:
+                setMaxNumberRows(MAX_NUMBER_ROWS_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -794,6 +855,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return computed != COMPUTED_EDEFAULT;
             case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
                 return joinConditions != null && !joinConditions.isEmpty();
+            case IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS:
+                return maxNumberRows != MAX_NUMBER_ROWS_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -833,6 +896,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         result.append(dataminingType);
         result.append(", computed: ");
         result.append(computed);
+        result.append(", maxNumberRows: ");
+        result.append(maxNumberRows);
         result.append(')');
         return result.toString();
     }

@@ -75,6 +75,8 @@ public class UserDefIndicatorItemProvider
             addUniqueValueCountPropertyDescriptor(object);
             addDuplicateValueCountPropertyDescriptor(object);
             addValueToFreqPropertyDescriptor(object);
+            addValuePropertyDescriptor(object);
+            addDatatypePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -256,6 +258,50 @@ public class UserDefIndicatorItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Value feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addValuePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_value_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_value_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__VALUE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Datatype feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDatatypePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_datatype_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_datatype_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__DATATYPE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns UserDefIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -300,6 +346,8 @@ public class UserDefIndicatorItemProvider
             case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
             case IndicatorSqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
             case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

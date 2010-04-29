@@ -34,6 +34,8 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getAnalysisType <em>Analysis Type</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getDeactivatedIndicators <em>Deactivated Indicators</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getExecutionLanguage <em>Execution Language</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#isStoreData <em>Store Data</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getMaxNumberRows <em>Max Number Rows</em>}</li>
  * </ul>
  * </p>
  *
@@ -119,6 +121,46 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * @ordered
      */
     protected ExecutionLanguage executionLanguage = EXECUTION_LANGUAGE_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isStoreData()
+     * @generated
+     * @ordered
+     */
+    protected static final boolean STORE_DATA_EDEFAULT = false;
+
+    /**
+     * The cached value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isStoreData()
+     * @generated
+     * @ordered
+     */
+    protected boolean storeData = STORE_DATA_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getMaxNumberRows()
+     * @generated
+     * @ordered
+     */
+    protected static final int MAX_NUMBER_ROWS_EDEFAULT = 0;
+
+    /**
+     * The cached value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getMaxNumberRows()
+     * @generated
+     * @ordered
+     */
+    protected int maxNumberRows = MAX_NUMBER_ROWS_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -234,6 +276,48 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * <!-- end-user-doc -->
      * @generated
      */
+    public boolean isStoreData() {
+        return storeData;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setStoreData(boolean newStoreData) {
+        boolean oldStoreData = storeData;
+        storeData = newStoreData;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA, oldStoreData, storeData));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public int getMaxNumberRows() {
+        return maxNumberRows;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setMaxNumberRows(int newMaxNumberRows) {
+        int oldMaxNumberRows = maxNumberRows;
+        maxNumberRows = newMaxNumberRows;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS, oldMaxNumberRows, maxNumberRows));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -249,6 +333,10 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 return getDeactivatedIndicators();
             case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
                 return getExecutionLanguage();
+            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+                return isStoreData();
+            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
+                return getMaxNumberRows();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -284,6 +372,12 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
             case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
                 setExecutionLanguage((ExecutionLanguage)newValue);
                 return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+                setStoreData((Boolean)newValue);
+                return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
+                setMaxNumberRows((Integer)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -314,6 +408,12 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
             case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
                 setExecutionLanguage(EXECUTION_LANGUAGE_EDEFAULT);
                 return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+                setStoreData(STORE_DATA_EDEFAULT);
+                return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
+                setMaxNumberRows(MAX_NUMBER_ROWS_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -338,6 +438,10 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 return deactivatedIndicators != null && !deactivatedIndicators.isEmpty();
             case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
                 return executionLanguage != EXECUTION_LANGUAGE_EDEFAULT;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+                return storeData != STORE_DATA_EDEFAULT;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
+                return maxNumberRows != MAX_NUMBER_ROWS_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -356,6 +460,10 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
         result.append(analysisType);
         result.append(", executionLanguage: ");
         result.append(executionLanguage);
+        result.append(", storeData: ");
+        result.append(storeData);
+        result.append(", maxNumberRows: ");
+        result.append(maxNumberRows);
         result.append(')');
         return result.toString();
     }

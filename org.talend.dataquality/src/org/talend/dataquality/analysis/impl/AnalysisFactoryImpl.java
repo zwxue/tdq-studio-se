@@ -6,6 +6,7 @@
  */
 package org.talend.dataquality.analysis.impl;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -13,6 +14,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.talend.dataquality.analysis.*;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -72,6 +74,8 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
             case AnalysisPackage.ANALYSIS_PARAMETERS: return createAnalysisParameters();
             case AnalysisPackage.ANALYSIS_RESULT: return createAnalysisResult();
             case AnalysisPackage.EXECUTION_INFORMATIONS: return createExecutionInformations();
+            case AnalysisPackage.INDIC_TO_ROWS_MAP: return (EObject)createIndicToRowsMap();
+            case AnalysisPackage.ANALYZED_DATA_SET: return createAnalyzedDataSet();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -159,6 +163,26 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
     public ExecutionInformations createExecutionInformations() {
         ExecutionInformationsImpl executionInformations = new ExecutionInformationsImpl();
         return executionInformations;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public Map.Entry<Indicator, AnalyzedDataSet> createIndicToRowsMap() {
+        IndicToRowsMapImpl indicToRowsMap = new IndicToRowsMapImpl();
+        return indicToRowsMap;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public AnalyzedDataSet createAnalyzedDataSet() {
+        AnalyzedDataSetImpl analyzedDataSet = new AnalyzedDataSetImpl();
+        return analyzedDataSet;
     }
 
     /**

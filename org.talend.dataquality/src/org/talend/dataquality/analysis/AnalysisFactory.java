@@ -71,6 +71,15 @@ public interface AnalysisFactory extends EFactory {
     ExecutionInformations createExecutionInformations();
 
     /**
+     * Returns a new object of class '<em>Analyzed Data Set</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Analyzed Data Set</em>'.
+     * @generated
+     */
+    AnalyzedDataSet createAnalyzedDataSet();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

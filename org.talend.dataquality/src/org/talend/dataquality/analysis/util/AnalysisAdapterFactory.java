@@ -6,11 +6,13 @@
  */
 package org.talend.dataquality.analysis.util;
 
+import java.util.Map;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.analysis.*;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisPackage;
@@ -99,6 +101,14 @@ public class AnalysisAdapterFactory extends AdapterFactoryImpl {
             @Override
             public Adapter caseExecutionInformations(ExecutionInformations object) {
                 return createExecutionInformationsAdapter();
+            }
+            @Override
+            public Adapter caseIndicToRowsMap(Map.Entry<Indicator, AnalyzedDataSet> object) {
+                return createIndicToRowsMapAdapter();
+            }
+            @Override
+            public Adapter caseAnalyzedDataSet(AnalyzedDataSet object) {
+                return createAnalyzedDataSetAdapter();
             }
             @Override
             public Adapter caseElement(Element object) {
@@ -211,6 +221,34 @@ public class AnalysisAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createExecutionInformationsAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>Indic To Rows Map</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see java.util.Map.Entry
+     * @generated
+     */
+    public Adapter createIndicToRowsMapAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.analysis.AnalyzedDataSet <em>Analyzed Data Set</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.analysis.AnalyzedDataSet
+     * @generated
+     */
+    public Adapter createAnalyzedDataSetAdapter() {
         return null;
     }
 

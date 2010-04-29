@@ -1514,13 +1514,31 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 5;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_PARAMETERS__STORE_DATA = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 6;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 7;
+
+    /**
      * The number of structural features of the '<em>Parameters</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_PARAMETERS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 6;
+    int ANALYSIS_PARAMETERS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 8;
 
 
     /**
@@ -1984,22 +2002,22 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS_RESULT__RESULT_METADATA = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 1;
 
     /**
-     * The feature id for the '<em><b>Indicator Values</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int ANALYSIS_RESULT__INDICATOR_VALUES = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 2;
-
-    /**
      * The feature id for the '<em><b>Indicators</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_RESULT__INDICATORS = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 3;
+    int ANALYSIS_RESULT__INDICATORS = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 2;
+
+    /**
+     * The feature id for the '<em><b>Indic To Row Map</b></em>' map.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_RESULT__INDIC_TO_ROW_MAP = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 3;
 
     /**
      * The number of structural features of the '<em>Result</em>' class.
@@ -2085,6 +2103,89 @@ public interface AnalysisPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.analysis.impl.IndicToRowsMapImpl <em>Indic To Rows Map</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.analysis.impl.IndicToRowsMapImpl
+     * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getIndicToRowsMap()
+     * @generated
+     */
+    int INDIC_TO_ROWS_MAP = 5;
+
+    /**
+     * The feature id for the '<em><b>Key</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INDIC_TO_ROWS_MAP__KEY = 0;
+
+    /**
+     * The feature id for the '<em><b>Value</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INDIC_TO_ROWS_MAP__VALUE = 1;
+
+    /**
+     * The number of structural features of the '<em>Indic To Rows Map</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INDIC_TO_ROWS_MAP_FEATURE_COUNT = 2;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl <em>Analyzed Data Set</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl
+     * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getAnalyzedDataSet()
+     * @generated
+     */
+    int ANALYZED_DATA_SET = 6;
+
+    /**
+     * The feature id for the '<em><b>Data Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYZED_DATA_SET__DATA_COUNT = 0;
+
+    /**
+     * The feature id for the '<em><b>Record Size</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYZED_DATA_SET__RECORD_SIZE = 1;
+
+    /**
+     * The feature id for the '<em><b>Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYZED_DATA_SET__DATA = 2;
+
+    /**
+     * The number of structural features of the '<em>Analyzed Data Set</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYZED_DATA_SET_FEATURE_COUNT = 3;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.analysis.AnalysisType <em>Type</em>}' enum.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2092,7 +2193,7 @@ public interface AnalysisPackage extends EPackage {
      * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getAnalysisType()
      * @generated
      */
-    int ANALYSIS_TYPE = 5;
+    int ANALYSIS_TYPE = 7;
 
 
     /**
@@ -2103,7 +2204,7 @@ public interface AnalysisPackage extends EPackage {
      * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getExecutionLanguage()
      * @generated
      */
-    int EXECUTION_LANGUAGE = 6;
+    int EXECUTION_LANGUAGE = 8;
 
 
     /**
@@ -2269,6 +2370,28 @@ public interface AnalysisPackage extends EPackage {
     EAttribute getAnalysisParameters_ExecutionLanguage();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalysisParameters#isStoreData <em>Store Data</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Store Data</em>'.
+     * @see org.talend.dataquality.analysis.AnalysisParameters#isStoreData()
+     * @see #getAnalysisParameters()
+     * @generated
+     */
+    EAttribute getAnalysisParameters_StoreData();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalysisParameters#getMaxNumberRows <em>Max Number Rows</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Max Number Rows</em>'.
+     * @see org.talend.dataquality.analysis.AnalysisParameters#getMaxNumberRows()
+     * @see #getAnalysisParameters()
+     * @generated
+     */
+    EAttribute getAnalysisParameters_MaxNumberRows();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.analysis.AnalysisResult <em>Result</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2301,17 +2424,6 @@ public interface AnalysisPackage extends EPackage {
     EReference getAnalysisResult_ResultMetadata();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.analysis.AnalysisResult#getIndicatorValues <em>Indicator Values</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the containment reference list '<em>Indicator Values</em>'.
-     * @see org.talend.dataquality.analysis.AnalysisResult#getIndicatorValues()
-     * @see #getAnalysisResult()
-     * @generated
-     */
-    EReference getAnalysisResult_IndicatorValues();
-
-    /**
      * Returns the meta object for the containment reference list '{@link org.talend.dataquality.analysis.AnalysisResult#getIndicators <em>Indicators</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2321,6 +2433,17 @@ public interface AnalysisPackage extends EPackage {
      * @generated
      */
     EReference getAnalysisResult_Indicators();
+
+    /**
+     * Returns the meta object for the map '{@link org.talend.dataquality.analysis.AnalysisResult#getIndicToRowMap <em>Indic To Row Map</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the map '<em>Indic To Row Map</em>'.
+     * @see org.talend.dataquality.analysis.AnalysisResult#getIndicToRowMap()
+     * @see #getAnalysisResult()
+     * @generated
+     */
+    EReference getAnalysisResult_IndicToRowMap();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.analysis.ExecutionInformations <em>Execution Informations</em>}'.
@@ -2397,6 +2520,83 @@ public interface AnalysisPackage extends EPackage {
      * @generated
      */
     EAttribute getExecutionInformations_LastExecutionNumberOk();
+
+    /**
+     * Returns the meta object for class '{@link java.util.Map.Entry <em>Indic To Rows Map</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Indic To Rows Map</em>'.
+     * @see java.util.Map.Entry
+     * @model keyType="org.talend.dataquality.indicators.Indicator" keyRequired="true"
+     *        valueType="org.talend.dataquality.analysis.AnalyzedDataSet"
+     * @generated
+     */
+    EClass getIndicToRowsMap();
+
+    /**
+     * Returns the meta object for the reference '{@link java.util.Map.Entry <em>Key</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Key</em>'.
+     * @see java.util.Map.Entry
+     * @see #getIndicToRowsMap()
+     * @generated
+     */
+    EReference getIndicToRowsMap_Key();
+
+    /**
+     * Returns the meta object for the reference '{@link java.util.Map.Entry <em>Value</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Value</em>'.
+     * @see java.util.Map.Entry
+     * @see #getIndicToRowsMap()
+     * @generated
+     */
+    EReference getIndicToRowsMap_Value();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.analysis.AnalyzedDataSet <em>Analyzed Data Set</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Analyzed Data Set</em>'.
+     * @see org.talend.dataquality.analysis.AnalyzedDataSet
+     * @generated
+     */
+    EClass getAnalyzedDataSet();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalyzedDataSet#getDataCount <em>Data Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Data Count</em>'.
+     * @see org.talend.dataquality.analysis.AnalyzedDataSet#getDataCount()
+     * @see #getAnalyzedDataSet()
+     * @generated
+     */
+    EAttribute getAnalyzedDataSet_DataCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalyzedDataSet#getRecordSize <em>Record Size</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Record Size</em>'.
+     * @see org.talend.dataquality.analysis.AnalyzedDataSet#getRecordSize()
+     * @see #getAnalyzedDataSet()
+     * @generated
+     */
+    EAttribute getAnalyzedDataSet_RecordSize();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalyzedDataSet#getData <em>Data</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Data</em>'.
+     * @see org.talend.dataquality.analysis.AnalyzedDataSet#getData()
+     * @see #getAnalyzedDataSet()
+     * @generated
+     */
+    EAttribute getAnalyzedDataSet_Data();
 
     /**
      * Returns the meta object for enum '{@link org.talend.dataquality.analysis.AnalysisType <em>Type</em>}'.
@@ -2567,6 +2767,22 @@ public interface AnalysisPackage extends EPackage {
         EAttribute ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE = eINSTANCE.getAnalysisParameters_ExecutionLanguage();
 
         /**
+         * The meta object literal for the '<em><b>Store Data</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYSIS_PARAMETERS__STORE_DATA = eINSTANCE.getAnalysisParameters_StoreData();
+
+        /**
+         * The meta object literal for the '<em><b>Max Number Rows</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS = eINSTANCE.getAnalysisParameters_MaxNumberRows();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl <em>Result</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -2593,20 +2809,20 @@ public interface AnalysisPackage extends EPackage {
         EReference ANALYSIS_RESULT__RESULT_METADATA = eINSTANCE.getAnalysisResult_ResultMetadata();
 
         /**
-         * The meta object literal for the '<em><b>Indicator Values</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference ANALYSIS_RESULT__INDICATOR_VALUES = eINSTANCE.getAnalysisResult_IndicatorValues();
-
-        /**
          * The meta object literal for the '<em><b>Indicators</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
         EReference ANALYSIS_RESULT__INDICATORS = eINSTANCE.getAnalysisResult_Indicators();
+
+        /**
+         * The meta object literal for the '<em><b>Indic To Row Map</b></em>' map feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference ANALYSIS_RESULT__INDIC_TO_ROW_MAP = eINSTANCE.getAnalysisResult_IndicToRowMap();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.ExecutionInformationsImpl <em>Execution Informations</em>}' class.
@@ -2665,6 +2881,66 @@ public interface AnalysisPackage extends EPackage {
          * @generated
          */
         EAttribute EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK = eINSTANCE.getExecutionInformations_LastExecutionNumberOk();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.IndicToRowsMapImpl <em>Indic To Rows Map</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.analysis.impl.IndicToRowsMapImpl
+         * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getIndicToRowsMap()
+         * @generated
+         */
+        EClass INDIC_TO_ROWS_MAP = eINSTANCE.getIndicToRowsMap();
+
+        /**
+         * The meta object literal for the '<em><b>Key</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference INDIC_TO_ROWS_MAP__KEY = eINSTANCE.getIndicToRowsMap_Key();
+
+        /**
+         * The meta object literal for the '<em><b>Value</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference INDIC_TO_ROWS_MAP__VALUE = eINSTANCE.getIndicToRowsMap_Value();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl <em>Analyzed Data Set</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl
+         * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getAnalyzedDataSet()
+         * @generated
+         */
+        EClass ANALYZED_DATA_SET = eINSTANCE.getAnalyzedDataSet();
+
+        /**
+         * The meta object literal for the '<em><b>Data Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYZED_DATA_SET__DATA_COUNT = eINSTANCE.getAnalyzedDataSet_DataCount();
+
+        /**
+         * The meta object literal for the '<em><b>Record Size</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYZED_DATA_SET__RECORD_SIZE = eINSTANCE.getAnalyzedDataSet_RecordSize();
+
+        /**
+         * The meta object literal for the '<em><b>Data</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYZED_DATA_SET__DATA = eINSTANCE.getAnalyzedDataSet_Data();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.AnalysisType <em>Type</em>}' enum.

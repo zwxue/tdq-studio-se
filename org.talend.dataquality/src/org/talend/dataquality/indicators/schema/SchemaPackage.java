@@ -323,6 +323,15 @@ public interface SchemaPackage extends EPackage {
     int SCHEMA_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.COMPOSITE_INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SCHEMA_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.COMPOSITE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -706,6 +715,15 @@ public interface SchemaPackage extends EPackage {
     int ABSTRACT_TABLE_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -983,6 +1001,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int TABLE_INDICATOR__JOIN_CONDITIONS = ABSTRACT_TABLE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__MAX_NUMBER_ROWS = ABSTRACT_TABLE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
@@ -1280,6 +1307,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CATALOG_INDICATOR__JOIN_CONDITIONS = SCHEMA_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CATALOG_INDICATOR__MAX_NUMBER_ROWS = SCHEMA_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -1640,6 +1676,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CONNECTION_INDICATOR__JOIN_CONDITIONS = CATALOG_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__MAX_NUMBER_ROWS = CATALOG_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -2028,6 +2073,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int VIEW_INDICATOR__JOIN_CONDITIONS = ABSTRACT_TABLE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__MAX_NUMBER_ROWS = ABSTRACT_TABLE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.

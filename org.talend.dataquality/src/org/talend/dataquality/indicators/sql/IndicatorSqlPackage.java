@@ -322,6 +322,15 @@ public interface IndicatorSqlPackage extends EPackage {
     int USER_DEF_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -681,6 +690,15 @@ public interface IndicatorSqlPackage extends EPackage {
      * @ordered
      */
     int WHERE_RULE_INDICATOR__JOIN_CONDITIONS = USER_DEF_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__MAX_NUMBER_ROWS = USER_DEF_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.
@@ -1043,6 +1061,15 @@ public interface IndicatorSqlPackage extends EPackage {
      * @ordered
      */
     int JAVA_USER_DEF_INDICATOR__JOIN_CONDITIONS = USER_DEF_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__MAX_NUMBER_ROWS = USER_DEF_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.

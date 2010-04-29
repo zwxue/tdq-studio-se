@@ -7,6 +7,7 @@
 package org.talend.dataquality.analysis;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwmx.analysis.informationreporting.ReportGroup;
@@ -21,8 +22,8 @@ import orgomg.cwmx.analysis.informationreporting.ReportGroup;
  * <ul>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisResult#getAnalysis <em>Analysis</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisResult#getResultMetadata <em>Result Metadata</em>}</li>
- *   <li>{@link org.talend.dataquality.analysis.AnalysisResult#getIndicatorValues <em>Indicator Values</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisResult#getIndicators <em>Indicators</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.AnalysisResult#getIndicToRowMap <em>Indic To Row Map</em>}</li>
  * </ul>
  * </p>
  *
@@ -86,26 +87,6 @@ public interface AnalysisResult extends ReportGroup {
     void setResultMetadata(ExecutionInformations value);
 
     /**
-     * Returns the value of the '<em><b>Indicator Values</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.domain.LiteralValue}.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Indicator Values</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * TODO scorreia remove?
-     * @deprecated will be removed from the model.
-     * <!-- end-model-doc -->
-     * @return the value of the '<em>Indicator Values</em>' containment reference list.
-     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisResult_IndicatorValues()
-     * @model containment="true"
-     * @generated
-     */
-    EList<LiteralValue> getIndicatorValues();
-
-    /**
      * Returns the value of the '<em><b>Indicators</b></em>' containment reference list.
      * The list contents are of type {@link org.talend.dataquality.indicators.Indicator}.
      * <!-- begin-user-doc -->
@@ -120,5 +101,22 @@ public interface AnalysisResult extends ReportGroup {
      * @generated
      */
     EList<Indicator> getIndicators();
+
+    /**
+     * Returns the value of the '<em><b>Indic To Row Map</b></em>' map.
+     * The key is of type {@link org.talend.dataquality.indicators.Indicator},
+     * and the value is of type {@link org.talend.dataquality.analysis.AnalyzedDataSet},
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Indic To Row Map</em>' map isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Indic To Row Map</em>' map.
+     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisResult_IndicToRowMap()
+     * @model mapType="org.talend.dataquality.analysis.IndicToRowsMap<org.talend.dataquality.indicators.Indicator, org.talend.dataquality.analysis.AnalyzedDataSet>" transient="true"
+     * @generated
+     */
+    EMap<Indicator, AnalyzedDataSet> getIndicToRowMap();
 
 } // AnalysisResult

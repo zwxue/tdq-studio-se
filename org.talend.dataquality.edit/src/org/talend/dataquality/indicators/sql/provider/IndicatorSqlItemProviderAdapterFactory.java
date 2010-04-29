@@ -122,6 +122,29 @@ public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterF
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.sql.JavaUserDefIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected JavaUserDefIndicatorItemProvider javaUserDefIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.sql.JavaUserDefIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createJavaUserDefIndicatorAdapter() {
+        if (javaUserDefIndicatorItemProvider == null) {
+            javaUserDefIndicatorItemProvider = new JavaUserDefIndicatorItemProvider(this);
+        }
+
+        return javaUserDefIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -222,6 +245,7 @@ public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterF
     public void dispose() {
         if (userDefIndicatorItemProvider != null) userDefIndicatorItemProvider.dispose();
         if (whereRuleIndicatorItemProvider != null) whereRuleIndicatorItemProvider.dispose();
+        if (javaUserDefIndicatorItemProvider != null) javaUserDefIndicatorItemProvider.dispose();
     }
 
 }
