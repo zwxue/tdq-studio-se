@@ -1039,11 +1039,6 @@
            version="4.0.0">
      </workspacetask>
      <projecttask
-           class="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
-           id="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
-           name="Update Defintion File">
-     </projecttask>
-     <projecttask
            class="org.talend.dataprofiler.core.migration.impl.UpdateSQLExplorerDriversTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateSQLExplorerDriversTask"
            name="Update SQLExplorer Drivers">
@@ -1064,6 +1059,12 @@
            id="org.talend.dataprofiler.core.updateOracleTextIndicators"
            name="Update Oracle Text Indicators"
            version="4.0.1">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
+           name="Update Defintion File For Release Before 3.2.2"
+           version="3.2.2">
      </workspacetask>
   </extension>
   <extension
