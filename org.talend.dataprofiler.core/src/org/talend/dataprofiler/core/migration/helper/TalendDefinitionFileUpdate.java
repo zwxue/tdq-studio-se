@@ -33,6 +33,7 @@ import org.talend.resource.ResourceManager;
 public class TalendDefinitionFileUpdate {
 
     private static Logger log = Logger.getLogger(TalendDefinitionFileUpdate.class);
+
     private static final String TALENDDEFINITIONFILENAME = ".Talend.definition";
 
     /**
@@ -72,5 +73,27 @@ public class TalendDefinitionFileUpdate {
         }
 
         return true;
+    }
+
+    /**
+     * Method "indexOf".
+     * 
+     * @return true if ok
+     */
+    public int indexOf(String str) {
+        IFolder librariesFolder = ResourceManager.getLibrariesFolder();
+        IFile definitionFile = librariesFolder.getFile(TALENDDEFINITIONFILENAME);
+
+        if (definitionFile.exists()) {
+            File file = new File(definitionFile.getLocationURI());
+            try {
+                String content = FileUtils.readFileToString(file, EMFUtil.ENCODING);
+                return content.indexOf(str);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                return -1;
+            }
+        }
+        return -1;
     }
 }

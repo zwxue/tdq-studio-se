@@ -1066,6 +1066,12 @@
            name="Update Defintion File For Release Before 3.2.2"
            version="3.2.2">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateAccessDistinctQueryTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateAccessDistinctQueryTask"
+           name="Update Access Distinct Query Task"
+           version="4.0.1">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

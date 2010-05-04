@@ -176,6 +176,10 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         dbTypeCombo.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
+                // MOD yyi 2010-05-04 10494
+                if (dbTypeCombo.getText().trim().equals("Generic ODBC")) { //$NON-NLS-1$
+                    updateButtonState();
+                }
                 if (dbTypeCombo.getText().trim().equals("Generic JDBC")) { //$NON-NLS-1$
                     updateStatus(IStatus.WARNING, UIMessages.MSG_SELECT_GENERIC_JDBC);
                 }
@@ -502,6 +506,9 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                 // deal with sqlite;
                 String filename = this.connectionParam.getFilePath();
                 complete &= filename != null && !filename.trim().equals(""); //$NON-NLS-1$
+            } else if (SupportDBUrlType.ODBCDEFAULTURL.getDBKey().equals(dbTypeName)) {
+                // deal with Generic ODBC;
+                complete &= true; //$NON-NLS-1$
             } else {
                 complete &= this.userid != null && !this.userid.trim().equals(""); //$NON-NLS-1$
             }

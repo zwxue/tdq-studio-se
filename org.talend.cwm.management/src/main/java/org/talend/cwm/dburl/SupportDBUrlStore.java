@@ -227,6 +227,7 @@ public final class SupportDBUrlStore {
         SupportDBUrlType dbUrlDefaultType = supportDiverNameDBUrlMap.get(dbDriver);
         return dbUrlDefaultType == null ? SupportDBUrlType.ODBCDEFAULTURL : dbUrlDefaultType;
     }
+
     public Properties getDBPameterProperties(String connectionStr) {
         Properties paramProperties = new Properties();
         String matchSubStr = connectionStr.substring(0, 8);

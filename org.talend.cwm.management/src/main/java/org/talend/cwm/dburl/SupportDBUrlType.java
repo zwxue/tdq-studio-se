@@ -148,7 +148,14 @@ public enum SupportDBUrlType {
         "", //$NON-NLS-1$
         null,
         "MDM"),
-    JAVADEFAULTURL("Java", "localhost", null, "dbname", null, null, null, "Java");
+    JAVADEFAULTURL("Java", "localhost", null, "dbname", null, null, null, "Java"),
+    ACCESS("ACCESS", //$NON-NLS-1$
+           null,
+           null,
+           null,
+           null,
+           "sun.jdbc.odbc.JdbcOdbcDriver", //$NON-NLS-1$
+           "datasourceName", "Access"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private final String dbKey;
 

@@ -80,7 +80,8 @@ public enum PatternLanguageType {
          11,
          SupportDBUrlType.JAVADEFAULTURL.getLanguage(),
          SupportDBUrlType.JAVADEFAULTURL.getLanguage(),
-         PatternToExcelEnum.JavaRegexp);
+         PatternToExcelEnum.JavaRegexp),
+    ACCESS(12, SupportDBUrlType.ACCESS.getLanguage(), SupportDBUrlType.ACCESS.getLanguage(), PatternToExcelEnum.Access);
 
     private static Logger log = Logger.getLogger(PatternLanguageType.class);
 
