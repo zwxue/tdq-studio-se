@@ -501,7 +501,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private void addItemElements(final ModelElementIndicator[] elements) {
         for (int i = 0; i < elements.length; i++) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
-            treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
+            treeItem.setImage(getColumnElementImage(elements[i]));
 
             final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
             treeItem.setText(0, getModelElemetnDisplayName(meIndicator)); //$NON-NLS-1$
@@ -626,6 +626,19 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             treeItem.setExpanded(true);
         }
         this.setDirty(true);
+    }
+
+    /**
+     * DOC yyi 2010-04-29 12572 for MDM elements
+     * 
+     * @param element
+     * @return
+     */
+    private Image getColumnElementImage(ModelElementIndicator element) {
+        if (element instanceof XmlElementIndicator) {
+            return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
+        }
+        return ImageLib.getImage(ImageLib.TD_COLUMN);
     }
 
     /**
