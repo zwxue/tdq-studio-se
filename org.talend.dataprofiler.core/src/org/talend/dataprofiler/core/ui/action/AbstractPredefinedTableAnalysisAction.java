@@ -90,9 +90,8 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
     }
 
     protected WizardDialog getStandardAnalysisWizardDialog(AnalysisType type, AnalysisParameter parameter) {
-        if (wizard == null) {
-            wizard = WizardFactory.createAnalysisWizard(type, parameter);
-        }
+        // MOD by zshen for bug 12657
+        wizard = WizardFactory.createAnalysisWizard(type, parameter);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);
