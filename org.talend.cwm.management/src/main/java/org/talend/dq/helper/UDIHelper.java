@@ -279,22 +279,22 @@ public final class UDIHelper {
 
             if (validateJavaUDI(userJavaClassName, jarPath)) {
                 File file = new File(jarPath);
-                    TalendURLClassLoader cl;
-                    cl = new TalendURLClassLoader(new URL[] { file.toURL() });
-                    Class<?> clazz = cl.findClass(userJavaClassName);
-                    if (clazz != null) {
-                        UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
-
-                        if (indicator instanceof JavaUserDefIndicator) {
-                            ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
-                        } else {
-                            JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
-                            judiTemplate.setJavaUserDefObject(judi);
-                            judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                            judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
-                            adaptedUDI = judiTemplate;
-                        }
+                TalendURLClassLoader cl;
+                cl = new TalendURLClassLoader(new URL[] { file.toURL() });
+                Class<?> clazz = cl.findClass(userJavaClassName);
+                if (clazz != null) {
+                    UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
+                    judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                    if (indicator instanceof JavaUserDefIndicator) {
+                        ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
+                    } else {
+                        JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
+                        judiTemplate.setJavaUserDefObject(judi);
+                        judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                        judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
+                        adaptedUDI = judiTemplate;
                     }
+                }
             }
         }
         return adaptedUDI;

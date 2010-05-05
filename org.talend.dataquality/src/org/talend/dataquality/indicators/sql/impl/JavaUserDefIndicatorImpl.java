@@ -327,4 +327,19 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
         this.executionLanguage = executionLanguage;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getCount()
+     */
+    @Override
+    public Long getCount() {
+        if (isJavaEngine()) {
+            return javaUDI.getCount();
+        }
+        return super.getCount();
+    }
+
+    
+    
 } // JavaUserDefIndicatorImpl

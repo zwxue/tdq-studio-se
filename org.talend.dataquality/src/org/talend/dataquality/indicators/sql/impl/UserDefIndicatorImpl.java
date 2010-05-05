@@ -21,7 +21,6 @@ import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl;
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
@@ -40,7 +39,7 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
  */
 public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndicator {
 
-    private static Logger log = Logger.getLogger(FrequencyIndicatorImpl.class);
+    private static Logger log = Logger.getLogger(UserDefIndicatorImpl.class);
 
     private static final DecimalFormat F4_DIGIT = new DecimalFormat("0000");
 
@@ -913,7 +912,11 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      */
     @Override
     public IndicatorValueType getValueType() {
-        return IndicatorValueType.REAL_VALUE;
+        if (IndicatorCategoryHelper.isUserDefRealValue(getIndicatorCategory())) {
+            return IndicatorValueType.REAL_VALUE;
+        }
+        // else if count, frequency table or matching count
+        return IndicatorValueType.INTEGER_VALUE;
     }
 
     /**
