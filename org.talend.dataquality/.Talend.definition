@@ -10,7 +10,7 @@
     <taggedValue xmi:id="_ybpowDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of distinct rows (like a &quot;SELECT DISTINCT&quot; SQL statement)"/>
     <taggedValue xmi:id="_ybqP0Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of distinct records"/>
     <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyl" body="SELECT DISTINCT COUNT (&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Access"/>
+    <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyl" body="SELECT COUNT (&lt;%=__COLUMN_NAMES__%>) FROM (SELECT DISTINCT (&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>)" language="Access"/>
     <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyk" body="count(distinct-values(//&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%>))" language="MDM"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0RF2Ed2PKb6nEJEvhw" name="Unique Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Unique Count">

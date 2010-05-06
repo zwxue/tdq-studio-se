@@ -34,7 +34,7 @@ public class UpdateAccessDistinctQueryTask extends AWorkspaceTask {
 
         String oriQuery = "<sqlGenericExpression xmi:id=\"_ybqP0jh8Ed2XmO7pl5Yuyg\" body=\"SELECT COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"SQL\"/>";
 
-        String accessQuery = "    <sqlGenericExpression xmi:id=\"_ybqP0jh8Ed2XmO7pl5Yuyl\" body=\"SELECT DISTINCT COUNT (&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Access\"/>";
+        String accessQuery = "    <sqlGenericExpression xmi:id=\"_ybqP0jh8Ed2XmO7pl5Yuyl\" body=\"SELECT COUNT (&lt;%=__COLUMN_NAMES__%>) FROM (SELECT DISTINCT (&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>)\" language=\"Access\"/>";
 
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
         if (-1 == talendDefinitionFileUpdate.indexOf(accessQuery)) {

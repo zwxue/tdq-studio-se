@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -45,9 +46,12 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.IndicatorTreeModelBuilder;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * This dialog use to select the indictor object for different columns.
@@ -90,6 +94,8 @@ public class IndicatorSelectDialog extends TrayDialog {
     // ADD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose bu user.
     private ExecutionLanguage language;
 
+    private DbmsLanguage dbms;
+
     /**
      * DOC xqliu IndicatorSelectDialog constructor comment.
      * 
@@ -122,9 +128,15 @@ public class IndicatorSelectDialog extends TrayDialog {
         Object editorPart = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editorPart instanceof AnalysisEditor) {
             AnalysisEditor analyEditor = (AnalysisEditor) editorPart;
-            if (analyEditor.getMasterPage() instanceof ColumnMasterDetailsPage)
+            if (analyEditor.getMasterPage() instanceof ColumnMasterDetailsPage) {
                 this.language = ExecutionLanguage.get(((ColumnMasterDetailsPage) analyEditor.getMasterPage()).getExecCombo()
                         .getText());
+
+                DataManager connection = ((ColumnMasterDetailsPage) analyEditor.getMasterPage()).getAnalysis().getContext()
+                        .getConnection();
+                this.dbms = DbmsLanguageFactory.createDbmsLanguage(connection);
+            }
+
         }
         // ~
 
@@ -468,6 +480,16 @@ public class IndicatorSelectDialog extends TrayDialog {
                     }
                     final ModelElementIndicator currentIndicator = (ModelElementIndicator) treeColumns[j].getData();
                     checkButton.setEnabled(ModelElementIndicatorRule.match(indicatorNode, currentIndicator, this.language));
+
+                    // ADD yyi 2010-05-06 10494: Disable the indicator buttons which are not support MS Access
+                    // Remove the language compare to support all DB type, if needed.
+                    if (dbms.getDbmsName().equalsIgnoreCase(SupportDBUrlType.ACCESS.getLanguage())
+                            && null != indicatorNode.getIndicatorInstance()
+                            && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null) {
+                        checkButton.setEnabled(false);
+                    }
+                    // ~
+
                     checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum, currentIndicator));
                     if (indicatorEnum != null) {
                         checkButton.setToolTipText(DefaultMessagesImpl.getString(
