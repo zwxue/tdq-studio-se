@@ -32,6 +32,7 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -223,8 +224,14 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
         for (IContributionItem item : items) {
             if (item instanceof ActionContributionItem) {
                 ActionContributionItem contrib = (ActionContributionItem) item;
-                AbstractConnectionTreeAction action = (AbstractConnectionTreeAction) contrib.getAction();
-                action.setEnabled(action.isAvailable());
+                // MOD mzhao bug 12938, Avoid a ClassCastException. 2010-05-06.
+                AbstractConnectionTreeAction contibAction = null;
+                IAction action = contrib.getAction();
+                if (action instanceof AbstractConnectionTreeAction) {
+                    contibAction = (AbstractConnectionTreeAction) action;
+                    action.setEnabled(contibAction.isAvailable());
+                }
+                // ~
             }
         }
     }
