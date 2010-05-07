@@ -78,7 +78,8 @@ public class TalendDefinitionFileUpdate {
     /**
      * Method "indexOf".
      * 
-     * @return true if ok
+     * @return the index of the first occurrence of the character in the character sequence represented by this object,
+     * or <code>-1</code> if the character does not occur.
      */
     public int indexOf(String str) {
         IFolder librariesFolder = ResourceManager.getLibrariesFolder();

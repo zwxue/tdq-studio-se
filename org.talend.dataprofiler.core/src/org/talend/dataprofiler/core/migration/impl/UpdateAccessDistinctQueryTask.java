@@ -19,9 +19,9 @@ import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
 
 /**
- * @author scorreia
+ * @author yyi
  * 
- * This migration task removes the call to the Oracle TRIM function when computing the length indicators
+ * To update access distince query
  */
 public class UpdateAccessDistinctQueryTask extends AWorkspaceTask {
 
