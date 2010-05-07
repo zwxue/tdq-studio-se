@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -332,18 +331,20 @@ public class IndicatorSelectDialog extends TrayDialog {
 
         private void processRowButtonSelect(boolean selection, List<Button> rowButtons) {
             for (Button btn : rowButtons) {
-                ModelElementIndicator columnIndicator = (ModelElementIndicator) btn.getData(MODELELEMENTINDICATORFLAG);
-                IIndicatorNode node = (IIndicatorNode) btn.getData();
-                IndicatorEnum indicEnum = node.getIndicatorEnum();
+                if (btn.isEnabled()) {
+                    ModelElementIndicator columnIndicator = (ModelElementIndicator) btn.getData(MODELELEMENTINDICATORFLAG);
+                    IIndicatorNode node = (IIndicatorNode) btn.getData();
+                    IndicatorEnum indicEnum = node.getIndicatorEnum();
 
-                if (selection && ModelElementIndicatorRule.match(node, columnIndicator, language)) {
-                    btn.setSelection(true);
-                    if (indicEnum != null) {
-                        columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
+                    if (selection && ModelElementIndicatorRule.match(node, columnIndicator, language)) {
+                        btn.setSelection(true);
+                        if (indicEnum != null) {
+                            columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
+                        }
+                    } else {
+                        btn.setSelection(false);
+                        columnIndicator.removeTempIndicatorEnum(node.getIndicatorEnum());
                     }
-                } else {
-                    btn.setSelection(false);
-                    columnIndicator.removeTempIndicatorEnum(node.getIndicatorEnum());
                 }
             }
         }
@@ -483,12 +484,12 @@ public class IndicatorSelectDialog extends TrayDialog {
 
                     // ADD yyi 2010-05-06 10494: Disable the indicator buttons which are not support MS Access
                     // Remove the language compare to support all DB type, if needed.
-                    
-					// MOD mzhao bug 10494, if there is no definition for this
-					// indicator in .talend.definition file(Neither
-					// the database type is clearly specified nor a default database
-					// type is defined), disable the indicator selection.
-					// 2010-05-06 
+
+                    // MOD mzhao bug 10494, if there is no definition for this
+                    // indicator in .talend.definition file(Neither
+                    // the database type is clearly specified nor a default database
+                    // type is defined), disable the indicator selection.
+                    // 2010-05-06
                     if (null != indicatorNode.getIndicatorInstance()
                             && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null) {
                         checkButton.setEnabled(false);
