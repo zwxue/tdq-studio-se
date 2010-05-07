@@ -438,98 +438,102 @@ public class IndicatorSelectDialog extends TrayDialog {
     private void createChildrenNode(Tree tree, TreeItemContainer parentItem, TreeColumn[] treeColumns,
             IIndicatorNode[] branchNodes) {
         for (int i = 0; i < branchNodes.length; i++) {
-            final TreeItemContainer treeItem;
-            if (parentItem == null) {
-                treeItem = new TreeItemContainer(tree, SWT.NONE, treeColumns.length);
-            } else {
-                treeItem = new TreeItemContainer(parentItem, SWT.NONE, treeColumns.length);
-            }
-
-            TreeEditor editor;
-            Button checkButton;
-            Button rowCheckButton = null;
-            Button commonCheckButton;
-            List<Button> rowButtonList = new ArrayList<Button>();
             IIndicatorNode indicatorNode = branchNodes[i];
-            for (int j = 0; j < treeColumns.length; j++) {
-                IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();
-                if (j == 0) {
-                    treeItem.setText(0, indicatorNode.getLabel());
-                    if (indicatorEnum != null) {
-                        treeItem.setData(INDICATORITEM, indicatorNode);
-                    }
-                    continue;
-                } else if (j == 1 && treeColumns.length > 2) {
-                    editor = new TreeEditor(tree);
-                    rowCheckButton = new Button(tree, SWT.CHECK);
-                    rowCheckButton.addSelectionListener(new RowSelectButtonListener(j, treeItem, indicatorEnum, null));
-
-                    // set background color to the "All columns" column
-                    Color systemColor = tree.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
-                    treeItem.setBackground(j, systemColor); // no need to free this color
-                    rowCheckButton.setBackground(systemColor);
-
-                    commonCheckButton = rowCheckButton;
-
+            if (!indicatorNode.getLabel().equals("")) {
+                final TreeItemContainer treeItem;
+                if (parentItem == null) {
+                    treeItem = new TreeItemContainer(tree, SWT.NONE, treeColumns.length);
                 } else {
-                    editor = new TreeEditor(tree);
-                    checkButton = new Button(tree, SWT.CHECK);
-                    checkButton.setData(indicatorNode);
-
-                    if (((ModelElementIndicator) treeColumns[j].getData()).contains(indicatorEnum)) {
-                        checkButton.setSelection(true);
-                    }
-                    final ModelElementIndicator currentIndicator = (ModelElementIndicator) treeColumns[j].getData();
-                    checkButton.setEnabled(ModelElementIndicatorRule.match(indicatorNode, currentIndicator, this.language));
-
-                    // ADD yyi 2010-05-06 10494: Disable the indicator buttons which are not support MS Access
-                    // Remove the language compare to support all DB type, if needed.
-
-                    // MOD mzhao bug 10494, if there is no definition for this
-                    // indicator in .talend.definition file(Neither
-                    // the database type is clearly specified nor a default database
-                    // type is defined), disable the indicator selection.
-                    // 2010-05-06
-                    if (null != indicatorNode.getIndicatorInstance()
-                            && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null) {
-                        checkButton.setEnabled(false);
-                    }
-                    // ~
-
-                    checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum, currentIndicator));
-                    if (indicatorEnum != null) {
-                        checkButton.setToolTipText(DefaultMessagesImpl.getString(
-                                "IndicatorSelectDialog.enable", indicatorEnum.getLabel(), currentIndicator.getElementName())); //$NON-NLS-1$ //$NON-NLS-2$
-                    }
-                    checkButton.setData(MODELELEMENTINDICATORFLAG, currentIndicator);
-                    commonCheckButton = checkButton;
-
-                    rowButtonList.add(checkButton);
+                    treeItem = new TreeItemContainer(parentItem, SWT.NONE, treeColumns.length);
                 }
 
-                commonCheckButton.pack();
-                editor.minimumWidth = commonCheckButton.getSize().x;
-                editor.horizontalAlignment = SWT.CENTER;
-                editor.setEditor(commonCheckButton, treeItem, j);
+                TreeEditor editor;
+                Button checkButton;
+                Button rowCheckButton = null;
+                Button commonCheckButton;
+                List<Button> rowButtonList = new ArrayList<Button>();
+                for (int j = 0; j < treeColumns.length; j++) {
+                    IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();
+                    if (j == 0) {
+                        treeItem.setText(0, indicatorNode.getLabel());
+                        if (indicatorEnum != null) {
+                            treeItem.setData(INDICATORITEM, indicatorNode);
+                        }
+                        continue;
+                    } else if (j == 1 && treeColumns.length > 2) {
+                        editor = new TreeEditor(tree);
+                        rowCheckButton = new Button(tree, SWT.CHECK);
+                        rowCheckButton.addSelectionListener(new RowSelectButtonListener(j, treeItem, indicatorEnum, null));
 
-                treeItem.setButton(j, commonCheckButton);
-            }
+                        // set background color to the "All columns" column
+                        Color systemColor = tree.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
+                        treeItem.setBackground(j, systemColor); // no need to free this color
+                        rowCheckButton.setBackground(systemColor);
 
-            if (rowCheckButton != null) {
-                boolean allChecked = true;
-                rowCheckButton.setData(ROWINDICATORFLAG, rowButtonList);
-                for (Button btn : rowButtonList) {
-                    if (!btn.getSelection()) {
-                        allChecked = false;
+                        commonCheckButton = rowCheckButton;
+
+                    } else {
+                        editor = new TreeEditor(tree);
+                        checkButton = new Button(tree, SWT.CHECK);
+                        checkButton.setData(indicatorNode);
+
+                        if (((ModelElementIndicator) treeColumns[j].getData()).contains(indicatorEnum)) {
+                            checkButton.setSelection(true);
+                        }
+                        final ModelElementIndicator currentIndicator = (ModelElementIndicator) treeColumns[j].getData();
+                        checkButton.setEnabled(ModelElementIndicatorRule.match(indicatorNode, currentIndicator, this.language));
+
+                        // ADD yyi 2010-05-06 10494: Disable the indicator buttons which are not support MS Access
+                        // Remove the language compare to support all DB type, if needed.
+
+                        // MOD mzhao bug 10494, if there is no definition for this
+                        // indicator in .talend.definition file(Neither
+                        // the database type is clearly specified nor a default database
+                        // type is defined), disable the indicator selection.
+                        // 2010-05-06
+                        if (null != indicatorNode.getIndicatorInstance()
+                                && null != indicatorNode.getIndicatorInstance().getIndicatorDefinition()
+                                && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null) {
+                            checkButton.setEnabled(false);
+                        }
+                        // ~
+
+                        checkButton
+                                .addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum, currentIndicator));
+                        if (indicatorEnum != null) {
+                            checkButton.setToolTipText(DefaultMessagesImpl.getString(
+                                    "IndicatorSelectDialog.enable", indicatorEnum.getLabel(), currentIndicator.getElementName())); //$NON-NLS-1$ //$NON-NLS-2$
+                        }
+                        checkButton.setData(MODELELEMENTINDICATORFLAG, currentIndicator);
+                        commonCheckButton = checkButton;
+
+                        rowButtonList.add(checkButton);
                     }
-                }
-                rowCheckButton.setSelection(allChecked);
-            }
 
-            if (indicatorNode.hasChildren()) {
-                createChildrenNode(tree, treeItem, treeColumns, indicatorNode.getChildren());
+                    commonCheckButton.pack();
+                    editor.minimumWidth = commonCheckButton.getSize().x;
+                    editor.horizontalAlignment = SWT.CENTER;
+                    editor.setEditor(commonCheckButton, treeItem, j);
+
+                    treeItem.setButton(j, commonCheckButton);
+                }
+
+                if (rowCheckButton != null) {
+                    boolean allChecked = true;
+                    rowCheckButton.setData(ROWINDICATORFLAG, rowButtonList);
+                    for (Button btn : rowButtonList) {
+                        if (!btn.getSelection()) {
+                            allChecked = false;
+                        }
+                    }
+                    rowCheckButton.setSelection(allChecked);
+                }
+
+                if (indicatorNode.hasChildren()) {
+                    createChildrenNode(tree, treeItem, treeColumns, indicatorNode.getChildren());
+                }
+                treeItem.setExpanded(true);
             }
-            treeItem.setExpanded(true);
         }
 
     }
