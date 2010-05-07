@@ -315,6 +315,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         if (colName == null) { // no replacement found, try the default one
                             colName = dbms().getPatternFinderDefaultFunction(colName);
                         }
+                        if (colName == null) { // no replacement found, try the default one
+                            return traceError("No replacement found for database type: " + language + " for indicator "
+                                    + indicator.getName());
+                        }
                     }
                     // ~
                 } else if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator())
@@ -1183,14 +1187,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (log.isInfoEnabled()) {
             log.info("Computing indicator: " + indicator.getName());
         }
-        List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
-
         // give result to indicator so that it handles the results
         boolean ret = false;
         try {
+            List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
+
             ret = indicator.storeSqlResults(myResultSet);
         } catch (Exception e) {
-            throw new SQLException(e.toString());
+            log.warn(e, e);
         }
         return ret;
     }
