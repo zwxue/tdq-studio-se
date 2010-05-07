@@ -306,6 +306,10 @@ public class CatalogBuilder extends CwmBuilder {
             catalog2schemas = DatabaseContentRetriever.getSchemas(this.connection);
         }
 
+        // ADD xqliu 2010-05-07 bug 9840
+        boolean odbcIngres = this.connection.getMetaData().getDriverName().startsWith(DatabaseConstant.ODBC_INGRES_DRIVER_NAME);
+        // ~9840
+
         // store schemas in catalogs
         Set<String> catNames = catalog2schemas.keySet();
         for (String catName : catNames) {
@@ -324,7 +328,8 @@ public class CatalogBuilder extends CwmBuilder {
                 // ADD xqliu 2010-04-21 bug 12452
                 List<TdSchema> retrievedSchemas = new ArrayList<TdSchema>();
                 for (TdSchema schema : schemas) {
-                    if (retrieveCatalogSchema(dbName, schema.getName())) {
+                	// MOD xqliu 2010-05-07 bug 9840
+                    if (retrieveCatalogSchema(dbName, schema.getName()) || odbcIngres) {
                         retrievedSchemas.add(schema);
                     }
                 }
@@ -333,7 +338,9 @@ public class CatalogBuilder extends CwmBuilder {
                 // ~12452
                 // MOD xqliu 2010-03-04 feature 11412
                 // handle case when one catalog exist but no mapping between catalog and schemas exist (PostgreSQL)
-                if (ConnectionUtils.isPostgresql(this.connection) && catNames.size() == 1 && this.name2catalog.size() == 1) {
+                // MOD xqliu 2010-05-07 bug 9840
+                if ((ConnectionUtils.isPostgresql(this.connection) && catNames.size() == 1 && this.name2catalog.size() == 1)
+                        || odbcIngres) {
                     TdCatalog cat = this.name2catalog.values().iterator().next();
                     // MOD xqliu 2010-04-21 bug 12452
                     // CatalogHelper.addSchemas(schemas, cat);
