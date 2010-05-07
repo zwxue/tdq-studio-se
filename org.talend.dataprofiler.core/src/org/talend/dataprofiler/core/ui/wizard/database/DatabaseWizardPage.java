@@ -155,8 +155,8 @@ public class DatabaseWizardPage extends AbstractWizardPage {
 
         label = new Label(tempComp, SWT.NULL);
         label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.password")); //$NON-NLS-1$
-        passwordText = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
-        passwordText.setEchoChar('*');
+        // MOD zshen for bug 11931
+        passwordText = new Text(tempComp, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
         fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
         passwordText.setLayoutData(fullHorizontal);
         passwordText.addModifyListener(new ModifyListener() {
