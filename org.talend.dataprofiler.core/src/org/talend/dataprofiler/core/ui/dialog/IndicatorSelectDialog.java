@@ -483,8 +483,13 @@ public class IndicatorSelectDialog extends TrayDialog {
 
                     // ADD yyi 2010-05-06 10494: Disable the indicator buttons which are not support MS Access
                     // Remove the language compare to support all DB type, if needed.
-                    if (dbms.getDbmsName().equalsIgnoreCase(SupportDBUrlType.ACCESS.getLanguage())
-                            && null != indicatorNode.getIndicatorInstance()
+                    
+					// MOD mzhao bug 10494, if there is no definition for this
+					// indicator in .talend.definition file(Neither
+					// the database type is clearly specified nor a default database
+					// type is defined), disable the indicator selection.
+					// 2010-05-06 
+                    if (null != indicatorNode.getIndicatorInstance()
                             && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null) {
                         checkButton.setEnabled(false);
                     }
