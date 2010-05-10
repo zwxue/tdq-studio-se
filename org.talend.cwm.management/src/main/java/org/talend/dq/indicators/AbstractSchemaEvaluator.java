@@ -625,6 +625,11 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                         schemas = DatabaseContentRetriever.getMSSQLSchemas(connection).get(catalog.getName());
                     } else if (ConnectionUtils.isPostgresql(connection)) {
                         schemas = DatabaseContentRetriever.getSchemas(connection).get(null);
+                        // ADD xqliu 2010-05-10 bug 12564
+                        if (schemas == null) {
+                            schemas = DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
+                        }
+                        // ~12564
                     } else {
                         schemas = DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
                     }
