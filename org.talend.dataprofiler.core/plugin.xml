@@ -1052,7 +1052,7 @@
            class="org.talend.dataprofiler.core.migration.impl.ThresholdsValuesTask"
            id="org.talend.dataprofiler.core.migration.impl.ThresholdsValuesTask"
            name="Thresholds Values Task"
-           version="4.0.0">
+           version="3.2.3">
      </workspacetask>
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateOracleTextIndicatorQueryTask"

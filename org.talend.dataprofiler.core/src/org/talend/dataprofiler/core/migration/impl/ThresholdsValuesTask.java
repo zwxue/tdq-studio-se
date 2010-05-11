@@ -20,11 +20,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.helper.VersionCompareHelper;
+import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
+import org.talend.utils.ProductVersion;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -49,6 +53,13 @@ public class ThresholdsValuesTask extends AWorkspaceTask {
      */
     public boolean execute() {
         try {
+            // There handle a special case, the Thresholds is different in TOP and TDQ in 3.2.2(r33000)
+            ProductVersion vesion = WorkspaceVersionHelper.getVesion();
+            ProductVersion version322 = new ProductVersion(3, 2, 2);
+            if (VersionCompareHelper.isEqual(vesion, version322) && ResourceManager.getReportsFolder().exists()) {
+                return true;
+            }
+
             Collection<Analysis> allAnalysis = AnaResourceFileHelper.getInstance().getAllAnalysis();
             for (Analysis analysis : allAnalysis) {
                 EList<Indicator> indicators = analysis.getResults().getIndicators();
