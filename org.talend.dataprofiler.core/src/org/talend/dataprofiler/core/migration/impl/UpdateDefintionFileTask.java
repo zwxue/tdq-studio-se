@@ -66,7 +66,7 @@ public class UpdateDefintionFileTask extends AWorkspaceTask {
      */
     public Date getOrder() {
         Calendar calender = Calendar.getInstance();
-        calender.set(2009, 10, 20);
+        calender.set(2010, 5, 11);
         return calender.getTime();
     }
 }
