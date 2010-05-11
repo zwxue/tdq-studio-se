@@ -775,6 +775,17 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             if (!ModelElementHelper.isFromSameTable(analyzedElement) && !"".equals(dataFilterComp.getDataFilterString())) { //$NON-NLS-1$
                 return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotCreatAnalysis"), false); //$NON-NLS-1$
             }
+
+            // ADD xqliu 2010-05-11 bug 11750
+            ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
+            if (!(modelElementIndicators == null || modelElementIndicators.length == 0)) {
+                for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+                    if (modelElementIndicator.getIndicators().length == 0) {
+                        return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoIndicatorAssigned"), false); //$NON-NLS-1$
+                    }
+                }
+            }
+            // ~11750
         }
 
         return new ReturnCode(true);
