@@ -142,7 +142,9 @@ public class ReloadDatabaseAction extends Action {
                 EMFSharedResources.getInstance().unloadResource(eResource.getURI().toString());
 
                 IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-                Path path = new Path(analysis.getFileName());
+                // MOD by zshen for bug 12316 to avoid null argument.
+                Path path = new Path(analysis.getFileName() == null ? eResource.getURI().toPlatformString(false) : analysis
+                        .getFileName());
                 IFile file = root.getFile(path);
                 analysis = AnaResourceFileHelper.getInstance().readFromFile(file);
                 Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
