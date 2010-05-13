@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -204,14 +205,14 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                moveElement(masterPage.getTreeViewer(), false);
+                moveElement(masterPage.getTreeViewer(), -1);
             }
 
         });
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                moveElement(masterPage.getTreeViewer(), true);
+                moveElement(masterPage.getTreeViewer(), 1);
             }
 
         });
@@ -251,45 +252,29 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * DOC zshen Comment method "moveElement".
      * 
      * @param columnsElementViewer
-     * @param isDown
+     * @param step
      * 
      * move the element of the columnList to up or down.
      */
-    private void moveElement(AnalysisColumnSetTreeViewer columnsElementViewer, boolean isDown) {
+    private void moveElement(AnalysisColumnSetTreeViewer columnsElementViewer, int step) {
         Tree currentTree = columnsElementViewer.getTree();
         Object[] selectItem = currentTree.getSelection();
         List<Column> columnList = columnsElementViewer.getColumnSetMultiValueList();
         int index = 0;
-        boolean moveFlag = false;
         List<Integer> indexArray = new ArrayList<Integer>();
-        if (isDown) {
-            for (int i = selectItem.length - 1; i >= 0; i--) {
-                index = currentTree.indexOf((TreeItem) selectItem[i]);
-                if ((index + 1) >= columnList.size()) {
-                    return;
-                } else {
-                    Column moveElement = (Column) ((TreeItem) selectItem[i])
-                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
-                    columnList.remove(moveElement);
-                    columnList.add((index + 1), moveElement);
-                    indexArray.add(index + 1);
-                }
-            }
-        } else {
-            for (int i = 0; i < selectItem.length; i++) {
-                index = currentTree.indexOf((TreeItem) selectItem[i]);
-                if ((index - 1) < 0) {
-                    return;
-                } else {
-                    Column moveElement = (Column) ((TreeItem) selectItem[i])
-                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
-                    columnList.remove(moveElement);
-                    columnList.add((index - 1), moveElement);
-                    indexArray.add(index - 1);
-                }
+        for (int i = 0; i < selectItem.length; i++) {
+            index = currentTree.indexOf((TreeItem) selectItem[i]);
+            if (index + step > -1 && index + step < columnList.size()) {
+                Column moveElement = (Column) ((TreeItem) selectItem[i])
+                        .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                columnList.remove(moveElement);
+                columnList.add((index + step), moveElement);
+                indexArray.add(index + step);
+            } else {
+                return;
             }
         }
-        columnsElementViewer.setInput(convertList(columnList).toArray());
+        columnsElementViewer.setInput(columnList.toArray());
         currentTree = columnsElementViewer.getTree();
         for (int i = 0; i < indexArray.size(); i++) {
             currentTree.select(currentTree.getItem(indexArray.get(i)));
@@ -476,6 +461,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         for (Object obj : objs) {
             columnList.add((TdColumn) obj);
         }
+        // MOD yyi 2010-05-13 12828
+        Collections.reverse(columnList);
+        // ~
         this.setElements(columnList);
     }
 
