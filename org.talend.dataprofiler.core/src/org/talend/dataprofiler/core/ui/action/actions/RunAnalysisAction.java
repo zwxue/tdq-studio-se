@@ -103,7 +103,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
             ReturnCode canRun = anaEditor.canRun();
             if (!canRun.isOk()) {
-                MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun
+                MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun//$NON-NLS-1$
                         .getMessage());
                 return;
             }
