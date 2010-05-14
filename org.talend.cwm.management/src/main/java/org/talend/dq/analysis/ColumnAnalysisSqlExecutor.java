@@ -64,6 +64,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -309,18 +310,20 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     // done scorreia: get user defined functions for pattern finder
                     // MOD xqliu 2009-07-01 bug 7818
                     if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
-                        // final EList<CharactersMapping> charactersMapping =
-                        // indicatorDefinition.getCharactersMapping();
-                        // colName = dbms().getPatternFinderFunction(colName, charactersMapping);
-                        // if (colName == null) { // no replacement found, try the default one
-                        // colName = dbms().getPatternFinderDefaultFunction(colName);
-                        // }
                         // MOD zshen for bug 12675 2010-05-12
-                        colName = dbms().getAppointedPatternFinderFunction(colName, "0123456789", "9999999999");
-                        if (colName == null) { // no replacement found, try the default one
-                            return traceError("No replacement found for database type: " + language + " for indicator "
-                                    + indicator.getName());
+                        if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
+                            colName = addFunctionTypeConvert(colName);
                         }
+                        // ~12675
+                    }
+                    final EList<CharactersMapping> charactersMapping = indicatorDefinition.getCharactersMapping();
+                    colName = dbms().getPatternFinderFunction(colName, charactersMapping);
+                    if (colName == null) { // no replacement found, try the default one
+                        colName = dbms().getPatternFinderDefaultFunction(colName);
+                    }
+                    if (colName == null) { // no replacement found, try the default one
+                        return traceError("No replacement found for database type: " + language + " for indicator "
+                                + indicator.getName());
                     }
                     // ~
                 } else if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator())
@@ -375,6 +378,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         return false;
+    }
+
+    private String addFunctionTypeConvert(String colName) {
+        if (colName == null) {
+            return colName;
+        }
+        colName = " CAST(" + colName + " AS CHAR) ";
+        return colName;
     }
 
     /**

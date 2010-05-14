@@ -326,25 +326,6 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
-     * DOC zshen Comment method "getAppointedPatternFinderFunction".
-     * 
-     * @param expression a column name or a string
-     * @param charsToReplace the list of characters to remove
-     * @param replacementChars the replacement characters
-     * @return a default SQL expression which can be used as pattern finder
-     */
-    public String getAppointedPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
-        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
-        for (int i = 0; i < charsToReplace.length(); i++) {
-            final char charToReplace = charsToReplace.charAt(i);
-            final char replacement = replacementChars.charAt(i);
-            expression = replaceOneChar(expression, charToReplace, replacement);
-        }
-        return expression;
-    }
-
-    /**
      * Method "getPatternFinderFunction".
      * 
      * @param colName a column name or a string
