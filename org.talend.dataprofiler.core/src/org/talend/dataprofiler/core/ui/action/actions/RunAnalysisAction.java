@@ -59,6 +59,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private static Logger log = Logger.getLogger(RunAnalysisAction.class);
 
     public static final String ID = "org.talend.common.runTalendElement";//$NON-NLS-1$
+
     private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00"); //$NON-NLS-1$
 
     private Analysis analysis = null;
@@ -99,6 +100,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             }
 
             AnalysisEditor anaEditor = (AnalysisEditor) editor;
+
+            ReturnCode canRun = anaEditor.canRun();
+            if (!canRun.isOk()) {
+                MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun
+                        .getMessage());
+                return;
+            }
+
             if (selectionFile != null) {
                 analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
 

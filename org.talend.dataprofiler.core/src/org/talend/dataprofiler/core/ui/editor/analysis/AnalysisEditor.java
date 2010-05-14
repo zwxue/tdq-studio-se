@@ -31,6 +31,7 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author rli
@@ -261,5 +262,14 @@ public class AnalysisEditor extends CommonFormEditor {
      */
     public Action getRunAnalysisAction() {
         return runAction;
+    }
+
+    /**
+     * DOC yyi Comment method "canRun".
+     * 
+     * @return
+     */
+    public ReturnCode canRun() {
+        return masterPage.canRun();
     }
 }
