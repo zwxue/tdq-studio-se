@@ -43,7 +43,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -493,7 +492,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                         // type is defined), disable the indicator selection.
                         // 2010-05-06
                         if (null != indicatorNode.getIndicatorInstance()
-                                && !(indicatorNode.getIndicatorInstance() instanceof DatePatternFreqIndicator)
+                                && null != indicatorNode.getIndicatorInstance().getIndicatorDefinition()
                                 && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null) {
                             checkButton.setEnabled(false);
                         }
