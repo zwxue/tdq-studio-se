@@ -35,7 +35,7 @@ import orgomg.cwm.objectmodel.core.Expression;
 public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
 
     // MOD mzhao 2010-04-12 bug 11554
-    private static final String REGEX = ".*\\s*SELECT.*\\s* (REPLACE.*|TRANSLATE.*|TO_NUMBER.*|DATEPART.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
+    private static final String REGEX = ".*\\s*SELECT.*\\s* (YEAR.*|REPLACE.*|TRANSLATE.*|TO_NUMBER.*|DATEPART.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
     private static final String REGEX_INFORMIX = ".*\\s*SELECT (REPLACE.*)\\s*(AS|as)+\\s*\\w+\\s* FROM"; //$NON-NLS-1$
 
