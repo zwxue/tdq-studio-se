@@ -97,6 +97,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     protected Long nullCount = NULL_COUNT_EDEFAULT;
 
+    // MOD mzhao feature 12919
+    protected boolean mustStoreRow = false;
+
     /**
      * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference.
      * <!-- begin-user-doc
@@ -629,14 +632,12 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
      */
     public boolean mustStoreRow() {
-        // TODO: implement this method
-        // Ensure that you remove @generated or mark it @generated NOT
-        throw new UnsupportedOperationException();
+        return mustStoreRow;
     }
 
     /*

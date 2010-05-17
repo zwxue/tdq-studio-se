@@ -210,6 +210,7 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
 
         String str = data.toString();
         if (StringUtils.equals(str, this.defValue)) {
+            mustStoreRow = true;
             this.defaultValCount++;
         }
         return ok;

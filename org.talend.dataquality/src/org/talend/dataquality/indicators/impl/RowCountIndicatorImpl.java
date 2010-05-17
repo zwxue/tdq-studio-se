@@ -47,6 +47,7 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
      */
     @Override
     public boolean handle(Object value) {
+        mustStoreRow = true;
         return super.handle(value);
     }
 

@@ -22,7 +22,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EMap;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisFactory;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.utils.collections.MultiMapHelper;
@@ -36,6 +41,12 @@ import org.talend.utils.sugars.ReturnCode;
 public class IndicatorEvaluator extends Evaluator<String> {
 
     private static Logger log = Logger.getLogger(IndicatorEvaluator.class);
+
+    private Analysis analysis = null;
+
+    public IndicatorEvaluator(Analysis analysis) {
+        this.analysis = analysis;
+    }
 
     protected ReturnCode executeSqlQuery(String sqlStatement) throws SQLException {
         ReturnCode ok = new ReturnCode(true);
@@ -71,8 +82,13 @@ public class IndicatorEvaluator extends Evaluator<String> {
             ok.setReturnCode(mess, false);
             return ok;
         }
-        label: while (resultSet.next()) {
 
+        // MOD mzhao feature: 12919, add capability to dill down data on Java engine.
+        AnalysisResult anaResult = analysis.getResults();
+        EMap<Indicator, AnalyzedDataSet> indicToRowMap = anaResult.getIndicToRowMap();
+        indicToRowMap.clear();
+        int recordIncrement = 0;
+        label: while (resultSet.next()) {
             // --- for each column
             // feature 0010630 zshen: dislodge the Qualifiers from name of the column
             for (int i = 0; i < columnlist.size(); i++) {
@@ -80,7 +96,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 List<Indicator> indicators = getIndicators(col);
                 int offset = col.lastIndexOf('.') + 1;
                 col = col.substring(offset);
-
                 // ~
                 // --- get content of column
                 Object object = resultSet.getObject(col);
@@ -97,9 +112,38 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     }
 
                     indicator.handle(object);
+
+                    // ~MOD mzhao feature: 12919
+                    // if (analysis.getParameters().isStoreData()) {
+                    if (false) {
+                        AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
+                        if (analyzedDataSet == null) {
+                            analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
+                            indicToRowMap.put(indicator, analyzedDataSet);
+                            // analyzedDataSet.setDataCount(maxNumberRows);
+                            analyzedDataSet.setRecordSize(columnlist.size());
+                        }
+
+                        List<Object[]> valueObjectList = analyzedDataSet.getData();
+                        if (valueObjectList == null) {
+                            valueObjectList = new ArrayList<Object[]>();
+                            analyzedDataSet.setData(valueObjectList);
+                        }
+                        // if (recordIncrement < analysis.getParameters().getMaxNumberRows() && indicator.mustStoreRow()
+                        if (recordIncrement < 50 && indicator.mustStoreRow()) {
+                            if (valueObjectList.size() > recordIncrement) {
+                                valueObjectList.get(recordIncrement)[i] = object;
+                            } else {
+                                Object[] valueObject = new Object[columnlist.size()];
+                                valueObject[i] = object;
+                                valueObjectList.add(valueObject);
+                            }
+                        }
+                        // ~
+                    }
                 }
             }
-
+            recordIncrement++;
             // TODO scorreia give a full row to indicator (indicator will have to handle its data??
 
         }
@@ -109,6 +153,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         connection.close();
         return ok;
     }
+
 
     /**
      * 

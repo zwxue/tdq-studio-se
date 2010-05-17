@@ -163,6 +163,8 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
         assert data instanceof String : "Cannot check for blank on non string: " + data;
         String str = (String) data;
         if (StringUtils.isBlank(str)) {
+            // MOD mzhao feature: 12919
+            mustStoreRow = true;
             this.blankCount++;
         }
         return ok;

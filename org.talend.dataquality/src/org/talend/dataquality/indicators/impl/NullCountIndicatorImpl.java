@@ -80,4 +80,15 @@ public class NullCountIndicatorImpl extends IndicatorImpl implements NullCountIn
         return this.getNullCount();
     }
 
+    /**
+     * ADD mzhao feature: 12919
+     */
+    @Override
+    public boolean handle(Object data) {
+        if (data == null) {
+            mustStoreRow = true;
+        }
+        return super.handle(data);
+    }
+
 } // NullCountIndicatorImpl

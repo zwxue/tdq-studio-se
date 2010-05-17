@@ -69,7 +69,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     }
 
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        IndicatorEvaluator eval = new IndicatorEvaluator();
+        IndicatorEvaluator eval = new IndicatorEvaluator(analysis);
         // MOD xqliu 2009-02-09 bug 6237
         eval.setMonitor(getMonitor());
         // --- add indicators

@@ -100,7 +100,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
 
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        IndicatorEvaluator eval = new IndicatorEvaluator();
+        IndicatorEvaluator eval = new IndicatorEvaluator(analysis);
         eval.setMonitor(getMonitor());
         // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
