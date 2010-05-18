@@ -572,6 +572,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     public void addElements(final List<Column> columns, int index) {
         this.addItemElements(columns, index);
+        updateBindConnection(masterPage, tree);
     }
 
     /**

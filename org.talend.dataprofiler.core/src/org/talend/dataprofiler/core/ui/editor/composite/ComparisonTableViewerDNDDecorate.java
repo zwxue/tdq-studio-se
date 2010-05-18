@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.composite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -29,13 +30,14 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.views.AbstractSelectionReceiver;
 import orgomg.cwm.resource.relational.Column;
 
 /**
  * The class can install a drag&drop function for target table viewer.
  */
-public class TableViewerDNDDecorate {
+public class ComparisonTableViewerDNDDecorate {
 
     /**
      * No need to validate the element of element.
@@ -52,10 +54,21 @@ public class TableViewerDNDDecorate {
     private Object dragSelectedElement;
 
     private boolean allowDuplication = false;
-    public TableViewerDNDDecorate(boolean allowDuplication) {
+
+    private AbstractAnalysisMetadataPage masterPage;
+
+    private List<TableViewer> tableViewerPosStack;
+
+    private AnalysisColumnCompareTreeViewer compareTreeViewer;
+
+    public ComparisonTableViewerDNDDecorate(AnalysisColumnCompareTreeViewer compareTreeViewer, AbstractAnalysisMetadataPage masterPage,
+            List<TableViewer> tableViewerPosStack, boolean allowDuplication) {
         final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
         transferTypes = new Transfer[] { transfer, TextTransfer.getInstance() };
         this.allowDuplication = allowDuplication;
+        this.masterPage = masterPage;
+        this.tableViewerPosStack = tableViewerPosStack;
+        this.compareTreeViewer = compareTreeViewer;
     }
 
     /**
@@ -66,8 +79,8 @@ public class TableViewerDNDDecorate {
      * @param installDragListener decide to whether install a drag listener for targetViewer: if true, will install the
      * listener; else, will not install.
      * @param validateType
-     * @see TableViewerDNDDecorate#NON_VALIDATETYPE
-     * @see TableViewerDNDDecorate#COLUMN_VALIDATETYPE
+     * @see ComparisonTableViewerDNDDecorate#NON_VALIDATETYPE
+     * @see ComparisonTableViewerDNDDecorate#COLUMN_VALIDATETYPE
      */
     public void installDND(final TableViewer targetViewer, final boolean installDragListener, final int validateType) {
         int operations = DND.DROP_COPY | DND.DROP_MOVE;
@@ -81,6 +94,10 @@ public class TableViewerDNDDecorate {
             @SuppressWarnings("unchecked")
             public void drop(DropTargetEvent event, LocalSelectionTransfer transfer) {
                 List inputElements = (List) targetViewer.getInput();
+                // MOD mzhao bug:12766,Avoid an null pointer exception error.
+                if (inputElements == null) {
+                    inputElements = new ArrayList();
+                }
                 if (dragSelectedElement != null) {
                     TableItem item = (TableItem) event.item;
                     TableItem[] items = targetViewer.getTable().getItems();
@@ -100,6 +117,9 @@ public class TableViewerDNDDecorate {
                     inputElements.addAll(selectionElements);
                 }
                 targetViewer.setInput(inputElements);
+                // Update connection widget.
+                compareTreeViewer.updateBindConnection(masterPage, tableViewerPosStack);
+                compareTreeViewer.setDirty(true);
             }
 
             public boolean doDropValidation(DropTargetEvent event, LocalSelectionTransfer transfer) {
@@ -160,10 +180,12 @@ public class TableViewerDNDDecorate {
         List selectionList = selection.toList();
         if (!allowDuplication) {
             List elements = (List) targetViewer.getInput();
-            for (Object element : elements) {
-                if (selectionList.contains(element)) {
-                    isValidation = false;
-                    break;
+            if (elements != null) {
+                for (Object element : elements) {
+                    if (selectionList.contains(element)) {
+                        isValidation = false;
+                        break;
+                    }
                 }
             }
         }

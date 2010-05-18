@@ -293,8 +293,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         // ~
         // DragAndDropDecorate decorate = new DragAndDropDecorate();
         // decorate.toDecorateDragAndDrop(columnsElementViewer);
-        TableViewerDNDDecorate dndDecorate = new TableViewerDNDDecorate(allowColumnDupcation);
-        dndDecorate.installDND(columnsElementViewer, true, TableViewerDNDDecorate.COLUMN_VALIDATETYPE);
+        ComparisonTableViewerDNDDecorate dndDecorate = new ComparisonTableViewerDNDDecorate(this, masterPage, tableViewerPosStack,
+                allowColumnDupcation);
+        dndDecorate.installDND(columnsElementViewer, true, ComparisonTableViewerDNDDecorate.COLUMN_VALIDATETYPE);
 
         Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);
         buttonsComp.setLayout(new GridLayout(4, true));
