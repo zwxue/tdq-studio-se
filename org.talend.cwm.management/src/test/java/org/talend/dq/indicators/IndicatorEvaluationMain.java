@@ -71,7 +71,7 @@ public final class IndicatorEvaluationMain {
 
     private static final char DOT = '.';
 
-    private static Evaluator<String> evaluator = new IndicatorEvaluator();
+    private static Evaluator<String> evaluator = new IndicatorEvaluator(null);
 
     private IndicatorEvaluationMain() {
     }
@@ -99,8 +99,8 @@ public final class IndicatorEvaluationMain {
             String[] columnsArray = new String[] { "my_int" // 0
                     , "my_double" // 1
                     , "my_text" // 2
-                    , "my_string" // 3
                     , "my_date" // 4
+                    , "my_string" // 3
                     , "my_int_null" // 5
             };
 
