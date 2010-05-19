@@ -32,7 +32,13 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
+import org.talend.cwm.xml.XmlPackage;
+import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.reports.ReportsPackage;
+import org.talend.dataquality.rules.RulesPackage;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -234,8 +240,24 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * org.talend.core.model.properties.Property, java.lang.String)
      */
     public TDQItem initItem(ModelElement element, Property property) {
-        TDQItem item = PropertiesFactory.eINSTANCE.createTDQItem();
-
+        TDQItem item = null;
+        // MOD mzhao feature 13114, 2010-05-19 distinguish tdq items.
+        if (element.eClass().equals(AnalysisPackage.eINSTANCE.getAnalysis())) {
+            item = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        } else if (element.eClass().equals(RulesPackage.eINSTANCE.getDQRule())) {
+            item = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
+        } else if (element.eClass().equals(SoftwaredeploymentPackage.eINSTANCE.getTdDataProvider())) {
+            item = PropertiesFactory.eINSTANCE.createTDQDBConnectionItem();
+        } else if (element.eClass().equals(IndicatorsPackage.eINSTANCE.getIndicator())) {
+            item = PropertiesFactory.eINSTANCE.createTDQIndicatorItem();
+        } else if (element.eClass().equals(XmlPackage.eINSTANCE.getTdXMLDocument())) {
+            item = PropertiesFactory.eINSTANCE.createTDQMDMConnectionItem();
+        } else if (element.eClass().equals(ReportsPackage.eINSTANCE.getTdReport())) {
+            item = PropertiesFactory.eINSTANCE.createTDQReportItem();
+        } else {
+            item = PropertiesFactory.eINSTANCE.createTDQItem();
+        }
+        
         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
         itemState.setPath("");
