@@ -309,11 +309,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternLowFreqIndicator())) {
                     // done scorreia: get user defined functions for pattern finder
                     // MOD xqliu 2009-07-01 bug 7818
-                    if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
+                    if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType()) || Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
                         // MOD zshen for bug 12675 2010-05-12
-                        if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
-                            colName = addFunctionTypeConvert(colName);
-                        }
+                        colName = addFunctionTypeConvert(colName);
                         // ~12675
                     }
                     final EList<CharactersMapping> charactersMapping = indicatorDefinition.getCharactersMapping();
