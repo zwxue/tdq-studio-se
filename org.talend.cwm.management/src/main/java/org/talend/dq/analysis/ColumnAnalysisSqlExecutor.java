@@ -300,7 +300,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD scorreia 2008-06-23 check column type (robustness against bug 4287)
                     && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
                 // frequencies with date aggregation
-                completedSqlString = getDateAggregatedCompletedString(sqlGenericExpression, colName, table, dateAggregationType);
+                completedSqlString = getDateAggregatedCompletedStringWithoutAlia(sqlGenericExpression, colName, table,
+                        dateAggregationType);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             } else { // usual nominal frequencies
@@ -545,6 +546,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param table
      * @param dataFilterExpression
      * @param dateAggregationType
+     * @deprecated
      * @return
      */
     @SuppressWarnings("fallthrough")
@@ -594,6 +596,65 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
         String groupByAliases = dbms().supportAliasesInGroupBy() ? aliases : result;
         String sql = dbms().fillGenericQueryWithColumnTableAndAlias(sqlExpression.getBody(), result, table, groupByAliases);
+        return sql;
+    }
+
+    /**
+     * 
+     * DOC mzhao bug 12675: Drill down of date type not correct. Here would not use alias.
+     * 
+     * @param sqlExpression
+     * @param colName
+     * @param table
+     * @param dateAggregationType
+     * @return
+     */
+    private String getDateAggregatedCompletedStringWithoutAlia(Expression sqlExpression, String colName, String table,
+            DateGrain dateAggregationType) {
+        int nbExtractedColumns = 0;
+        String result = ""; //$NON-NLS-1$
+        //        String aliases = ""; // used in group by clause in MySQL //$NON-NLS-1$
+        // String alias;
+        switch (dateAggregationType) {
+        case DAY:
+            // alias = getAlias(colName, DateGrain.DAY);
+            result = dbms().extractDay(colName) + comma(result);
+            // aliases = alias + comma(aliases);
+            nbExtractedColumns++;
+        case WEEK:
+            // alias = getAlias(colName, DateGrain.WEEK);
+            result = dbms().extractWeek(colName) + comma(result);
+            // aliases = alias + comma(aliases);
+            nbExtractedColumns++;
+            // no break
+        case MONTH:
+            // alias = getAlias(colName, DateGrain.MONTH);
+            result = dbms().extractMonth(colName) + comma(result);
+            // aliases = alias + comma(aliases);
+            nbExtractedColumns++;
+            // no break
+        case QUARTER:
+            // alias = getAlias(colName, DateGrain.QUARTER);
+            result = dbms().extractQuarter(colName) + comma(result);
+            // aliases = alias + comma(aliases);
+            nbExtractedColumns++;
+            // no break
+        case YEAR:
+            // alias = getAlias(colName, DateGrain.YEAR);
+            result = dbms().extractYear(colName) + comma(result);
+            // aliases = alias + comma(aliases);
+            nbExtractedColumns++;
+            break;
+        case NONE:
+            result = colName;
+            nbExtractedColumns++;
+            // aliases = colName; // bug 5336 fixed aliases must not be empty otherwise the group by clause is empty.
+            break;
+        default:
+            break;
+        }
+        // String groupByAliases = dbms().supportAliasesInGroupBy() ? aliases : result;
+        String sql = dbms().fillGenericQueryWithColumnTableAndAlias(sqlExpression.getBody(), result, table, result);
         return sql;
     }
 
