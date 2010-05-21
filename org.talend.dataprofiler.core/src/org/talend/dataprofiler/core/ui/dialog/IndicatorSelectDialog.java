@@ -27,11 +27,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.TypedListener;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -95,6 +98,8 @@ public class IndicatorSelectDialog extends TrayDialog {
     private ExecutionLanguage language;
 
     private DbmsLanguage dbms;
+
+    private List<Button> checkButtons = new ArrayList<Button>();
 
     /**
      * DOC xqliu IndicatorSelectDialog constructor comment.
@@ -427,6 +432,30 @@ public class IndicatorSelectDialog extends TrayDialog {
         return comp;
     }
 
+    /**
+     * DOC yyi 2010-05-19 select all enabled indicators on Ctrl+Shift+[A|N] is down or other case.
+     * 
+     * @param selected
+     */
+    public void selectAllIndicators(boolean selected) {
+        for (Button checkButton : checkButtons) {
+            if (checkButton.isEnabled() && selected != checkButton.getSelection()) {
+                checkButton.setSelection(selected);
+
+                Listener[] listeners = checkButton.getListeners(SWT.Selection);
+                if (listeners.length > 0) {
+                    TypedListener typedListener = (TypedListener) checkButton.getListeners(SWT.Selection)[0];
+                    if (typedListener.getEventListener() instanceof ButtonSelectionListener) {
+                        ButtonSelectionListener listener = (ButtonSelectionListener) typedListener.getEventListener();
+                        Event e = new Event();
+                        e.widget = checkButton;
+                        listener.widgetSelected(new SelectionEvent(e));
+                    }
+                }
+            }
+        }
+    }
+
     private void createTreeStructure(Tree tree) {
 
         TreeColumn[] treeColumns = createTreeColumns(tree);
@@ -465,7 +494,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                         editor = new TreeEditor(tree);
                         rowCheckButton = new Button(tree, SWT.CHECK);
                         rowCheckButton.addSelectionListener(new RowSelectButtonListener(j, treeItem, indicatorEnum, null));
-
+                        checkButtons.add(rowCheckButton);
                         // set background color to the "All columns" column
                         Color systemColor = tree.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
                         treeItem.setBackground(j, systemColor); // no need to free this color
@@ -510,6 +539,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                         commonCheckButton = checkButton;
 
                         rowButtonList.add(checkButton);
+                        checkButtons.add(checkButton);
                     }
 
                     commonCheckButton.pack();

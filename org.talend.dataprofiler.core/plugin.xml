@@ -897,7 +897,7 @@
   </extension>
    
    <extension
-	point="org.eclipse.ui.contexts">
+         point="org.eclipse.ui.contexts">
 	<context
 		name="%context.name.DQViewScope"
 		description="%context.description.contextDQRespositoryView"
@@ -926,6 +926,20 @@
            id="org.talend.dataprofiler.core.testRegular"
            name="%command.name.testRegular">
      </command>
+     <command
+           category="org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog"
+           id="org.talend.dataprofiler.core.selectAllIndicators"
+           name="%command.name.selectIndicators">
+     </command>
+     <command
+           category="org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog"
+           id="org.talend.dataprofiler.core.deselectAllIndicators"
+           name="%command.name.deselectIndicators">
+     </command>
+     <category
+           id="org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog"
+           name="%command.category.indicatorSelectionDialog">
+     </category>
   </extension>
   <extension
         point="org.eclipse.ui.bindings">
@@ -945,6 +959,18 @@
            contextId="org.talend.dataprofiler.core.ui.views.PatternTestView.viewScope"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
            sequence="Ctrl+Enter">
+     </key>
+     <key
+           commandId="org.talend.dataprofiler.core.selectAllIndicators"
+           contextId="org.eclipse.ui.contexts.dialogAndWindow"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="M1+M2+A">
+     </key>
+     <key
+           commandId="org.talend.dataprofiler.core.deselectAllIndicators"
+           contextId="org.eclipse.ui.contexts.dialogAndWindow"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="M1+M2+N">
      </key>
   </extension>
   <extension
@@ -1098,6 +1124,17 @@
               tooltip="export items">
         </action>
      </actionSet>
+  </extension>
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.talend.dataprofiler.core.ui.handlers.SelectIndicatorsHandler"
+           commandId="org.talend.dataprofiler.core.selectAllIndicators">
+     </handler>
+     <handler
+           class="org.talend.dataprofiler.core.ui.handlers.SelectIndicatorsHandler"
+           commandId="org.talend.dataprofiler.core.deselectAllIndicators">
+     </handler>
   </extension>
 
 </plugin>
