@@ -112,6 +112,17 @@ public final class PropertyHelper {
     }
 
     /**
+     * DOC bZhou Comment method "getProperty".
+     * 
+     * @param element
+     * @return
+     */
+    public static Property getProperty(ModelElement element) {
+        IFile propertyFile = PropertyHelper.getPropertyFile(element);
+        return propertyFile != null ? getProperty(propertyFile) : null;
+    }
+
+    /**
      * DOC bZhou Comment method "getTDQItem".
      * 
      * @param propertyFile

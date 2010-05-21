@@ -187,7 +187,7 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
             public void run() {
 
-                IFile propertyFile = getPropertyFile(resource);
+                IFile propertyFile = PropertyHelper.getPropertyFile(resource);
 
                 if (propertyFile != null) {
 
@@ -249,31 +249,5 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
                 }
             }
         }
-    }
-
-    /**
-     * DOC bZhou Comment method "getPropertyFile".
-     * 
-     * @param resource
-     * @return
-     */
-    private IFile getPropertyFile(Resource resource) {
-
-        if (resource != null) {
-
-            EList<EObject> modelElements = resource.getContents();
-
-            ModelElement modelElement = (ModelElement) EcoreUtil.getObjectByType(modelElements, CorePackage.eINSTANCE
-                    .getModelElement());
-            if (modelElement != null) {
-                String propertyPath = MetadataHelper.getPropertyPath(modelElement);
-                if (propertyPath != null) {
-                    return (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
-                }
-            }
-
-        }
-        return null;
-
     }
 }

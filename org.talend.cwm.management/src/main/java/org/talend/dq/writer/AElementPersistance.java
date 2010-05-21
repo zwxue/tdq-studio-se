@@ -26,6 +26,7 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
@@ -39,6 +40,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -163,9 +165,16 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         Resource resource = element.eResource();
         String fileName = resource.getURI().lastSegment();
 
-        Property property = initProperty(element);
-        TDQItem item = initItem(element, property);
-        item.setFilename(fileName);
+        Property property = PropertyHelper.getProperty(element);
+        if (property == null) {
+            property = initProperty(element);
+        }
+
+        Item item = property.getItem();
+        if (item == null) {
+            item = initItem(element, property);
+        }
+        ((TDQItem) item).setFilename(fileName);
 
         URI uri = element.eResource().getURI();
         serialize(property, uri);
@@ -257,7 +266,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         } else {
             item = PropertiesFactory.eINSTANCE.createTDQItem();
         }
-        
+
         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
         itemState.setPath("");
@@ -276,7 +285,10 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         ReturnCode rc = new ReturnCode();
 
         URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        Resource propertyResource = util.createResource(propertiesURI);
+        Resource propertyResource = property.eResource();
+        if (propertyResource == null) {
+            propertyResource = util.createResource(propertiesURI);
+        }
 
         propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getItem());
