@@ -53,6 +53,15 @@ public interface ColumnsetFactory extends EFactory {
     ColumnSetMultiValueIndicator createColumnSetMultiValueIndicator();
 
     /**
+     * Returns a new object of class '<em>All Match Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>All Match Indicator</em>'.
+     * @generated
+     */
+    AllMatchIndicator createAllMatchIndicator();
+
+    /**
      * Returns a new object of class '<em>Count Avg Null Indicator</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

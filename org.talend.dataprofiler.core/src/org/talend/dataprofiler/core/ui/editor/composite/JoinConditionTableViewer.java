@@ -596,4 +596,9 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             }
         }
     }
+
+    @Override
+    protected void setElements(Object element) {
+
+    }
 }

@@ -884,6 +884,13 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="duplicateCountIndicator"
             eType="#//indicators/DuplicateCountIndicator" containment="true"/>
       </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="AllMatchIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator #//indicators/RegexpMatchingIndicator">
+        <eOperations name="getCompositeRegexMatchingIndicators">
+          <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList">
+            <eTypeArguments eClassifier="#//indicators/RegexpMatchingIndicator"/>
+          </eGenericType>
+        </eOperations>
+      </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="CountAvgNullIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
       <eClassifiers xsi:type="ecore:EDataType" name="ListObject" instanceClassName="java.util.List&lt;Object>"/>
       <eClassifiers xsi:type="ecore:EClass" name="MinMaxDateIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>

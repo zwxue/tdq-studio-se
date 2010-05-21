@@ -72,6 +72,7 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
             case ColumnsetPackage.VALUE_MATCHING_INDICATOR: return createValueMatchingIndicator();
             case ColumnsetPackage.ROW_MATCHING_INDICATOR: return createRowMatchingIndicator();
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR: return createColumnSetMultiValueIndicator();
+            case ColumnsetPackage.ALL_MATCH_INDICATOR: return createAllMatchIndicator();
             case ColumnsetPackage.COUNT_AVG_NULL_INDICATOR: return createCountAvgNullIndicator();
             case ColumnsetPackage.MIN_MAX_DATE_INDICATOR: return createMinMaxDateIndicator();
             case ColumnsetPackage.WEAK_CORRELATION_INDICATOR: return createWeakCorrelationIndicator();
@@ -140,6 +141,16 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
     public ColumnSetMultiValueIndicator createColumnSetMultiValueIndicator() {
         ColumnSetMultiValueIndicatorImpl columnSetMultiValueIndicator = new ColumnSetMultiValueIndicatorImpl();
         return columnSetMultiValueIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public AllMatchIndicator createAllMatchIndicator() {
+        AllMatchIndicatorImpl allMatchIndicator = new AllMatchIndicatorImpl();
+        return allMatchIndicator;
     }
 
     /**

@@ -11,6 +11,8 @@ import java.util.List;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EGenericType;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
@@ -26,6 +28,7 @@ import org.talend.dataquality.domain.sql.SQLPackage;
 import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
@@ -113,6 +116,13 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * @generated
      */
     private EClass columnSetMultiValueIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass allMatchIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -482,6 +492,15 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getAllMatchIndicator() {
+        return allMatchIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getCountAvgNullIndicator() {
         return countAvgNullIndicatorEClass;
     }
@@ -629,6 +648,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR);
         createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR);
 
+        allMatchIndicatorEClass = createEClass(ALL_MATCH_INDICATOR);
+
         countAvgNullIndicatorEClass = createEClass(COUNT_AVG_NULL_INDICATOR);
 
         minMaxDateIndicatorEClass = createEClass(MIN_MAX_DATE_INDICATOR);
@@ -684,6 +705,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         valueMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
         rowMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
         columnSetMultiValueIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
+        allMatchIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
+        allMatchIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getRegexpMatchingIndicator());
         countAvgNullIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         minMaxDateIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         weakCorrelationIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
@@ -715,6 +738,14 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         initEReference(getColumnSetMultiValueIndicator_UniqueCountIndicator(), theIndicatorsPackage.getUniqueCountIndicator(), null, "uniqueCountIndicator", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getColumnSetMultiValueIndicator_DistinctCountIndicator(), theIndicatorsPackage.getDistinctCountIndicator(), null, "distinctCountIndicator", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getColumnSetMultiValueIndicator_DuplicateCountIndicator(), theIndicatorsPackage.getDuplicateCountIndicator(), null, "duplicateCountIndicator", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(allMatchIndicatorEClass, AllMatchIndicator.class, "AllMatchIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        EOperation op = addEOperation(allMatchIndicatorEClass, null, "getCompositeRegexMatchingIndicators", 0, 1, IS_UNIQUE, IS_ORDERED);
+        EGenericType g1 = createEGenericType(ecorePackage.getEEList());
+        EGenericType g2 = createEGenericType(theIndicatorsPackage.getRegexpMatchingIndicator());
+        g1.getETypeArguments().add(g2);
+        initEOperation(op, g1);
 
         initEClass(countAvgNullIndicatorEClass, CountAvgNullIndicator.class, "CountAvgNullIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

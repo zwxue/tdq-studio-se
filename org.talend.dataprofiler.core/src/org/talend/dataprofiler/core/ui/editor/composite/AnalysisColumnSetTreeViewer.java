@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
@@ -63,6 +64,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -99,11 +101,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     public static final String VIEWER_KEY = "org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer"; //$NON-NLS-1$
 
-    private static final int WIDTH1_CELL = 75;
-
     private Composite parentComp;
-
-    private Tree tree;
 
     private Button[] buttons;
 
@@ -117,15 +115,13 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private MenuItem editPatternMenuItem;
 
-    public AnalysisColumnSetTreeViewer(Composite parent) {
+    public AnalysisColumnSetTreeViewer(Composite parent, ColumnSetMasterPage masterPage) {
+        absMasterPage = masterPage;
+        viewKey = VIEWER_KEY;
         parentComp = parent;
         tree = createTree(parent);
         tree.setData(this);
         columnSetMultiValueList = new ArrayList<Column>();
-    }
-
-    public AnalysisColumnSetTreeViewer(Composite parent, ColumnSetMasterPage masterPage) {
-        this(parent);
         this.masterPage = masterPage;
         this.createButtonSection(parent.getParent());
         // this.setElements(masterPage.getColumnSetMultiValueIndicator().
@@ -146,8 +142,16 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         column1.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.analyzedColumns")); //$NON-NLS-1$
 
         TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
-        column2.setWidth(80);
-        column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
+        column2.setWidth(120);
+        column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dataminingType")); //$NON-NLS-1$
+
+        TreeColumn column3 = new TreeColumn(newTree, SWT.CENTER);
+        column3.setWidth(80);
+        column3.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.pattern")); //$NON-NLS-1$
+
+        TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
+        column4.setWidth(80);
+        column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
 
         parent.layout();
         createTreeMenu(newTree, false);
@@ -495,6 +499,45 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     + column.getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
             treeItem.setData(COLUMN_INDICATOR_KEY, column);
 
+            // MOD mzhao feature 13040 , 2010-05-21
+            final ColumnIndicatorImpl meIndicator = new ColumnIndicatorImpl(column);
+            TreeEditor comboEditor = new TreeEditor(tree);
+            final CCombo combo = new CCombo(tree, SWT.BORDER);
+            for (DataminingType type : DataminingType.values()) {
+                combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
+                // for presentation
+            }
+            DataminingType dataminingType = MetadataHelper.getDataminingType(meIndicator.getModelElement());
+
+            if (dataminingType == null) {
+                combo.select(0);
+            } else {
+                combo.setText(dataminingType.getLiteral());
+            }
+            combo.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), meIndicator.getModelElement());
+                    setDirty(true);
+                }
+
+            });
+            combo.setEditable(false);
+
+            comboEditor.minimumWidth = WIDTH1_CELL;
+            comboEditor.setEditor(combo, treeItem, 1);
+
+            TreeEditor addPatternEditor = new TreeEditor(tree);
+            Label addPatternLabl = new Label(tree, SWT.NONE);
+            addPatternLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+            addPatternLabl.setImage(ImageLib.getImage(ImageLib.ADD_PATTERN));
+            addPatternLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
+            addPatternLabl.pack();
+
+            addPatternLabl.addMouseListener(new PatternMouseAdapter(this, masterPage, meIndicator, treeItem));
+            addPatternEditor.minimumWidth = addPatternLabl.getImage().getBounds().width;
+            addPatternEditor.setEditor(addPatternLabl, treeItem, 2);
+
             TreeEditor delLabelEditor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
             delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
@@ -517,7 +560,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
             delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
-            delLabelEditor.setEditor(delLabel, treeItem, 1);
+            delLabelEditor.setEditor(delLabel, treeItem, 3);
             treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { delLabelEditor });
             /*
              * if (columnIndicator.hasIndicators()) { createIndicatorItems(treeItem,
@@ -587,28 +630,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             removeItemBranch(item);
         }
 
-    }
-
-    private void removeItemBranch(TreeItem item) {
-        TreeEditor[] editors = (TreeEditor[]) item.getData(ITEM_EDITOR_KEY);
-        if (editors != null) {
-            for (int j = 0; j < editors.length; j++) {
-                editors[j].getEditor().dispose();
-                editors[j].dispose();
-            }
-        }
-
-        if (item.getItemCount() == 0) {
-            item.dispose();
-            this.setDirty(true);
-            return;
-        }
-        TreeItem[] items = item.getItems();
-        for (int i = 0; i < items.length; i++) {
-            removeItemBranch(items[i]);
-        }
-        item.dispose();
-        this.setDirty(true);
     }
 
     private void addTreeListener(final Tree tree) {
@@ -764,4 +785,5 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         }
         this.addElements(columns, index);
     }
+
 }

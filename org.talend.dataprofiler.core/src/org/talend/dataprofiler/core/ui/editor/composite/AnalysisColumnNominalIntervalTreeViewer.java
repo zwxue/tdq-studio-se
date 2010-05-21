@@ -611,27 +611,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         }
     }
 
-    private void removeItemBranch(TreeItem item) {
-        TreeEditor[] editors = (TreeEditor[]) item.getData(ITEM_EDITOR_KEY);
-        if (editors != null) {
-            for (int j = 0; j < editors.length; j++) {
-                editors[j].getEditor().dispose();
-                editors[j].dispose();
-            }
-        }
-
-        if (item.getItemCount() == 0) {
-            item.dispose();
-            this.setDirty(true);
-            return;
-        }
-        TreeItem[] items = item.getItems();
-        for (int i = 0; i < items.length; i++) {
-            removeItemBranch(items[i]);
-        }
-        item.dispose();
-        this.setDirty(true);
-    }
 
     private void addTreeListener(final Tree tree) {
         tree.addFocusListener(new FocusListener() {

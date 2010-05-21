@@ -1428,6 +1428,439 @@ public interface ColumnsetPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl <em>All Match Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl
+     * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getAllMatchIndicator()
+     * @generated
+     */
+    int ALL_MATCH_INDICATOR = 4;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__NAME = COLUMN_SET_MULTI_VALUE_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__VISIBILITY = COLUMN_SET_MULTI_VALUE_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__CLIENT_DEPENDENCY = COLUMN_SET_MULTI_VALUE_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__SUPPLIER_DEPENDENCY = COLUMN_SET_MULTI_VALUE_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__CONSTRAINT = COLUMN_SET_MULTI_VALUE_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__NAMESPACE = COLUMN_SET_MULTI_VALUE_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__IMPORTER = COLUMN_SET_MULTI_VALUE_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__STEREOTYPE = COLUMN_SET_MULTI_VALUE_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__TAGGED_VALUE = COLUMN_SET_MULTI_VALUE_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DOCUMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DESCRIPTION = COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__RESPONSIBLE_PARTY = COLUMN_SET_MULTI_VALUE_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__ELEMENT_NODE = COLUMN_SET_MULTI_VALUE_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__SET = COLUMN_SET_MULTI_VALUE_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__RENDERED_OBJECT = COLUMN_SET_MULTI_VALUE_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__VOCABULARY_ELEMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__MEASUREMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__CHANGE_REQUEST = COLUMN_SET_MULTI_VALUE_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DASDL_PROPERTY = COLUMN_SET_MULTI_VALUE_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__NULL_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__PARAMETERS = COLUMN_SET_MULTI_VALUE_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__ANALYZED_ELEMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DATAMINING_TYPE = COLUMN_SET_MULTI_VALUE_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__INDICATOR_DEFINITION = COLUMN_SET_MULTI_VALUE_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__INSTANTIATED_EXPRESSIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__COMPUTED = COLUMN_SET_MULTI_VALUE_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__JOIN_CONDITIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__ANALYZED_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>List Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__LIST_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Numeric Functions</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__NUMERIC_FUNCTIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS;
+
+    /**
+     * The feature id for the '<em><b>Nominal Columns</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__NOMINAL_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>Numeric Columns</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__NUMERIC_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>Column Headers</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__COLUMN_HEADERS = COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS;
+
+    /**
+     * The feature id for the '<em><b>Date Functions</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DATE_FUNCTIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS;
+
+    /**
+     * The feature id for the '<em><b>Date Columns</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DATE_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>Unique Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__UNIQUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DISTINCT_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DUPLICATE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Row Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__ROW_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Unique Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__UNIQUE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DISTINCT_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__DUPLICATE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR;
+
+    /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The number of structural features of the '<em>All Match Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR_FEATURE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 2;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.columnset.impl.CountAvgNullIndicatorImpl <em>Count Avg Null Indicator</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1435,7 +1868,7 @@ public interface ColumnsetPackage extends EPackage {
      * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getCountAvgNullIndicator()
      * @generated
      */
-    int COUNT_AVG_NULL_INDICATOR = 4;
+    int COUNT_AVG_NULL_INDICATOR = 5;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1850,7 +2283,7 @@ public interface ColumnsetPackage extends EPackage {
      * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getMinMaxDateIndicator()
      * @generated
      */
-    int MIN_MAX_DATE_INDICATOR = 5;
+    int MIN_MAX_DATE_INDICATOR = 6;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2265,7 +2698,7 @@ public interface ColumnsetPackage extends EPackage {
      * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getWeakCorrelationIndicator()
      * @generated
      */
-    int WEAK_CORRELATION_INDICATOR = 6;
+    int WEAK_CORRELATION_INDICATOR = 7;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2680,7 +3113,7 @@ public interface ColumnsetPackage extends EPackage {
      * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getColumnDependencyIndicator()
      * @generated
      */
-    int COLUMN_DEPENDENCY_INDICATOR = 7;
+    int COLUMN_DEPENDENCY_INDICATOR = 8;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3005,7 +3438,7 @@ public interface ColumnsetPackage extends EPackage {
      * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getSimpleStatIndicator()
      * @generated
      */
-    int SIMPLE_STAT_INDICATOR = 8;
+    int SIMPLE_STAT_INDICATOR = 9;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3420,7 +3853,7 @@ public interface ColumnsetPackage extends EPackage {
      * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getListObject()
      * @generated
      */
-    int LIST_OBJECT = 9;
+    int LIST_OBJECT = 10;
 
 
     /**
@@ -3649,6 +4082,16 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      */
     EReference getColumnSetMultiValueIndicator_DuplicateCountIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.columnset.AllMatchIndicator <em>All Match Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>All Match Indicator</em>'.
+     * @see org.talend.dataquality.indicators.columnset.AllMatchIndicator
+     * @generated
+     */
+    EClass getAllMatchIndicator();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator <em>Count Avg Null Indicator</em>}'.
@@ -3963,6 +4406,16 @@ public interface ColumnsetPackage extends EPackage {
          * @generated
          */
         EReference COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR = eINSTANCE.getColumnSetMultiValueIndicator_DuplicateCountIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl <em>All Match Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl
+         * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getAllMatchIndicator()
+         * @generated
+         */
+        EClass ALL_MATCH_INDICATOR = eINSTANCE.getAllMatchIndicator();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.columnset.impl.CountAvgNullIndicatorImpl <em>Count Avg Null Indicator</em>}' class.
