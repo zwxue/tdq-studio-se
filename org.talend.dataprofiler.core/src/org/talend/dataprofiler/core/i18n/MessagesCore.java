@@ -62,7 +62,9 @@ public abstract class MessagesCore {
                 // return babiliTranslation;
                 // }
             }
-            return resourceBundle.getString(key);
+            // MOD xqliu 2010-05-21 bug 11750
+            return resourceBundle.getString(key).replaceAll("'", "''");
+            // ~ 11750
         } catch (MissingResourceException e) {
             return KEY_NOT_FOUND_PREFIX + key + KEY_NOT_FOUND_SUFFIX;
         }
