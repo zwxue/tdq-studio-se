@@ -32,7 +32,11 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -77,7 +81,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     public abstract boolean canDrop(ModelElement modelElement);
 
-    public abstract void dropModelElements(List<? extends ModelElement> modelElements, int index);
 
     protected Tree tree;
 
@@ -165,7 +168,12 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
         delEditor.minimumWidth = delLabel.getImage().getBounds().width;
         delEditor.horizontalAlignment = SWT.CENTER;
-        delEditor.setEditor(delLabel, indicatorItem, 4);
+        // MOD mzhao feature 13040, column analysis have 5 columns, whereas columnset have 4 columns.
+        if (AnalysisColumnTreeViewer.VIEWER_KEY.equals(viewKey)) {
+            delEditor.setEditor(delLabel, indicatorItem, 4);
+        } else if (AnalysisColumnSetTreeViewer.VIEWER_KEY.equals(viewKey)) {
+            delEditor.setEditor(delLabel, indicatorItem, 3);
+        }
         indicatorItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { optionEditor, delEditor });
         if (indicatorType.hasChildren()) {
             indicatorItem.setData(treeItem.getData(MODELELEMENT_INDICATOR_KEY));
@@ -174,7 +182,11 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         createIndicatorParameters(indicatorItem, indicatorUnit);
     }
 
-    protected abstract void setElements(Object element);
+    protected abstract void setElements(ModelElementIndicator[] modelElementIndicator);
+
+    public ModelElementIndicator[] getModelElementIndicator() {
+        return this.modelElementIndicators;
+    }
 
     protected void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit indicatorUnit : indicatorUnits) {
@@ -407,6 +419,57 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
         }
+    }
+
+    public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
+        int size = modelElements.size();
+        ModelElementIndicator[] meIndicators = new ModelElementIndicator[size];
+        for (int i = 0; i < size; i++) {
+            ModelElement modelElement = modelElements.get(i);
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
+            if (tdColumn != null) {
+                meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(tdColumn);
+            } else {
+                TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(modelElement);
+                if (xmlElement != null) {
+                    meIndicators[i] = ModelElementIndicatorHelper.createXmlElementIndicator(xmlElement);
+                }
+            }
+        }
+        addElements(meIndicators);
+    }
+
+    public abstract void addElements(final ModelElementIndicator[] elements);
+    public void setInput(Object[] objs) {
+        boolean isMdm = false;
+        if (objs != null && objs.length != 0) {
+            isMdm = objs[0] instanceof TdXMLElement;
+            if (!(objs[0] instanceof TdColumn || isMdm)) {
+                return;
+            }
+        }
+
+        List<ModelElement> modelElementList = new ArrayList<ModelElement>();
+        for (Object obj : objs) {
+            modelElementList.add((ModelElement) obj);
+        }
+        List<ModelElementIndicator> modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+            if (modelElementList.contains(modelElementIndicator.getModelElement())) {
+                modelElementIndicatorList.add(modelElementIndicator);
+                modelElementList.remove(modelElementIndicator.getModelElement());
+            }
+        }
+
+        for (ModelElement modelElement : modelElementList) {
+            ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper
+                    .createXmlElementIndicator((TdXMLElement) modelElement) : ModelElementIndicatorHelper
+                    .createColumnIndicator((TdColumn) modelElement);
+            modelElementIndicatorList.add(temp);
+        }
+        this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList
+                .size()]);
+        this.setElements(modelElementIndicators);
     }
 
 }

@@ -6,14 +6,15 @@
  */
 package org.talend.dataquality.indicators.columnset.impl;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.BasicEList;
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.MatchingIndicator;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -25,8 +26,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl#getMatchingValueCount <em>Matching Value Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl#getNotMatchingValueCount <em>Not Matching Value Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl#getCompositeRegexMatchingIndicators <em>Composite Regex Matching Indicators</em>}</li>
  * </ul>
  * </p>
  *
@@ -34,50 +34,18 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
  */
 public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements AllMatchIndicator {
 
-    private EList<RegexpMatchingIndicator> compositeRegexMatchingIndicators = new BasicEList<RegexpMatchingIndicator>();
     /**
-     * The default value of the '{@link #getMatchingValueCount() <em>Matching Value Count</em>}' attribute.
+     * The cached value of the '{@link #getCompositeRegexMatchingIndicators() <em>Composite Regex Matching Indicators</em>}' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMatchingValueCount()
+     * @see #getCompositeRegexMatchingIndicators()
      * @generated
      * @ordered
      */
-    protected static final Long MATCHING_VALUE_COUNT_EDEFAULT = null;
+    protected EList<RegexpMatchingIndicator> compositeRegexMatchingIndicators;
 
     /**
-     * The cached value of the '{@link #getMatchingValueCount() <em>Matching Value Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getMatchingValueCount()
-     * @generated
-     * @ordered
-     */
-    protected Long matchingValueCount = MATCHING_VALUE_COUNT_EDEFAULT;
-
-    /**
-     * The default value of the '{@link #getNotMatchingValueCount() <em>Not Matching Value Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getNotMatchingValueCount()
-     * @generated
-     * @ordered
-     */
-    protected static final Long NOT_MATCHING_VALUE_COUNT_EDEFAULT = null;
-
-    /**
-     * The cached value of the '{@link #getNotMatchingValueCount() <em>Not Matching Value Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getNotMatchingValueCount()
-     * @generated
-     * @ordered
-     */
-    protected Long notMatchingValueCount = NOT_MATCHING_VALUE_COUNT_EDEFAULT;
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected AllMatchIndicatorImpl() {
@@ -99,50 +67,25 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * <!-- end-user-doc -->
      * @generated
      */
-    public Long getMatchingValueCount() {
-        return matchingValueCount;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setMatchingValueCount(Long newMatchingValueCount) {
-        Long oldMatchingValueCount = matchingValueCount;
-        matchingValueCount = newMatchingValueCount;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public Long getNotMatchingValueCount() {
-        return notMatchingValueCount;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setNotMatchingValueCount(Long newNotMatchingValueCount) {
-        Long oldNotMatchingValueCount = notMatchingValueCount;
-        notMatchingValueCount = newNotMatchingValueCount;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount, notMatchingValueCount));
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated NOT
-     */
     public EList<RegexpMatchingIndicator> getCompositeRegexMatchingIndicators() {
+        if (compositeRegexMatchingIndicators == null) {
+            compositeRegexMatchingIndicators = new EObjectContainmentEList<RegexpMatchingIndicator>(RegexpMatchingIndicator.class, this, ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS);
+        }
         return compositeRegexMatchingIndicators;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+        switch (featureID) {
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                return ((InternalEList<?>)getCompositeRegexMatchingIndicators()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
     }
 
     /**
@@ -153,10 +96,8 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
-                return getMatchingValueCount();
-            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-                return getNotMatchingValueCount();
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                return getCompositeRegexMatchingIndicators();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -166,14 +107,13 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * <!-- end-user-doc -->
      * @generated
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
-                setMatchingValueCount((Long)newValue);
-                return;
-            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-                setNotMatchingValueCount((Long)newValue);
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                getCompositeRegexMatchingIndicators().clear();
+                getCompositeRegexMatchingIndicators().addAll((Collection<? extends RegexpMatchingIndicator>)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -187,11 +127,8 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
-                setMatchingValueCount(MATCHING_VALUE_COUNT_EDEFAULT);
-                return;
-            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-                setNotMatchingValueCount(NOT_MATCHING_VALUE_COUNT_EDEFAULT);
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                getCompositeRegexMatchingIndicators().clear();
                 return;
         }
         super.eUnset(featureID);
@@ -205,84 +142,10 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
-                return MATCHING_VALUE_COUNT_EDEFAULT == null ? matchingValueCount != null : !MATCHING_VALUE_COUNT_EDEFAULT.equals(matchingValueCount);
-            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-                return NOT_MATCHING_VALUE_COUNT_EDEFAULT == null ? notMatchingValueCount != null : !NOT_MATCHING_VALUE_COUNT_EDEFAULT.equals(notMatchingValueCount);
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                return compositeRegexMatchingIndicators != null && !compositeRegexMatchingIndicators.isEmpty();
         }
         return super.eIsSet(featureID);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-        if (baseClass == MatchingIndicator.class) {
-            switch (derivedFeatureID) {
-                case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT: return IndicatorsPackage.MATCHING_INDICATOR__MATCHING_VALUE_COUNT;
-                case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT: return IndicatorsPackage.MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT;
-                default: return -1;
-            }
-        }
-        if (baseClass == PatternMatchingIndicator.class) {
-            switch (derivedFeatureID) {
-                default: return -1;
-            }
-        }
-        if (baseClass == RegexpMatchingIndicator.class) {
-            switch (derivedFeatureID) {
-                default: return -1;
-            }
-        }
-        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-        if (baseClass == MatchingIndicator.class) {
-            switch (baseFeatureID) {
-                case IndicatorsPackage.MATCHING_INDICATOR__MATCHING_VALUE_COUNT: return ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT;
-                case IndicatorsPackage.MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT: return ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT;
-                default: return -1;
-            }
-        }
-        if (baseClass == PatternMatchingIndicator.class) {
-            switch (baseFeatureID) {
-                default: return -1;
-            }
-        }
-        if (baseClass == RegexpMatchingIndicator.class) {
-            switch (baseFeatureID) {
-                default: return -1;
-            }
-        }
-        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public String toString() {
-        if (eIsProxy()) return super.toString();
-
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (matchingValueCount: ");
-        result.append(matchingValueCount);
-        result.append(", notMatchingValueCount: ");
-        result.append(notMatchingValueCount);
-        result.append(')');
-        return result.toString();
     }
 
 } //AllMatchIndicatorImpl

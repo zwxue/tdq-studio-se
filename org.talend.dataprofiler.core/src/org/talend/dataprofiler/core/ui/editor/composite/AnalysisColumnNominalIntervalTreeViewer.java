@@ -61,6 +61,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
@@ -769,5 +770,15 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             }
         }
         this.addElements(columns, index);
+    }
+
+    @Override
+    public void addElements(ModelElementIndicator[] elements) {
+
+    }
+
+    @Override
+    protected void setElements(ModelElementIndicator[] modelElementIndicator) {
+
     }
 }

@@ -57,14 +57,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -124,8 +123,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         columnSetMultiValueList = new ArrayList<Column>();
         this.masterPage = masterPage;
         this.createButtonSection(parent.getParent());
-        // this.setElements(masterPage.getColumnSetMultiValueIndicator().
-        // getAnalyzedColumns());
+        this.setElements(masterPage.getCurrentModelElementIndicators());
         this.setDirty(false);
     }
 
@@ -468,30 +466,33 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         // MOD yyi 2010-05-13 12828
         Collections.reverse(columnList);
         // ~
-        this.setElements(columnList);
+        super.setInput(objs);
     }
 
-    public void setElements(final Object columns) {
+
+
+    public void setElements(ModelElementIndicator[] elements) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
         tree.setData(this);
         // MOD mzhao bug 8282 2009-7-31 Clear column cache.
         columnSetMultiValueList.clear();
-        addItemElements((List<Column>) columns, 0);
+        this.modelElementIndicators = elements;
+        addItemElements(elements);
         // addItemElements(columns);
         // masterPage.getAnalysis().getContext().setConnection(null);
         // MOD mzhao 2009-05-05 bug 6587.
         updateBindConnection(masterPage, tree);
     }
 
-    private void addItemElements(final List<Column> columns, int index) {
-        for (int i = 0; i < columns.size(); i++) {
-            final TdColumn column = (TdColumn) columns.get(i);
-            final TreeItem treeItem = new TreeItem(tree, SWT.NONE, index);
+    private void addItemElements(final ModelElementIndicator[] elements) {
+        for (int i = 0; i < elements.length; i++) {
+            final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
+            final TdColumn column = (TdColumn) meIndicator.getModelElement();
+            final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, column);
-            columnSetMultiValueList.add(index, column);
-
+            columnSetMultiValueList.add(column);
             String columnName = column.getName();
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
@@ -500,7 +501,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             treeItem.setData(COLUMN_INDICATOR_KEY, column);
 
             // MOD mzhao feature 13040 , 2010-05-21
-            final ColumnIndicatorImpl meIndicator = new ColumnIndicatorImpl(column);
+
             TreeEditor comboEditor = new TreeEditor(tree);
             final CCombo combo = new CCombo(tree, SWT.BORDER);
             for (DataminingType type : DataminingType.values()) {
@@ -562,10 +563,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             delLabelEditor.horizontalAlignment = SWT.CENTER;
             delLabelEditor.setEditor(delLabel, treeItem, 3);
             treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { delLabelEditor });
-            /*
-             * if (columnIndicator.hasIndicators()) { createIndicatorItems(treeItem,
-             * columnIndicator.getIndicatorUnits()); }
-             */
+            if (meIndicator.hasIndicators()) {
+                createIndicatorItems(treeItem, meIndicator.getIndicatorUnits());
+            }
             delLabelEditor.layout();
             treeItem.setExpanded(true);
         }
@@ -576,8 +576,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         tree.forceFocus();
     }
 
-    public void addElements(final List<Column> columns, int index) {
-        this.addItemElements(columns, index);
+    public void addElements(final ModelElementIndicator[] elements) {
+        this.addItemElements(elements);
     }
 
     /**
@@ -758,7 +758,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         // masterPage.getColumnSetMultiValueIndicator()
         // .getAnalyzedColumns().size());
         columnSetMultiValueList.clear();
-        this.setElements(masterPage.getSimpleStatIndicator().getAnalyzedColumns());
+        this.setElements(masterPage.getCurrentModelElementIndicators());
     }
 
     @Override
@@ -774,16 +774,5 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         return true;
     }
 
-    @Override
-    public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
-        List<Column> columns = new ArrayList<Column>();
-        for (ModelElement element : modelElements) {
-            TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-            if (column != null) {
-                columns.add(column);
-            }
-        }
-        this.addElements(columns, index);
-    }
 
 }

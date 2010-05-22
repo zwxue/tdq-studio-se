@@ -1834,22 +1834,13 @@ public interface ColumnsetPackage extends EPackage {
     int ALL_MATCH_INDICATOR__DUPLICATE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR;
 
     /**
-     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * The feature id for the '<em><b>Composite Regex Matching Indicators</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 0;
-
-    /**
-     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 1;
+    int ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The number of structural features of the '<em>All Match Indicator</em>' class.
@@ -1858,7 +1849,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int ALL_MATCH_INDICATOR_FEATURE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 2;
+    int ALL_MATCH_INDICATOR_FEATURE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 1;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.columnset.impl.CountAvgNullIndicatorImpl <em>Count Avg Null Indicator</em>}' class.
@@ -4094,6 +4085,17 @@ public interface ColumnsetPackage extends EPackage {
     EClass getAllMatchIndicator();
 
     /**
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.indicators.columnset.AllMatchIndicator#getCompositeRegexMatchingIndicators <em>Composite Regex Matching Indicators</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Composite Regex Matching Indicators</em>'.
+     * @see org.talend.dataquality.indicators.columnset.AllMatchIndicator#getCompositeRegexMatchingIndicators()
+     * @see #getAllMatchIndicator()
+     * @generated
+     */
+    EReference getAllMatchIndicator_CompositeRegexMatchingIndicators();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator <em>Count Avg Null Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4416,6 +4418,14 @@ public interface ColumnsetPackage extends EPackage {
          * @generated
          */
         EClass ALL_MATCH_INDICATOR = eINSTANCE.getAllMatchIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Composite Regex Matching Indicators</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS = eINSTANCE.getAllMatchIndicator_CompositeRegexMatchingIndicators();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.columnset.impl.CountAvgNullIndicatorImpl <em>Count Avg Null Indicator</em>}' class.

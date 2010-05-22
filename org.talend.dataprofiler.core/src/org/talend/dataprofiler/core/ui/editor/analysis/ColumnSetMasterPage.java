@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -50,7 +51,9 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
@@ -68,6 +71,8 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
@@ -99,6 +104,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     ColumnSetAnalysisHandler columnSetAnalysisHandler;
 
     private SimpleStatIndicator simpleStatIndicator;
+    
+    private AllMatchIndicator allMatchIndicator;
 
     protected String execLang;
 
@@ -122,13 +129,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private Section previewSection;
 
-    private Section analysisParamSection;
-
     private Section indicatorsSection;
+
+    private ModelElementIndicator[] currentModelElementIndicators;
 
     public ColumnSetMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
-
         currentEditor = (AnalysisEditor) editor;
     }
 
@@ -143,7 +149,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         columnSetAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = columnSetAnalysisHandler.getStringDataFilter();
         analyzedColumns = columnSetAnalysisHandler.getAnalyzedColumns();
-        if (columnSetAnalysisHandler.getIndicator() == null) {
+        if (columnSetAnalysisHandler.getSimpleStatIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             simpleStatIndicator = columnsetFactory.createSimpleStatIndicator();
             simpleStatIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
@@ -151,21 +157,37 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             simpleStatIndicator.setDuplicateCountIndicator(IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator());
             simpleStatIndicator.setUniqueCountIndicator(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
         } else {
-            simpleStatIndicator = (SimpleStatIndicator) columnSetAnalysisHandler.getIndicator();
+            simpleStatIndicator = (SimpleStatIndicator) columnSetAnalysisHandler.getSimpleStatIndicator();
+        }
+        if (columnSetAnalysisHandler.getAllmatchIndicator() == null) {
+            ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
+            allMatchIndicator = columnsetFactory.createAllMatchIndicator();
+        } else {
+            allMatchIndicator = (AllMatchIndicator) columnSetAnalysisHandler.getAllmatchIndicator();
         }
 
         initializeIndicator(simpleStatIndicator);
-
+        List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
+        ModelElementIndicator currentIndicator;
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             if (tdColumn == null) {
                 continue;
             }
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, tdColumn);
+
+            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(element);
+            Collection<Indicator> indicatorList = columnSetAnalysisHandler.getRegexMathingIndicators(element);
+            currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
+            meIndicatorList.add(currentIndicator);
         }
+        currentModelElementIndicators = meIndicatorList.toArray(new ModelElementIndicator[meIndicatorList.size()]);
 
     }
 
+    public ModelElementIndicator[] getCurrentModelElementIndicators() {
+        return this.currentModelElementIndicators;
+    }
     private void initializeIndicator(Indicator indicator) {
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
@@ -451,7 +473,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     public void saveAnalysis() throws DataprofilerCoreException {
         columnSetAnalysisHandler.clearAnalysis();
         simpleStatIndicator.getAnalyzedColumns().clear();
-
+        allMatchIndicator.getAnalyzedColumns().clear();
         // set execute engine
         Analysis analysis = columnSetAnalysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
@@ -468,6 +490,26 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             analysis.getContext().setConnection(tdProvider);
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
             columnSetAnalysisHandler.addIndicator(columnList, simpleStatIndicator);
+            //~ MOD mzhao feature 13040. 2010-05-21
+            allMatchIndicator.getCompositeRegexMatchingIndicators().clear();
+            ModelElementIndicator[] modelElementIndicator = treeViewer.getModelElementIndicator();
+            if (modelElementIndicator != null) {
+                for (ModelElementIndicator modelElementInd : modelElementIndicator) {
+                    Indicator[] inds = modelElementInd.getPatternIndicators();
+                    for (Indicator ind : inds) {
+                        if (ind instanceof RegexpMatchingIndicator) {
+                            ind.setAnalyzedElement(modelElementInd.getModelElement());
+                            allMatchIndicator.getCompositeRegexMatchingIndicators().add((RegexpMatchingIndicator) ind);
+                        }
+                    }
+                }
+
+            }
+            if (allMatchIndicator.getCompositeRegexMatchingIndicators().size() > 0) {
+                allMatchIndicator.getAnalyzedColumns().addAll(columnList);
+                columnSetAnalysisHandler.addIndicator(columnList, allMatchIndicator);
+            }
+            // ~
         } else {
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();

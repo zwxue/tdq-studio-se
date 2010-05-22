@@ -148,10 +148,7 @@ public class ColumnsetSwitch<T> {
                 AllMatchIndicator allMatchIndicator = (AllMatchIndicator)theEObject;
                 T result = caseAllMatchIndicator(allMatchIndicator);
                 if (result == null) result = caseColumnSetMultiValueIndicator(allMatchIndicator);
-                if (result == null) result = caseRegexpMatchingIndicator(allMatchIndicator);
                 if (result == null) result = caseCompositeIndicator(allMatchIndicator);
-                if (result == null) result = casePatternMatchingIndicator(allMatchIndicator);
-                if (result == null) result = caseMatchingIndicator(allMatchIndicator);
                 if (result == null) result = caseIndicator(allMatchIndicator);
                 if (result == null) result = caseModelElement(allMatchIndicator);
                 if (result == null) result = caseElement(allMatchIndicator);
@@ -437,36 +434,6 @@ public class ColumnsetSwitch<T> {
      * @generated
      */
     public T caseCompositeIndicator(CompositeIndicator object) {
-        return null;
-    }
-
-    /**
-     * Returns the result of interpreting the object as an instance of '<em>Pattern Matching Indicator</em>'.
-     * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Pattern Matching Indicator</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
-    public T casePatternMatchingIndicator(PatternMatchingIndicator object) {
-        return null;
-    }
-
-    /**
-     * Returns the result of interpreting the object as an instance of '<em>Regexp Matching Indicator</em>'.
-     * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Regexp Matching Indicator</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
-    public T caseRegexpMatchingIndicator(RegexpMatchingIndicator object) {
         return null;
     }
 

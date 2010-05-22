@@ -501,6 +501,15 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EReference getAllMatchIndicator_CompositeRegexMatchingIndicators() {
+        return (EReference)allMatchIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getCountAvgNullIndicator() {
         return countAvgNullIndicatorEClass;
     }
@@ -649,6 +658,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR);
 
         allMatchIndicatorEClass = createEClass(ALL_MATCH_INDICATOR);
+        createEReference(allMatchIndicatorEClass, ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS);
 
         countAvgNullIndicatorEClass = createEClass(COUNT_AVG_NULL_INDICATOR);
 
@@ -706,7 +716,6 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         rowMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
         columnSetMultiValueIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
         allMatchIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
-        allMatchIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getRegexpMatchingIndicator());
         countAvgNullIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         minMaxDateIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         weakCorrelationIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
@@ -740,12 +749,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         initEReference(getColumnSetMultiValueIndicator_DuplicateCountIndicator(), theIndicatorsPackage.getDuplicateCountIndicator(), null, "duplicateCountIndicator", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(allMatchIndicatorEClass, AllMatchIndicator.class, "AllMatchIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-        EOperation op = addEOperation(allMatchIndicatorEClass, null, "getCompositeRegexMatchingIndicators", 0, 1, IS_UNIQUE, IS_ORDERED);
-        EGenericType g1 = createEGenericType(ecorePackage.getEEList());
-        EGenericType g2 = createEGenericType(theIndicatorsPackage.getRegexpMatchingIndicator());
-        g1.getETypeArguments().add(g2);
-        initEOperation(op, g1);
+        initEReference(getAllMatchIndicator_CompositeRegexMatchingIndicators(), theIndicatorsPackage.getRegexpMatchingIndicator(), null, "compositeRegexMatchingIndicators", null, 0, -1, AllMatchIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(countAvgNullIndicatorEClass, CountAvgNullIndicator.class, "CountAvgNullIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

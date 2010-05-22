@@ -51,6 +51,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
@@ -598,7 +599,12 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     }
 
     @Override
-    protected void setElements(Object element) {
+    public void addElements(ModelElementIndicator[] elements) {
+
+    }
+
+    @Override
+    protected void setElements(ModelElementIndicator[] modelElementIndicator) {
 
     }
 }

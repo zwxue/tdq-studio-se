@@ -58,9 +58,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLElement;
@@ -377,43 +375,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return code;
     }
 
-    public void setInput(Object[] objs) {
-        boolean isMdm = false;
-        if (objs != null && objs.length != 0) {
-            isMdm = objs[0] instanceof TdXMLElement;
-            if (!(objs[0] instanceof TdColumn || isMdm)) {
-                return;
-            }
-        }
 
-        List<ModelElement> modelElementList = new ArrayList<ModelElement>();
-        for (Object obj : objs) {
-            modelElementList.add((ModelElement) obj);
-        }
-        List<ModelElementIndicator> modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
-        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-            if (modelElementList.contains(modelElementIndicator.getModelElement())) {
-                modelElementIndicatorList.add(modelElementIndicator);
-                modelElementList.remove(modelElementIndicator.getModelElement());
-            }
-        }
-
-        for (ModelElement modelElement : modelElementList) {
-            ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper
-                    .createXmlElementIndicator((TdXMLElement) modelElement) : ModelElementIndicatorHelper
-                    .createColumnIndicator((TdColumn) modelElement);
-            modelElementIndicatorList.add(temp);
-        }
-        this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList
-                .size()]);
-        this.setElements(modelElementIndicators);
-    }
-
-    public void setElements(Object elements) {
+    public void setElements(ModelElementIndicator[] elements) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
         tree.setData(VIEWER_KEY, this);
-        this.modelElementIndicators = (ModelElementIndicator[]) elements;
+        this.modelElementIndicators = elements;
         addItemElements((ModelElementIndicator[]) elements);
         initializedConnection((ModelElementIndicator[]) elements);
         // MOD mzhao 2009-05-5, bug 6587.
@@ -695,12 +662,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
     }
 
-
-
-    public ModelElementIndicator[] getModelElementIndicator() {
-        return this.modelElementIndicators;
-    }
-
     /**
      * Remove the selected elements(eg:TdColumn or Indicator) from tree.
      * 
@@ -871,24 +832,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return true;
     }
 
-    @Override
-    public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
-        int size = modelElements.size();
-        ModelElementIndicator[] meIndicators = new ModelElementIndicator[size];
-        for (int i = 0; i < size; i++) {
-            ModelElement modelElement = modelElements.get(i);
-            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
-            if (tdColumn != null) {
-                meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(tdColumn);
-            } else {
-                TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(modelElement);
-                if (xmlElement != null) {
-                    meIndicators[i] = ModelElementIndicatorHelper.createXmlElementIndicator(xmlElement);
-                }
-            }
-        }
-        this.addElements(meIndicators);
-    }
 
     /**
      * DOC zqin AnalysisColumnTreeViewer class global comment. Detailled comment
