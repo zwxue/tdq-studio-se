@@ -29,6 +29,8 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
+import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -134,14 +136,51 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
      * @param column
      * @return the indicators attached to this column
      */
-    public Indicator getIndicator() {
+    public Indicator getSimpleStatIndicator() {
         Indicator indicator = null;
         EList<Indicator> allIndics = analysis.getResults().getIndicators();
         for (Indicator indic : allIndics) {
-            if (indic != null)
+            if (indic != null && indic instanceof SimpleStatIndicator) {
                 indicator = indic;
+                break;
+            }
         }
         return indicator;
+    }
+
+    /**
+     * 
+     * DOC mzhao get AllMetchIndicator.
+     * 
+     * @return
+     */
+    public Indicator getAllmatchIndicator() {
+        Indicator indicator = null;
+        EList<Indicator> allIndics = analysis.getResults().getIndicators();
+        for (Indicator indic : allIndics) {
+            if (indic != null && indic instanceof AllMatchIndicator) {
+                indicator = indic;
+                break;
+            }
+        }
+        return indicator;
+    }
+
+    public Collection<Indicator> getRegexMathingIndicators(ModelElement modelElement) {
+        Collection<Indicator> indics = new ArrayList<Indicator>();
+        EList<Indicator> allIndics = analysis.getResults().getIndicators();
+        for (Indicator indicator : allIndics) {
+            if (indicator instanceof AllMatchIndicator) {
+                AllMatchIndicator allMatchInd = (AllMatchIndicator) indicator;
+                for (Indicator regexInd : allMatchInd.getCompositeRegexMatchingIndicators()) {
+                    if (regexInd.getAnalyzedElement() != null && regexInd.getAnalyzedElement().equals(modelElement)) {
+                        indics.add(regexInd);
+                    }
+                }
+                break;
+            }
+        }
+        return indics;
     }
 
     /**

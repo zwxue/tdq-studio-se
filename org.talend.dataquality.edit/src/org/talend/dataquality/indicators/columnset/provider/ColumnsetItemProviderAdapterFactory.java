@@ -145,6 +145,29 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.columnset.AllMatchIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AllMatchIndicatorItemProvider allMatchIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.columnset.AllMatchIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAllMatchIndicatorAdapter() {
+        if (allMatchIndicatorItemProvider == null) {
+            allMatchIndicatorItemProvider = new AllMatchIndicatorItemProvider(this);
+        }
+
+        return allMatchIndicatorItemProvider;
+    }
+
+    /**
      * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -361,6 +384,7 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
         if (valueMatchingIndicatorItemProvider != null) valueMatchingIndicatorItemProvider.dispose();
         if (rowMatchingIndicatorItemProvider != null) rowMatchingIndicatorItemProvider.dispose();
         if (columnSetMultiValueIndicatorItemProvider != null) columnSetMultiValueIndicatorItemProvider.dispose();
+        if (allMatchIndicatorItemProvider != null) allMatchIndicatorItemProvider.dispose();
         if (countAvgNullIndicatorItemProvider != null) countAvgNullIndicatorItemProvider.dispose();
         if (minMaxDateIndicatorItemProvider != null) minMaxDateIndicatorItemProvider.dispose();
         if (weakCorrelationIndicatorItemProvider != null) weakCorrelationIndicatorItemProvider.dispose();
