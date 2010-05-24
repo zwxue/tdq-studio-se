@@ -99,6 +99,9 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             if (SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(analyzedElement) != null) {
                 isRangeForDate = false;
                 isDatetime = false;
+            } else if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analyzedElement) != null) {
+                isRangeForDate = false;
+                isDatetime = false;
             } else {
                 int sqltype = ((TdColumn) analyzedElement).getJavaType();
                 isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
