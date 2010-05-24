@@ -28,7 +28,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.IMigrationTask.MigrationTaskCategory;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
-import org.talend.dataprofiler.core.migration.helper.DataBaseVersionHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.utils.ProductVersion;
@@ -162,23 +161,7 @@ public final class MigrationTaskManager {
      * @param type
      * @return
      */
-    public static List<IMigrationTask> findMigrationTaskByType(MigrationTaskType... types) {
-        List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
-
-        for (MigrationTaskType type : types) {
-            validTasks.addAll(findWorkspaceTaskByType(type));
-        }
-
-        return validTasks;
-    }
-
-    /**
-     * DOC bZhou Comment method "findMigrationTaskByType".
-     * 
-     * @param type
-     * @return
-     */
-    public static List<IMigrationTask> findWorkspaceTaskByType(MigrationTaskType type) {
+    public static List<IMigrationTask> findWorkspaceTaskByType(MigrationTaskType type, ProductVersion specifiedVersion) {
         List<IMigrationTask> wTasks = findTasksByCategory(MigrationTaskCategory.WORKSPACE);
         List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
 
@@ -189,10 +172,9 @@ public final class MigrationTaskManager {
             }
         }
 
-        if (type == MigrationTaskType.DATABASE) {
-            ProductVersion workspaceVersion = DataBaseVersionHelper.getVersion();
+        if (specifiedVersion != null) {
             ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
-            return findValidTasks(workspaceVersion, currentVersion, validTasks);
+            return findValidTasks(specifiedVersion, currentVersion, validTasks);
         }
 
         return validTasks;

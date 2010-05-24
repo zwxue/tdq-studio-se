@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -146,11 +148,40 @@ public final class PropertyHelper {
     public static IPath getElementPath(Property property) {
         TDQItem item = (TDQItem) property.getItem();
 
-        IPath proPath = getItemWorkspaceBasePath(property);
-        proPath = proPath.append(item.getState().getPath());
-        proPath = proPath.append(item.getFilename());
+        IPath itemPath = getItemWorkspaceBasePath(property);
+        String path = item.getState().getPath();
+        if (path == null || StringUtils.isEmpty(path)) {
+            IPath propPath = new Path(property.eResource().getURI().toFileString());
+            IPath mathPath = new Path(itemPath.lastSegment());
+            int matchIndex = indexOfPath(propPath, mathPath);
+            IPath relativePath = propPath.uptoSegment(matchIndex + 1);
+            path = propPath.makeRelativeTo(relativePath).removeLastSegments(1).toString();
+        }
+        itemPath = itemPath.append(path);
+        itemPath = itemPath.append(item.getFilename());
 
-        return proPath;
+        return itemPath;
+    }
+
+    /**
+     * DOC bZhou Comment method "indexOfPath".
+     * 
+     * @param path
+     * @param indexPath
+     * @return
+     */
+    private static int indexOfPath(IPath path, IPath indexPath) {
+        Assert.isNotNull(path);
+        Assert.isNotNull(indexPath);
+
+        int count = 0;
+        for (int i = 0; i < path.segmentCount(); i++) {
+            if (path.segment(i).equals(indexPath.toString())) {
+                return count;
+            }
+            count++;
+        }
+        return count;
     }
 
     /**

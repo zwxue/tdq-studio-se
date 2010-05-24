@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.migration.helper;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,8 +21,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.resource.ResourceManager;
@@ -66,17 +65,26 @@ public final class WorkspaceVersionHelper {
      * @return
      */
     public static ProductVersion getVesion(IFile versionFile) {
+        return getVesion(versionFile.getLocation().toFile());
+    }
+
+    /**
+     * DOC bZhou Comment method "getVesion".
+     * 
+     * @param versionFile
+     * @return
+     */
+    public static ProductVersion getVesion(File versionFile) {
+
         try {
-            versionFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
             if (versionFile.exists()) {
                 Properties pros = new Properties();
 
-                pros.load(versionFile.getContents());
+                pros.load(new FileInputStream(versionFile));
                 String version = pros.getProperty(VERSION);
                 if (version != null && !"".equals(version)) { //$NON-NLS-1$
                     return ProductVersion.fromString(version);
                 }
-
             }
         } catch (Exception e) {
             log.error(e, e);
