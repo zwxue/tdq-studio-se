@@ -62,9 +62,7 @@ public abstract class MessagesCore {
                 // return babiliTranslation;
                 // }
             }
-            // MOD xqliu 2010-05-21 bug 11750
-            return resourceBundle.getString(key).replaceAll("'", "''");
-            // ~ 11750
+            return resourceBundle.getString(key);
         } catch (MissingResourceException e) {
             return KEY_NOT_FOUND_PREFIX + key + KEY_NOT_FOUND_SUFFIX;
         }
@@ -79,7 +77,8 @@ public abstract class MessagesCore {
      * @return the string for the given key in the given resource bundle
      */
     public static String getString(String key, String pluginId, ResourceBundle resourceBundle, Object[] args) {
-        return MessageFormat.format(getString(key, pluginId, resourceBundle), args);
+        // MOD xqliu 2010-05-24 bug 11750
+        return MessageFormat.format(getString(key, pluginId, resourceBundle).replaceAll("'", "''"), args);
     }
 
     /**
@@ -110,7 +109,8 @@ public abstract class MessagesCore {
      * @return the string for the given key in the given resource bundle
      */
     public static String getString(String key, ResourceBundle resourceBundle, Object[] args) {
-        return MessageFormat.format(getString(key, null, resourceBundle), args);
+        // MOD xqliu 2010-05-24 bug 11750
+        return MessageFormat.format(getString(key, null, resourceBundle).replaceAll("'", "''"), args);
     }
 
 }
