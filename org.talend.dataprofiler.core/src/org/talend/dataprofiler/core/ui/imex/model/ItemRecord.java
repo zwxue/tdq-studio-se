@@ -143,7 +143,7 @@ public class ItemRecord {
                         Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
                         if (projOBJ != null) {
                             Project project = (Project) projOBJ;
-                            this.projectName = project.getLabel();
+                            this.projectName = project.getTechnicalLabel();
                         }
                     }
                 }

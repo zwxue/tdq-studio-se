@@ -33,9 +33,14 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.migration.IMigrationTask;
+import org.talend.dataprofiler.core.migration.MigrationTaskManager;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
+import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -44,6 +49,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class FileSystemImportWriter implements IImexWriter {
 
     private static Logger log = Logger.getLogger(FileSystemImportWriter.class);
+
+    private File versionFile;
 
     /*
      * (non-Javadoc)
@@ -55,21 +62,25 @@ public class FileSystemImportWriter implements IImexWriter {
     public ItemRecord[] populate(ItemRecord[] elements, boolean checkExisted) {
         List<ItemRecord> inValidRecords = new ArrayList<ItemRecord>();
 
-        if (elements instanceof ItemRecord[]) {
-            ItemRecord[] recoreds = (ItemRecord[]) elements;
+        for (ItemRecord record : elements) {
 
-            for (ItemRecord record : recoreds) {
+            checkDependency(record);
 
-                checkDependency(record);
-
-                if (checkExisted) {
-                    checkExisted(record);
-                }
-
-                if (!record.isValid()) {
-                    inValidRecords.add(record);
-                }
+            if (checkExisted) {
+                checkExisted(record);
             }
+
+            if (!record.isValid()) {
+                inValidRecords.add(record);
+            }
+        }
+
+        if (elements.length != 0) {
+            ItemRecord anyRecord = elements[0];
+            String path = anyRecord.getFile().getAbsolutePath();
+            String subStr = StringUtils.substringBeforeLast(path, anyRecord.getProjectName());
+            String versionPath = subStr + anyRecord.getProjectName() + "/TDQ_Libraries/.version.txt";
+            versionFile = new File(versionPath);
         }
 
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
@@ -144,7 +155,7 @@ public class FileSystemImportWriter implements IImexWriter {
             String oldProjectLabel = record.getProjectName();
             String curProjectLabel = ResourceManager.getRootProjectName();
             if (!StringUtils.equals(oldProjectLabel, curProjectLabel)) {
-                String content = FileUtils.readFileToString(desFile);
+                String content = FileUtils.readFileToString(desFile, "utf-8");
                 content = StringUtils.replace(content, "/" + oldProjectLabel + "/", "/" + curProjectLabel + "/");
                 FileUtils.writeStringToFile(desFile, content, "utf-8");
             }
@@ -171,6 +182,14 @@ public class FileSystemImportWriter implements IImexWriter {
         Display.getDefault().asyncExec(new Runnable() {
 
             public void run() {
+
+                if (versionFile != null) {
+                    ProductVersion version = WorkspaceVersionHelper.getVesion(versionFile);
+                    List<IMigrationTask> migrationTasks = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE,
+                            version);
+                    MigrationTaskManager.doMigrationTask(migrationTasks);
+                }
+
                 CorePlugin.getDefault().refreshWorkSpace();
                 CorePlugin.getDefault().refreshDQView();
             }

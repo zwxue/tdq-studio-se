@@ -226,7 +226,7 @@ public class ImportWizardPage extends WizardPage {
             } // else tree is empty so do nothing
             // temporary disable the tree edition right before 4.0 release to avoid exporting a non consistent
             // repository.
-            repositoryTree.getTree().setEnabled(false);
+            repositoryTree.getTree().setEnabled(true);
             repositoryTree.refresh();
         } else {
             repositoryTree.setInput(null);
@@ -435,6 +435,7 @@ public class ImportWizardPage extends WizardPage {
                 }
             }
         }
+
         return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
     }
 

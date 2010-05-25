@@ -63,6 +63,8 @@ public class ExportWizardPage extends WizardPage {
 
     private String specifiedPath;
 
+    private List<String> errors;
+
     private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
     public ExportWizardPage(String specifiedPath) {
@@ -91,29 +93,14 @@ public class ExportWizardPage extends WizardPage {
 
         initControlState();
 
-        temporaryDisableTreeSelection();
-
         setControl(top);
-    }
-
-    /**
-     * This method is created right before 4.0 release to avoid exporting a non consistent repository. this should be
-     * removed when implementing consistency check on the export. This will disable selection on the reposiroty tree and
-     * check all the items to force complete selection and avoid partial unchecked selection.
-     */
-    private void temporaryDisableTreeSelection() {
-        TreeItem topItem = repositoryTree.getTree().getTopItem();
-        TreeItem[] topItems = repositoryTree.getTree().getItems();
-        for (TreeItem treeItem : topItems) {
-            repositoryTree.setSubtreeChecked(treeItem.getData(), true);
-        } // else tree is empty so do nothing
-        repositoryTree.getTree().setEnabled(false);
     }
 
     /**
      * DOC bZhou Comment method "initControlState".
      */
     protected void initControlState() {
+
         setArchState(false);
         setPageComplete(false);
     }
@@ -235,6 +222,8 @@ public class ExportWizardPage extends WizardPage {
                     // repositoryTree.setExpandedElements(repositoryTree.getCheckedElements());
                     repositoryTree.refresh();
                 }
+
+                checkForErrors();
             }
         });
 
@@ -242,7 +231,6 @@ public class ExportWizardPage extends WizardPage {
 
             public void modifyText(ModifyEvent e) {
                 checkForErrors();
-                updatePageStatus();
             }
         });
     }
@@ -252,11 +240,31 @@ public class ExportWizardPage extends WizardPage {
      * export.
      */
     protected void checkForErrors() {
+        errors = new ArrayList<String>();
+
         if (!new File(dirTxt.getText()).exists()) {
-            setErrorMessage(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
+            errors.add(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
+        }
+
+        ItemRecord[] elements = getElements();
+        for (ItemRecord record : elements) {
+            File file = record.getFile();
+            IFile iFile = file2IFile(file);
+            File[] dependencies = computeDependencies(iFile);
+            for (File depFile : dependencies) {
+                if (!repositoryTree.getChecked(depFile)) {
+                    errors.add("\"" + record.getElement().getName() + "\" miss dependency file :" + depFile.getName());
+                }
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            setErrorMessage(errors.get(0));
         } else {
             setErrorMessage(null);
         }
+
+        updatePageStatus();
     }
 
     /**

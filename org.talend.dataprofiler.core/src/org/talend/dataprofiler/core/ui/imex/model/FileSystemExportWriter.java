@@ -16,12 +16,14 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.PluginChecker;
+import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -80,12 +82,24 @@ public class FileSystemExportWriter implements IImexWriter {
      */
     public void finish(ItemRecord[] records) throws IOException {
         if (PluginChecker.isTDCPLoaded()) {
-            IPath projResPath = ResourceManager.getRootProject().getLocation().append("talend.project");
-            IPath projDesPath = new Path(destination).append(ResourceManager.getRootProjectName()).append("talend.project");
-            File projFile = projResPath.toFile();
-            if (projFile.exists()) {
-                copyFile(projFile, projDesPath.toFile());
-            }
+            IFile projFile = ResourceManager.getRootProject().getFile("talend.project");
+            copyFileToDest(projFile);
+        }
+
+        IFile versionFile = WorkspaceVersionHelper.getVersionFile();
+        copyFileToDest(versionFile);
+    }
+
+    /**
+     * DOC bZhou Comment method "copyFileToDest".
+     * 
+     * @param source
+     * @throws IOException
+     */
+    private void copyFileToDest(IFile source) throws IOException {
+        IPath desPath = new Path(destination).append(source.getFullPath());
+        if (source.exists()) {
+            copyFile(source.getLocation().toFile(), desPath.toFile());
         }
     }
 
