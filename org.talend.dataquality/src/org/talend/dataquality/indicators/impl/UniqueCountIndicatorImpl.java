@@ -21,10 +21,11 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.UniqueCountIndicatorImpl#getUniqueValueCount <em>Unique Value Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.UniqueCountIndicatorImpl#getUniqueValueCount <em>Unique Value Count
+ * </em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCountIndicator {
@@ -50,9 +51,12 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     protected Long uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
 
     private Set<Object> uniqueObjects = new HashSet<Object>();
+
     private Set<Object> duplicateObjects = new HashSet<Object>();
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected UniqueCountIndicatorImpl() {
@@ -61,6 +65,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -70,6 +75,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Set<Object> getUniqueValues() {
@@ -80,54 +86,59 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT:
-                return getUniqueValueCount();
+        case IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT:
+            return getUniqueValueCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT:
-                setUniqueValueCount((Long)newValue);
-                return;
+        case IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT:
+            setUniqueValueCount((Long) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT:
-                setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
-                return;
+        case IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT:
+            setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT:
-                return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT.equals(uniqueValueCount);
+        case IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT:
+            return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT
+                    .equals(uniqueValueCount);
         }
         return super.eIsSet(featureID);
     }
@@ -147,6 +158,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Long getUniqueValueCount() {
@@ -155,13 +167,15 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setUniqueValueCount(Long newUniqueValueCount) {
         Long oldUniqueValueCount = uniqueValueCount;
         uniqueValueCount = newUniqueValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT, oldUniqueValueCount, uniqueValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.UNIQUE_COUNT_INDICATOR__UNIQUE_VALUE_COUNT,
+                    oldUniqueValueCount, uniqueValueCount));
     }
 
     /*

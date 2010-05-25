@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -162,7 +164,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         final Iterator<ModelElement> iterator = analysedElements.iterator();
         while (iterator.hasNext()) { // for (ModelElement modelElement : analysedElements) {
             ModelElement modelElement = iterator.next();
-
             // --- preconditions
             TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
             if (col == null) {
@@ -179,11 +180,13 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
                 return null;
             }
             // else add into select
-
-            sql.append(this.quote(col.getName()));
-            // append comma if more columns exist
-            if (iterator.hasNext()) {
-                sql.append(',');
+            // MOD zshen feature 12919 select all the column to be prepare for drill down when user need.
+            if (!analysis.getParameters().isStoreData()) {
+                sql.append(this.quote(col.getName()));
+                // append comma if more columns exist
+                if (iterator.hasNext()) {
+                    sql.append(',');
+                }
             }
 
             // if (!query.addSelect(col)) {
@@ -194,11 +197,24 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             fromPart.add(colSet);
 
         }
-
         if (fromPart.size() != 1) {
             log.error("Java analysis must be run on only one table. The number of different tables is " + fromPart.size() + ".");
             this.errorMessage = "Cannot run a Java analysis on several tables. Use only columns from one table.";
             return null;
+        }
+        // MOD zshen feature 12919 select all the column to be prepare for drill down.
+        if (analysis.getParameters().isStoreData()) {
+            List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysedElements.get(0)
+                    .eContainer()));
+            Iterator<TdColumn> iter = columnList.iterator();
+            while (iter.hasNext()) {
+                TdColumn column = iter.next();
+                sql.append(this.quote(column.getName()));
+                // append comma if more columns exist
+                if (iter.hasNext()) {
+                    sql.append(',');
+                }
+            }
         }
 
         // add from clause

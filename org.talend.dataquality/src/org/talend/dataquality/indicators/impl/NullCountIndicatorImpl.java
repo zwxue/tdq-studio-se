@@ -16,13 +16,14 @@ import org.talend.dataquality.indicators.NullCountIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class NullCountIndicatorImpl extends IndicatorImpl implements NullCountIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected NullCountIndicatorImpl() {
@@ -31,6 +32,7 @@ public class NullCountIndicatorImpl extends IndicatorImpl implements NullCountIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -87,6 +89,8 @@ public class NullCountIndicatorImpl extends IndicatorImpl implements NullCountIn
     public boolean handle(Object data) {
         if (data == null) {
             mustStoreRow = true;
+        } else {
+            mustStoreRow = false;
         }
         return super.handle(data);
     }

@@ -15,6 +15,8 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.talend.dataquality.analysis.ExecutionLanguage;
+
 /**
  * DOC zqin class global comment. Detailled comment
  */
@@ -29,25 +31,27 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         Map<String, String> map = new HashMap<String, String>();
 
         if (!isXml()) {
+            // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
+            boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
             switch (this.indicatorEnum) {
             case RowCountIndicatorEnum:
             case NullCountIndicatorEnum:
             case BlankCountIndicatorEnum:
             case DefValueCountIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, getRowsStatement());
+                map.put(MENU_VIEW_ROWS, isSqlEngine ? getRowsStatement() : null);
                 break;
 
             case UniqueIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
-                map.put(MENU_VIEW_VALUES, getValuesStatement(this.columnName));
+                map.put(MENU_VIEW_ROWS, isSqlEngine ? getRowsStatementWithSubQuery() : null);
+                map.put(MENU_VIEW_VALUES, isSqlEngine ? getValuesStatement(this.columnName) : null);
                 break;
             case DistinctCountIndicatorEnum:
-                map.put(MENU_VIEW_VALUES, getDistinctValuesStatement(this.columnName));
+                map.put(MENU_VIEW_VALUES, isSqlEngine ? getDistinctValuesStatement(this.columnName) : null);
                 break;
 
             case DuplicateCountIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
-                map.put(MENU_VIEW_VALUES, getValuesStatement(this.columnName));
+                map.put(MENU_VIEW_ROWS, isSqlEngine ? getRowsStatementWithSubQuery() : null);
+                map.put(MENU_VIEW_VALUES, isSqlEngine ? getValuesStatement(this.columnName) : null);
                 break;
             default:
             }

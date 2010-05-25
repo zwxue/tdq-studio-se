@@ -130,7 +130,7 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * @generated
      * @ordered
      */
-    protected static final boolean STORE_DATA_EDEFAULT = false;
+    protected static final boolean STORE_DATA_EDEFAULT = true;
 
     /**
      * The cached value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
@@ -150,7 +150,7 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * @generated
      * @ordered
      */
-    protected static final int MAX_NUMBER_ROWS_EDEFAULT = 0;
+    protected static final int MAX_NUMBER_ROWS_EDEFAULT = 50;
 
     /**
      * The cached value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.

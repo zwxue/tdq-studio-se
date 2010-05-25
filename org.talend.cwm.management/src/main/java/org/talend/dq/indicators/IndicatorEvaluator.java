@@ -23,7 +23,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -88,6 +91,12 @@ public class IndicatorEvaluator extends Evaluator<String> {
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = anaResult.getIndicToRowMap();
         indicToRowMap.clear();
         int recordIncrement = 0;
+        // MOD zshen compute the num of data which contain in resultSet.
+        resultSet.last();
+        int totalResultNum = resultSet.getRow();
+        resultSet.beforeFirst();
+        //
+        // --- for each row
         label: while (resultSet.next()) {
             // --- for each column
             // feature 0010630 zshen: dislodge the Qualifiers from name of the column
@@ -112,16 +121,15 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     }
 
                     indicator.handle(object);
-
                     // ~MOD mzhao feature: 12919
-                    // if (analysis.getParameters().isStoreData()) {
-                    if (false) {
+                    if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
+                        // if (false) {
                         AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
                         if (analyzedDataSet == null) {
                             analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
                             indicToRowMap.put(indicator, analyzedDataSet);
-                            // analyzedDataSet.setDataCount(maxNumberRows);
-                            analyzedDataSet.setRecordSize(columnlist.size());
+                            analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
+                            analyzedDataSet.setRecordSize(totalResultNum);
                         }
 
                         List<Object[]> valueObjectList = analyzedDataSet.getData();
@@ -129,21 +137,36 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             valueObjectList = new ArrayList<Object[]>();
                             analyzedDataSet.setData(valueObjectList);
                         }
-                        // if (recordIncrement < analysis.getParameters().getMaxNumberRows() && indicator.mustStoreRow()
-                        if (recordIncrement < 50 && indicator.mustStoreRow()) {
-                            if (valueObjectList.size() > recordIncrement) {
-                                valueObjectList.get(recordIncrement)[i] = object;
-                            } else {
-                                Object[] valueObject = new Object[columnlist.size()];
-                                valueObject[i] = object;
-                                valueObjectList.add(valueObject);
+                        // MOD zshen add another loop to insert all of columnValue on the row into indicator.
+                        recordIncrement = valueObjectList.size();
+                        for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
+                            List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                                    .getAnalyzedElement().eContainer()));
+
+                            String newcol = columnList.get(j).getName();
+                            Object newobject = resultSet.getObject(newcol);
+                            if (newobject != null && !(newobject instanceof String)
+                                    && newobject.toString().indexOf("TIMESTAMP") > -1) {
+                                newobject = resultSet.getTimestamp(newcol);
                             }
+
+                            if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                                // if (recordIncrement < 50 && indicator.mustStoreRow()) {
+                                if (recordIncrement < valueObjectList.size()) {
+                                    valueObjectList.get(recordIncrement)[j] = newobject;
+                                } else {
+                                    Object[] valueObject = new Object[resultSet.getMetaData().getColumnCount()];
+                                    valueObject[j] = newobject;
+                                    valueObjectList.add(valueObject);
+                                }
+                            }
+
                         }
                         // ~
                     }
                 }
             }
-            recordIncrement++;
+
             // TODO scorreia give a full row to indicator (indicator will have to handle its data??
 
         }
@@ -153,7 +176,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
         connection.close();
         return ok;
     }
-
 
     /**
      * 
