@@ -23,6 +23,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.PartInitException;
+import org.jfree.util.Log;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -33,6 +35,7 @@ import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
+import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -145,27 +148,68 @@ public final class ChartTableFactory {
                                     }
                                 }
                             }
-                            // MOD by zshen feature 11574:add menu "Generate regular pattern" to date pattern
-                        } else if (isDatePatternFrequencyIndicator(indicator) && isJAVALanguage) {
-                            final DatePatternFreqIndicator dateIndicator = (DatePatternFreqIndicator) indicator;
-                            MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                            itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
-                            itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
-                            itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
-                                @Override
-                                public void widgetSelected(SelectionEvent e) {
-                                    DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                                    IFolder folder = ResourceManager.getPatternRegexFolder();
-                                    String model = dataEntity.getLabel();
-                                    String regex = dateIndicator.getRegex(model);
-                                    new CreatePatternAction(
-                                            folder,
-                                            ExpressionType.REGEXP,
-                                            "'" + regex + "'", model == null ? "" : "match \"" + model + "\"", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$
+                        } else {
+                            try {
+                                if (analysis.getParameters().isStoreData()
+                                        && !analysis.getResults().getIndicToRowMap().get(indicator).getData().isEmpty()) {
+                                    MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
+                                            dataEntity);
+                                    for (final MenuItemEntity itemEntity : itemEntities) {
+                                        MenuItem item = new MenuItem(menu, SWT.PUSH);
+                                        item.setText(itemEntity.getLabel());
+                                        item.setImage(itemEntity.getIcon());
+
+                                        item.addSelectionListener(new SelectionAdapter() {
+
+                                            @Override
+                                            public void widgetSelected(SelectionEvent e) {
+
+                                                // TODO open the editor and display all of data which saved in the
+                                                // indicator.
+                                                try {
+                                                    CorePlugin
+                                                            .getDefault()
+                                                            .getWorkbench()
+                                                            .getActiveWorkbenchWindow()
+                                                            .getActivePage()
+                                                            .openEditor(
+                                                                    new DrillDownEditorInput(analysis, dataEntity.getIndicator()),
+                                                                    "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");
+                                                } catch (PartInitException e1) {
+                                                    e1.printStackTrace();
+                                                }
+                                            }
+
+                                        });
+                                    }
                                 }
+                            } catch (NullPointerException nullexception) {
 
-                            });
+                                Log.error("drill down the data shuold run the analysis firstly.");
+                            }
+                            // MOD by zshen feature 11574:add menu "Generate regular pattern" to date pattern
+                            if (isDatePatternFrequencyIndicator(indicator)) {
+                                final DatePatternFreqIndicator dateIndicator = (DatePatternFreqIndicator) indicator;
+                                MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
+                                itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
+                                itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
+                                itemCreatePatt.addSelectionListener(new SelectionAdapter() {
+
+                                    @Override
+                                    public void widgetSelected(SelectionEvent e) {
+                                        DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
+                                        IFolder folder = ResourceManager.getPatternRegexFolder();
+                                        String model = dataEntity.getLabel();
+                                        String regex = dateIndicator.getRegex(model);
+                                        new CreatePatternAction(
+                                                folder,
+                                                ExpressionType.REGEXP,
+                                                "'" + regex + "'", model == null ? "" : "match \"" + model + "\"", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$
+                                    }
+
+                                });
+                            }
                         }
                         // ~11574
                         menu.setVisible(true);

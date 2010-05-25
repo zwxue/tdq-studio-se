@@ -805,6 +805,12 @@
             id="org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"
             name="%editor.name.IndicatorEditor">
       </editor>
+      <editor
+            class="org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownResultEditor"
+            default="false"
+            id="org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"
+            name="drillDownResultEditor">
+      </editor>
    </extension>
   <extension
         point="org.eclipse.ui.cheatsheets.cheatSheetContent">

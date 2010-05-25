@@ -30,12 +30,16 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
@@ -65,6 +69,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -80,6 +85,8 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
+import com.informix.util.stringUtil;
+
 /**
  * @author rli
  * 
@@ -89,6 +96,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
 
     private String execLang;
+
+    private Button drillDownCheck;
+
+    private Text maxNumText;
 
     private CCombo execCombo;
 
@@ -516,17 +527,24 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         analysisParamSection = createSection(form, anasisDataComp, DefaultMessagesImpl
                 .getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
+
         sectionClient.setLayout(new GridLayout(2, false));
         toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
         // MOD zshen:need to use the component with finish indicator Selection.
         execCombo = new CCombo(sectionClient, SWT.BORDER);
         // ~
         execCombo.setEditable(false);
+
         for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
             String temp = language.getLiteral();
             execCombo.add(temp);
         }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        // MOD zshen feature 12919 : add allow drill down and max number row component for java engin.
+        final Composite javaEnginSection = createjavaEnginSection(sectionClient);
+        if (ExecutionLanguage.SQL.equals(executionLanguage)) {
+            javaEnginSection.setVisible(false);
+        }
         execCombo.setText(executionLanguage.getLiteral());
         execLang = executionLanguage.getLiteral();
         // ADD xqliu 2009-08-24 bug 8776
@@ -556,6 +574,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     return;
                 }
                 // ~11104
+                // MOD zshen feature 12919 : hidden or display parameter of java engin.
+                if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang))) {
+                    javaEnginSection.setVisible(false);
+                } else {
+                    javaEnginSection.setVisible(true);
+                }
+                // 12919~
                 setDirty(true);
                 treeViewer.setLanguage(ExecutionLanguage.get(execLang));
                 // ~
@@ -563,6 +588,76 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         });
         analysisParamSection.setClient(sectionClient);
+    }
+
+    /**
+     * 
+     * add zshen feature 12919.
+     */
+    protected Composite createjavaEnginSection(Composite sectionClient) {
+
+        AnalysisParameters anaParameters = analysisHandler.getAnalysis().getParameters();
+        Composite javaEnginSection = toolkit.createComposite(sectionClient);
+        Composite checkSection = toolkit.createComposite(javaEnginSection);
+        Composite numberSection = toolkit.createComposite(javaEnginSection);
+        // GridLayout gridLayout1 = new GridLayout(2, false);
+        GridLayout gridLayout = new GridLayout(2, false);
+
+        gridLayout.marginWidth = 0;
+        // GridData data = new GridData();
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(javaEnginSection);
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(checkSection);
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(numberSection);
+        // data.verticalAlignment = GridData.FILL;
+        // data.horizontalSpan = 2;
+        // data.grabExcessHorizontalSpace = true;
+        // data.grabExcessVerticalSpace = true;
+        // javaEnginSection.setLayoutData(data);
+        javaEnginSection.setLayout(gridLayout);
+        checkSection.setLayout(gridLayout);
+        numberSection.setLayout(gridLayout);
+        Label drillDownLabel = toolkit.createLabel(checkSection, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
+        drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);
+        drillDownCheck.setSelection(true);
+        drillDownCheck.setSelection(anaParameters.isStoreData());
+        drillDownCheck.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                setDirty(true);
+            }
+
+        });
+        Label maxNumLabel = toolkit.createLabel(numberSection, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.maxNumberLabel"));
+        maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
+        maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
+        maxNumText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                String textContent = maxNumText.getText();
+                if (stringUtil.isANum(textContent)) {
+                    setDirty(true);
+                } else {
+                    MessageDialog.openWarning(e.display.getActiveShell(), DefaultMessagesImpl
+                            .getString("ColumnMasterDetailsPage.warningMessageTitle"), DefaultMessagesImpl
+                            .getString("ColumnMasterDetailsPage.integerConvertWarning"));
+                    maxNumText.setText(textContent.substring(0, textContent.length() - 1));
+                }
+
+            }
+
+        });
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
+        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
+        // ((GridData) maxNumText.getLayoutData()).widthHint = 200;
+        GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).applyTo(drillDownCheck);
+        // GridData data1 = new GridData();
+        // data1.horizontalSpan = 2;
+        // drillDownCheck.setLayoutData(data1);
+        // maxNumLabel.setLayoutData(data1);
+        return javaEnginSection;
     }
 
     /**
@@ -594,6 +689,12 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         TdDataProvider tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
+        // MOD zshen feature 12919 to save analysisParameter.
+        if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang))) {
+            analysis.getParameters().setMaxNumberRows(Integer.parseInt(maxNumText.getText()));
+            analysis.getParameters().setStoreData(drillDownCheck.getSelection());
+        }
+        // ~12919
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
 
             tdProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]);
