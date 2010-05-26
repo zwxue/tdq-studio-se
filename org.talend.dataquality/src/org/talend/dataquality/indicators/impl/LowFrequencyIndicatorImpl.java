@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.impl;
@@ -14,18 +13,18 @@ import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.utils.collections.MapValueSorter;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Low Frequency Indicator</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Low Frequency Indicator</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class LowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements LowFrequencyIndicator {
+
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected LowFrequencyIndicatorImpl() {
@@ -33,8 +32,8 @@ public class LowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -47,6 +46,10 @@ public class LowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
         return new MapValueSorter().getLessFrequent(this.valueToFreq, n);
     }
 
-    
-    
-} //LowFrequencyIndicatorImpl
+    @Override
+    public boolean handle(Object data) {
+        mustStoreRow = true;
+        return super.handle(data);
+    }
+
+} // LowFrequencyIndicatorImpl

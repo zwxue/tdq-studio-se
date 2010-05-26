@@ -8,6 +8,7 @@ package org.talend.dataquality.analysis;
 
 import java.util.List;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -25,6 +26,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.dataquality.analysis.AnalyzedDataSet#getDataCount <em>Data Count</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalyzedDataSet#getRecordSize <em>Record Size</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalyzedDataSet#getData <em>Data</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.AnalyzedDataSet#getPatternData <em>Pattern Data</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.AnalyzedDataSet#getFrequencyData <em>Frequency Data</em>}</li>
  * </ul>
  * </p>
  *
@@ -107,5 +110,57 @@ public interface AnalyzedDataSet extends EObject {
      * @generated
      */
     void setData(List<Object[]> value);
+
+    /**
+     * Returns the value of the '<em><b>Pattern Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Pattern Data</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Pattern Data</em>' attribute.
+     * @see #setPatternData(List)
+     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalyzedDataSet_PatternData()
+     * @model dataType="org.talend.dataquality.indicators.columnset.ListObject"
+     * @generated
+     */
+    List<Object> getPatternData();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.analysis.AnalyzedDataSet#getPatternData <em>Pattern Data</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Pattern Data</em>' attribute.
+     * @see #getPatternData()
+     * @generated
+     */
+    void setPatternData(List<Object> value);
+
+    /**
+     * Returns the value of the '<em><b>Frequency Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Frequency Data</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Frequency Data</em>' attribute.
+     * @see #setFrequencyData(Map)
+     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalyzedDataSet_FrequencyData()
+     * @model transient="true"
+     * @generated
+     */
+    Map<Object, List<Object[]>> getFrequencyData();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.analysis.AnalyzedDataSet#getFrequencyData <em>Frequency Data</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Frequency Data</em>' attribute.
+     * @see #getFrequencyData()
+     * @generated
+     */
+    void setFrequencyData(Map<Object, List<Object[]>> value);
 
 } // AnalyzedDataSet

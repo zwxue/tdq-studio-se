@@ -61,11 +61,11 @@ public class PatternExplorer extends DataExplorer {
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         // MOD zshen 10448 Add menus "view invalid values" and "view valid values" on pattern matching indicator
-        map.put("view invalid values", getInvalidValuesStatement()); //$NON-NLS-1$
-        map.put("view valid values", getValidValuesStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_INVALID_VALUES, getInvalidValuesStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_VALID_VALUES, getValidValuesStatement()); //$NON-NLS-1$
         // ~10448
-        map.put("view invalid rows", getInvalidRowsStatement()); //$NON-NLS-1$
-        map.put("view valid rows", getValidRowsStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_VALID_ROWS, getValidRowsStatement()); //$NON-NLS-1$
 
         return map;
     }

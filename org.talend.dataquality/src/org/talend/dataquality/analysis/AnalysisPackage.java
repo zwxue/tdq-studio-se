@@ -2177,13 +2177,31 @@ public interface AnalysisPackage extends EPackage {
     int ANALYZED_DATA_SET__DATA = 2;
 
     /**
+     * The feature id for the '<em><b>Pattern Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYZED_DATA_SET__PATTERN_DATA = 3;
+
+    /**
+     * The feature id for the '<em><b>Frequency Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYZED_DATA_SET__FREQUENCY_DATA = 4;
+
+    /**
      * The number of structural features of the '<em>Analyzed Data Set</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYZED_DATA_SET_FEATURE_COUNT = 3;
+    int ANALYZED_DATA_SET_FEATURE_COUNT = 5;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.analysis.AnalysisType <em>Type</em>}' enum.
@@ -2599,6 +2617,28 @@ public interface AnalysisPackage extends EPackage {
     EAttribute getAnalyzedDataSet_Data();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalyzedDataSet#getPatternData <em>Pattern Data</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Pattern Data</em>'.
+     * @see org.talend.dataquality.analysis.AnalyzedDataSet#getPatternData()
+     * @see #getAnalyzedDataSet()
+     * @generated
+     */
+    EAttribute getAnalyzedDataSet_PatternData();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalyzedDataSet#getFrequencyData <em>Frequency Data</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Frequency Data</em>'.
+     * @see org.talend.dataquality.analysis.AnalyzedDataSet#getFrequencyData()
+     * @see #getAnalyzedDataSet()
+     * @generated
+     */
+    EAttribute getAnalyzedDataSet_FrequencyData();
+
+    /**
      * Returns the meta object for enum '{@link org.talend.dataquality.analysis.AnalysisType <em>Type</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2941,6 +2981,22 @@ public interface AnalysisPackage extends EPackage {
          * @generated
          */
         EAttribute ANALYZED_DATA_SET__DATA = eINSTANCE.getAnalyzedDataSet_Data();
+
+        /**
+         * The meta object literal for the '<em><b>Pattern Data</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYZED_DATA_SET__PATTERN_DATA = eINSTANCE.getAnalyzedDataSet_PatternData();
+
+        /**
+         * The meta object literal for the '<em><b>Frequency Data</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYZED_DATA_SET__FREQUENCY_DATA = eINSTANCE.getAnalyzedDataSet_FrequencyData();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.AnalysisType <em>Type</em>}' enum.

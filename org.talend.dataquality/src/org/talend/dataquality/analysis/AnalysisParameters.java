@@ -160,6 +160,7 @@ public interface AnalysisParameters extends ReportGroup {
 
     /**
      * Returns the value of the '<em><b>Store Data</b></em>' attribute.
+     * The default value is <code>"true"</code>.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
@@ -169,7 +170,7 @@ public interface AnalysisParameters extends ReportGroup {
      * @return the value of the '<em>Store Data</em>' attribute.
      * @see #setStoreData(boolean)
      * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisParameters_StoreData()
-     * @model
+     * @model default="true"
      * @generated
      */
     boolean isStoreData();
@@ -186,6 +187,7 @@ public interface AnalysisParameters extends ReportGroup {
 
     /**
      * Returns the value of the '<em><b>Max Number Rows</b></em>' attribute.
+     * The default value is <code>"50"</code>.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
@@ -194,7 +196,7 @@ public interface AnalysisParameters extends ReportGroup {
      * @return the value of the '<em>Max Number Rows</em>' attribute.
      * @see #setMaxNumberRows(int)
      * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisParameters_MaxNumberRows()
-     * @model
+     * @model default="50"
      * @generated
      */
     int getMaxNumberRows();

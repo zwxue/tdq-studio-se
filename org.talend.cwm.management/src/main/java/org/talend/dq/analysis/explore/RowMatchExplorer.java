@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -39,9 +38,9 @@ public class RowMatchExplorer extends DataExplorer {
     public Map<String, String> getQueryMap() {
         // TODO Auto-generated method stub
         Map<String, String> map = new HashMap<String, String>();
-        map.put(Messages.getString("RowMatchExplorer.viewMatch"), getRowsMatchStatement()); //$NON-NLS-1$
-        map.put(Messages.getString("RowMatchExplorer.viewNotMatch"), getRowsNotMatchStatement()); //$NON-NLS-1$
-        map.put(Messages.getString("RowMatchExplorer.viewRows"), getAllRowsStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_MATCH_ROWS, getRowsMatchStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_NOT_MATCH_ROWS, getRowsNotMatchStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_ROWS, getAllRowsStatement()); //$NON-NLS-1$
         return map;
     }
 

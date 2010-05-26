@@ -217,11 +217,14 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
 
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = false;
         super.handle(data);
         if (data != null) {
             if (!this.uniqueObjects.add(data)) {
                 // store duplicate objects
                 duplicateObjects.add(data);
+            } else {
+                mustStoreRow = true;
             }
         }
         return true;

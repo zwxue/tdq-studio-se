@@ -33,6 +33,9 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.LowFrequencyIndicator;
+import org.talend.dataquality.indicators.PatternLowFreqIndicator;
+import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -131,12 +134,34 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
                             analyzedDataSet.setRecordSize(totalResultNum);
                         }
+                        List<Object[]> valueObjectList = null;
+                        if (indicator instanceof LowFrequencyIndicator) {
+                            Map<Object, List<Object[]>> valueObjectListMap = analyzedDataSet.getFrequencyData();
+                            if (valueObjectListMap == null) {
+                                valueObjectListMap = new HashMap<Object, List<Object[]>>();
+                                analyzedDataSet.setFrequencyData(valueObjectListMap);
+                            }
+                            String key = object == null ? "Null field" : object.toString();
+                            if (key.equals("")) {
+                                key = "Empty field";
+                            }
+                            if (indicator instanceof PatternLowFreqIndicator) {
+                                key = ((PatternLowFreqIndicator) indicator).convertCharacters(key);
+                            }
+                            valueObjectList = valueObjectListMap.get(key);
+                            if (valueObjectList == null) {
+                                valueObjectList = new ArrayList<Object[]>();
+                                valueObjectListMap.put(key, valueObjectList);
+                            }
 
-                        List<Object[]> valueObjectList = analyzedDataSet.getData();
-                        if (valueObjectList == null) {
-                            valueObjectList = new ArrayList<Object[]>();
-                            analyzedDataSet.setData(valueObjectList);
+                        } else {
+                            valueObjectList = analyzedDataSet.getData();
+                            if (valueObjectList == null) {
+                                valueObjectList = new ArrayList<Object[]>();
+                                analyzedDataSet.setData(valueObjectList);
+                            }
                         }
+
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
                         recordIncrement = valueObjectList.size();
                         for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
@@ -152,6 +177,15 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
                             if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                                 // if (recordIncrement < 50 && indicator.mustStoreRow()) {
+                                // if (indicator instanceof LowFrequencyIndicator) {
+                                // if (recordIncrement < valueObjectList.size()) {
+                                // valueObjectList.get(recordIncrement)[j] = newobject;
+                                // } else {
+                                // Object[] valueObject = new Object[resultSet.getMetaData().getColumnCount()];
+                                // valueObject[j] = newobject;
+                                // valueObjectList.add(valueObject);
+                                // }
+                                // } else {
                                 if (recordIncrement < valueObjectList.size()) {
                                     valueObjectList.get(recordIncrement)[j] = newobject;
                                 } else {
@@ -159,10 +193,23 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                     valueObject[j] = newobject;
                                     valueObjectList.add(valueObject);
                                 }
+                                // }
                             }
 
                         }
                         // ~
+                    } else if (indicator instanceof UniqueCountIndicator
+                            && analysis.getResults().getIndicToRowMap().get(indicator) != null) {
+                        List<Object[]> valueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
+                        List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                                .getAnalyzedElement().eContainer()));
+                        int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
+                        for (Object[] dataObject : valueObjectList) {
+                            if (dataObject[offsetting].equals(object)) {
+                                valueObjectList.remove(dataObject);
+                                break;
+                            }
+                        }
                     }
                 }
             }

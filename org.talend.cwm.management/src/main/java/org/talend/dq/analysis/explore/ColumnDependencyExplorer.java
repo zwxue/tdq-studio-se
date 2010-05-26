@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dq.dbms.GenericSQLHandler;
@@ -34,12 +33,12 @@ public class ColumnDependencyExplorer extends DataExplorer {
 
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("View valid values", this.getValidValuesStatement());
-        map.put("View invalid values", this.getInvalidValuesStatement());
-        map.put("View detailed invalid values", this.getDetailedInvalidValuesStatement());
-        map.put("View detailed valid values", this.getDetailedValidValuesStatement());
-        map.put(Messages.getString("ColumnDependencyExplorer.viewValidRows"), getValidRowsStatement()); //$NON-NLS-1$
-        map.put(Messages.getString("ColumnDependencyExplorer.viewInvalidRows"), getInvalidRowsStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_VALID_VALUES, this.getValidValuesStatement());
+        map.put(MENU_VIEW_INVALID_VALUES, this.getInvalidValuesStatement());
+        map.put(MENU_VIEW_DETAILED_INVALID_VALUES, this.getDetailedInvalidValuesStatement());
+        map.put(MENU_VIEW_DETAILED_VALID_VALUES, this.getDetailedValidValuesStatement());
+        map.put(MENU_VIEW_VALID_ROWS, getValidRowsStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement()); //$NON-NLS-1$
         return map;
     }
 

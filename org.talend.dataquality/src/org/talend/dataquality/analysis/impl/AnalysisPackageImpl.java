@@ -10,6 +10,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
@@ -609,6 +610,24 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getAnalyzedDataSet_PatternData() {
+        return (EAttribute)analyzedDataSetEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getAnalyzedDataSet_FrequencyData() {
+        return (EAttribute)analyzedDataSetEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EEnum getAnalysisType() {
         return analysisTypeEEnum;
     }
@@ -692,6 +711,8 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         createEAttribute(analyzedDataSetEClass, ANALYZED_DATA_SET__DATA_COUNT);
         createEAttribute(analyzedDataSetEClass, ANALYZED_DATA_SET__RECORD_SIZE);
         createEAttribute(analyzedDataSetEClass, ANALYZED_DATA_SET__DATA);
+        createEAttribute(analyzedDataSetEClass, ANALYZED_DATA_SET__PATTERN_DATA);
+        createEAttribute(analyzedDataSetEClass, ANALYZED_DATA_SET__FREQUENCY_DATA);
 
         // Create enums
         analysisTypeEEnum = createEEnum(ANALYSIS_TYPE);
@@ -728,6 +749,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
         DomainPackage theDomainPackage = (DomainPackage)EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI);
         IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
+        ColumnsetPackage theColumnsetPackage = (ColumnsetPackage)EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI);
 
         // Add subpackages
         getESubpackages().add(theCategoryPackage);
@@ -760,8 +782,8 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         initEAttribute(getAnalysisParameters_AnalysisType(), this.getAnalysisType(), "analysisType", "", 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getAnalysisParameters_DeactivatedIndicators(), theIndicatorsPackage.getIndicator(), null, "deactivatedIndicators", null, 0, -1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getAnalysisParameters_ExecutionLanguage(), this.getExecutionLanguage(), "executionLanguage", null, 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getAnalysisParameters_StoreData(), ecorePackage.getEBoolean(), "storeData", null, 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getAnalysisParameters_MaxNumberRows(), ecorePackage.getEInt(), "maxNumberRows", null, 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAnalysisParameters_StoreData(), ecorePackage.getEBoolean(), "storeData", "true", 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAnalysisParameters_MaxNumberRows(), ecorePackage.getEInt(), "maxNumberRows", "50", 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(analysisResultEClass, AnalysisResult.class, "AnalysisResult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getAnalysisResult_Analysis(), this.getAnalysis(), this.getAnalysis_Results(), "analysis", null, 0, 1, AnalysisResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -785,6 +807,13 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         initEAttribute(getAnalyzedDataSet_DataCount(), ecorePackage.getEInt(), "dataCount", null, 0, 1, AnalyzedDataSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getAnalyzedDataSet_RecordSize(), ecorePackage.getEInt(), "recordSize", null, 0, 1, AnalyzedDataSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getAnalyzedDataSet_Data(), theIndicatorsPackage.getObjectArray(), "data", null, 0, 1, AnalyzedDataSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAnalyzedDataSet_PatternData(), theColumnsetPackage.getListObject(), "patternData", null, 0, 1, AnalyzedDataSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        EGenericType g1 = createEGenericType(ecorePackage.getEMap());
+        EGenericType g2 = createEGenericType(ecorePackage.getEJavaObject());
+        g1.getETypeArguments().add(g2);
+        g2 = createEGenericType(theIndicatorsPackage.getObjectArray());
+        g1.getETypeArguments().add(g2);
+        initEAttribute(getAnalyzedDataSet_FrequencyData(), g1, "frequencyData", null, 0, 1, AnalyzedDataSet.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize enums and add enum literals
         initEEnum(analysisTypeEEnum, AnalysisType.class, "AnalysisType");

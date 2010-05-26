@@ -54,12 +54,14 @@
           <details key="documentation" value="The execution language: either analysis is computed by using SQL queries or by using Java code."/>
         </eAnnotations>
       </eStructuralFeatures>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+          defaultValueLiteral="true">
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
           <details key="documentation" value="when true, the data must be stored in the analyzedDataSets.&#xA;when false, the data are not kept during the analysis with the java engine."/>
         </eAnnotations>
       </eStructuralFeatures>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxNumberRows" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxNumberRows" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+          defaultValueLiteral="50">
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
           <details key="documentation" value="The maximum number of rows kept in each indicator when analyzing data with the Java engine. "/>
         </eAnnotations>
@@ -142,6 +144,13 @@
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
           <details key="documentation" value="the analyzed data."/>
         </eAnnotations>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="patternData" eType="#//indicators/columnset/ListObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="frequencyData" transient="true">
+        <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+          <eTypeArguments eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+          <eTypeArguments eClassifier="#//indicators/ObjectArray"/>
+        </eGenericType>
       </eStructuralFeatures>
     </eClassifiers>
     <eSubpackages name="category" nsURI="http://org.talend.dataquality.category" nsPrefix="dataquality.category">
