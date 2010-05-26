@@ -152,7 +152,8 @@ public final class ChartTableFactory {
                         } else {
                             try {
                                 if (analysis.getParameters().isStoreData()
-                                        && !analysis.getResults().getIndicToRowMap().get(indicator).getData().isEmpty()) {
+                                        && (analysis.getResults().getIndicToRowMap().get(indicator).getData() != null || analysis
+                                                .getResults().getIndicToRowMap().get(indicator).getFrequencyData() != null)) {
                                     MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
                                             dataEntity);
                                     for (final MenuItemEntity itemEntity : itemEntities) {
@@ -174,7 +175,7 @@ public final class ChartTableFactory {
                                                             .getActiveWorkbenchWindow()
                                                             .getActivePage()
                                                             .openEditor(
-                                                                    new DrillDownEditorInput(analysis, dataEntity.getIndicator()),
+                                                                    new DrillDownEditorInput(analysis, dataEntity, itemEntity),
                                                                     "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");
                                                 } catch (PartInitException e1) {
                                                     e1.printStackTrace();

@@ -15,8 +15,10 @@ package org.talend.dataprofiler.core.ui.editor.analysis.drilldown;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * DOC zshen class global comment. Detailled comment
@@ -27,13 +29,19 @@ public class DrillDownEditorInput implements IEditorInput {
 
     private Indicator currIndicator;
 
+    private MenuItemEntity menuItemEntity;
+
+    private ChartDataEntity dataEntity;
+
     public DrillDownEditorInput() {
 
     }
 
-    public DrillDownEditorInput(Analysis analysis, Indicator indicator) {
+    public DrillDownEditorInput(Analysis analysis, ChartDataEntity dataEntity, MenuItemEntity menuItemEntity) {
         this.analysis = analysis;
-        this.currIndicator = indicator;
+        this.currIndicator = dataEntity.getIndicator();
+        this.menuItemEntity = menuItemEntity;
+        this.dataEntity = dataEntity;
     }
 
     /*
@@ -111,4 +119,15 @@ public class DrillDownEditorInput implements IEditorInput {
         this.currIndicator = currIndicator;
     }
 
+    public String getMenuType() {
+        return this.menuItemEntity.getLabel();
+    }
+
+    public String getSelectValue() {
+        return this.dataEntity.getLabel();
+    }
+
+    public String getComputeValue() {
+        return this.dataEntity.getValue();
+    }
 }
