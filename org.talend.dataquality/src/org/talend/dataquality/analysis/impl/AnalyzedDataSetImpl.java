@@ -32,9 +32,9 @@ import org.talend.dataquality.analysis.AnalyzedDataSet;
 public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet {
 
     /**
-     * The default value of the '{@link #getDataCount() <em>Data Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getDataCount() <em>Data Count</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getDataCount()
      * @generated
      * @ordered
@@ -42,9 +42,9 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
     protected static final int DATA_COUNT_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getDataCount() <em>Data Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getDataCount() <em>Data Count</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getDataCount()
      * @generated
      * @ordered
@@ -52,9 +52,9 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
     protected int dataCount = DATA_COUNT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getRecordSize() <em>Record Size</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getRecordSize() <em>Record Size</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getRecordSize()
      * @generated
      * @ordered
@@ -62,9 +62,9 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
     protected static final int RECORD_SIZE_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getRecordSize() <em>Record Size</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getRecordSize() <em>Record Size</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getRecordSize()
      * @generated
      * @ordered
@@ -92,9 +92,9 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
     protected List<Object[]> data = DATA_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getPatternData() <em>Pattern Data</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The default value of the '{@link #getPatternData() <em>Pattern Data</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getPatternData()
      * @generated
      * @ordered
@@ -102,19 +102,24 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
     protected static final List<Object> PATTERN_DATA_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getPatternData() <em>Pattern Data</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getPatternData() <em>Pattern Data</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getPatternData()
-     * @generated
+     * @generated NOT
      * @ordered
      */
     protected List<Object> patternData = PATTERN_DATA_EDEFAULT;
 
+    // MOD zshen feature 12919
+    public final static int VALID_VALUE = 0;
+
+    public final static int INVALID_VALUE = 1;
+
     /**
-     * The cached value of the '{@link #getFrequencyData() <em>Frequency Data</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getFrequencyData() <em>Frequency Data</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getFrequencyData()
      * @generated
      * @ordered
@@ -123,6 +128,7 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected AnalyzedDataSetImpl() {
@@ -131,6 +137,7 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -140,6 +147,7 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public int getDataCount() {
@@ -148,17 +156,20 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setDataCount(int newDataCount) {
         int oldDataCount = dataCount;
         dataCount = newDataCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT, oldDataCount, dataCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT, oldDataCount,
+                    dataCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public int getRecordSize() {
@@ -167,17 +178,20 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setRecordSize(int newRecordSize) {
         int oldRecordSize = recordSize;
         recordSize = newRecordSize;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE, oldRecordSize, recordSize));
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE, oldRecordSize,
+                    recordSize));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public List<Object[]> getData() {
@@ -186,6 +200,7 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setData(List<Object[]> newData) {
@@ -197,6 +212,7 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public List<Object> getPatternData() {
@@ -205,17 +221,20 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setPatternData(List<Object> newPatternData) {
         List<Object> oldPatternData = patternData;
         patternData = newPatternData;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA, oldPatternData, patternData));
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA,
+                    oldPatternData, patternData));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Map<Object, List<Object[]>> getFrequencyData() {
@@ -224,117 +243,125 @@ public class AnalyzedDataSetImpl extends EObjectImpl implements AnalyzedDataSet 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setFrequencyData(Map<Object, List<Object[]>> newFrequencyData) {
         Map<Object, List<Object[]>> oldFrequencyData = frequencyData;
         frequencyData = newFrequencyData;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA, oldFrequencyData, frequencyData));
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA,
+                    oldFrequencyData, frequencyData));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
-                return getDataCount();
-            case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
-                return getRecordSize();
-            case AnalysisPackage.ANALYZED_DATA_SET__DATA:
-                return getData();
-            case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
-                return getPatternData();
-            case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
-                return getFrequencyData();
+        case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
+            return getDataCount();
+        case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
+            return getRecordSize();
+        case AnalysisPackage.ANALYZED_DATA_SET__DATA:
+            return getData();
+        case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
+            return getPatternData();
+        case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
+            return getFrequencyData();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
-                setDataCount((Integer)newValue);
-                return;
-            case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
-                setRecordSize((Integer)newValue);
-                return;
-            case AnalysisPackage.ANALYZED_DATA_SET__DATA:
-                setData((List<Object[]>)newValue);
-                return;
-            case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
-                setPatternData((List<Object>)newValue);
-                return;
-            case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
-                setFrequencyData((Map<Object, List<Object[]>>)newValue);
-                return;
+        case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
+            setDataCount((Integer) newValue);
+            return;
+        case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
+            setRecordSize((Integer) newValue);
+            return;
+        case AnalysisPackage.ANALYZED_DATA_SET__DATA:
+            setData((List<Object[]>) newValue);
+            return;
+        case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
+            setPatternData((List<Object>) newValue);
+            return;
+        case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
+            setFrequencyData((Map<Object, List<Object[]>>) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
-                setDataCount(DATA_COUNT_EDEFAULT);
-                return;
-            case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
-                setRecordSize(RECORD_SIZE_EDEFAULT);
-                return;
-            case AnalysisPackage.ANALYZED_DATA_SET__DATA:
-                setData(DATA_EDEFAULT);
-                return;
-            case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
-                setPatternData(PATTERN_DATA_EDEFAULT);
-                return;
-            case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
-                setFrequencyData((Map<Object, List<Object[]>>)null);
-                return;
+        case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
+            setDataCount(DATA_COUNT_EDEFAULT);
+            return;
+        case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
+            setRecordSize(RECORD_SIZE_EDEFAULT);
+            return;
+        case AnalysisPackage.ANALYZED_DATA_SET__DATA:
+            setData(DATA_EDEFAULT);
+            return;
+        case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
+            setPatternData(PATTERN_DATA_EDEFAULT);
+            return;
+        case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
+            setFrequencyData((Map<Object, List<Object[]>>) null);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
-                return dataCount != DATA_COUNT_EDEFAULT;
-            case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
-                return recordSize != RECORD_SIZE_EDEFAULT;
-            case AnalysisPackage.ANALYZED_DATA_SET__DATA:
-                return DATA_EDEFAULT == null ? data != null : !DATA_EDEFAULT.equals(data);
-            case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
-                return PATTERN_DATA_EDEFAULT == null ? patternData != null : !PATTERN_DATA_EDEFAULT.equals(patternData);
-            case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
-                return frequencyData != null;
+        case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
+            return dataCount != DATA_COUNT_EDEFAULT;
+        case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
+            return recordSize != RECORD_SIZE_EDEFAULT;
+        case AnalysisPackage.ANALYZED_DATA_SET__DATA:
+            return DATA_EDEFAULT == null ? data != null : !DATA_EDEFAULT.equals(data);
+        case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
+            return PATTERN_DATA_EDEFAULT == null ? patternData != null : !PATTERN_DATA_EDEFAULT.equals(patternData);
+        case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
+            return frequencyData != null;
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy())
+            return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (dataCount: ");

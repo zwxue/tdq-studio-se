@@ -31,6 +31,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
+import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LowFrequencyIndicator;
@@ -65,7 +66,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
             ok.setReturnCode(Messages.getString("IndicatorEvaluator.DefineAnalyzedColumns"), false); //$NON-NLS-1$
             return ok;
         }
-
         // create query statement
         // feature 0010630 zshen: Tables are not found when using Excel with ODBC connection
         Statement statement = null;
@@ -79,7 +79,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
             }
             statement.execute(sqlStatement);
         }
-
         // get the results
         ResultSet resultSet = statement.getResultSet();
         if (resultSet == null) {
@@ -88,7 +87,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
             ok.setReturnCode(mess, false);
             return ok;
         }
-
         // MOD mzhao feature: 12919, add capability to dill down data on Java engine.
         AnalysisResult anaResult = analysis.getResults();
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = anaResult.getIndicToRowMap();
@@ -98,7 +96,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
         resultSet.last();
         int totalResultNum = resultSet.getRow();
         resultSet.beforeFirst();
-        //
         // --- for each row
         label: while (resultSet.next()) {
             // --- for each column
@@ -122,70 +119,22 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     if (!continueRun()) {
                         break label;
                     }
-
                     indicator.handle(object);
                     // ~MOD mzhao feature: 12919
                     if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
-                        // if (false) {
-                        AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
-                        if (analyzedDataSet == null) {
-                            analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
-                            indicToRowMap.put(indicator, analyzedDataSet);
-                            analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
-                            analyzedDataSet.setRecordSize(totalResultNum);
-                        }
-                        List<Object[]> valueObjectList = null;
-                        if (indicator instanceof LowFrequencyIndicator) {
-                            Map<Object, List<Object[]>> valueObjectListMap = analyzedDataSet.getFrequencyData();
-                            if (valueObjectListMap == null) {
-                                valueObjectListMap = new HashMap<Object, List<Object[]>>();
-                                analyzedDataSet.setFrequencyData(valueObjectListMap);
-                            }
-                            String key = object == null ? "Null field" : object.toString();
-                            if (key.equals("")) {
-                                key = "Empty field";
-                            }
-                            if (indicator instanceof PatternLowFreqIndicator) {
-                                key = ((PatternLowFreqIndicator) indicator).convertCharacters(key);
-                            }
-                            valueObjectList = valueObjectListMap.get(key);
-                            if (valueObjectList == null) {
-                                valueObjectList = new ArrayList<Object[]>();
-                                valueObjectListMap.put(key, valueObjectList);
-                            }
-
-                        } else {
-                            valueObjectList = analyzedDataSet.getData();
-                            if (valueObjectList == null) {
-                                valueObjectList = new ArrayList<Object[]>();
-                                analyzedDataSet.setData(valueObjectList);
-                            }
-                        }
-
+                        List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
                         recordIncrement = valueObjectList.size();
                         for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
                             List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
                                     .getAnalyzedElement().eContainer()));
-
                             String newcol = columnList.get(j).getName();
                             Object newobject = resultSet.getObject(newcol);
                             if (newobject != null && !(newobject instanceof String)
                                     && newobject.toString().indexOf("TIMESTAMP") > -1) {
                                 newobject = resultSet.getTimestamp(newcol);
                             }
-
                             if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                                // if (recordIncrement < 50 && indicator.mustStoreRow()) {
-                                // if (indicator instanceof LowFrequencyIndicator) {
-                                // if (recordIncrement < valueObjectList.size()) {
-                                // valueObjectList.get(recordIncrement)[j] = newobject;
-                                // } else {
-                                // Object[] valueObject = new Object[resultSet.getMetaData().getColumnCount()];
-                                // valueObject[j] = newobject;
-                                // valueObjectList.add(valueObject);
-                                // }
-                                // } else {
                                 if (recordIncrement < valueObjectList.size()) {
                                     valueObjectList.get(recordIncrement)[j] = newobject;
                                 } else {
@@ -193,20 +142,18 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                     valueObject[j] = newobject;
                                     valueObjectList.add(valueObject);
                                 }
-                                // }
                             }
-
                         }
                         // ~
                     } else if (indicator instanceof UniqueCountIndicator
                             && analysis.getResults().getIndicToRowMap().get(indicator) != null) {
-                        List<Object[]> valueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
+                        List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
                         List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
                                 .getAnalyzedElement().eContainer()));
                         int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
-                        for (Object[] dataObject : valueObjectList) {
+                        for (Object[] dataObject : removeValueObjectList) {
                             if (dataObject[offsetting].equals(object)) {
-                                valueObjectList.remove(dataObject);
+                                removeValueObjectList.remove(dataObject);
                                 break;
                             }
                         }
@@ -214,14 +161,69 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
             }
 
-            // TODO scorreia give a full row to indicator (indicator will have to handle its data??
-
         }
         // --- release resultset
         resultSet.close();
         // --- close
         connection.close();
         return ok;
+    }
+
+    private List<Object[]> initDataSet(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap, Object object) {
+        AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
+        List<Object[]> valueObjectList = null;
+        if (analyzedDataSet == null) {
+            analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
+            indicToRowMap.put(indicator, analyzedDataSet);
+            analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
+            analyzedDataSet.setRecordSize(0);
+        }
+
+        if (indicator instanceof LowFrequencyIndicator) {
+            Map<Object, List<Object[]>> valueObjectListMap = analyzedDataSet.getFrequencyData();
+            if (valueObjectListMap == null) {
+                valueObjectListMap = new HashMap<Object, List<Object[]>>();
+                analyzedDataSet.setFrequencyData(valueObjectListMap);
+            }
+            String key = null;
+            if (object == null) {
+                key = "Null field";
+            } else if (object.equals("")) {
+                key = "Empty field";
+            } else if (indicator instanceof PatternLowFreqIndicator) {
+                key = ((PatternLowFreqIndicator) indicator).convertCharacters(object.toString());
+            } else {
+                key = object.toString();
+            }
+            valueObjectList = valueObjectListMap.get(key);
+            if (valueObjectList == null) {
+                valueObjectList = new ArrayList<Object[]>();
+                valueObjectListMap.put(key, valueObjectList);
+            }
+
+        } else if (indicator.isInValidRow() || indicator.isValidRow()) {
+            List<Object> patternData = analyzedDataSet.getPatternData();
+            if (patternData == null) {
+                patternData = new ArrayList<Object>();
+                patternData.add(new ArrayList<Object[]>());
+                patternData.add(new ArrayList<Object[]>());
+                analyzedDataSet.setPatternData(patternData);
+            }
+            if (indicator.isInValidRow()) {
+                if (patternData.get(AnalyzedDataSetImpl.INVALID_VALUE) instanceof List<?>) {
+                    valueObjectList = (ArrayList<Object[]>) patternData.get(AnalyzedDataSetImpl.INVALID_VALUE);
+                }
+            } else {
+                valueObjectList = (ArrayList<Object[]>) patternData.get(AnalyzedDataSetImpl.VALID_VALUE);
+            }
+        } else {
+            valueObjectList = analyzedDataSet.getData();
+            if (valueObjectList == null) {
+                valueObjectList = new ArrayList<Object[]>();
+                analyzedDataSet.setData(valueObjectList);
+            }
+        }
+        return valueObjectList;
     }
 
     /**
@@ -233,7 +235,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
      */
     public List<String> sortColumnName(Set<String> columns, String sqlStatement) {
         List<String> columnNameList = new ArrayList<String>();
-        Map offset = new HashMap();
+        Map<Object, Object> offset = new HashMap<Object, Object>();
         for (String col : columns) {
             int offsetCol = col.lastIndexOf('.') + 1;
             String colName = col.substring(offsetCol);

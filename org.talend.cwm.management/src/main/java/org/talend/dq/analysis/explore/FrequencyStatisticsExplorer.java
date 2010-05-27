@@ -14,26 +14,22 @@ package org.talend.dq.analysis.explore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.dbms.DB2DbmsLanguage;
-import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sql.Java2SqlType;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC Administrator class global comment. Detailled comment
  */
 public class FrequencyStatisticsExplorer extends DataExplorer {
-
 
     protected String getFreqRowsStatement() {
 
@@ -220,8 +216,9 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      */
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-
-        map.put(MENU_VIEW_ROWS, getFreqRowsStatement());
+        // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
+        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
+        map.put(MENU_VIEW_ROWS, isSqlEngine ? getFreqRowsStatement() : null);
 
         return map;
     }
@@ -235,20 +232,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         // get function which convert data into a pattern
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         int javaType = column.getJavaType();
-//        if (!Java2SqlType.isNumbericInSQL(javaType)) {
-//        	function=getFunction();
-//        }
-        // MOD zshen bug 11005 sometimes(when instead of soundex() with some sql),the Variable named "function" is not
-        // is
-        // colName.
-//        if (function != null
-//                && (DbmsLanguageFactory.isInfomix(this.dbmsLanguage.getDbmsName()) || DbmsLanguageFactory
-//                        .isOracle(this.dbmsLanguage.getDbmsName()))) {
-//            function = columnName;
-//        }
-        // ~11005
         // MOD mzhao bug 9681 2009-11-09
-        
+
         Object value = null;
         if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof DB2DbmsLanguage) {
             value = entity.getKey();
@@ -256,11 +241,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             value = "'" + entity.getKey() + "'";
         }
 
-		String clause = entity.isLabelNull() ? columnName
-				+ dbmsLanguage.isNull() : columnName + dbmsLanguage.equal()
-				+ value; //$NON-NLS-1$ //$NON-NLS-2$
+        String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : columnName + dbmsLanguage.equal() + value; //$NON-NLS-1$ //$NON-NLS-2$
         return clause;
     }
 
-    
 }

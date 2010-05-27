@@ -30,6 +30,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getJoinConditions <em>Join Conditions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getMaxNumberRows <em>Max Number Rows</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.Indicator#isValidRow <em>Valid Row</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.Indicator#isInValidRow <em>In Valid Row</em>}</li>
  * </ul>
  * </p>
  *
@@ -277,6 +279,58 @@ public interface Indicator extends ModelElement {
      * @generated
      */
     void setMaxNumberRows(int value);
+
+    /**
+     * Returns the value of the '<em><b>Valid Row</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * True if the previously handled data is match with the pattern.False if the indicator not need the parameter.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Valid Row</em>' attribute.
+     * @see #setValidRow(boolean)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_ValidRow()
+     * @model default="false"
+     * @generated
+     */
+    boolean isValidRow();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isValidRow <em>Valid Row</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Valid Row</em>' attribute.
+     * @see #isValidRow()
+     * @generated
+     */
+    void setValidRow(boolean value);
+
+    /**
+     * Returns the value of the '<em><b>In Valid Row</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * True if the previously handled data is not match with the pattern.False if the indicator not need the parameter.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>In Valid Row</em>' attribute.
+     * @see #setInValidRow(boolean)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_InValidRow()
+     * @model default="false"
+     * @generated
+     */
+    boolean isInValidRow();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isInValidRow <em>In Valid Row</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>In Valid Row</em>' attribute.
+     * @see #isInValidRow()
+     * @generated
+     */
+    void setInValidRow(boolean value);
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

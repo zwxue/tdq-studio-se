@@ -333,6 +333,24 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMNS_COMPARE_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.MATCHING_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMNS_COMPARE_INDICATOR__VALID_ROW = IndicatorsPackage.MATCHING_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMNS_COMPARE_INDICATOR__IN_VALID_ROW = IndicatorsPackage.MATCHING_INDICATOR__IN_VALID_ROW;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -648,6 +666,24 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int VALUE_MATCHING_INDICATOR__MAX_NUMBER_ROWS = COLUMNS_COMPARE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALUE_MATCHING_INDICATOR__VALID_ROW = COLUMNS_COMPARE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALUE_MATCHING_INDICATOR__IN_VALID_ROW = COLUMNS_COMPARE_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
@@ -966,6 +1002,24 @@ public interface ColumnsetPackage extends EPackage {
     int ROW_MATCHING_INDICATOR__MAX_NUMBER_ROWS = COLUMNS_COMPARE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ROW_MATCHING_INDICATOR__VALID_ROW = COLUMNS_COMPARE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ROW_MATCHING_INDICATOR__IN_VALID_ROW = COLUMNS_COMPARE_INDICATOR__IN_VALID_ROW;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1281,6 +1335,24 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.COMPOSITE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__VALID_ROW = IndicatorsPackage.COMPOSITE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__IN_VALID_ROW = IndicatorsPackage.COMPOSITE_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
@@ -1697,6 +1769,24 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int ALL_MATCH_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__IN_VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
@@ -2123,6 +2213,24 @@ public interface ColumnsetPackage extends EPackage {
     int COUNT_AVG_NULL_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__IN_VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__IN_VALID_ROW;
+
+    /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2536,6 +2644,24 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int MIN_MAX_DATE_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__IN_VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
@@ -2953,6 +3079,24 @@ public interface ColumnsetPackage extends EPackage {
     int WEAK_CORRELATION_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__IN_VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__IN_VALID_ROW;
+
+    /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3368,6 +3512,24 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMN_DEPENDENCY_INDICATOR__MAX_NUMBER_ROWS = IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS;
 
     /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__VALID_ROW = IndicatorsPackage.INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__IN_VALID_ROW = IndicatorsPackage.INDICATOR__IN_VALID_ROW;
+
+    /**
      * The feature id for the '<em><b>Column A</b></em>' reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3691,6 +3853,24 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int SIMPLE_STAT_INDICATOR__MAX_NUMBER_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SIMPLE_STAT_INDICATOR__VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SIMPLE_STAT_INDICATOR__IN_VALID_ROW = COLUMN_SET_MULTI_VALUE_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.

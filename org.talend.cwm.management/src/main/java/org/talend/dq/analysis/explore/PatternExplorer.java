@@ -15,6 +15,7 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
@@ -59,13 +60,15 @@ public class PatternExplorer extends DataExplorer {
     }
 
     public Map<String, String> getQueryMap() {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<String, String>();// MOD zshen feature 12919 adapt to pop-menu for Jave
+        // engin on result page
+        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
         // MOD zshen 10448 Add menus "view invalid values" and "view valid values" on pattern matching indicator
-        map.put(MENU_VIEW_INVALID_VALUES, getInvalidValuesStatement()); //$NON-NLS-1$
-        map.put(MENU_VIEW_VALID_VALUES, getValidValuesStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_INVALID_VALUES, isSqlEngine ? getInvalidValuesStatement() : null); //$NON-NLS-1$
+        map.put(MENU_VIEW_VALID_VALUES, isSqlEngine ? getValidValuesStatement() : null); //$NON-NLS-1$
         // ~10448
-        map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement()); //$NON-NLS-1$
-        map.put(MENU_VIEW_VALID_ROWS, getValidRowsStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_INVALID_ROWS, isSqlEngine ? getInvalidRowsStatement() : null); //$NON-NLS-1$
+        map.put(MENU_VIEW_VALID_ROWS, isSqlEngine ? getValidRowsStatement() : null); //$NON-NLS-1$
 
         return map;
     }

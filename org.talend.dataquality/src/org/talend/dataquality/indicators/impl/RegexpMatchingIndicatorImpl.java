@@ -121,14 +121,22 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
      */
     @Override
     public boolean handle(Object data) {
+        this.mustStoreRow = true;
+        this.setValidRow(false);
+        this.setInValidRow(false);
         if (data != null) {
             String body = String.valueOf(data);
             Matcher matcher = pattern.matcher(body);
             if (matcher.find()) {
                 this.matchingValueCount++;
+                this.setValidRow(true);
+            } else {
+                this.setInValidRow(true);
             }
-        }
 
+        } else {
+            this.setInValidRow(true);
+        }
         boolean ok = super.handle(data);
 
         return ok;
