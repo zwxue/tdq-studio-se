@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.talend.cwm.management.test
+Bundle-SymbolicName: org.talend.cwm.management.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: .Talend SA.
+Fragment-Host: org.talend.cwm.management;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit4;bundle-version="4.5.0"
+Export-Package: org.talend.cwm.db.connection;uses:="org.apache.log4j",
+ org.talend.cwm.management.api,
+ org.talend.cwm.management.connection,
+ org.talend.cwm.management.i18n,
+ org.talend.dq.analysis;uses:="org.talend.dataquality.analysis,org.talend.cwm.softwaredeployment,org.talend.dataquality.indicators.columnset",
+ org.talend.dq.analysis.category,
+ org.talend.dq.analysis.explore,
+ org.talend.dq.dbms,
+ org.talend.dq.indicators;uses:="org.apache.log4j",
+ org.talend.dq.indicators.graph.tests;
+  uses:="edu.uci.ics.jung.visualization.control,
+   javax.swing,
+   org.talend.dq.indicators.graph,
+   edu.uci.ics.jung.visualization.transform,
+   edu.uci.ics.jung.graph,
+   edu.uci.ics.jung.graph.decorators,
+   edu.uci.ics.jung.visualization",
+ org.talend.dq.sql.converters
