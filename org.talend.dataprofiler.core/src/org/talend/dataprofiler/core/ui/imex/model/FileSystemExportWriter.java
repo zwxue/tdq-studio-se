@@ -33,7 +33,7 @@ public class FileSystemExportWriter implements IImexWriter {
 
     private static Logger log = Logger.getLogger(FileSystemExportWriter.class);
 
-    private String destination;
+    private String basePath;
 
     /*
      * (non-Javadoc)
@@ -52,12 +52,11 @@ public class FileSystemExportWriter implements IImexWriter {
      * 
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
-     * , java.lang.String)
+     * )
      */
-    public void write(ItemRecord recored, String destination) throws IOException, CoreException {
-        this.destination = destination;
+    public void write(ItemRecord recored) throws IOException, CoreException {
 
-        IPath itemDesPath = new Path(destination).append(recored.getFullPath());
+        IPath itemDesPath = new Path(basePath).append(recored.getFullPath());
         IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
         // export item file
@@ -97,7 +96,7 @@ public class FileSystemExportWriter implements IImexWriter {
      * @throws IOException
      */
     private void copyFileToDest(IFile source) throws IOException {
-        IPath desPath = new Path(destination).append(source.getFullPath());
+        IPath desPath = new Path(basePath).append(source.getFullPath());
         if (source.exists()) {
             copyFile(source.getLocation().toFile(), desPath.toFile());
         }
@@ -117,4 +116,23 @@ public class FileSystemExportWriter implements IImexWriter {
             log.warn("Export failed! " + source.getAbsolutePath() + " is not existed");
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(java.lang.String)
+     */
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#getBasePath()
+     */
+    public String getBasePath() {
+        return this.basePath;
+    }
+
 }

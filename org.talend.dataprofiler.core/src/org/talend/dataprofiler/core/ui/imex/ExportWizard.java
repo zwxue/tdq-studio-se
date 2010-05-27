@@ -48,8 +48,8 @@ public class ExportWizard extends Wizard {
     public ExportWizard(EImexType type, String specifiedPath) {
         setWindowTitle("Export Item");
 
-        this.exportPage = new ExportWizardPage(specifiedPath);
         this.writer = ExportWriterFactory.create(type);
+        this.exportPage = new ExportWizardPage(writer, specifiedPath);
     }
 
     /*
@@ -70,7 +70,6 @@ public class ExportWizard extends Wizard {
     @Override
     public boolean performFinish() {
 
-        final String destPath = exportPage.getFilePath();
         final ItemRecord[] records = exportPage.getElements();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {
@@ -89,7 +88,7 @@ public class ExportWizard extends Wizard {
 
                         if (record.isValid()) {
                             log.info("Start exporting " + record.getFile().getAbsolutePath());
-                            writer.write(record, destPath);
+                            writer.write(record);
                         } else {
                             for (String error : record.getErrors()) {
                                 log.error(error);

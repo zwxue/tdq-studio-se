@@ -78,7 +78,7 @@ public class ImportWizard extends Wizard {
 
                         if (record.isValid()) {
                             log.info("Start importing " + record.getFile().getAbsolutePath());
-                            writer.write(record, null);
+                            writer.write(record);
                         }
 
                         monitor.worked(1);

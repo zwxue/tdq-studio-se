@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
@@ -50,8 +51,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * This class defines the UI for the export feature in TOP and TQ for the Data profile perspective.
  */
 public class ExportWizardPage extends WizardPage {
-
-    private static final int EXPAND_LEVEL = 3;
 
     private CheckboxTreeViewer repositoryTree;
 
@@ -65,11 +64,14 @@ public class ExportWizardPage extends WizardPage {
 
     private List<String> errors;
 
+    private IImexWriter writer;
+
     private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
-    public ExportWizardPage(String specifiedPath) {
+    public ExportWizardPage(IImexWriter writer, String specifiedPath) {
         super(Messages.getString("ExportWizardPage.2")); //$NON-NLS-1$
         setMessage(Messages.getString("ExportWizardPage.3")); //$NON-NLS-1$
+        this.writer = writer;
         this.specifiedPath = specifiedPath;
     }
 
@@ -100,7 +102,6 @@ public class ExportWizardPage extends WizardPage {
      * DOC bZhou Comment method "initControlState".
      */
     protected void initControlState() {
-
         setArchState(false);
         setPageComplete(false);
     }
@@ -219,7 +220,6 @@ public class ExportWizardPage extends WizardPage {
                         repositoryTree.setChecked(file, item.getChecked());
                     }
 
-                    // repositoryTree.setExpandedElements(repositoryTree.getCheckedElements());
                     repositoryTree.refresh();
                 }
 
@@ -230,6 +230,7 @@ public class ExportWizardPage extends WizardPage {
         dirTxt.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                writer.setBasePath(dirTxt.getText());
                 checkForErrors();
             }
         });
@@ -323,7 +324,6 @@ public class ExportWizardPage extends WizardPage {
         repositoryTree.setContentProvider(new FileTreeContentProvider());
         repositoryTree.setLabelProvider(new FileTreeLabelProvider());
         repositoryTree.setInput(computInput());
-        // repositoryTree.expandToLevel(EXPAND_LEVEL);
         repositoryTree.expandAll();
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(repositoryTree.getTree());
@@ -408,18 +408,5 @@ public class ExportWizardPage extends WizardPage {
         }
 
         return null;
-    }
-
-    /**
-     * DOC bZhou Comment method "getFilePath".
-     * 
-     * @return
-     */
-    public String getFilePath() {
-        if (dirBTN.getSelection()) {
-            return dirTxt.getText();
-        } else {
-            return archTxt.getText();
-        }
     }
 }

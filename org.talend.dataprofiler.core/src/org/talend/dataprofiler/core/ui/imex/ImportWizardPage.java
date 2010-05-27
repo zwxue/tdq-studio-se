@@ -16,6 +16,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -44,6 +46,7 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -223,23 +226,23 @@ public class ImportWizardPage extends WizardPage {
             TreeItem[] topItems = repositoryTree.getTree().getItems();
             for (TreeItem treeItem : topItems) {
                 repositoryTree.setSubtreeChecked(treeItem.getData(), true);
-            } // else tree is empty so do nothing
-            // temporary disable the tree edition right before 4.0 release to avoid exporting a non consistent
-            // repository.
-            repositoryTree.getTree().setEnabled(true);
+            }
             repositoryTree.refresh();
+
+            writer.setBasePath(dirTxt.getText());
         } else {
             repositoryTree.setInput(null);
         }
         checkforErrors();
-        updatePageStatus();
     }
 
     /**
      * update the page state that is the finish button enable state according to the error message being present or not.
      */
     private void updatePageStatus() {
-        setPageComplete(getErrorMessage() == null);
+        boolean valid = getErrorMessage() == null;
+        setPageComplete(valid);
+        repositoryTree.getTree().setEnabled(valid);
     }
 
     /**
@@ -248,15 +251,23 @@ public class ImportWizardPage extends WizardPage {
      * check that anything is check in the tree or issue an error.<br>
      */
     private void checkforErrors() {
-        if (!new File(dirTxt.getText()).exists()) {
+        IPath dirPath = new Path(dirTxt.getText());
+        if (!dirPath.toFile().exists()) {
             setErrorMessage(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
         } else if (repositoryTree.getTree().getItems().length == 0) {
             setErrorMessage(Messages.getString("ImportWizardPage.0")); //$NON-NLS-1$
         } else if (repositoryTree.getCheckedElements().length == 0) {
             setErrorMessage(Messages.getString("ImportWizardPage.1")); //$NON-NLS-1$
         } else {
-            setErrorMessage(null);
+            IPath versionPath = dirPath.append(EResourceConstant.LIBRARIES.getPath()).append(".version.txt");
+            if (!versionPath.toFile().exists()) {
+                setErrorMessage("Invalid project!");
+            } else {
+                setErrorMessage(null);
+            }
         }
+
+        updatePageStatus();
     }
 
     /**

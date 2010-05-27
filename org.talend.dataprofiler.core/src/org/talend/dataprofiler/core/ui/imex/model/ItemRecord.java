@@ -16,20 +16,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.dq.helper.EObjectHelper;
@@ -40,11 +36,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ItemRecord {
 
-    private static Logger log = Logger.getLogger(ItemRecord.class);
-
     private File file;
-
-    private String projectName;
 
     private ModelElement element;
 
@@ -123,33 +115,6 @@ public class ItemRecord {
             return path;
         }
         return null;
-    }
-
-    /**
-     * DOC bZhou Comment method "getProjectName".
-     * 
-     * @return
-     */
-    public String getProjectName() {
-        if (projectName == null && property != null) {
-
-            InternalEObject author = (InternalEObject) property.getAuthor();
-            if (author != null) {
-                Resource projResource = author.eResource();
-                if (projResource != null) {
-                    URI projectUri = projResource.getURI();
-                    IPath projectPath = new Path(projectUri.toFileString());
-                    if (projectPath.toFile().exists()) {
-                        Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
-                        if (projOBJ != null) {
-                            Project project = (Project) projOBJ;
-                            this.projectName = project.getTechnicalLabel();
-                        }
-                    }
-                }
-            }
-        }
-        return this.projectName == null ? ReponsitoryContextBridge.PROJECT_DEFAULT_NAME : this.projectName;
     }
 
     /**

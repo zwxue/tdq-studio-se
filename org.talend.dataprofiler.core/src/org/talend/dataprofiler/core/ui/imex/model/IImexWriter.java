@@ -22,6 +22,20 @@ import org.eclipse.core.runtime.CoreException;
 public interface IImexWriter {
 
     /**
+     * DOC bZhou Comment method "setBasePath".
+     * 
+     * @param basePath
+     */
+    public void setBasePath(String basePath);
+
+    /**
+     * DOC bZhou Comment method "getBasePath".
+     * 
+     * @return
+     */
+    public String getBasePath();
+
+    /**
      * DOC bZhou Comment method "populate".
      * 
      * @param elements
@@ -34,11 +48,10 @@ public interface IImexWriter {
      * DOC bZhou Comment method "write".
      * 
      * @param recored
-     * @param destination
      * @throws IOException
      * @throws CoreException
      */
-    public void write(ItemRecord recored, String destination) throws IOException, CoreException;
+    public void write(ItemRecord recored) throws IOException, CoreException;
 
     /**
      * DOC bZhou Comment method "finish".

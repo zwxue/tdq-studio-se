@@ -26,10 +26,15 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.widgets.Display;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.properties.Project;
+import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -37,6 +42,7 @@ import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
@@ -51,6 +57,10 @@ public class FileSystemImportWriter implements IImexWriter {
     private static Logger log = Logger.getLogger(FileSystemImportWriter.class);
 
     private File versionFile;
+
+    private String basePath;
+
+    private String projectName;
 
     /*
      * (non-Javadoc)
@@ -77,13 +87,34 @@ public class FileSystemImportWriter implements IImexWriter {
 
         if (elements.length != 0) {
             ItemRecord anyRecord = elements[0];
-            String path = anyRecord.getFile().getAbsolutePath();
-            String subStr = StringUtils.substringBeforeLast(path, anyRecord.getProjectName());
-            String versionPath = subStr + anyRecord.getProjectName() + "/TDQ_Libraries/.version.txt";
-            versionFile = new File(versionPath);
+
+            retrieveProjectName(anyRecord);
         }
 
+        versionFile = new Path(basePath).append("/TDQ_Libraries/.version.txt").toFile();
+
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
+    }
+
+    private void retrieveProjectName(ItemRecord anyRecord) {
+        Property property = anyRecord.getProperty();
+        if (projectName == null && property != null) {
+
+            InternalEObject author = (InternalEObject) property.getAuthor();
+            if (author != null && !author.eIsProxy()) {
+                Resource projResource = author.eResource();
+                if (projResource != null) {
+                    IPath projectPath = new Path(projResource.getURI().toFileString());
+                    Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
+                    if (projOBJ != null) {
+                        Project project = (Project) projOBJ;
+                        projectName = project.getTechnicalLabel();
+                    }
+                }
+            } else {
+                projectName = ReponsitoryContextBridge.PROJECT_DEFAULT_NAME;
+            }
+        }
     }
 
     /**
@@ -130,9 +161,9 @@ public class FileSystemImportWriter implements IImexWriter {
      * 
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
-     * , java.lang.String)
+     * )
      */
-    public void write(ItemRecord record, String destination) throws IOException, CoreException {
+    public void write(ItemRecord record) throws IOException, CoreException {
         IPath itemPath = PropertyHelper.getElementPath(record.getProperty());
 
         IPath itemDesPath = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath).getLocation();
@@ -152,11 +183,10 @@ public class FileSystemImportWriter implements IImexWriter {
 
             FilesUtils.copyFile(resFile, desFile);
 
-            String oldProjectLabel = record.getProjectName();
             String curProjectLabel = ResourceManager.getRootProjectName();
-            if (!StringUtils.equals(oldProjectLabel, curProjectLabel)) {
+            if (!StringUtils.equals(projectName, curProjectLabel)) {
                 String content = FileUtils.readFileToString(desFile, "utf-8");
-                content = StringUtils.replace(content, "/" + oldProjectLabel + "/", "/" + curProjectLabel + "/");
+                content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");
                 FileUtils.writeStringToFile(desFile, content, "utf-8");
             }
         }
@@ -194,5 +224,23 @@ public class FileSystemImportWriter implements IImexWriter {
                 CorePlugin.getDefault().refreshDQView();
             }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(java.lang.String)
+     */
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#getBasePath()
+     */
+    public String getBasePath() {
+        return this.basePath;
     }
 }
