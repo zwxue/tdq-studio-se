@@ -19,6 +19,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 
 /**
  * DOC zshen class global comment. Detailled comment
@@ -32,6 +33,12 @@ public class DrillDownEditorInput implements IEditorInput {
     private MenuItemEntity menuItemEntity;
 
     private ChartDataEntity dataEntity;
+
+    public static final int MENU_VALUE_TYPE = 1;
+
+    public static final int MENU_VALID_TYPE = 2;
+
+    public static final int MENU_INVALID_TYPE = 3;
 
     public DrillDownEditorInput() {
 
@@ -128,6 +135,26 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     public String getComputeValue() {
+        if (judgeMenuType(this.getMenuType(), this.MENU_INVALID_TYPE)) {
+            return ((PatternChartDataEntity) this.dataEntity).getNumNoMatch();
+        } else if (judgeMenuType(this.getMenuType(), this.MENU_VALID_TYPE)) {
+            return ((PatternChartDataEntity) this.dataEntity).getNumMatch();
+        }
         return this.dataEntity.getValue();
+    }
+
+    public static boolean judgeMenuType(String menuStr, int menuType) {
+        if (menuStr == null)
+            return false;
+        switch (menuType) {
+        case MENU_VALUE_TYPE:
+            return menuStr.toLowerCase().indexOf("values") > -1;
+        case MENU_VALID_TYPE:
+            return menuStr.toLowerCase().indexOf("valid") > -1;
+        case MENU_INVALID_TYPE:
+            return menuStr.toLowerCase().indexOf("invalid") > -1;
+        default:
+            return false;
+        }
     }
 }

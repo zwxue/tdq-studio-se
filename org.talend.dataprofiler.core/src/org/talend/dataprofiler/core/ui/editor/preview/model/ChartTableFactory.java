@@ -38,6 +38,7 @@ import org.talend.dataprofiler.core.service.IJobService;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
@@ -151,9 +152,10 @@ public final class ChartTableFactory {
 
                         } else {
                             try {
+                                AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
                                 if (analysis.getParameters().isStoreData()
-                                        && (analysis.getResults().getIndicToRowMap().get(indicator).getData() != null || analysis
-                                                .getResults().getIndicToRowMap().get(indicator).getFrequencyData() != null)) {
+                                        && (analyDataSet.getData() != null || analyDataSet.getFrequencyData() != null || analyDataSet
+                                                .getPatternData() != null)) {
                                     MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
                                             dataEntity);
                                     for (final MenuItemEntity itemEntity : itemEntities) {
@@ -187,7 +189,7 @@ public final class ChartTableFactory {
                                 }
                             } catch (NullPointerException nullexception) {
 
-                                Log.error("drill down the data shuold run the analysis firstly.");
+                                Log.error("drill down the data shuold run the analysis firstly." + nullexception);
                             }
                             // MOD by zshen feature 11574:add menu "Generate regular pattern" to date pattern
                             if (isDatePatternFrequencyIndicator(indicator)) {
