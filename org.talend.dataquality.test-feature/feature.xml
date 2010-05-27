@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.talend.dataquality.test_feature"
+      label="org.talend.dataquality.test_feature Feature"
+      version="1.0.0.qualifier"
+      provider-name=".Talend SA."
+      plugin="org.talend.dataquality.test">
+
+   <description>
+      All Tests For Talend Data Quality
+   </description>
+
+   <copyright>
+      All Tests For Talend Data Quality
+   </copyright>
+
+   <license>
+      All Tests For Talend Data Quality
+   </license>
+
+   <requires>
+      <import plugin="org.talend.cwm.compare" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.talend.cwm.management" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.talend.dataprofiler.core" version="4.0.1" match="greaterOrEqual"/>
+      <import plugin="org.talend.dataprofiler.persistence" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.talend.dataquality.matching" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.talend.dataquality.reporting" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.talend.sqltools" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.junit4" version="4.5.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.talend.cwm.compare.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.cwm.management.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataprofiler.core.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataprofiler.persistence.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataquality.matching.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataquality.reporting.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.sqltools.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataquality.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
