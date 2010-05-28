@@ -182,7 +182,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         String[] supportTypes = PatternLanguageType.getAllLanguageTypes();
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(supportTypes));
+        // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
+        systemIndicator = this.getEditor().getEditorInput() instanceof IndicatorEditorInput;
+        if (systemIndicator) {
+            allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
 
+        }
         // MOD xqliu 2010-03-23 feature 11201
         // remainDBTypeList = new ArrayList<String>();
         // remainDBTypeList.addAll(allDBTypeList);
