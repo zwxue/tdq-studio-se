@@ -169,7 +169,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     @Override
     protected ReturnCode canRun() {
 
-        return new ReturnCode(columnListA.size() > 0);
+        return columnListA.size() > 0 ? new ReturnCode(true) : new ReturnCode(DefaultMessagesImpl
+                .getString("ColumnDependencyMasterDetailsPage.columnsBlankRunMessage"), false); //$NON-NLS-1$
     }
 
     /*

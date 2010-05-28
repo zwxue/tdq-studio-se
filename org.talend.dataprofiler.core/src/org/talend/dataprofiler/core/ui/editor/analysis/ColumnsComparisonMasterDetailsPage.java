@@ -329,7 +329,12 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     @Override
     protected ReturnCode canRun() {
-        return new ReturnCode(rowMatchingIndicatorA.getColumnSetA().size() != 0);
+
+        // return new ReturnCode(rowMatchingIndicatorA.getColumnSetA().size() != 0);
+
+        return 0 == rowMatchingIndicatorA.getColumnSetA().size() ? new ReturnCode(DefaultMessagesImpl
+                .getString("ColumnsComparisonMasterDetailsPage.columnsBlankRunMessage"), false) : new ReturnCode(true); //$NON-NLS-1$
+
     }
 
     public ScrolledForm getScrolledForm() {
