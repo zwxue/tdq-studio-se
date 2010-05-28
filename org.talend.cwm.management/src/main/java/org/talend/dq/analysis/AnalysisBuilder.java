@@ -17,7 +17,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.junit.Assert;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.analysis.Analysis;
@@ -239,7 +238,7 @@ public class AnalysisBuilder {
         String filename = DqRepositoryViewService.createFilename(this.analysis.getName(), FactoriesUtil.ANA);
         IFile file = folder.getFile(filename);
         ReturnCode saved = writer.save(analysis, file);
-        Assert.assertTrue(saved.getMessage(), saved.isOk());
+        // Assert.assertTrue(saved.getMessage(), saved.isOk());
         if (saved.isOk()) {
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + file.getFullPath());
