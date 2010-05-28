@@ -34,11 +34,16 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
 
-        String resultSql = dbmsLanguage.getFreqRowsStatement(this.columnName, getFullyQualifiedTableName(column), entity.getKey()
-                .toString());
-        if (resultSql != null) {
-            return resultSql;
+        String resultSql = null;
+        // MOD klliu 0013242: set soundex indicator for null field,drill down will get NPE
+        if (entity.getKey() != null) {
+            resultSql = dbmsLanguage.getFreqRowsStatement(this.columnName, getFullyQualifiedTableName(column), entity.getKey()
+                    .toString());
+            if (resultSql != null) {
+                return resultSql;
+            }
         }
+
 
         //
 
