@@ -85,7 +85,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     protected static Logger log = Logger.getLogger(ColumnCorrelationNominalIntervalResultPage.class);
 
-    private Composite resultComp;
+    // private Composite resultComp;
 
     private Composite graphicsAndTableComp;
 
@@ -446,7 +446,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             table.getColumn(i).pack();
         }
         columnSetElementSection.setClient(sectionTableComp);
-        //ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+        // ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
         setupTableGridDataLimitedSize(table, tableRows.size());
         addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
         return columnSetElementSection;

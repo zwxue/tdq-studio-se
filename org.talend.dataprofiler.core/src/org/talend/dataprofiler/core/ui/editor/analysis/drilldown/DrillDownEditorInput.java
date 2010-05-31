@@ -12,11 +12,21 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis.drilldown;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sourceforge.sqlexplorer.dataset.DataSet;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalyzedDataSet;
+import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -33,6 +43,10 @@ public class DrillDownEditorInput implements IEditorInput {
     private MenuItemEntity menuItemEntity;
 
     private ChartDataEntity dataEntity;
+
+    private String[] columnHeader = null;
+
+    private String[][] columnValue = null;
 
     public static final int MENU_VALUE_TYPE = 1;
 
@@ -135,9 +149,9 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     public String getComputeValue() {
-        if (judgeMenuType(this.getMenuType(), this.MENU_INVALID_TYPE)) {
+        if (judgeMenuType(this.getMenuType(), MENU_INVALID_TYPE)) {
             return ((PatternChartDataEntity) this.dataEntity).getNumNoMatch();
-        } else if (judgeMenuType(this.getMenuType(), this.MENU_VALID_TYPE)) {
+        } else if (judgeMenuType(this.getMenuType(), MENU_VALID_TYPE)) {
             return ((PatternChartDataEntity) this.dataEntity).getNumMatch();
         }
         return this.dataEntity.getValue();
@@ -157,4 +171,66 @@ public class DrillDownEditorInput implements IEditorInput {
             return false;
         }
     }
+
+    public DataSet getDataSet() {
+        List<TdColumn> columnElementList = filterAdaptColumnHeader();
+        columnHeader = new String[columnElementList.size()];
+        int headerIndex = 0;
+        for (TdColumn columnElement : columnElementList) {
+            columnHeader[headerIndex++] = columnElement.getName();
+        }
+        List<Object[]> newColumnElementList = filterAdaptDataList();
+        columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
+        int rowIndex = 0;
+        for (Object[] tableRow : newColumnElementList) {
+            int columnIndex = 0;
+            for (Object tableValue : tableRow) {
+                columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
+            }
+            rowIndex++;
+        }
+        return new DataSet(columnHeader, columnValue);
+        // return null;
+    }
+
+    public List<Object[]> filterAdaptDataList() {
+        // get columnValue
+        List<Object[]> newColumnElementList = new ArrayList<Object[]>();
+        AnalyzedDataSet analysisDataSet = this.getAnalysis().getResults().getIndicToRowMap().get(currIndicator);
+        if (analysisDataSet.getData() != null && analysisDataSet.getData().size() > 0) {
+            newColumnElementList.addAll(analysisDataSet.getData());
+        } else if (analysisDataSet.getFrequencyData() != null && analysisDataSet.getFrequencyData().size() > 0) {
+            String selectValue = this.getSelectValue();
+            newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
+        } else if (analysisDataSet.getPatternData() != null && analysisDataSet.getPatternData().size() > 0) {
+            if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_INVALID_TYPE)) {
+                newColumnElementList.addAll((List<Object[]>) analysisDataSet.getPatternData().get(
+                        AnalyzedDataSetImpl.INVALID_VALUE));
+            } else if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALID_TYPE)) {
+                newColumnElementList.addAll((List<Object[]>) analysisDataSet.getPatternData()
+                        .get(AnalyzedDataSetImpl.VALID_VALUE));
+            }
+        }
+        return newColumnElementList;
+    }
+
+    public List<TdColumn> filterAdaptColumnHeader() {
+        // get columnHeader
+        Indicator indicator = this.getCurrIndicator();
+        String menuType = this.getMenuType();
+        List<TdColumn> columnElementList = null;
+        if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALUE_TYPE)) {
+            columnElementList = new ArrayList<TdColumn>();
+            columnElementList.add((TdColumn) indicator.getAnalyzedElement());
+        } else {
+            columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
+                    .eContainer()));
+        }
+        return columnElementList;
+    }
+
+    public boolean isDataSpill() {
+        return analysis.getResults().getIndicToRowMap().get(currIndicator).getDataCount() < Double.parseDouble(getComputeValue());
+    }
+
 }

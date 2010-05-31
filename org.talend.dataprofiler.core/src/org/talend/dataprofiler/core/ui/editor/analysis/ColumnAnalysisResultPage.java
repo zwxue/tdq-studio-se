@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -36,7 +35,7 @@ import org.talend.dq.analysis.AnalysisHandler;
  */
 public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(ColumnAnalysisResultPage.class);
+    // private static Logger log = Logger.getLogger(ColumnAnalysisResultPage.class);
 
     private Composite resultComp;
 
