@@ -36,6 +36,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
+import org.talend.dataquality.indicators.SoundexLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -179,7 +180,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
             analyzedDataSet.setRecordSize(0);
         }
 
-        if (indicator instanceof LowFrequencyIndicator) {
+        if (indicator instanceof LowFrequencyIndicator || indicator instanceof SoundexLowFreqIndicator) {
             Map<Object, List<Object[]>> valueObjectListMap = analyzedDataSet.getFrequencyData();
             if (valueObjectListMap == null) {
                 valueObjectListMap = new HashMap<Object, List<Object[]>>();
