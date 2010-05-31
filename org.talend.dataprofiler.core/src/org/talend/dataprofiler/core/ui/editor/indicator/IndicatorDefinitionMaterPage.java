@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.indicator;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +38,8 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -49,6 +54,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -57,6 +63,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -968,10 +975,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         combo.addSelectionListener(new LangCombSelectionListener());
         tempExpressionMap.put(combo, BooleanExpressionHelper.createExpression(combo.getText(), null));
 
-        Composite detailComp = new Composite(combo.getParent(), SWT.NONE);
+        final Composite detailComp = new Composite(combo.getParent(), SWT.NONE);
         widgetMap.put(combo, detailComp);
         detailComp.setLayout(new GridLayout(4, false));
-        Text classNameText = new Text(detailComp, SWT.BORDER);
+        final Text classNameText = new Text(detailComp, SWT.BORDER);
         classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) classNameText.getLayoutData()).widthHint = 250;
         classNameText.setText(classNameStr);
@@ -991,9 +998,24 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 String path = dialog.open();
                 if (path != null) {
                     jarPathText.setText(path);
+                    // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+                    validateJavaUDI(detailComp, classNameText, jarPathText);
                 }
             }
         });
+        // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+        classNameText.addFocusListener(new FocusListener() {
+
+            public void focusGained(FocusEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            public void focusLost(FocusEvent e) {
+                // TODO Auto-generated method stub
+                validateJavaUDI(detailComp, classNameText, jarPathText);
+            }
+        });
+
         combo.setData(PluginConstant.CLASS_NAME_TEXT, classNameText);
         combo.setData(PluginConstant.JAR_FILE_PATH, jarPathText);
 
@@ -1002,6 +1024,40 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
     }
 
+    // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+    /**
+     * DOC klliu Comment method "alidateJavaUDI". ADD klliu 2010-05-31 bug 13451
+     * 
+     * @param detailComp
+     * @param classNameText
+     * @param jarPathText
+     */
+    private void validateJavaUDI(Composite detailComp, Text classNameText, Text jarPathText) {
+        if (isSystemIndicator() == false) {
+            String className = classNameText.getText();
+            String jarPath = jarPathText.getText();
+            if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
+                    && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
+                File file = new File(jarPath);
+                TalendURLClassLoader cl;
+                try {
+                    cl = new TalendURLClassLoader(new URL[] { file.toURL() });
+                    cl.findClass(className);
+                } catch (MalformedURLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (ClassNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                    MessageBox messageBox = new MessageBox(detailComp.getShell(), SWT.WRAP | SWT.YES);
+                    messageBox.setText("Warning");
+                    messageBox.setMessage("Please check Class Name is right? This class '" + className
+                            + "' is not found in file '" + jarPath + "'.");
+                    messageBox.open();
+                }
+            }
+        }
+    }
     /**
      * 
      * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
