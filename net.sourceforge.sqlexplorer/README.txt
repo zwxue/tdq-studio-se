@@ -74,3 +74,13 @@ is changed you might get unexpected results if you find that your JRE does too.
 
 
 
+2010-06-01 klliu Data explorer perspective display error 
+---------------------------------------------------------------------------------------
+In this case you must check "messages.properties" in "net.sourceforge.sqlexplorer\src",and 
+you can find the about oracle's bundle key.
+
+NOTE: Add the content of "text.properties" to "messages.properties", the path of  "text.properties" like so:
+net.sourceforge.sqlexplorer.oracle_3.5.0.jar\net\sourceforge\sqlexplorer\oracle\text.properties
+
+
+
