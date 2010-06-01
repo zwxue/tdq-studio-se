@@ -1303,7 +1303,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         detailComp = new Composite(combo.getParent(), SWT.NONE);
         widgetMap.put(combo, detailComp);
         detailComp.setLayout(new GridLayout(4, false));
-        Text classNameText = new Text(detailComp, SWT.BORDER);
+        final Text classNameText = new Text(detailComp, SWT.BORDER);
         classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
         classNameText.addModifyListener(new NeedToSetDirtyListener());
         ((GridData) classNameText.getLayoutData()).widthHint = 250;
@@ -1321,7 +1321,21 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 String path = dialog.open();
                 if (path != null) {
                     jarPathText.setText(path);
+                    // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+                    validateJavaUDI(classNameText.getParent(), classNameText, jarPathText);
                 }
+            }
+        });
+        // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+        classNameText.addFocusListener(new FocusListener() {
+
+            public void focusGained(FocusEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            public void focusLost(FocusEvent e) {
+                // TODO Auto-generated method stub
+                validateJavaUDI(classNameText.getParent(), classNameText, jarPathText);
             }
         });
         combo.setData(PluginConstant.CLASS_NAME_TEXT, classNameText);
@@ -1501,7 +1515,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     @Override
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
-
+        // ADD klliu 2010-06-01 bug 13451: Class name of Java User Define Indicator must be validated
+        if (!checkJavaUDIBeforeSave()) {
+            ((IndicatorEditor) this.getEditor()).setSaveActionButtonState(false);
+            String message = "Please checking the Class Name of Java or JarPath is right !";
+            MessageUI.openWarning(message);
+            return;
+        }
         // ADD xqliu 2010-02-25 feature 11201
         if (!checkBeforeSave())
             return;
@@ -1614,6 +1634,49 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
         }
+    }
+
+    /**
+     * DOC Administrator Comment method "checkJavaUDIBeforeSave".
+     * 
+     * @return
+     */
+    private boolean checkJavaUDIBeforeSave() {
+        EList<TaggedValue> tvs = definition.getTaggedValue();
+        String className = null;
+        String jarPath = "";
+        for (TaggedValue tv : tvs) {
+            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                className = tv.getValue();
+
+            }
+            if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                jarPath = tv.getValue();
+            }
+            if (isSystemIndicator() == false) {
+
+                if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
+                        && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
+                    File file = new File(jarPath);
+                    TalendURLClassLoader cl;
+                    try {
+                        cl = new TalendURLClassLoader(new URL[] { file.toURL() });
+                        cl.findClass(className);
+                    } catch (MalformedURLException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    } catch (ClassNotFoundException e1) {
+                        String message = "Please checking the Class Name of Java or JarPath is right !";
+                        MessageUI.openWarning(message);
+                        return false;
+                    }
+                } else
+                    return false;
+            }
+        }
+
+        return true;
+
     }
 
     /**
