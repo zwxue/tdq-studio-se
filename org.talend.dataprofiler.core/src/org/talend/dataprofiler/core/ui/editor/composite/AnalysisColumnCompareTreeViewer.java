@@ -611,8 +611,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         @SuppressWarnings("unchecked")
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        	//MOD mzhao bug 0012766: Change connection of analysis does not work well , here don't user oldInput parameter.
-            if (newInput != null) {
+        	//MOD qiongli the oldInput be used when open a editor
+        	if (oldInput != null && newInput != null) {
                 if (!((List) newInput).isEmpty()) {
                     masterPage.setDirty(true);
                 }
