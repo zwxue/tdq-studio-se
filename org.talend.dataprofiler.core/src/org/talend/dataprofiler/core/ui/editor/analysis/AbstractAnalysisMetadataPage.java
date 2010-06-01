@@ -85,14 +85,19 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             MessageDialogWithToggle.openError(null,
                     DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
         } else {
-            super.doSave(monitor);
-            try {
-                saveAnalysis();
-                this.isDirty = false;
-            } catch (DataprofilerCoreException e) {
-                ExceptionHandler.process(e, Level.ERROR);
-                log.error(e, e);
-            }
+			super.doSave(monitor);
+			try {
+				saveAnalysis();
+				this.isDirty = false;
+				// MOD qiongli bug 0012766,2010-5-31:After change to another connection
+				// which has same columns with before,the editor should not
+				// dirty.
+				((AnalysisEditor) this.getEditor())
+						.firePropertyChange(IEditorPart.PROP_DIRTY);
+			} catch (DataprofilerCoreException e) {
+				ExceptionHandler.process(e, Level.ERROR);
+				log.error(e, e);
+			}
         }
     }
 
