@@ -65,6 +65,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnDependencyMasterDet
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -610,12 +611,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         @SuppressWarnings("unchecked")
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            if (oldInput != null && newInput != null) {
+        	//MOD mzhao bug 0012766: Change connection of analysis does not work well , here don't user oldInput parameter.
+            if (newInput != null) {
                 if (!((List) newInput).isEmpty()) {
                     masterPage.setDirty(true);
                 }
             }
         }
+        
 
         public Image getImage(Object element) {
             if (element instanceof TdColumn) {
@@ -653,13 +656,21 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     public void updateModelViewer() {
         if (analysis.getResults().getIndicators().size() != 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
-            RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
-            columnListA.clear();
-            columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
-            tableViewerPosStack.get(0).setInput(columnListA);
-            columnListB.clear();
-            columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
-            tableViewerPosStack.get(1).setInput(columnListB);
+            //MOD qiongli bug 0012766,2010-5-31,to the instance of ColumnDependencyIndicator
+			if (indicators.get(0) instanceof ColumnDependencyIndicator) {
+				tableViewerPosStack.get(0).setInput(columnListA);
+				tableViewerPosStack.get(1).setInput(columnListB);
+			} else {
+				RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators
+						.get(0);
+				columnListA.clear();
+				columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
+				tableViewerPosStack.get(0).setInput(columnListA);
+				columnListB.clear();
+				columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
+				tableViewerPosStack.get(1).setInput(columnListB);
+			}
+			
         } else {
             // MOD mzhao bug 12766, 2010-04-22 refresh the viewer.
         	columnListA.clear();
