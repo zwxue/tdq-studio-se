@@ -33,3 +33,4 @@
 * when driver is modified, validate classpath and try loading selected class
 * copy driver modifies the original driver if an error occurred (e.g. invalid class)
 
+scorreia test
