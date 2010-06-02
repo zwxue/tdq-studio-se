@@ -127,29 +127,6 @@ public final class ChartTableFactory {
                                 }
                             }
 
-                            if (PluginChecker.isTDCPLoaded() && !isMDMAnalysis) {
-                                final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault()
-                                        .getService(IJobService.class);
-                                if (service != null) {
-                                    service.setIndicator(indicator);
-                                    service.setAnalysis(analysis);
-
-                                    MenuItem item = null;
-                                    if (isDUDIndicator(indicator)) {
-                                        item = new MenuItem(menu, SWT.PUSH);
-                                        item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
-                                    } else if (isPatternMatchingIndicator(indicator)) {
-                                        item = new MenuItem(menu, SWT.PUSH);
-                                        item.setText("Generate jobs");
-                                    }
-
-                                    if (item != null) {
-                                        item.setImage(ImageLib.getImage(ImageLib.ICON_PROCESS));
-                                        item.addSelectionListener(getAdapter(service));
-                                    }
-                                }
-                            }
-
                         } else {
                             try {
                                 AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
@@ -214,6 +191,29 @@ public final class ChartTableFactory {
                                 });
                             }
                         }
+                        if (PluginChecker.isTDCPLoaded() && !isMDMAnalysis) {
+                            final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault()
+                                    .getService(IJobService.class);
+                            if (service != null) {
+                                service.setIndicator(indicator);
+                                service.setAnalysis(analysis);
+
+                                MenuItem item = null;
+                                if (isDUDIndicator(indicator)) {
+                                    item = new MenuItem(menu, SWT.PUSH);
+                                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
+                                } else if (isPatternMatchingIndicator(indicator)) {
+                                    item = new MenuItem(menu, SWT.PUSH);
+                                    item.setText("Generate jobs");
+                                }
+
+                                if (item != null) {
+                                    item.setImage(ImageLib.getImage(ImageLib.ICON_PROCESS));
+                                    item.addSelectionListener(getAdapter(service));
+                                }
+                            }
+                        }
+
                         // ~11574
                         menu.setVisible(true);
                     }

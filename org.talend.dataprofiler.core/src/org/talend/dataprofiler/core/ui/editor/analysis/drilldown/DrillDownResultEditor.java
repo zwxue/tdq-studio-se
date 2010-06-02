@@ -19,6 +19,7 @@ import net.sourceforge.sqlexplorer.dataset.actions.ExportCSVAction;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -35,6 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
@@ -111,6 +113,11 @@ public class DrillDownResultEditor extends EditorPart {
         // createPopupMenu();
         tableView = new TableViewer(parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER);
         Table table = tableView.getTable();
+        MenuManager popupMenu = new MenuManager();
+        // IAction newRowAction = new NewRowAction();
+        popupMenu.add(exportAction);
+        Menu menu = popupMenu.createContextMenu(table);
+        table.setMenu(menu);
 
         exportAction.setTable(table);
         GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(table);
