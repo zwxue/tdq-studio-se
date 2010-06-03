@@ -12,19 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
@@ -39,23 +36,25 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public class EncryptAndDecryptPasswordTask extends AWorkspaceTask {
 
-    public boolean execute() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
+     */
+    @Override
+    protected boolean doExecute() throws Exception {
         IFolder folder = ResourceManager.getConnectionFolder();
-        try {
-            IResource[] resource = folder.members();
-            if (resource.length > 0) {
-                for (IResource re : resource) {
-                    if (re instanceof IFile) {
-                        IFile file = (IFile) re;
-                        TdDataProvider tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
-                        encryptDataProvider(tdDataProvider);
-                    }
 
+        IResource[] resource = folder.members();
+        if (resource.length > 0) {
+            for (IResource re : resource) {
+                if (re instanceof IFile) {
+                    IFile file = (IFile) re;
+                    TdDataProvider tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
+                    encryptDataProvider(tdDataProvider);
                 }
+
             }
-        } catch (CoreException e) {
-            ExceptionHandler.process(e);
-            return false;
         }
 
         return true;
@@ -118,9 +117,7 @@ public class EncryptAndDecryptPasswordTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 3, 3);
-        return calender.getTime();
+        return createDate(2009, 3, 3);
     }
 
     /*

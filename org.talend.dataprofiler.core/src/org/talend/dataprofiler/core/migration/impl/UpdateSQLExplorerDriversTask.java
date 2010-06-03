@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.LinkedList;
 
 import net.sourceforge.sqlexplorer.EDriverName;
-import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -33,9 +32,10 @@ public class UpdateSQLExplorerDriversTask extends AProjectTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
+    @Override
+    protected boolean doExecute() throws Exception {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         DriverManager driverModel = sqlPlugin.getDriverModel();
 
@@ -47,12 +47,7 @@ public class UpdateSQLExplorerDriversTask extends AProjectTask {
                     if (!jars.isEmpty()) {
                         mand.setJars(jars);
                         mand.setDriverClassName(supportDBUrlType.getDbDriver());
-                        try {
-                            mand.registerSQLDriver();
-                        } catch (Exception e) {
-                            log.error(e, e);
-                            return false;
-                        }
+                        mand.registerSQLDriver();
 
                         break;
                     }
@@ -61,12 +56,7 @@ public class UpdateSQLExplorerDriversTask extends AProjectTask {
             }
         }
 
-        try {
-            driverModel.saveDrivers();
-        } catch (ExplorerException e) {
-            log.error(e, e);
-            return false;
-        }
+        driverModel.saveDrivers();
 
         return true;
     }

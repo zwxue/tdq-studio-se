@@ -21,6 +21,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.resource.ResourceManager;
@@ -34,6 +35,8 @@ public final class WorkspaceVersionHelper {
     protected static Logger log = Logger.getLogger(WorkspaceVersionHelper.class);
 
     public static final String VERSION = "version"; //$NON-NLS-1$
+
+    private static ProductVersion productVersion;
 
     private WorkspaceVersionHelper() {
 
@@ -65,7 +68,7 @@ public final class WorkspaceVersionHelper {
      * @return
      */
     public static ProductVersion getVesion(IFile versionFile) {
-        return getVesion(versionFile.getLocation().toFile());
+        return getVesion(versionFile.getLocation());
     }
 
     /**
@@ -74,23 +77,29 @@ public final class WorkspaceVersionHelper {
      * @param versionFile
      * @return
      */
-    public static ProductVersion getVesion(File versionFile) {
+    public static ProductVersion getVesion(IPath versionPath) {
 
-        try {
-            if (versionFile.exists()) {
-                Properties pros = new Properties();
+        File versionFile = versionPath == null ? null : versionPath.toFile();
 
-                pros.load(new FileInputStream(versionFile));
-                String version = pros.getProperty(VERSION);
-                if (version != null && !"".equals(version)) { //$NON-NLS-1$
-                    return ProductVersion.fromString(version);
+        if (productVersion == null) {
+            try {
+                if (versionFile != null && versionFile.exists()) {
+                    Properties pros = new Properties();
+
+                    pros.load(new FileInputStream(versionFile));
+                    String version = pros.getProperty(VERSION);
+                    if (version != null && !"".equals(version)) { //$NON-NLS-1$
+                        productVersion = ProductVersion.fromString(version);
+                    }
+                } else {
+                    productVersion = new ProductVersion(0, 0, 0);
                 }
+            } catch (Exception e) {
+                log.error(e, e);
             }
-        } catch (Exception e) {
-            log.error(e, e);
         }
 
-        return new ProductVersion(0, 0, 0);
+        return productVersion;
     }
 
     /**

@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -54,40 +53,41 @@ public class ReorderingLibraryFoldersTask extends AWorkspaceTask {
 
     private static final String JRXML_REPORTS = "JRXML Reports";
 
-    public boolean execute() {
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
+     */
+    @Override
+    protected boolean doExecute() throws Exception {
         IFolder libraryFolder = ResourceManager.getLibrariesFolder();
 
-        try {
-            // Patterns -> Patterns/Regex
-            IFolder patternFolder = ResourceManager.getPatternFolder();
-            IFolder newRegexSubfolder = createSubfolder(patternFolder, EResourceConstant.PATTERN_REGEX.getName());
-            moveItems(patternFolder, newRegexSubfolder);
+        // Patterns -> Patterns/Regex
+        IFolder patternFolder = ResourceManager.getPatternFolder();
+        IFolder newRegexSubfolder = createSubfolder(patternFolder, EResourceConstant.PATTERN_REGEX.getName());
+        moveItems(patternFolder, newRegexSubfolder);
 
-            // SQL Patterns -> Patterns/SQL
-            IFolder oldSqlPatternsFolder = libraryFolder.getFolder(SQL_PATTERNS);
-            IFolder newSqlSubfolder = createSubfolder(patternFolder, EResourceConstant.PATTERN_SQL.getName());
-            moveItems(oldSqlPatternsFolder, newSqlSubfolder);
-            oldSqlPatternsFolder.delete(true, null);
+        // SQL Patterns -> Patterns/SQL
+        IFolder oldSqlPatternsFolder = libraryFolder.getFolder(SQL_PATTERNS);
+        IFolder newSqlSubfolder = createSubfolder(patternFolder, EResourceConstant.PATTERN_SQL.getName());
+        moveItems(oldSqlPatternsFolder, newSqlSubfolder);
+        oldSqlPatternsFolder.delete(true, null);
 
-            // DQ Rules -> Rules/SQL
-            IFolder oldDqRulesFolder = libraryFolder.getFolder(DQ_RULES);
-            IFolder newRulesFolder = createSubfolder(libraryFolder, EResourceConstant.RULES.getName());
-            IFolder newRulesSQLSubfolder = createSubfolder(newRulesFolder, EResourceConstant.RULES_SQL.getName());
-            moveItems(oldDqRulesFolder, newRulesSQLSubfolder);
-            oldDqRulesFolder.delete(true, null);
+        // DQ Rules -> Rules/SQL
+        IFolder oldDqRulesFolder = libraryFolder.getFolder(DQ_RULES);
+        IFolder newRulesFolder = createSubfolder(libraryFolder, EResourceConstant.RULES.getName());
+        IFolder newRulesSQLSubfolder = createSubfolder(newRulesFolder, EResourceConstant.RULES_SQL.getName());
+        moveItems(oldDqRulesFolder, newRulesSQLSubfolder);
+        oldDqRulesFolder.delete(true, null);
 
-            // JRXML Reports -> JRXML Template
-            IFolder oldJrxmlFolder = libraryFolder.getFolder(JRXML_REPORTS);
-            IFolder newJrxmlFolder = createSubfolder(libraryFolder, EResourceConstant.JRXML_TEMPLATE.getName());
-            moveItems(oldJrxmlFolder, newJrxmlFolder);
-            oldJrxmlFolder.delete(true, null);
+        // JRXML Reports -> JRXML Template
+        IFolder oldJrxmlFolder = libraryFolder.getFolder(JRXML_REPORTS);
+        IFolder newJrxmlFolder = createSubfolder(libraryFolder, EResourceConstant.JRXML_TEMPLATE.getName());
+        moveItems(oldJrxmlFolder, newJrxmlFolder);
+        oldJrxmlFolder.delete(true, null);
 
-            // Refresh project
-            ResourceService.refreshStructure();
-        } catch (CoreException e) {
-            log.error(e.getMessage(), e);
-        }
+        // Refresh project
+        ResourceService.refreshStructure();
 
         return true;
     }
@@ -209,9 +209,7 @@ public class ReorderingLibraryFoldersTask extends AWorkspaceTask {
     }
 
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 07, 01);
-        return calender.getTime();
+        return createDate(2009, 07, 01);
     }
 
 }

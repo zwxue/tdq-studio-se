@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +21,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -47,9 +47,20 @@ public class CreateElementPropertiesTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
      */
-    public boolean execute() {
+    @Override
+    public boolean valid() {
+        return !DQStructureManager.getInstance().isNeedCreateStructure() && super.valid();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
+     */
+    @Override
+    protected boolean doExecute() throws Exception {
         Collection<Analysis> allAnalysis = AnaResourceFileHelper.getInstance().getAllAnalysis();
 
         Collection<WhereRule> allDQRules = DQRuleResourceFileHelper.getInstance().getAllDQRules();
@@ -112,9 +123,7 @@ public class CreateElementPropertiesTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 10, 13);
-        return calender.getTime();
+        return createDate(2009, 10, 13);
     }
 
 }

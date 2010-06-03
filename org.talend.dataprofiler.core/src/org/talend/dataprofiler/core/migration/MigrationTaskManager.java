@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -119,6 +120,31 @@ public final class MigrationTaskManager {
         ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
         ProductVersion cVersion = CorePlugin.getDefault().getProductVersion();
         return findValidTasks(wVersion, cVersion, allTasks);
+    }
+
+    /**
+     * DOC bZhou Comment method "findValidMigrationTasks".
+     * 
+     * @return
+     */
+    public static List<IMigrationTask> findNonDBValidTasks() {
+        ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
+        ProductVersion cVersion = CorePlugin.getDefault().getProductVersion();
+        List<IMigrationTask> validTasks = findValidTasks(wVersion, cVersion, allTasks);
+
+        Iterator<IMigrationTask> it = validTasks.iterator();
+
+        while (it.hasNext()) {
+            IMigrationTask task = it.next();
+            if (task.getTaskCategory() == MigrationTaskCategory.WORKSPACE) {
+                IWorkspaceMigrationTask wTask = (IWorkspaceMigrationTask) task;
+                if (wTask.getMigrationTaskType() == MigrationTaskType.DATABASE) {
+                    it.remove();
+                }
+            }
+        }
+
+        return validTasks;
     }
 
     /**

@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
@@ -22,7 +21,6 @@ import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
  * DOC bZhou class global comment. Detailled comment
  */
 public class SoundexIndicatorQueryTask extends AWorkspaceTask {
-
 
     private final String oldSoundexQuery = "ORDER BY d,c DESC";
 
@@ -35,9 +33,10 @@ public class SoundexIndicatorQueryTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
+    @Override
+    protected boolean doExecute() throws Exception {
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
         talendDefinitionFileUpdate.add(this.oldSoundexQuery, this.newSoundexQuery);
         talendDefinitionFileUpdate.add(this.oldPSoundexQuery, this.newPSoundexQuery);
@@ -59,9 +58,7 @@ public class SoundexIndicatorQueryTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 10, 23);
-        return calender.getTime();
+        return createDate(2009, 10, 23);
     }
 
 }

@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -25,27 +23,31 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
  */
 public class UpdateDefintionFileTask extends AWorkspaceTask {
 
-    private static Logger log = Logger.getLogger(UpdateDefintionFileTask.class);
+    private IFile talendDefinitionFile;
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
      */
-    public boolean execute() {
+    @Override
+    public boolean valid() {
+        talendDefinitionFile = DefinitionHandler.getTalendDefinitionFile();
+
+        return talendDefinitionFile.exists() && super.valid();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
+     */
+    @Override
+    protected boolean doExecute() throws Exception {
         // TODO compare new file and old file to extract the udis and then add them into new file.
 
-        IFile talendDefinitionFile = DefinitionHandler.getTalendDefinitionFile();
-        if (talendDefinitionFile.exists()) {
-            try {
-                talendDefinitionFile.delete(true, null);
-
-                DefinitionHandler.getInstance();
-            } catch (Exception e) {
-                log.error(e, e);
-                return false;
-            }
-        }
+        talendDefinitionFile.delete(true, null);
+        DefinitionHandler.getInstance();
 
         return true;
     }
@@ -65,8 +67,6 @@ public class UpdateDefintionFileTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2010, 5, 11);
-        return calender.getTime();
+        return createDate(2010, 5, 11);
     }
 }

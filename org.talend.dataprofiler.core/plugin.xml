@@ -1078,7 +1078,7 @@
      <projecttask
            class="org.talend.dataprofiler.core.migration.impl.UpdateVersionsTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateVersionsTask"
-           name="Update Version Information">
+           name="Update Workspace Version">
      </projecttask>
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.ThresholdsValuesTask"

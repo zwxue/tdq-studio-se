@@ -12,11 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.EResourceConstant;
@@ -27,22 +25,27 @@ import org.talend.resource.ResourceManager;
  */
 public class CreateExchangeFolderTask extends AWorkspaceTask {
 
-    private static Logger log = Logger.getLogger(CreateExchangeFolderTask.class);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
+     */
+    @Override
+    public boolean valid() {
+        return !ResourceManager.getExchangeFolder().exists() && super.valid();
+    }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
-        try {
-            DQStructureManager manager = DQStructureManager.getInstance();
-            manager.createNewFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.EXCHANGE.getName());
-        } catch (Exception e) {
-            ExceptionHandler.process(e);
-            return false;
-        }
-        return true;
+    @Override
+    protected boolean doExecute() throws Exception {
+        DQStructureManager manager = DQStructureManager.getInstance();
+        IFolder folder = manager.createNewFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.EXCHANGE.getName());
+
+        return folder != null && folder.exists();
     }
 
     /*
@@ -51,9 +54,7 @@ public class CreateExchangeFolderTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 5, 8);
-        return calender.getTime();
+        return createDate(2009, 5, 8);
     }
 
     /*

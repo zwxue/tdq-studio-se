@@ -49,6 +49,24 @@ public abstract class AWorkspaceTask extends AMigrationTask implements IWorkspac
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataprofiler.core.migration.IMigrationTask#persist()
+     */
+    public boolean persist() throws Exception {
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IMigrationTask#clear()
+     */
+    public boolean clear() {
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getTaskCategory()
      */
     public MigrationTaskCategory getTaskCategory() {

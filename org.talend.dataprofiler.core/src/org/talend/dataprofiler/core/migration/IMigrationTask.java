@@ -70,6 +70,21 @@ public interface IMigrationTask {
     public boolean execute();
 
     /**
+     * DOC bZhou Comment method "persist".
+     * 
+     * @return true if persist successfully.
+     * @throws Exception TODO
+     */
+    public boolean persist() throws Exception;
+
+    /**
+     * DOC bZhou Comment method "clear".
+     * 
+     * @return true if clear successfully.
+     */
+    public boolean clear();
+
+    /**
      * DOC bzhou Comment method "getOrder".
      * 
      * Use to manage task order. Tasks are sorted (ASC) by this date, then executed following this order.

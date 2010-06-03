@@ -14,8 +14,6 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -50,60 +48,52 @@ public class TDCPFolderMergeTask extends AWorkspaceTask {
     public TDCPFolderMergeTask() {
     }
 
-    public boolean execute() {
-        try {
-            // Create one project.
-            IProject rootProject = ResourceManager.getRootProject();
-            if (!rootProject.exists()) {
-                rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.getRootProjectName());
-            }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
+     */
+    @Override
+    protected boolean doExecute() throws Exception {
+        // Create one project.
+        IProject rootProject = ResourceManager.getRootProject();
+        if (!rootProject.exists()) {
+            rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.getRootProjectName());
+        }
 
-            // Copy "top level" folders already as projects in TOP/TDQ into this
-            // project.
-            IResource[] resources = ResourcesPlugin.getWorkspace().getRoot().members();
+        // Copy "top level" folders already as projects in TOP/TDQ into this
+        // project.
+        IResource[] resources = ResourcesPlugin.getWorkspace().getRoot().members();
 
-            if (resources != null && resources.length > 0) {
-                for (IResource resource : resources) {
-                    // copy three folders:
-                    if (resource.getName().equals("Data Profiling") //$NON-NLS-1$
-                            || resource.getName().equals("Libraries") //$NON-NLS-1$
-                            || resource.getName().equals("Metadata")) { //$NON-NLS-1$
-                        IPath destination = null;
-                        IFolder prefixFolder = rootProject.getFolder(DQStructureManager.PREFIX_TDQ + resource.getName());
-                        prefixFolder.create(IResource.FORCE, true, new NullProgressMonitor());
-                        for (IResource rs : ((IProject) resource).members()) {
-                            if (rs.getName().equals(".project")) { //$NON-NLS-1$
-                                continue;
-                            }
-                            destination = prefixFolder.getFolder(rs.getName()).getFullPath();
-                            rs.copy(destination, IResource.FORCE, new NullProgressMonitor());
+        if (resources != null && resources.length > 0) {
+            for (IResource resource : resources) {
+                // copy three folders:
+                if (resource.getName().equals("Data Profiling") //$NON-NLS-1$
+                        || resource.getName().equals("Libraries") //$NON-NLS-1$
+                        || resource.getName().equals("Metadata")) { //$NON-NLS-1$
+                    IPath destination = null;
+                    IFolder prefixFolder = rootProject.getFolder(DQStructureManager.PREFIX_TDQ + resource.getName());
+                    prefixFolder.create(IResource.FORCE, true, new NullProgressMonitor());
+                    for (IResource rs : ((IProject) resource).members()) {
+                        if (rs.getName().equals(".project")) { //$NON-NLS-1$
+                            continue;
                         }
-                        resource.delete(true, new NullProgressMonitor());
+                        destination = prefixFolder.getFolder(rs.getName()).getFullPath();
+                        rs.copy(destination, IResource.FORCE, new NullProgressMonitor());
                     }
+                    resource.delete(true, new NullProgressMonitor());
                 }
             }
-            // Reporting_db
-            String pathName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/";
-            File repFolder = new File(pathName);
-            if (repFolder.exists()) {
-                FileUtils.copyDirectory(repFolder, ResourceManager.getReportDBFolder().getLocation().toFile());
-                FileUtils.forceDelete(new File(pathName));
-            }
-            // ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
-            return fileContentUpgrade(rootProject);
-            // ~
-        } catch (InvocationTargetException e) {
-            ExceptionHandler.process(e);
-        } catch (InterruptedException e) {
-            ExceptionHandler.process(e);
-        } catch (CoreException e) {
-            ExceptionHandler.process(e);
-        } catch (IOException e) {
-            ExceptionHandler.process(e);
-        } catch (Throwable e) {
-            ExceptionHandler.process(e);
         }
-        return false;
+        // Reporting_db
+        String pathName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/";
+        File repFolder = new File(pathName);
+        if (repFolder.exists()) {
+            FileUtils.copyDirectory(repFolder, ResourceManager.getReportDBFolder().getLocation().toFile());
+            FileUtils.forceDelete(new File(pathName));
+        }
+        // ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
+        return fileContentUpgrade(rootProject);
     }
 
     private boolean fileContentUpgrade(IProject rootProject) throws CoreException {
@@ -137,9 +127,7 @@ public class TDCPFolderMergeTask extends AWorkspaceTask {
     }
 
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(1949, 10, 1);
-        return calender.getTime();
+        return createDate(1949, 10, 1);
     }
 
     /*

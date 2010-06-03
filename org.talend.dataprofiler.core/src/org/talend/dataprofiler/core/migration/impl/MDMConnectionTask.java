@@ -15,17 +15,26 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Date;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class MDMConnectionTask extends AWorkspaceTask {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
+     */
+    @Override
+    public boolean valid() {
+
+        return !ResourceManager.getMDMConnectionFolder().exists() && super.valid();
+    }
 
     /*
      * (non-Javadoc)
@@ -39,21 +48,14 @@ public class MDMConnectionTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
-        ResourceService.refreshStructure();
-        IFolder mdmConnectionFolder = ResourceManager.getMDMConnectionFolder();
-        if (!mdmConnectionFolder.exists()) {
-            IFolder metadataFolder = ResourceManager.getMetadataFolder();
-            try {
-                DQStructureManager.getInstance().createNewFolder(metadataFolder, EResourceConstant.MDM_CONNECTIONS);
-            } catch (CoreException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return true;
+    @Override
+    protected boolean doExecute() throws Exception {
+        IFolder metadataFolder = ResourceManager.getMetadataFolder();
+        IFolder folder = DQStructureManager.getInstance().createNewFolder(metadataFolder, EResourceConstant.MDM_CONNECTIONS);
+
+        return folder != null && folder.exists();
     }
 
     /*

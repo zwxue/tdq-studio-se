@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -41,18 +39,14 @@ public class UpdateDependenciesFileTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
-        try {
-            // MOD scorreia 2009-10-07 load all analyses and find those which use patterns.
-            updateDependencies(ResourceManager.getAnalysisFolder());
-            return true;
-        } catch (CoreException e) {
-            ExceptionHandler.process(e);
-            return false;
-        }
+    @Override
+    protected boolean doExecute() throws Exception {
+        // MOD scorreia 2009-10-07 load all analyses and find those which use patterns.
+        updateDependencies(ResourceManager.getAnalysisFolder());
 
+        return true;
     }
 
     /**
@@ -104,9 +98,7 @@ public class UpdateDependenciesFileTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 6, 1);
-        return calender.getTime();
+        return createDate(2009, 6, 1);
     }
 
 }

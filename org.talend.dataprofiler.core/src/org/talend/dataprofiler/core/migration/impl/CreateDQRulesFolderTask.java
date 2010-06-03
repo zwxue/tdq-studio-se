@@ -12,13 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.ResourceManager;
@@ -37,18 +35,25 @@ public class CreateDQRulesFolderTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
      */
-    public boolean execute() {
-        try {
-            DQStructureManager manager = DQStructureManager.getInstance();
-            IFolder createNewFoler = manager.createNewFolder(ResourceManager.getLibrariesFolder(), DQ_RULES);
-            manager.copyFilesToFolder(CorePlugin.getDefault(), RULES_PATH, true, createNewFoler, null);
-        } catch (Exception e) {
-            ExceptionHandler.process(e);
-            return false;
-        }
-        return true;
+    @Override
+    public boolean valid() {
+        return !ResourceManager.getLibrariesFolder().getFolder(DQ_RULES).exists() && super.valid();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
+     */
+    @Override
+    protected boolean doExecute() throws Exception {
+        DQStructureManager manager = DQStructureManager.getInstance();
+        IFolder folder = manager.createNewFolder(ResourceManager.getLibrariesFolder(), DQ_RULES);
+        manager.copyFilesToFolder(CorePlugin.getDefault(), RULES_PATH, true, folder, null);
+
+        return folder != null && folder.exists();
     }
 
     /*
@@ -57,9 +62,7 @@ public class CreateDQRulesFolderTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 2, 13);
-        return calender.getTime();
+        return createDate(2009, 2, 13);
     }
 
     /*

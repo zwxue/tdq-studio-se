@@ -12,13 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration;
 
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.apache.log4j.Logger;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public abstract class AMigrationTask implements IMigrationTask {
+
+    private static Logger log = Logger.getLogger(AMigrationTask.class);
 
     private String id;
 
@@ -60,6 +65,23 @@ public abstract class AMigrationTask implements IMigrationTask {
         this.name = name;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IMigrationTask#execute()
+     */
+    public final boolean execute() {
+        try {
+            return doExecute() && persist();
+        } catch (Exception e) {
+            log.error(e, e);
+        } finally {
+            clear();
+        }
+
+        return false;
+    }
+
     /**
      * DOC bZhou Comment method "createDate".
      * 
@@ -73,4 +95,14 @@ public abstract class AMigrationTask implements IMigrationTask {
         calender.set(year, month, day);
         return calender.getTime();
     }
+
+    /**
+     * DOC bZhou Comment method "doExecute".
+     * 
+     * @return TODO
+     * 
+     * @throws Exception TODO
+     * @throws SQLException
+     */
+    protected abstract boolean doExecute() throws Exception;
 }

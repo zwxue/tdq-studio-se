@@ -214,7 +214,7 @@ public class FileSystemImportWriter implements IImexWriter {
             public void run() {
 
                 if (versionFile != null) {
-                    ProductVersion version = WorkspaceVersionHelper.getVesion(versionFile);
+                    ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
                     List<IMigrationTask> migrationTasks = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE,
                             version);
                     MigrationTaskManager.doMigrationTask(migrationTasks);

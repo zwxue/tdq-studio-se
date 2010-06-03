@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -40,6 +39,23 @@ public class ThresholdsValuesTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
+     */
+    @Override
+    public boolean valid() {
+        // There handle a special case, the Thresholds is different in TOP and TDQ in 3.2.2(r33000)
+        ProductVersion vesion = WorkspaceVersionHelper.getVesion();
+        ProductVersion version322 = new ProductVersion(3, 2, 2);
+        if (VersionCompareHelper.isEqual(vesion, version322) && ResourceManager.getReportsFolder().exists()) {
+            return false;
+        }
+
+        return super.valid();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -49,47 +65,37 @@ public class ThresholdsValuesTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
-        try {
-            // There handle a special case, the Thresholds is different in TOP and TDQ in 3.2.2(r33000)
-            ProductVersion vesion = WorkspaceVersionHelper.getVesion();
-            ProductVersion version322 = new ProductVersion(3, 2, 2);
-            if (VersionCompareHelper.isEqual(vesion, version322) && ResourceManager.getReportsFolder().exists()) {
-                return true;
-            }
+    @Override
+    protected boolean doExecute() throws Exception {
 
-            Collection<Analysis> allAnalysis = AnaResourceFileHelper.getInstance().getAllAnalysis();
-            for (Analysis analysis : allAnalysis) {
-                EList<Indicator> indicators = analysis.getResults().getIndicators();
-                for (Indicator indicator : indicators) {
-                    String[] pThresholds = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
-                    if (pThresholds != null) {
-                        String sOldMin = pThresholds[0];
-                        String sOldMax = pThresholds[1];
+        Collection<Analysis> allAnalysis = AnaResourceFileHelper.getInstance().getAllAnalysis();
+        for (Analysis analysis : allAnalysis) {
+            EList<Indicator> indicators = analysis.getResults().getIndicators();
+            for (Indicator indicator : indicators) {
+                String[] pThresholds = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
+                if (pThresholds != null) {
+                    String sOldMin = pThresholds[0];
+                    String sOldMax = pThresholds[1];
 
-                        String sNewMin = null, sNewMax = null;
-                        if (StringUtils.isNotBlank(sOldMin)) {
-                            sNewMin = String.valueOf(Double.valueOf(sOldMin) / 100);
-                        }
-
-                        if (StringUtils.isNotBlank(sOldMax)) {
-                            sNewMax = String.valueOf(Double.valueOf(sOldMax) / 100);
-                        }
-
-                        IndicatorHelper.setIndicatorThresholdInPercent(indicator.getParameters(), sNewMin, sNewMax);
+                    String sNewMin = null, sNewMax = null;
+                    if (StringUtils.isNotBlank(sOldMin)) {
+                        sNewMin = String.valueOf(Double.valueOf(sOldMin) / 100);
                     }
-                }
 
-                ElementWriterFactory.getInstance().createAnalysisWrite().save(analysis);
+                    if (StringUtils.isNotBlank(sOldMax)) {
+                        sNewMax = String.valueOf(Double.valueOf(sOldMax) / 100);
+                    }
+
+                    IndicatorHelper.setIndicatorThresholdInPercent(indicator.getParameters(), sNewMin, sNewMax);
+                }
             }
 
-            return true;
-        } catch (Exception e) {
-            log.error(e);
-            return false;
+            ElementWriterFactory.getInstance().createAnalysisWrite().save(analysis);
         }
+
+        return true;
     }
 
     /*
@@ -98,9 +104,7 @@ public class ThresholdsValuesTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2010, 4, 6);
-        return calender.getTime();
+        return createDate(2010, 4, 6);
     }
 
 }

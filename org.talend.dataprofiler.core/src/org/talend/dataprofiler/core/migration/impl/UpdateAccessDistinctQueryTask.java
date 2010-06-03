@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
@@ -28,10 +27,10 @@ public class UpdateAccessDistinctQueryTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
-
+    @Override
+    protected boolean doExecute() throws Exception {
         String categorie = "categories=\"_ccKHEBF2Ed2PKb6nEJEvhw\" label=\"Distinct Count\">";
 
         String accessQuery = "    <sqlGenericExpression xmi:id=\"_ybqP0jh8Ed2XmO7pl5Yuyl\" body=\"SELECT COUNT (&lt;%=__COLUMN_NAMES__%>) FROM (SELECT DISTINCT (&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>)\" language=\"Access\"/>";
@@ -41,7 +40,8 @@ public class UpdateAccessDistinctQueryTask extends AWorkspaceTask {
             talendDefinitionFileUpdate.add(categorie, categorie + System.getProperty("line.separator") + accessQuery);
             return talendDefinitionFileUpdate.replace(this.getClass().getName());
         }
-        return true;
+
+        return false;
     }
 
     /*
@@ -59,9 +59,7 @@ public class UpdateAccessDistinctQueryTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2010, 05, 04);
-        return calender.getTime();
+        return createDate(2010, 05, 04);
     }
 
 }

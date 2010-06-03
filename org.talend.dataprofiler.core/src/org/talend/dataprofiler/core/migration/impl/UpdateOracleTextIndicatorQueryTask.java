@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
@@ -28,9 +27,10 @@ public class UpdateOracleTextIndicatorQueryTask extends AWorkspaceTask {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
+    @Override
+    protected boolean doExecute() throws Exception {
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
         talendDefinitionFileUpdate
                 .add(
@@ -58,9 +58,7 @@ public class UpdateOracleTextIndicatorQueryTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2010, 04, 19);
-        return calender.getTime();
+        return createDate(2010, 04, 19);
     }
 
 }

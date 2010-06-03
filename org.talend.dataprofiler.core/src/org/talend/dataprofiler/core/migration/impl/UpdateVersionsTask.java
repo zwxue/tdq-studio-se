@@ -12,9 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import org.apache.log4j.Logger;
 import org.talend.dataprofiler.core.migration.AProjectTask;
-import org.talend.dataprofiler.core.migration.helper.DataBaseVersionHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 
 /**
@@ -22,27 +20,16 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
  */
 public class UpdateVersionsTask extends AProjectTask {
 
-    private static Logger log = Logger.getLogger(UpdateVersionsTask.class);
-
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.migration.IMigrationTask#execute()
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public boolean execute() {
-        try {
-            // update workspace version.
-            WorkspaceVersionHelper.storeVersion();
-
-            // update databse version.
-            DataBaseVersionHelper.storeVersion();
-
-        } catch (Exception e) {
-            log.error(e, e);
-            return false;
-        }
+    @Override
+    protected boolean doExecute() throws Exception {
+        // update workspace version.
+        WorkspaceVersionHelper.storeVersion();
 
         return true;
     }
-
 }

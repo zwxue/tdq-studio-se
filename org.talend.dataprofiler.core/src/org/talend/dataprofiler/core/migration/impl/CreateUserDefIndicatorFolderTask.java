@@ -12,12 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.EResourceConstant;
@@ -29,25 +26,33 @@ import org.talend.resource.ResourceService;
  */
 public class CreateUserDefIndicatorFolderTask extends AWorkspaceTask {
 
-    protected static Logger log = Logger.getLogger(CreateUserDefIndicatorFolderTask.class);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
+     */
+    @Override
+    public boolean valid() {
+        return !ResourceManager.getUDIFolder().exists() && super.valid();
+    }
 
-    public boolean execute() {
-        try {
-            DQStructureManager manager = DQStructureManager.getInstance();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
+     */
+    @Override
+    protected boolean doExecute() throws Exception {
+        DQStructureManager manager = DQStructureManager.getInstance();
 
-            // creator Indicators
-            IFolder folder = manager
-                    .createNewFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.INDICATORS.getName());
-            ResourceService.setNoSubFolderProperty(folder);
+        // creator Indicators
+        IFolder folder = manager.createNewFolder(ResourceManager.getLibrariesFolder(), EResourceConstant.INDICATORS.getName());
+        ResourceService.setNoSubFolderProperty(folder);
 
-            // create User Defined Indicators
-            folder = manager.createNewFolder(folder, EResourceConstant.USER_DEFINED_INDICATORS.getName());
+        // create User Defined Indicators
+        folder = manager.createNewFolder(folder, EResourceConstant.USER_DEFINED_INDICATORS.getName());
 
-        } catch (Exception e) {
-            ExceptionHandler.process(e);
-            return false;
-        }
-        return true;
+        return folder != null && folder.exists();
     }
 
     public MigrationTaskType getMigrationTaskType() {
@@ -55,9 +60,7 @@ public class CreateUserDefIndicatorFolderTask extends AWorkspaceTask {
     }
 
     public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 8, 13);
-        return calender.getTime();
+        return createDate(2009, 8, 13);
     }
 
 }
