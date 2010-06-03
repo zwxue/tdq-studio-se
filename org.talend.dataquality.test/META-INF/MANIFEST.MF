@@ -5,4 +5,4 @@ Bundle-SymbolicName: org.talend.dataquality.test
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: .Talend SA.
-Require-Bundle: org.junit4;bundle-version="4.5.0"
+Require-Bundle: org.junit4
