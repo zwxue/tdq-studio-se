@@ -27,6 +27,7 @@ import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
@@ -182,6 +183,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         return unitList.toArray(new IndicatorUnit[unitList.size()]);
     }
 
+    // MOD klliu 2010-06-03 init Indicators of the gate
     public void setIndicators(Indicator[] indicators) {
         clear();
         for (Indicator oneIndicator : indicators) {
@@ -234,6 +236,9 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                     IndicatorEnum.NullCountIndicatorEnum, countsIndicator.getNullCountIndicator()));
             this.plainIndicatorUnitMap.put(IndicatorEnum.UniqueIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.UniqueIndicatorEnum, countsIndicator.getUniqueCountIndicator()));
+            // MOD klliu bug 13411 2010-06-03
+            this.plainIndicatorUnitMap.put(IndicatorEnum.DefValueCountIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.DefValueCountIndicatorEnum, countsIndicator.getDefaultValueIndicator()));
             break;
         case TextIndicatorEnum:
             TextIndicator textIndicator = (TextIndicator) indicator;
@@ -400,6 +405,9 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                 countsIndicator
                         .setUniqueCountIndicator((UniqueCountIndicator) getIndicatorUnit(IndicatorEnum.UniqueIndicatorEnum)
                                 .getIndicator());
+                // MOD klliu bug 13411 2010-06-03
+                countsIndicator.setDefaultValueIndicator((DefValueCountIndicator) getIndicatorUnit(
+                        IndicatorEnum.DefValueCountIndicatorEnum).getIndicator());
                 indicatorUnit.setChildren(createCategoryIndicatorUnits(IndicatorEnum.CountsIndicatorEnum.getChildren()));
                 indicatorUnitList.add(indicatorUnit);
                 break;
