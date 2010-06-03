@@ -32,6 +32,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelectionAction;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
@@ -134,6 +135,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         helpMenu.add(welcomeAction);
         helpMenu.add(helpAction);
         helpMenu.add(aboutAction);
+        //ADD qiongli 2010-6-3,bug 0012874 
+        CheatSheetCategoryBasedSelectionAction cscAction = new CheatSheetCategoryBasedSelectionAction();
+        cscAction.setText("Cheat Sheets...");
+        helpMenu.add(cscAction);
     }
 
     private static final String[] ACTIONSETID = new String[] { "org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo", //$NON-NLS-1$
