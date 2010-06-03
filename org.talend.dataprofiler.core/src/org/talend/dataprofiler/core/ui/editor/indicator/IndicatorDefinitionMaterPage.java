@@ -52,8 +52,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -135,6 +137,27 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     // ADD xqliu 2010-03-23 feature 11201
     private List<Expression> tempExpressionList;
 
+    // ADD klliu 2010-06-03 bug 13451
+    private String classNameForSave;
+
+    private String jarPathForSave;
+
+    // MOD klliu 2010-06-03 bug 13451
+    private String getClassNameForSave() {
+        return this.classNameForSave;
+    }
+
+    private void setClassNameForSave(String classNameForSave) {
+        this.classNameForSave = classNameForSave;
+    }
+
+    private String getJarPathForSave() {
+        return this.jarPathForSave;
+    }
+
+    private void setJarPathForSave(String jarPathForSave) {
+        this.jarPathForSave = jarPathForSave;
+    }
     public boolean isSystemIndicator() {
         return systemIndicator;
     }
@@ -1051,7 +1074,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 validateJavaUDI(detailComp, classNameText, jarPathText);
             }
         });
+        classNameText.addListener(SWT.MouseExit, new Listener() {
 
+            public void handleEvent(Event event) {
+                // TODO Auto-generated method stub
+                setClassNameForSave(classNameText.getText().toString());
+                setJarPathForSave(jarPathText.getText().toString());
+            }
+
+        });
         combo.setData(PluginConstant.CLASS_NAME_TEXT, classNameText);
         combo.setData(PluginConstant.JAR_FILE_PATH, jarPathText);
 
@@ -1070,8 +1101,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void validateJavaUDI(Composite detailComp, Text classNameText, Text jarPathText) {
         if (isSystemIndicator() == false) {
-            String className = classNameText.getText();
-            String jarPath = jarPathText.getText();
+            String className = classNameText.getText().toString();
+            String jarPath = jarPathText.getText().toString();
+            this.setClassNameForSave(className);
+            this.setJarPathForSave(jarPath);
             if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
                     && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
                 File file = new File(jarPath);
@@ -1679,12 +1712,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private boolean checkJavaUDIBeforeSave() {
         EList<TaggedValue> tvs = definition.getTaggedValue();
-        String className = null;
-        String jarPath = "";
+        String className = this.getClassNameForSave();
+        String jarPath = this.getJarPathForSave();
         for (TaggedValue tv : tvs) {
             if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT) || tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
-                className = tv.getValue();
-                jarPath = tv.getValue();
+
                 if (!systemIndicator) {
                     if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
                             && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
@@ -1697,8 +1729,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
                         } catch (ClassNotFoundException e1) {
-                            String message = "Please checking the Class Name of Java or JarPath is right !";
-                            MessageUI.openWarning(message);
                             return false;
                         }
                     } else
