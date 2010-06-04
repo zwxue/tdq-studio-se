@@ -123,7 +123,8 @@ public enum SupportDBUrlType {
     INGRESDEFAULTURL("Ingres", "localhost", "II7", "dbname", null, "com.ingres.jdbc.IngresDriver", null, "Ingres"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     SQLITE3DEFAULTURL("SQLite3", "localhost", "", "dbname", null, "org.sqlite.JDBC", null, "SQLite"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     GENERICJDBCDEFAULTURL("Generic JDBC", "", "", "", null, "", null, "Generic JDBC"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-    TERADATADEFAULTURL("Teradata", "localhost", null, "dbname", null, "com.ncr.teradata.TeraDriver", null, "Teradata"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    // MOD klliu 2010-06-04 bug 12819: upgrade jdbc driver class used in sql explorer
+    TERADATADEFAULTURL("Teradata", "localhost", null, "dbname", null, "com.teradata.jdbc.TeraDriver", null, "Teradata"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     AS400DEFAULTURL("AS400", //$NON-NLS-1$
                     "localhost", //$NON-NLS-1$
                     null, //$NON-NLS-1$

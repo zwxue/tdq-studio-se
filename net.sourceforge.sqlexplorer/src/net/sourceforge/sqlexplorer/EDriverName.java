@@ -82,7 +82,8 @@ public enum EDriverName {
                        "lib/jaybird-2.1.1.jar"),
     TERADATADEFAULTURL(
                        "Teradata",
-                       "com.ncr.teradata.TeraDriver",
+    // MOD klliu 2010-06-04 bug 12819: upgrade jdbc driver class used in sql explorer
+                       "com.teradata.jdbc.TeraDriver",
                        "-50",
                        "lib/terajdbc4.jar",
                        "lib/tdgssconfig.jar"),
