@@ -578,6 +578,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     public void addElements(final ModelElementIndicator[] elements) {
         this.addItemElements(elements);
+        // MOD qiongli 2010-6-4,bug 0012766,after drag and drop a column from left view,update the connection state
+        updateBindConnection(masterPage, tree);
     }
 
     /**
