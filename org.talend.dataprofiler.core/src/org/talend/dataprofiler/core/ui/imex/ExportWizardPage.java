@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -45,6 +44,7 @@ import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -212,7 +212,7 @@ public class ExportWizardPage extends WizardPage {
             public void widgetSelected(SelectionEvent e) {
                 TreeItem item = (TreeItem) e.item;
                 File sfile = (File) item.getData();
-                IFile sIFile = file2IFile(sfile);
+                IFile sIFile = ResourceService.file2IFile(sfile);
                 if (sIFile != null) {
                     File[] dependencies = computeDependencies(sIFile);
 
@@ -250,7 +250,7 @@ public class ExportWizardPage extends WizardPage {
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
             File file = record.getFile();
-            IFile iFile = file2IFile(file);
+            IFile iFile = ResourceService.file2IFile(file);
             File[] dependencies = computeDependencies(iFile);
             for (File depFile : dependencies) {
                 if (!repositoryTree.getChecked(depFile)) {
@@ -392,21 +392,5 @@ public class ExportWizardPage extends WizardPage {
             }
         }
         return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
-    }
-
-    /**
-     * DOC bZhou Comment method "file2IFile".
-     * 
-     * @param file
-     * @return
-     */
-    private IFile file2IFile(File file) {
-        if (file.isFile()) {
-            IPath path = new Path(file.getAbsolutePath());
-            path = path.makeRelativeTo(ResourceManager.getRootProject().getLocation());
-            return ResourceManager.getRootProject().getFile(path);
-        }
-
-        return null;
     }
 }

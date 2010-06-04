@@ -178,6 +178,29 @@ public class ImportWizardPage extends WizardPage {
             }
         });
 
+        repositoryTree.getTree().addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TreeItem item = (TreeItem) e.item;
+                File sfile = (File) item.getData();
+
+                if (sfile.isFile()) {
+                    ItemRecord record = new ItemRecord(sfile);
+
+                    List<File> dependencyFiles = record.getDependencyFiles();
+
+                    for (File file : dependencyFiles) {
+                        repositoryTree.setChecked(file, item.getChecked());
+                    }
+
+                    repositoryTree.refresh();
+
+                    checkforErrors();
+                }
+            }
+        });
+
         dirTxt.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -242,7 +265,6 @@ public class ImportWizardPage extends WizardPage {
     private void updatePageStatus() {
         boolean valid = getErrorMessage() == null;
         setPageComplete(valid);
-        repositoryTree.getTree().setEnabled(valid);
     }
 
     /**
@@ -251,20 +273,38 @@ public class ImportWizardPage extends WizardPage {
      * check that anything is check in the tree or issue an error.<br>
      */
     private void checkforErrors() {
+        List<String> dErrors = new ArrayList<String>();
+
         IPath dirPath = new Path(dirTxt.getText());
         if (!dirPath.toFile().exists()) {
-            setErrorMessage(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
-        } else if (repositoryTree.getTree().getItems().length == 0) {
-            setErrorMessage(Messages.getString("ImportWizardPage.0")); //$NON-NLS-1$
-        } else if (repositoryTree.getCheckedElements().length == 0) {
-            setErrorMessage(Messages.getString("ImportWizardPage.1")); //$NON-NLS-1$
-        } else {
-            IPath versionPath = dirPath.append(EResourceConstant.LIBRARIES.getPath()).append(".version.txt");
-            if (!versionPath.toFile().exists()) {
-                setErrorMessage("Invalid project!");
-            } else {
-                setErrorMessage(null);
+            dErrors.add(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
+        }
+        if (repositoryTree.getTree().getItems().length == 0) {
+            dErrors.add(Messages.getString("ImportWizardPage.0")); //$NON-NLS-1$
+        }
+
+        if (repositoryTree.getCheckedElements().length == 0) {
+            dErrors.add(Messages.getString("ImportWizardPage.1")); //$NON-NLS-1$
+        }
+
+        IPath versionPath = dirPath.append(EResourceConstant.LIBRARIES.getPath()).append(".version.txt");
+        if (!versionPath.toFile().exists()) {
+            dErrors.add("Invalid project!");
+        }
+
+        ItemRecord[] elements = getElements();
+        for (ItemRecord record : elements) {
+            for (File depFile : record.getDependencyFiles()) {
+                if (!repositoryTree.getChecked(depFile)) {
+                    dErrors.add("\"" + record.getElement().getName() + "\" miss dependency file :" + depFile.getName());
+                }
             }
+        }
+
+        if (!dErrors.isEmpty()) {
+            setErrorMessage(dErrors.get(0));
+        } else {
+            setErrorMessage(null);
         }
 
         updatePageStatus();

@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dq.helper.EObjectHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -41,6 +42,8 @@ public class ItemRecord {
     private ModelElement element;
 
     private Property property;
+
+    private List<File> dependencyFiles;
 
     private List<String> errors = new ArrayList<String>();
 
@@ -79,6 +82,8 @@ public class ItemRecord {
         if (property == null && file != null) {
             property = (Property) EObjectHelper.retrieveEObject(getPropertyPath(), PropertiesPackage.eINSTANCE.getProperty());
         }
+
+        computeDependencies();
     }
 
     /**
@@ -115,6 +120,38 @@ public class ItemRecord {
             return path;
         }
         return null;
+    }
+
+    /**
+     * Getter for dependencyFiles.
+     * 
+     * @return the dependencyFiles
+     */
+    public List<File> getDependencyFiles() {
+        return this.dependencyFiles;
+    }
+
+    /**
+     * DOC bZhou Comment method "computeDependencies".
+     */
+    private void computeDependencies() {
+        if (dependencyFiles == null) {
+            dependencyFiles = new ArrayList<File>();
+
+            List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
+
+            ModelElementHelper.iterateClientDependencies(element, dependencyElements);
+
+            for (ModelElement dElement : dependencyElements) {
+
+                URI dURI = dElement.eResource().getURI();
+                Resource dResource = resourceSet.getResource(dURI, false);
+
+                if (dResource != null) {
+                    dependencyFiles.add(new File(dResource.getURI().toFileString()));
+                }
+            }
+        }
     }
 
     /**
