@@ -25,9 +25,9 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.utils.sql.metadata.constants.GetColumn;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.enumerations.NullableType;
 
 /**
@@ -146,7 +146,7 @@ public class ColumnBuilder extends CwmBuilder {
                 log.warn(e1, e1);
             }
             String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
-            Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
+            TdExpression defExpression = BooleanExpressionHelper.createTdExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
 
             try {
                 column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));

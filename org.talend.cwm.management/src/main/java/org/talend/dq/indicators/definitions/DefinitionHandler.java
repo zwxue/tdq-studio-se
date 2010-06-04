@@ -31,6 +31,7 @@ import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
@@ -349,7 +350,7 @@ public final class DefinitionHandler {
     public boolean removeRegexFunction(String dbmsName) {
 
         IndicatorDefinition regexIndDef = this.getIndicatorDefinition(REGULAR_EXPRESSION_MATCHING);
-        EList<Expression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
+        EList<TdExpression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
         for (Expression expression : sqlGenericExpression) {
             if (dbmsName.equals(expression.getLanguage())) {
                 sqlGenericExpression.remove(expression);
@@ -365,7 +366,7 @@ public final class DefinitionHandler {
         boolean ok = true;
         boolean replaced = false;
         IndicatorDefinition regexIndDef = this.getIndicatorDefinition(REGULAR_EXPRESSION_MATCHING);
-        EList<Expression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
+        EList<TdExpression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
 
         for (Expression expression : sqlGenericExpression) {
             if (dbmsName.equals(expression.getLanguage())) {
@@ -377,7 +378,7 @@ public final class DefinitionHandler {
         if (!replaced) {
             // add new expression
             String genericSQL = getGenericSQL(dbmsName, regexpFunction);
-            Expression createdExpression = BooleanExpressionHelper.createExpression(dbmsName, genericSQL);
+            TdExpression createdExpression = BooleanExpressionHelper.createTdExpression(dbmsName, genericSQL);
             sqlGenericExpression.add(createdExpression);
         }
         return ok;

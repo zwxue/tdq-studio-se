@@ -73,6 +73,7 @@ import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
@@ -83,8 +84,8 @@ import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -106,7 +107,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     // MOD xqliu 2010-03-23 feature 11201
     // private List<String> remainDBTypeList;
 
-    private Map<CCombo, Expression> tempExpressionMap;
+    private Map<CCombo, TdExpression> tempExpressionMap;
 
     private Map<CCombo, Composite> widgetMap;
 
@@ -135,7 +136,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private boolean systemIndicator;
 
     // ADD xqliu 2010-03-23 feature 11201
-    private List<Expression> tempExpressionList;
+    private List<TdExpression> tempExpressionList;
 
     // ADD klliu 2010-06-03 bug 13451
     private String classNameForSave;
@@ -290,7 +291,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void initTempExpressionMap() {
         if (tempExpressionMap == null) {
-            tempExpressionMap = new HashMap<CCombo, Expression>();
+            tempExpressionMap = new HashMap<CCombo, TdExpression>();
         } else {
             tempExpressionMap.clear();
         }
@@ -301,13 +302,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void initTempExpressionList(IndicatorDefinition definition) {
         if (tempExpressionList == null) {
-            tempExpressionList = new ArrayList<Expression>();
+            tempExpressionList = new ArrayList<TdExpression>();
         } else {
             tempExpressionList.clear();
         }
         if (definition != null) {
-            EList<Expression> expressions = definition.getSqlGenericExpression();
-            for (Expression exp : expressions) {
+            EList<TdExpression> expressions = definition.getSqlGenericExpression();
+            for (TdExpression exp : expressions) {
                 tempExpressionList.add(cloneExpression(exp));
             }
         }
@@ -588,17 +589,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         afExpressionComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         if (definition != null) {
-            EList<Expression> aggregate1argFunctions = definition.getAggregate1argFunctions();
-            EList<Expression> date1argFunctions = definition.getDate1argFunctions();
+            EList<TdExpression> aggregate1argFunctions = definition.getAggregate1argFunctions();
+            EList<TdExpression> date1argFunctions = definition.getDate1argFunctions();
 
             if (aggregate1argFunctions != null && aggregate1argFunctions.size() > 0) {
-                for (Expression expression : aggregate1argFunctions) {
+                for (TdExpression expression : aggregate1argFunctions) {
                     recordAFExpression(afExpressionMap, expression, null);
                 }
             }
 
             if (date1argFunctions != null && date1argFunctions.size() > 0) {
-                for (Expression expression : date1argFunctions) {
+                for (TdExpression expression : date1argFunctions) {
                     recordAFExpression(afExpressionMap, null, expression);
                 }
             }
@@ -650,6 +651,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
                 String lang = combo.getText();
                 aggregateDateExpression.setLanguage(PatternLanguageType.findLanguageByName(lang));
+                aggregateDateExpression.setModificationDate(getCurrentDateTime());
                 setDirty(true);
             }
         });
@@ -745,8 +747,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param aggregateExpression
      * @param dateExpression
      */
-    private void recordAFExpression(Map<String, AggregateDateExpression> expressionMap, Expression aggregateExpression,
-            Expression dateExpression) {
+    private void recordAFExpression(Map<String, AggregateDateExpression> expressionMap, TdExpression aggregateExpression,
+            TdExpression dateExpression) {
         String language = null;
         if (aggregateExpression != null) {
             language = aggregateExpression.getLanguage();
@@ -802,7 +804,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
 
                 String language = PatternLanguageType.findLanguageByName(remainDBTypeListAF.get(0));
-                Expression expression = BooleanExpressionHelper.createExpression(language, ""); //$NON-NLS-1$
+                TdExpression expression = BooleanExpressionHelper.createTdExpression(language, ""); //$NON-NLS-1$
+                expression.setModificationDate(getCurrentDateTime());
                 AggregateDateExpression ade = new AggregateDateExpression();
                 if (hasAggregateExpression) {
                     expression.setBody(BODY_AGGREGATE);
@@ -952,7 +955,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     // MOD xqliu 2010-03-23 feature 11201
                     // EList<Expression> expList = definition.getSqlGenericExpression();
                     // for (Expression expression : expList) {
-                    for (Expression expression : tempExpressionList) {
+                    for (TdExpression expression : tempExpressionList) {
                         createNewLineWithExpression(expression);
                     }
                 }
@@ -1032,7 +1035,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ~11201
         combo.setText(PatternLanguageType.JAVA.getName());
         combo.addSelectionListener(new LangCombSelectionListener());
-        tempExpressionMap.put(combo, BooleanExpressionHelper.createExpression(combo.getText(), null));
+        tempExpressionMap.put(combo, BooleanExpressionHelper.createTdExpression(combo.getText(), null));
 
         final Composite detailComp = new Composite(combo.getParent(), SWT.NONE);
         widgetMap.put(combo, detailComp);
@@ -1138,7 +1141,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
     }
 
-    private void createNewLineWithExpression(final Expression expression) {
+    private void createNewLineWithExpression(final TdExpression expression) {
         final Composite lineComp = new Composite(expressionComp, SWT.NONE);
         lineComp.setLayout(new GridLayout(3, false));
         final CCombo combo = new CCombo(lineComp, SWT.BORDER);
@@ -1220,7 +1223,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ADD xqliu 2010-02-25 feature 11201
         // createDbVersionText(combo, lineComp, null, 30);
         // ~
-        Expression expression = BooleanExpressionHelper.createExpression(combo.getText(), null);
+        TdExpression expression = BooleanExpressionHelper.createTdExpression(combo.getText(), null);
+        expression.setModificationDate(getCurrentDateTime());
         tempExpressionMap.put(combo, expression);
         if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
             updateLineForJava(combo);
@@ -1262,8 +1266,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         public void modifyText(ModifyEvent e) {
             Text patternText = (Text) e.getSource();
-            Expression expression = tempExpressionMap.get(combo);
+            TdExpression expression = tempExpressionMap.get(combo);
             expression.setBody(patternText.getText());
+            expression.setModificationDate(getCurrentDateTime());
             setDirty(true);
         }
 
@@ -1287,9 +1292,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (e.getSource() != null && e.getSource() instanceof Text) {
                 dbVersionText = (Text) e.getSource();
             }
-            Expression expression = tempExpressionMap.get(this.combo);
+            TdExpression expression = tempExpressionMap.get(this.combo);
             if (expression != null && dbVersionText != null) {
                 expression.setVersion(dbVersionText.getText().trim());
+                expression.setModificationDate(getCurrentDateTime());
             }
             // ~11892
         }
@@ -1305,13 +1311,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         public void widgetSelected(SelectionEvent e) {
             CCombo combo = (CCombo) e.getSource();
             String lang = combo.getText();
-            Expression expression = tempExpressionMap.get(combo);
+            TdExpression expression = tempExpressionMap.get(combo);
             if (expression == null) {
-                expression = BooleanExpressionHelper.createExpression(lang, null);
+                expression = BooleanExpressionHelper.createTdExpression(lang, null);
                 tempExpressionMap.put(combo, expression);
             } else {
                 expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
             }
+            expression.setModificationDate(getCurrentDateTime());
             if (!lang.equals(PatternLanguageType.JAVA.getName())) {
                 // MOD xqliu 2010-03-23 feature 11201
                 updateLineForExpression(combo, expression);
@@ -1333,7 +1340,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param combo
      * @param expression
      */
-    private void updateLineForExpression(final CCombo combo, Expression expression) {
+    private void updateLineForExpression(final CCombo combo, TdExpression expression) {
         Composite detailComp = widgetMap.get(combo);
         if (detailComp != null) {
             detailComp.dispose();
@@ -1596,7 +1603,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return;
         // ~
 
-        EList<Expression> expressions = definition.getSqlGenericExpression();
+        EList<TdExpression> expressions = definition.getSqlGenericExpression();
         expressions.clear();
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
 
@@ -1658,10 +1665,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         }
         if (hasAggregateExpression) {
-            EList<Expression> aggregate1argFunctions = definition.getAggregate1argFunctions();
+            EList<TdExpression> aggregate1argFunctions = definition.getAggregate1argFunctions();
             aggregate1argFunctions.clear();
             for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
-                Expression expression = ade.getAggregateExpression();
+                TdExpression expression = ade.getAggregateExpression();
                 if (expression.getBody() != null && !"".equals(expression.getBody())) { //$NON-NLS-1$
                     aggregate1argFunctions.add(expression);
                 }
@@ -1669,10 +1676,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         if (hasDateExpression) {
-            EList<Expression> date1argFunctions = definition.getDate1argFunctions();
+            EList<TdExpression> date1argFunctions = definition.getDate1argFunctions();
             date1argFunctions.clear();
             for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
-                Expression expression = ade.getDateExpression();
+                TdExpression expression = ade.getDateExpression();
                 if (expression.getBody() != null && !"".equals(expression.getBody())) { //$NON-NLS-1$
                     date1argFunctions.add(expression);
                 }
@@ -1754,7 +1761,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             CCombo cb = it.next();
             if (tempExpressionMap.get(cb).getBody() != null
                     && !PluginConstant.EMPTY_STRING.equals(tempExpressionMap.get(cb).getBody())) {
-                Expression expression = tempExpressionMap.get(cb);
+                TdExpression expression = tempExpressionMap.get(cb);
                 String language = expression.getLanguage();
                 String version = expression.getVersion();
                 if (version != null && !"".equals(version)) {
@@ -1796,23 +1803,23 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private final class AggregateDateExpression implements Cloneable {
 
-        private Expression aggregateExpression;
+        private TdExpression aggregateExpression;
 
-        private Expression dateExpression;
+        private TdExpression dateExpression;
 
-        public Expression getAggregateExpression() {
+        public TdExpression getAggregateExpression() {
             return aggregateExpression;
         }
 
-        public void setAggregateExpression(Expression aggregateExpression) {
+        public void setAggregateExpression(TdExpression aggregateExpression) {
             this.aggregateExpression = aggregateExpression;
         }
 
-        public Expression getDateExpression() {
+        public TdExpression getDateExpression() {
             return dateExpression;
         }
 
-        public void setDateExpression(Expression dateExpression) {
+        public void setDateExpression(TdExpression dateExpression) {
             this.dateExpression = dateExpression;
         }
 
@@ -1878,17 +1885,36 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             try {
                 ade = (AggregateDateExpression) super.clone();
                 if (getAggregateExpression() != null) {
-                    ade.setAggregateExpression(BooleanExpressionHelper.createExpression(getAggregateExpression().getLanguage(),
+                    ade.setAggregateExpression(BooleanExpressionHelper.createTdExpression(getAggregateExpression().getLanguage(),
                             getAggregateExpression().getBody()));
                 }
                 if (getDateExpression() != null) {
-                    ade.setDateExpression(BooleanExpressionHelper.createExpression(getDateExpression().getLanguage(),
+                    ade.setDateExpression(BooleanExpressionHelper.createTdExpression(getDateExpression().getLanguage(),
                             getDateExpression().getBody()));
                 }
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
             }
             return ade;
+        }
+
+        public void setModificationDate(String dateValue) {
+            if (aggregateExpression != null) {
+                aggregateExpression.setModificationDate(dateValue);
+            }
+            if (dateExpression != null) {
+                dateExpression.setModificationDate(dateValue);
+            }
+        }
+
+        public String getModificationDate() {
+            if (aggregateExpression != null) {
+                return aggregateExpression.getModificationDate();
+            }
+            if (dateExpression != null) {
+                return dateExpression.getModificationDate();
+            }
+            return null;
         }
     }
 
@@ -1899,7 +1925,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         String horizontalAxis, verticalAxis, bubbleSize;
 
-        Expression aggreagetExpression;
+        TdExpression aggreagetExpression;
 
         public String getHorizontalAxis() {
             return horizontalAxis;
@@ -1941,7 +1967,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
 
-        public AggregateVO(Expression aggregateExpression) {
+        public AggregateVO(TdExpression aggregateExpression) {
             this.aggreagetExpression = aggregateExpression;
             if (this.aggreagetExpression != null) {
                 String body = this.aggreagetExpression.getBody();
@@ -1981,6 +2007,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         public int hashCode() {
             return this.getLanguage().concat(this.getBody()).hashCode();
+        }
+
+        public String getModificationDate() {
+            return aggreagetExpression == null ? null : aggreagetExpression.getModificationDate();
+        }
+
+        public void setModificationDate(String dateValue) {
+            if (aggreagetExpression != null) {
+                aggreagetExpression.setModificationDate(dateValue);
+            }
         }
 
     }
@@ -2110,7 +2146,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         String lowerValue, upperValue, total, highlightedValues;
 
-        Expression dateExpression;
+        TdExpression dateExpression;
 
         public String getLowerValue() {
             return lowerValue;
@@ -2161,7 +2197,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
 
-        public DateVO(Expression dateExpression) {
+        public DateVO(TdExpression dateExpression) {
             this.dateExpression = dateExpression;
             if (this.dateExpression != null) {
                 String body = this.dateExpression.getBody();
@@ -2202,6 +2238,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         public int hashCode() {
             return this.getLanguage().concat(this.getBody()).hashCode();
+        }
+
+        public void setModificationDate(String dateValue) {
+            if (dateExpression != null) {
+                dateExpression.setModificationDate(dateValue);
+            }
+        }
+
+        public String getModificationDate() {
+            return dateExpression == null ? null : dateExpression.getModificationDate();
         }
 
     }
@@ -2410,9 +2456,19 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param exp
      * @return
      */
-    public static final Expression cloneExpression(Expression exp) {
-        Expression newExp = BooleanExpressionHelper.createExpression(exp.getLanguage(), exp.getBody());
+    public static final TdExpression cloneExpression(TdExpression exp) {
+        TdExpression newExp = BooleanExpressionHelper.createTdExpression(exp.getLanguage(), exp.getBody());
         newExp.setVersion(exp.getVersion());
+        newExp.setModificationDate(exp.getModificationDate());
         return newExp;
+    }
+
+    /**
+     * DOC xqliu Comment method "getCurrentDateTime". ADD xqliu 2010-06-04 feature 13454
+     * 
+     * @return
+     */
+    private String getCurrentDateTime() {
+        return DateUtils.getCurrentDate(DateUtils.PATTERN_5);
     }
 }

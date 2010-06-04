@@ -32,6 +32,7 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -596,10 +597,10 @@ public class DbmsLanguage {
      * @return the expression for this database language or for the default SQL or null when not found
      */
     public Expression getSqlExpression(IndicatorDefinition indicatorDefinition) {
-        EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
+        EList<TdExpression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
 
         // MOD xqliu 2010-02-25 feature 11201
-        Expression sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression,
+        TdExpression sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression,
                 this.getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression);
         // ~11201
         if (sqlGenExpr != null) {
@@ -653,7 +654,7 @@ public class DbmsLanguage {
      * @return the ordered list of aggregate functions
      */
     public List<String> getAggregate1argFunctions(IndicatorDefinition indicatorDefinition) {
-        final EList<Expression> aggregate1argFunctions = indicatorDefinition.getAggregate1argFunctions();
+        final EList<TdExpression> aggregate1argFunctions = indicatorDefinition.getAggregate1argFunctions();
         return getFunctions(indicatorDefinition, aggregate1argFunctions);
     }
 
@@ -664,13 +665,13 @@ public class DbmsLanguage {
      * @return the ordered list of functions applicable to date columns
      */
     public List<String> getDate1argFunctions(IndicatorDefinition indicatorDefinition) {
-        final EList<Expression> date1argFunctions = indicatorDefinition.getDate1argFunctions();
+        final EList<TdExpression> date1argFunctions = indicatorDefinition.getDate1argFunctions();
         return getFunctions(indicatorDefinition, date1argFunctions);
     }
 
-    private List<String> getFunctions(IndicatorDefinition indicatorDefinition, final EList<Expression> functions) {
+    private List<String> getFunctions(IndicatorDefinition indicatorDefinition, final EList<TdExpression> functions) {
         // MOD xqliu 2010-02-25 feature 11201
-        Expression sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, this.dbmsName, functions, this
+        TdExpression sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, this.dbmsName, functions, this
                 .getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, functions);
         // ~11201
         if (sqlGenExpr != null) {
@@ -721,9 +722,9 @@ public class DbmsLanguage {
      * @param defaultLanguage
      * @return
      */
-    private static Expression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
-            EList<Expression> sqlGenericExpression) {
-        for (Expression sqlGenExpr : sqlGenericExpression) {
+    private static TdExpression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
+            EList<TdExpression> sqlGenericExpression) {
+        for (TdExpression sqlGenExpr : sqlGenericExpression) {
             if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
                 return sqlGenExpr; // language found
             }
@@ -740,17 +741,17 @@ public class DbmsLanguage {
      * @param dbVersion
      * @return
      */
-    private static Expression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
-            EList<Expression> sqlGenericExpression, ProductVersion dbVersion) {
-        List<Expression> tempExpressions = new ArrayList<Expression>();
-        for (Expression sqlGenExpr : sqlGenericExpression) {
+    private static TdExpression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
+            EList<TdExpression> sqlGenericExpression, ProductVersion dbVersion) {
+        List<TdExpression> tempExpressions = new ArrayList<TdExpression>();
+        for (TdExpression sqlGenExpr : sqlGenericExpression) {
             if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
                 tempExpressions.add(sqlGenExpr);
             }
         }
-        Expression defaultExpression = null;
-        List<Expression> tempExpressions2 = new ArrayList<Expression>();
-        for (Expression exp : tempExpressions) {
+        TdExpression defaultExpression = null;
+        List<TdExpression> tempExpressions2 = new ArrayList<TdExpression>();
+        for (TdExpression exp : tempExpressions) {
             if (exp.getVersion() == null || "".equals(exp.getVersion())) {
                 defaultExpression = exp;
             } else {
@@ -761,7 +762,7 @@ public class DbmsLanguage {
                 }
             }
         }
-        for (Expression exp : tempExpressions2) {
+        for (TdExpression exp : tempExpressions2) {
             if (dbVersion.toString().startsWith(exp.getVersion()) || exp.getVersion().startsWith(dbVersion.toString())) {
                 return exp;
             }

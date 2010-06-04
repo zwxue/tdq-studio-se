@@ -6,6 +6,7 @@
  */
 package org.talend.dataquality.expressions.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
@@ -22,6 +23,7 @@ import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.expressions.ExpressionsPackage;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
@@ -80,6 +82,13 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
      * @generated
      */
     private EClass booleanExpressionNodeEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass tdExpressionEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -227,6 +236,33 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getTdExpression() {
+        return tdExpressionEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTdExpression_Version() {
+        return (EAttribute)tdExpressionEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTdExpression_ModificationDate() {
+        return (EAttribute)tdExpressionEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public ExpressionsFactory getExpressionsFactory() {
         return (ExpressionsFactory)getEFactoryInstance();
     }
@@ -251,6 +287,10 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
 
         // Create classes and their features
         booleanExpressionNodeEClass = createEClass(BOOLEAN_EXPRESSION_NODE);
+
+        tdExpressionEClass = createEClass(TD_EXPRESSION);
+        createEAttribute(tdExpressionEClass, TD_EXPRESSION__VERSION);
+        createEAttribute(tdExpressionEClass, TD_EXPRESSION__MODIFICATION_DATE);
     }
 
     /**
@@ -278,6 +318,7 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
 
         // Obtain other dependent packages
         orgomg.cwm.foundation.expressions.ExpressionsPackage theExpressionsPackage_1 = (orgomg.cwm.foundation.expressions.ExpressionsPackage)EPackage.Registry.INSTANCE.getEPackage(orgomg.cwm.foundation.expressions.ExpressionsPackage.eNS_URI);
+        CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 
         // Create type parameters
 
@@ -285,9 +326,14 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
 
         // Add supertypes to classes
         booleanExpressionNodeEClass.getESuperTypes().add(theExpressionsPackage_1.getExpressionNode());
+        tdExpressionEClass.getESuperTypes().add(theCorePackage.getExpression());
 
         // Initialize classes and features; add operations and parameters
         initEClass(booleanExpressionNodeEClass, BooleanExpressionNode.class, "BooleanExpressionNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(tdExpressionEClass, TdExpression.class, "TdExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getTdExpression_Version(), theCorePackage.getString(), "version", null, 0, 1, TdExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTdExpression_ModificationDate(), theCorePackage.getTime(), "modificationDate", null, 0, 1, TdExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Create resource
         createResource(eNS_URI);

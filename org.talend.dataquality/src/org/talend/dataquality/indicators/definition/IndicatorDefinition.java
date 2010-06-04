@@ -7,6 +7,7 @@
 package org.talend.dataquality.indicators.definition;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.dataquality.expressions.TdExpression;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -112,7 +113,7 @@ public interface IndicatorDefinition extends ModelElement {
 
     /**
      * Returns the value of the '<em><b>Sql Generic Expression</b></em>' containment reference list.
-     * The list contents are of type {@link orgomg.cwm.objectmodel.core.Expression}.
+     * The list contents are of type {@link org.talend.dataquality.expressions.TdExpression}.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Sql Generic Expression</em>' containment reference list isn't clear,
@@ -124,11 +125,11 @@ public interface IndicatorDefinition extends ModelElement {
      * @model containment="true"
      * @generated
      */
-    EList<Expression> getSqlGenericExpression();
+    EList<TdExpression> getSqlGenericExpression();
 
     /**
      * Returns the value of the '<em><b>Aggregate1arg Functions</b></em>' containment reference list.
-     * The list contents are of type {@link orgomg.cwm.objectmodel.core.Expression}.
+     * The list contents are of type {@link org.talend.dataquality.expressions.TdExpression}.
      * <!-- begin-user-doc -->
      * <p>
      * Contains a list of aggregate functions (specific to each database language). There is only one expression for
@@ -141,11 +142,11 @@ public interface IndicatorDefinition extends ModelElement {
      * @model containment="true"
      * @generated
      */
-    EList<Expression> getAggregate1argFunctions();
+    EList<TdExpression> getAggregate1argFunctions();
 
     /**
      * Returns the value of the '<em><b>Date1arg Functions</b></em>' containment reference list.
-     * The list contents are of type {@link orgomg.cwm.objectmodel.core.Expression}.
+     * The list contents are of type {@link org.talend.dataquality.expressions.TdExpression}.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Date1arg Functions</em>' containment reference list isn't clear,
@@ -157,7 +158,7 @@ public interface IndicatorDefinition extends ModelElement {
      * @model containment="true"
      * @generated
      */
-    EList<Expression> getDate1argFunctions();
+    EList<TdExpression> getDate1argFunctions();
 
     /**
      * Returns the value of the '<em><b>Characters Mapping</b></em>' containment reference list.

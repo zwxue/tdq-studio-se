@@ -1296,15 +1296,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getExpression_Version() {
-        return (EAttribute)expressionEClass.getEStructuralFeatures().get(2);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     public EClass getBooleanExpression() {
         return booleanExpressionEClass;
     }
@@ -1691,7 +1682,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
         expressionEClass = createEClass(EXPRESSION);
         createEAttribute(expressionEClass, EXPRESSION__BODY);
         createEAttribute(expressionEClass, EXPRESSION__LANGUAGE);
-        createEAttribute(expressionEClass, EXPRESSION__VERSION);
 
         booleanExpressionEClass = createEClass(BOOLEAN_EXPRESSION);
 
@@ -1896,7 +1886,6 @@ public class CorePackageImpl extends EPackageImpl implements CorePackage {
         initEClass(expressionEClass, Expression.class, "Expression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getExpression_Body(), this.getString(), "body", null, 0, 1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getExpression_Language(), this.getName_(), "language", null, 0, 1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getExpression_Version(), this.getString(), "version", null, 0, 1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(booleanExpressionEClass, BooleanExpression.class, "BooleanExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

@@ -669,15 +669,6 @@ public interface DatatypesPackage extends EPackage {
     int QUERY_EXPRESSION__LANGUAGE = CorePackage.PROCEDURE_EXPRESSION__LANGUAGE;
 
     /**
-     * The feature id for the '<em><b>Version</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int QUERY_EXPRESSION__VERSION = CorePackage.PROCEDURE_EXPRESSION__VERSION;
-
-    /**
      * The feature id for the '<em><b>Report Group</b></em>' reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

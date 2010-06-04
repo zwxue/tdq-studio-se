@@ -34,6 +34,7 @@ import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -154,7 +155,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         // completedSqlString is the final query
         String finalQuery = completedSqlString;
         if (finalQuery != null) {
-            Expression instantiateSqlExpression = BooleanExpressionHelper.createExpression(language, finalQuery);
+            TdExpression instantiateSqlExpression = BooleanExpressionHelper.createTdExpression(language, finalQuery);
             indicator.setInstantiatedExpression(instantiateSqlExpression);
             return true;
         }

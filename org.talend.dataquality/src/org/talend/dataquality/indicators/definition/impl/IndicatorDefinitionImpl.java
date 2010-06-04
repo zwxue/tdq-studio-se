@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
@@ -103,7 +104,7 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * @generated
      * @ordered
      */
-    protected EList<Expression> sqlGenericExpression;
+    protected EList<TdExpression> sqlGenericExpression;
 
     /**
      * The cached value of the '{@link #getAggregate1argFunctions() <em>Aggregate1arg Functions</em>}' containment reference list.
@@ -113,7 +114,7 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * @generated
      * @ordered
      */
-    protected EList<Expression> aggregate1argFunctions;
+    protected EList<TdExpression> aggregate1argFunctions;
 
     /**
      * The cached value of the '{@link #getDate1argFunctions() <em>Date1arg Functions</em>}' containment reference list.
@@ -123,7 +124,7 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * @generated
      * @ordered
      */
-    protected EList<Expression> date1argFunctions;
+    protected EList<TdExpression> date1argFunctions;
 
     /**
      * The cached value of the '{@link #getCharactersMapping() <em>Characters Mapping</em>}' containment reference list.
@@ -216,9 +217,9 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList<Expression> getSqlGenericExpression() {
+    public EList<TdExpression> getSqlGenericExpression() {
         if (sqlGenericExpression == null) {
-            sqlGenericExpression = new EObjectContainmentEList<Expression>(Expression.class, this, DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION);
+            sqlGenericExpression = new EObjectContainmentEList<TdExpression>(TdExpression.class, this, DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION);
         }
         return sqlGenericExpression;
     }
@@ -228,9 +229,9 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList<Expression> getAggregate1argFunctions() {
+    public EList<TdExpression> getAggregate1argFunctions() {
         if (aggregate1argFunctions == null) {
-            aggregate1argFunctions = new EObjectContainmentEList<Expression>(Expression.class, this, DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS);
+            aggregate1argFunctions = new EObjectContainmentEList<TdExpression>(TdExpression.class, this, DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS);
         }
         return aggregate1argFunctions;
     }
@@ -240,9 +241,9 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList<Expression> getDate1argFunctions() {
+    public EList<TdExpression> getDate1argFunctions() {
         if (date1argFunctions == null) {
-            date1argFunctions = new EObjectContainmentEList<Expression>(Expression.class, this, DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS);
+            date1argFunctions = new EObjectContainmentEList<TdExpression>(TdExpression.class, this, DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS);
         }
         return date1argFunctions;
     }
@@ -333,15 +334,15 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return;
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:
                 getSqlGenericExpression().clear();
-                getSqlGenericExpression().addAll((Collection<? extends Expression>)newValue);
+                getSqlGenericExpression().addAll((Collection<? extends TdExpression>)newValue);
                 return;
             case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
                 getAggregate1argFunctions().clear();
-                getAggregate1argFunctions().addAll((Collection<? extends Expression>)newValue);
+                getAggregate1argFunctions().addAll((Collection<? extends TdExpression>)newValue);
                 return;
             case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
                 getDate1argFunctions().clear();
-                getDate1argFunctions().addAll((Collection<? extends Expression>)newValue);
+                getDate1argFunctions().addAll((Collection<? extends TdExpression>)newValue);
                 return;
             case DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING:
                 getCharactersMapping().clear();

@@ -21,7 +21,6 @@ package orgomg.cwm.objectmodel.core;
  * <ul>
  *   <li>{@link orgomg.cwm.objectmodel.core.Expression#getBody <em>Body</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.Expression#getLanguage <em>Language</em>}</li>
- *   <li>{@link orgomg.cwm.objectmodel.core.Expression#getVersion <em>Version</em>}</li>
  * </ul>
  * </p>
  *
@@ -79,31 +78,5 @@ public interface Expression extends Element {
      * @generated
      */
     void setLanguage(String value);
-
-    /**
-     * Returns the value of the '<em><b>Version</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Version</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Version</em>' attribute.
-     * @see #setVersion(String)
-     * @see orgomg.cwm.objectmodel.core.CorePackage#getExpression_Version()
-     * @model dataType="orgomg.cwm.objectmodel.core.String"
-     * @generated
-     */
-    String getVersion();
-
-    /**
-     * Sets the value of the '{@link orgomg.cwm.objectmodel.core.Expression#getVersion <em>Version</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Version</em>' attribute.
-     * @see #getVersion()
-     * @generated
-     */
-    void setVersion(String value);
 
 } // Expression

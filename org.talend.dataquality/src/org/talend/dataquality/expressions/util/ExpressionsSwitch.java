@@ -15,6 +15,7 @@ import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsPackage;
 import orgomg.cwm.foundation.expressions.ExpressionNode;
 import orgomg.cwm.objectmodel.core.Element;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * <!-- begin-user-doc -->
@@ -98,6 +99,14 @@ public class ExpressionsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case ExpressionsPackage.TD_EXPRESSION: {
+                TdExpression tdExpression = (TdExpression)theEObject;
+                T result = caseTdExpression(tdExpression);
+                if (result == null) result = caseExpression(tdExpression);
+                if (result == null) result = caseElement(tdExpression);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -114,6 +123,21 @@ public class ExpressionsSwitch<T> {
      * @generated
      */
     public T caseBooleanExpressionNode(BooleanExpressionNode object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Td Expression</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Td Expression</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseTdExpression(TdExpression object) {
         return null;
     }
 
@@ -144,6 +168,21 @@ public class ExpressionsSwitch<T> {
      * @generated
      */
     public T caseExpressionNode(ExpressionNode object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Expression</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Expression</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseExpression(Expression object) {
         return null;
     }
 

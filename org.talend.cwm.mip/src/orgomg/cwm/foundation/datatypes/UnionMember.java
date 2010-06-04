@@ -38,7 +38,7 @@ public interface UnionMember extends Attribute {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Contains the value of the Union?s discriminator for this UnionMember.
+     * Contains the value of the Union�s discriminator for this UnionMember.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Member Case</em>' containment reference.
      * @see #setMemberCase(Expression)
@@ -63,7 +63,7 @@ public interface UnionMember extends Attribute {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * Indicates if this UnionMember is the default member of the Union (implying that when unstated, the Union?s discriminator would assume this instance?s memberCase value).
+     * Indicates if this UnionMember is the default member of the Union (implying that when unstated, the Union�s discriminator would assume this instance�s memberCase value).
      * <!-- end-model-doc -->
      * @return the value of the '<em>Is Default</em>' attribute.
      * @see #setIsDefault(boolean)

@@ -61,6 +61,7 @@ public class ExpressionsFactoryImpl extends EFactoryImpl implements ExpressionsF
     public EObject create(EClass eClass) {
         switch (eClass.getClassifierID()) {
             case ExpressionsPackage.BOOLEAN_EXPRESSION_NODE: return createBooleanExpressionNode();
+            case ExpressionsPackage.TD_EXPRESSION: return createTdExpression();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -74,6 +75,16 @@ public class ExpressionsFactoryImpl extends EFactoryImpl implements ExpressionsF
     public BooleanExpressionNode createBooleanExpressionNode() {
         BooleanExpressionNodeImpl booleanExpressionNode = new BooleanExpressionNodeImpl();
         return booleanExpressionNode;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public TdExpression createTdExpression() {
+        TdExpressionImpl tdExpression = new TdExpressionImpl();
+        return tdExpression;
     }
 
     /**

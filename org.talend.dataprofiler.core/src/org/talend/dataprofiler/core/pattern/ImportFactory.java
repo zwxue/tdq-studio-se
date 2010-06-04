@@ -43,6 +43,7 @@ import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionPro
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
@@ -50,7 +51,6 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.objectmodel.core.Expression;
 
 import com.csvreader.CsvReader;
 
@@ -536,7 +536,7 @@ public final class ImportFactory {
                 parameters.purpose, parameters.status, parameters.category);
 
         for (String key : parameters.regex.keySet()) {
-            Expression expression = BooleanExpressionHelper.createExpression(key, parameters.regex.get(key));
+            TdExpression expression = BooleanExpressionHelper.createTdExpression(key, parameters.regex.get(key));
             id.getSqlGenericExpression().add(expression);
         }
 

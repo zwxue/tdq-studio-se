@@ -481,7 +481,6 @@
               <details key="documentation" value="Names the language in which the expression body is represented. The interpretation of the expression depends on the language. If the language name is omitted, no interpretation for the expression can be assumed. In general, a language name should be spelled and capitalized exactly as it appears in the document defining the language. For example, use COBOL, not Cobol; use Ada, not ADA; use PostScript, not Postscript."/>
             </eAnnotations>
           </eStructuralFeatures>
-          <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="#//cwm/objectmodel/core/String"/>
         </eClassifiers>
         <eClassifiers xsi:type="ecore:EClass" name="BooleanExpression" eSuperTypes="#//cwm/objectmodel/core/Expression">
           <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

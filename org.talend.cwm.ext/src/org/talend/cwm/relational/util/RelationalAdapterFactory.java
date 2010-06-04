@@ -8,13 +8,17 @@ package org.talend.cwm.relational.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import org.talend.cwm.relational.*;
-
+import org.talend.cwm.relational.RelationalPackage;
+import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdProcedure;
+import org.talend.cwm.relational.TdSchema;
+import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdTrigger;
+import org.talend.cwm.relational.TdView;
 import orgomg.cwm.objectmodel.behavioral.BehavioralFeature;
 import orgomg.cwm.objectmodel.behavioral.Method;
 import orgomg.cwm.objectmodel.core.Attribute;
@@ -25,7 +29,6 @@ import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;

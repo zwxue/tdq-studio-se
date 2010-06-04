@@ -19,6 +19,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
@@ -28,7 +29,6 @@ import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -42,7 +42,7 @@ public class NewDQRulesWizard extends AbstractWizard {
 
     private DQRulesParameter parameter;
 
-    private Expression expression;
+    private TdExpression expression;
 
     // default value of Criticality Level
     private static final int CRITICALITY_LEVEL_DEFAULT = 1;
@@ -97,9 +97,9 @@ public class NewDQRulesWizard extends AbstractWizard {
         return null;
     }
 
-    public Expression getExpression() {
+    public TdExpression getExpression() {
         if (expression == null) {
-            expression = (Expression) EcoreUtil.copy(DefinitionHandler.getInstance().getDQRuleDefaultIndicatorDefinition()
+            expression = (TdExpression) EcoreUtil.copy(DefinitionHandler.getInstance().getDQRuleDefaultIndicatorDefinition()
                     .getSqlGenericExpression().get(0));
         }
         return expression;

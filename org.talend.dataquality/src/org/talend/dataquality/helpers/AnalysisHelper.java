@@ -190,7 +190,7 @@ public final class AnalysisHelper {
             } else {
                 Expression expression = expressions.getExpression();
                 if (expression == null) {
-                    expression = BooleanExpressionHelper.createExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
+                    expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
                             datafilterString);
                     expressions.setExpression(expression);
                 } else {
@@ -231,7 +231,7 @@ public final class AnalysisHelper {
                 } else {
                     Expression expression = expressions.getExpression();
                     if (expression == null) {
-                        expression = BooleanExpressionHelper.createExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
+                        expression = BooleanExpressionHelper.createTdExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
                                 datafilterString);
                         expressions.setExpression(expression);
                     } else {

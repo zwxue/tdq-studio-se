@@ -14,11 +14,14 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
+import org.talend.dataquality.expressions.ExpressionsFactory;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.PluginConstant;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
@@ -27,9 +30,8 @@ import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.UDIndicatorBuilder;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.objectmodel.core.CoreFactory;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -38,7 +40,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public class NewUDIndicatorWizard extends AbstractWizard {
 
-    private Expression expression;
+    private TdExpression expression;
 
     private NewUDIndicatorWizardPage1 mPage1;
 
@@ -80,7 +82,25 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         }
         UDIHelper.setUDICategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
         IFolder folder = parameter.getFolderProvider().getFolderResource();
+        // ADD xqliu 2010-06-04 feature 13454
+        recordModificationDate(indicatorDefinition);
+        // ~ 13454
         return ElementWriterFactory.getInstance().createUDIndicatorWriter().create(indicatorDefinition, folder);
+    }
+
+    /**
+     * DOC xqliu Comment method "recordModificationDate".
+     * 
+     * @param indicatorDefinition
+     */
+    private void recordModificationDate(IndicatorDefinition indicatorDefinition) {
+        EList<TdExpression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
+        if (sqlGenericExpression != null) {
+            String dateValue = DateUtils.getCurrentDate(DateUtils.PATTERN_5);
+            for (TdExpression exp : sqlGenericExpression) {
+                exp.setModificationDate(dateValue);
+            }
+        }
     }
 
     public ModelElement initCWMResourceBuilder() {
@@ -105,9 +125,9 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         TaggedValueHelper.setValidStatus(true, cwmElement);
     }
 
-    public Expression getExpression() {
+    public TdExpression getExpression() {
         if (expression == null) {
-            expression = CoreFactory.eINSTANCE.createExpression();
+            expression = ExpressionsFactory.eINSTANCE.createTdExpression();
         }
         if (expression != null) {
             expression.setBody(this.getParameter().getExpression());

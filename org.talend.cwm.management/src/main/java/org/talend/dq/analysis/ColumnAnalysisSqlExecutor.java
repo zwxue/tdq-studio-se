@@ -51,6 +51,7 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -371,7 +372,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String finalQuery = completedSqlString;
 
         if (finalQuery != null) {
-            Expression instantiateSqlExpression = BooleanExpressionHelper.createExpression(language, finalQuery);
+            TdExpression instantiateSqlExpression = BooleanExpressionHelper.createTdExpression(language, finalQuery);
             indicator.setInstantiatedExpression(instantiateSqlExpression);
             return true;
         }

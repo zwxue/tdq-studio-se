@@ -15,6 +15,7 @@ import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsPackage;
 import orgomg.cwm.foundation.expressions.ExpressionNode;
 import orgomg.cwm.objectmodel.core.Element;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * <!-- begin-user-doc -->
@@ -77,12 +78,20 @@ public class ExpressionsAdapterFactory extends AdapterFactoryImpl {
                 return createBooleanExpressionNodeAdapter();
             }
             @Override
+            public Adapter caseTdExpression(TdExpression object) {
+                return createTdExpressionAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
             @Override
             public Adapter caseExpressionNode(ExpressionNode object) {
                 return createExpressionNodeAdapter();
+            }
+            @Override
+            public Adapter caseExpression(Expression object) {
+                return createExpressionAdapter();
             }
             @Override
             public Adapter defaultCase(EObject object) {
@@ -119,6 +128,20 @@ public class ExpressionsAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.expressions.TdExpression <em>Td Expression</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.expressions.TdExpression
+     * @generated
+     */
+    public Adapter createTdExpressionAdapter() {
+        return null;
+    }
+
+    /**
      * Creates a new adapter for an object of class '{@link orgomg.cwm.objectmodel.core.Element <em>Element</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
@@ -143,6 +166,20 @@ public class ExpressionsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createExpressionNodeAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link orgomg.cwm.objectmodel.core.Expression <em>Expression</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see orgomg.cwm.objectmodel.core.Expression
+     * @generated
+     */
+    public Adapter createExpressionAdapter() {
         return null;
     }
 

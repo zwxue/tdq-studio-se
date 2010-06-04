@@ -125,7 +125,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             }
             sqlExpr = dbms().addWhereToStatement(sqlExpr, stringDataFilter);
 
-            indicator.setInstantiatedExpression(BooleanExpressionHelper.createExpression(sqlGenericExpression.getLanguage(),
+            indicator.setInstantiatedExpression(BooleanExpressionHelper.createTdExpression(sqlGenericExpression.getLanguage(),
                     sqlExpr));
         }
     }

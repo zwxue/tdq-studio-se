@@ -17,8 +17,8 @@ import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsFactory;
+import org.talend.dataquality.expressions.TdExpression;
 import orgomg.cwm.foundation.expressions.ExpressionNode;
-import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -44,13 +44,13 @@ public final class BooleanExpressionHelper {
      */
     public static BooleanExpressionNode createBooleanExpressionNode(String body) {
         BooleanExpressionNode expr = ExpressionsFactory.eINSTANCE.createBooleanExpressionNode();
-        Expression expression = createExpression(DEFAULT_LANGUAGE, body);
+        TdExpression expression = createTdExpression(DEFAULT_LANGUAGE, body);
         expr.setExpression(expression);
         return expr;
     }
 
-    public static Expression createExpression(String language, String body) {
-        Expression expression = CoreFactory.eINSTANCE.createExpression();
+    public static TdExpression createTdExpression(String language, String body) {
+        TdExpression expression = ExpressionsFactory.eINSTANCE.createTdExpression();
         expression.setBody(body);
         expression.setLanguage(language);
         return expression;
@@ -58,7 +58,7 @@ public final class BooleanExpressionHelper {
 
     public static ExpressionNode createExpressionNode(String language, String body) {
         ExpressionNode node = orgomg.cwm.foundation.expressions.ExpressionsFactory.eINSTANCE.createExpressionNode();
-        node.setExpression(createExpression(language, body));
+        node.setExpression(createTdExpression(language, body));
         return node;
     }
 
@@ -82,7 +82,7 @@ public final class BooleanExpressionHelper {
      */
     public static RegularExpression createRegularExpression(String language, String expression) {
         RegularExpression regexp = PatternFactory.eINSTANCE.createRegularExpression();
-        regexp.setExpression(createExpression(language, expression));
+        regexp.setExpression(createTdExpression(language, expression));
         return regexp;
     }
     
@@ -96,7 +96,7 @@ public final class BooleanExpressionHelper {
      */
     public static RegularExpression createRegularExpression(String language, String expression, ExpressionType exprType) {
         RegularExpression regexp = PatternFactory.eINSTANCE.createRegularExpression();
-        regexp.setExpression(createExpression(language, expression));
+        regexp.setExpression(createTdExpression(language, expression));
         regexp.setExpressionType(exprType.getLiteral());
         return regexp;
     }
