@@ -12,13 +12,17 @@
 // ============================================================================
 package org.talend.resource;
 
+import java.io.File;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -215,5 +219,21 @@ public final class ResourceService {
         }
 
         return rc;
+    }
+
+    /**
+     * DOC bZhou Comment method "file2IFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static IFile file2IFile(File file) {
+        if (file.isFile()) {
+            IPath path = new Path(file.getAbsolutePath());
+            path = path.makeRelativeTo(ResourceManager.getRootProject().getLocation());
+            return ResourceManager.getRootProject().getFile(path);
+        }
+
+        return null;
     }
 }
