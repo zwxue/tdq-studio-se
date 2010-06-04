@@ -71,6 +71,9 @@ import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
+import org.talend.dataprofiler.core.service.GlobalServiceRegister;
+import org.talend.dataprofiler.core.service.IDatabaseJobService;
+import org.talend.dataprofiler.core.service.IJobService;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
@@ -90,6 +93,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
@@ -375,7 +379,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return code;
     }
 
-
     public void setElements(ModelElementIndicator[] elements) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
@@ -613,8 +616,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 + PluginConstant.PARENTHESIS_RIGHT : "null";
     }
 
-
-
     /**
      * DOC rli Comment method "deleteTreeElements".
      * 
@@ -832,7 +833,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return true;
     }
 
-
     /**
      * DOC zqin AnalysisColumnTreeViewer class global comment. Detailled comment
      * 
@@ -917,6 +917,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
                     }
                 });
+
             }
 
             if (isSelectedPatternIndicator(tree.getSelection())) {
@@ -938,7 +939,27 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
                 });
             }
+            // MOD zshen 2010-06-02 featrue 12919
+            // judge to indicator whether is frequency
+            if (isSelectedFrequencyIndicator(tree.getSelection())) {
+                MenuItem editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
+                editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob")); //$NON-NLS-1$
+                editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.ICON_PROCESS));
+                editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
 
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault().getService(
+                                IJobService.class);
+                        if (service != null) {
+                            service.setIndicator(getSelectedIndicator(tree.getSelection()));
+                            service.setAnalysis(getAnalysis());
+                            service.executeJob();
+                        }
+                    }
+
+                });
+            }
             if (isSelectedUDIndicator(tree.getSelection())) {
                 MenuItem editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
                 editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.editUDIndicator")); //$NON-NLS-1$
@@ -1162,6 +1183,46 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
 
             return true;
+        }
+
+        /**
+         * 
+         * DOC zshen Comment method "isSelectedFrequencyIndicator". judge to indicator whether is frequency
+         * 
+         * @param items
+         * @return
+         */
+        private boolean isSelectedFrequencyIndicator(TreeItem[] items) {
+            if (!isSelectedIndicator(items)) {
+                return false;
+            }
+
+            for (TreeItem item : items) {
+                IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                if (unit != null) {
+
+                    Indicator indicator = unit.getIndicator();
+                    if (!(indicator instanceof FrequencyIndicator)) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private Indicator getSelectedIndicator(TreeItem[] items) {
+            assert items.length == 1;
+            if (!isSelectedIndicator(items)) {
+                return null;
+            }
+            for (TreeItem item : items) {
+                IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                if (unit != null) {
+                    return unit.getIndicator();
+                }
+            }
+            return null;
         }
 
         /**

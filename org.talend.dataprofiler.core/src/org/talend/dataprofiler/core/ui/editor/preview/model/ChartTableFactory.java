@@ -44,6 +44,7 @@ import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
@@ -197,14 +198,13 @@ public final class ChartTableFactory {
                             if (service != null) {
                                 service.setIndicator(indicator);
                                 service.setAnalysis(analysis);
-
                                 MenuItem item = null;
                                 if (isDUDIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
                                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
                                 } else if (isPatternMatchingIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText("Generate jobs");
+                                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));
                                 }
 
                                 if (item != null) {
@@ -290,6 +290,24 @@ public final class ChartTableFactory {
             }
         };
 
+        return iSwitch.doSwitch(indicator) != null;
+    }
+
+    /**
+     * DOC zshen Comment method "isFrequenceIndicator".
+     * 
+     * @param indicator
+     * @return false if the indicator is not Frequence indicator.
+     */
+
+    public static boolean isFrequenceIndicator(Indicator indicator) {
+        IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
+
+            @Override
+            public Indicator caseFrequencyIndicator(FrequencyIndicator object) {
+                return object;
+            }
+        };
         return iSwitch.doSwitch(indicator) != null;
     }
 
