@@ -170,7 +170,13 @@ public enum IndicatorEnum {
                             ColumnsetPackage.SIMPLE_STAT_INDICATOR,
                             ColumnsetPackage.Literals.SIMPLE_STAT_INDICATOR,
                             "Simple Stat Indicator", //$NON-NLS-1$
-                            null);
+                            null),
+
+    AllMatchIndicatorEnum(
+                          ColumnsetPackage.ALL_MATCH_INDICATOR,
+                          ColumnsetPackage.Literals.ALL_MATCH_INDICATOR,
+                          "All Match Indicator", //$NON-NLS-1$
+                          null);
 
     private EClass indicatorType;
 
@@ -328,6 +334,8 @@ public enum IndicatorEnum {
             returnEnum = JavaUserDefinedIndicatorEnum;
         } else if (indicatorType == ColumnDependencyIndicatorEnum.getIndicatorType()) {
             returnEnum = ColumnDependencyIndicatorEnum;
+        } else if (indicatorType == AllMatchIndicatorEnum.getIndicatorType()) {
+            returnEnum = AllMatchIndicatorEnum;
         }
 
         return returnEnum;

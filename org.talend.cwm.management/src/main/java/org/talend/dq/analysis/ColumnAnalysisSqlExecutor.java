@@ -490,7 +490,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param indicator
      * @return the patterns or null if none has been found
      */
-    private List<String> getPatterns(Indicator indicator) {
+    protected List<String> getPatterns(Indicator indicator) {
         List<String> patternStrings = new ArrayList<String>();
         Domain dataValidDomain = indicator.getParameters().getDataValidDomain();
         if (dataValidDomain == null) {

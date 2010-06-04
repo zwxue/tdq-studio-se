@@ -29,6 +29,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -311,7 +312,10 @@ public final class AnalysisHelper {
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
             if (indicator instanceof PatternMatchingIndicator) {
-                rets.addAll(((PatternMatchingIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
+                IndicatorParameters parameters = ((PatternMatchingIndicator) indicator).getParameters();
+                if (null != parameters) {
+                    rets.addAll(parameters.getDataValidDomain().getPatterns());
+                }
             }
             // MOD scorreia 2009-10-07 User defined matching indicator is NOT a pattern matching indicator.
             // else if (indicator instanceof UserDefIndicator) {

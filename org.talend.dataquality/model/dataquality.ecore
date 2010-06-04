@@ -902,7 +902,7 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="duplicateCountIndicator"
             eType="#//indicators/DuplicateCountIndicator" containment="true"/>
       </eClassifiers>
-      <eClassifiers xsi:type="ecore:EClass" name="AllMatchIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator">
+      <eClassifiers xsi:type="ecore:EClass" name="AllMatchIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator #//indicators/RegexpMatchingIndicator">
         <eStructuralFeatures xsi:type="ecore:EReference" name="compositeRegexMatchingIndicators"
             upperBound="-1" eType="#//indicators/RegexpMatchingIndicator" containment="true"/>
       </eClassifiers>

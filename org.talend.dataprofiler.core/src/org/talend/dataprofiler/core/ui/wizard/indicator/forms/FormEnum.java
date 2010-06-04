@@ -190,6 +190,7 @@ public enum FormEnum {
             break;
         case RegexpMatchingIndicatorEnum:
         case SqlPatternMatchingIndicatorEnum:
+        case AllMatchIndicatorEnum:
             forms = new FormEnum[] { IndicatorThresholdsForm };
 
             break;

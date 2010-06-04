@@ -24,6 +24,8 @@ import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TreeEditor;
@@ -76,6 +78,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
@@ -469,8 +472,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         super.setInput(objs);
     }
 
-
-
     public void setElements(ModelElementIndicator[] elements) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
@@ -499,6 +500,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
                     + column.getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
             treeItem.setData(COLUMN_INDICATOR_KEY, column);
+            treeItem.setData(MODELELEMENT_INDICATOR_KEY, meIndicator);
 
             // MOD mzhao feature 13040 , 2010-05-21
 
@@ -535,7 +537,19 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             addPatternLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
             addPatternLabl.pack();
 
-            addPatternLabl.addMouseListener(new PatternMouseAdapter(this, masterPage, meIndicator, treeItem));
+            PatternMouseAdapter mouseAdapter = new PatternMouseAdapter(this, masterPage, meIndicator, treeItem);
+            mouseAdapter.addFilter(new ViewerFilter() {
+
+                @Override
+                public boolean select(Viewer viewer, Object parentElement, Object element) {
+                    if (element instanceof IFolder) {
+                        IFolder folder = (IFolder) element;
+                        return !folder.getName().endsWith("SQL");
+                    }
+                    return true;
+                }
+            });
+            addPatternLabl.addMouseListener(mouseAdapter);
             addPatternEditor.minimumWidth = addPatternLabl.getImage().getBounds().width;
             addPatternEditor.setEditor(addPatternLabl, treeItem, 2);
 
@@ -562,7 +576,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
             delLabelEditor.setEditor(delLabel, treeItem, 3);
-            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { delLabelEditor });
+            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, addPatternEditor, delLabelEditor });
             if (meIndicator.hasIndicators()) {
                 createIndicatorItems(treeItem, meIndicator.getIndicatorUnits());
             }
@@ -776,5 +790,20 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#createOneUnit(org.eclipse.swt.widgets
+     * .TreeItem, org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit)
+     */
+    @Override
+    public void createOneUnit(TreeItem treeItem, IndicatorUnit indicatorUnit) {
+        super.createOneUnit(treeItem, indicatorUnit);
+        treeItem.setExpanded(true);
+        masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().add(
+                (RegexpMatchingIndicator) indicatorUnit.getIndicator());
+        masterPage.updateIndicatorSection();
+    }
 
 }

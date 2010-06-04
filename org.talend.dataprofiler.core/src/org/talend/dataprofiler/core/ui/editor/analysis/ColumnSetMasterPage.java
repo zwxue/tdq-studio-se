@@ -43,6 +43,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -61,7 +62,9 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeVie
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -80,6 +83,7 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -104,7 +108,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     ColumnSetAnalysisHandler columnSetAnalysisHandler;
 
     private SimpleStatIndicator simpleStatIndicator;
-    
+
     private AllMatchIndicator allMatchIndicator;
 
     protected String execLang;
@@ -162,6 +166,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (columnSetAnalysisHandler.getAllmatchIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             allMatchIndicator = columnsetFactory.createAllMatchIndicator();
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(allMatchIndicator);
         } else {
             allMatchIndicator = (AllMatchIndicator) columnSetAnalysisHandler.getAllmatchIndicator();
         }
@@ -188,6 +193,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     public ModelElementIndicator[] getCurrentModelElementIndicators() {
         return this.currentModelElementIndicators;
     }
+
     private void initializeIndicator(Indicator indicator) {
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
@@ -265,7 +271,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         indicatorsViewer = new IndicatorsComp(indicatorsComp, this);
         indicatorsViewer.setDirty(false);
         indicatorsViewer.addPropertyChangeListener(this);
-        indicatorsViewer.setInput(simpleStatIndicator);
+        indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
         indicatorsSection.setClient(indicatorsComp);
     }
 
@@ -387,13 +393,13 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     public void createPreviewCharts(final ScrolledForm form, final Composite parentComp, final boolean isCreate) {
-        Section previewSection = createSection(
+        Section previewSimpleStatSection = createSection(
                 form,
                 parentComp,
                 DefaultMessagesImpl.getString("ColumnSetResultPage.SimpleStatistics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
-        previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
+        previewSimpleStatSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        Composite sectionClient = toolkit.createComposite(previewSection);
+        Composite sectionClient = toolkit.createComposite(previewSimpleStatSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -402,7 +408,63 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         simpleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         createSimpleStatistics(form, simpleComposite);
-        previewSection.setClient(sectionClient);
+        previewSimpleStatSection.setClient(sectionClient);
+
+        // match
+
+        Section previewMatchSection = createSection(form, parentComp, "All Match", ""); //$NON-NLS-1$
+        previewMatchSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        Composite sectionMatchClient = toolkit.createComposite(previewMatchSection);
+        sectionMatchClient.setLayout(new GridLayout());
+        sectionMatchClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Composite matchComposite = toolkit.createComposite(sectionMatchClient);
+        matchComposite.setLayout(new GridLayout(1, true));
+        matchComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        createAllMatch(form, matchComposite);
+        previewMatchSection.setClient(sectionMatchClient);
+    }
+
+    private void createAllMatch(final ScrolledForm form, final Composite composite) {
+
+        CustomerDefaultCategoryDataset dataset = new CustomerDefaultCategoryDataset();
+        dataset.addValue(allMatchIndicator.getNotMatchingValueCount(), "NOT_MATCHING", "Analysized Columns");
+        dataset.addValue(allMatchIndicator.getMatchingValueCount(), "MATCHING", "Analysized Columns");
+
+        PatternChartDataEntity dataEntityA = new PatternChartDataEntity();
+        dataEntityA.setLabel("Analysized Columns");
+        dataEntityA.setIndicator(allMatchIndicator);
+        if (null != allMatchIndicator.getMatchingValueCount())
+            dataEntityA.setNumMatch(allMatchIndicator.getMatchingValueCount().toString());
+        if (null != allMatchIndicator.getNotMatchingValueCount())
+            dataEntityA.setNumNoMatch(allMatchIndicator.getNotMatchingValueCount().toString());
+        dataset.addDataEntity(dataEntityA);
+
+        JFreeChart chart = TopChartFactory.createStackedBarChart("All Match", dataset, //$NON-NLS-1$
+                PlotOrientation.VERTICAL);
+
+        ChartDecorator.decorate(chart);
+
+        // List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
+        // units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, (RegexpMatchingIndicator) allMatchIndicator,
+        // null));
+        //
+        // IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(EIndicatorChartType.PATTERN_MATCHING,
+        // units);
+        //
+        // // create chart
+        // JFreeChart chart = chartTypeState.getChart();
+        // ChartDecorator.decorate(chart);
+        if (chart != null) {
+            ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+
+            GridData gd = new GridData();
+            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+            cc.setLayoutData(gd);
+        }
     }
 
     private void createSimpleStatistics(final ScrolledForm form, final Composite composite) {
@@ -490,7 +552,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             analysis.getContext().setConnection(tdProvider);
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
             columnSetAnalysisHandler.addIndicator(columnList, simpleStatIndicator);
-            //~ MOD mzhao feature 13040. 2010-05-21
+            // ~ MOD mzhao feature 13040. 2010-05-21
             allMatchIndicator.getCompositeRegexMatchingIndicators().clear();
             ModelElementIndicator[] modelElementIndicator = treeViewer.getModelElementIndicator();
             if (modelElementIndicator != null) {
@@ -625,4 +687,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     }
 
+    public AllMatchIndicator getAllMatchIndicator() {
+        return allMatchIndicator;
+    }
+
+    public void updateIndicatorSection() {
+        if (null != indicatorsViewer)
+            indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
+    }
 }

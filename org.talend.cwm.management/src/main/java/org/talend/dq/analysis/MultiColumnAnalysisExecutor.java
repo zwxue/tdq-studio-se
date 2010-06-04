@@ -34,6 +34,8 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -313,6 +315,28 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         try {
             List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
             // give result to indicator so that it handles the results
+            if (indicator instanceof AllMatchIndicator) {
+
+                AllMatchIndicator regexIndicator = (AllMatchIndicator) indicator;
+                List<String>[] patterns = new List[regexIndicator.getAnalyzedColumns().size()];
+                EList<Column> columns = regexIndicator.getAnalyzedColumns();
+                EList<RegexpMatchingIndicator> indicators = regexIndicator.getCompositeRegexMatchingIndicators();
+
+                for (int i = 0; i < columns.size(); i++) {
+                    for (RegexpMatchingIndicator rmi : indicators) {
+                        if (rmi.getAnalyzedElement() == columns.get(i)) {
+                            if (null == patterns[i]) {
+                                patterns[i] = new ArrayList<String>();
+                            }
+                            String regex = getPatterns(rmi).get(0);
+                            patterns[i].add(regex.substring(1, regex.length() - 1));
+                        }
+                    }
+                }
+
+                regexIndicator.setPatterns(patterns);
+            }
+
             return indicator.storeSqlResults(myResultSet);
         } catch (SQLException e) {
             log.error(e, e);

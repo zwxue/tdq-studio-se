@@ -514,6 +514,16 @@ public final class DefinitionHandler {
             /*
              * (non-Javadoc)
              * 
+             * @see org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch
+             * #caseAllMatchIndicator(org.talend.dataquality .indicators .columnset.AllMatchIndicator)
+             */
+            public Boolean caseAllMatchIndicator(org.talend.dataquality.indicators.columnset.AllMatchIndicator object) {
+                return setIndicatorDefinition(object, "All Match"); //$NON-NLS-1$
+            };
+
+            /*
+             * (non-Javadoc)
+             * 
              * @seeorg.talend.dataquality.indicators.columnset.util.ColumnsetSwitch#caseSimpleStatIndicator(org.talend.
              * dataquality.indicators.columnset.SimpleStatIndicator)
              */

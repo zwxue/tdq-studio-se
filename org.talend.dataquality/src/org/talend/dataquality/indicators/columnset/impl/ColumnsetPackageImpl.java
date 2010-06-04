@@ -716,6 +716,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         rowMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
         columnSetMultiValueIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
         allMatchIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
+        allMatchIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getRegexpMatchingIndicator());
         countAvgNullIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         minMaxDateIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         weakCorrelationIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());

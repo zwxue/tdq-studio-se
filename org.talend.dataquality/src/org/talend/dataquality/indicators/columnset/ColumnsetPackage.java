@@ -1924,13 +1924,31 @@ public interface ColumnsetPackage extends EPackage {
     int ALL_MATCH_INDICATOR__DUPLICATE_COUNT_INDICATOR = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR;
 
     /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
      * The feature id for the '<em><b>Composite Regex Matching Indicators</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 0;
+    int ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 2;
 
     /**
      * The number of structural features of the '<em>All Match Indicator</em>' class.
@@ -1939,7 +1957,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int ALL_MATCH_INDICATOR_FEATURE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 1;
+    int ALL_MATCH_INDICATOR_FEATURE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 3;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.columnset.impl.CountAvgNullIndicatorImpl <em>Count Avg Null Indicator</em>}' class.

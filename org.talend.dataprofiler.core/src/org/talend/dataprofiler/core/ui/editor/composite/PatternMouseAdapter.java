@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -50,6 +51,8 @@ public class PatternMouseAdapter extends MouseAdapter {
 
     private TreeItem treeItem = null;
 
+    private ViewerFilter[] filters;
+
     public PatternMouseAdapter(AbstractColumnDropTree columnDropTree, AbstractAnalysisMetadataPage masterPage,
             ModelElementIndicator meIndicator, TreeItem treeItem) {
         this.masterPage = masterPage;
@@ -79,6 +82,12 @@ public class PatternMouseAdapter extends MouseAdapter {
 
         CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(libProject);
 
+        if (null != filters) {
+            for (ViewerFilter filter : filters) {
+                dialog.addFilter(filter);
+            }
+        }
+
         // IFile[] selectedFiles =
         // PatternUtilities.getPatternFileByIndicator(clmIndicator);
         // dialog.setInitialSelections(selectedFiles);
@@ -98,5 +107,9 @@ public class PatternMouseAdapter extends MouseAdapter {
                 }
             }
         }
+    }
+
+    public void addFilter(ViewerFilter... filters) {
+        this.filters = filters;
     }
 }
