@@ -94,9 +94,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
         indicToRowMap.clear();
         int recordIncrement = 0;
         // MOD zshen compute the num of data which contain in resultSet.
-        resultSet.last();
-        int totalResultNum = resultSet.getRow();
-        resultSet.beforeFirst();
+        // resultSet.last();
+        // int totalResultNum = resultSet.getRow();
+        // resultSet.beforeFirst();
         // --- for each row
         label: while (resultSet.next()) {
             // --- for each column
