@@ -180,6 +180,10 @@ public class DrillDownEditorInput implements IEditorInput {
             columnHeader[headerIndex++] = columnElement.getName();
         }
         List<Object[]> newColumnElementList = filterAdaptDataList();
+        if (newColumnElementList.size() <= 0) {
+            columnValue = new String[0][0];
+            return new DataSet(columnHeader, columnValue);
+        }
         columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
         int rowIndex = 0;
         for (Object[] tableRow : newColumnElementList) {
@@ -198,7 +202,7 @@ public class DrillDownEditorInput implements IEditorInput {
         List<Object[]> newColumnElementList = new ArrayList<Object[]>();
         AnalyzedDataSet analysisDataSet = this.getAnalysis().getResults().getIndicToRowMap().get(currIndicator);
         if (analysisDataSet.getData() != null && analysisDataSet.getData().size() > 0) {
-            newColumnElementList.addAll(analysisDataSet.getData());
+            newColumnElementList.addAll(getDesignatedData());
         } else if (analysisDataSet.getFrequencyData() != null && analysisDataSet.getFrequencyData().size() > 0) {
             String selectValue = this.getSelectValue();
             newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
@@ -212,6 +216,29 @@ public class DrillDownEditorInput implements IEditorInput {
             }
         }
         return newColumnElementList;
+    }
+
+    private List<Object[]> getDesignatedData() {
+        AnalyzedDataSet analysisDataSet = this.getAnalysis().getResults().getIndicToRowMap().get(currIndicator);
+        List<Object[]> dataList = analysisDataSet.getData();
+
+        List<Object[]> returnDataList = new ArrayList<Object[]>();
+        if (analysisDataSet.getData() == null || analysisDataSet.getData().size() < 0) {
+            return returnDataList;
+        }
+        if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+            List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(currIndicator
+                    .getAnalyzedElement().eContainer()));
+            int offset = columnElementList.indexOf(currIndicator.getAnalyzedElement());
+            for (Object[] obj : dataList) {
+                Object[] newObj = new Object[1];
+                newObj[0] = obj[offset];
+                returnDataList.add(newObj);
+            }
+        } else {
+            returnDataList = dataList;
+        }
+        return returnDataList;
     }
 
     public List<TdColumn> filterAdaptColumnHeader() {

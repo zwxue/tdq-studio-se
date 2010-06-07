@@ -600,19 +600,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         Composite javaEnginSection = toolkit.createComposite(sectionClient);
         Composite checkSection = toolkit.createComposite(javaEnginSection);
         Composite numberSection = toolkit.createComposite(javaEnginSection);
-        // GridLayout gridLayout1 = new GridLayout(2, false);
         GridLayout gridLayout = new GridLayout(2, false);
-
         gridLayout.marginWidth = 0;
-        // GridData data = new GridData();
+
         GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(javaEnginSection);
         GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(checkSection);
         GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(numberSection);
-        // data.verticalAlignment = GridData.FILL;
-        // data.horizontalSpan = 2;
-        // data.grabExcessHorizontalSpace = true;
-        // data.grabExcessVerticalSpace = true;
-        // javaEnginSection.setLayoutData(data);
+
         javaEnginSection.setLayout(gridLayout);
         checkSection.setLayout(gridLayout);
         numberSection.setLayout(gridLayout);

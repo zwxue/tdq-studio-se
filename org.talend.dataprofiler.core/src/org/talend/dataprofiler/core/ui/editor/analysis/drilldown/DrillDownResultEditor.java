@@ -62,7 +62,6 @@ public class DrillDownResultEditor extends EditorPart {
 
     private Hashtable<String, Action> actionList;
 
-    // public static final String[] ACTION_NAME = { "save as" , "export" };
     public static final String[] ACTION_NAME = { "export" };
 
     public DrillDownResultEditor() {
@@ -123,8 +122,7 @@ public class DrillDownResultEditor extends EditorPart {
         GridDataFactory.fillDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(table);
         if (this.getEditorInput() instanceof DrillDownEditorInput) {
             DrillDownEditorInput ddEditorInput = (DrillDownEditorInput) this.getEditorInput();
-            // Analysis analysis = ddEditorInput.getAnalysis();
-            // Indicator indicator = ddEditorInput.getCurrIndicator();
+
             addTableColumn(ddEditorInput, table);
             table.setLinesVisible(true);
             table.setHeaderVisible(true);
@@ -136,33 +134,16 @@ public class DrillDownResultEditor extends EditorPart {
             for (TableColumn packColumn : table.getColumns()) {
                 packColumn.pack();
             }
-            // AnalyzedDataSet anaDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
+
         }
 
     }
-
-    // public void createPopuMenu() {
-    // MenuManager manager = new MenuManager("mymenu", "mymenu");
-    // manager.setRemoveAllWhenShown(true);
-    // manager.addMenuListener(new IMenuListener() {
-    //
-    // public void menuAboutToShow(IMenuManager manager) {
-    // manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    //
-    // }
-    //
-    // });
-    // Table table = tableView.getTable();
-    // manager.createContextMenu(table);
-    //
-    // }
 
     private void createCoolBar(Composite parent) {
         CoolBar coolBar = new CoolBar(parent, SWT.HORIZONTAL | SWT.HORIZONTAL);
         GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).applyTo(coolBar);
         actionList = new Hashtable<String, Action>();
-        // actionList.put(ACTION_NAME[0], saveAction);
-        // actionList.put(ACTION_NAME[1], exportAction);
+
         actionList.put(ACTION_NAME[0], exportAction);
         ToolBar toolBar = new ToolBar(coolBar, SWT.RIGHT | SWT.FLAT);
         toolBar.pack();
@@ -170,50 +151,14 @@ public class DrillDownResultEditor extends EditorPart {
         for (int i = 0; i < ACTION_NAME.length; i++) {
             ToolItem item = new ToolItem(toolBar, SWT.PUSH);
             item.setImage(actionList.get(ACTION_NAME[i]).getImageDescriptor().createImage());
-            // item.setText(actionList.get(ACTION_NAME[i]).getText());
+
             item.setToolTipText(actionList.get(ACTION_NAME[i]).getText());
             item.addSelectionListener(new ListenToTheAction(actionList.get(ACTION_NAME[i])));
-            // item.setEnabled(false);
 
         }
 
         CoolItem coolEdit = new CoolItem(coolBar, SWT.HORIZONTAL | SWT.DROP_DOWN);
         coolEdit.setControl(toolBar);
-        // coolEdit.addSelectionListener(new CoolItemSelectionListener());
-
-        // ToolBar toolBar2 = new ToolBar(coolBar, SWT.RIGHT | SWT.FLAT);
-        // ToolItem item = null;
-        //
-        // item = new ToolItem(toolBar2, SWT.PUSH);
-        // item.setImage(guideAction.getImageDescriptor().createImage());
-        // item.setText(guideAction.getText());
-        // item.setToolTipText(guideAction.getText());
-        // item.addSelectionListener(new ListenToTheAction(guideAction));
-        // actionList.put(actionName[5], guideAction);
-        //
-        // CoolItem coolfun = new CoolItem(coolBar, SWT.HORIZONTAL | SWT.DROP_DOWN);
-        // coolfun.setControl(toolBar2);
-        // coolfun.addSelectionListener(new CoolItemSelectionListener());
-        //
-        // ToolBar toolBar3 = new ToolBar(coolBar, SWT.RIGHT | SWT.FLAT);
-        //
-        // item = new ToolItem(toolBar3, SWT.PUSH);
-        // item.setImage(displayPackageTreeAction.getImageDescriptor().createImage());
-        // item.setText(displayPackageTreeAction.getText());
-        // item.setToolTipText(displayPackageTreeAction.getText());
-        // item.addSelectionListener(new ListenToTheAction(displayPackageTreeAction));
-        // actionList.put(actionName[6], displayPackageTreeAction);
-        //
-        // item = new ToolItem(toolBar3, SWT.PUSH);
-        // item.setImage(displayDBViewerAction.getImageDescriptor().createImage());
-        // item.setText(displayDBViewerAction.getText());
-        // item.setToolTipText(displayDBViewerAction.getText());
-        // item.addSelectionListener(new ListenToTheAction(displayDBViewerAction));
-        // actionList.put(actionName[7], displayDBViewerAction);
-        //
-        // CoolItem cooldis = new CoolItem(coolBar, SWT.HORIZONTAL | SWT.DROP_DOWN);
-        // cooldis.setControl(toolBar3);
-        // cooldis.addSelectionListener(new CoolItemSelectionListener());
 
         CoolItem[] coolItems = coolBar.getItems();
         for (int i = 0; i < coolItems.length; i++) {
@@ -238,7 +183,7 @@ public class DrillDownResultEditor extends EditorPart {
         Point p2 = coolEdit.computeSize(p.x, p.y);
         coolEdit.setControl(toolBar);
         coolEdit.setSize(p2);
-        // coolBar.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+
         coolBar.setLocked(true);
     }
 
@@ -247,39 +192,6 @@ public class DrillDownResultEditor extends EditorPart {
      */
     private void makeAction() {
 
-        // // save as
-        // saveAction = new Action(ACTION_NAME[0]) {
-        //
-        // @Override
-        // public void run() {
-        //
-        // MessageBox messageBox = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-        // SWT.YES
-        // | SWT.NO);
-        // messageBox.setText("Confirmation");
-        // messageBox.setMessage("action test");
-        // // int value =
-        // messageBox.open();
-        // // if (value == SWT.YES) {
-        // //
-        // // String sqls = generateAlterSQL();
-        // // Class cls = input.getClass();
-        // // Method med;
-        // // try {
-        // // med = cls.getMethod("openSQLEditorBySQL", String.class);
-        // // med.invoke(input, sqls);
-        // // } catch (Exception e) {
-        // // System.out.println(e);
-        // // }
-        // // this.setEnabled(true);
-        // // }
-        // // fileDialog();
-        // }
-        //
-        // };
-        // saveAction.setImageDescriptor(Activator.getImageDescriptor("icons/save.gif"));
-        // saveAction.setText("save as");
-        // saveAction.setEnabled(true);
         // export
         exportAction = new ExportCSVAction();
         exportAction.setImageDescriptor(CorePlugin.getImageDescriptor("icons/export_wiz.gif"));
@@ -287,16 +199,6 @@ public class DrillDownResultEditor extends EditorPart {
     }
 
     private void addTableColumn(DrillDownEditorInput ddEditorInput, Table table) {
-        // Indicator indicator = ddEditorInput.getCurrIndicator();
-        // String menuType = ddEditorInput.getMenuType();
-        // List<TdColumn> columnElementList = null;
-        // if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALUE_TYPE)) {
-        // columnElementList = new ArrayList<TdColumn>();
-        // columnElementList.add((TdColumn) indicator.getAnalyzedElement());
-        // } else {
-        // columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
-        // .eContainer()));
-        // }
 
         List<TdColumn> columnElementList = ddEditorInput.filterAdaptColumnHeader();
         for (TdColumn columnElement : columnElementList) {
@@ -403,26 +305,7 @@ public class DrillDownResultEditor extends EditorPart {
             if (inputElement instanceof DrillDownEditorInput) {
                 DrillDownEditorInput ddEditorInput = ((DrillDownEditorInput) inputElement);
                 List<Object[]> newColumnElementList = ddEditorInput.filterAdaptDataList();
-                // currIndicator = ddEditorInput.getCurrIndicator();
-                // String menuType = ddEditorInput.getMenuType();
-                // List<Object[]> newColumnElementList = new ArrayList<Object[]>();
-                // AnalyzedDataSet analysisDataSet = ((DrillDownEditorInput) inputElement).getAnalysis().getResults()
-                // .getIndicToRowMap().get(currIndicator);
-                // if (analysisDataSet.getData() != null && analysisDataSet.getData().size() > 0) {
-                // newColumnElementList.addAll(analysisDataSet.getData());
-                // } else if (analysisDataSet.getFrequencyData() != null && analysisDataSet.getFrequencyData().size() >
-                // 0) {
-                // String selectValue = ddEditorInput.getSelectValue();
-                // newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
-                // } else if (analysisDataSet.getPatternData() != null && analysisDataSet.getPatternData().size() > 0) {
-                // if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_INVALID_TYPE)) {
-                // newColumnElementList.addAll((List<Object[]>) analysisDataSet.getPatternData().get(
-                // AnalyzedDataSetImpl.INVALID_VALUE));
-                // } else if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALID_TYPE)) {
-                // newColumnElementList.addAll((List<Object[]>) analysisDataSet.getPatternData().get(
-                // AnalyzedDataSetImpl.VALID_VALUE));
-                // }
-                // }
+
                 if (ddEditorInput.isDataSpill()) {
                     Object[] leaveOutData = new Object[newColumnElementList.get(0).length];
                     for (int i = 0; i < newColumnElementList.get(0).length; i++) {
