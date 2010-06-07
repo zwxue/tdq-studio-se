@@ -317,29 +317,44 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
         return result.toString();
     }
 
+    /**
+     * DOC yyi Comment method "computeCounts".
+     * 
+     * @param objects
+     * @return
+     */
     private boolean computeCounts(List<Object[]> objects) {
-        boolean ok = true;
         Long matchCount = 0L;
+        // loop all rows of the resultset(objects)
         for (Object[] row : objects) {
-            boolean found = false;
+
+            boolean isAMatch = false;
+            // loop all columns of the row
             for (int i = 0; i < row.length - 1; i++) {
-                for (String regex : patterns[i]) {
-                    Pattern p = Pattern.compile(regex);
-                    Matcher m = p.matcher(String.valueOf(row[i]));
-                    if (!m.find()) {
-                        found = false;
-                        break;
+                if (null != patterns[i]) {
+                    // loop all pattern of the column
+                    for (String regex : patterns[i]) {
+                        Pattern p = Pattern.compile(regex);
+                        Matcher m = p.matcher(String.valueOf(row[i]));
+                        if (!m.find()) {
+                            isAMatch = false; // one match failed => record does not match
+                            break;
+                        }
+                        isAMatch = true;
                     }
-                    found = true;
+                    // end of for loop
+                    if (false == isAMatch)
+                        break;
                 }
-                if (false == found)
-                    break;
             }
-            if (found) {
+            // end of for loop
+
+            if (isAMatch) {
                 Long val = Long.valueOf(String.valueOf(row[row.length - 1]));
-                matchCount += val;
+                matchCount += val; // recode all match count
             }
         }
+        // end of for loop
         setMatchingValueCount(matchCount);
         setNotMatchingValueCount(getCount() - matchCount);
         return super.handle(objects);

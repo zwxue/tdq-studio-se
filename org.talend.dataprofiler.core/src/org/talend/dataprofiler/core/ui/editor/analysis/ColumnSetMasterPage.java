@@ -43,7 +43,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -62,9 +61,8 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeVie
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -83,7 +81,6 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
-import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -323,7 +320,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
-            indicatorsViewer.setInput(simpleStatIndicator);
+            indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
             return;
         }
     }
@@ -411,52 +408,35 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         previewSimpleStatSection.setClient(sectionClient);
 
         // match
+        if (0 < allMatchIndicator.getCompositeRegexMatchingIndicators().size()) {
 
-        Section previewMatchSection = createSection(form, parentComp, "All Match", ""); //$NON-NLS-1$
-        previewMatchSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            Section previewMatchSection = createSection(form, parentComp, "All Match", ""); //$NON-NLS-1$
+            previewMatchSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        Composite sectionMatchClient = toolkit.createComposite(previewMatchSection);
-        sectionMatchClient.setLayout(new GridLayout());
-        sectionMatchClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+            Composite sectionMatchClient = toolkit.createComposite(previewMatchSection);
+            sectionMatchClient.setLayout(new GridLayout());
+            sectionMatchClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Composite matchComposite = toolkit.createComposite(sectionMatchClient);
-        matchComposite.setLayout(new GridLayout(1, true));
-        matchComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+            Composite matchComposite = toolkit.createComposite(sectionMatchClient);
+            matchComposite.setLayout(new GridLayout(1, true));
+            matchComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        createAllMatch(form, matchComposite);
-        previewMatchSection.setClient(sectionMatchClient);
+            createAllMatch(form, matchComposite);
+            previewMatchSection.setClient(sectionMatchClient);
+        }
     }
 
     private void createAllMatch(final ScrolledForm form, final Composite composite) {
 
-        CustomerDefaultCategoryDataset dataset = new CustomerDefaultCategoryDataset();
-        dataset.addValue(allMatchIndicator.getNotMatchingValueCount(), "NOT_MATCHING", "Analysized Columns");
-        dataset.addValue(allMatchIndicator.getMatchingValueCount(), "MATCHING", "Analysized Columns");
+        List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
+        units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator, null));
 
-        PatternChartDataEntity dataEntityA = new PatternChartDataEntity();
-        dataEntityA.setLabel("Analysized Columns");
-        dataEntityA.setIndicator(allMatchIndicator);
-        if (null != allMatchIndicator.getMatchingValueCount())
-            dataEntityA.setNumMatch(allMatchIndicator.getMatchingValueCount().toString());
-        if (null != allMatchIndicator.getNotMatchingValueCount())
-            dataEntityA.setNumNoMatch(allMatchIndicator.getNotMatchingValueCount().toString());
-        dataset.addDataEntity(dataEntityA);
+        EIndicatorChartType matchingType = EIndicatorChartType.PATTERN_MATCHING;
+        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(matchingType, units);
+        ChartWithData chartData = new ChartWithData(matchingType, chartTypeState.getChart(), chartTypeState.getDataEntity());
 
-        JFreeChart chart = TopChartFactory.createStackedBarChart("All Match", dataset, //$NON-NLS-1$
-                PlotOrientation.VERTICAL);
-
+        JFreeChart chart = chartTypeState.getChart();
         ChartDecorator.decorate(chart);
-
-        // List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
-        // units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, (RegexpMatchingIndicator) allMatchIndicator,
-        // null));
-        //
-        // IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(EIndicatorChartType.PATTERN_MATCHING,
-        // units);
-        //
-        // // create chart
-        // JFreeChart chart = chartTypeState.getChart();
-        // ChartDecorator.decorate(chart);
         if (chart != null) {
             ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 

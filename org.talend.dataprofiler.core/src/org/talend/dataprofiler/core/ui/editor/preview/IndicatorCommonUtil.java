@@ -153,6 +153,7 @@ public final class IndicatorCommonUtil {
 
                 case RegexpMatchingIndicatorEnum:
                 case SqlPatternMatchingIndicatorEnum:
+                case AllMatchIndicatorEnum:
                     tempObject = handleMatchingValue(indicator);
                     break;
 

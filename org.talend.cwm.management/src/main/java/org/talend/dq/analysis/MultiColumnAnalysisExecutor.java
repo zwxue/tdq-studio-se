@@ -314,35 +314,48 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private boolean executeQuery(Indicator indicator, Connection connection, Expression query) {
         try {
             List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
-            // give result to indicator so that it handles the results
+
+            // yyi: store patterns in AllMatchIndicator.
             if (indicator instanceof AllMatchIndicator) {
 
-                AllMatchIndicator regexIndicator = (AllMatchIndicator) indicator;
-                List<String>[] patterns = new List[regexIndicator.getAnalyzedColumns().size()];
-                EList<Column> columns = regexIndicator.getAnalyzedColumns();
-                EList<RegexpMatchingIndicator> indicators = regexIndicator.getCompositeRegexMatchingIndicators();
+                AllMatchIndicator matchIndicator = (AllMatchIndicator) indicator;
+                EList<Column> columns = matchIndicator.getAnalyzedColumns();
+                List<String>[] patternList = new List[columns.size()];
+                EList<RegexpMatchingIndicator> indicators = matchIndicator.getCompositeRegexMatchingIndicators();
 
                 for (int i = 0; i < columns.size(); i++) {
                     for (RegexpMatchingIndicator rmi : indicators) {
                         if (rmi.getAnalyzedElement() == columns.get(i)) {
-                            if (null == patterns[i]) {
-                                patterns[i] = new ArrayList<String>();
+                            if (null == patternList[i]) {
+                                patternList[i] = new ArrayList<String>();
                             }
-                            String regex = getPatterns(rmi).get(0);
-                            patterns[i].add(regex.substring(1, regex.length() - 1));
+                            String regex = getRegexWithoutQuotes(getPatterns(rmi).get(0));
+                            patternList[i].add(regex);
                         }
                     }
                 }
-
-                regexIndicator.setPatterns(patterns);
+                matchIndicator.setPatterns(patternList);
             }
 
+            // give result to indicator so that it handles the results
             return indicator.storeSqlResults(myResultSet);
         } catch (SQLException e) {
             log.error(e, e);
             return false;
         }
 
+    }
+
+    private String getRegexWithoutQuotes(String pattern) {
+        int beginIndex = 0;
+        int endIndex = pattern.length();
+        if ('\'' == pattern.charAt(0)) {
+            beginIndex++;
+        }
+        if ('\'' == pattern.charAt(endIndex - 1)) {
+            endIndex--;
+        }
+        return pattern.substring(beginIndex, endIndex);
     }
 
     /*

@@ -806,4 +806,21 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         masterPage.updateIndicatorSection();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#removeItemBranch(org.eclipse.swt.widgets
+     * .TreeItem)
+     */
+    @Override
+    protected void removeItemBranch(TreeItem item) {
+        IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+        super.removeItemBranch(item);
+        if (null != unit) {
+            masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
+            masterPage.updateIndicatorSection();
+        }
+    }
+
 }

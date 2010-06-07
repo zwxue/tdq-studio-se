@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOpera
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -69,6 +70,8 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     private ColumnSetMasterPage masterPage;
 
     private SimpleStatIndicator simpleStaticIndicator;
+
+    private AllMatchIndicator allMatchIndicator;
 
     private Composite chartComposite;
 
@@ -88,6 +91,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
         this.masterPage = (ColumnSetMasterPage) analysisEditor.getMasterPage();
         simpleStaticIndicator = masterPage.getSimpleStatIndicator();
+        allMatchIndicator = masterPage.getAllMatchIndicator();
     }
 
     @Override
@@ -128,6 +132,11 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         } else {
             this.createSimpleStatisticsPart(sectionClient,
                     DefaultMessagesImpl.getString("ColumnSetResultPage.SimpleStatistics"), simpleStaticIndicator); //$NON-NLS-1$
+
+            // match
+            if (0 < allMatchIndicator.getCompositeRegexMatchingIndicators().size()) {
+                this.createAllMatchPart(sectionClient, "All Match", allMatchIndicator);
+            }
         }
 
         Composite tableComp = toolkit.createComposite(sectionClient);
@@ -143,8 +152,47 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         graphicsAndTableSection.setClient(sectionClient);
     }
 
+    private Section createAllMatchPart(Composite parentComp, String title, AllMatchIndicator matchIndicator) {
+        Section section = createSection(form, parentComp, title, null); //$NON-NLS-1$
+        section.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Composite sectionClient = toolkit.createComposite(section);
+        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
+
+        Composite matchingComposite = toolkit.createComposite(sectionClient);
+        matchingComposite.setLayout(new GridLayout(2, true));
+        matchingComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
+        units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator, null));
+
+        EIndicatorChartType matchingType = EIndicatorChartType.PATTERN_MATCHING;
+        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(matchingType, units);
+        ChartWithData chartData = new ChartWithData(matchingType, chartTypeState.getChart(), chartTypeState.getDataEntity());
+
+        TableViewer tableviewer = chartTypeState.getTableForm(matchingComposite);
+        tableviewer.setInput(chartData);
+        TableUtils.addTooltipOnTableItem(tableviewer.getTable());
+
+        JFreeChart chart = chartTypeState.getChart();
+        ChartDecorator.decorate(chart);
+        if (chart != null) {
+            ChartComposite cc = new ChartComposite(matchingComposite, SWT.NONE, chart, true);
+
+            GridData gd = new GridData();
+            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+            cc.setLayoutData(gd);
+        }
+        section.setClient(sectionClient);
+        return section;
+    }
+
     private Section createSimpleStatisticsPart(Composite parentComp, String title, SimpleStatIndicator simpleStatIndicator) {
-        //MOD sgandon 15/03/2010 bug 11769 : made descriotion null to remove empty space.
+        // MOD sgandon 15/03/2010 bug 11769 : made descriotion null to remove empty space.
         Section section = createSection(form, parentComp, title, null); //$NON-NLS-1$
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -222,8 +270,8 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             table.getColumn(i).pack();
         }
         columnSetElementSection.setClient(sectionTableComp);
-
-        //ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+        columnSetElementSection.setExpanded(false);
+        // ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
         setupTableGridDataLimitedSize(table, tableRows.size());
 
         addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
