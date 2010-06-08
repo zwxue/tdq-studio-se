@@ -656,18 +656,19 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     public void updateModelViewer() {
         if (analysis.getResults().getIndicators().size() != 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
-            //MOD qiongli bug 0012766,2010-6-8,to the instance of ColumnDependencyIndicator and update view
+			// MOD qiongli bug 0012766,2010-6-8,to the instance of
+			// ColumnDependencyIndicator and update view
 			if (indicators.get(0) instanceof ColumnDependencyIndicator) {
-				 columnListA.clear();
-	                columnListB.clear();
-	                ColumnDependencyIndicator cdi = null;
-	                for (int i = 0; i < indicators.size(); i++) {
-	                    cdi = (ColumnDependencyIndicator) indicators.get(i);
-	                    columnListA.add(cdi.getColumnA());
-	                    columnListB.add(cdi.getColumnB());
-	                }
-	                tableViewerPosStack.get(0).setInput(columnListA);
-	                tableViewerPosStack.get(1).setInput(columnListB);
+				columnListA.clear();
+				columnListB.clear();
+				ColumnDependencyIndicator cdi = null;
+				for (int i = 0; i < indicators.size(); i++) {
+					cdi = (ColumnDependencyIndicator) indicators.get(i);
+					columnListA.add(cdi.getColumnA());
+					columnListB.add(cdi.getColumnB());
+				}
+				tableViewerPosStack.get(0).setInput(columnListA);
+				tableViewerPosStack.get(1).setInput(columnListB);
 			} else {
 				RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators
 						.get(0);
@@ -683,10 +684,13 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             // MOD mzhao bug 12766, 2010-04-22 refresh the viewer.
         	columnListA.clear();
         	columnListB.clear();
-            tableViewerPosStack.get(0).setInput(null);
-            tableViewerPosStack.get(1).setInput(null);
-            // ~
-        }
+			// MOD qiongli 2010-6-8, bug 13595
+			// tableViewerPosStack.get(0).setInput(null);
+			// tableViewerPosStack.get(1).setInput(null);
+			tableViewerPosStack.get(0).setInput(columnListA);
+			tableViewerPosStack.get(1).setInput(columnListB);
+			// ~
+		}
 
     }
 
