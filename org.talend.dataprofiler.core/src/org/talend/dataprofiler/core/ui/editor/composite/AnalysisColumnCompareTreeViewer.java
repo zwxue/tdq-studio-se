@@ -656,10 +656,18 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     public void updateModelViewer() {
         if (analysis.getResults().getIndicators().size() != 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
-            //MOD qiongli bug 0012766,2010-5-31,to the instance of ColumnDependencyIndicator
+            //MOD qiongli bug 0012766,2010-6-8,to the instance of ColumnDependencyIndicator and update view
 			if (indicators.get(0) instanceof ColumnDependencyIndicator) {
-				tableViewerPosStack.get(0).setInput(columnListA);
-				tableViewerPosStack.get(1).setInput(columnListB);
+				 columnListA.clear();
+	                columnListB.clear();
+	                ColumnDependencyIndicator cdi = null;
+	                for (int i = 0; i < indicators.size(); i++) {
+	                    cdi = (ColumnDependencyIndicator) indicators.get(i);
+	                    columnListA.add(cdi.getColumnA());
+	                    columnListB.add(cdi.getColumnB());
+	                }
+	                tableViewerPosStack.get(0).setInput(columnListA);
+	                tableViewerPosStack.get(1).setInput(columnListB);
 			} else {
 				RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators
 						.get(0);
