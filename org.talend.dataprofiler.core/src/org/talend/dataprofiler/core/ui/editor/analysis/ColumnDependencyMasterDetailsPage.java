@@ -224,6 +224,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
                 indicator.setIndicatorDefinition(DefinitionHandler.getInstance().getFDRuleDefaultIndicatorDefinition());
                 analysis.getResults().getIndicators().add(indicator);
                 anaBuilder.addElementToAnalyze(columnListA.get(i), indicator);
+                // ADD this line qiongli 2010-6-8
+                anaBuilder.addElementToAnalyze(columnListB.get(i), indicator);
             }
         }
 
