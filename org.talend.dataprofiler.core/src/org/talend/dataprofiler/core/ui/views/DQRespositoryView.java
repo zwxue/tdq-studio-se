@@ -122,7 +122,7 @@ public class DQRespositoryView extends CommonNavigator {
         }
 
         if (manager.isNeedMigration()) {
-            MigrationTaskManager.doMigrationTask(MigrationTaskManager.findValidTasks());
+            MigrationTaskManager.doMigrationTask(MigrationTaskManager.findNonDBValidTasks());
         }
     }
 
