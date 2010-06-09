@@ -96,18 +96,20 @@ public final class PropertyHelper {
      * @return Null if can't find.
      */
     public static Property getProperty(IFile propertyFile) {
-        URI propURI = URI.createPlatformResourceURI(propertyFile.getFullPath().toString(), false);
-        Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
+        if (propertyFile.exists()) {
+            URI propURI = URI.createPlatformResourceURI(propertyFile.getFullPath().toString(), false);
+            Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
 
-        // in this case, we need to reload the content again.
-        if (resource.getContents().isEmpty()) {
-            resource = new ResourceSetImpl().getResource(propURI, true);
-        }
+            // in this case, we need to reload the content again.
+            if (resource.getContents().isEmpty()) {
+                resource = new ResourceSetImpl().getResource(propURI, true);
+            }
 
-        if (resource.getContents() != null) {
-            Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
-            if (object != null) {
-                return (Property) object;
+            if (resource.getContents() != null) {
+                Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
+                if (object != null) {
+                    return (Property) object;
+                }
             }
         }
         return null;
