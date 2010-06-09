@@ -209,38 +209,42 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         // ~
         // !MOD mzhao 2010-03-08,Feature 11387. Add reverse action to make it easy for columns comparing on opposite
         // way.
-        columnReverseButtion = new Button(compareToplevelComp, SWT.NONE);
-        // GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(compareToplevelComp);
-        columnReverseButtion.setText("Reverse columns");
-        columnReverseButtion.addMouseListener(new MouseListener() {
+		// MOD qiongli 2010-6-10,bug 13600:remove "reverse columns" button for
+		// ColumnSet comparison analysis.
+		if (masterPage instanceof ColumnDependencyMasterDetailsPage) {
+			columnReverseButtion = new Button(compareToplevelComp, SWT.NONE);
+			// GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(compareToplevelComp);
+			columnReverseButtion.setText("Reverse columns");
+			columnReverseButtion.addMouseListener(new MouseListener() {
 
-            public void mouseDoubleClick(MouseEvent e) {
+				public void mouseDoubleClick(MouseEvent e) {
 
-            }
+				}
 
-            public void mouseDown(MouseEvent e) {
-                handleColumnReverseAction();
-            }
+				public void mouseDown(MouseEvent e) {
+					handleColumnReverseAction();
+				}
 
-            public void mouseUp(MouseEvent e) {
+				public void mouseUp(MouseEvent e) {
 
-            }
+				}
 
-        });
-        columnReverseButtion.addKeyListener(new KeyListener() {
+			});
+			columnReverseButtion.addKeyListener(new KeyListener() {
 
-            public void keyPressed(KeyEvent e) {
-                if (e.keyCode == 13) {
-                    handleColumnReverseAction();
-                }
-            }
+				public void keyPressed(KeyEvent e) {
+					if (e.keyCode == 13) {
+						handleColumnReverseAction();
+					}
+				}
 
-            public void keyReleased(KeyEvent e) {
+				public void keyReleased(KeyEvent e) {
 
-            }
+				}
 
-        });
-        // ~
+			});
+		}
+		// ~
 
         SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
         sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
