@@ -171,7 +171,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
         parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
 
-        addSourceDND(newTree);
+        // addSourceDND(newTree);
         addTargetDND(newTree);
 
         addTreeListener(newTree);
@@ -275,11 +275,18 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 columnList.remove(moveElement);
                 columnList.add((index + step), moveElement);
                 indexArray.add(index + step);
+
+                ModelElementIndicator tmpElement = modelElementIndicators[index + step];
+                modelElementIndicators[index + step] = modelElementIndicators[index];
+                modelElementIndicators[index] = tmpElement;
+
             } else {
                 return;
             }
         }
-        columnsElementViewer.setInput(columnList.toArray());
+
+        // columnsElementViewer.setInput(columnList.toArray());
+        setElements(modelElementIndicators);
         currentTree = columnsElementViewer.getTree();
         for (int i = 0; i < indexArray.size(); i++) {
             currentTree.select(currentTree.getItem(indexArray.get(i)));

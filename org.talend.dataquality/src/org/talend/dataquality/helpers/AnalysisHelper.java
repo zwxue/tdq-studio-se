@@ -313,7 +313,7 @@ public final class AnalysisHelper {
         for (Indicator indicator : indicators) {
             if (indicator instanceof PatternMatchingIndicator) {
                 IndicatorParameters parameters = ((PatternMatchingIndicator) indicator).getParameters();
-                if (null != parameters) {
+                if (null != parameters && null != parameters.getDataValidDomain()) {
                     rets.addAll(parameters.getDataValidDomain().getPatterns());
                 }
             }

@@ -1104,6 +1104,12 @@
            name="Update Access Distinct Query Task"
            version="4.0.1">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateAllMatchIndicatorTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateAllMatchIndicatorTask"
+           name="Update All Match Indicator Task"
+           version="4.1.0">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
