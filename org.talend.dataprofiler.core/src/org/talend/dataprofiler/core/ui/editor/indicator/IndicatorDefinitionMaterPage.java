@@ -214,17 +214,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(supportTypes));
         // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
-        systemIndicator = this.getEditor().getEditorInput() instanceof IndicatorEditorInput;
+        systemIndicator = this.getEditor().getEditorInput() instanceof IndicatorEditorInput && definition != null
+        && definition.eResource() != null && definition.eResource().getURI().toString().contains(".Talend.definition");
+
         // initialize user defined indicator category
         definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
         if (systemIndicator) {
             allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
 
-        } else if (!systemIndicator) {
-            if (!checkJavaUDIBeforeOpen()) {
-                allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
-            }
-        }
+        } 
         // MOD xqliu 2010-03-23 feature 11201
         // remainDBTypeList = new ArrayList<String>();
         // remainDBTypeList.addAll(allDBTypeList);
@@ -949,7 +947,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ADD xqliu 2010-02-26 bug 11201
         addTitleComp(expressionComp);
         // ADD klliu 2010-06-02 bug 13451: Class name of Java User Define Indicator must be validated
-        if (!checkJavaUDIBeforeOpen()) {
+       //MOD backport klliu2010-06-10
+        //if (!checkJavaUDIBeforeOpen()) {
             if (tempExpressionMap.size() == 0) {
                 if (definition != null) {
                     // MOD xqliu 2010-03-23 feature 11201
@@ -958,11 +957,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     for (TdExpression expression : tempExpressionList) {
                         createNewLineWithExpression(expression);
                     }
+                    createNewLineWithJavaUDI();
                 }
             }
             createAddButton(composite);
-        } else
-            createNewLineWithJavaUDI();
+        //} else
+          
         // if (tempExpressionMap.size() == 0) {
         // if (definition != null) {
         // // MOD xqliu 2010-03-23 feature 11201
@@ -1027,8 +1027,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
         combo.setEditable(false);
-        // MOD klliu 2010-06-02 bug 13451
-        combo.setEnabled(false);
+        // MOD klliu 2010-06-10 bug 13104
+        //combo.setEnabled(false);
         // MOD xqliu 2010-03-23 feature 11201
         // combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
         combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
@@ -1721,9 +1721,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         EList<TaggedValue> tvs = definition.getTaggedValue();
         String className = this.getClassNameForSave();
         String jarPath = this.getJarPathForSave();
+        volidateNameAndPath(className, jarPath, tvs);
         for (TaggedValue tv : tvs) {
             if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT) || tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
-
+            	className = this.getClassNameForSave();
+                jarPath = this.getJarPathForSave();
                 if (!systemIndicator) {
                     if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
                             && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
@@ -1748,7 +1750,27 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         return true;
 
     }
+    /**
+     * DOC klliu Comment method "volidateNameAndPath".
+     * 
+     * @param className
+     * @param jarPath
+     */
+    private void volidateNameAndPath(String className, String jarPath, EList<TaggedValue> tvs) {
+        // TODO Auto-generated method stub
+        if (className == null && jarPath == null) {
+            for (TaggedValue tv : tvs) {
+                if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                    this.setClassNameForSave(tv.getValue());
+                    continue;
+                }
+                if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                    this.setJarPathForSave(tv.getValue());
+                }
+            }
+        }
 
+    }
     /**
      * DOC xqliu Comment method "checkBeforeSave". ADD xqliu 2010-02-25 feature 11201
      * 

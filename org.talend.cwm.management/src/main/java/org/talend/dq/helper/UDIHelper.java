@@ -312,7 +312,12 @@ public final class UDIHelper {
         EList<TaggedValue> tvs = definition.getTaggedValue();
         for (TaggedValue tv : tvs) {
             if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
-                return true;
+            	   for (TaggedValue tv1 : tvs) {
+                       if (!tv1.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                           return false;
+                       } else
+                           return true;
+                   }
             }
         }
         return false;
