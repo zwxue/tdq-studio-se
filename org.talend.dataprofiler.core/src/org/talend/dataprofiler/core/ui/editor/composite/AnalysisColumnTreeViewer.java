@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -41,19 +40,14 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -62,7 +56,6 @@ import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLElement;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -71,11 +64,6 @@ import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
-import org.talend.dataprofiler.core.service.GlobalServiceRegister;
-import org.talend.dataprofiler.core.service.IDatabaseJobService;
-import org.talend.dataprofiler.core.service.IJobService;
-import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -85,22 +73,15 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
-import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -721,7 +702,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
                     tree.setMenu(null);
                 } else {
-                    new ModelElementTreeMenuProvider(tree).createTreeMenu();
+                    new ColumnModelElementTreeMenuProvider(tree).createTreeMenu();
                 }
             }
 
@@ -834,439 +815,40 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * DOC zqin AnalysisColumnTreeViewer class global comment. Detailled comment
-     * 
-     * this class provide an action to deal with the menu actions on tree viewer.
-     * 
+     * DOC yyi 2010-06-10 Refactor to ModelElementTreeMenuProvider
      */
-    class ModelElementTreeMenuProvider {
-
-        private Tree tree;
-
-        public ModelElementTreeMenuProvider(Tree tree) {
-            this.tree = tree;
-        }
+    class AnalysisColumnColumnMenuProvider extends ModelElementTreeMenuProvider {
 
         /**
-         * DOC qzhang Comment method "createTreeMenu".
-         * 
-         * @param newTree
-         * @param containEdit
-         */
-        public void createTreeMenu() {
-            Menu oldMenu = tree.getMenu();
-            if (oldMenu != null && !oldMenu.isDisposed()) {
-                oldMenu.dispose();
-            }
-            Menu menu = new Menu(tree);
-
-            if (isSelectedColumn(tree.getSelection())) {
-                MenuItem previewMenuItem = new MenuItem(menu, SWT.CASCADE);
-                previewMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.previewDQElement")); //$NON-NLS-1$
-                previewMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-                previewMenuItem.addSelectionListener(new SelectionAdapter() {
-
-                    /*
-                     * (non-Javadoc)
-                     * 
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected (org.eclipse
-                     * .swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        previewSelectedElements(tree);
-                    }
-
-                });
-
-                MenuItem showLocationMenuItem = new MenuItem(menu, SWT.CASCADE);
-                showLocationMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
-                showLocationMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-                showLocationMenuItem.addSelectionListener(new SelectionAdapter() {
-
-                    /*
-                     * (non-Javadoc)
-                     * 
-                     * @seeorg.eclipse.swt.events.SelectionAdapter# widgetSelected(org.eclipse
-                     * .swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        showSelectedElements(tree);
-                    }
-
-                });
-            }
-
-            if (isSelectedIndicator(tree.getSelection()) && !isMdmSelected(tree.getSelection())) {
-                // MOD 2009-01-04 mzhao
-                MenuItem showQueryMenuItem = new MenuItem(menu, SWT.CASCADE);
-                showQueryMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.viewQuery")); //$NON-NLS-1$
-                showQueryMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-                showQueryMenuItem.addSelectionListener(new SelectionAdapter() {
-
-                    /*
-                     * (non-Javadoc)
-                     * 
-                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected (org.eclipse
-                     * .swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        viewQueryForSelectedElement(tree);
-
-                    }
-                });
-
-            }
-
-            if (isSelectedPatternIndicator(tree.getSelection())) {
-                MenuItem editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
-                editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.editPattern")); //$NON-NLS-1$
-                editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
-                editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
-
-                    /*
-                     * (non-Javadoc)
-                     * 
-                     * @seeorg.eclipse.swt.events.SelectionAdapter# widgetSelected(org
-                     * .eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        editPattern(tree);
-                    }
-
-                });
-            }
-            // MOD zshen 2010-06-02 featrue 12919
-            // judge to indicator whether is frequency
-            if (isSelectedFrequencyIndicator(tree.getSelection())) {
-                MenuItem editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
-                editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob")); //$NON-NLS-1$
-                editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.ICON_PROCESS));
-                editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault().getService(
-                                IJobService.class);
-                        if (service != null) {
-                            service.setIndicator(getSelectedIndicator(tree.getSelection()));
-                            service.setAnalysis(getAnalysis());
-                            service.executeJob();
-                        }
-                    }
-
-                });
-            }
-            if (isSelectedUDIndicator(tree.getSelection())) {
-                MenuItem editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
-                editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.editUDIndicator")); //$NON-NLS-1$
-                editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.IND_DEFINITION));
-                editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
-
-                    /*
-                     * (non-Javadoc)
-                     * 
-                     * @seeorg.eclipse.swt.events.SelectionAdapter# widgetSelected(org
-                     * .eclipse.swt.events.SelectionEvent)
-                     */
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        editUDIndicator(tree);
-                    }
-
-                });
-            }
-            // add common menu to the tree
-            MenuItem addTaskItem = new MenuItem(menu, SWT.CASCADE);
-            addTaskItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.AddTask")); //$NON-NLS-1$
-            addTaskItem.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-            addTaskItem.addSelectionListener(new SelectionAdapter() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org .eclipse .swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    TreeItem[] selection = tree.getSelection();
-                    if (selection.length > 0) {
-                        TreeItem treeItem = selection[0];
-                        ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
-                        ModelElement me = meIndicator.getModelElement();
-                        ModelElement ana = getAnalysis();
-                        ana.setName(me.getName());
-                        if (me instanceof ModelElement) {
-                            (new TdAddTaskAction(tree.getShell(), ana)).run();
-                        }
-                    }
-
-                }
-            });
-
-            MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
-            deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
-            deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            deleteMenuItem.addSelectionListener(new SelectionAdapter() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org .eclipse .swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    removeSelectedElements(tree);
-
-                }
-
-            });
-
-            tree.setMenu(menu);
-        }
-
-        private void editPattern(Tree tree) {
-            TreeItem[] selection = tree.getSelection();
-            if (selection.length > 0) {
-                TreeItem treeItem = selection[0];
-                IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
-                PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit.getIndicator();
-                Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
-                IFolder patternFolder = ResourceManager.getPatternFolder();
-                IFolder sqlPatternFolder = ResourceManager.getPatternSQLFolder();
-                IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
-                        new IFolder[] { patternFolder, sqlPatternFolder });
-                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                try {
-                    activePage.openEditor(new FileEditorInput(file),
-                            "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"); //$NON-NLS-1$
-                } catch (PartInitException e1) {
-                    log.error(e1, e1);
-                }
-            }
-        }
-
-        /**
-         * DOC yyi Comment method "editUDIndicator" 2009-09-04.
+         * DOC yyi ColumnModelElementTreeMenuProvider constructor comment.
          * 
          * @param tree
          */
-        private void editUDIndicator(Tree tree) {
-            TreeItem[] selection = tree.getSelection();
-            if (selection.length > 0) {
-                TreeItem treeItem = selection[0];
-                IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
-                UserDefIndicator indicator = (UserDefIndicator) indicatorUnit.getIndicator();
-
-                IFolder userFolder = ResourceManager.getUDIFolder();
-                IFile file = UDIResourceFileHelper.getInstance().getUDIFile(indicator.getIndicatorDefinition(),
-                        new IFolder[] { userFolder });
-
-                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                try {
-                    activePage.openEditor(new FileEditorInput(file),
-                            "org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"); //$NON-NLS-1$
-                } catch (PartInitException e1) {
-                    log.error(e1, e1);
-                }
-            }
+        public AnalysisColumnColumnMenuProvider(Tree tree) {
+            super(tree);
         }
 
-        /**
-         * DOC Zqin Comment method "previewSelectedElements".
+        /*
+         * (non-Javadoc)
          * 
-         * @param newTree
+         * @see org.talend.dataprofiler.core.ui.editor.composite.ModelElementTreeMenuProvider#getAnalysis2()
          */
-        private void previewSelectedElements(Tree newTree) {
-            TreeItem[] items = newTree.getSelection();
-            ModelElement[] mes = new ModelElement[items.length];
-
-            for (int i = 0; i < items.length; i++) {
-                ModelElementIndicator meIndicator = (ModelElementIndicator) items[i].getData(MODELELEMENT_INDICATOR_KEY);
-                ModelElement me = meIndicator.getModelElement();
-                mes[i] = me;
-            }
-
-            new PreviewColumnAction(mes).run();
+        @Override
+        protected Analysis getAnalysis2() {
+            return getAnalysis();
         }
 
-        /**
+        /*
+         * (non-Javadoc)
          * 
-         * DOC mzhao Comment method "viewQueryForSelectedElement".
-         * 
-         * @param newTree
+         * @see
+         * org.talend.dataprofiler.core.ui.editor.composite.ModelElementTreeMenuProvider#removeSelectedElements2(org
+         * .eclipse.swt.widgets.Tree)
          */
-        private void viewQueryForSelectedElement(Tree newTree) {
-            TreeItem[] selection = newTree.getSelection();
-            for (TreeItem item : selection) {
-                ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-                ModelElement me = meIndicator.getModelElement();
-                TdDataProvider dataprovider = ModelElementHelper.getTdDataProvider(me);
-                IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
-                Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
-                if (expression == null) {
-                    MessageDialogWithToggle
-                            .openWarning(
-                                    null,
-                                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.Warn"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.NoQueryDefined")); //$NON-NLS-1$ //$NON-NLS-2$
-                    return;
-                }
-
-                CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(), me.getName());
-            }
+        @Override
+        protected void removeSelectedElements2(Tree tree) {
+            removeSelectedElements(tree);
         }
 
-        /**
-         * DOC Zqin Comment method "showSelectedElements".MOD 2009-01-07 mzhao.
-         * 
-         * @param newTree
-         */
-        private void showSelectedElements(Tree newTree) {
-            TreeItem[] selection = newTree.getSelection();
-
-            DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
-            if (selection.length == 1) {
-                try {
-                    ModelElementIndicator meIndicator = (ModelElementIndicator) selection[0].getData(MODELELEMENT_INDICATOR_KEY);
-                    ModelElement me = meIndicator.getModelElement();
-                    dqview.showSelectedElements(me);
-
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
-            }
-        }
-
-        private boolean isSelectedColumn(TreeItem[] items) {
-            for (TreeItem item : items) {
-                if (item.getData(INDICATOR_UNIT_KEY) != null || item.getData(DATA_PARAM) != null) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private boolean isSelectedIndicator(TreeItem[] items) {
-
-            if (isSelectedColumn(items)) {
-                return false;
-            }
-
-            for (TreeItem item : items) {
-                if (item.getData(DATA_PARAM) != null) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private boolean isSelectedPatternIndicator(TreeItem[] items) {
-            if (!isSelectedIndicator(items)) {
-                return false;
-            }
-
-            for (TreeItem item : items) {
-                IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                if (unit != null) {
-
-                    Indicator indicator = unit.getIndicator();
-                    if (!(indicator instanceof PatternMatchingIndicator)) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        /**
-         * 
-         * DOC zshen Comment method "isSelectedFrequencyIndicator". judge to indicator whether is frequency
-         * 
-         * @param items
-         * @return
-         */
-        private boolean isSelectedFrequencyIndicator(TreeItem[] items) {
-            if (!isSelectedIndicator(items)) {
-                return false;
-            }
-
-            for (TreeItem item : items) {
-                IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                if (unit != null) {
-
-                    Indicator indicator = unit.getIndicator();
-                    if (!(indicator instanceof FrequencyIndicator)) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        private Indicator getSelectedIndicator(TreeItem[] items) {
-            assert items.length == 1;
-            if (!isSelectedIndicator(items)) {
-                return null;
-            }
-            for (TreeItem item : items) {
-                IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                if (unit != null) {
-                    return unit.getIndicator();
-                }
-            }
-            return null;
-        }
-
-        /**
-         * DOC xqliu Comment method "isMdmSelected".
-         * 
-         * @param items
-         * @return
-         */
-        private boolean isMdmSelected(TreeItem[] items) {
-            for (TreeItem item : items) {
-                Object data = item.getData(INDICATOR_UNIT_KEY);
-                if (data != null) {
-                    if (data instanceof IndicatorUnit) {
-                        IndicatorUnit iu = (IndicatorUnit) data;
-                        return iu.isXmlElement();
-                    }
-                }
-            }
-            return false;
-        }
-
-        /**
-         * DOC yyi Comment method "isSelectedUDIndicator" 2009-09-04.
-         * 
-         * @param items
-         * @return
-         */
-        private boolean isSelectedUDIndicator(TreeItem[] items) {
-            if (!isSelectedIndicator(items)) {
-                return false;
-            }
-
-            for (TreeItem item : items) {
-                IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                if (unit != null) {
-
-                    Indicator indicator = unit.getIndicator();
-                    if (!(indicator instanceof UserDefIndicator)) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
     }
 }

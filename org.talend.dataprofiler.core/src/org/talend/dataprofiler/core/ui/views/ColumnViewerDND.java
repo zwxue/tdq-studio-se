@@ -55,7 +55,9 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -68,6 +70,7 @@ import orgomg.cwm.resource.relational.Column;
 public class ColumnViewerDND {
 
     private static Logger log = Logger.getLogger(ColumnViewerDND.class);
+
     ISelectionReceiver receiver = null;
 
     private static int lastValidOperation;
@@ -205,6 +208,15 @@ public class ColumnViewerDND {
                     if (pattern != null && TaggedValueHelper.getValidStatus(pattern)) {
                         is = false;
                     }
+                    TreeItem item = (TreeItem) event.item;
+                    Object viewer = item == null ? null : item.getParent().getData();
+                    if (viewer instanceof AnalysisColumnSetTreeViewer) {
+                        String expressionType = DomainHelper.getExpressionType(pattern);
+                        boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
+                        if (isSQLPattern) {
+                            is = true;
+                        }
+                    }
                 }
             }
 
@@ -225,14 +237,23 @@ public class ColumnViewerDND {
             IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
             TreeItem item = (TreeItem) event.item;
             ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
-            AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getParent().getData(
-                    AnalysisColumnTreeViewer.VIEWER_KEY);
-            Analysis analysis = viewer.getAnalysis();
 
-            IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-            if (addIndicatorUnit != null) {
-                viewer.createOneUnit(item, addIndicatorUnit);
-                viewer.setDirty(true);
+            Object viewer = item.getParent().getData();
+
+            if (viewer instanceof AnalysisColumnTreeViewer) {
+                Analysis analysis = ((AnalysisColumnTreeViewer) viewer).getAnalysis();
+                IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
+                if (addIndicatorUnit != null) {
+                    ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, addIndicatorUnit);
+                    ((AnalysisColumnTreeViewer) viewer).setDirty(true);
+                }
+            } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
+                Analysis analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis();
+                IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
+                if (addIndicatorUnit != null) {
+                    ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, addIndicatorUnit);
+                    ((AnalysisColumnSetTreeViewer) viewer).setDirty(true);
+                }
             }
         }
 

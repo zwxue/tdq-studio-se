@@ -14,10 +14,11 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -53,14 +54,9 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -72,16 +68,10 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 
@@ -105,7 +95,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private Composite parentComp;
 
-    private Button[] buttons;
+    private Map<String, Button> buttons = new HashMap<String, Button>();
 
     private List<Column> columnSetMultiValueList;
 
@@ -155,7 +145,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
 
         parent.layout();
-        createTreeMenu(newTree, false);
+        // createTreeMenu(newTree, false);
 
         AbstractAnalysisActionHandler actionHandler = new AbstractAnalysisActionHandler(parent) {
 
@@ -205,7 +195,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         final Button moveDownButton = new Button(buttonsComp, SWT.NULL);
         moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
         moveDownButton.setLayoutData(buttonGridData);
-        buttons = new Button[] { delButton, moveUpButton, moveDownButton };
+        buttons.put("delButton", delButton);
+        buttons.put("moveUpButton", moveUpButton);
+        buttons.put("moveDownButton", moveDownButton);
         enabledButtons(false);
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
@@ -247,9 +239,15 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * change the state of buttons.
      */
     public void enabledButtons(boolean enabled) {
-        for (Button button : buttons) {
-            button.setEnabled(enabled);
+
+        boolean moveEnabled = enabled;
+        TreeItem[] selectItems = getTree().getSelection();
+        if (!isSelectedColumn(selectItems)) {
+            moveEnabled = false;
         }
+        buttons.get("delButton").setEnabled(enabled);
+        buttons.get("moveUpButton").setEnabled(moveEnabled);
+        buttons.get("moveDownButton").setEnabled(moveEnabled);
     }
 
     /**
@@ -349,118 +347,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
             }
         });
-    }
-
-    /**
-     * DOC xzhao Comment method "createTreeMenu".
-     * 
-     * @param newTree
-     * @param containEdit
-     */
-    private void createTreeMenu(final Tree newTree, boolean containEdit) {
-        Menu oldMenu = newTree.getMenu();
-        if (oldMenu != null && !oldMenu.isDisposed()) {
-            oldMenu.dispose();
-        }
-        menu = new Menu(newTree);
-
-        MenuItem createColumnAnalysisMenuItem = new MenuItem(menu, SWT.CASCADE);
-        createColumnAnalysisMenuItem.setText(DefaultMessagesImpl.getString("CreateColumnAnalysisAction.columnAnalysis")); //$NON-NLS-1$
-        createColumnAnalysisMenuItem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
-        createColumnAnalysisMenuItem.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                createColumnAnalysis(tree);
-            }
-        });
-
-        MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
-        deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
-        deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        deleteMenuItem.addSelectionListener(new SelectionAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                removeSelectedElements(newTree);
-                // MOD mzhao 2005-05-05 bug 6587.
-                // MOD mzhao 2009-06-8, bug 5887.
-                updateBindConnection(masterPage, tree);
-            }
-
-        });
-
-        // ADD 2009-01-07 mzhao for feature:0005664
-        MenuItem showMenuItem = new MenuItem(menu, SWT.CASCADE);
-        showMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
-        showMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-        showMenuItem.addSelectionListener(new SelectionAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                TreeItem[] selection = newTree.getSelection();
-
-                if (selection.length == 1) {
-                    DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
-                    try {
-                        TdColumn tdColumn = (TdColumn) selection[0].getData(COLUMN_INDICATOR_KEY);
-                        dqview.showSelectedElements(tdColumn);
-                    } catch (Exception ex) {
-                        log.error(ex, ex);
-                    }
-                }
-            }
-
-        });
-
-        if (containEdit) {
-            editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
-            editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.editPattern")); //$NON-NLS-1$
-            editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
-            editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org .eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    TreeItem[] selection = tree.getSelection();
-                    if (selection.length > 0) {
-                        TreeItem treeItem = selection[0];
-                        IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
-                        PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit.getIndicator();
-                        Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
-                        // MOD mzhao 2009-03-13 Feature 6066 Move all folders
-                        // into one project.
-                        IFolder patternFolder = ResourceManager.getPatternFolder();
-                        IFolder sqlPatternFolder = ResourceManager.getPatternSQLFolder();
-                        IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
-                                new IFolder[] { patternFolder, sqlPatternFolder });
-                        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                        try {
-                            activePage.openEditor(new FileEditorInput(file),
-                                    "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"); //$NON-NLS-1$
-                        } catch (PartInitException e1) {
-                            log.error(e1, e1);
-                        }
-                    }
-                }
-
-            });
-        }
-        newTree.setMenu(menu);
     }
 
     public void setInput(Object[] objs) {
@@ -597,6 +483,17 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         tree.forceFocus();
     }
 
+    private boolean isSelectedColumn(TreeItem[] items) {
+        for (TreeItem item : items) {
+            if (item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY) != null
+                    || item.getData(AbstractColumnDropTree.DATA_PARAM) != null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void addElements(final ModelElementIndicator[] elements) {
         this.addItemElements(elements);
         // MOD qiongli 2010-6-4,bug 0012766,after drag and drop a column from left view,update the connection state
@@ -618,7 +515,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             }
         }
         this.columnSetMultiValueList = remainColumns;
-        // setElements(columnSetMultiValueList);
     }
 
     public List<Column> getColumnSetMultiValueList() {
@@ -648,14 +544,21 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     private void removeSelectedElements(final Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
         for (TreeItem item : selection) {
-            TdColumn tdColumn = (TdColumn) item.getData(COLUMN_INDICATOR_KEY);
-            deleteColumnItems(tdColumn);
+            ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+
+            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+            if (indicatorUnit != null) {
+                deleteIndicatorItems(meIndicator, indicatorUnit);
+            } else {
+                TdColumn tdColumn = (TdColumn) item.getData(COLUMN_INDICATOR_KEY);
+                deleteColumnItems(tdColumn);
+            }
             removeItemBranch(item);
         }
-
     }
 
     private void addTreeListener(final Tree tree) {
+
         tree.addFocusListener(new FocusListener() {
 
             public void focusGained(FocusEvent e) {
@@ -690,14 +593,15 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
                         tree.setMenu(null);
                         return;
-                    } else if (item.getData(INDICATOR_UNIT_KEY) != null) {
-                        IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                        IndicatorEnum type = indicatorUnit.getType();
-                        con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
-                                || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0;
+                    } else {
+                        // IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                        // IndicatorEnum type = indicatorUnit.getType();
+                        // con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
+                        // || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0;
+                        new AnalysisColumnSetMenuProvider(tree).createTreeMenu();
                     }
                 }
-                createTreeMenu(tree, con);
+                // createTreeMenu(tree, con);
             }
         });
 
@@ -823,11 +727,39 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     @Override
     protected void removeItemBranch(TreeItem item) {
         IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+        ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+
         super.removeItemBranch(item);
         if (null != unit) {
+            meIndicator.removeIndicatorUnit(unit);
             masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
             masterPage.updateIndicatorSection();
         }
     }
 
+    /**
+     * DOC yyi AnalysisColumnSetTreeViewer class global comment. Detailled comment
+     */
+    class AnalysisColumnSetMenuProvider extends ModelElementTreeMenuProvider {
+
+        /**
+         * DOC yyi AnalysisColumnSetMenuProvider constructor comment.
+         * 
+         * @param tree
+         */
+        public AnalysisColumnSetMenuProvider(Tree tree) {
+            super(tree);
+        }
+
+        @Override
+        protected void removeSelectedElements2(Tree theTree) {
+            removeSelectedElements(theTree);
+        }
+
+        @Override
+        protected Analysis getAnalysis2() {
+            return getAnalysis();
+        }
+
+    }
 }

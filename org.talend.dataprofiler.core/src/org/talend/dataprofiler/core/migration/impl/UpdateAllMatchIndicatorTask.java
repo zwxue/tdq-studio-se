@@ -43,7 +43,7 @@ public class UpdateAllMatchIndicatorTask extends AWorkspaceTask {
     @Override
     protected boolean doExecute() throws Exception {
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
-        if (-1 == talendDefinitionFileUpdate.indexOf("name=\"All Match\" label=\"All Match\"")) {
+        if (-1 == talendDefinitionFileUpdate.indexOf("name=\"All Match\"")) {
             talendDefinitionFileUpdate.add(endLine, allMatchIndicatorDefinitions + separator + endLine);
             return talendDefinitionFileUpdate.replace(this.getClass().getName());
         }
