@@ -42,7 +42,11 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
     private Map<String, PrimaryKey> column2pk = new HashMap<String, PrimaryKey>();
 
     private Map<String, ForeignKey> column2foreign = new HashMap<String, ForeignKey>();
-    
+
+    private Map<String, PrimaryKey> name2pk = new HashMap<String, PrimaryKey>();
+
+    private Map<String, ForeignKey> name2fk = new HashMap<String, ForeignKey>();
+
     /**
      * TableBuilder constructor.
      * 
@@ -87,8 +91,7 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
         ResultSet primaryKeys = null;
         try {
             // MOD xqliu 2009-07-13 bug 7888
-            primaryKeys = ConnectionUtils.getConnectionMetadata(connection).getPrimaryKeys(catalogName,
-                schemaPattern, tableName);
+            primaryKeys = ConnectionUtils.getConnectionMetadata(connection).getPrimaryKeys(catalogName, schemaPattern, tableName);
             // ~
             try {
                 while (primaryKeys.next()) {
@@ -135,8 +138,8 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
         ResultSet foreignKeys = null;
         try {
             // MOD xqliu 2009-07-13 bug 7888
-            foreignKeys = ConnectionUtils.getConnectionMetadata(connection).getImportedKeys(catalogName,
-                    schemaPattern, tableName);
+            foreignKeys = ConnectionUtils.getConnectionMetadata(connection)
+                    .getImportedKeys(catalogName, schemaPattern, tableName);
             // ~
             try {
                 while (foreignKeys.next()) {
@@ -160,8 +163,7 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
     private ForeignKey createForeignKey(ResultSet foreignKeys) throws SQLException {
         String name = foreignKeys.getString(GetForeignKey.FK_NAME.name());
         String colName = foreignKeys.getString(GetForeignKey.FKCOLUMN_NAME.name());
-        ForeignKey foreignKey = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createForeignKey();
-        foreignKey.setName(name);
+        ForeignKey foreignKey = this.geFK(name);
         column2foreign.put(colName, foreignKey);
         return foreignKey;
     }
@@ -169,10 +171,29 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
     private PrimaryKey createPrimaryKey(ResultSet primaryKeys) throws SQLException {
         String pkName = primaryKeys.getString(GetPrimaryKey.PK_NAME.name());
         String colName = primaryKeys.getString(GetPrimaryKey.COLUMN_NAME.name());
-        PrimaryKey primaryKey = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createPrimaryKey();
-        primaryKey.setName(pkName);
+        PrimaryKey primaryKey = this.getPK(pkName);
         column2pk.put(colName, primaryKey);
         return primaryKey;
+    }
+
+    private PrimaryKey getPK(String pkName) {
+        PrimaryKey primaryKey = this.name2pk.get(pkName);
+        if (primaryKey == null) {
+            primaryKey = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createPrimaryKey();
+            primaryKey.setName(pkName);
+            this.name2pk.put(pkName, primaryKey);
+        }
+        return primaryKey;
+    }
+
+    private ForeignKey geFK(String name) {
+        ForeignKey foreignKey = this.name2fk.get(name);
+        if (foreignKey == null) {
+            foreignKey = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createForeignKey();
+            foreignKey.setName(name);
+            this.name2fk.put(name, foreignKey);
+        }
+        return foreignKey;
     }
 
 }
