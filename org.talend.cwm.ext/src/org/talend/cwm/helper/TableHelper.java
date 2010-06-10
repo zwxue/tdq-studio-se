@@ -107,10 +107,21 @@ public final class TableHelper {
      * @param table
      * @param pk the primary key of the table
      */
-    public static boolean addPrimaryKey(Table table, PrimaryKey pk) {
+    public static PrimaryKey addPrimaryKey(Table table, PrimaryKey pk) {
         assert table != null;
         assert pk != null;
-        return table.getOwnedElement().add(pk);
+        List<PrimaryKey> primaryKeyList = getPrimaryKeys(table);
+        // MOD zshen for bug 12842
+        if (primaryKeyList.size() <= 0) {// the table not primaryKey
+            table.getOwnedElement().add(pk);
+            return pk;
+        } else {// the table had a primaryKey
+            if (pk.getFeature().size() > 0) {
+                primaryKeyList.get(0).getFeature().add(pk.getFeature().get(pk.getFeature().size() - 1));
+            }
+            return primaryKeyList.get(0);
+        }
+
     }
 
     /**
@@ -145,10 +156,13 @@ public final class TableHelper {
      * @param table
      * @param primaryKeys the primary keys of the table.
      */
-    public static boolean addPrimaryKeys(ColumnSet table, List<PrimaryKey> primaryKeys) {
+    public static void addPrimaryKeys(ColumnSet table, List<PrimaryKey> primaryKeys) {
         assert table != null;
         assert primaryKeys != null;
-        return table.getOwnedElement().addAll(primaryKeys);
+        for (PrimaryKey primaryKey : primaryKeys) {
+            addPrimaryKey((Table) table, primaryKey);
+        }
+
     }
 
     /**
@@ -157,10 +171,19 @@ public final class TableHelper {
      * @param table
      * @param foreignKey the foreign key of the given table
      */
-    public static boolean addForeignKey(ColumnSet table, ForeignKey foreignKey) {
+    public static ForeignKey addForeignKey(ColumnSet table, ForeignKey foreignKey) {
         assert table != null;
         assert foreignKey != null;
-        return table.getOwnedElement().add(foreignKey);
+        List<ForeignKey> foreignKeyList = getForeignKeys((Table) table);
+        if (foreignKeyList.size() <= 0) {
+            table.getOwnedElement().add(foreignKey);
+            return foreignKey;
+        } else {
+            if (foreignKey.getFeature().size() > 0) {
+                foreignKeyList.get(0).getFeature().add(foreignKey.getFeature().get(foreignKey.getFeature().size() - 1));
+            }
+            return foreignKeyList.get(0);
+        }
     }
 
     /**
@@ -169,10 +192,13 @@ public final class TableHelper {
      * @param table
      * @param foreignKeys the foreign keys of this table
      */
-    public static boolean addForeignKeys(ColumnSet table, List<ForeignKey> foreignKeys) {
+    public static void addForeignKeys(ColumnSet table, List<ForeignKey> foreignKeys) {
         assert table != null;
         assert foreignKeys != null;
-        return table.getOwnedElement().addAll(foreignKeys);
+        for (ForeignKey foreignKey : foreignKeys) {
+            addForeignKey((Table) table, foreignKey);
+        }
+
     }
 
     /**

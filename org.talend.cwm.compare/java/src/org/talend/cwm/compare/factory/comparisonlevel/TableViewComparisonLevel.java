@@ -227,16 +227,19 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         if (columnSetSwitch != null) {
             ColumnSet columnSet = (ColumnSet) selectedObj;
             ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
+            // MOD zshen 2010.06.10 for feature 12842.
             // Case of pk
             PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
             if (primaryKey != null) {
-                TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
+                primaryKey = TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
+                columnSetSwitch.getUniqueKey().clear();
                 columnSetSwitch.getUniqueKey().add(primaryKey);
             }
             // Case of fk
             ForeignKey foreignKey = ColumnHelper.getForeignKey(columnSetSwitch);
             if (foreignKey != null) {
-                TableHelper.addForeignKey((Table) columnSet, foreignKey);
+                foreignKey = TableHelper.addForeignKey((Table) columnSet, foreignKey);
+                columnSetSwitch.getKeyRelationship().clear();
                 columnSetSwitch.getKeyRelationship().add(foreignKey);
             }
         }
@@ -250,20 +253,20 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         }
         popRemoveElementConfirm();
         ColumnSet columnSet = (ColumnSet) selectedObj;
-
-        // Case of pk
-        PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(removeColumn);
-        if (primaryKey != null) {
-            columnSet.getOwnedElement().remove(primaryKey);
-            removeColumn.getUniqueKey().remove(primaryKey);
-        }
-
-        // Case of fk
-        ForeignKey foreingKey = ColumnHelper.getForeignKey(removeColumn);
-        if (foreingKey != null) {
-            columnSet.getOwnedElement().remove(foreingKey);
-            removeColumn.getKeyRelationship().remove(foreingKey);
-        }
+        // MOD zshen 2010.06.10 for feature 12842 have been deal in the method ColumnSetHelper.removeColumn.
+        // // Case of pk
+        // PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(removeColumn);
+        // if (primaryKey != null) {
+        // columnSet.getOwnedElement().remove(primaryKey);
+        // removeColumn.getUniqueKey().remove(primaryKey);
+        // }
+        //
+        // // Case of fk
+        // ForeignKey foreingKey = ColumnHelper.getForeignKey(removeColumn);
+        // if (foreingKey != null) {
+        // columnSet.getOwnedElement().remove(foreingKey);
+        // removeColumn.getKeyRelationship().remove(foreingKey);
+        // }
         // Remove column
         ColumnSetHelper.removeColumn(removeColumn, columnSet);
 

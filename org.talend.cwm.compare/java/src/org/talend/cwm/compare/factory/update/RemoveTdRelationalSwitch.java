@@ -38,12 +38,19 @@ public class RemoveTdRelationalSwitch extends UpdateRelationalSwitch {
         if (columnSet == null) {
             return Boolean.FALSE;
         }
-        columnSet.getOwnedElement().remove(object);
+        // MOD zshen 2010.06.10 for feature 12842
         TdColumn column = null;
         if (leftElement instanceof TdColumn) {
             column = (TdColumn) leftElement;
-            column.getKeyRelationship().remove(object);
+        } else {
+            return Boolean.FALSE;
         }
+        if (object.getFeature().size() <= 1) {
+            columnSet.getOwnedElement().remove(object);
+        } else {
+            object.getFeature().remove(column);
+        }
+        column.getKeyRelationship().remove(object);
         return Boolean.TRUE;
     }
 
@@ -58,12 +65,19 @@ public class RemoveTdRelationalSwitch extends UpdateRelationalSwitch {
         if (columnSet == null) {
             return Boolean.FALSE;
         }
-        columnSet.getOwnedElement().remove(object);
+        // MOD zshen 2010.06.10 for feature 12842
         TdColumn column = null;
         if (leftElement instanceof TdColumn) {
             column = (TdColumn) leftElement;
-            column.getUniqueKey().remove(object);
+        } else {
+            return Boolean.FALSE;
         }
+        if (object.getFeature().size() <= 1) {
+            columnSet.getOwnedElement().remove(object);
+        } else {
+            object.getFeature().remove(column);
+        }
+        column.getUniqueKey().remove(object);
 
         return Boolean.TRUE;
     }

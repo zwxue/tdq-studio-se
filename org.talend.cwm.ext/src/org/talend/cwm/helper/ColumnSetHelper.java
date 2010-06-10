@@ -64,7 +64,7 @@ public final class ColumnSetHelper {
         // first remove PK if it exists
         if (ColumnHelper.isPrimaryKey(column)) {
             PrimaryKey primaryKey = ColumnHelper.removePrimaryKey(column);
-            if (primaryKey != null) {
+            if (primaryKey != null && primaryKey.getFeature().size() <= 0) {
                 TableHelper.removePrimaryKey(columnSet, primaryKey);
             }
         }
@@ -72,7 +72,7 @@ public final class ColumnSetHelper {
         // remove foreign key if it exists
         if (ColumnHelper.isForeignKey(column)) {
             ForeignKey foreignKey = ColumnHelper.removeForeignKey(column);
-            if (foreignKey != null) {
+            if (foreignKey != null && foreignKey.getFeature().size() <= 0) {
                 TableHelper.removeForeignKey(columnSet, foreignKey);
             }
         }

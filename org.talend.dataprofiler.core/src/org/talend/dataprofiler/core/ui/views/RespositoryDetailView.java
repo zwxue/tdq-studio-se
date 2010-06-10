@@ -249,13 +249,15 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private void createEcosComponent(IEcosComponent component) {
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Name"), component.getName()); //$NON-NLS-1$
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Author"), component.getAuthor()); //$NON-NLS-1$
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Description"), component.getDescription()); //$NON-NLS-1$
+        newLabelAndText(gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.Description"), component.getDescription()); //$NON-NLS-1$
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Type"), component.getCategry().getName()); //$NON-NLS-1$
 
     }
 
     private void createRegularExpression(RegularExpression regularExpression) {
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Expression"), regularExpression.getExpression().getBody()); //$NON-NLS-1$
+        newLabelAndText(gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.Expression"), regularExpression.getExpression().getBody()); //$NON-NLS-1$
     }
 
     private void createTableDetail(Table table) {
@@ -263,11 +265,17 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
         newLabelAndText(
                 gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.size())); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.get(0).getFeature().size())); //$NON-NLS-1$
+        newLabelAndText(
+                gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeyName"), primaryKeys.isEmpty() ? null : primaryKeys.get(0).getName()); //$NON-NLS-1$
         List<ForeignKey> foreignKeys = TableHelper.getForeignKeys(table);
         newLabelAndText(
                 gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.size())); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignKeys.isEmpty() ? null : foreignKeys.get(0).getName()); //$NON-NLS-1$
+        newLabelAndText(
+                gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.ForeignkeyName"), foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.get(0).getFeature().size())); //$NON-NLS-1$
     }
 
     private boolean createFileDetail(boolean is, IFile fe2) {

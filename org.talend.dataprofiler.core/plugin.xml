@@ -1105,6 +1105,12 @@
            version="4.0.1">
      </workspacetask>
      <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UniquePkAndFkTask"
+           id="org.talend.dataprofiler.core.migration.impl.UniquePkAndFkTask"
+           name="Unique Pk And Fk In Xmi file"
+           version="4.1.0">
+     </workspacetask>
+     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateAllMatchIndicatorTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateAllMatchIndicatorTask"
            name="Update All Match Indicator Task"

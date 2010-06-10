@@ -51,7 +51,7 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
         ForeignKey foreignKey = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createForeignKey();
         foreignKey.setName(fkName);
         if (columnSet instanceof Table) {
-            TableHelper.addForeignKey((Table) columnSet, foreignKey);
+            foreignKey = TableHelper.addForeignKey((Table) columnSet, foreignKey);
             tdColumn.getKeyRelationship().add(foreignKey);
         }
         return Boolean.TRUE;
@@ -78,7 +78,7 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
         PrimaryKey primaryKey = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createPrimaryKey();
         primaryKey.setName(pkName);
         if (columnSet instanceof Table) {
-            TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
+            primaryKey = TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
             tdColumn.getUniqueKey().add(primaryKey);
         }
         return Boolean.TRUE;
