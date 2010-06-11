@@ -15,6 +15,7 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -37,12 +38,13 @@ public class TextStatisticsExplorer extends DataExplorer {
      * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
      */
     public Map<String, String> getQueryMap() {
+        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
         Map<String, String> map = new HashMap<String, String>();
 
         switch (this.indicatorEnum) {
         case MinLengthIndicatorEnum:
         case MaxLengthIndicatorEnum:
-            map.put(MENU_VIEW_ROWS, getTextRowsStatement());
+            map.put(MENU_VIEW_ROWS, isSqlEngine ? getTextRowsStatement() : null);
             break;
         default:
         }
