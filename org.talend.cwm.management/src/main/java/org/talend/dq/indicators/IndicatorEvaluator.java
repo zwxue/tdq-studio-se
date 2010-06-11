@@ -124,6 +124,17 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     }
                     indicator.handle(object);
                     // ~MOD mzhao feature: 12919
+
+                    AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
+                    if (analyzedDataSet == null) {
+                        analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
+                        indicToRowMap.put(indicator, analyzedDataSet);
+                        analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
+                        analyzedDataSet.setRecordSize(0);
+                    }
+                    if (analyzedDataSet.getData() == null) {
+                        analyzedDataSet.setData(new ArrayList<Object[]>());
+                    }
                     if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
                         List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
@@ -231,7 +242,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 valueObjectList = new ArrayList<Object[]>();
                 analyzedDataSet.setData(valueObjectList);
             }
+
         }
+
         return valueObjectList;
     }
 
