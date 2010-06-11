@@ -28,6 +28,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 
@@ -205,6 +206,9 @@ public class DrillDownEditorInput implements IEditorInput {
             newColumnElementList.addAll(getDesignatedData());
         } else if (analysisDataSet.getFrequencyData() != null && analysisDataSet.getFrequencyData().size() > 0) {
             String selectValue = this.getSelectValue();
+            if (currIndicator instanceof LengthIndicator) {
+                selectValue = ((LengthIndicator) currIndicator).getLength().toString();
+            }
             newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
         } else if (analysisDataSet.getPatternData() != null && analysisDataSet.getPatternData().size() > 0) {
             if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_INVALID_TYPE)) {
