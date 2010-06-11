@@ -131,38 +131,44 @@ public final class ChartTableFactory {
                         } else {
                             try {
                                 AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
-                                if (analysis.getParameters().isStoreData()
-                                        && (analyDataSet.getData() != null || analyDataSet.getFrequencyData() != null || analyDataSet
-                                                .getPatternData() != null)) {
-                                    MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
-                                            dataEntity);
-                                    for (final MenuItemEntity itemEntity : itemEntities) {
-                                        MenuItem item = new MenuItem(menu, SWT.PUSH);
-                                        item.setText(itemEntity.getLabel());
-                                        item.setImage(itemEntity.getIcon());
+                                if (analysis.getParameters().isStoreData()) {
 
-                                        item.addSelectionListener(new SelectionAdapter() {
+                                    if ((analyDataSet.getData().size() > 0 || analyDataSet.getFrequencyData() != null || analyDataSet
+                                            .getPatternData() != null)) {
+                                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
+                                                dataEntity);
+                                        for (final MenuItemEntity itemEntity : itemEntities) {
+                                            MenuItem item = new MenuItem(menu, SWT.PUSH);
+                                            item.setText(itemEntity.getLabel());
+                                            item.setImage(itemEntity.getIcon());
 
-                                            @Override
-                                            public void widgetSelected(SelectionEvent e) {
+                                            item.addSelectionListener(new SelectionAdapter() {
 
-                                                // TODO open the editor and display all of data which saved in the
-                                                // indicator.
-                                                try {
-                                                    CorePlugin
-                                                            .getDefault()
-                                                            .getWorkbench()
-                                                            .getActiveWorkbenchWindow()
-                                                            .getActivePage()
-                                                            .openEditor(
-                                                                    new DrillDownEditorInput(analysis, dataEntity, itemEntity),
-                                                                    "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");
-                                                } catch (PartInitException e1) {
-                                                    e1.printStackTrace();
+                                                @Override
+                                                public void widgetSelected(SelectionEvent e) {
+
+                                                    // TODO open the editor and display all of data which saved in the
+                                                    // indicator.
+                                                    try {
+                                                        CorePlugin
+                                                                .getDefault()
+                                                                .getWorkbench()
+                                                                .getActiveWorkbenchWindow()
+                                                                .getActivePage()
+                                                                .openEditor(
+                                                                        new DrillDownEditorInput(analysis, dataEntity, itemEntity),
+                                                                        "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");
+                                                    } catch (PartInitException e1) {
+                                                        e1.printStackTrace();
+                                                    }
                                                 }
-                                            }
 
-                                        });
+                                            });
+                                        }
+                                    } else if (analyDataSet.getData().size() <= 0) {
+                                        MenuItem item = new MenuItem(menu, SWT.PUSH);
+                                        item.setText("No data");
+                                        item.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
                                     }
                                 }
                             } catch (NullPointerException nullexception) {
