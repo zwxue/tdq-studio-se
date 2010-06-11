@@ -14,13 +14,14 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLengthIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MinLengthIndicatorImpl() {
@@ -29,6 +30,7 @@ public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLe
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -43,6 +45,7 @@ public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLe
      */
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = true;
         boolean ok = super.handle(data);
         if (data != null) {
             String str = (String) data;

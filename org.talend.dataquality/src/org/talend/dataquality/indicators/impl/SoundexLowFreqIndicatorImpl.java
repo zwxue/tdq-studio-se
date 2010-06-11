@@ -14,13 +14,14 @@ import org.talend.dataquality.indicators.SoundexLowFreqIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class SoundexLowFreqIndicatorImpl extends SoundexFreqIndicatorImpl implements SoundexLowFreqIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected SoundexLowFreqIndicatorImpl() {
@@ -29,6 +30,7 @@ public class SoundexLowFreqIndicatorImpl extends SoundexFreqIndicatorImpl implem
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -38,7 +40,6 @@ public class SoundexLowFreqIndicatorImpl extends SoundexFreqIndicatorImpl implem
 
     @Override
     public boolean handle(Object data) {
-        this.mustStoreRow = true;
         return super.handle(data);
     }
 

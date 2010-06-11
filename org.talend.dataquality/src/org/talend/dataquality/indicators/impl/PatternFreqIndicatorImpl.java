@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.impl;
@@ -13,23 +12,22 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.utils.string.AsciiUtils;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Pattern Freq Indicator</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Pattern Freq Indicator</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements PatternFreqIndicator {
-    
+
     private String charsToReplace = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
-    
+
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected PatternFreqIndicatorImpl() {
@@ -37,21 +35,26 @@ public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     protected EClass eStaticClass() {
         return IndicatorsPackage.Literals.PATTERN_FREQ_INDICATOR;
     }
-    
-    
 
     @Override
     public boolean finalizeComputation() {
         // TODO Auto-generated method stub
         return super.finalizeComputation();
+    }
+
+    /**
+     * add by zshen for feature 12919 to convertCharacter when save data into analysisDataSet with java engin
+     */
+    public String convertCharacters(String data) {
+        return AsciiUtils.replaceCharacters(String.valueOf(data), this.charsToReplace, this.replacementChars);
     }
 
     @Override
@@ -65,9 +68,10 @@ public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         }
         return super.prepare();
     }
-    
+
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = true;
         if (data == null) {
             return super.handle(data);
         } else {
@@ -76,5 +80,4 @@ public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         }
     }
 
-    
-} //PatternFreqIndicatorImpl
+} // PatternFreqIndicatorImpl

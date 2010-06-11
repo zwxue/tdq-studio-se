@@ -21,10 +21,11 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.DistinctCountIndicatorImpl#getDistinctValueCount <em>Distinct Value Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.DistinctCountIndicatorImpl#getDistinctValueCount <em>Distinct Value
+ * Count</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class DistinctCountIndicatorImpl extends IndicatorImpl implements DistinctCountIndicator {
@@ -48,11 +49,12 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      * @ordered
      */
     protected Long distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
-    
+
     private Set<Object> distinctObjects = new HashSet<Object>();
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected DistinctCountIndicatorImpl() {
@@ -61,6 +63,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -70,6 +73,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Set<Object> getDistinctValues() {
@@ -80,54 +84,59 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT:
-                return getDistinctValueCount();
+        case IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT:
+            return getDistinctValueCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT:
-                setDistinctValueCount((Long)newValue);
-                return;
+        case IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT:
+            setDistinctValueCount((Long) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT:
-                setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
-                return;
+        case IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT:
+            setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT:
-                return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT.equals(distinctValueCount);
+        case IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT:
+            return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT
+                    .equals(distinctValueCount);
         }
         return super.eIsSet(featureID);
     }
@@ -147,6 +156,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Long getDistinctValueCount() {
@@ -155,13 +165,15 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setDistinctValueCount(Long newDistinctValueCount) {
         Long oldDistinctValueCount = distinctValueCount;
         distinctValueCount = newDistinctValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT, oldDistinctValueCount, distinctValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET,
+                    IndicatorsPackage.DISTINCT_COUNT_INDICATOR__DISTINCT_VALUE_COUNT, oldDistinctValueCount, distinctValueCount));
     }
 
     /*
@@ -202,9 +214,12 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      */
     @Override
     public boolean handle(Object data) {
+        this.mustStoreRow = false;
         super.handle(data);
         if (data != null) {
-            this.distinctObjects.add(data);
+            if (this.distinctObjects.add(data)) {
+                this.mustStoreRow = true;
+            }
         }
         return true;
     }
@@ -227,6 +242,4 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
         return super.reset();
     }
 
-    
-    
 } // DistinctCountIndicatorImpl
