@@ -5,10 +5,10 @@
  */
 package org.talend.dataquality.indicators.columnset.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -18,12 +18,15 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MatchingIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>All Match Indicator</b></em>'. <!--
@@ -96,7 +99,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      */
     protected EList<RegexpMatchingIndicator> compositeRegexMatchingIndicators;
 
-    private List<String>[] patterns;
+    private List<java.util.regex.Pattern>[] patterns;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -354,6 +357,19 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
         return result.toString();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#prepare()
+     */
+    @Override
+    public boolean prepare() {
+        if (!instantiatePatterns()) {
+            return false;
+        }
+        return super.prepare();
+    }
+
     /**
      * DOC yyi Comment method "computeCounts".
      * 
@@ -361,6 +377,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * @return
      */
     private boolean computeCounts(List<Object[]> objects) {
+
         boolean ok = true;
         Long matchCount = 0L;
         // loop all rows of the resultset(objects)
@@ -371,8 +388,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
             for (int i = 0; i < row.length - 1; i++) {
                 if (null != patterns[i]) {
                     // loop all pattern of the column
-                    for (String regex : patterns[i]) {
-                        Pattern p = Pattern.compile(regex);
+                    for (java.util.regex.Pattern p : patterns[i]) {
                         Matcher m = p.matcher(String.valueOf(row[i]));
                         if (!m.find()) {
                             isAMatch = false; // one match failed => record does not match
@@ -417,13 +433,39 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
         return ok;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.columnset.AllMatchIndicator#setPatterns(java.util.List)
-     */
-    public void setPatterns(List<String>[] patterns) {
-        // TODO Auto-generated method stub
-        this.patterns = patterns;
+    private boolean instantiatePatterns() {
+
+        EList<Column> columns = this.getAnalyzedColumns();
+        this.patterns = new List[columns.size()];
+        EList<RegexpMatchingIndicator> indicators = this.getCompositeRegexMatchingIndicators();
+        String r = null;
+
+        for (int i = 0; i < columns.size(); i++) {
+            for (RegexpMatchingIndicator rmi : indicators) {
+                if (rmi.getAnalyzedElement() == columns.get(i)) {
+                    if (null == this.patterns[i]) {
+                        this.patterns[i] = new ArrayList<java.util.regex.Pattern>();
+                    }
+                    EList<Pattern> columnPatterns = rmi.getParameters().getDataValidDomain().getPatterns();
+                    for (Pattern p : columnPatterns) {
+                        r = DomainHelper.getJavaRegexp(p);
+                        if (r == null) {
+                            r = DomainHelper.getSQLRegexp(p);
+                        }
+                        if (r != null) {
+                            if (r.startsWith("'") && r.endsWith("'")) {
+                                // remove enclosing singles quotes which are used for SQL only (not java)
+                                r = r.substring(1, r.length() - 1);
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+                    this.patterns[i].add(java.util.regex.Pattern.compile(r));
+                }
+            }
+        }
+        return true;
     }
+
 } // AllMatchIndicatorImpl

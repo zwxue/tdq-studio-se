@@ -21,8 +21,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.util.LocalSelectionTransfer;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -30,11 +28,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TreeEditor;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSource;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -308,47 +301,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         ColumnViewerDND.installDND(newTree);
     }
 
-    /**
-     * DOC bZhou Comment method "addSourceDND".
-     * 
-     * @param newTree
-     */
-    private void addSourceDND(final Tree newTree) {
-        final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
-        Transfer[] types = new Transfer[] { transfer };
-        int operations = DND.DROP_COPY | DND.DROP_MOVE;
-        final DragSource source = new DragSource(newTree, operations);
-        source.setTransfer(types);
-        final TreeItem[] dragSourceItem = new TreeItem[1];
-        source.addDragListener(new DragSourceListener() {
-
-            public void dragStart(DragSourceEvent event) {
-                TreeItem[] selection = newTree.getSelection();
-                dragSourceItem[0] = selection[0];
-                if (selection.length > 0) {
-                    event.doit = true;
-                    transfer.setSelection(new StructuredSelection(selection[0].getData(COLUMN_INDICATOR_KEY)));
-                    getColumnSetMultiValueList().remove(selection[0].getData(COLUMN_INDICATOR_KEY));
-                } else {
-                    event.doit = false;
-                }
-            };
-
-            public void dragSetData(DragSourceEvent event) {
-                event.data = dragSourceItem[0];
-            }
-
-            public void dragFinished(DragSourceEvent event) {
-                if (event.detail == DND.DROP_MOVE) {
-                    removeItemBranch(dragSourceItem[0]);
-                    tree.forceFocus();
-                }
-                dragSourceItem[0] = null;
-
-            }
-        });
-    }
-
     public void setInput(Object[] objs) {
         if (objs != null && objs.length != 0) {
             if (!(objs[0] instanceof TdColumn)) {
@@ -495,7 +447,19 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     public void addElements(final ModelElementIndicator[] elements) {
-        this.addItemElements(elements);
+        // this.addItemElements(elements);
+
+        TdColumn[] columns = new TdColumn[elements.length];
+        for (int i = 0; i < elements.length; i++) {
+            columns[i] = (TdColumn) elements[i].getModelElement();
+        }
+        List<Column> oriColumns = getColumnSetMultiValueList();
+        for (Column column : columns) {
+            if (!oriColumns.contains(column)) {
+                oriColumns.add(column);
+            }
+        }
+        setInput(oriColumns.toArray());
         // MOD qiongli 2010-6-4,bug 0012766,after drag and drop a column from left view,update the connection state
         updateBindConnection(masterPage, tree);
     }

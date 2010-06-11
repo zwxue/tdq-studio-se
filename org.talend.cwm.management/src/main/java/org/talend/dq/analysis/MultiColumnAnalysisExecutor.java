@@ -34,8 +34,6 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.RegexpMatchingIndicator;
-import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -230,6 +228,9 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             // execute the sql statement for each indicator
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             for (Indicator indicator : indicators) {
+                if (!indicator.prepare()) {
+                    return traceError("No expressions found in the pattern both 'Java' and 'ALL_DATABASE_TYPE'.");
+                }
                 // set the connection's catalog
                 if (this.catalogOrSchema != null) { // check whether null argument can be given
                     changeCatalog(this.catalogOrSchema, connection);
@@ -314,28 +315,6 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private boolean executeQuery(Indicator indicator, Connection connection, Expression query) {
         try {
             List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
-
-            // yyi: store patterns in AllMatchIndicator.
-            if (indicator instanceof AllMatchIndicator) {
-
-                AllMatchIndicator matchIndicator = (AllMatchIndicator) indicator;
-                EList<Column> columns = matchIndicator.getAnalyzedColumns();
-                List<String>[] patternList = new List[columns.size()];
-                EList<RegexpMatchingIndicator> indicators = matchIndicator.getCompositeRegexMatchingIndicators();
-
-                for (int i = 0; i < columns.size(); i++) {
-                    for (RegexpMatchingIndicator rmi : indicators) {
-                        if (rmi.getAnalyzedElement() == columns.get(i)) {
-                            if (null == patternList[i]) {
-                                patternList[i] = new ArrayList<String>();
-                            }
-                            String regex = getRegexWithoutQuotes(getPatterns(rmi).get(0));
-                            patternList[i].add(regex);
-                        }
-                    }
-                }
-                matchIndicator.setPatterns(patternList);
-            }
 
             // give result to indicator so that it handles the results
             return indicator.storeSqlResults(myResultSet);

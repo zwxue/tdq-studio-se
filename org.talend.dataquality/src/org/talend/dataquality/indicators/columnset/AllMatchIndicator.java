@@ -5,8 +5,6 @@
  */
 package org.talend.dataquality.indicators.columnset;
 
-import java.util.List;
-
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 
@@ -29,15 +27,15 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 public interface AllMatchIndicator extends ColumnSetMultiValueIndicator, RegexpMatchingIndicator {
 
     /**
-     * Returns the value of the '<em><b>Composite Regex Matching Indicators</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.indicators.RegexpMatchingIndicator}.
-     * <!-- begin-user-doc
+     * Returns the value of the '<em><b>Composite Regex Matching Indicators</b></em>' containment reference list. The
+     * list contents are of type {@link org.talend.dataquality.indicators.RegexpMatchingIndicator}. <!-- begin-user-doc
      * -->
      * <p>
      * If the meaning of the '<em>Composite Regex Matching Indicators</em>' reference list isn't clear, there really
      * should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * 
      * @return the value of the '<em>Composite Regex Matching Indicators</em>' containment reference list.
      * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getAllMatchIndicator_CompositeRegexMatchingIndicators()
      * @model containment="true"
@@ -45,10 +43,4 @@ public interface AllMatchIndicator extends ColumnSetMultiValueIndicator, RegexpM
      */
     EList<RegexpMatchingIndicator> getCompositeRegexMatchingIndicators();
 
-    /**
-     * DOC yyi Comment method "setPatterns".
-     * 
-     * @param patterns
-     */
-    void setPatterns(List<String>[] patterns);
 } // AllMatchIndicator
