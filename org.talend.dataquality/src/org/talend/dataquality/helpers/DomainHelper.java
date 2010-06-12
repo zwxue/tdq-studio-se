@@ -109,7 +109,12 @@ public final class DomainHelper {
      * @return
      */
     public static String getJavaRegexp(Pattern pattern) {
-        return getRegexp(pattern, "Java");
+    	//MOD  klliu 2010-06-12
+    	String javaPattern=getRegexp(pattern, "Java");
+    	if(javaPattern==null){
+    		 return " Pelase check the indicator :"+pattern.getName()+",which didn't define Java of Patten Definition!";//$NON-NLS-1$
+    	}
+        return javaPattern ;
     }
 
     /**

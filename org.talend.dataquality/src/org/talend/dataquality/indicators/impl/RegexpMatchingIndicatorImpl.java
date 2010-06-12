@@ -16,6 +16,7 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.i18n.Messages;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Regexp Matching Indicator</b></em>'. <!--
@@ -28,8 +29,17 @@ import org.talend.i18n.Messages;
 public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements RegexpMatchingIndicator {
 
     private static Logger log = Logger.getLogger(RegexpMatchingIndicatorImpl.class);
+    //add klliu 2010-06-12 bug 13695
+    private String javaPatternMessage;
+    public String getJavaPatternMessage() {
+		return javaPatternMessage;
+	}
 
-    /**
+	public void setJavaPatternMessage(String javaPatternMessage) {
+		this.javaPatternMessage = javaPatternMessage;
+	}
+
+	/**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -61,6 +71,11 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
         if (regex == null) {
             return false;
         }
+        // MOD klliu 2010-06-12 bug 13695
+        if(regex.equals(this.getJavaPatternMessage())){
+        	this.setJavaPatternMessage(regex);
+        	return false;
+        }
         pattern = java.util.regex.Pattern.compile(regex);
         if (log.isInfoEnabled()) {
             log.info(Messages.getString("Using_regular_expression", this.getName(), regex));
@@ -68,12 +83,17 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
         return super.prepare();
     }
 
-    /**
+  
+  
+
+	/**
      * DOC scorreia Comment method "getRegex".
      * 
      * @return
      */
     private String getRegex() {
+    	// MOD klliu 2010-06-12
+    	 String r =null;
         if (this.parameters != null) {
             final Domain dataValidDomain = parameters.getDataValidDomain();
             if (dataValidDomain != null) {
@@ -81,7 +101,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                 for (Pattern p : patterns) {
                     if (p != null) {
                         // MOD yyi 2009-09-29 Feature: 9289
-                        String r = DomainHelper.getJavaRegexp(p);
+                        r = DomainHelper.getJavaRegexp(p);
                         if (r == null) { // get regex valid for all kind of database and engine
                             r = DomainHelper.getSQLRegexp(p);
                         }
@@ -89,14 +109,14 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                             if (r.startsWith("'") && r.endsWith("'")) {
                                 // remove enclosing singles quotes which are used for SQL only (not java)
                                 r = r.substring(1, r.length() - 1);
-                            }
-                            return r;
+                                return r;
+                            }else this.setJavaPatternMessage(r);
                         }
                     }
                 }
             }
         }
-        return null;
+        return r;
     }
 
     /*
