@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
+import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -202,11 +203,11 @@ public class IndicatorEvaluator extends Evaluator<String> {
             }
             String key = null;
             if (object == null) {
-                key = "Null field";
+                key = SpecialValueDisplay.NULL_FIELD;
             } else if (indicator instanceof MinLengthIndicator || indicator instanceof MaxLengthIndicator) {
                 key = String.valueOf(object.toString().length());
             } else if (object.equals("")) {
-                key = "Empty field";
+                key = SpecialValueDisplay.EMPTY_FIELD;
             } else if (indicator instanceof PatternLowFreqIndicator) {
                 key = ((PatternLowFreqIndicator) indicator).convertCharacters(object.toString());
             } else if (indicator instanceof PatternFreqIndicator) {
