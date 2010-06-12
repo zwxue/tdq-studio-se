@@ -234,27 +234,29 @@ public class ColumnViewerDND {
 
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
-            IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
-            TreeItem item = (TreeItem) event.item;
-            ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
-
-            Object viewer = item.getParent().getData();
-
-            if (viewer instanceof AnalysisColumnTreeViewer) {
-                Analysis analysis = ((AnalysisColumnTreeViewer) viewer).getAnalysis();
-                IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-                if (addIndicatorUnit != null) {
-                    ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, addIndicatorUnit);
-                    ((AnalysisColumnTreeViewer) viewer).setDirty(true);
-                }
-            } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
-                Analysis analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis();
-                IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-                if (addIndicatorUnit != null) {
-                    ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, addIndicatorUnit);
-                    ((AnalysisColumnSetTreeViewer) viewer).setDirty(true);
-                }
-            }
+        	//MOD klliu 2010-06-12 bug 13696
+			StructuredSelection ts = (StructuredSelection) commonViewer.getSelection();
+			AnalysisColumnTreeViewer viewer = null;
+			Analysis analysis = null;
+			ArrayList<IFile> al=new ArrayList<IFile>();
+			if (ts.iterator() != null) {
+				Iterator<IFile> iter=(Iterator<IFile>)ts.iterator();
+				while (iter.hasNext()) {
+					al.add( iter.next());
+				}
+				for(IFile fe:al){
+					TreeItem item = (TreeItem) event.item;
+					ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
+					viewer = (AnalysisColumnTreeViewer) item.getParent().getData(AnalysisColumnTreeViewer.VIEWER_KEY);
+					analysis = viewer.getAnalysis();
+					IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe,data, analysis);
+					if (addIndicatorUnit != null) {
+						viewer.createOneUnit(item, addIndicatorUnit);
+						
+					}
+				}
+				viewer.setDirty(true);
+			}
         }
 
     }
