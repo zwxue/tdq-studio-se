@@ -49,6 +49,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
@@ -366,7 +367,55 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 	}
                 }
 
-            } else {
+			}
+			// ADD qiongli bug 0012766
+			else if (indicator instanceof ColumnDependencyIndicator) {
+				// Functional Dependency indicator
+				ColumnDependencyIndicator funDepInd = (ColumnDependencyIndicator) indicator;
+				if (funDepInd.getColumnA() == null
+						|| funDepInd.getColumnB() == null) {
+					return false;
+				}
+				// Column A
+				if (synEleMap.get(funDepInd.getColumnA()) != null) {
+					TdColumn newColumn = (TdColumn) synEleMap.get(funDepInd
+							.getColumnA());
+					funDepInd.setColumnA(newColumn);
+					anaBuilder.addElementToAnalyze(newColumn, indicator);
+					isExistSynedElement = true;
+				}
+				
+				// Column B
+				if (synEleMap.get(funDepInd.getColumnB()) != null) {
+					TdColumn newColumn = (TdColumn) synEleMap.get(funDepInd
+							.getColumnB());
+					funDepInd.setColumnB(newColumn);
+					anaBuilder.addElementToAnalyze(newColumn, indicator);
+					isExistSynedElement = true;
+				}
+
+                // Analyzed element(Table)
+                ModelElement oldAnaEle = funDepInd.getAnalyzedElement();
+                funDepInd.setAnalyzedElement(null);
+                ColumnSet oldColSetA = ColumnHelper.getColumnSetOwner(funDepInd.getColumnA());
+                ColumnSet oldColSetB = ColumnHelper.getColumnSetOwner(funDepInd.getColumnB());
+                if (oldColSetA == oldAnaEle) {
+                	if(synEleMap.get(funDepInd.getColumnA())!=null){
+						funDepInd.setAnalyzedElement(ColumnHelper
+								.getColumnSetOwner((Column) synEleMap
+										.get(funDepInd.getColumnA())));
+                	}
+                }
+                if (oldColSetB == oldAnaEle) {
+                	if(synEleMap.get(funDepInd.getColumnB())!=null){
+						funDepInd.setAnalyzedElement(ColumnHelper
+								.getColumnSetOwner((Column) synEleMap
+										.get(funDepInd.getColumnB())));
+                	}
+                }
+
+            }
+            else {
                 ModelElement me = indicator.getAnalyzedElement();
                 if (synEleMap.get(me) != null) {
                     indicator.setAnalyzedElement(synEleMap.get(me));
