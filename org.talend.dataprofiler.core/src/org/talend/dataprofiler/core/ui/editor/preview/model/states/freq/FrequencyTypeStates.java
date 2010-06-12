@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
-import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
@@ -29,8 +29,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChart
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.FrequencyLabelProvider;
 import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dq.analysis.explore.DataExplorer;
-import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
@@ -68,10 +66,10 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                     FrequencyExt freqExt = frequencyExt[i];
                     String keyLabel = String.valueOf(freqExt.getKey());
                     if ("null".equals(keyLabel)) { //$NON-NLS-1$
-                        keyLabel = PluginConstant.NULL_FIELD;
+                        keyLabel = SpecialValueDisplay.NULL_FIELD;
                     }
                     if ("".equals(keyLabel)) { //$NON-NLS-1$
-                        keyLabel = PluginConstant.EMPTY_FIELD;
+                        keyLabel = SpecialValueDisplay.EMPTY_FIELD;
                     }
 
                     customerdataset.addValue(freqExt.getValue(), "", keyLabel); //$NON-NLS-1$
