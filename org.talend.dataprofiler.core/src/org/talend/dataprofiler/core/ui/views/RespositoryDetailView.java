@@ -272,10 +272,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         List<ForeignKey> foreignKeys = TableHelper.getForeignKeys(table);
         newLabelAndText(
                 gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignKeys.isEmpty() ? null : foreignKeys.get(0).getName()); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"),  foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.get(0).getFeature().size())); //$NON-NLS-1$
         newLabelAndText(
                 gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.ForeignkeyName"), foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.get(0).getFeature().size())); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RespositoryDetailView.ForeignkeyName"), foreignKeys.isEmpty() ? null : foreignKeys.get(0).getName()); //$NON-NLS-1$
     }
 
     private boolean createFileDetail(boolean is, IFile fe2) {
