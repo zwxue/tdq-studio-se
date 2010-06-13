@@ -198,7 +198,6 @@ public final class ColumnHelper {
         return null;
     }
 
-
     /**
      * Method "removePrimaryKey".
      * 
@@ -215,7 +214,7 @@ public final class ColumnHelper {
         // else
         return null;
     }
-    
+
     /**
      * 
      * DOC mzhao Comment method "isForeignKey",Feature 8690.
@@ -224,7 +223,7 @@ public final class ColumnHelper {
      * @return
      */
     public static boolean isForeignKey(Column column) {
-        return getForeignKey(column) != null;
+        return getForeignKey(column) != null && getForeignKey(column).size() > 0;
     }
 
     /**
@@ -234,17 +233,18 @@ public final class ColumnHelper {
      * @param column
      * @return
      */
-    public static ForeignKey getForeignKey(Column column) {
+    public static Set<ForeignKey> getForeignKey(Column column) {
         EList<KeyRelationship> foreignKeys = column.getKeyRelationship();
+        Set<ForeignKey> foreignKeySet = new HashSet<ForeignKey>();
         for (KeyRelationship foreignKey : foreignKeys) {
             if (foreignKey != null) {
                 ForeignKey fk = SwitchHelpers.FOREIGN_KEY_SWITCH.doSwitch(foreignKey);
                 if (fk != null) {
-                    return fk;
+                    foreignKeySet.add(fk);
                 }
             }
         }
-        return null;
+        return foreignKeySet;
     }
 
     /**
@@ -253,18 +253,19 @@ public final class ColumnHelper {
      * @param column
      * @return the removed Foreign key or null
      */
-    public static ForeignKey removeForeignKey(Column column) {
+    public static Set<ForeignKey> removeForeignKey(Column column) {
         assert column != null;
-        ForeignKey foreignKey = getForeignKey(column);
-        if (foreignKey != null) {
-            column.getKeyRelationship().remove(foreignKey);
-            return foreignKey;
+        Set<ForeignKey> foreignKeySet = getForeignKey(column);
+        if (foreignKeySet != null) {
+            for (ForeignKey foreignKey : foreignKeySet) {
+                column.getKeyRelationship().remove(foreignKey);
+            }
+            return foreignKeySet;
         }
         // else
         return null;
     }
-    
-    
+
     /**
      * DOC bZhou Comment method "isFromSameConnection".
      * 

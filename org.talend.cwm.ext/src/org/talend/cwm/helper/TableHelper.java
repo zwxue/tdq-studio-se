@@ -14,7 +14,9 @@ package org.talend.cwm.helper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -23,6 +25,7 @@ import org.talend.cwm.relational.TdTable;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.StructuralFeature;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
@@ -112,16 +115,22 @@ public final class TableHelper {
         assert pk != null;
         List<PrimaryKey> primaryKeyList = getPrimaryKeys(table);
         // MOD zshen for bug 12842
-        if (primaryKeyList.size() <= 0) {// the table not primaryKey
-            table.getOwnedElement().add(pk);
-            return pk;
-        } else {// the table had a primaryKey
-            if (pk.getFeature().size() > 0) {
-                primaryKeyList.get(0).getFeature().add(pk.getFeature().get(pk.getFeature().size() - 1));
+        String newPrimaryKeyName = pk.getName();
+        for (PrimaryKey thePrimaryKey : primaryKeyList) {
+            if (thePrimaryKey.getName().equals(newPrimaryKeyName)) {
+                thePrimaryKey.getFeature().addAll(thePrimaryKey.getFeature());
+                StructuralFeature[] structuralFeaturethe = thePrimaryKey.getFeature().toArray(
+                        new StructuralFeature[thePrimaryKey.getFeature().size()]);
+                for (StructuralFeature primaryKeyColumn : structuralFeaturethe) {
+                    TdColumn theColumn = (TdColumn) (primaryKeyColumn);
+                    theColumn.getUniqueKey().clear();
+                    theColumn.getUniqueKey().add(thePrimaryKey);
+                }
+                return thePrimaryKey;
             }
-            return primaryKeyList.get(0);
         }
-
+        table.getOwnedElement().add(pk);
+        return pk;
     }
 
     /**
@@ -175,15 +184,31 @@ public final class TableHelper {
         assert table != null;
         assert foreignKey != null;
         List<ForeignKey> foreignKeyList = getForeignKeys((Table) table);
-        if (foreignKeyList.size() <= 0) {
-            table.getOwnedElement().add(foreignKey);
-            return foreignKey;
-        } else {
-            if (foreignKey.getFeature().size() > 0) {
-                foreignKeyList.get(0).getFeature().add(foreignKey.getFeature().get(foreignKey.getFeature().size() - 1));
+        // if (foreignKeyList.size() <= 0) {
+        // table.getOwnedElement().add(foreignKey);
+        // return foreignKey;
+        // } else {
+        // if (foreignKey.getFeature().size() > 0) {
+        String newForeignKeyName = foreignKey.getName();
+        for (ForeignKey theForeignKey : foreignKeyList) {
+            if (theForeignKey.getName().equals(newForeignKeyName)) {
+                theForeignKey.getFeature().addAll(foreignKey.getFeature());
+                StructuralFeature[] structuralFeaturethe = theForeignKey.getFeature().toArray(
+                        new StructuralFeature[theForeignKey.getFeature().size()]);
+                for (StructuralFeature foreignKeyColumn : structuralFeaturethe) {
+                    TdColumn theColumn = (TdColumn) (foreignKeyColumn);
+                    theColumn.getKeyRelationship().remove(foreignKey);
+                    theColumn.getKeyRelationship().add(theForeignKey);
+                }
+                return theForeignKey;
             }
-            return foreignKeyList.get(0);
         }
+        table.getOwnedElement().add(foreignKey);
+        // foreignKeyList.get(0).getFeature().add(foreignKey.getFeature().get(foreignKey.getFeature().size() -
+        // 1));
+        // }
+        return foreignKey;
+        // }
     }
 
     /**
@@ -235,6 +260,16 @@ public final class TableHelper {
             }
         }
         return foreignkeys;
+    }
+
+    public static Map<String, Integer> getForeignKeysInformation(Table table) {
+        Map<String, Integer> info = new HashMap<String, Integer>();
+
+        for (ForeignKey foreign : getForeignKeys(table)) {
+            info.put(foreign.getName(), foreign.getFeature().size());
+
+        }
+        return info;
     }
 
     /**

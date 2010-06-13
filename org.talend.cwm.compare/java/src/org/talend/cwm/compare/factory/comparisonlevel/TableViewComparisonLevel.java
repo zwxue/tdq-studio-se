@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -231,16 +232,18 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
             // Case of pk
             PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
             if (primaryKey != null) {
-                primaryKey = TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
-                columnSetSwitch.getUniqueKey().clear();
-                columnSetSwitch.getUniqueKey().add(primaryKey);
+                PrimaryKey newPrimaryKey = TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
+                columnSetSwitch.getUniqueKey().remove(primaryKey);
+                columnSetSwitch.getUniqueKey().add(newPrimaryKey);
             }
             // Case of fk
-            ForeignKey foreignKey = ColumnHelper.getForeignKey(columnSetSwitch);
-            if (foreignKey != null) {
-                foreignKey = TableHelper.addForeignKey((Table) columnSet, foreignKey);
-                columnSetSwitch.getKeyRelationship().clear();
-                columnSetSwitch.getKeyRelationship().add(foreignKey);
+            Set<ForeignKey> foreignKeySet = ColumnHelper.getForeignKey(columnSetSwitch);
+            for (ForeignKey foreignKey : foreignKeySet) {
+                if (foreignKey != null) {
+                    ForeignKey newForeignKey = TableHelper.addForeignKey((Table) columnSet, foreignKey);
+                    columnSetSwitch.getKeyRelationship().remove(foreignKey);
+                    columnSetSwitch.getKeyRelationship().add(newForeignKey);
+                }
             }
         }
     }

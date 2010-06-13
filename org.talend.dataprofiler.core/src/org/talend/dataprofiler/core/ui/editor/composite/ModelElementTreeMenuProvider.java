@@ -173,7 +173,6 @@ public abstract class ModelElementTreeMenuProvider {
                         service.executeJob();
                     }
                 }
-
             });
         }
         if (isSelectedUDIndicator(tree.getSelection())) {

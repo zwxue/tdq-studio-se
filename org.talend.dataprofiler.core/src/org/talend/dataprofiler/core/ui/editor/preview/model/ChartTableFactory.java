@@ -123,30 +123,27 @@ public final class ChartTableFactory {
                                             PatternTransformer pattTransformer = new PatternTransformer(language);
                                             createPattern(analysis, itemEntity, pattTransformer);
                                         }
-
                                     });
                                 }
                             }
-
                         } else {
                             try {
                                 AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
                                 if (analysis.getParameters().isStoreData()) {
-
-                                    if ((analyDataSet.getData().size() > 0 || analyDataSet.getFrequencyData() != null || analyDataSet
-                                            .getPatternData() != null)) {
+                                    if (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
+                                            || analyDataSet.getFrequencyData() != null
+                                            && analyDataSet.getFrequencyData().size() > 0
+                                            || analyDataSet.getPatternData() != null && analyDataSet.getPatternData().size() > 0) {
                                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
                                                 dataEntity);
                                         for (final MenuItemEntity itemEntity : itemEntities) {
                                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                                             item.setText(itemEntity.getLabel());
                                             item.setImage(itemEntity.getIcon());
-
                                             item.addSelectionListener(new SelectionAdapter() {
 
                                                 @Override
                                                 public void widgetSelected(SelectionEvent e) {
-
                                                     // TODO open the editor and display all of data which saved in the
                                                     // indicator.
                                                     try {
@@ -165,7 +162,7 @@ public final class ChartTableFactory {
 
                                             });
                                         }
-                                    } else if (analyDataSet.getData().size() <= 0) {
+                                    } else {
                                         MenuItem item = new MenuItem(menu, SWT.PUSH);
                                         item.setText("No data");
                                         item.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));

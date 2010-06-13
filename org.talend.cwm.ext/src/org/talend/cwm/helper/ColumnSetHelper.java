@@ -71,9 +71,13 @@ public final class ColumnSetHelper {
 
         // remove foreign key if it exists
         if (ColumnHelper.isForeignKey(column)) {
-            ForeignKey foreignKey = ColumnHelper.removeForeignKey(column);
-            if (foreignKey != null && foreignKey.getFeature().size() <= 0) {
-                TableHelper.removeForeignKey(columnSet, foreignKey);
+            Set<ForeignKey> foreignKeySet = ColumnHelper.removeForeignKey(column);
+            if (foreignKeySet != null) {
+                for (ForeignKey foreignKey : foreignKeySet) {
+                    if (foreignKey != null && foreignKey.getFeature().size() <= 0) {
+                        TableHelper.removeForeignKey(columnSet, foreignKey);
+                    }
+                }
             }
         }
         return columnSet.getFeature().remove(column);

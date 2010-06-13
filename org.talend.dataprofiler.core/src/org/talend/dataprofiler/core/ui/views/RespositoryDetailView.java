@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.views;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
@@ -69,7 +70,6 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.Table;
 
@@ -265,17 +265,15 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
         newLabelAndText(
                 gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.get(0).getFeature().size())); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : primaryKeys.get(0).getName() + "(" + String.valueOf(primaryKeys.get(0).getFeature().size()) + ")"); //$NON-NLS-1$
+        Map<String, Integer> foreignInfo = TableHelper.getForeignKeysInformation(table);
+        String[] foreignNameArray = foreignInfo.keySet().toArray(new String[foreignInfo.keySet().size()]);
         newLabelAndText(
                 gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeyName"), primaryKeys.isEmpty() ? null : primaryKeys.get(0).getName()); //$NON-NLS-1$
-        List<ForeignKey> foreignKeys = TableHelper.getForeignKeys(table);
-        newLabelAndText(
-                gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"),  foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.get(0).getFeature().size())); //$NON-NLS-1$
-        newLabelAndText(
-                gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.ForeignkeyName"), foreignKeys.isEmpty() ? null : foreignKeys.get(0).getName()); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignNameArray.length == 0 ? null : foreignNameArray[0] + "(" + foreignInfo.get(foreignNameArray[0]) + ")"); //$NON-NLS-1$
+        for (int i = 1; i < foreignNameArray.length; i++) {
+            newLabelAndText(gContainer, "", foreignNameArray[i] + "(" + foreignInfo.get(foreignNameArray[i]) + ")"); //$NON-NLS-1$
+        }
     }
 
     private boolean createFileDetail(boolean is, IFile fe2) {

@@ -14,7 +14,9 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -24,6 +26,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -32,14 +35,15 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.StructuralFeature;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
 
 /**
  * 
- * DOC zshen class global comment. one table only have one primaryKey element and one foreignKey element,so filter the
- * *.prv file others to one.
+ * DOC zshen class global comment. one table only have one primaryKey element and many foreignKey element,so filter the
+ * *.prv file to check it.
  */
 public class UniquePkAndFkTask extends AWorkspaceTask {
 
@@ -67,7 +71,9 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
                     TdDataProvider tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
                     List<orgomg.cwm.objectmodel.core.Package> dataManagerList = tdDataProvider.getDataPackage();
                     for (orgomg.cwm.objectmodel.core.Package firstLevelElement : dataManagerList) {
-                        saveFalg = getTables(firstLevelElement).isOk().booleanValue();
+                        if (getTables(firstLevelElement).isOk()) {
+                            saveFalg = true;// The file should be saved
+                        }
                     }
                     if (saveFalg) {
                         PrvResourceFileHelper.getInstance().save(tdDataProvider);
@@ -81,6 +87,13 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
         return returnFlag;
     }
 
+    /**
+     * 
+     * DOC zshen Comment method "checkPkAndFk".
+     * 
+     * @param element
+     * @return merge pks or fks if their name is same each other
+     */
     private Boolean checkPkAndFk(TdTable element) {
         boolean needToSave = false;
         // case pk
@@ -98,16 +111,26 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
         }
         // case fk
         if (TableHelper.getForeignKeys(element).size() > 1) {
+            Map<String, ForeignKey> foreignKeySet = new HashMap<String, ForeignKey>();
             List<ForeignKey> foreignKeyList = TableHelper.getForeignKeys(element);
-            for (int i = 1; i < foreignKeyList.size(); i++) {
+            for (int i = 0; i < foreignKeyList.size(); i++) {
                 ForeignKey fk = foreignKeyList.get(i);
-                Column column = (Column) fk.getFeature().get(fk.getFeature().size() - 1);
-                ColumnHelper.removeForeignKey(column);// remove old fk from column
-                column.getKeyRelationship().add(foreignKeyList.get(0));// add new fk to column
-                foreignKeyList.get(0).getFeature().add(column);// add column to new pk
-                TableHelper.removeForeignKey(element, fk);// remove old fk from table
+                if (foreignKeySet.get(fk.getName()) != null) {
+                    foreignKeySet.get(fk.getName()).getFeature().addAll(fk.getFeature());
+                    StructuralFeature[] structFeatureArray = fk.getFeature().toArray(
+                            new StructuralFeature[fk.getFeature().size()]);
+                    for (StructuralFeature fkFeature : structFeatureArray) {
+                        TdColumn fkColumn = (TdColumn) fkFeature;
+                        fkColumn.getKeyRelationship().remove(fk);
+                        fkColumn.getKeyRelationship().add(foreignKeySet.get(fk.getName()));
+                    }
+                    TableHelper.removeForeignKey(element, fk);// remove old fk from table
+                    needToSave = true;
+                } else {
+                    foreignKeySet.put(fk.getName(), fk);
+                }
             }
-            needToSave = true;
+
         }
         return Boolean.valueOf(needToSave);
     }
@@ -120,17 +143,25 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
             return returnCode;
         if (element instanceof TdCatalog) {
             for (ModelElement subElement : ((TdCatalog) element).getOwnedElement()) {
-                tableList.addAll(getTables(subElement).getObject());
+                TypedReturnCode<List<TdTable>> newreturnCode = getTables(subElement);
+                tableList.addAll(newreturnCode.getObject());
+                if (newreturnCode.isOk()) {
+                    returnCode.setOk(newreturnCode.isOk());
+                }
             }
-        }
-        if (element instanceof TdSchema) {
+        } else if (element instanceof TdSchema) {
             for (ModelElement subElement : ((TdSchema) element).getOwnedElement()) {
-                tableList.addAll(getTables(subElement).getObject());
+                TypedReturnCode<List<TdTable>> newreturnCode = getTables(subElement);
+                tableList.addAll(newreturnCode.getObject());
+                if (newreturnCode.isOk()) {
+                    returnCode.setOk(newreturnCode.isOk());
+                }
             }
-        }
-        if (element instanceof TdTable) {
+        } else if (element instanceof TdTable) {
             tableList.add((TdTable) element);
-            returnCode.setOk(checkPkAndFk((TdTable) element));
+            if (checkPkAndFk((TdTable) element)) {
+                returnCode.setOk(true);
+            }
         }
 
         return returnCode;
