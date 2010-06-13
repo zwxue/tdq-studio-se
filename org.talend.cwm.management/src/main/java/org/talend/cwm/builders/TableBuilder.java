@@ -17,8 +17,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -41,7 +43,7 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
 
     private Map<String, PrimaryKey> column2pk = new HashMap<String, PrimaryKey>();
 
-    private Map<String, ForeignKey> column2foreign = new HashMap<String, ForeignKey>();
+    private Map<String, Set<ForeignKey>> column2foreign = new HashMap<String, Set<ForeignKey>>();
 
     private Map<String, PrimaryKey> name2pk = new HashMap<String, PrimaryKey>();
 
@@ -129,12 +131,12 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
      * @return the foreign key if any attached to this column. The foreign keys must have been created by this table
      * builder.
      */
-    public ForeignKey getForeignKey(String columnName) {
+    public Set<ForeignKey> getForeignKey(String columnName) {
         return column2foreign.get(columnName);
     }
 
     public List<ForeignKey> getForeignKeys(String catalogName, String schemaPattern, String tableName) throws SQLException {
-        List<ForeignKey> pks = new ArrayList<ForeignKey>();
+        List<ForeignKey> fks = new ArrayList<ForeignKey>();
         ResultSet foreignKeys = null;
         try {
             // MOD xqliu 2009-07-13 bug 7888
@@ -143,8 +145,8 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
             // ~
             try {
                 while (foreignKeys.next()) {
-                    ForeignKey pk = createForeignKey(foreignKeys);
-                    pks.add(pk);
+                    ForeignKey fk = createForeignKey(foreignKeys);
+                    fks.add(fk);
                 }
             } catch (SQLException e) {
                 throw e;
@@ -157,14 +159,19 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
             log.warn("Cannot get foreign key with this database driver.", e1);
         }
         // ~
-        return pks;
+        return fks;
     }
 
     private ForeignKey createForeignKey(ResultSet foreignKeys) throws SQLException {
         String name = foreignKeys.getString(GetForeignKey.FK_NAME.name());
         String colName = foreignKeys.getString(GetForeignKey.FKCOLUMN_NAME.name());
         ForeignKey foreignKey = this.geFK(name);
-        column2foreign.put(colName, foreignKey);
+        Set<ForeignKey> foreignSet = column2foreign.get(colName);
+        if (foreignSet == null) {
+            foreignSet = new HashSet<ForeignKey>();
+        }
+        foreignSet.add(foreignKey);
+        column2foreign.put(colName, foreignSet);
         return foreignKey;
     }
 

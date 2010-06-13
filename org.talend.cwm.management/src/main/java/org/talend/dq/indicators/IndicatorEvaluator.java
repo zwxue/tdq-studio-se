@@ -133,9 +133,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
                         analyzedDataSet.setRecordSize(0);
                     }
-                    if (analyzedDataSet.getData() == null) {
-                        analyzedDataSet.setData(new ArrayList<Object[]>());
-                    }
+                    // if (analyzedDataSet.getData() == null) {
+                    // analyzedDataSet.setData(new ArrayList<Object[]>());
+                    // }
                     if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
                         List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
@@ -161,7 +161,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         }
                         // ~
                     } else if (indicator instanceof UniqueCountIndicator
-                            && analysis.getResults().getIndicToRowMap().get(indicator) != null) {
+                            && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
                         List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
                         List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
                                 .getAnalyzedElement().eContainer()));
@@ -172,6 +172,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                 break;
                             }
                         }
+
                     }
                 }
             }

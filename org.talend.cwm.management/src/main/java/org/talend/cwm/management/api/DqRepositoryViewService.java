@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -501,9 +502,11 @@ public final class DqRepositoryViewService {
                     if (primaryKey != null) {
                         tdColumn.getUniqueKey().add(primaryKey);
                     }
-                    ForeignKey foreignKey = tableBuild.getForeignKey(colname);
-                    if (foreignKey != null) {
-                        tdColumn.getKeyRelationship().add(foreignKey);
+                    Set<ForeignKey> foreignKeySet = tableBuild.getForeignKey(colname);
+                    if (foreignKeySet != null && foreignKeySet.size() > 0) {
+                        for (ForeignKey foreignKey : foreignKeySet) {
+                            tdColumn.getKeyRelationship().add(foreignKey);
+                        }
                     }
                     // TODO scorreia should create relationship between FK and PK
                 }
