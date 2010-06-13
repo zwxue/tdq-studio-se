@@ -46,6 +46,7 @@ import org.talend.dataprofiler.core.ui.dialog.AnalyzedElementSynDialog.SynTreeMo
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
@@ -289,12 +290,30 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         EList<Indicator> indcList = synAnalysis.getResults().getIndicators();
         Indicator[] copiedIndArray = new Indicator[indcList.size()];
         System.arraycopy(indcList.toArray(), 0, copiedIndArray, 0, indcList.size());
-        synAnalysis.getContext().getAnalysedElements().clear();
+        // MOD qiongli 2010-6-13,bug 12766:To column analysis, which has same
+		// construct connection with before and maybe have not indicator
+		boolean isExistSynedElement = false;
+		AnalysisType analysisType = synAnalysis.getParameters()
+				.getAnalysisType();
+		if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
+			EList<ModelElement> meLs = synAnalysis.getContext().getAnalysedElements();
+			ModelElement[] mes = new ModelElement[meLs.size()];
+			System.arraycopy(meLs.toArray(), 0, mes, 0, meLs.size());
+			synAnalysis.getContext().getAnalysedElements().clear();
+			for (int i = 0; i < mes.length; i++) {
+				if (synEleMap.get(mes[i]) != null) {
+					TdColumn newColumn = (TdColumn) synEleMap.get(mes[i]);
+					synAnalysis.getContext().getAnalysedElements().add(newColumn);
+					isExistSynedElement = true;
+				}
+			}
+		}
+		if (!isExistSynedElement)
+			synAnalysis.getContext().getAnalysedElements().clear();
+		// ~
         synAnalysis.getResults().getIndicators().clear();
 
-        boolean isExistSynedElement = false;
         for (Indicator indicator : copiedIndArray) {
-
             // Add new analyzed element contained in new
             // connection.
             if (indicator instanceof ColumnSetMultiValueIndicator) {
@@ -419,7 +438,10 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 ModelElement me = indicator.getAnalyzedElement();
                 if (synEleMap.get(me) != null) {
                     indicator.setAnalyzedElement(synEleMap.get(me));
-                    anaBuilder.addElementToAnalyze(synEleMap.get(me), indicator);
+                    if (analysisType == AnalysisType.MULTIPLE_COLUMN)
+                    	synAnalysis.getResults().getIndicators().add(indicator);
+                    else
+                        anaBuilder.addElementToAnalyze(synEleMap.get(me), indicator);
                     isExistSynedElement = true;
                 }
             }
