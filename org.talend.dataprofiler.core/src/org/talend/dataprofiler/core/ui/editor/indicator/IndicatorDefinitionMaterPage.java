@@ -1061,23 +1061,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 if (path != null) {
                     jarPathText.setText(path);
                     // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                    validateJavaUDI(detailComp, classNameText, jarPathText);
+                    validateJavaUDI( classNameText, jarPathText);
                 }
             }
         });
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-        classNameText.addFocusListener(new FocusListener() {
-
-            public void focusGained(FocusEvent e) {
-                // TODO Auto-generated method stub
-            }
-
-            public void focusLost(FocusEvent e) {
-                // TODO Auto-generated method stub
-                validateJavaUDI(detailComp, classNameText, jarPathText);
-            }
-        });
-        classNameText.addListener(SWT.MouseExit, new Listener() {
+     
+        classNameText.addListener(SWT.Modify, new Listener() {
 
             public void handleEvent(Event event) {
                 // TODO Auto-generated method stub
@@ -1102,33 +1092,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param classNameText
      * @param jarPathText
      */
-    private void validateJavaUDI(Composite detailComp, Text classNameText, Text jarPathText) {
-        if (isSystemIndicator() == false) {
+    private boolean validateJavaUDI(Text classNameText, Text jarPathText) {
+        if (!isSystemIndicator()) {
             String className = classNameText.getText().toString();
             String jarPath = jarPathText.getText().toString();
             this.setClassNameForSave(className);
             this.setJarPathForSave(jarPath);
-            if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
-                    && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
-                File file = new File(jarPath);
-                TalendURLClassLoader cl;
-                try {
-                    cl = new TalendURLClassLoader(new URL[] { file.toURL() });
-                    cl.findClass(className);
-                } catch (MalformedURLException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (ClassNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                    MessageBox messageBox = new MessageBox(detailComp.getShell(), SWT.WRAP | SWT.YES);
-                    messageBox.setText("Warning");
-                    messageBox.setMessage("Please check Class Name is right? This class '" + className
-                            + "' is not found in file '" + jarPath + "'.");
-                    messageBox.open();
-                }
-            }
         }
+        return false;
     }
     /**
      * 
@@ -1398,20 +1369,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 if (path != null) {
                     jarPathText.setText(path);
                     // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                    validateJavaUDI(classNameText.getParent(), classNameText, jarPathText);
+                    validateJavaUDI( classNameText, jarPathText);
                 }
             }
         });
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-        classNameText.addFocusListener(new FocusListener() {
+        classNameText.addListener(SWT.Modify, new Listener() {
 
-            public void focusGained(FocusEvent e) {
+            public void handleEvent(Event event) {
                 // TODO Auto-generated method stub
-            }
+                setClassNameForSave(classNameText.getText().toString());
+                setJarPathForSave(jarPathText.getText().toString());
 
-            public void focusLost(FocusEvent e) {
-                // TODO Auto-generated method stub
-                validateJavaUDI(classNameText.getParent(), classNameText, jarPathText);
             }
         });
         combo.setData(PluginConstant.CLASS_NAME_TEXT, classNameText);
@@ -1718,38 +1687,109 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     private boolean checkJavaUDIBeforeSave() {
-        EList<TaggedValue> tvs = definition.getTaggedValue();
-        String className = this.getClassNameForSave();
-        String jarPath = this.getJarPathForSave();
-        volidateNameAndPath(className, jarPath, tvs);
-        for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT) || tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
-            	className = this.getClassNameForSave();
-                jarPath = this.getJarPathForSave();
-                if (!systemIndicator) {
-                    if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
-                            && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
-                        File file = new File(jarPath);
-                        TalendURLClassLoader cl;
-                        try {
-                            cl = new TalendURLClassLoader(new URL[] { file.toURL() });
-                            cl.findClass(className);
-                        } catch (MalformedURLException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        } catch (ClassNotFoundException e1) {
-                            return false;
-                        }
-                    } else
-                        return false;
-                } else
-                    return true;
+    	if (!systemIndicator) {
+
+            EList<TaggedValue> tvs = definition.getTaggedValue();
+            boolean isHaveJavaComb = checkIsHaveJavaComb();
+            boolean isHaveJavaTag = checkContainsJavaUDI(definition);
+            boolean isHaveSqlExpr = checkIsHaveSqlExcepretion();
+            String className = this.getClassNameForSave();
+            String jarPath = this.getJarPathForSave();
+            volidateNameAndPath(className, jarPath, tvs);
+            boolean cj2e = checkJavaIndicatorIsEixt();
+            if (isHaveJavaComb == true && isHaveSqlExpr == true && isHaveJavaTag == false) {
+                // if(isHaveJavaTag){}
+                return cj2e;
+            } else if (isHaveJavaComb == false && isHaveSqlExpr == true) {
+                return true;
+            } else if (isHaveJavaComb == true && isHaveSqlExpr == false) {
+                return cj2e;
+            } else if (isHaveJavaComb == true && isHaveSqlExpr == true) {
+                return cj2e;
             }
         }
-
         return true;
 
     }
+    /**
+     * DOC klliu Comment method "checkContainsJavaUDI".
+     * 
+     * @param definition2
+     * @return
+     */
+    private boolean checkContainsJavaUDI(IndicatorDefinition definition2) {
+        // TODO Auto-generated method stub
+        EList<TaggedValue> tvs = definition.getTaggedValue();
+        for (TaggedValue tv : tvs) {
+            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * DOC klliu Comment method "checkJavaIndicatorIsEixt".
+     * 
+     * @return
+     */
+    private boolean checkJavaIndicatorIsEixt() {
+        // TODO Auto-generated method stub
+        String className = this.getClassNameForSave();
+        String jarPath = this.getJarPathForSave();
+
+        if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
+                && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
+            File file = new File(jarPath);
+            TalendURLClassLoader cl;
+            try {
+                cl = new TalendURLClassLoader(new URL[] { file.toURL() });
+                cl.findClass(className);
+                return true;
+            } catch (MalformedURLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            } catch (ClassNotFoundException e1) {
+                return false;
+            }
+        } else
+            return false;
+
+        return false;
+    }
+
+    /**
+     * DOC klliu Comment method "checkIsHaveSqlExcepretion".
+     * 
+     * @return
+     */
+    private boolean checkIsHaveSqlExcepretion() {
+        // TODO Auto-generated method stub
+        EList<TdExpression> expression = definition.getSqlGenericExpression();
+        if (!expression.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC klliu Comment method "checkIsHavaJavaComb".
+     * 
+     * @return
+     */
+    private boolean checkIsHaveJavaComb() {
+        // TODO Auto-generated method stub
+        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            // MOD MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-28
+            if (cb.getText().equals(PatternLanguageType.JAVA.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * DOC klliu Comment method "volidateNameAndPath".
      * 
@@ -1758,7 +1798,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void volidateNameAndPath(String className, String jarPath, EList<TaggedValue> tvs) {
         // TODO Auto-generated method stub
-        if (className == null && jarPath == null) {
+        if (className == null || jarPath == null) {
             for (TaggedValue tv : tvs) {
                 if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
                     this.setClassNameForSave(tv.getValue());
@@ -1771,6 +1811,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
     }
+
     /**
      * DOC xqliu Comment method "checkBeforeSave". ADD xqliu 2010-02-25 feature 11201
      * 

@@ -309,18 +309,13 @@ public final class UDIHelper {
     }
 
     private static boolean containsJavaUDI(IndicatorDefinition definition) {
-        EList<TaggedValue> tvs = definition.getTaggedValue();
-        for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
-            	   for (TaggedValue tv1 : tvs) {
-                       if (!tv1.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
-                           return false;
-                       } else
-                           return true;
-                   }
-            }
-        }
-        return false;
+		EList<TaggedValue> tvs = definition.getTaggedValue();
+		for (TaggedValue tv : tvs) {
+			if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+				return true;
+			}
+		}
+		return false;
     }
 
 }
