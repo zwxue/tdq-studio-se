@@ -21,8 +21,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -145,7 +145,7 @@ public class ChartTableProviderClassSet {
             String label = entity.getLabel();
             switch (columnIndex) {
             case 0:
-                if (PluginConstant.NULL_FIELD.equals(label) || PluginConstant.EMPTY_FIELD.equals(label)) {
+                if (SpecialValueDisplay.NULL_FIELD.equals(label) || SpecialValueDisplay.EMPTY_FIELD.equals(label)) {
                     return Display.getDefault().getSystemColor(SWT.COLOR_RED);
                 }
             default:
@@ -189,7 +189,7 @@ public class ChartTableProviderClassSet {
             String label = entity.getLabel();
             switch (columnIndex) {
             case 0:
-                if (PluginConstant.NULL_FIELD.equals(label) || PluginConstant.EMPTY_FIELD.equals(label)) {
+                if (SpecialValueDisplay.NULL_FIELD.equals(label) || SpecialValueDisplay.EMPTY_FIELD.equals(label)) {
                     return Display.getDefault().getSystemColor(SWT.COLOR_RED);
                 }
             default:
