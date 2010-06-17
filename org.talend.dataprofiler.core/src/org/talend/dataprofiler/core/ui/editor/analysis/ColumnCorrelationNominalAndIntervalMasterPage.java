@@ -148,14 +148,21 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         correlationAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = correlationAnalysisHandler.getStringDataFilter();
         analyzedColumns = correlationAnalysisHandler.getAnalyzedColumns();
-        CountAvgNullIndicator currentCountAvgNullIndicator;
         if (correlationAnalysisHandler.getIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
-            currentCountAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
-            // MOD xqliu 2010-04-06 bug 12161
-            fillSimpleIndicators(currentCountAvgNullIndicator);
-            // ~12161
-            columnSetMultiIndicator = currentCountAvgNullIndicator;
+            //MOD qiongli 2010-6-18 bug 12766
+            if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
+                columnSetMultiIndicator = columnsetFactory.createCountAvgNullIndicator();
+                // MOD xqliu 2010-04-06 bug 12161
+                fillSimpleIndicators(columnSetMultiIndicator);
+                // ~12161
+            }
+            if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
+                columnSetMultiIndicator = columnsetFactory.createMinMaxDateIndicator();
+            }
+            if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
+                columnSetMultiIndicator = columnsetFactory.createWeakCorrelationIndicator();
+            }
         } else {
             columnSetMultiIndicator = (ColumnSetMultiValueIndicator) correlationAnalysisHandler.getIndicator();
         }
