@@ -211,14 +211,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         String[] supportTypes = PatternLanguageType.getAllLanguageTypes();
+        // initialize user defined indicator category
+        definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(supportTypes));
         // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
         systemIndicator = this.getEditor().getEditorInput() instanceof IndicatorEditorInput && definition != null
         && definition.eResource() != null && definition.eResource().getURI().toString().contains(".Talend.definition");
 
-        // initialize user defined indicator category
-        definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
+      
         if (systemIndicator) {
             allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
 
