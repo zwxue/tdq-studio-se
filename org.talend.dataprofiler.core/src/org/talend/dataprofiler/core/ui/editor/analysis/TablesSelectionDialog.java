@@ -61,6 +61,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
+import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
@@ -160,6 +161,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
         this.addFilter(filter);
         this.addFilter(new EMFObjFilter());
+        //MOD qiongli 2010-6-17 bug 13727
+        addFilter(new DQFolderFliter(true));
     }
 
     protected void addCheckedListener() {
