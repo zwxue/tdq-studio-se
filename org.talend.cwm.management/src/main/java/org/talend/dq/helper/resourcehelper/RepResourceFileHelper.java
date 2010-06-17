@@ -159,6 +159,17 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         this.allRepMap.clear();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#deleteRelated(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected void deleteRelated(IFile file) {
+        // TODO Auto-generated method stub
+
+    }
+
     public ReturnCode save(TdReport report) {
         ReportWriter writer = ElementWriterFactory.getInstance().createReportWriter();
         ReturnCode saved = writer.save(report);

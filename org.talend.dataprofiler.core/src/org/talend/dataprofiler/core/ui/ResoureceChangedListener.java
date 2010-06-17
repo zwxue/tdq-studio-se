@@ -171,7 +171,7 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
             public void run() {
                 IFile propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
                         file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
-                if (propFile != null) {
+                if (propFile.exists()) {
                     try {
                         propFile.delete(true, new NullProgressMonitor());
                     } catch (CoreException e) {
@@ -187,11 +187,11 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
             public void run() {
 
-                IFile propertyFile = PropertyHelper.getPropertyFile(resource);
+                IFile propFile = PropertyHelper.getPropertyFile(resource);
 
-                if (propertyFile != null) {
+                if (propFile.exists()) {
 
-                    Resource propertyResource = RepResourceFileHelper.getInstance().getFileResource(propertyFile);
+                    Resource propertyResource = RepResourceFileHelper.getInstance().getFileResource(propFile);
 
                     updateProperty(resource, propertyResource);
 

@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
@@ -92,25 +93,33 @@ public final class PropertyHelper {
     /**
      * DOC bZhou Comment method "getProperty".
      * 
-     * @param propertyFile
+     * @param file
      * @return Null if can't find.
      */
-    public static Property getProperty(IFile propertyFile) {
-        if (propertyFile.exists()) {
-            URI propURI = URI.createPlatformResourceURI(propertyFile.getFullPath().toString(), false);
-            Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
+    public static Property getProperty(IFile file) {
+        if (file.exists()) {
 
-            // in this case, we need to reload the content again.
-            if (resource.getContents().isEmpty()) {
-                resource = new ResourceSetImpl().getResource(propURI, true);
-            }
+            if (StringUtils.equalsIgnoreCase(file.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)) {
+                URI propURI = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+                Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
 
-            if (resource.getContents() != null) {
-                Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
-                if (object != null) {
-                    return (Property) object;
+                // in this case, we need to reload the content again.
+                if (resource.getContents().isEmpty()) {
+                    resource = new ResourceSetImpl().getResource(propURI, true);
                 }
+
+                if (resource.getContents() != null) {
+                    Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
+                    if (object != null) {
+                        return (Property) object;
+                    }
+                }
+            } else {
+                // try to get property from element file.
+                IFile propertyFile = getPropertyFile(file);
+                return getProperty(propertyFile);
             }
+
         }
         return null;
     }
@@ -153,7 +162,7 @@ public final class PropertyHelper {
         IPath itemPath = getItemWorkspaceBasePath(property);
         String path = item.getState().getPath();
         if (path == null || StringUtils.isEmpty(path)) {
-            IPath propPath = new Path(property.eResource().getURI().toFileString());
+            IPath propPath = new Path(property.eResource().getURI().toString());
             IPath mathPath = new Path(itemPath.lastSegment());
             int matchIndex = indexOfPath(propPath, mathPath);
             IPath relativePath = propPath.uptoSegment(matchIndex + 1);

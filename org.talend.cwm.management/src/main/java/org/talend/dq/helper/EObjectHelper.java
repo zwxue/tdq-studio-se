@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -35,13 +34,8 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dataquality.reports.TdReport;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.analysis.informationvisualization.RenderedObject;
+import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -92,7 +86,7 @@ public final class EObjectHelper {
 
     }
 
-    public static void removeDependencys(IResource[] resources) {
+    public static void removeDependencys(IResource... resources) {
         for (IResource selectedObj : resources) {
 
             IFile file = ((IFile) selectedObj);
@@ -114,43 +108,8 @@ public final class EObjectHelper {
     }
 
     private static ModelElement getModelElement(IFile file) {
-        ModelElement findModelElement = null;
-        if (FactoriesUtil.PROV.equalsIgnoreCase(file.getFileExtension())) {
-            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
-            findModelElement = returnValue.getObject();
-        } else if (FactoriesUtil.ANA.equalsIgnoreCase(file.getFileExtension())) {
-            findModelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
-        } else if (FactoriesUtil.REP.equalsIgnoreCase(file.getFileExtension())) {
-            findModelElement = RepResourceFileHelper.getInstance().findReport(file);
-            if (findModelElement == null) {
-                return findModelElement;
-            }
-            List<Resource> modifiedResources = new ArrayList<Resource>();
-            for (RenderedObject renderedObj : ((TdReport) findModelElement).getComponent()) {
-                EList<Dependency> supplierDependencies = renderedObj.getSupplierDependency();
-                for (Dependency dependency : supplierDependencies) {
-                    EList<ModelElement> client = dependency.getClient();
-                    // get the resource of each client
-                    for (ModelElement modelElement : client) {
-                        Resource clientResource = modelElement.eResource();
-                        URI resURI = clientResource.getURI();
-                        if (resURI.toString().equals(findModelElement.eResource().getURI().toString())) {
-                            modifiedResources.add(renderedObj.eResource());
-                            AnaResourceFileHelper.getInstance().clear();
-                        }
-                    }
-                    // clear the dependencies of all clients
-                    client.clear();
-                }
-            }
-            // save now modified resources (that contain the Dependency objects)
-            for (Resource resource : modifiedResources) {
-                EMFUtil.saveSingleResource(resource);
-            }
-        } else if (FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension())) {
-            findModelElement = PatternResourceFileHelper.getInstance().findPattern(file);
-        }
-        return findModelElement;
+        ResourceFileMap resourceFileMap = ModelElementFileFactory.getResourceFileMap(file);
+        return resourceFileMap != null ? resourceFileMap.getModelElement(file) : null;
     }
 
     public static List<ModelElement> getDependencySuppliers(IFile file) {
@@ -185,13 +144,6 @@ public final class EObjectHelper {
         ModelElement findElement = getModelElement(file);
         for (int i = 0; i < modelElements.size(); i++) {
             DependenciesHandler.getInstance().setUsageDependencyOn(findElement, modelElements.get(i));
-        }
-    }
-
-    public static void addDependenciesForModelElement(IFile file, List<ModelElement> modelElements) {
-        ModelElement findElement = getModelElement(file);
-        for (int i = 0; i < modelElements.size(); i++) {
-            DependenciesHandler.getInstance().setUsageDependencyOn(modelElements.get(i), findElement);
         }
     }
 

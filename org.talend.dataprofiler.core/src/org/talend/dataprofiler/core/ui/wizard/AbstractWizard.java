@@ -54,7 +54,6 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
 
                     if (getResourceFileMap() != null) {
                         getResourceFileMap().register(file, cwnElement.eResource());
-                        getResourceFileMap().setResourcesNumberChanged(true);
                     }
 
                     CorePlugin.getDefault().openEditor(file, getEditorName());

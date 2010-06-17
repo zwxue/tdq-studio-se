@@ -85,6 +85,7 @@ import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -161,7 +162,7 @@ public class DQRespositoryView extends CommonNavigator {
         // initialized connections in sql explorer.
         List<TdDataProvider> providers = PrvResourceFileHelper.getInstance().getAllDataProviders();
         for (DataProvider provider : providers) {
-            CorePlugin.getDefault().addConnetionAliasToSQLPlugin(provider);
+            CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(provider);
         }
     }
 

@@ -13,22 +13,19 @@
 package org.talend.dq.factory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.model.properties.PropertiesPackage;
-import org.talend.core.model.properties.Property;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -36,7 +33,6 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
-import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -148,43 +144,32 @@ public final class ModelElementFileFactory {
     }
 
     /**
-     * DOC bZhou Comment method "getProperty".
+     * DOC bZhou Comment method "getALLElements".
      * 
-     * @param file
-     * @return null if there is no property reference to this file.
+     * @param withSystem
+     * @return
      */
-    public static Property getProperty(IFile file) {
+    public static ModelElement[] getALLElements(boolean withSystem) {
+        Collection<Analysis> allAnalysis = AnaResourceFileHelper.getInstance().getAllAnalysis();
 
-        ModelElement modelElement = getModelElement(file);
-        if (modelElement != null) {
-            String propertyPath = MetadataHelper.getPropertyPath(modelElement);
-            if (propertyPath != null) {
-                IFile propertyFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
-                if (propertyFile != null) {
-                    return loadProperty(propertyFile);
-                }
-            }
-        }
+        Collection<WhereRule> allDQRules = DQRuleResourceFileHelper.getInstance().getAllDQRules();
 
-        return null;
-    }
+        Collection<Pattern> allPatternes = PatternResourceFileHelper.getInstance().getAllPatternes();
 
-    /**
-     * DOC bZhou Comment method "loadProperty".
-     * 
-     * @param file
-     * @return null if property is not existed.
-     */
-    static Property loadProperty(IFile file) {
-        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
-        Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
+        List<TdDataProvider> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders();
 
-        if (resource != null) {
-            Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
-                    .getProperty());
-            return property;
-        }
+        Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
 
-        return null;
+        Collection<IndicatorDefinition> allUDIs = UDIResourceFileHelper.getInstance().getAllUDIs();
+
+        List<ModelElement> allElement = new ArrayList<ModelElement>();
+        allElement.addAll(allAnalysis);
+        allElement.addAll(allDQRules);
+        allElement.addAll(allPatternes);
+        allElement.addAll(allDataProviders);
+        allElement.addAll(allReports);
+        allElement.addAll(allUDIs);
+
+        return allElement.toArray(new ModelElement[allElement.size()]);
     }
 }

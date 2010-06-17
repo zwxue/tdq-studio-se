@@ -18,7 +18,7 @@ import org.talend.dq.writer.AElementPersistance;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class ElementWriterFactory {
+public final class ElementWriterFactory {
 
     private static ElementWriterFactory instance;
 

@@ -40,7 +40,6 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -351,7 +350,10 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 existLanguage.add(language);
             }
         }
-        EMFUtil.saveSingleResource(pattern.eResource());
+        // EMFUtil.saveSingleResource(pattern.eResource());
+
+        PatternResourceFileHelper.getInstance().save(pattern);
+
         return true;
 
     }

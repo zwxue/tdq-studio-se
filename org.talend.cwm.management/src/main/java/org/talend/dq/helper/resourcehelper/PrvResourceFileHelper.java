@@ -30,6 +30,9 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dq.CWMPlugin;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.DataProviderWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
@@ -168,6 +171,23 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     public void clear() {
         super.clear();
         providerMap.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#deleteRelated(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected void deleteRelated(IFile file) {
+        TdDataProvider dataProvider = findProvider(file).getObject();
+
+        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
+        EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(softwareSystem);
+        EMFSharedResources.getInstance().saveSoftwareDeploymentResource();
+
+        // remove the alias from SQL Plugin
+        CWMPlugin.getDefault().removeAliasInSQLExplorer(dataProvider);
     }
 
     public ReturnCode save(TdDataProvider dataProvider) {

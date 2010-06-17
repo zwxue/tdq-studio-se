@@ -145,7 +145,6 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 try {
                     closeEditorIfOpened(fileRes);
                     fileRes.delete(true, null);
-                    ModelElementFileFactory.getResourceFileMap(fileRes).setResourcesNumberChanged(true);
                     srcParent.refreshLocal(IResource.DEPTH_INFINITE, null);
                     folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 } catch (CoreException e) {

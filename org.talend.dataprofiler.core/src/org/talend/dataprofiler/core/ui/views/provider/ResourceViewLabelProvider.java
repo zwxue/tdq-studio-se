@@ -36,6 +36,7 @@ import org.talend.dataprofiler.core.manager.DQStructureMessage;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
@@ -85,7 +86,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             }
 
             if (FactoriesUtil.isEmfFile(fileExtension)) {
-                Property property = ModelElementFileFactory.getProperty(file);
+                Property property = PropertyHelper.getProperty(file);
                 if (property != null) {
                     Item item = property.getItem();
                     Boolean lockByOthers = ImplementationHelper.getRepositoryManager().isLockByOthers(item);

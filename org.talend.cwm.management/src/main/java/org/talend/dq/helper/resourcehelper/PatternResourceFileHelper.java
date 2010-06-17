@@ -89,14 +89,12 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
      * @return
      */
     public Collection<Pattern> getAllPatternes(IFolder patternFodler) {
-        if (resourcesNumberChanged) {
-            try {
-                searchAllPatternes(patternFodler);
-            } catch (CoreException e) {
-                log.error(e, e);
-            }
-            resourcesNumberChanged = false;
+        try {
+            searchAllPatternes(patternFodler);
+        } catch (CoreException e) {
+            log.error(e, e);
         }
+
         return patternsMap.values();
     }
 
@@ -225,16 +223,15 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
      */
     public IFile getPatternFile(Pattern pattern, IFolder[] folders) {
         IFile file = null;
-        if (resourcesNumberChanged) {
-            try {
-                for (int i = 0; i < folders.length; i++) {
-                    searchAllPatternes(folders[i]);
-                }
-            } catch (CoreException e) {
-                log.error(e, e);
+
+        try {
+            for (int i = 0; i < folders.length; i++) {
+                searchAllPatternes(folders[i]);
             }
-            resourcesNumberChanged = false;
+        } catch (CoreException e) {
+            log.error(e, e);
         }
+
         Set<IFile> keySet = patternsMap.keySet();
         for (IFile file2 : keySet) {
             Pattern pattern2 = patternsMap.get(file2);
@@ -255,6 +252,17 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             }
         }
         return file;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#deleteRelated(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected void deleteRelated(IFile file) {
+        // TODO Auto-generated method stub
+
     }
 
     /*

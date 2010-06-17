@@ -12,19 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction;
-import org.talend.dataprofiler.core.ui.action.actions.DeleteDQRuleAction;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -44,7 +38,7 @@ public class DQRulesActionProvider extends CommonActionProvider {
     @Override
     public void fillContextMenu(IMenuManager menu) {
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
-        List<IFile> selectedFiles = new ArrayList<IFile>();
+
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
@@ -59,34 +53,5 @@ public class DQRulesActionProvider extends CommonActionProvider {
                 }
             }
         }
-        boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
-        if (!isSelectFile && !selectedFiles.isEmpty()) {
-            menu.add(new DeleteDQRuleAction(selectedFiles));
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "computeSelectedFiles".
-     * 
-     * @param treeSelection
-     * @param selectedFiles
-     * @return
-     */
-    public static boolean computeSelectedFiles(TreeSelection treeSelection, List<IFile> selectedFiles) {
-        boolean isSelectFile = false;
-        Iterator iterator = treeSelection.iterator();
-        while (iterator.hasNext()) {
-            Object obj = iterator.next();
-            if (obj instanceof IFile) {
-                IFile file = (IFile) obj;
-                if (EXTENSION_DQRULE.equalsIgnoreCase(file.getFileExtension())) {
-                    selectedFiles.add(file);
-                }
-            } else {
-                isSelectFile = true;
-                break;
-            }
-        }
-        return isSelectFile;
     }
 }

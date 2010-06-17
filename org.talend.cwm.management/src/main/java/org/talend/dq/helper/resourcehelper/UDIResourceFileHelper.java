@@ -98,14 +98,13 @@ public class UDIResourceFileHelper extends ResourceFileMap {
     }
 
     public Collection<IndicatorDefinition> getAllUDIs(IFolder patternFodler) {
-        if (resourcesNumberChanged) {
-            try {
-                searchAllUDIs(patternFodler);
-            } catch (CoreException e) {
-                log.error(e, e);
-            }
-            resourcesNumberChanged = false;
+
+        try {
+            searchAllUDIs(patternFodler);
+        } catch (CoreException e) {
+            log.error(e, e);
         }
+
         return idsMap.values();
     }
 
@@ -116,16 +115,15 @@ public class UDIResourceFileHelper extends ResourceFileMap {
 
     public IFile getUDIFile(IndicatorDefinition id, IFolder[] folders) {
         IFile file = null;
-        if (resourcesNumberChanged) {
-            try {
-                for (int i = 0; i < folders.length; i++) {
-                    searchAllUDIs(folders[i]);
-                }
-            } catch (CoreException e) {
-                log.error(e, e);
+
+        try {
+            for (int i = 0; i < folders.length; i++) {
+                searchAllUDIs(folders[i]);
             }
-            resourcesNumberChanged = false;
+        } catch (CoreException e) {
+            log.error(e, e);
         }
+
         Set<IFile> keySet = idsMap.keySet();
         for (IFile file2 : keySet) {
             IndicatorDefinition id2 = idsMap.get(file2);
@@ -173,6 +171,17 @@ public class UDIResourceFileHelper extends ResourceFileMap {
     public void clear() {
         super.clear();
         idsMap.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#deleteRelated(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected void deleteRelated(IFile file) {
+        // TODO Auto-generated method stub
+
     }
 
     /*

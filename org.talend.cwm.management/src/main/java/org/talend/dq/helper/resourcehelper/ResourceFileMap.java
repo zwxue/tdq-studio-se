@@ -12,13 +12,24 @@
 // ============================================================================
 package org.talend.dq.helper.resourcehelper;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -27,10 +38,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public abstract class ResourceFileMap {
 
     protected Map<IFile, Resource> registedResourceMap = new HashMap<IFile, Resource>();
-
-    // We judge the resources number whether changed, at first time will load all the resource of someone folder, so the
-    // default value is 'true'.
-    protected boolean resourcesNumberChanged = true;
 
     public void register(IFile fileString, Resource resource) {
         registedResourceMap.put(fileString, resource);
@@ -69,22 +76,87 @@ public abstract class ResourceFileMap {
     }
 
     /**
-     * Getter for resourceChanged.
+     * DOC bZhou Comment method "delete".
      * 
-     * @return the resourceChanged
+     * @param ifile
+     * @throws Exception
      */
-    public boolean isResourcesNumberChanged() {
-        return resourcesNumberChanged;
+    public ReturnCode delete(IFile ifile) throws Exception {
+        ReturnCode rc = new ReturnCode();
+
+        Resource resource = getFileResource(ifile);
+
+        List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(ifile);
+
+        if (!dependencyClients.isEmpty()) {
+            rc.setOk(false);
+            rc.setMessage("This item is depended by others! it can't be deleted!");
+        } else {
+            // remove dependency
+            EObjectHelper.removeDependencys(ifile);
+
+            // a hook to deal with others
+            deleteRelated(ifile);
+
+            // unload resource
+            String uriStr = resource.getURI().toString();
+            remove(ifile);
+            EMFSharedResources.getInstance().unloadResource(uriStr);
+
+            // delete file physically
+            if (ifile.isLinked()) {
+                File file = new File(ifile.getRawLocation().toOSString());
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
+            ifile.delete(true, new NullProgressMonitor());
+
+            IFile propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+                    ifile.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
+            if (propFile.exists()) {
+                propFile.delete(true, new NullProgressMonitor());
+            }
+
+            // svn commit
+            ProxyRepositoryManager.getInstance().save();
+
+            // finish
+            ifile.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+            rc.setMessage("Delete file successfully!");
+        }
+
+        return rc;
     }
 
     /**
-     * Sets the resourceChanged.
+     * DOC bZhou Comment method "getModelElement".
      * 
-     * @param resourceChanged the resourceChanged to set
+     * @param resource
+     * @return
      */
-    public void setResourcesNumberChanged(boolean resourceChanged) {
-        this.resourcesNumberChanged = resourceChanged;
+    public final ModelElement getModelElement(Resource resource) {
+        EList<EObject> contents = resource.getContents();
+        if (contents != null && !contents.isEmpty()) {
+            return (ModelElement) contents.get(0);
+        }
+
+        return null;
     }
+
+    /**
+     * DOC bZhou Comment method "getModelElement".
+     * 
+     * @param IFile
+     * @return
+     */
+    public final ModelElement getModelElement(IFile file) {
+        Resource fileResource = getFileResource(file);
+
+        return getModelElement(fileResource);
+    }
+
+    protected abstract void deleteRelated(IFile file);
 
     protected abstract boolean checkFile(IFile file);
 

@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -116,7 +117,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             if (driver != null) {
                 storeInfoToPerference(dataProvider);
             }
-            CorePlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
+            CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
         }
 
         return save;

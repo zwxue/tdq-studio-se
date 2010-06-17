@@ -112,14 +112,11 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
     }
 
     public Collection<WhereRule> getAllDQRules(IFolder patternFodler) {
-        if (resourcesNumberChanged) {
-            try {
-                whereRulesMap.clear();
-                searchAllWhereRules(patternFodler);
-            } catch (CoreException e) {
-                log.error(e, e);
-            }
-            resourcesNumberChanged = false;
+        try {
+            whereRulesMap.clear();
+            searchAllWhereRules(patternFodler);
+        } catch (CoreException e) {
+            log.error(e, e);
         }
         return whereRulesMap.values();
     }
@@ -131,16 +128,15 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
 
     public IFile getWhereRuleFile(WhereRule whereRule, IFolder[] folders) {
         IFile file = null;
-        if (resourcesNumberChanged) {
-            try {
-                for (int i = 0; i < folders.length; i++) {
-                    searchAllWhereRules(folders[i]);
-                }
-            } catch (CoreException e) {
-                log.error(e, e);
+
+        try {
+            for (int i = 0; i < folders.length; i++) {
+                searchAllWhereRules(folders[i]);
             }
-            resourcesNumberChanged = false;
+        } catch (CoreException e) {
+            log.error(e, e);
         }
+
         Set<IFile> keySet = whereRulesMap.keySet();
         for (IFile file2 : keySet) {
             WhereRule whereRule2 = whereRulesMap.get(file2);
@@ -194,6 +190,17 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
     public void clear() {
         super.clear();
         whereRulesMap.clear();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#deleteRelated(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected void deleteRelated(IFile file) {
+        // TODO Auto-generated method stub
+
     }
 
     /*

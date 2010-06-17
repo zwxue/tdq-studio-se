@@ -31,7 +31,6 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
-import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
@@ -62,14 +61,11 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
     }
 
     public Collection<Analysis> getAllAnalysis(IFolder analysesFolder) {
-        if (resourcesNumberChanged) {
-            try {
-                allAnalysisMap.clear();
-                searchAllAnalysis(analysesFolder);
-            } catch (CoreException e) {
-                log.error(e, e);
-            }
-            resourcesNumberChanged = false;
+        try {
+            allAnalysisMap.clear();
+            searchAllAnalysis(analysesFolder);
+        } catch (CoreException e) {
+            log.error(e, e);
         }
         return allAnalysisMap.values();
     }
@@ -213,9 +209,18 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         this.allAnalysisMap.clear();
     }
 
-    public ReturnCode save(Analysis analysis) {
-        String version = MetadataHelper.getVersion(analysis);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#deleteRelated(org.eclipse.core.resources.IFile)
+     */
+    @Override
+    protected void deleteRelated(IFile file) {
+        // TODO Auto-generated method stub
 
+    }
+
+    public ReturnCode save(Analysis analysis) {
         AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
         ReturnCode saved = writer.save(analysis);
         return saved;

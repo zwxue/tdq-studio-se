@@ -14,12 +14,8 @@ package org.talend.dataprofiler.core;
 
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.EDriverName;
-import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
-import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
-import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
@@ -32,7 +28,6 @@ import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -50,11 +45,10 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
-import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -192,7 +186,7 @@ public class CorePlugin extends AbstractUIPlugin {
                     ResourceManager.getMetadataFolder());
             for (TdDataProvider dataProvider : allDataProviders) {
                 if (dataProvider == tdDataProvider) {
-                    addConnetionAliasToSQLPlugin(dataProvider);
+                    CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
                     openInSqlEditor(tdDataProvider, query, editorName);
                 }
             }
@@ -214,90 +208,6 @@ public class CorePlugin extends AbstractUIPlugin {
         }
 
         return null;
-    }
-
-    /**
-     * DOC bZhou Comment method "addConnetionAliasToSQLPlugin".
-     * 
-     * @param dataproviders
-     */
-    public void addConnetionAliasToSQLPlugin(DataProvider... dataproviders) {
-        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-        AliasManager aliasManager = sqlPlugin.getAliasManager();
-
-        for (DataProvider dataProvider : dataproviders) {
-            try {
-                TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(dataProvider);
-                TdProviderConnection providerConnection = tdPc.getObject();
-
-                Alias alias = new Alias(dataProvider.getName());
-
-                String clearTextUser = DataProviderHelper.getUser(providerConnection);
-                String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
-                String password = DataProviderHelper.getClearTextPassword(providerConnection);
-
-                String url = providerConnection.getConnectionString();
-
-                User previousUser = new User(user, password);
-                alias.setDefaultUser(previousUser);
-
-                alias.setAutoLogon(false);
-                alias.setConnectAtStartup(true);
-                alias.setUrl(url);
-                ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
-                        EDriverName.getId(providerConnection.getDriverClassName()));
-                if (manDr != null) {
-                    alias.setDriver(manDr);
-                }
-
-                if (!aliasManager.contains(alias)) {
-                    aliasManager.addAlias(alias);
-                }
-
-            } catch (ExplorerException e) {
-                log.error(e, e);
-            }
-        }
-
-        try {
-            aliasManager.saveAliases();
-        } catch (ExplorerException e) {
-            log.error(e, e);
-        }
-        aliasManager.modelChanged();
-    }
-
-    /**
-     * DOC bZhou Comment method "removeConnetionAliasFromSQLPlugin".
-     * 
-     * @param dataproviders
-     */
-    public void removeConnetionAliasFromSQLPlugin(DataProvider... dataproviders) {
-        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-        AliasManager aliasManager = sqlPlugin.getAliasManager();
-
-        for (DataProvider dataProvider : dataproviders) {
-            try {
-                String aliasName = dataProvider.getName();
-                Alias alias = aliasManager.getAlias(aliasName);
-
-                for (IEditorReference editorRef : sqlPlugin.getActivePage().getEditorReferences()) {
-                    IEditorPart editor = editorRef.getEditor(false);
-                    if (editor instanceof SQLEditor) {
-                        SQLEditor sqlEditor = (SQLEditor) editor;
-                        if (sqlEditor.getSession().getUser().getAlias() == alias) {
-                            sqlPlugin.getActivePage().closeEditor(sqlEditor, true);
-                        }
-                    }
-                }
-
-                if (alias != null) {
-                    aliasManager.removeAlias(aliasName);
-                }
-            } catch (Exception e) {
-                log.error(e, e);
-            }
-        }
     }
 
     /**
