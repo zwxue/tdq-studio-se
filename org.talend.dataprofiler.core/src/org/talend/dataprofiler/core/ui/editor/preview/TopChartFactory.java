@@ -53,7 +53,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
-import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils.DateValueAggregate;
@@ -390,8 +390,8 @@ public final class TopChartFactory {
         CategoryPlot plot = createBarChart.getCategoryPlot();
 
         CategoryAxis domainAxis = plot.getDomainAxis();
-        domainAxis.setTickLabelPaint(PluginConstant.NULL_FIELD, Color.RED);
-        domainAxis.setTickLabelPaint(PluginConstant.EMPTY_FIELD, Color.RED);
+        domainAxis.setTickLabelPaint(SpecialValueDisplay.NULL_FIELD, Color.RED);
+        domainAxis.setTickLabelPaint(SpecialValueDisplay.EMPTY_FIELD, Color.RED);
         return createBarChart;
     }
 
