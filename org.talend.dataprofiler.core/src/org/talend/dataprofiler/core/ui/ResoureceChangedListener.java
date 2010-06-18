@@ -189,7 +189,7 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
                 IFile propFile = PropertyHelper.getPropertyFile(resource);
 
-                if (propFile.exists()) {
+                if (propFile != null && propFile.exists()) {
 
                     Resource propertyResource = RepResourceFileHelper.getInstance().getFileResource(propFile);
 
