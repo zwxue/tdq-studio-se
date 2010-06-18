@@ -14,6 +14,7 @@ package org.talend.dq.helper;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -67,11 +68,18 @@ public final class PropertyHelper {
      */
     public static IFile getPropertyFile(ModelElement modelElement) {
         String propertyPath = MetadataHelper.getPropertyPath(modelElement);
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+        IPath propPath;
+
         if (propertyPath != null) {
-            return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(propertyPath));
+            propPath = new Path(propertyPath);
+        } else {
+            String platformString = modelElement.eResource().getURI().toPlatformString(false);
+            propPath = new Path(platformString).removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
         }
 
-        return null;
+        return root.getFile(propPath);
     }
 
     /**
