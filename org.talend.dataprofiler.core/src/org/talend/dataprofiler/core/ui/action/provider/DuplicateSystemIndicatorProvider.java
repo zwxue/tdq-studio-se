@@ -57,12 +57,37 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
                 definitions[i] = definition;
             }
 
+            // MOD klliu 2010-06-17 13645: the sql template is not correct about the duplicate system indicator
             DuplicateSystemIndicationAction duplicate = new DuplicateSystemIndicationAction(definitions);
-            menu.add(duplicate);
+            if (!checkDefinitionForDuplicate(definitions)) {
+                menu.add(duplicate);
+            }
+           
         }
+      
     }
 
     /**
+     * DOC klliu Comment method "checkDefinitionForDuplicate".
+     * 
+     * @return
+     */
+    private boolean checkDefinitionForDuplicate(IndicatorDefinition[] definitions) {
+        // TODO Auto-generated method stub
+        for (int i = 0; i < definitions.length; i++) {
+            IndicatorDefinition definition = (IndicatorDefinition) definitions[i];
+            String label = definition.getLabel();
+            if (label.equals("Minimal Length") || label.equals("Unique Count") || label.equals("Distinct Count")
+                    || label.equals("Blank Count") || label.equals("Default Value Count") || label.equals("Maximal Length")
+                    || label.equals("Row Count") || label.equals("Duplicate Count") || label.equals("Null Count")) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+	/**
      * DOC yyi 2009-09-07, Feature:8882.
      */
     private class DuplicateSystemIndicationAction extends Action {
