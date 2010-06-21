@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
-import org.talend.dataprofiler.core.migration.helper.VersionCompareHelper;
+import org.talend.dataprofiler.core.migration.helper.VersionComparator;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -46,7 +46,7 @@ public class ThresholdsValuesTask extends AWorkspaceTask {
         // There handle a special case, the Thresholds is different in TOP and TDQ in 3.2.2(r33000)
         ProductVersion vesion = WorkspaceVersionHelper.getVesion();
         ProductVersion version322 = new ProductVersion(3, 2, 2);
-        if (VersionCompareHelper.isEqual(vesion, version322) && ResourceManager.getReportsFolder().exists()) {
+        if (VersionComparator.isEqual(vesion, version322) && ResourceManager.getReportsFolder().exists()) {
             return false;
         }
 
