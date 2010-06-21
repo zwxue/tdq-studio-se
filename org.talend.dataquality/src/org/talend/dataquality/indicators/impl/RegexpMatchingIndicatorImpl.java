@@ -10,13 +10,18 @@ import java.util.regex.Matcher;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.i18n.Messages;
-import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Regexp Matching Indicator</b></em>'. <!--
@@ -92,8 +97,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
      * @return
      */
     private String getRegex() {
-    	// MOD klliu 2010-06-12
-    	 String r =null;
+    	// MOD klliu 2010-06-12 bug 13695
         if (this.parameters != null) {
             final Domain dataValidDomain = parameters.getDataValidDomain();
             if (dataValidDomain != null) {
@@ -101,22 +105,36 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                 for (Pattern p : patterns) {
                     if (p != null) {
                         // MOD yyi 2009-09-29 Feature: 9289
-                        r = DomainHelper.getJavaRegexp(p);
+                        String r = DomainHelper.getJavaRegexp(p);
                         if (r == null) { // get regex valid for all kind of database and engine
                             r = DomainHelper.getSQLRegexp(p);
+                            // MOD klliu 2010-06-18 bug : 13695
+                            if (r == null) { // get regex valid for all kind of database and engine
+                                Column column = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement);
+                                if (column != null) {
+                                    TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(column);
+                                    TypedReturnCode<TdProviderConnection> rc = DataProviderHelper
+                                            .getTdProviderConnection(tdDataProvider);
+                                    String dbType = DataProviderHelper.getDBType(rc.getObject());
+
+                                    r = DomainHelper.getRegexp(p, dbType);
+                                    return r;
+                                }
+                            }
                         }
+
                         if (r != null) {
                             if (r.startsWith("'") && r.endsWith("'")) {
                                 // remove enclosing singles quotes which are used for SQL only (not java)
                                 r = r.substring(1, r.length() - 1);
-                                return r;
-                            }else this.setJavaPatternMessage(r);
+                            }
+                            return r;
                         }
                     }
                 }
             }
         }
-        return r;
+        return null;
     }
 
     /*
