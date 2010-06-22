@@ -30,6 +30,7 @@ import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.part.ISetSelectionTarget;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -77,11 +78,14 @@ public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
         for (int i = 0; i < definitions.length; i++) {
             IndicatorDefinition definition = (IndicatorDefinition) definitions[i];
             String label = definition.getLabel();
-            if (label.equals("Minimal Length") || label.equals("Unique Count") || label.equals("Distinct Count")
-                    || label.equals("Blank Count") || label.equals("Default Value Count") || label.equals("Maximal Length")
-                    || label.equals("Row Count") || label.equals("Duplicate Count") || label.equals("Null Count")) {
+            if (label.equals(PluginConstant.MINIMAL_LENGTH) || label.equals(PluginConstant.UNIQUE_COUNT)
+                    || label.equals(PluginConstant.DISTINCT_COUNT) || label.equals(PluginConstant.BLANK_COUNT)
+                    || label.equals(PluginConstant.DEFAULT_VALUE_COUNT) || label.equals(PluginConstant.MAXIMAL_LENGTH)
+                    || label.equals(PluginConstant.ROW_COUNT) || label.equals(PluginConstant.DUPLICATE_COUNT)
+                    || label.equals(PluginConstant.NULL_COUNT)) {
                 return false;
             }
+
 
         }
         return true;
