@@ -53,7 +53,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
     private static Logger log = Logger.getLogger(IndicatorEvaluator.class);
 
-    private Analysis analysis = null;
+    protected Analysis analysis = null;
 
     public IndicatorEvaluator(Analysis analysis) {
         this.analysis = analysis;
@@ -133,9 +133,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
                         analyzedDataSet.setRecordSize(0);
                     }
-                    // if (analyzedDataSet.getData() == null) {
-                    // analyzedDataSet.setData(new ArrayList<Object[]>());
-                    // }
+
                     if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
                         List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
@@ -185,7 +183,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         return ok;
     }
 
-    private List<Object[]> initDataSet(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap, Object object) {
+    protected List<Object[]> initDataSet(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap, Object object) {
         AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
         List<Object[]> valueObjectList = null;
         if (analyzedDataSet == null) {

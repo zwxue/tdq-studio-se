@@ -29,10 +29,10 @@ public class SimpleStatisticsExplorer extends DataExplorer {
      */
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
+        // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
+        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
+        if (!isXml() || !isSqlEngine) {
 
-        if (!isXml()) {
-            // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
-            boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
             switch (this.indicatorEnum) {
             case RowCountIndicatorEnum:
             case NullCountIndicatorEnum:

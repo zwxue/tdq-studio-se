@@ -12,7 +12,11 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -21,12 +25,18 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.helper.XmlElementHelper;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.indicators.MdmIndicatorEvaluator;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -37,6 +47,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class MdmAnalysisExecutor extends AnalysisExecutor {
 
     private TdDataProvider dataprovider;
+
+    protected MdmConnection mdmConnection;
 
     private static Logger log = Logger.getLogger(MdmAnalysisExecutor.class);
 
@@ -54,6 +66,38 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
     }
 
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+        MdmIndicatorEvaluator eval = new MdmIndicatorEvaluator(analysis);
+        eval.setMonitor(getMonitor());
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        for (Indicator indicator : indicators) {
+            assert indicator != null;
+            TdXMLElement tdXmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(indicator.getAnalyzedElement());
+            if (tdXmlElement == null) {
+                continue;
+            }
+            // --- get the schema owner
+            if (!belongToSameDocument(tdXmlElement)) {
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenColumn", tdXmlElement.getName()); //$NON-NLS-1$
+                return false;
+            }
+            // String columnName = ColumnHelper.getFullName(tdColumn);
+            eval.storeIndicator(tdXmlElement.getName(), indicator);
+            eval.setTdXmlDocument(tdXmlElement.getOwnedDocument());
+        }
+        TypedReturnCode<MdmConnection> mdmReturnObj = getMdmConnection(analysis);
+        // open a connection
+        if (!mdmReturnObj.isOk()) {
+            log.error(mdmReturnObj.getMessage());
+            this.errorMessage = mdmReturnObj.getMessage();
+            return false;
+        }
+        eval.setMdmconn(mdmReturnObj.getObject());
+        boolean closeAtTheEnd = true;
+        ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
+        if (!rc.isOk()) {
+            log.warn(rc.getMessage());
+            this.errorMessage = rc.getMessage();
+        }
         return true;
     }
 
@@ -69,8 +113,114 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
 
     @Override
     protected String createSqlStatement(Analysis analysis) {
-        // TODO 10238
-        return "";
+        this.cachedAnalysis = analysis;
+        StringBuilder sql = new StringBuilder("for $");
+        StringBuilder selectElement = new StringBuilder();
+        EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+        if (analysedElements.isEmpty()) {
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
+                    analysis.getName());
+            return null;
+        }
+        Set<TdXMLDocument> fromPart = new HashSet<TdXMLDocument>();
+        final Iterator<ModelElement> iterator = analysedElements.iterator();
+        String parentAnalyzedElementName = null;
+        TdXMLDocument xmlDocument = null;
+        String analyzedElementName = null;
+        while (iterator.hasNext()) {
+            ModelElement modelElement = iterator.next();
+            // --- preconditions
+            TdXMLElement tdXmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(modelElement);
+            if (tdXmlElement == null) {
+                this.errorMessage = "given element can't be used.";
+                return null;
+            }
+            ModelElement parentElement = XmlElementHelper.getParentElement(tdXmlElement);
+            if (parentElement == null) {
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName()); //$NON-NLS-1$
+            }
+            TdXMLElement parentXmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(parentElement);
+            if (parentXmlElement == null) {
+                this.errorMessage = Messages.getString(
+                        "ColumnAnalysisExecutor.NoContainerFound", parentElement.getName(), parentXmlElement); //$NON-NLS-1$
+                return null;
+            }
+            xmlDocument = parentXmlElement.getOwnedDocument();
+            if (!analysis.getParameters().isStoreData()) {
+                parentAnalyzedElementName = parentElement.getName();
+                analyzedElementName = tdXmlElement.getName();
+                if (selectElement.length() > 0) {
+                    selectElement.append("|$");
+                    selectElement.append(parentAnalyzedElementName);
+                    selectElement.append("/");
+                } else {
+                    selectElement.append("$");
+                    selectElement.append(parentAnalyzedElementName);
+                    selectElement.append("/");
+                }
+                selectElement.append(analyzedElementName);
+            }
+            fromPart.add(xmlDocument);
+        }
+        if (fromPart.size() != 1) {
+            log.error("Java analysis must be run on only one table. The number of different tables is " + fromPart.size() + ".");
+            this.errorMessage = "Cannot run a Java analysis on several tables. Use only columns from one table.";
+            return null;
+        }
+        if (analysis.getParameters().isStoreData()) {
+            TdXMLElement parentElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(XmlElementHelper
+                    .getParentElement(SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analysedElements.get(0))));
+            parentAnalyzedElementName = parentElement.getName();
+            List<TdXMLElement> columnList = DqRepositoryViewService.getXMLElements(parentElement);
+            // List<TdColumn> columnList =
+            // TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysedElements.get(0)
+            // .eContainer()));
+            Iterator<TdXMLElement> iter = columnList.iterator();
+            while (iter.hasNext()) {
+                TdXMLElement xmlElemenet = iter.next();
+                // sql.append(xmlElemenet.getName());
+                // append comma if more columns exist
+                if (DqRepositoryViewService.hasChildren(xmlElemenet)) {
+                    continue;
+                }
+                if (selectElement.length() > 0) {
+                    selectElement.append("|$");
+                    selectElement.append(parentElement.getName());
+                    selectElement.append("/");
+                } else {
+                    selectElement.append("$");
+                    selectElement.append(parentElement.getName());
+                    selectElement.append("/");
+                }
+                selectElement.append(xmlElemenet.getName());
+            }
+        }
+
+        if (selectElement.length() <= 0) {
+            this.errorMessage = "Not any element to be choice";
+            return null;
+        }
+        // for
+        sql.append(parentAnalyzedElementName);
+        sql.append(" in //");
+        sql.append(parentAnalyzedElementName);
+
+        // where--- get data filter
+        ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();
+        handler.setAnalysis(analysis);
+        String stringDataFilter = handler.getStringDataFilter();
+        if (stringDataFilter != null && !stringDataFilter.equals("")) {
+            // TODO The user will don't know what is our name of variable in xquery,so need us add our name of variable
+            // before the name of column by user input.Now our name of variable is parentNode name.
+            sql.append(dbms().where().toLowerCase());// All of function in xquery,character is lowercase
+            sql.append(stringDataFilter);
+        }
+        // return
+        sql.append(" return data(");
+        selectElement.append(")");
+        sql.append(selectElement);
+
+        return sql.toString();
     }
 
     @Override
@@ -144,7 +294,13 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
      * @return
      */
     protected TypedReturnCode<MdmConnection> getMdmConnection(Analysis analysis) {
+
         TypedReturnCode<MdmConnection> rc = new TypedReturnCode<MdmConnection>(false);
+        if (mdmConnection != null) {
+            rc.setObject(mdmConnection);
+            rc.setOk(true);
+            return rc;
+        }
         TdDataProvider dataProvider = (TdDataProvider) analysis.getContext().getConnection();
         EList<ProviderConnection> resourceConnections = dataProvider.getResourceConnection();
         if (resourceConnections != null && resourceConnections.size() > 0) {
@@ -159,6 +315,10 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             rc.setOk(mdmConnection.checkDatabaseConnection().isOk());
             rc.setMessage(url);
         }
+        if (rc.isOk()) {
+            mdmConnection = rc.getObject();
+        }
         return rc;
     }
+
 }
