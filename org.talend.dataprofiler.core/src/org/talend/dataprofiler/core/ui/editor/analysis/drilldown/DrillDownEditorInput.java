@@ -22,7 +22,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.XmlElementHelper;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
@@ -31,6 +34,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC zshen class global comment. Detailled comment
@@ -174,11 +178,11 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     public DataSet getDataSet() {
-        List<TdColumn> columnElementList = filterAdaptColumnHeader();
+        List<String> columnElementList = filterAdaptColumnHeader();
         columnHeader = new String[columnElementList.size()];
         int headerIndex = 0;
-        for (TdColumn columnElement : columnElementList) {
-            columnHeader[headerIndex++] = columnElement.getName();
+        for (String columnElement : columnElementList) {
+            columnHeader[headerIndex++] = columnElement;
         }
         List<Object[]> newColumnElementList = filterAdaptDataList();
         if (newColumnElementList.size() <= 0) {
@@ -225,15 +229,25 @@ public class DrillDownEditorInput implements IEditorInput {
     private List<Object[]> getDesignatedData() {
         AnalyzedDataSet analysisDataSet = this.getAnalysis().getResults().getIndicToRowMap().get(currIndicator);
         List<Object[]> dataList = analysisDataSet.getData();
+        ModelElement analysisElement = currIndicator.getAnalyzedElement();
 
         List<Object[]> returnDataList = new ArrayList<Object[]>();
         if (analysisDataSet.getData() == null || analysisDataSet.getData().size() < 0) {
             return returnDataList;
         }
         if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
-            List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(currIndicator
-                    .getAnalyzedElement().eContainer()));
-            int offset = columnElementList.indexOf(currIndicator.getAnalyzedElement());
+            int offset = 0;
+            if (analysisElement instanceof TdColumn) {
+                List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysisElement
+                        .eContainer()));
+
+                offset = columnElementList.indexOf(analysisElement);
+            } else if (analysisElement instanceof TdXMLElement) {
+                TdXMLElement parentElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(XmlElementHelper
+                        .getParentElement(SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analysisElement)));
+                List<TdXMLElement> xmlElementList = DqRepositoryViewService.getXMLElements(parentElement);
+                offset = xmlElementList.indexOf(analysisElement);
+            }
             for (Object[] obj : dataList) {
                 Object[] newObj = new Object[1];
                 newObj[0] = obj[offset];
@@ -245,17 +259,30 @@ public class DrillDownEditorInput implements IEditorInput {
         return returnDataList;
     }
 
-    public List<TdColumn> filterAdaptColumnHeader() {
+    public List<String> filterAdaptColumnHeader() {
         // get columnHeader
+
         Indicator indicator = this.getCurrIndicator();
+        ModelElement analysisElement = indicator.getAnalyzedElement();
         String menuType = this.getMenuType();
-        List<TdColumn> columnElementList = null;
+        List<String> columnElementList = new ArrayList<String>();
         if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALUE_TYPE)) {
-            columnElementList = new ArrayList<TdColumn>();
-            columnElementList.add((TdColumn) indicator.getAnalyzedElement());
-        } else {
-            columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
-                    .eContainer()));
+
+            columnElementList.add(indicator.getAnalyzedElement().getName());
+        } else if (analysisElement instanceof TdColumn) {
+            for (TdColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
+                    .eContainer()))) {
+                columnElementList.add(column.getName());
+            }
+
+        } else if (analysisElement instanceof TdXMLElement) {
+            TdXMLElement parentElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(XmlElementHelper
+                    .getParentElement(SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analysisElement)));
+            for (TdXMLElement xmlElement : DqRepositoryViewService.getXMLElements(parentElement)) {
+                if (!DqRepositoryViewService.hasChildren(xmlElement)) {
+                    columnElementList.add(xmlElement.getName());
+                }
+            }
         }
         return columnElementList;
     }

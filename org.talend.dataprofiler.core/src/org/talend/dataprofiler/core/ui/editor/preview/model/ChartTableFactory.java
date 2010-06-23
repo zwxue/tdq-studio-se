@@ -130,10 +130,12 @@ public final class ChartTableFactory {
                             try {
                                 AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
                                 if (analysis.getParameters().isStoreData()) {
-                                    if (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
-                                            || analyDataSet.getFrequencyData() != null
-                                            && analyDataSet.getFrequencyData().size() > 0
-                                            || analyDataSet.getPatternData() != null && analyDataSet.getPatternData().size() > 0) {
+                                    if (analyDataSet != null
+                                            && (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
+                                                    || analyDataSet.getFrequencyData() != null
+                                                    && analyDataSet.getFrequencyData().size() > 0 || analyDataSet
+                                                    .getPatternData() != null
+                                                    && analyDataSet.getPatternData().size() > 0)) {
                                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
                                                 dataEntity);
                                         for (final MenuItemEntity itemEntity : itemEntities) {

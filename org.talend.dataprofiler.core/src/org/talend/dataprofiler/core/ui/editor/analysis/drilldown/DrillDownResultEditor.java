@@ -45,7 +45,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 
 /**
@@ -200,10 +199,10 @@ public class DrillDownResultEditor extends EditorPart {
 
     private void addTableColumn(DrillDownEditorInput ddEditorInput, Table table) {
 
-        List<TdColumn> columnElementList = ddEditorInput.filterAdaptColumnHeader();
-        for (TdColumn columnElement : columnElementList) {
+        List<String> columnElementList = ddEditorInput.filterAdaptColumnHeader();
+        for (String columnElement : columnElementList) {
             TableColumn column = new TableColumn(table, SWT.CENTER);
-            column.setText(columnElement.getName());
+            column.setText(columnElement);
         }
     }
 

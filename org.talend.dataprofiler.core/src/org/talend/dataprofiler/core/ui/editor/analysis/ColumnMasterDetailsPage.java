@@ -883,9 +883,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
             analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
-        if (analysisHandler.isMdmConnection() && ExecutionLanguage.JAVA.getLiteral().equals(this.execLang)) {
-            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mdmSQL"), false); //$NON-NLS-1$
-        }
+        // feature 13573 add the support to java engine
+        // if (analysisHandler.isMdmConnection() && ExecutionLanguage.JAVA.getLiteral().equals(this.execLang)) {
+        //            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mdmSQL"), false); //$NON-NLS-1$
+        // }
         return new ReturnCode(true);
     }
 
