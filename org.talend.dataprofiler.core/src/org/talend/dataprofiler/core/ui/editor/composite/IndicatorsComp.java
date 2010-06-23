@@ -46,6 +46,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
+import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.resource.relational.Column;
 
@@ -107,8 +108,9 @@ public class IndicatorsComp extends AbstractPagePart {
     public void setInput(Object... obj) {
         List<Indicator> indicatortList = new ArrayList<Indicator>();
         for (Object indicatorObj : obj) {
-            if (indicatorObj instanceof ColumnSetMultiValueIndicator) {
-                columnSetIndicator = (ColumnSetMultiValueIndicator) indicatorObj;
+            // for SimpleStatIndicator
+            if (indicatorObj instanceof SimpleStatIndicator) {
+                columnSetIndicator = (SimpleStatIndicator) indicatorObj;
                 for (Indicator indicator : IndicatorHelper.getIndicatorLeaves(columnSetIndicator)) {
                     indicatortList.add(indicator);
                 }

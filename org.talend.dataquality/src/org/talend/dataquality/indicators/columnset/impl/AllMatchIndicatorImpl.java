@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MatchingIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
@@ -468,4 +469,25 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getChildIndicators()
+     */
+    @Override
+    public EList<Indicator> getChildIndicators() {
+        EList<Indicator> indicators = super.getChildIndicators();
+        indicators.addAll(getCompositeRegexMatchingIndicators());
+        return indicators;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getIntegerValue()
+     */
+    @Override
+    public Long getIntegerValue() {
+        return getNotMatchingValueCount();
+    }
 } // AllMatchIndicatorImpl
