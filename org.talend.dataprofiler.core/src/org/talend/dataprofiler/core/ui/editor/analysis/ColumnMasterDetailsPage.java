@@ -567,7 +567,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
                 // "analyzed Columns",ExecutionLanguage only is Java.
                 if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {
-                    MessageUI.openWarning(execCombo.getShell(), DefaultMessagesImpl
+                    MessageUI.openWarning(DefaultMessagesImpl
                             .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
                     execCombo.setText(ExecutionLanguage.JAVA.getLiteral());
                     execLang = execCombo.getText();
