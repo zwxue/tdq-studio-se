@@ -36,7 +36,7 @@ public class SoundexLowFrequencyTableState extends FrequencyTypeStates {
 
     @Override
     protected void sortIndicator(FrequencyExt[] frequencyExt) {
-        ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.SOUNDEX_FREQUENCY_COMPARATOR_ID);
+        ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.SOUNDEX_LOW_FREQUENCY_COMPARATOR_ID);
     }
 
     @Override
