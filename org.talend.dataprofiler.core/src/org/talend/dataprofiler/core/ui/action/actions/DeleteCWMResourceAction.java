@@ -49,6 +49,7 @@ public class DeleteCWMResourceAction extends Action {
      */
     public void run() {
         try {
+
             for (IFile file : selectedFiles) {
 
                 ResourceFileMap resourceFileMap = ModelElementFileFactory.getResourceFileMap(file);
@@ -63,8 +64,9 @@ public class DeleteCWMResourceAction extends Action {
 
                     if (runStatus) {
                         resourceFileMap.delete(file);
+                    } else {
+                        break;
                     }
-
                 }
             }
 
