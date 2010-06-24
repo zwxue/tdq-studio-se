@@ -41,6 +41,7 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.impl.SoundexFreqIndicatorImpl;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -175,6 +176,13 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
             }
 
+        }
+        List<Indicator> indicators = analysis.getResults().getIndicators();
+        //MOD qiongli 2010-6-23,bug 13654
+        for (Indicator indicator : indicators) {
+        	if(indicator instanceof SoundexFreqIndicatorImpl){
+        		((SoundexFreqIndicatorImpl) indicator).soundexForJavaEngine();
+        	}
         }
         // --- release resultset
         resultSet.close();
