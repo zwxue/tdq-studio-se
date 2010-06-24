@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -23,16 +24,16 @@ public final class MessageUI {
     private MessageUI() {
     }
 
-    public static void openError(String message) {
-        MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("MessageUI.Error"), message); //$NON-NLS-1$
+    public static void openError(Shell shell, String message) {
+        MessageDialogWithToggle.openError(shell, DefaultMessagesImpl.getString("MessageUI.Error"), message); //$NON-NLS-1$
     }
 
-    public static void openWarning(String message) {
-        MessageDialogWithToggle.openWarning(null, DefaultMessagesImpl.getString("MessageUI.Warning"), message); //$NON-NLS-1$
+    public static void openWarning(Shell shell, String message) {
+        MessageDialogWithToggle.openWarning(shell, DefaultMessagesImpl.getString("MessageUI.Warning"), message); //$NON-NLS-1$
     }
 
-    public static boolean openConfirm(String message) {
-        return MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("MessageUI.Confirm"), message); //$NON-NLS-1$
+    public static boolean openConfirm(Shell shell, String message) {
+        return MessageDialogWithToggle.openConfirm(shell, DefaultMessagesImpl.getString("MessageUI.Confirm"), message); //$NON-NLS-1$
     }
 
 }
