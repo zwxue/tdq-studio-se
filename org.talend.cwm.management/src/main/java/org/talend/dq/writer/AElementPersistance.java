@@ -104,16 +104,21 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         ReturnCode rc = new ReturnCode();
 
         if (!check(file)) {
-            rc.setReturnCode("Failed to save pattern, the extent file name is wrong.", false);
+            rc.setReturnCode("Failed to save! the extent file name is wrong.", false);
         } else {
 
             String filePath = file.getFullPath().toString();
+
             if (!util.addEObjectToResourceSet(filePath, element)) {
                 rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
             } else {
                 if (element instanceof RenderedObject) {
                     ((RenderedObject) element).setFileName(filePath);
                 }
+
+                String propPaht = file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION)
+                        .toString();
+                MetadataHelper.setPropertyPath(propPaht, element);
 
                 rc = save(element);
             }

@@ -13,7 +13,15 @@
 package org.talend.dq.writer.impl;
 
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.writer.AElementPersistance;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwmx.analysis.informationreporting.Report;
+import orgomg.cwmx.analysis.informationset.Rule;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -132,6 +140,34 @@ public final class ElementWriterFactory {
         } else if (FactoriesUtil.SOFTWARE_SYSTEM.equals(fileExtension)) {
             return createSoftwareSystemWriter();
         } else if (FactoriesUtil.TALEND_DEFINITION.equals(fileExtension)) {
+            return createSYSIndicatorWriter();
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "create".
+     * 
+     * @param element
+     * @return
+     */
+    public AElementPersistance create(ModelElement element) {
+        if (element instanceof Analysis) {
+            return createAnalysisWrite();
+        } else if (element instanceof Report) {
+            return createReportWriter();
+        } else if (element instanceof DataProvider) {
+            return createDataProviderWriter();
+        } else if (element instanceof Pattern) {
+            return createPatternWriter();
+        } else if (element instanceof IndicatorDefinition) {
+            return createUDIndicatorWriter();
+        } else if (element instanceof Rule) {
+            return createdRuleWriter();
+        } else if (element instanceof SoftwareSystem) {
+            return createSoftwareSystemWriter();
+        } else if (element instanceof IndicatorDefinition) {
             return createSYSIndicatorWriter();
         }
 

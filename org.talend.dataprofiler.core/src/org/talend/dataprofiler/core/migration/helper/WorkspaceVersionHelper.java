@@ -58,7 +58,11 @@ public final class WorkspaceVersionHelper {
      * @return
      */
     public static ProductVersion getVesion() {
-        return getVesion(getVersionFile());
+        if (productVersion == null) {
+            productVersion = getVesion(getVersionFile());
+        }
+
+        return productVersion;
     }
 
     /**
@@ -81,25 +85,24 @@ public final class WorkspaceVersionHelper {
 
         File versionFile = versionPath == null ? null : versionPath.toFile();
 
-        if (productVersion == null) {
-            try {
-                if (versionFile != null && versionFile.exists()) {
-                    Properties pros = new Properties();
+        ProductVersion pVersion = null;
+        try {
+            if (versionFile != null && versionFile.exists()) {
+                Properties pros = new Properties();
 
-                    pros.load(new FileInputStream(versionFile));
-                    String version = pros.getProperty(VERSION);
-                    if (version != null && !"".equals(version)) { //$NON-NLS-1$
-                        productVersion = ProductVersion.fromString(version);
-                    }
-                } else {
-                    productVersion = new ProductVersion(0, 0, 0);
+                pros.load(new FileInputStream(versionFile));
+                String version = pros.getProperty(VERSION);
+                if (version != null && !"".equals(version)) { //$NON-NLS-1$
+                    pVersion = ProductVersion.fromString(version);
                 }
-            } catch (Exception e) {
-                log.error(e, e);
+            } else {
+                pVersion = new ProductVersion(0, 0, 0);
             }
+        } catch (Exception e) {
+            log.error(e, e);
         }
 
-        return productVersion;
+        return pVersion;
     }
 
     /**

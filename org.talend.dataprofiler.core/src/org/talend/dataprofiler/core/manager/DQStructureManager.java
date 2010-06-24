@@ -43,11 +43,15 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.writer.AElementPersistance;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * Create the folder structure for the DQ Reponsitory view.
@@ -322,11 +326,20 @@ public final class DQStructureManager {
         if (inputStream == null) {
             return;
         }
+
         IFile file = folder.getFile(fileName);
-        if (file.exists()) {
-            return;
+        if (!file.exists()) {
+            file.create(inputStream, false, null);
+
+            ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
+            if (modelElement != null) {
+                AElementPersistance writer = ElementWriterFactory.getInstance().create(file.getFileExtension());
+                if (writer != null) {
+                    writer.save(modelElement);
+                }
+            }
         }
-        file.create(inputStream, false, null);
+
     }
 
     public boolean isPathValid(IPath path, String label) {

@@ -14,14 +14,10 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
-import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
-import org.talend.dq.writer.impl.DQRuleWriter;
+import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -50,18 +46,10 @@ public class CreateElementPropertiesTask extends AWorkspaceTask {
         ModelElement[] allElements = ModelElementFileFactory.getALLElements(false);
 
         for (ModelElement element : allElements) {
-            String propertyPath = MetadataHelper.getPropertyPath(element);
 
-            if (propertyPath == null) {
-                DQRuleWriter writer = ElementWriterFactory.getInstance().createdRuleWriter();
-                writer.savePerperties(element);
-            } else {
-                IFile propertyFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(propertyPath));
-                if (!propertyFile.exists()) {
-                    DQRuleWriter writer = ElementWriterFactory.getInstance().createdRuleWriter();
-                    writer.savePerperties(element);
-                }
-            }
+            AElementPersistance writer = ElementWriterFactory.getInstance().create(element);
+
+            writer.save(element);
         }
 
         return true;
