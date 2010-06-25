@@ -53,6 +53,7 @@ public class SoundexLowFreqIndicatorImpl extends SoundexFreqIndicatorImpl implem
      */
     public boolean finalizeComputation() {
         final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
+		soundexForJavaEngine();
         MapValueSorter mvs=new MapValueSorter();
         List<Object> ls=mvs.sortMap(this.getValueToDistinctFreq(), true);
         List<Object> mostFrequent = getOrderElements(ls, topN,true);
