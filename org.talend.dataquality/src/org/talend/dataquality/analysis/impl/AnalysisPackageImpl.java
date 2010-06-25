@@ -828,6 +828,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         addEEnumLiteral(analysisTypeEEnum, AnalysisType.CATALOG);
         addEEnumLiteral(analysisTypeEEnum, AnalysisType.COLUMN_CORRELATION);
         addEEnumLiteral(analysisTypeEEnum, AnalysisType.COLUMN_SET);
+        addEEnumLiteral(analysisTypeEEnum, AnalysisType.BUSINESS_RULE);
 
         initEEnum(executionLanguageEEnum, ExecutionLanguage.class, "ExecutionLanguage");
         addEEnumLiteral(executionLanguageEEnum, ExecutionLanguage.SQL);

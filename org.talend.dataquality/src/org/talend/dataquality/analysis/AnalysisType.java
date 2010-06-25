@@ -117,7 +117,15 @@ public enum AnalysisType implements Enumerator {
      * @generated
      * @ordered
      */
-    COLUMN_SET(9, "COLUMN_SET", "Column Set Analysis");
+    COLUMN_SET(10, "COLUMN_SET", "Column Set Analysis"), /**
+     * The '<em><b>BUSINESS RULE</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #BUSINESS_RULE_VALUE
+     * @generated
+     * @ordered
+     */
+    BUSINESS_RULE(11, "BUSINESS_RULE", "Business Rule Analysis");
 
     /**
      * The '<em><b>COLUMN</b></em>' literal value.
@@ -282,7 +290,22 @@ public enum AnalysisType implements Enumerator {
      * @generated
      * @ordered
      */
-    public static final int COLUMN_SET_VALUE = 9;
+    public static final int COLUMN_SET_VALUE = 10;
+
+    /**
+     * The '<em><b>BUSINESS RULE</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>BUSINESS RULE</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #BUSINESS_RULE
+     * @model literal="Business Rule Analysis"
+     * @generated
+     * @ordered
+     */
+    public static final int BUSINESS_RULE_VALUE = 11;
 
     /**
      * An array of all the '<em><b>Type</b></em>' enumerators.
@@ -303,6 +326,7 @@ public enum AnalysisType implements Enumerator {
             CATALOG,
             COLUMN_CORRELATION,
             COLUMN_SET,
+            BUSINESS_RULE,
         };
 
     /**
@@ -363,6 +387,8 @@ public enum AnalysisType implements Enumerator {
             case MULTIPLE_COLUMN_VALUE: return MULTIPLE_COLUMN;
             case CATALOG_VALUE: return CATALOG;
             case COLUMN_CORRELATION_VALUE: return COLUMN_CORRELATION;
+            case COLUMN_SET_VALUE: return COLUMN_SET;
+            case BUSINESS_RULE_VALUE: return BUSINESS_RULE;
         }
         return null;
     }
