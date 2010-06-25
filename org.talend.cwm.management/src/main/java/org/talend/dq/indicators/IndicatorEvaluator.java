@@ -177,13 +177,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
             }
 
         }
-        List<Indicator> indicators = analysis.getResults().getIndicators();
-        //MOD qiongli 2010-6-23,bug 13654
-        for (Indicator indicator : indicators) {
-        	if(indicator instanceof SoundexFreqIndicatorImpl){
-        		((SoundexFreqIndicatorImpl) indicator).soundexForJavaEngine();
-        	}
-        }
         // --- release resultset
         resultSet.close();
         // --- close
