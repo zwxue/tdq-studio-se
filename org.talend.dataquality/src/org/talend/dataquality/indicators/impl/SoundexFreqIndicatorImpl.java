@@ -57,6 +57,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     protected HashMap<Object, Long> valueToDistinctFreq = VALUE_TO_DISTINCT_FREQ_EDEFAULT;
 
     private static Logger log = Logger.getLogger(SoundexFreqIndicatorImpl.class);
+    protected boolean isComputeCount=true;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -269,8 +270,8 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      * Run as JavaEngine.Set ValueToFreq and ValueToDistinctFreq
      * Add by qiongli 2010-6-22,bug 13654
      */
-    
-    public void soundexForJavaEngine(){
+
+    protected void soundexForJavaEngine(){
 		Iterator<Object> iterator = this.getValueToFreq().keySet().iterator();
 		Soundex sd = new Soundex();
 		HashMap<Object, Long> disctinctVfMap = new HashMap<Object, Long>();
@@ -280,18 +281,18 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 			String array[] = new String[3];
 			Object obj = iterator.next();
 			if (obj == null) {
-				array[0] = null;// col value
-				array[1] = sd.soundex(SpecialValueDisplay.NULL_FIELD);// to soundex value
+				array[0] = SpecialValueDisplay.NULL_FIELD;// col value
 				array[2] = String.valueOf(0);// distinct count
 			} else {
-				try {
-					array[0] = obj.toString();
-					array[1] = sd.soundex(array[0]);
-				} catch (IllegalArgumentException ex) {
-					log.warn("Soundex algorithm do not support the charactors: "+array[0]);
-					continue;
-				}
+				array[0] = obj.toString();
 				array[2] = String.valueOf(1);
+			}
+			try {
+				array[1] = sd.soundex(array[0]);// soundex value
+			} catch (IllegalArgumentException ex) {
+				log.warn("Soundex algorithm do not support the charactors: "
+						+ array[0]);
+				continue;
 			}
 			valueToFreqLs.add(array);
 		}
@@ -330,6 +331,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     @Override
     public boolean finalizeComputation() {
         final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
+        soundexForJavaEngine();
 		MapValueSorter mvs = new MapValueSorter();
 		List<Object> ls = mvs.sortMap(this.valueToDistinctFreq, false);
 		List<Object> mostDistinctFrequent = getOrderElements(ls, topN, false);
