@@ -305,4 +305,22 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         return new ReturnCode(true);
     }
 
+    /**
+     * 
+     * DOC zshen DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat
+     * sheets.
+     */
+    public void openColumnsSetASelectionDialog() {
+        anaColumnCompareViewer.openColumnsSetASelectionDialog();
+    }
+
+    /**
+     * 
+     * DOC zshen DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat
+     * sheets.
+     */
+    public void openColumnsSetBSelectionDialog() {
+        anaColumnCompareViewer.openColumnsSetBSelectionDialog();
+    }
+
 }

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.Properties;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.Wizard;
@@ -25,6 +26,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -38,6 +40,8 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
     private static final int WIDTH = 400;
 
     private static final int HEIGHT = 350;
+
+    private final static int MDM_CONNECTION_TYPE_VALUE = 1;
 
     private IFolder folder;
 
@@ -82,7 +86,20 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
+        if (params == null || params.length == 0) {
+            return;
+        }
+        Integer connectionType = null;
+        if (NumberUtils.isNumber(params[0])) {
+            connectionType = NumberUtils.toInt(params[0]);
+        }
+        switch (connectionType) {
+        case MDM_CONNECTION_TYPE_VALUE:
+            this.folder = ResourceManager.getMDMConnectionFolder();
+            break;
+        default:
+            this.folder = ResourceManager.getConnectionFolder();
+        }
         run();
     }
-
 }

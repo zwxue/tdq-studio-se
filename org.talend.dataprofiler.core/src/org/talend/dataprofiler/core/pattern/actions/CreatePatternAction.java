@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern.actions;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
@@ -19,6 +20,8 @@ import org.eclipse.help.IHelpResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.cheatsheets.ICheatSheetAction;
+import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -28,6 +31,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.PatternParameter;
+import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -36,7 +40,7 @@ import org.talend.top.repository.ProxyRepositoryManager;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  * 
  */
-public class CreatePatternAction extends Action {
+public class CreatePatternAction extends Action implements ICheatSheetAction {
 
     private IFolder folder;
 
@@ -47,6 +51,10 @@ public class CreatePatternAction extends Action {
     private String lanuage;
 
     private String purpose;
+
+    public CreatePatternAction() {
+
+    }
 
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
@@ -114,5 +122,37 @@ public class CreatePatternAction extends Action {
             if (WizardDialog.OK == dialog.open())
                 ProxyRepositoryManager.getInstance().save();
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
+     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
+     */
+    public void run(String[] params, ICheatSheetManager manager) {
+        if (params == null || params.length == 0) {
+            return;
+        }
+        Integer patternType = null;
+        if (NumberUtils.isNumber(params[0])) {
+            patternType = NumberUtils.toInt(params[0]);
+        }
+        if (patternType != null) {
+            switch (patternType.intValue()) {
+            case ExpressionType.SQL_LIKE_VALUE:
+                this.type = ExpressionType.SQL_LIKE;
+                this.folder = ResourceManager.getPatternSQLFolder();
+                setText(DefaultMessagesImpl.getString("CreatePatternAction.newSQLPattern")); //$NON-NLS-1$
+                break;
+            case ExpressionType.REGEXP_VALUE:
+                this.type = ExpressionType.REGEXP;
+                this.folder = ResourceManager.getPatternRegexFolder();
+                setText(DefaultMessagesImpl.getString("CreatePatternAction.newRegularPattern")); //$NON-NLS-1$
+                break;
+            }
+        }
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_PATTERN));
+        this.run();
     }
 }

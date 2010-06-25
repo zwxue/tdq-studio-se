@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Create a new columnSet analysis">
+   <intro>
+      <description>
+      This tutorial guides you through the creation of an analysis of the content of a set of columns.And
+         the result of this analysis will give the following information:
+         	row count
+			distinct count
+			unique count
+			duplicate count
+      </description>
+   </intro>
+   <item
+         skip="false"
+         title="Set the analysis metadata.">
+      <description>
+         This step opens the analysis creation wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a column</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens an editor in which you can define the settings of the analysis.
+      </description>
+       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="10">
+      </action>
+   </item>
+   <item
+         title="Select the columns to analyze.">
+      <description>
+         Click on the<b> &quot;Select columns to analyze&quot;</b> hyperlink (or <b> click the link below</b>).
+
+If you know the content of a column, set its type to either &quot;Nominal&quot;, or &quot;Interval&quot;. &quot;Nominal&quot; means that the column contains textual values (no order, no mathematical function applicable). On the other hand, &quot;Interval&quot; means that mathematical functions (such as the average) can be used. This type is to be set in the editor.
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="10">
+      </action>
+   </item>
+   <item
+         title="Set the indicators&apos; options.">
+      <description>
+         Click on the <b> &quot;options&quot;</b>  button for each indicator you want to set the options to. By default, reasonable options are chosen.
+      </description>
+   </item>
+   <item
+         title="Choose a pattern for each column">
+      <description>
+         For each column, you can add a pattern indicator. There are two kinds of patterns. The regular patterns which are regular expressions (not supported by all databases) and the SQL patterns which are the patterns that you add in a &quot;LIKE&quot; clause. Click on the <b>&quot;Add Pattern&quot;</b> button near each column or <b>drag&amp;drop</b> a pattern from the repository view onto a column.
+      </description>
+   </item>
+   <item
+         title="Filter data to analyze.">
+      <description>
+         This step is optional. By default, all the data are analyzed. 
+To filter data, you must write a SQL &quot;where&quot; clause in the data filter text area.
+      </description>
+   </item>
+   <item
+         title="Analyze.">
+      <description>
+         To execute the analysis, click on the  <b>&quot;Run&quot;</b>  button at the bottom of the editor (<b>or click the link below</b>).
+You can run the analysis with a context menu on the &quot;Analysis&quot; objects in the &quot;DQ Repository&quot; view
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      </action>
+   </item>
+   <item
+         title="Refresh the graphics">
+      <description>
+         To generate the graphics of the analysis from the data, click on the <b>&quot;Refresh graphics&quot;</b>  hyperlink (<b>or click the link below</b>). &quot;Refresh graphics&quot; means that graphics are displayed with the last computed data.
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      </action>
+   </item>
+</cheatsheet>

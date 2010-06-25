@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Title">
+   <intro>
+      <description>
+         This analysis helps you to detect anomalies in your column dependencies. It determines to which extent the values of a column A determines the values of a column B. This relationship is noted as A-&gt;B. 
+
+As an example, the value of the “City” column determines the value of the “Country” columns, except in some rare cases.
+      </description>
+   </intro>
+   <item
+         title="Set the analysis metadata.">
+      <description>
+         This step opens the analysis creation wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a column</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens an editor in which you can define the settings of the analysis.
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="10">
+      </action>
+   </item>
+   <item
+         title="Select the left columns to analyze.">
+      <description>
+         Click on the<b> &quot;Select columns from A set&quot;</b> hyperlink (or <b> click the link below</b>).
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="10" param2="A">
+      </action>
+   </item>
+   <item
+         title="Select the right columns to analyze.">
+      <description>
+         Click on the<b> &quot;Select columns from B set&quot;</b> hyperlink (or <b> click the link below</b>).
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="10" param2="B">
+      </action>
+   </item>
+   <item
+         title="Analyze.">
+      <description>
+         To execute the analysis, click on the &quot;Run&quot; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &quot;Analysis&quot; object in the &quot;DQ Repository&quot; view.
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
+   </item>
+</cheatsheet>

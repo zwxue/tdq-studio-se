@@ -822,6 +822,21 @@
            id="org.talend.dataprofiler.core.category"
            name="Talend - Cheat Sheets">
      </category>
+     <category
+           id="org.talend.dataprofiler.core.category.database"
+           name="Database"
+           parentCategory="org.talend.dataprofiler.core.category">
+     </category>
+     <category
+           id="org.talend.dataprofiler.core.category.analysis"
+           name="Analysis"
+           parentCategory="org.talend.dataprofiler.core.category">
+     </category>
+     <category
+           id="org.talend.dataprofiler.core.category.indicator"
+           name="Indicator"
+           parentCategory="org.talend.dataprofiler.core.category">
+     </category>
      <cheatsheet
            category="org.talend.dataprofiler.core.category"
            composite="true"
@@ -841,27 +856,12 @@
            id="org.talend.dataprofiler.core.cheatsheet2"
            name="Database Connection Creation">
      </cheatsheet>
-     <category
-           id="org.talend.dataprofiler.core.category.database"
-           name="Database"
-           parentCategory="org.talend.dataprofiler.core.category">
-     </category>
-     <category
-           id="org.talend.dataprofiler.core.category.analysis"
-           name="Analysis"
-           parentCategory="org.talend.dataprofiler.core.category">
-     </category>
      <cheatsheet
            category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/ConnectionAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.connection.analysis"
            name="Connection Analysis Creation">
      </cheatsheet>
-     <category
-           id="org.talend.dataprofiler.core.category.indicator"
-           name="Indicator"
-           parentCategory="org.talend.dataprofiler.core.category">
-     </category>
      <cheatsheet
            category="org.talend.dataprofiler.core.category.analysis"
            contentFile="cheatsheets/CatalogAnalysis_cheat.xml"
@@ -903,7 +903,63 @@
            contentFile="cheatsheets/NominalCorrelationAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.nominalCorrelation.analysis"
            name="Nominal Correlation Analysis Creation">
-     </cheatsheet>             
+     </cheatsheet>
+    <cheatsheet
+          category="org.talend.dataprofiler.core.category.analysis"
+          composite="false"
+          contentFile="cheatsheets/ColumnSetAnalysis_cheat.xml"
+          id="org.talend.dataprofiler.core.cheatsheet.columnSet.analysis"
+          name="Column Set Annlysis Creation">
+    </cheatsheet>
+    <cheatsheet
+          category="org.talend.dataprofiler.core.category.analysis"
+          composite="false"
+          contentFile="cheatsheets/FunctionalDependAnalysis_cheat.xml"
+          id="org.talend.dataprofiler.core.cheatsheet.functionDependency.analysis"
+          name="Functionial Dependency Analysis Creation">
+    </cheatsheet>
+    <cheatsheet
+          category="org.talend.dataprofiler.core.category"
+          composite="false"
+          contentFile="cheatsheets/BusinessRuleAnalysis_cheat.xml"
+          id="org.talend.dataprofiler.core.cheatsheet.bussinessRule.analysis"
+          name="Business Rule Analysis">
+    </cheatsheet>
+    <cheatsheet
+          category="org.talend.dataprofiler.core.category"
+          composite="false"
+          contentFile="cheatsheets/PatternSql_cheat.xml"
+          id="org.talend.dataprofiler.core.cheatsheet.libraries.pattern.sql"
+          name="Pattern Sql">
+    </cheatsheet>
+    <cheatsheet
+          category="org.talend.dataprofiler.core.category"
+          composite="false"
+          contentFile="cheatsheets/PatternRegex_cheat.xml"
+          id="org.talend.dataprofiler.core.cheatsheet.libraries.pattern.regex"
+          name="Pattern Regex">
+    </cheatsheet>
+    <cheatsheet
+          category="org.talend.dataprofiler.core.category"
+          composite="false"
+          contentFile="cheatsheets/DqRule_cheat.xml"
+          id="org.talend.dataprofiler.core.cheatsheet.libraries.rules.sql"
+          name="Dq Rule">
+    </cheatsheet>
+    <cheatsheet
+          category="org.talend.dataprofiler.core.category"
+          composite="false"
+          contentFile="cheatsheets/SourceFile_cheat.xml"
+          id="org.talend.dataprofiler.core.cheatsheet.libraries.rules.source"
+          name="Source File">
+    </cheatsheet>
+    <cheatsheet
+          category="org.talend.dataprofiler.core.category.database"
+          composite="false"
+          contentFile="cheatsheets/SourceFile_cheat.xml"
+          id="org.talend.dataprofiler.core.cheatsheet.database.mdmConnection"
+          name="MDMConnection">
+    </cheatsheet>             
   </extension>
    
    <extension
