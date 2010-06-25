@@ -80,6 +80,8 @@ public class FileSystemExportWriter implements IImexWriter {
      * [])
      */
     public void finish(ItemRecord[] records) throws IOException {
+        ItemRecord.clear();
+
         if (PluginChecker.isTDCPLoaded()) {
             IFile projFile = ResourceManager.getRootProject().getFile("talend.project");
             copyFileToDest(projFile);

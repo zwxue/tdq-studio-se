@@ -55,6 +55,17 @@ public class ImportWizard extends Wizard {
     /*
      * (non-Javadoc)
      * 
+     * @see org.eclipse.jface.wizard.Wizard#performCancel()
+     */
+    @Override
+    public boolean performCancel() {
+        ItemRecord.clear();
+        return super.performCancel();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override

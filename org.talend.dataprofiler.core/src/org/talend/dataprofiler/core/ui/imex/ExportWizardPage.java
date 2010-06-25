@@ -15,8 +15,8 @@ package org.talend.dataprofiler.core.ui.imex;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -38,13 +38,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
-import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
-import org.talend.dq.factory.ModelElementFileFactory;
-import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -211,19 +207,17 @@ public class ExportWizardPage extends WizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 TreeItem item = (TreeItem) e.item;
-                File sfile = (File) item.getData();
-                IFile sIFile = ResourceService.file2IFile(sfile);
-                if (sIFile != null) {
-                    File[] dependencies = computeDependencies(sIFile);
+                ItemRecord record = (ItemRecord) item.getData();
 
-                    for (File file : dependencies) {
-                        repositoryTree.setChecked(file, item.getChecked());
+                if (record.getFile().isFile()) {
+                    for (File file : record.getDependencyMap().keySet()) {
+                        repositoryTree.setChecked(ItemRecord.findRecord(file), item.getChecked());
                     }
 
                     repositoryTree.refresh();
-                }
 
-                checkForErrors();
+                    checkForErrors();
+                }
             }
         });
 
@@ -249,12 +243,12 @@ public class ExportWizardPage extends WizardPage {
 
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
-            File file = record.getFile();
-            IFile iFile = ResourceService.file2IFile(file);
-            File[] dependencies = computeDependencies(iFile);
-            for (File depFile : dependencies) {
-                if (!repositoryTree.getChecked(depFile)) {
-                    errors.add("\"" + record.getElement().getName() + "\" miss dependency file :" + depFile.getName());
+            Map<File, ModelElement> dependencyMap = record.getDependencyMap();
+            for (File depFile : dependencyMap.keySet()) {
+                if (!repositoryTree.getChecked(ItemRecord.findRecord(depFile))) {
+                    ModelElement element = dependencyMap.get(depFile);
+                    String fileName = element != null ? element.getName() : depFile.getName();
+                    errors.add("\"" + record.getElement().getName() + "\" miss dependency : " + fileName);
                 }
             }
         }
@@ -273,33 +267,6 @@ public class ExportWizardPage extends WizardPage {
      */
     protected void updatePageStatus() {
         setPageComplete(getErrorMessage() == null);
-    }
-
-    /**
-     * DOC bZhou Comment method "computeDependencies".
-     * 
-     * @param elements
-     * @return
-     */
-    protected File[] computeDependencies(IFile... elements) {
-        List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
-        List<File> dependencyFiles = new ArrayList<File>();
-
-        ModelElement[] modelElements = ModelElementFileFactory.getModelElements(elements);
-        for (ModelElement melement : modelElements) {
-            ModelElementHelper.iterateClientDependencies(melement, dependencyElements);
-        }
-
-        for (ModelElement element : dependencyElements) {
-            ResourceFileMap fileMap = ModelElementFileFactory.getResourceFileMap(element);
-            if (fileMap != null) {
-                IFile file = fileMap.findCorrespondingFile(element);
-                if (file != null && file.exists()) {
-                    dependencyFiles.add(file.getLocation().toFile());
-                }
-            }
-        }
-        return dependencyFiles.toArray(new File[dependencyFiles.size()]);
     }
 
     /**
@@ -334,10 +301,12 @@ public class ExportWizardPage extends WizardPage {
      * 
      * @return
      */
-    private Object computInput() {
+    private ItemRecord computInput() {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        return specifiedPath == null ? ResourceManager.getRootProject().getLocation().toFile() : workspace.getRoot().getFolder(
-                new Path(specifiedPath)).getLocation().toFile();
+        File file = specifiedPath == null ? ResourceManager.getRootProject().getLocation().toFile() : workspace.getRoot()
+                .getFolder(new Path(specifiedPath)).getLocation().toFile();
+
+        return new ItemRecord(file);
     }
 
     /**
@@ -384,10 +353,10 @@ public class ExportWizardPage extends WizardPage {
 
         Object[] checkedElements = repositoryTree.getCheckedElements();
         for (Object obj : checkedElements) {
-            if (obj instanceof File) {
-                File file = (File) obj;
-                if (file.isFile()) {
-                    itemRecords.add(new ItemRecord(file));
+            if (obj instanceof ItemRecord) {
+                ItemRecord record = (ItemRecord) obj;
+                if (record.getFile().isFile()) {
+                    itemRecords.add(record);
                 }
             }
         }

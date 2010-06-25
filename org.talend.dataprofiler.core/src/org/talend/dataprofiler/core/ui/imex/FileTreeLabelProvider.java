@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -41,8 +42,9 @@ public class FileTreeLabelProvider extends LabelProvider {
     @Override
     public Image getImage(Object element) {
         Image image = null;
-        if (element instanceof File) {
-            File file = (File) element;
+        if (element instanceof ItemRecord) {
+            ItemRecord record = (ItemRecord) element;
+            File file = record.getFile();
             String fileName = file.getName();
             if (file.isDirectory()) {
                 image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
@@ -117,8 +119,9 @@ public class FileTreeLabelProvider extends LabelProvider {
      */
     @Override
     public String getText(Object element) {
-        if (element instanceof File) {
-            File file = (File) element;
+        if (element instanceof ItemRecord) {
+            ItemRecord recored = (ItemRecord) element;
+            File file = recored.getFile();
             String fileExtension = new Path(file.getName()).getFileExtension();
             if (file.isFile() && FactoriesUtil.isEmfFile(fileExtension)) {
                 EMFUtil emfUtil = new EMFUtil();

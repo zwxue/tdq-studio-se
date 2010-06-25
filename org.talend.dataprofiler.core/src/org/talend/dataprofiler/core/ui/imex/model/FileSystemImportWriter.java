@@ -36,7 +36,6 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
-import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
@@ -140,18 +139,11 @@ public class FileSystemImportWriter implements IImexWriter {
      * @param record
      */
     private void checkDependency(ItemRecord record) {
-        List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
-
-        ModelElement element = record.getElement();
-
-        if (element != null) {
-            ModelElementHelper.iterateClientDependencies(element, dependencyElements);
-            for (ModelElement melement : dependencyElements) {
-                if (melement.eIsProxy()) {
-                    InternalEObject inObject = (InternalEObject) melement;
-                    record.addError("\"" + element.getName() + "\" missing dependented file : "
-                            + inObject.eProxyURI().toFileString());
-                }
+        for (ModelElement melement : record.getDependencyMap().values()) {
+            if (melement.eIsProxy()) {
+                InternalEObject inObject = (InternalEObject) melement;
+                record.addError("\"" + record.getElement().getName() + "\" missing dependented file : "
+                        + inObject.eProxyURI().toFileString());
             }
         }
     }
@@ -200,9 +192,7 @@ public class FileSystemImportWriter implements IImexWriter {
      * [])
      */
     public void finish(ItemRecord[] records) throws IOException {
-        for (ItemRecord record : records) {
-            record.clear();
-        }
+        ItemRecord.clear();
 
         IFile defintionFile = ResourceManager.getLibrariesFolder().getFile(".Talend.definition");
         if (!defintionFile.exists()) {

@@ -14,8 +14,11 @@ package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -25,11 +28,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -43,17 +48,25 @@ public class ItemRecord {
 
     private Property property;
 
-    private List<File> dependencyFiles;
+    private Map<File, ModelElement> dependencyMap;
 
     private List<String> errors = new ArrayList<String>();
 
+    private ItemRecord parent;
+
+    private ItemRecord[] childern;
+
     private static ResourceSet resourceSet;
+
+    private static List<ItemRecord> allItemRecords;
 
     public ItemRecord(File file) {
         this.file = file;
 
         try {
-            init();
+            if (file.isFile()) {
+                init();
+            }
         } catch (Exception e) {
             addError(e.getMessage());
         }
@@ -66,6 +79,12 @@ public class ItemRecord {
         if (resourceSet == null) {
             resourceSet = new ResourceSetImpl();
         }
+
+        if (allItemRecords == null) {
+            allItemRecords = new ArrayList<ItemRecord>();
+        }
+
+        allItemRecords.add(this);
 
         if (element == null && file != null) {
             URI fileURI = URI.createFileURI(file.getAbsolutePath());
@@ -123,20 +142,20 @@ public class ItemRecord {
     }
 
     /**
-     * Getter for dependencyFiles.
+     * Getter for dependencyMap.
      * 
-     * @return the dependencyFiles
+     * @return the dependencyMap
      */
-    public List<File> getDependencyFiles() {
-        return this.dependencyFiles;
+    public Map<File, ModelElement> getDependencyMap() {
+        return this.dependencyMap;
     }
 
     /**
      * DOC bZhou Comment method "computeDependencies".
      */
     private void computeDependencies() {
-        if (dependencyFiles == null) {
-            dependencyFiles = new ArrayList<File>();
+        if (dependencyMap == null) {
+            dependencyMap = new HashMap<File, ModelElement>();
 
             List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
 
@@ -148,7 +167,8 @@ public class ItemRecord {
                 Resource dResource = resourceSet.getResource(dURI, false);
 
                 if (dResource != null) {
-                    dependencyFiles.add(new File(dResource.getURI().toFileString()));
+                    File depFile = new File(dResource.getURI().toFileString());
+                    dependencyMap.put(depFile, dElement);
                 }
             }
         }
@@ -157,7 +177,7 @@ public class ItemRecord {
     /**
      * clear the resource set.
      */
-    public void clear() {
+    public static void clear() {
 
         if (resourceSet != null) {
             for (Resource resource : resourceSet.getResources()) {
@@ -167,7 +187,10 @@ public class ItemRecord {
             resourceSet = null;
         }
 
-        element = null;
+        if (allItemRecords != null) {
+            allItemRecords.clear();
+            allItemRecords = null;
+        }
     }
 
     /**
@@ -231,5 +254,116 @@ public class ItemRecord {
      */
     public ModelElement getElement() {
         return this.element;
+    }
+
+    /**
+     * Getter for parent.
+     * 
+     * @return the parent
+     */
+    public ItemRecord getParent() {
+        if (parent == null && file != null) {
+            parent = new ItemRecord(file.getParentFile());
+        }
+
+        return this.parent;
+    }
+
+    /**
+     * Getter for childern.
+     * 
+     * @return the childern
+     */
+    public ItemRecord[] getChildern() {
+        if (childern == null) {
+            List<ItemRecord> recordList = new ArrayList<ItemRecord>();
+
+            File[] listFiles = file.listFiles();
+
+            if (listFiles != null) {
+                for (File aFile : listFiles) {
+                    if (isValid(aFile)) {
+                        recordList.add(new ItemRecord(aFile));
+                    }
+                }
+            }
+
+            childern = recordList.toArray(new ItemRecord[recordList.size()]);
+        }
+
+        return this.childern;
+    }
+
+    /**
+     * DOC bZhou Comment method "isValid".
+     * 
+     * @param file
+     * @return
+     */
+    private boolean isValid(File file) {
+        if (file.isDirectory()) {
+            return isValidDirectory(file);
+        }
+
+        return isValidFile(file);
+    }
+
+    /**
+     * DOC bZhou Comment method "isValidFile".
+     * 
+     * @param file
+     * @return
+     */
+    private boolean isValidFile(File file) {
+        IPath path = new Path(file.getAbsolutePath());
+        IPath propPath = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+        File propFile = propPath.toFile();
+
+        return propFile.exists() && !StringUtils.equals(path.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION);
+    }
+
+    /**
+     * DOC bZhou Comment method "isTOPFile".
+     * 
+     * @param file
+     * @return
+     */
+    private boolean isValidDirectory(File file) {
+        String absolutePath = file.getAbsolutePath();
+
+        boolean tdqProject = false;
+
+        File[] listFiles = file.listFiles();
+        if (listFiles != null) {
+            for (File afile : listFiles) {
+                if (StringUtils.equals(afile.getName(), "talend.project")) {
+                    tdqProject = true;
+                    break;
+                }
+            }
+        }
+
+        return (absolutePath.indexOf(EResourceConstant.DATA_PROFILING.getName()) > 0
+                || absolutePath.indexOf(EResourceConstant.LIBRARIES.getName()) > 0
+                || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0
+                || StringUtils.equals(file.getName(), ReponsitoryContextBridge.PROJECT_DEFAULT_NAME) || tdqProject)
+                && !file.getName().startsWith(".");
+    }
+
+    /**
+     * DOC bZhou Comment method "findRecord".
+     * 
+     * @param file
+     * @return
+     */
+    public static ItemRecord findRecord(File file) {
+        for (ItemRecord record : allItemRecords) {
+            if (file.getAbsolutePath().equals(record.getFile().getAbsolutePath())) {
+                return record;
+            }
+        }
+
+        return null;
     }
 }
