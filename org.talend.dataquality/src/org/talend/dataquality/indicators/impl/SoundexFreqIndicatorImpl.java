@@ -57,7 +57,6 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     protected HashMap<Object, Long> valueToDistinctFreq = VALUE_TO_DISTINCT_FREQ_EDEFAULT;
 
     private static Logger log = Logger.getLogger(SoundexFreqIndicatorImpl.class);
-    protected boolean isComputeCount=true;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
