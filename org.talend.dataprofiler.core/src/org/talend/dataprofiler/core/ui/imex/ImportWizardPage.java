@@ -47,6 +47,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.resource.EResourceConstant;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -183,21 +184,20 @@ public class ImportWizardPage extends WizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 TreeItem item = (TreeItem) e.item;
-                File sfile = (File) item.getData();
+                ItemRecord record = (ItemRecord) item.getData();
 
-                if (sfile.isFile()) {
-                    ItemRecord record = new ItemRecord(sfile);
-
-                    List<File> dependencyFiles = record.getDependencyFiles();
-
-                    for (File file : dependencyFiles) {
-                        repositoryTree.setChecked(file, item.getChecked());
+                if (record.getFile().isFile()) {
+                    for (File file : record.getDependencyMap().keySet()) {
+                        ItemRecord findRecord = ItemRecord.findRecord(file);
+                        if (findRecord != null) {
+                            repositoryTree.setChecked(findRecord, item.getChecked());
+                        }
                     }
-
-                    repositoryTree.refresh();
-
-                    checkforErrors();
                 }
+
+                repositoryTree.refresh();
+
+                checkforErrors();
             }
         });
 
@@ -244,7 +244,7 @@ public class ImportWizardPage extends WizardPage {
     protected void dirTextModified() {
         File file = new File(dirTxt.getText());
         if (file.exists()) {
-            repositoryTree.setInput(file);
+            repositoryTree.setInput(new ItemRecord(file));
             repositoryTree.expandAll();
             TreeItem[] topItems = repositoryTree.getTree().getItems();
             for (TreeItem treeItem : topItems) {
@@ -289,14 +289,17 @@ public class ImportWizardPage extends WizardPage {
 
         IPath versionPath = dirPath.append(EResourceConstant.LIBRARIES.getPath()).append(".version.txt");
         if (!versionPath.toFile().exists()) {
-            dErrors.add("Invalid project!");
+            dErrors.add("Invalid Project! \nYou should only select a project folder, but not a worksapce folder or others.");
         }
 
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
-            for (File depFile : record.getDependencyFiles()) {
-                if (!repositoryTree.getChecked(depFile)) {
-                    dErrors.add("\"" + record.getElement().getName() + "\" miss dependency file :" + depFile.getName());
+            for (File depFile : record.getDependencyMap().keySet()) {
+                ModelElement element = record.getDependencyMap().get(depFile);
+
+                ItemRecord findRecord = ItemRecord.findRecord(depFile);
+                if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
+                    dErrors.add("\"" + record.getElement().getName() + "\" miss dependency :" + element.getName());
                 }
             }
         }
@@ -479,14 +482,13 @@ public class ImportWizardPage extends WizardPage {
 
         Object[] checkedElements = repositoryTree.getCheckedElements();
         for (Object obj : checkedElements) {
-            if (obj instanceof File) {
-                File file = (File) obj;
-                if (file.isFile()) {
-                    itemRecords.add(new ItemRecord(file));
+            if (obj instanceof ItemRecord) {
+                ItemRecord record = (ItemRecord) obj;
+                if (record.getFile().isFile()) {
+                    itemRecords.add(record);
                 }
             }
         }
-
         return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
     }
 
