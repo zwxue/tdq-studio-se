@@ -120,7 +120,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         finput = (FileEditorInput) reference.getEditorInput();
                         if (finput.getFile().equals(selectionFile)) {
                             IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true)).getActivePageInstance();
-                            if (reference instanceof IRuningStatusListener) {
+                            //MOD qiongli bug 13880
+//                            if (reference instanceof IRuningStatusListener) {
+                            if (activePageInstance instanceof IRuningStatusListener) {
                                 listener = (IRuningStatusListener) activePageInstance;
                             }
                         }
