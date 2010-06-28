@@ -82,7 +82,7 @@ public class OpenColumnSelectorAction extends Action implements ICheatSheetActio
                         page3.openColumnsSetBSelectionDialog();
                     }
                 }
-                page3.doSave(null);
+                // page3.doSave(null);
                 break;
             case AnalysisType.COLUMN_SET_VALUE:
                 ColumnSetMasterPage page0 = (ColumnSetMasterPage) editor.getMasterPage();

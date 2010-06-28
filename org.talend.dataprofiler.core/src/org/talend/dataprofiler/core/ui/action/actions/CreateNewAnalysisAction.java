@@ -89,7 +89,7 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         if (analysisCatigory != null) {
             switch (analysisCatigory) {
             case AnalysisType.BUSINESS_RULE_VALUE:
-                analysisType = AnalysisType.BUSINESS_RULE;
+                analysisType = AnalysisType.TABLE;
                 wizard = WizardFactory.createAnalysisWizard(analysisType);
                 break;
             case AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY_VALUE:

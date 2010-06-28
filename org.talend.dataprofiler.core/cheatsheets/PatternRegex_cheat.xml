@@ -11,7 +11,7 @@ Please refer to the documentation of your Database Management System for more de
    <item
          title="set regex pattern information and content">
       <description>
-         <b>Body</b>
+         This step opens the Regex pattern creation wizard. You can <b> right click</b> on the &quot;Libraries->Patterns->Regex&quot; folder or <b>click the link below</b>. This wizard helps you to fill the Regex pattern metadata (name, purpose, description and expression). At the end it opens an editor in which you can define the settings of the pattern.
       </description>
       <action class="org.talend.dataprofiler.core.pattern.actions.CreatePatternAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="0"/>
    </item>

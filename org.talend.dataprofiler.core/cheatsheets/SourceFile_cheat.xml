@@ -3,14 +3,14 @@
       title="create a new sql file">
    <intro>
       <description>
-         <b>Body</b>
+         create a new sql file
       </description>
    </intro>
    <item
          title="Set file name and sql content">
       <description>
-         <b>Body</b>
+         This step opens the source sql creation wizard. You can <b> right click</b> on the &quot;Libraries->source sql&quot; folder or <b>click the link below</b>. This wizard helps you to fill the source sql metadata (name and location). At the end it opens an editor in which you can define the settings of the content of sql.
       </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
+      <action class="org.talend.dataprofiler.core.sql.AddSqlFileAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
    </item>
 </cheatsheet>

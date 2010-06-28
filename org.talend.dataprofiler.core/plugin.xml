@@ -956,7 +956,7 @@
     <cheatsheet
           category="org.talend.dataprofiler.core.category.database"
           composite="false"
-          contentFile="cheatsheets/SourceFile_cheat.xml"
+          contentFile="cheatsheets/MdmConnection_cheat.xml"
           id="org.talend.dataprofiler.core.cheatsheet.database.mdmConnection"
           name="MDMConnection">
     </cheatsheet>             

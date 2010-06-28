@@ -3,13 +3,13 @@
       title="Create a new MDM connection">
    <intro>
       <description>
-         <b>Body</b>
+         create a MDM connection.
       </description>
    </intro>
    <item
          title="Set the connection metadata.">
       <description>
-         <b>Body</b>
+         setting metadata for connection(for name, password...).
       </description>
        <action class="org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="1"/>
    </item>

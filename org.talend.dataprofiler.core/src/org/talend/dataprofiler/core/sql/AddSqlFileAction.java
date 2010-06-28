@@ -25,9 +25,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.cheatsheets.ICheatSheetAction;
+import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -35,7 +38,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  * 
  */
-public class AddSqlFileAction extends Action {
+public class AddSqlFileAction extends Action implements ICheatSheetAction {
 
     protected static Logger log = Logger.getLogger(AddSqlFileAction.class);
 
@@ -50,6 +53,17 @@ public class AddSqlFileAction extends Action {
         setText(DefaultMessagesImpl.getString("AddSqlFileAction.createSQLFile")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.folder = folder;
+    }
+
+    /**
+     * 
+     * DOC zshen AddSqlFileAction constructor comment.
+     * 
+     */
+    public AddSqlFileAction() {
+        setText(DefaultMessagesImpl.getString("AddSqlFileAction.createSQLFile")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
+        this.folder = ResourceManager.getSourceFileFolder();
     }
 
     /*
@@ -80,6 +94,17 @@ public class AddSqlFileAction extends Action {
                 log.error(e, e);
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
+     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
+     */
+    public void run(String[] params, ICheatSheetManager manager) {
+        run();
+
     }
 
 }

@@ -34,6 +34,12 @@ public class CreateDQRulesAction extends Action implements ICheatSheetAction {
 
     private IFolder folder;
 
+    public CreateDQRulesAction() {
+        setText(DefaultMessagesImpl.getString("DQRulesAction.newDQRule")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_DQ));
+        this.folder = ResourceManager.getRulesSQLFolder();
+    }
+
     public CreateDQRulesAction(IFolder folder) {
         setText(DefaultMessagesImpl.getString("DQRulesAction.newDQRule")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_DQ));
@@ -65,9 +71,7 @@ public class CreateDQRulesAction extends Action implements ICheatSheetAction {
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
-        setText(DefaultMessagesImpl.getString("DQRulesAction.newDQRule")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_DQ));
-        this.folder = ResourceManager.getRulesSQLFolder();
+
         run();
     }
 }

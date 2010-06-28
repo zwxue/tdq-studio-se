@@ -3,13 +3,13 @@
       title="create a new DqRule">
    <intro>
       <description>
-         <b>Body</b>
+         create a new DQ Rule.
       </description>
    </intro>
    <item
-         title="Item">
+         title="set DQ Rule information and content ">
       <description>
-         <b>Body</b>
+         setting DQ Rule.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
    </item>
