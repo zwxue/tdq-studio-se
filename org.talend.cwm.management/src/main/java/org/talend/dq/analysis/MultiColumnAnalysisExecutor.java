@@ -26,14 +26,19 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -228,9 +233,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             // execute the sql statement for each indicator
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             for (Indicator indicator : indicators) {
-                if (!indicator.prepare()) {
-                    return traceError("No expressions found in the pattern both 'Java' and 'ALL_DATABASE_TYPE'.");
-                }
+                indicator.prepare();
                 // set the connection's catalog
                 if (this.catalogOrSchema != null) { // check whether null argument can be given
                     changeCatalog(this.catalogOrSchema, connection);
@@ -353,4 +356,45 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.ColumnAnalysisExecutor#check(org.talend.dataquality.analysis.Analysis)
+     */
+    @Override
+    protected boolean check(Analysis analysis) {
+
+        boolean check = super.check(analysis);
+        if (!check) {
+            return false;
+        } else {
+            EList<Indicator> indicators = analysis.getResults().getIndicators();
+            for (Indicator indicator : indicators) {
+                if (indicator instanceof AllMatchIndicator) {
+                    if (!checkAllMatchIndicator((AllMatchIndicator) indicator)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    protected boolean checkAllMatchIndicator(AllMatchIndicator indicator) {
+        EList<RegexpMatchingIndicator> indicators = indicator.getCompositeRegexMatchingIndicators();
+        String patternNames = "";
+        for (RegexpMatchingIndicator rmi : indicators) {
+            EList<Pattern> patterns = rmi.getParameters().getDataValidDomain().getPatterns();
+            for (Pattern p : patterns) {
+                if (null == DomainHelper.getJavaRegexp(p) && null == DomainHelper.getSQLRegexp(p)) {
+                    patternNames += System.getProperty("line.separator") + "\"" + p.getName() + "\"";
+                }
+            }
+        }
+        if ("" != patternNames) {
+            this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicator", patternNames);
+            return false;
+        }
+        return true;
+    }
 }
