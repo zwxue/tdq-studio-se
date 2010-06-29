@@ -69,6 +69,9 @@ public class CorrelationDataSorter extends ViewerSorter {
                 } else {
                     return ((Date) obj2).compareTo((Date) obj1);
                 }
+            } else if (obj1 instanceof Comparable) {
+                // MOD yyi 2010-06-29 for 13868
+                return ((Comparable) obj1).compareTo((Comparable) obj2);
             } else {
                 if (arrayIndex > 0) {
                     return obj1.toString().compareTo(obj2.toString());
