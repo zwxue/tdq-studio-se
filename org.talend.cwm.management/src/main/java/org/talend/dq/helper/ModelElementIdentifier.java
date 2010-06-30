@@ -13,6 +13,7 @@
 package org.talend.dq.helper;
 
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -21,12 +22,16 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
+import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 import orgomg.cwmx.analysis.informationreporting.util.InformationreportingSwitch;
 
 /**
- * DOC bZhou class global comment. Detailled comment
+ * 
+ * This class is a utility class to decide what's the real type of a model element.
+ * 
+ * Designed by zqin, 2010-6-25
  */
 public final class ModelElementIdentifier {
 
@@ -69,8 +74,17 @@ public final class ModelElementIdentifier {
         };
     };
 
+    public static final SoftwaredeploymentSwitch<SoftwareSystem> SOFTWARE = new SoftwaredeploymentSwitch<SoftwareSystem>() {
+
+        public SoftwareSystem caseSoftwareSystem(SoftwareSystem object) {
+            return object;
+        };
+    };
+
     /**
      * DOC bZhou Comment method "isAnalysis".
+     * 
+     * Decide it's an analysis or not.
      * 
      * @param element
      * @return
@@ -82,6 +96,8 @@ public final class ModelElementIdentifier {
     /**
      * DOC bZhou Comment method "isReport".
      * 
+     * Decide it's a report or not.
+     * 
      * @param element
      * @return
      */
@@ -91,6 +107,8 @@ public final class ModelElementIdentifier {
 
     /**
      * DOC bZhou Comment method "isPattern".
+     * 
+     * Decide it's a pattern or not.
      * 
      * @param element
      * @return
@@ -102,6 +120,8 @@ public final class ModelElementIdentifier {
     /**
      * DOC bZhou Comment method "isID".
      * 
+     * Decide it's an indicator defintion or not.
+     * 
      * @param element
      * @return
      */
@@ -111,6 +131,8 @@ public final class ModelElementIdentifier {
 
     /**
      * DOC bZhou Comment method "isDQRule".
+     * 
+     * Decide it's a dq rule or not.
      * 
      * @param element
      * @return
@@ -122,10 +144,24 @@ public final class ModelElementIdentifier {
     /**
      * DOC bZhou Comment method "isDataProvider".
      * 
+     * Decide it's a data provider or not.
+     * 
      * @param element
      * @return
      */
     public static boolean isDataProvider(ModelElement element) {
         return SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(element) != null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isSoftware".
+     * 
+     * Decide it's a software system or not.
+     * 
+     * @param element
+     * @return
+     */
+    public static boolean isSoftware(ModelElement element) {
+        return SOFTWARE.doSwitch(element) != null;
     }
 }

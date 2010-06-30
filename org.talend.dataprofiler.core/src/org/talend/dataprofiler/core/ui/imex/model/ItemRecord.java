@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.jfree.util.Log;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -68,7 +69,7 @@ public class ItemRecord {
                 init();
             }
         } catch (Exception e) {
-            addError(e.getMessage());
+            Log.error(e, e);
         }
     }
 

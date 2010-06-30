@@ -143,7 +143,7 @@ public final class DefinitionHandler {
     /**
      * plugin relative path to the default file.
      */
-    private static final String FILENAME = ".Talend." + FactoriesUtil.TALEND_DEFINITION; //$NON-NLS-1$
+    private static final String FILENAME = ".Talend." + FactoriesUtil.DEFINITION; //$NON-NLS-1$
 
     private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME; //$NON-NLS-1$
 

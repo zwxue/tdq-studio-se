@@ -13,15 +13,9 @@
 package org.talend.dq.writer.impl;
 
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.writer.AElementPersistance;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
-import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwmx.analysis.informationreporting.Report;
-import orgomg.cwmx.analysis.informationset.Rule;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -82,15 +76,6 @@ public final class ElementWriterFactory {
     }
 
     /**
-     * DOC bZhou Comment method "createUDIndicatorWriter".
-     * 
-     * @return
-     */
-    public UDIndicatorWriter createUDIndicatorWriter() {
-        return new UDIndicatorWriter();
-    }
-
-    /**
      * DOC bZhou Comment method "createdRuleWriter".
      * 
      * @return
@@ -109,12 +94,12 @@ public final class ElementWriterFactory {
     }
 
     /**
-     * DOC bZhou Comment method "createSYSIndicatorWriter".
+     * DOC bZhou Comment method "createIndicatorDefinitionWriter".
      * 
      * @return
      */
-    public SYSIndicatorWriter createSYSIndicatorWriter() {
-        return new SYSIndicatorWriter();
+    public IndicatorDefinitionWriter createIndicatorDefinitionWriter() {
+        return new IndicatorDefinitionWriter();
     }
 
     /**
@@ -133,14 +118,12 @@ public final class ElementWriterFactory {
             return createDataProviderWriter();
         } else if (FactoriesUtil.PATTERN.equals(fileExtension)) {
             return createPatternWriter();
-        } else if (FactoriesUtil.UDI.equals(fileExtension)) {
-            return createUDIndicatorWriter();
         } else if (FactoriesUtil.DQRULE.equals(fileExtension)) {
             return createdRuleWriter();
         } else if (FactoriesUtil.SOFTWARE_SYSTEM.equals(fileExtension)) {
             return createSoftwareSystemWriter();
-        } else if (FactoriesUtil.TALEND_DEFINITION.equals(fileExtension)) {
-            return createSYSIndicatorWriter();
+        } else if (FactoriesUtil.DEFINITION.equals(fileExtension)) {
+            return createIndicatorDefinitionWriter();
         }
 
         return null;
@@ -153,22 +136,23 @@ public final class ElementWriterFactory {
      * @return
      */
     public AElementPersistance create(ModelElement element) {
-        if (element instanceof Analysis) {
+
+        if (ModelElementIdentifier.isAnalysis(element)) {
             return createAnalysisWrite();
-        } else if (element instanceof Report) {
+        } else if (ModelElementIdentifier.isReport(element)) {
             return createReportWriter();
-        } else if (element instanceof DataProvider) {
+        } else if (ModelElementIdentifier.isDataProvider(element)) {
             return createDataProviderWriter();
-        } else if (element instanceof Pattern) {
+        } else if (ModelElementIdentifier.isPattern(element)) {
             return createPatternWriter();
-        } else if (element instanceof IndicatorDefinition) {
-            return createUDIndicatorWriter();
-        } else if (element instanceof Rule) {
-            return createdRuleWriter();
-        } else if (element instanceof SoftwareSystem) {
+        } else if (ModelElementIdentifier.isID(element)) {
+            if (ModelElementIdentifier.isDQRule(element)) {
+                return createdRuleWriter();
+            }
+
+            return createIndicatorDefinitionWriter();
+        } else if (ModelElementIdentifier.isSoftware(element)) {
             return createSoftwareSystemWriter();
-        } else if (element instanceof IndicatorDefinition) {
-            return createSYSIndicatorWriter();
         }
 
         return null;

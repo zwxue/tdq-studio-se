@@ -543,7 +543,7 @@ public final class ImportFactory {
         boolean validStatus = UDIHelper.isUDIValid(id);
         TaggedValueHelper.setValidStatus(validStatus, id);
 
-        String fname = DqRepositoryViewService.createFilename(parameters.name, FactoriesUtil.UDI);
+        String fname = DqRepositoryViewService.createFilename(parameters.name, FactoriesUtil.DEFINITION);
 
         try {
 
@@ -563,7 +563,7 @@ public final class ImportFactory {
 
         IFile pfile = selectionFolder.getFile(fname);
 
-        ElementWriterFactory.getInstance().createUDIndicatorWriter().save(id, pfile);
+        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(id, pfile);
     }
 
     /**

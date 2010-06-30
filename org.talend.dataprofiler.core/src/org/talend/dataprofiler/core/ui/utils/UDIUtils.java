@@ -144,7 +144,7 @@ public final class UDIUtils {
                 for (Object udi : selection) {
                     if (udi instanceof IFile) {
                         IFile file = (IFile) udi;
-                        if (FactoriesUtil.UDI.equals(file.getFileExtension())) {
+                        if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
                             IndicatorDefinition findUdi = UDIResourceFileHelper.getInstance().findUDI(file);
                             boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
                             if (!validStatus) {
@@ -165,7 +165,7 @@ public final class UDIUtils {
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof IFile) {
                     IFile file = (IFile) element;
-                    if (FactoriesUtil.UDI.equals(file.getFileExtension())) {
+                    if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
                         return true;
                     }
                 } else if (element instanceof IFolder) {

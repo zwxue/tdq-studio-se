@@ -58,14 +58,17 @@ public class ExportUDIWizard extends Wizard {
         for (Object element : elements) {
             if (element instanceof IFile) {
                 IFile file = (IFile) element;
-                if (FactoriesUtil.UDI.equalsIgnoreCase(file.getFileExtension())) {
+                if (FactoriesUtil.DEFINITION.equalsIgnoreCase(file.getFileExtension())) {
                     seletedIndicators.add(UDIResourceFileHelper.getInstance().findUDI(file));
                 }
             }
         }
 
         if ("".equals(targetFile)) { //$NON-NLS-1$
-            MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("ExportUDIWizard.Error"), DefaultMessagesImpl.getString("ExportUDIWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog
+                    .openError(
+                            getShell(),
+                            DefaultMessagesImpl.getString("ExportUDIWizard.Error"), DefaultMessagesImpl.getString("ExportUDIWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         } else {
             File resource = new File(targetFile);

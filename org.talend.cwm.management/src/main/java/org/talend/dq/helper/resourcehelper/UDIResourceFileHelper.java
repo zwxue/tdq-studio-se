@@ -31,7 +31,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.dq.writer.impl.UDIndicatorWriter;
+import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -156,7 +156,7 @@ public class UDIResourceFileHelper extends ResourceFileMap {
     }
 
     public ReturnCode save(IndicatorDefinition indicator) {
-        UDIndicatorWriter writer = ElementWriterFactory.getInstance().createUDIndicatorWriter();
+        IndicatorDefinitionWriter writer = ElementWriterFactory.getInstance().createIndicatorDefinitionWriter();
         ReturnCode saved = writer.save(indicator);
         return saved;
     }
@@ -191,7 +191,7 @@ public class UDIResourceFileHelper extends ResourceFileMap {
      */
     @Override
     protected boolean checkFile(IFile file) {
-        return file != null && FactoriesUtil.UDI.equalsIgnoreCase(file.getFileExtension());
+        return file != null && FactoriesUtil.DEFINITION.equalsIgnoreCase(file.getFileExtension());
     }
 
     /*

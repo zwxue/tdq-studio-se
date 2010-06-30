@@ -132,7 +132,7 @@ public class DuplicateCWMResourceAction extends Action {
             IFolder parent = (IFolder) oldFile.getParent();
 
             // this is for duplicated system indicator.
-            if (ModelElementIdentifier.isID(oldObject)) {
+            if (ModelElementIdentifier.isID(oldObject) && !ModelElementIdentifier.isDQRule(oldObject)) {
                 parent = ResourceManager.getUDIFolder();
             }
 

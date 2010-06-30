@@ -77,11 +77,6 @@ public final class FactoriesUtil {
     public static final String SQL = "sql"; //$NON-NLS-1$
 
     /**
-     * Extension used for the files in which the User Defined Indicators are serialized.
-     */
-    public static final String UDI = "definition"; //$NON-NLS-1$
-
-    /**
      * Extension used for the files which is integrated in TOS properties.
      */
     public static final String PROPERTIES_EXTENSION = "properties"; //$NON-NLS-1$
@@ -99,7 +94,7 @@ public final class FactoriesUtil {
     /**
      * Extension used for the files in which the System Indicators are serialized.
      */
-    public static final String TALEND_DEFINITION = DefinitionPackage.eNAME;
+    public static final String DEFINITION = DefinitionPackage.eNAME;
 
     /**
      * Extension used for the files in which the pattern are serialized.
@@ -181,7 +176,6 @@ public final class FactoriesUtil {
         extensions.add(REP);
         extensions.add(PATTERN);
         extensions.add(DQRULE);
-        extensions.add(UDI);
 
         // --- CWM generated packages
         extensions.add(CorePackage.eNAME);
@@ -279,7 +273,7 @@ public final class FactoriesUtil {
      * @return
      */
     public static boolean isUDIFile(String fileExtension) {
-        return StringUtils.equalsIgnoreCase(UDI, fileExtension);
+        return StringUtils.equalsIgnoreCase(DEFINITION, fileExtension);
     }
 
     /**

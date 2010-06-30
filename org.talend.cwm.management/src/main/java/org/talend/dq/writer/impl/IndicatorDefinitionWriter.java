@@ -12,23 +12,20 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dq.writer.AElementPersistance;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC xqliu class global comment. Detailled comment
+ * DOC bZhou class global comment. Detailled comment
  */
-public class UDIndicatorWriter extends AElementPersistance {
-
-    static Logger log = Logger.getLogger(UDIndicatorWriter.class);
+public class IndicatorDefinitionWriter extends AElementPersistance {
 
     /**
-     * DOC bZhou UDIndicatorWriter constructor comment.
+     * DOC bZhou SYSIndicatorWriter constructor comment.
      */
-    UDIndicatorWriter() {
-        super();
+    IndicatorDefinitionWriter() {
+        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -60,6 +57,7 @@ public class UDIndicatorWriter extends AElementPersistance {
      */
     @Override
     protected String getFileExtension() {
-        return FactoriesUtil.UDI;
+        return FactoriesUtil.DEFINITION;
     }
+
 }
