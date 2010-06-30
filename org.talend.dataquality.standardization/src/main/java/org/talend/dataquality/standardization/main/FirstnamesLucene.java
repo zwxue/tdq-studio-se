@@ -54,7 +54,7 @@ public final class FirstnamesLucene {
 
         // 2. query
         // TODO the query will be the data of an input flow in a Talend job.
-        String[] firstnames = args.length > 0 ? args : new String[] { "jean", "rémy", "jean-philippe", "sebastiao", "r*my*" };
+        String[] firstnames = args.length > 0 ? args : new String[] { "jeants", "rémy", "jean-philippe", "sebastiao", "r*my*" };
 
         // 3. search
         int hitsPerPage = 10;
