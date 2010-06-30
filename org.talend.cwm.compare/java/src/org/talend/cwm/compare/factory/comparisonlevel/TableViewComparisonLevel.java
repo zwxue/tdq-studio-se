@@ -250,7 +250,10 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         TdColumn parentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement.eContainer());
         if (parentColumn != null) {
             ColumnSet columnSet = (ColumnSet) selectedObj;
-            ColumnSetHelper.removeColumn(parentColumn, columnSet);
+            // MOD by zshen for bug 13978
+            TdColumn leftParentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(addElement.getLeftParent());
+            ColumnSetHelper.removeColumn(leftParentColumn, columnSet);
+            // ~13978
             ColumnSetHelper.addColumn(parentColumn, columnSet);
         }
     }
