@@ -66,6 +66,12 @@ import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC zqin class global comment. Detailled comment
+ * 
+ * When changing the sharing codes with the AnalysisColumnTreeViewer and AnalysisColumnSetTreeViewer pleases test them
+ * both are OK in Column Analysis and Column Set Analysis.
+ * 
+ * @link org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer
+ * @link org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer
  */
 public class ColumnViewerDND {
 
@@ -236,7 +242,7 @@ public class ColumnViewerDND {
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             // MOD klliu 2010-06-12 bug 13696
             StructuredSelection ts = (StructuredSelection) commonViewer.getSelection();
-            AnalysisColumnTreeViewer viewer = null;
+            AbstractColumnDropTree viewer = null;
             Analysis analysis = null;
             ArrayList<IFile> al = new ArrayList<IFile>();
             if (ts.iterator() != null) {
@@ -247,12 +253,21 @@ public class ColumnViewerDND {
                 for (IFile fe : al) {
                     TreeItem item = (TreeItem) event.item;
                     ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
-                    viewer = (AnalysisColumnTreeViewer) item.getParent().getData(AnalysisColumnTreeViewer.VIEWER_KEY);
-                    analysis = viewer.getAnalysis();
-                    IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-                    if (addIndicatorUnit != null) {
-                        viewer.createOneUnit(item, addIndicatorUnit);
 
+                    // MOD yyi 2010-07-01 13993: Drag&drop patterns to column set analysis,get NPE.
+                    viewer = (AbstractColumnDropTree) item.getParent().getData();
+                    if (viewer instanceof AnalysisColumnTreeViewer) {
+                        analysis = ((AnalysisColumnTreeViewer) viewer).getAnalysis();
+                        IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
+                        if (addIndicatorUnit != null) {
+                            ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, addIndicatorUnit);
+                        }
+                    } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
+                        analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis();
+                        IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
+                        if (addIndicatorUnit != null) {
+                            ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, addIndicatorUnit);
+                        }
                     }
                 }
                 viewer.setDirty(true);
