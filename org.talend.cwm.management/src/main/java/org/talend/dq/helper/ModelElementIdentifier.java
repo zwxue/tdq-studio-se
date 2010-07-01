@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch;
 import org.talend.dataquality.analysis.Analysis;
@@ -23,7 +24,6 @@ import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 import orgomg.cwmx.analysis.informationreporting.util.InformationreportingSwitch;
 
@@ -89,7 +89,7 @@ public final class ModelElementIdentifier {
      * @param element
      * @return
      */
-    public static boolean isAnalysis(ModelElement element) {
+    public static boolean isAnalysis(EObject element) {
         return ANALYSIS.doSwitch(element) != null;
     }
 
@@ -101,7 +101,7 @@ public final class ModelElementIdentifier {
      * @param element
      * @return
      */
-    public static boolean isReport(ModelElement element) {
+    public static boolean isReport(EObject element) {
         return REPORT.doSwitch(element) != null;
     }
 
@@ -113,7 +113,7 @@ public final class ModelElementIdentifier {
      * @param element
      * @return
      */
-    public static boolean isPattern(ModelElement element) {
+    public static boolean isPattern(EObject element) {
         return PATTERN.doSwitch(element) != null;
     }
 
@@ -125,7 +125,7 @@ public final class ModelElementIdentifier {
      * @param element
      * @return
      */
-    public static boolean isID(ModelElement element) {
+    public static boolean isID(EObject element) {
         return INDICATOR_DEFINITION.doSwitch(element) != null;
     }
 
@@ -137,7 +137,7 @@ public final class ModelElementIdentifier {
      * @param element
      * @return
      */
-    public static boolean isDQRule(ModelElement element) {
+    public static boolean isDQRule(EObject element) {
         return DQ_RULE.doSwitch(element) != null;
     }
 
@@ -149,7 +149,7 @@ public final class ModelElementIdentifier {
      * @param element
      * @return
      */
-    public static boolean isDataProvider(ModelElement element) {
+    public static boolean isDataProvider(EObject element) {
         return SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(element) != null;
     }
 
@@ -161,7 +161,7 @@ public final class ModelElementIdentifier {
      * @param element
      * @return
      */
-    public static boolean isSoftware(ModelElement element) {
+    public static boolean isSoftware(EObject element) {
         return SOFTWARE.doSwitch(element) != null;
     }
 }

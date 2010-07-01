@@ -43,7 +43,6 @@ import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationT
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -54,6 +53,10 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class FileSystemImportWriter implements IImexWriter {
 
     private static Logger log = Logger.getLogger(FileSystemImportWriter.class);
+
+    private static final String VERSION_PATH = "/TDQ_Libraries/.version.txt";
+
+    private static final String DEFINITION_PATH = "/TDQ_Libraries/.Talend.definition";
 
     private File versionFile;
 
@@ -90,7 +93,7 @@ public class FileSystemImportWriter implements IImexWriter {
             retrieveProjectName(anyRecord);
         }
 
-        versionFile = new Path(basePath).append("/TDQ_Libraries/.version.txt").toFile();
+        versionFile = new Path(basePath).append(VERSION_PATH).toFile();
 
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
     }
@@ -194,9 +197,10 @@ public class FileSystemImportWriter implements IImexWriter {
     public void finish(ItemRecord[] records) throws IOException {
         ItemRecord.clear();
 
-        IFile defintionFile = ResourceManager.getLibrariesFolder().getFile(".Talend.definition");
-        if (!defintionFile.exists()) {
-            DefinitionHandler.getInstance();
+        File defFile = new Path(basePath).append(DEFINITION_PATH).toFile();
+        if (defFile.exists()) {
+            File defintionFile = ResourceManager.getRootProject().getFile(DEFINITION_PATH).getLocation().toFile();
+            FilesUtils.copyFile(defFile, defintionFile);
         }
 
         Display.getDefault().asyncExec(new Runnable() {

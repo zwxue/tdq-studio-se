@@ -136,11 +136,6 @@ public final class DefinitionHandler {
     private IndicatorsDefinitions indicatorDefinitions;
 
     /**
-     * true if a copy from the file in the plugin directory to the workspace directory is needed.
-     */
-    private boolean needCopy = false;
-
-    /**
      * plugin relative path to the default file.
      */
     private static final String FILENAME = ".Talend." + FactoriesUtil.DEFINITION; //$NON-NLS-1$
@@ -151,7 +146,7 @@ public final class DefinitionHandler {
         if (instance == null) {
             instance = new DefinitionHandler();
             // try to copy in workspace
-            if (instance.needCopy) {
+            if (!getTalendDefinitionFile().exists()) {
                 instance.copyDefinitionsIntoFolder(ResourceManager.getLibrariesFolder());
             }
         }
@@ -210,7 +205,6 @@ public final class DefinitionHandler {
             }
         }
         if (definitionsFile == null) {
-            needCopy = true;
             uri = URI.createPlatformPluginURI(PLUGIN_PATH, false);
             try { // load from plugin path
                 definitionsFile = util.getResourceSet().getResource(uri, true);

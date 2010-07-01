@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Date;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
@@ -33,6 +35,12 @@ public class UpdateDefintionFileTask extends AWorkspaceTask {
     @Override
     public boolean valid() {
         talendDefinitionFile = DefinitionHandler.getTalendDefinitionFile();
+
+        try {
+            talendDefinitionFile.getParent().refreshLocal(IResource.DEPTH_ONE, null);
+        } catch (CoreException e) {
+            //
+        }
 
         return talendDefinitionFile.exists() && super.valid();
     }

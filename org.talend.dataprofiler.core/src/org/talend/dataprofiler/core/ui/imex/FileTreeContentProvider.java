@@ -87,8 +87,7 @@ public class FileTreeContentProvider implements ITreeContentProvider {
      * java.lang.Object)
      */
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        // TODO Auto-generated method stub
-
+        ItemRecord.clear();
     }
 
 }
