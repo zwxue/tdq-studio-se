@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -56,6 +57,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sql.XSDDataTypeConvertor;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -100,8 +102,14 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 isRangeForDate = false;
                 isDatetime = false;
             } else if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analyzedElement) != null) {
-                isRangeForDate = false;
-                isDatetime = false;
+                TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analyzedElement);
+                int sqltype = XSDDataTypeConvertor.convertToJDBCType(xmlElement.getJavaType());
+                isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
+                        && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
+
+                if (isRangeForDate) {
+                    isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
+                }
             } else {
                 int sqltype = ((TdColumn) analyzedElement).getJavaType();
                 isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
