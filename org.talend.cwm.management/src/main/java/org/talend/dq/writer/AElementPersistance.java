@@ -36,6 +36,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.xml.XmlPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.reports.ReportsPackage;
@@ -264,7 +265,10 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             item = PropertiesFactory.eINSTANCE.createTDQDBConnectionItem();
         } else if (element instanceof IndicatorDefinition) {
             item = PropertiesFactory.eINSTANCE.createTDQIndicatorItem();
-        } else if (element.eClass().equals(XmlPackage.eINSTANCE.getTdXMLDocument())) {
+        } else if (element instanceof Pattern) {
+            item = PropertiesFactory.eINSTANCE.createTDQPatternItem();
+        }
+        else if (element.eClass().equals(XmlPackage.eINSTANCE.getTdXMLDocument())) {
             item = PropertiesFactory.eINSTANCE.createTDQMDMConnectionItem();
         } else if (element.eClass().equals(ReportsPackage.eINSTANCE.getTdReport())) {
             item = PropertiesFactory.eINSTANCE.createTDQReportItem();
