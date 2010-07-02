@@ -94,6 +94,7 @@ public final class SqlExplorerBridge {
             for (INode schemaNode : schemas) {
                 if (parentPackageElement.getName().equalsIgnoreCase(schemaNode.getName())) {
                     catalogOrSchemaNode = schemaNode;
+                    break;
                 }
             }
         }
