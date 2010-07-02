@@ -33,46 +33,18 @@ import org.talend.dataquality.standardization.query.FirstNameStandardize;
 public class HandleLuceneImpl implements HandleLucene {
 	private final int hitsPerPage = 10;
 	private String indexfolder;
-    private ArrayList<String[]> hits = new ArrayList<String[]>();
+	private ArrayList<String[]> hits = new ArrayList<String[]>();
 
-	public ArrayList<String[]> getHits() {
-		return hits;
-	}
-
-	public void setHits(ArrayList<String[]> hits) {
-		this.hits = hits;
-	}
-
-	public String getIndexfolder() {
-		return indexfolder;
-	}
-
-	public void setIndexfolder(String indexfolder) {
-		this.indexfolder = indexfolder;
-	}
-
-	private Analyzer getAnalyzer() {
-		return new SimpleAnalyzer();
-	}
-
-	private IndexBuilder getIndexBuilder() {
-		String tt=getIndexfolder();
-		return new IndexBuilder(tt);
-	}
-
-	public IndexSearcher getIndexSearcher() throws CorruptIndexException, IOException {
-		Directory dir=null;
-		try {
-			dir = FSDirectory.open(new File(getIndexfolder()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return new IndexSearcher(dir);
-	}
-
+	/**
+	 * Input filename to be indexed once for all and indexfolder to store the
+	 * files of indexing.
+	 * 
+	 * @param filename
+	 * @param indexfolder
+	 * @return
+	 */
 	public boolean createIndex(String filename, String indexfolder) {
-		setIndexfolder( indexfolder);
+		setIndexfolder(indexfolder);
 		IndexBuilder idxBuilder = getIndexBuilder();
 		int[] columnsToBeIndexed = new int[] { 0, 1, 2, 3 };
 		try {
@@ -86,10 +58,19 @@ public class HandleLuceneImpl implements HandleLucene {
 		return true;
 	}
 
+	/**
+	 * Expect that by accepting parameter and returns the correct result, if not
+	 * correspond with the result of searchwords, do a fuzzy query, returns the
+	 * result of the similar.
+	 * 
+	 * @param searchWords
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	public ArrayList<String[]> getSearchResult(String[] searchWords)
 			throws IOException, ParseException {
 		// TODO Auto-generated method stub
-		
 
 		IndexSearcher firtNameIs = getIndexSearcher();
 
@@ -106,28 +87,67 @@ public class HandleLuceneImpl implements HandleLucene {
 
 		return getHits();
 	}
-	public void treatSearchResult(ScoreDoc[] docs){
-		
-            for (int i = 0; i < docs.length; ++i) {
-                int docId = docs[i].doc;
-                Document d=null;
-				try {
-					d = getIndexSearcher().doc(docId);
-					float sd=docs[i].score;
-					String name=d.get("name");
-					String alias=d.get("alias");
-					String count=d.get("count");
-					String[] doc=new String[]{ name,alias ,Float.toHexString(sd),count};
-					hits.add(doc);
-				} catch (CorruptIndexException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }
-		
+
+	private void treatSearchResult(ScoreDoc[] docs) {
+
+		for (int i = 0; i < docs.length; ++i) {
+			int docId = docs[i].doc;
+			Document d = null;
+			try {
+				d = getIndexSearcher().doc(docId);
+				float sd = docs[i].score;
+				String name = d.get("name");
+				String alias = d.get("alias");
+				String count = d.get("count");
+				String[] doc = new String[] { name, alias,
+						Float.toHexString(sd), count };
+				hits.add(doc);
+			} catch (CorruptIndexException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	private ArrayList<String[]> getHits() {
+		return hits;
+	}
+
+	private void setHits(ArrayList<String[]> hits) {
+		this.hits = hits;
+	}
+
+	private String getIndexfolder() {
+		return indexfolder;
+	}
+
+	private void setIndexfolder(String indexfolder) {
+		this.indexfolder = indexfolder;
+	}
+
+	private Analyzer getAnalyzer() {
+		return new SimpleAnalyzer();
+	}
+
+	private IndexBuilder getIndexBuilder() {
+		String tt = getIndexfolder();
+		return new IndexBuilder(tt);
+	}
+
+	private IndexSearcher getIndexSearcher() throws CorruptIndexException,
+			IOException {
+		Directory dir = null;
+		try {
+			dir = FSDirectory.open(new File(getIndexfolder()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new IndexSearcher(dir);
 	}
 
 }
