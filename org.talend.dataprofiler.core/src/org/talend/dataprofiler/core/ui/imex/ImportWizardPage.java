@@ -289,7 +289,7 @@ public class ImportWizardPage extends WizardPage {
 
         IPath versionPath = dirPath.append(EResourceConstant.LIBRARIES.getPath()).append(".version.txt");
         if (!versionPath.toFile().exists()) {
-            dErrors.add("Invalid Project! \nYou should only select a project folder, but not a worksapce folder or others.");
+            dErrors.add(Messages.getString("ImportWizardPage.invalidProjectFolder"));//$NON-NLS-1$
         }
 
         ItemRecord[] elements = getElements();
