@@ -26,7 +26,10 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogAction;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
@@ -63,8 +66,13 @@ public final class SqlExplorerBridge {
             }
         }
 
+        
+        // MOD qiongli bug 13093,2010-7-2,show the warning dialog when the table can't be found
+        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         if (currentUser == null) {
-            return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
+        	MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable") + tableName);
+        	return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
                     "SqlExplorerBridge.NotFindCorrespondTable", tableName), //$NON-NLS-1$
                     false);
         }
@@ -107,10 +115,16 @@ public final class SqlExplorerBridge {
                 DetailTabManager.setActiveTabName(activeTabName);
                 DatabaseStructureView dsView = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
                 dsView.setSessionSelectionNode(currentUser.getMetaDataSession(), new StructuredSelection(node));
+                // MOD qiongli bug 13093,2010-7-2
+                SQLExplorerPlugin.getDefault().getConnectionsView().getTreeViewer().setSelection(
+                        new StructuredSelection(currentUser));
+
 
                 return typedReturnCode;
             }
         }
+        MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable") + tableName);
         return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
                 "SqlExplorerBridge.NotFindCorrespondTableObject", tableName), //$NON-NLS-1$
                 false);

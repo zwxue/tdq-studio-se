@@ -365,17 +365,29 @@ public class DatabaseStructureView extends ViewPart {
      * @param selection
      */
     public void setSessionSelectionNode(MetaDataSession session, ISelection selection) {
-        if (_tabFolder == null) {
-            try {
-                addSession(session);
-            } catch (SQLCannotConnectException e) {
-                e.printStackTrace();
-            }
-        }
-        CTabItem item = _tabFolder.getSelection();
-        if (item != null) {
-            TabData tabData = (TabData) item.getData();
-            if (tabData != null) {
+         // MOD qiongli bug 13093,delete the condition :'if (_tabFolder == null)'
+		try {
+			addSession(session);
+		} catch (SQLCannotConnectException e) {
+			e.printStackTrace();
+		}
+
+		CTabItem item = _tabFolder.getSelection();
+		if (item != null) {
+			TabData tabData = (TabData) item.getData();
+			if (tabData != null) {
+				// MOD qiongli bug 13093 ,2010-7-2
+				if (tabData.session.getUser() != session.getUser()) {
+					CTabItem items[] = _tabFolder.getItems();
+					for (CTabItem it : items) {
+						tabData = (TabData) it.getData();
+						if (tabData.session.getUser() == session.getUser()) {
+							_tabFolder.setSelection(it);
+							break;
+						}
+					}
+				}
+                // ~
                 tabData.treeViewer.setSelection(selection);
             }
         }

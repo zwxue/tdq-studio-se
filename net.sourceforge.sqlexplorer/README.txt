@@ -83,4 +83,11 @@ NOTE: Add the content of "text.properties" to "messages.properties", the path of
 net.sourceforge.sqlexplorer.oracle_3.5.0.jar\net\sourceforge\sqlexplorer\oracle\text.properties
 
 
+2010-7-2 qiongli bug 13093:the function in Data Explorer for view the information of data structure not work well 
+---------------------------------------------------------------------------------------------------
+The method in class of "net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView" has been modified:
+1.Delete the condition : 'if(_tabFolder == null)'
+2.Add line 379 to 388: select correct item as active item.
+
+
 

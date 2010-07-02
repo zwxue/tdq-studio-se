@@ -208,6 +208,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private Section statisticalSection = null;
 
     private Button reloadDatabasesBtn = null;
+    
+    private SchemaIndicator currentCatalogIndicator = null; // used in sqlserver
 
     /**
      * 
@@ -569,6 +571,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 public void selectionChanged(SelectionChangedEvent event) {
                     StructuredSelection selection = (StructuredSelection) event.getSelection();
                     CatalogIndicator firstElement = (CatalogIndicator) selection.getFirstElement();
+                    // MOD qiongli bug 13093,2010-7-2,
+                    currentCatalogIndicator = (SchemaIndicator) selection.getFirstElement();
                     // MOD xqliu 2009-11-30 bug 9114
                     if (firstElement != null) {
                         schemaTableViewer.setInput(firstElement.getSchemaIndicators());
@@ -830,6 +834,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     TableItem tableItem = cursor.getRow();
                     String tableName = tableItem.getText(0);
                     Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+                    // MOD qiongli bug 13093,2010-7-2
+                    if (currentCatalogIndicator != null)
+                        parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
 
                     TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
                     TdProviderConnection providerConnection = tdPc.getObject();
@@ -849,6 +856,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     TableItem tableItem = cursor.getRow();
                     String tableName = tableItem.getText(0);
                     Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+                    // MOD qiongli bug 13093,2010-7-2
+                    if (currentCatalogIndicator != null)
+                        parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
 
                     TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
                     TdProviderConnection providerConnection = tdPc.getObject();
