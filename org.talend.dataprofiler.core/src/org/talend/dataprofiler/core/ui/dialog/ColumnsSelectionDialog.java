@@ -505,7 +505,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         public List<ModelElement> getCheckedModelElementList(ModelElement modelElement) {
             List<ModelElement> checkedModelElements = new ArrayList<ModelElement>();
             List<? extends ModelElement> modelElementList = new ArrayList<ModelElement>();
-            
+
             if (modelElement instanceof ColumnSet) {
                 modelElementList = ColumnSetHelper.getColumns((ColumnSet) modelElement);
             } else if ((modelElement instanceof TdXMLElement)) {
@@ -631,6 +631,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     class ModelElementContentProvider implements IStructuredContentProvider {
 
         public Object[] getElements(Object inputElement) {
+            if (!(inputElement instanceof ColumnSet)) {
+                return new Object[0];
+            }
             EObject eObj = (EObject) inputElement;
             ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObj);
             if (columnSet != null) {
