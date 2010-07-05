@@ -252,7 +252,12 @@ public class ColumnViewerDND {
                 }
                 for (IFile fe : al) {
                     TreeItem item = (TreeItem) event.item;
-                    ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
+                    // MOD mzhao, bug 13993 cannot drag and drop patterns to MDM elements currently. 2010-07-05
+                    Object indData = item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
+                    if (!(indData instanceof ColumnIndicator)) {
+                        continue;
+                    }
+                    ColumnIndicator data = (ColumnIndicator) indData;
 
                     // MOD yyi 2010-07-01 13993: Drag&drop patterns to column set analysis,get NPE.
                     viewer = (AbstractColumnDropTree) item.getParent().getData();
