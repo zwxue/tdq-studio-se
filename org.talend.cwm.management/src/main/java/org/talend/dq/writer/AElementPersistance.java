@@ -223,7 +223,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
     public Property initProperty(ModelElement element) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
 
-        String author = MetadataHelper.getAuthor(element);
+        // String author = MetadataHelper.getAuthor(element); // MOD xqliu 2010-07-05 bug 14111
         String purpose = MetadataHelper.getPurpose(element);
         String description = MetadataHelper.getDescription(element);
         String version = MetadataHelper.getVersion(element);
@@ -231,7 +231,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         User user = ReponsitoryContextBridge.getUser();
         if (user != null) {
-            user.setLogin(author);
+            // user.setLogin(author); // MOD xqliu 2010-07-05 bug 14111
             property.setAuthor(user);
         }
 
