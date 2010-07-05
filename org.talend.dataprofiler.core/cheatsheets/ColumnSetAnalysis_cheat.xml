@@ -31,18 +31,21 @@ If you know the content of a column, set its type to either &quot;Nominal&quot;,
       </action>
    </item>
    <item
+         skip="true"
          title="Set the indicators&apos; options.">
       <description>
          Click on the <b> &quot;options&quot;</b>  button for each indicator you want to set the options to. By default, reasonable options are chosen.
       </description>
    </item>
    <item
+         skip="true"
          title="Choose a pattern for each column">
       <description>
          For each column, you can add a pattern indicator. There are two kinds of patterns. The regular patterns which are regular expressions (not supported by all databases) and the SQL patterns which are the patterns that you add in a &quot;LIKE&quot; clause. Click on the <b>&quot;Add Pattern&quot;</b> button near each column or <b>drag&amp;drop</b> a pattern from the repository view onto a column.
       </description>
    </item>
    <item
+         skip="true"
          title="Filter data to analyze.">
       <description>
          This step is optional. By default, all the data are analyzed. 
@@ -59,6 +62,7 @@ You can run the analysis with a context menu on the &quot;Analysis&quot; objects
       </action>
    </item>
    <item
+         skip="true"
          title="Refresh the graphics">
       <description>
          To generate the graphics of the analysis from the data, click on the <b>&quot;Refresh graphics&quot;</b>  hyperlink (<b>or click the link below</b>). &quot;Refresh graphics&quot; means that graphics are displayed with the last computed data.

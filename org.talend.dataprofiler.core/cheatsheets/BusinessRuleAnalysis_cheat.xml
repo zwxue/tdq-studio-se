@@ -25,6 +25,7 @@ Note that you can create DQ rules and assign them to the created analysis at a l
       </action>
    </item>
    <item
+         skip="true"
          title="Add some rule to the column">
       <description>
          you can click &quot;add dq rule&quot; button after column or Drag from the tree at left to add new rule.
