@@ -172,7 +172,11 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 if (resource instanceof IFile) {
                     if (extensions.contains(((IFile) resource).getFileExtension()))
                         i++;
+                    // MOD by zshen for bug 13755
+                } else if (resource instanceof IFolder) {
+                    i += getFileCount((IFolder) resource, filterExtensions);
                 }
+                // ~13755
             }
         } catch (CoreException e) {
             e.printStackTrace();
