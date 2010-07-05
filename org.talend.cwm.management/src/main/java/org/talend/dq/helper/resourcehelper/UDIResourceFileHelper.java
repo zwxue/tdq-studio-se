@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -127,6 +128,20 @@ public class UDIResourceFileHelper extends ResourceFileMap {
         Set<IFile> keySet = idsMap.keySet();
         for (IFile file2 : keySet) {
             IndicatorDefinition id2 = idsMap.get(file2);
+            //MOD qiongli bug 13994, if contains java language indicator,handle it as follows
+			EList<TdExpression> ls = id.getSqlGenericExpression();
+			EList<TdExpression> ls2 = id2.getSqlGenericExpression();
+			if (ls.size() == 0) {
+				if (ResourceHelper.areSame(id, id2)) {
+					file = file2;
+					break;
+				} else {
+					continue;
+				}
+			}
+			if (ls2.size() == 0)
+				continue;
+            //~
             Expression e = id.getSqlGenericExpression().get(0);
             Expression e2 = id2.getSqlGenericExpression().get(0);
             String et = e.getLanguage();
