@@ -240,6 +240,14 @@ public class ColumnViewerDND {
 
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
+            // MOD mzhao, bug 13993 cannot drag and drop patterns to MDM elements currently. 2010-07-05
+            TreeItem item = (TreeItem) event.item;
+            Object indData = item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
+            if (!(indData instanceof ColumnIndicator)) {
+                return;
+            }
+            ColumnIndicator data = (ColumnIndicator) indData;
+
             // MOD klliu 2010-06-12 bug 13696
             StructuredSelection ts = (StructuredSelection) commonViewer.getSelection();
             AbstractColumnDropTree viewer = null;
@@ -251,13 +259,6 @@ public class ColumnViewerDND {
                     al.add(iter.next());
                 }
                 for (IFile fe : al) {
-                    TreeItem item = (TreeItem) event.item;
-                    // MOD mzhao, bug 13993 cannot drag and drop patterns to MDM elements currently. 2010-07-05
-                    Object indData = item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
-                    if (!(indData instanceof ColumnIndicator)) {
-                        continue;
-                    }
-                    ColumnIndicator data = (ColumnIndicator) indData;
 
                     // MOD yyi 2010-07-01 13993: Drag&drop patterns to column set analysis,get NPE.
                     viewer = (AbstractColumnDropTree) item.getParent().getData();
