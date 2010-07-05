@@ -110,20 +110,24 @@ public class NewUDIndicatorWizardPage2 extends AbstractWizardPage {
                 parameter.setLanguage(PatternLanguageType.findLanguageByName(comboLang.getText()));
                 // MOD mzhao feature 11128.
                 if (PatternLanguageType.JAVA.getName().equals(comboLang.getText())) {
-                    sqlText.setEnabled(false);
+                	sqlText.setEnabled(false);
                     setPageComplete(true);
                 } else {
                     sqlText.setEnabled(true);
+                    //MOD qiongli bug 13956,2010-7-5
+                    setPageComplete(false);
                 }
+                checkFieldsValue();
             }
         });
     }
 
     public boolean checkFieldsValue() {
-        if (sqlText.getText() == "") { //$NON-NLS-1$
-            updateStatus(IStatus.ERROR, MSG_EMPTY);
-            return false;
-        }
+    	//MOD qiongli bug 13956,2010-7-5
+		if (sqlText.getText() == "" && !PatternLanguageType.JAVA.getName().equals(comboLang.getText())) { //$NON-NLS-1$
+			updateStatus(IStatus.ERROR, MSG_EMPTY);
+			return false;
+		}
 
         updateStatus(IStatus.OK, MSG_OK);
         return true;
