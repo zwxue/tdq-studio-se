@@ -445,6 +445,12 @@
           <details key="documentation" value="The number of values used in frequency tables"/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="udiParamsMap" transient="true">
+        <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap">
+          <eTypeArguments eClassifier="ecore:EDataType ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/String"/>
+          <eTypeArguments eClassifier="ecore:EDataType ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/String"/>
+        </eGenericType>
+      </eStructuralFeatures>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="MedianIndicator" eSuperTypes="#//indicators/Indicator">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

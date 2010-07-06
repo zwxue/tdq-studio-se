@@ -16,7 +16,7 @@ import org.talend.utils.string.AsciiUtils;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements PatternFreqIndicator {
@@ -27,7 +27,6 @@ public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected PatternFreqIndicatorImpl() {
@@ -36,7 +35,6 @@ public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

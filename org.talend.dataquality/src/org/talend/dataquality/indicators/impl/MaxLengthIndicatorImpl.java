@@ -14,14 +14,13 @@ import org.talend.dataquality.indicators.MaxLengthIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLengthIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MaxLengthIndicatorImpl() {
@@ -30,7 +29,6 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

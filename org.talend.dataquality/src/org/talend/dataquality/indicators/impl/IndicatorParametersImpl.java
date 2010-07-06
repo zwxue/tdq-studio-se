@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.Map;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -30,6 +31,7 @@ import org.talend.dataquality.indicators.TextParameters;
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorParametersImpl#getTextParameter <em>Text Parameter</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorParametersImpl#getDateParameters <em>Date Parameters</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorParametersImpl#getTopN <em>Top N</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorParametersImpl#getUdiParamsMap <em>Udi Params Map</em>}</li>
  * </ul>
  * </p>
  *
@@ -115,6 +117,16 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
      * @ordered
      */
     protected int topN = TOP_N_EDEFAULT;
+
+    /**
+     * The cached value of the '{@link #getUdiParamsMap() <em>Udi Params Map</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getUdiParamsMap()
+     * @generated
+     * @ordered
+     */
+    protected Map<String, String> udiParamsMap;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -358,6 +370,27 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public Map<String, String> getUdiParamsMap() {
+        return udiParamsMap;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setUdiParamsMap(Map<String, String> newUdiParamsMap) {
+        Map<String, String> oldUdiParamsMap = udiParamsMap;
+        udiParamsMap = newUdiParamsMap;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__UDI_PARAMS_MAP, oldUdiParamsMap, udiParamsMap));
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -397,6 +430,8 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
                 return getDateParameters();
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
                 return getTopN();
+            case IndicatorsPackage.INDICATOR_PARAMETERS__UDI_PARAMS_MAP:
+                return getUdiParamsMap();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -405,6 +440,7 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
@@ -425,6 +461,9 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
                 return;
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
                 setTopN((Integer)newValue);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__UDI_PARAMS_MAP:
+                setUdiParamsMap((Map<String, String>)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -455,6 +494,9 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
                 setTopN(TOP_N_EDEFAULT);
                 return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__UDI_PARAMS_MAP:
+                setUdiParamsMap((Map<String, String>)null);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -478,6 +520,8 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
                 return dateParameters != null;
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
                 return topN != TOP_N_EDEFAULT;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__UDI_PARAMS_MAP:
+                return udiParamsMap != null;
         }
         return super.eIsSet(featureID);
     }
@@ -494,6 +538,8 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (topN: ");
         result.append(topN);
+        result.append(", udiParamsMap: ");
+        result.append(udiParamsMap);
         result.append(')');
         return result.toString();
     }

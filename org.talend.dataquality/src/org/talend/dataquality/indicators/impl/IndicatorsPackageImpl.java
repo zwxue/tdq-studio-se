@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -929,6 +930,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getIndicatorParameters_UdiParamsMap() {
+        return (EAttribute)indicatorParametersEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1613,6 +1623,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEReference(indicatorParametersEClass, INDICATOR_PARAMETERS__TEXT_PARAMETER);
         createEReference(indicatorParametersEClass, INDICATOR_PARAMETERS__DATE_PARAMETERS);
         createEAttribute(indicatorParametersEClass, INDICATOR_PARAMETERS__TOP_N);
+        createEAttribute(indicatorParametersEClass, INDICATOR_PARAMETERS__UDI_PARAMS_MAP);
 
         medianIndicatorEClass = createEClass(MEDIAN_INDICATOR);
         createEAttribute(medianIndicatorEClass, MEDIAN_INDICATOR__MEDIAN);
@@ -1907,6 +1918,12 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEReference(getIndicatorParameters_TextParameter(), this.getTextParameters(), null, "textParameter", null, 0, 1, IndicatorParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicatorParameters_DateParameters(), this.getDateParameters(), null, "dateParameters", null, 0, 1, IndicatorParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getIndicatorParameters_TopN(), ecorePackage.getEInt(), "topN", "10", 0, 1, IndicatorParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        EGenericType g1 = createEGenericType(ecorePackage.getEMap());
+        EGenericType g2 = createEGenericType(theCorePackage.getString());
+        g1.getETypeArguments().add(g2);
+        g2 = createEGenericType(theCorePackage.getString());
+        g1.getETypeArguments().add(g2);
+        initEAttribute(getIndicatorParameters_UdiParamsMap(), g1, "udiParamsMap", null, 0, 1, IndicatorParameters.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(medianIndicatorEClass, MedianIndicator.class, "MedianIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getMedianIndicator_Median(), ecorePackage.getEDoubleObject(), "median", null, 0, 1, MedianIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

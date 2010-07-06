@@ -73,6 +73,7 @@ public class IndicatorParametersItemProvider
             addDataValidDomainPropertyDescriptor(object);
             addBinsPropertyDescriptor(object);
             addTopNPropertyDescriptor(object);
+            addUdiParamsMapPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -166,6 +167,28 @@ public class IndicatorParametersItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Udi Params Map feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addUdiParamsMapPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_IndicatorParameters_udiParamsMap_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_IndicatorParameters_udiParamsMap_feature", "_UI_IndicatorParameters_type"),
+                 IndicatorsPackage.Literals.INDICATOR_PARAMETERS__UDI_PARAMS_MAP,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -232,6 +255,7 @@ public class IndicatorParametersItemProvider
 
         switch (notification.getFeatureID(IndicatorParameters.class)) {
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
+            case IndicatorsPackage.INDICATOR_PARAMETERS__UDI_PARAMS_MAP:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:

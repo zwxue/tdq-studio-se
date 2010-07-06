@@ -29,6 +29,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
+import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -267,62 +268,17 @@ public class IndicatorDefinitionItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION,
-                 CoreFactory.eINSTANCE.createExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION,
-                 CoreFactory.eINSTANCE.createBooleanExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION,
-                 CoreFactory.eINSTANCE.createProcedureExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION,
-                 DatatypesFactory.eINSTANCE.createQueryExpression()));
+                 ExpressionsFactory.eINSTANCE.createTdExpression()));
 
         newChildDescriptors.add
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
-                 CoreFactory.eINSTANCE.createExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
-                 CoreFactory.eINSTANCE.createBooleanExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
-                 CoreFactory.eINSTANCE.createProcedureExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
-                 DatatypesFactory.eINSTANCE.createQueryExpression()));
+                 ExpressionsFactory.eINSTANCE.createTdExpression()));
 
         newChildDescriptors.add
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
-                 CoreFactory.eINSTANCE.createExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
-                 CoreFactory.eINSTANCE.createBooleanExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
-                 CoreFactory.eINSTANCE.createProcedureExpression()));
-
-        newChildDescriptors.add
-            (createChildParameter
-                (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
-                 DatatypesFactory.eINSTANCE.createQueryExpression()));
+                 ExpressionsFactory.eINSTANCE.createTdExpression()));
 
         newChildDescriptors.add
             (createChildParameter

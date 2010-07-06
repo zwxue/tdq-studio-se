@@ -28,6 +28,7 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 
 /**
@@ -65,8 +66,54 @@ public class AllMatchIndicatorItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
+            addMatchingValueCountPropertyDescriptor(object);
+            addNotMatchingValueCountPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
+    }
+
+    /**
+     * This adds a property descriptor for the Matching Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addMatchingValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_MatchingIndicator_matchingValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_MatchingIndicator_matchingValueCount_feature", "_UI_MatchingIndicator_type"),
+                 IndicatorsPackage.Literals.MATCHING_INDICATOR__MATCHING_VALUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Not Matching Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addNotMatchingValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_MatchingIndicator_notMatchingValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_MatchingIndicator_notMatchingValueCount_feature", "_UI_MatchingIndicator_type"),
+                 IndicatorsPackage.Literals.MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
     }
 
     /**
@@ -136,6 +183,10 @@ public class AllMatchIndicatorItemProvider
         updateChildren(notification);
 
         switch (notification.getFeatureID(AllMatchIndicator.class)) {
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
             case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
@@ -153,6 +204,11 @@ public class AllMatchIndicatorItemProvider
     @Override
     protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
+
+        newChildDescriptors.add
+            (createChildParameter
+                (ColumnsetPackage.Literals.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS,
+                 ColumnsetFactory.eINSTANCE.createAllMatchIndicator()));
 
         newChildDescriptors.add
             (createChildParameter

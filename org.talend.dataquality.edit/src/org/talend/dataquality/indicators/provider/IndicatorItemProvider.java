@@ -30,6 +30,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
+import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -80,6 +81,8 @@ public class IndicatorItemProvider
             addIndicatorDefinitionPropertyDescriptor(object);
             addComputedPropertyDescriptor(object);
             addMaxNumberRowsPropertyDescriptor(object);
+            addValidRowPropertyDescriptor(object);
+            addInValidRowPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -239,6 +242,50 @@ public class IndicatorItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Valid Row feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addValidRowPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Indicator_validRow_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Indicator_validRow_feature", "_UI_Indicator_type"),
+                 IndicatorsPackage.Literals.INDICATOR__VALID_ROW,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the In Valid Row feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addInValidRowPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Indicator_inValidRow_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Indicator_inValidRow_feature", "_UI_Indicator_type"),
+                 IndicatorsPackage.Literals.INDICATOR__IN_VALID_ROW,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -301,6 +348,8 @@ public class IndicatorItemProvider
             case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
             case IndicatorsPackage.INDICATOR__COMPUTED:
             case IndicatorsPackage.INDICATOR__MAX_NUMBER_ROWS:
+            case IndicatorsPackage.INDICATOR__VALID_ROW:
+            case IndicatorsPackage.INDICATOR__IN_VALID_ROW:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case IndicatorsPackage.INDICATOR__PARAMETERS:
@@ -327,6 +376,11 @@ public class IndicatorItemProvider
             (createChildParameter
                 (IndicatorsPackage.Literals.INDICATOR__PARAMETERS,
                  IndicatorsFactory.eINSTANCE.createIndicatorParameters()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.INDICATOR__INSTANTIATED_EXPRESSIONS,
+                 ExpressionsFactory.eINSTANCE.createTdExpression()));
 
         newChildDescriptors.add
             (createChildParameter

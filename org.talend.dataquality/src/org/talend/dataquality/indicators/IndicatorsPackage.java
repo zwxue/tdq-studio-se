@@ -2981,13 +2981,22 @@ public interface IndicatorsPackage extends EPackage {
     int INDICATOR_PARAMETERS__TOP_N = 5;
 
     /**
+     * The feature id for the '<em><b>Udi Params Map</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INDICATOR_PARAMETERS__UDI_PARAMS_MAP = 6;
+
+    /**
      * The number of structural features of the '<em>Indicator Parameters</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDICATOR_PARAMETERS_FEATURE_COUNT = 6;
+    int INDICATOR_PARAMETERS_FEATURE_COUNT = 7;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MedianIndicatorImpl <em>Median Indicator</em>}' class.
@@ -12979,6 +12988,17 @@ public interface IndicatorsPackage extends EPackage {
     EAttribute getIndicatorParameters_TopN();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.IndicatorParameters#getUdiParamsMap <em>Udi Params Map</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Udi Params Map</em>'.
+     * @see org.talend.dataquality.indicators.IndicatorParameters#getUdiParamsMap()
+     * @see #getIndicatorParameters()
+     * @generated
+     */
+    EAttribute getIndicatorParameters_UdiParamsMap();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.MedianIndicator <em>Median Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -14126,6 +14146,14 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EAttribute INDICATOR_PARAMETERS__TOP_N = eINSTANCE.getIndicatorParameters_TopN();
+
+        /**
+         * The meta object literal for the '<em><b>Udi Params Map</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute INDICATOR_PARAMETERS__UDI_PARAMS_MAP = eINSTANCE.getIndicatorParameters_UdiParamsMap();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MedianIndicatorImpl <em>Median Indicator</em>}' class.

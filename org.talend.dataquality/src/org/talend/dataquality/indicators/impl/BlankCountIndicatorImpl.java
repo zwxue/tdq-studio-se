@@ -20,18 +20,18 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.BlankCountIndicatorImpl#getBlankCount <em>Blank Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.BlankCountIndicatorImpl#getBlankCount <em>Blank Count</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCountIndicator {
 
     /**
-     * The default value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getBlankCount()
      * @generated
      * @ordered
@@ -39,9 +39,9 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
     protected static final Long BLANK_COUNT_EDEFAULT = new Long(0L);
 
     /**
-     * The cached value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getBlankCount()
      * @generated
      * @ordered
@@ -50,7 +50,6 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected BlankCountIndicatorImpl() {
@@ -59,7 +58,6 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -69,7 +67,6 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public Long getBlankCount() {
@@ -78,71 +75,65 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setBlankCount(Long newBlankCount) {
         Long oldBlankCount = blankCount;
         blankCount = newBlankCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT,
-                    oldBlankCount, blankCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT, oldBlankCount, blankCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
-            return getBlankCount();
+            case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
+                return getBlankCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
-            setBlankCount((Long) newValue);
-            return;
+            case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
+                setBlankCount((Long)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
-            setBlankCount(BLANK_COUNT_EDEFAULT);
-            return;
+            case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
+                setBlankCount(BLANK_COUNT_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
-            return BLANK_COUNT_EDEFAULT == null ? blankCount != null : !BLANK_COUNT_EDEFAULT.equals(blankCount);
+            case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
+                return BLANK_COUNT_EDEFAULT == null ? blankCount != null : !BLANK_COUNT_EDEFAULT.equals(blankCount);
         }
         return super.eIsSet(featureID);
     }

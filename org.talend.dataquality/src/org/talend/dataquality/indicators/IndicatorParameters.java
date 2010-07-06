@@ -6,6 +6,7 @@
  */
 package org.talend.dataquality.indicators;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.domain.Domain;
 
@@ -23,6 +24,7 @@ import org.talend.dataquality.domain.Domain;
  *   <li>{@link org.talend.dataquality.indicators.IndicatorParameters#getTextParameter <em>Text Parameter</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.IndicatorParameters#getDateParameters <em>Date Parameters</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.IndicatorParameters#getTopN <em>Top N</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.IndicatorParameters#getUdiParamsMap <em>Udi Params Map</em>}</li>
  * </ul>
  * </p>
  *
@@ -184,5 +186,31 @@ public interface IndicatorParameters extends EObject {
      * @generated
      */
     void setTopN(int value);
+
+    /**
+     * Returns the value of the '<em><b>Udi Params Map</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Udi Params Map</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Udi Params Map</em>' attribute.
+     * @see #setUdiParamsMap(Map)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicatorParameters_UdiParamsMap()
+     * @model transient="true"
+     * @generated
+     */
+    Map<String, String> getUdiParamsMap();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.IndicatorParameters#getUdiParamsMap <em>Udi Params Map</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Udi Params Map</em>' attribute.
+     * @see #getUdiParamsMap()
+     * @generated
+     */
+    void setUdiParamsMap(Map<String, String> value);
 
 } // IndicatorParameters
