@@ -32,10 +32,8 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
-import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
-import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
@@ -384,11 +382,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         EList<RegexpMatchingIndicator> indicators = indicator.getCompositeRegexMatchingIndicators();
         String patternNames = "";
         for (RegexpMatchingIndicator rmi : indicators) {
-            EList<Pattern> patterns = rmi.getParameters().getDataValidDomain().getPatterns();
-            for (Pattern p : patterns) {
-                if (null == DomainHelper.getJavaRegexp(p) && null == DomainHelper.getSQLRegexp(p)) {
-                    patternNames += System.getProperty("line.separator") + "\"" + p.getName() + "\"";
-                }
+            if (null == rmi.getRegex()) {
+                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
             }
         }
         if ("" != patternNames) {
