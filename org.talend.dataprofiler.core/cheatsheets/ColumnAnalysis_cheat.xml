@@ -28,9 +28,16 @@ If you know the content of a column, set its type to either &quot;Nominal&quot;,
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenIndicatorSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
+   <item
+         skip="true"
+         title="Add a UDI">
+      <description>
+         Click on the <b> &quot;UDI&quot;</b>  button for each column you want to set the udi.
+      </description>
+   </item>
    <item title="Set the indicators&apos; options." dialog="true" skip="true">
       <description>
-         Click on the <b> &quot;options&quot;</b>  button for each indicator you want to set the options to. By default, reasonable options are chosen.
+         Click on the <b> &quot;options&quot;</b>  button for each indicator you want to set the options to. By default, reasonable options are chosen. (<b>or click the link below</b>).
       </description>
    </item>
    <item

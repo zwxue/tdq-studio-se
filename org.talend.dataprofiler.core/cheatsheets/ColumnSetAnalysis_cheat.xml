@@ -62,7 +62,7 @@ You can run the analysis with a context menu on the &quot;Analysis&quot; objects
       </action>
    </item>
    <item
-         skip="true"
+         skip="false"
          title="Refresh the graphics">
       <description>
          To generate the graphics of the analysis from the data, click on the <b>&quot;Refresh graphics&quot;</b>  hyperlink (<b>or click the link below</b>). &quot;Refresh graphics&quot; means that graphics are displayed with the last computed data.

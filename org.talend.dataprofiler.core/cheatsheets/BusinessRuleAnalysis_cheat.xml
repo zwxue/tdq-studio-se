@@ -34,7 +34,7 @@ Note that you can create DQ rules and assign them to the created analysis at a l
    <item
          title="Analyze.">
       <description>
-         To execute the analysis, click on the &amp;quot;Run&amp;quot; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &amp;quot;Analysis&amp;quot; object in the &amp;quot;DQ Repository&amp;quot; view.
+         To execute the analysis, click on the &apos;Run&apos; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &apos;Analysis&apos;; object in the &apos;DQ Repository&apos;; view.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
    </item>
