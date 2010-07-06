@@ -18,8 +18,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MatchingIndicator;
@@ -161,6 +159,16 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
             compositeRegexMatchingIndicators = new EObjectContainmentEList<RegexpMatchingIndicator>(RegexpMatchingIndicator.class, this, ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS);
         }
         return compositeRegexMatchingIndicators;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
+    public String getRegex() {
+        // TODO: implement this method
+        // Ensure that you remove @generated or mark it @generated NOT
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -410,22 +418,11 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
                     if (null == this.patterns[i]) {
                         this.patterns[i] = new ArrayList<java.util.regex.Pattern>();
                     }
-                    EList<Pattern> columnPatterns = rmi.getParameters().getDataValidDomain().getPatterns();
-                    for (Pattern p : columnPatterns) {
-                        r = DomainHelper.getJavaRegexp(p);
-                        if (r == null) {
-                            r = DomainHelper.getSQLRegexp(p);
-                        }
-                        if (r != null) {
-                            if (r.startsWith("'") && r.endsWith("'")) {
-                                // remove enclosing singles quotes which are used for SQL only (not java)
-                                r = r.substring(1, r.length() - 1);
-                            }
-                        } else {
-                            return false;
-                        }
+                    String regex = rmi.getRegex();
+                    this.patterns[i].add(java.util.regex.Pattern.compile(regex));
+                    if (null == regex) {
+
                     }
-                    this.patterns[i].add(java.util.regex.Pattern.compile(r));
                 }
             }
         }

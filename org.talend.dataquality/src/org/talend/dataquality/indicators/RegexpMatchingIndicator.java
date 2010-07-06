@@ -22,4 +22,12 @@ package org.talend.dataquality.indicators;
  * @generated
  */
 public interface RegexpMatchingIndicator extends PatternMatchingIndicator {
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model kind="operation"
+     * @generated
+     */
+    String getRegex();
 } // RegexpMatchingIndicator

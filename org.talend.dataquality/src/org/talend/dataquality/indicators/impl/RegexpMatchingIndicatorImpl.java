@@ -34,17 +34,19 @@ import orgomg.cwm.resource.relational.Column;
 public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements RegexpMatchingIndicator {
 
     private static Logger log = Logger.getLogger(RegexpMatchingIndicatorImpl.class);
-    //add klliu 2010-06-12 bug 13695
+
+    // add klliu 2010-06-12 bug 13695
     private String javaPatternMessage;
+
     public String getJavaPatternMessage() {
-		return javaPatternMessage;
-	}
+        return javaPatternMessage;
+    }
 
-	public void setJavaPatternMessage(String javaPatternMessage) {
-		this.javaPatternMessage = javaPatternMessage;
-	}
+    public void setJavaPatternMessage(String javaPatternMessage) {
+        this.javaPatternMessage = javaPatternMessage;
+    }
 
-	/**
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -77,9 +79,9 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
             return false;
         }
         // MOD klliu 2010-06-12 bug 13695
-        if(regex.equals(this.getJavaPatternMessage())){
-        	this.setJavaPatternMessage(regex);
-        	return false;
+        if (regex.equals(this.getJavaPatternMessage())) {
+            this.setJavaPatternMessage(regex);
+            return false;
         }
         pattern = java.util.regex.Pattern.compile(regex);
         if (log.isInfoEnabled()) {
@@ -88,16 +90,13 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
         return super.prepare();
     }
 
-  
-  
-
-	/**
+    /**
      * DOC scorreia Comment method "getRegex".
      * 
      * @return
      */
-    private String getRegex() {
-    	// MOD klliu 2010-06-12 bug 13695
+    public String getRegex() {
+        // MOD klliu 2010-06-12 bug 13695
         if (this.parameters != null) {
             final Domain dataValidDomain = parameters.getDataValidDomain();
             if (dataValidDomain != null) {

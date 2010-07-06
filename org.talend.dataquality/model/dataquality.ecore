@@ -656,6 +656,7 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This indicator handles regular expressions. These expressions need the database support of regular expressions."/>
       </eAnnotations>
+      <eOperations name="getRegex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="MatchingIndicator" abstract="true"
         eSuperTypes="#//indicators/Indicator">
