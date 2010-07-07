@@ -35,7 +35,7 @@ import org.talend.dataquality.standardization.query.FirstNameStandardize;
  */
 public class HandleLuceneImpl implements HandleLucene {
 	private final int hitsPerPage = 10;
-	private String indexfolder;
+	private final String indexfolder="./data/TalendGivenNames_index";;
 	private Map<String,String[]> hits = new HashMap<String,String[]>();
 	private ArrayList<String> soreDoc=null;
 	/**
@@ -47,7 +47,6 @@ public class HandleLuceneImpl implements HandleLucene {
 	 * @return
 	 */
 	public boolean createIndex(String filename, String indexfolder) {
-		setIndexfolder(indexfolder);
 		IndexBuilder idxBuilder = getIndexBuilder();
 		int[] columnsToBeIndexed = new int[] { 0, 1, 2, 3 };
 		try {
@@ -119,10 +118,6 @@ public class HandleLuceneImpl implements HandleLucene {
 
 	private String getIndexfolder() {
 		return indexfolder;
-	}
-
-	private void setIndexfolder(String indexfolder) {
-		this.indexfolder = indexfolder;
 	}
 
 	private Analyzer getAnalyzer() {

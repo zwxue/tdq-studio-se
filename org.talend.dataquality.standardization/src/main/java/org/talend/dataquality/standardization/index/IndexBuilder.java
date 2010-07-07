@@ -32,7 +32,7 @@ import com.csvreader.CsvReader;
  */
 public class IndexBuilder {
 
-	String directoryPath;
+	private String directoryPath;
 
 	private Directory index;
 
