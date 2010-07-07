@@ -49,13 +49,14 @@ public class FirstNameStandardize {
         this.hits = hitsPerPage;
     }
 
-    public ScoreDoc[] standardize(String input) throws ParseException, IOException {
+    public ScoreDoc[] standardize(String searchType,String input) throws ParseException, IOException {
         if (input == null || input.length() == 0) {
             return new ScoreDoc[0];
         }
-        Query q = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_NAME, analyzer).parse(input); // TODO do not harcode field name
-        Query qalias = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_ALIAS, analyzer).parse(input); // TODO do not harcode field
+        Query q = new QueryParser(Version.LUCENE_30, searchType, analyzer).parse(input); // TODO do not harcode field name
+        Query qalias = new  QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_ALIAS, analyzer).parse(input); // TODO do not harcode field
         // name
+        
         q = q.combine(new Query[] { q, qalias });
 
         // TODO do we need to create the doc collector every time?
@@ -97,8 +98,8 @@ public class FirstNameStandardize {
      * @throws ParseException
      * @throws IOException
      */
-    public String replaceName(String input) throws ParseException, IOException {
-        ScoreDoc[] results = standardize(input);
+    public String replaceName(String searchType,String input) throws ParseException, IOException {
+        ScoreDoc[] results = standardize(searchType,input);
         return results.length == 0 ? input : searcher.doc(results[0].doc).get("name");
     }
 

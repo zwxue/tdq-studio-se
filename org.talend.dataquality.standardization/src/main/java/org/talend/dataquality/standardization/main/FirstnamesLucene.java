@@ -65,7 +65,7 @@ public final class FirstnamesLucene {
         FirstNameStandardize stdname = new FirstNameStandardize(searcher, analyzer, hitsPerPage);
 
         for (String querystr : firstnames) {
-            ScoreDoc[] hits = stdname.standardize(querystr);
+            ScoreDoc[] hits = stdname.standardize("name",querystr);
             System.out.println("--> Matching \"" + querystr + "\"");
             // 4. display results
             displayResults(searcher, hits);

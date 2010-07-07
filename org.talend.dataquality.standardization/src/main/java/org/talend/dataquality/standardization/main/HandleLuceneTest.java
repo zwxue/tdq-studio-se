@@ -13,11 +13,10 @@
 package org.talend.dataquality.standardization.main;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Map;
 
-import org.apache.lucene.document.Document;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.search.ScoreDoc;
+import org.talend.dataquality.standardization.constant.PluginConstant;
 
 /**
  * DOC klliu class global comment.
@@ -41,13 +40,17 @@ public class HandleLuceneTest {
 		System.out.print(hl.createIndex(filename, indexfolder));
 
 		try {
-			ArrayList<String[]> hits = hl.getSearchResult(firstnames);
-			for (int h = 0; h < hits.size(); ++h) {
-				String[] docs = hits.get(h);
-				for (int i = 0; i < docs.length; i++) {
-					System.out.println(docs[i]);
+			Map<String, String[]> hits = hl.getSearchResult(
+					PluginConstant.FIRST_NAME_STANDARDIZE_NAME, firstnames);
+			for (String firstName : firstnames) {
+				String[] soreDocs = hits.get(firstName);
+				System.out.println("-----" + firstName + "---");
+				for (String doc : soreDocs) {
+					System.out.println(doc);
+
 				}
 			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
