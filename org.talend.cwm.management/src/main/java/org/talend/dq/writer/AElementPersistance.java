@@ -33,14 +33,8 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
-import org.talend.cwm.xml.XmlPackage;
-import org.talend.dataquality.analysis.AnalysisPackage;
-import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.reports.ReportsPackage;
-import org.talend.dataquality.rules.DQRule;
+import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -257,20 +251,19 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
     public TDQItem initItem(ModelElement element, Property property) {
         TDQItem item = null;
         // MOD mzhao feature 13114, 2010-05-19 distinguish tdq items.
-        if (element.eClass().equals(AnalysisPackage.eINSTANCE.getAnalysis())) {
+        if (ModelElementIdentifier.isAnalysis(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
-        } else if (element instanceof DQRule) {
+        } else if (ModelElementIdentifier.isDQRule(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
-        } else if (element.eClass().equals(SoftwaredeploymentPackage.eINSTANCE.getTdDataProvider())) {
+        } else if (ModelElementIdentifier.isDataProvider(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQDBConnectionItem();
-        } else if (element instanceof IndicatorDefinition) {
+        } else if (ModelElementIdentifier.isID(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQIndicatorItem();
-        } else if (element instanceof Pattern) {
+        } else if (ModelElementIdentifier.isPattern(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQPatternItem();
-        }
-        else if (element.eClass().equals(XmlPackage.eINSTANCE.getTdXMLDocument())) {
+        } else if (ModelElementIdentifier.isXMLProvider(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQMDMConnectionItem();
-        } else if (element.eClass().equals(ReportsPackage.eINSTANCE.getTdReport())) {
+        } else if (ModelElementIdentifier.isReport(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQReportItem();
         } else {
             item = PropertiesFactory.eINSTANCE.createTDQItem();

@@ -20,8 +20,9 @@ import java.util.Map;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -287,13 +288,130 @@ public class ExportWizardPage extends WizardPage {
      * @param top
      */
     private void createRepositoryTree(Composite top) {
-        repositoryTree = new ContainerCheckedTreeViewer(top);
+        Composite treeComposite = new Composite(top, SWT.NONE);
+        treeComposite.setLayout(new GridLayout(2, false));
+        treeComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        repositoryTree = new ContainerCheckedTreeViewer(treeComposite);
         repositoryTree.setContentProvider(new FileTreeContentProvider());
         repositoryTree.setLabelProvider(new FileTreeLabelProvider());
         repositoryTree.setInput(computInput());
         repositoryTree.expandAll();
+        repositoryTree.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(repositoryTree.getTree());
+        createUtilityButtons(treeComposite);
+    }
+
+    /**
+     * DOC bZhou Comment method "createUtilityButtons".
+     * 
+     * @param treeComposite
+     */
+    protected void createUtilityButtons(Composite treeComposite) {
+        Composite utilityComposite = new Composite(treeComposite, SWT.NONE);
+        utilityComposite.setLayout(new GridLayout());
+        utilityComposite.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+
+        Composite btnsComposite = new Composite(utilityComposite, SWT.NONE);
+        btnsComposite.setLayout(new GridLayout());
+
+        GridData gd = new GridData();
+        gd.verticalAlignment = SWT.BEGINNING;
+        gd.horizontalIndent = 0;
+        gd.horizontalSpan = 0;
+        btnsComposite.setLayoutData(gd);
+
+        Button selectAllBTN = new Button(btnsComposite, SWT.PUSH);
+        selectAllBTN.setText("Select All");
+
+        Button deselectAllBTN = new Button(btnsComposite, SWT.PUSH);
+        deselectAllBTN.setText("Deselect All");
+
+        Button addRequireBTN = new Button(btnsComposite, SWT.PUSH);
+        addRequireBTN.setText("Add Require Deps");
+
+        Composite infoComposite = new Composite(utilityComposite, SWT.NONE);
+        infoComposite.setLayout(new GridLayout());
+
+        gd = new GridData(GridData.FILL_BOTH);
+        gd.verticalAlignment = SWT.BOTTOM;
+        gd.horizontalIndent = 0;
+        gd.horizontalSpan = 0;
+        infoComposite.setLayoutData(gd);
+
+        final Button showSelectBTN = new Button(infoComposite, SWT.CHECK);
+        showSelectBTN.setText("Only show select element");
+
+        Button[] utilityBTNs = new Button[] { selectAllBTN, deselectAllBTN, addRequireBTN };
+
+        for (Button btn : utilityBTNs) {
+            gd = new GridData();
+            gd.widthHint = 150;
+            gd.verticalIndent = 0;
+            gd.horizontalIndent = 0;
+
+            btn.setLayoutData(gd);
+        }
+
+        selectAllBTN.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TreeItem[] topItems = repositoryTree.getTree().getItems();
+                for (TreeItem treeItem : topItems) {
+                    repositoryTree.setSubtreeChecked(treeItem.getData(), true);
+                }
+                repositoryTree.refresh();
+            }
+        });
+
+        deselectAllBTN.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TreeItem[] topItems = repositoryTree.getTree().getItems();
+                for (TreeItem treeItem : topItems) {
+                    repositoryTree.setSubtreeChecked(treeItem.getData(), false);
+                }
+                repositoryTree.refresh();
+            }
+        });
+
+        addRequireBTN.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                ItemRecord[] records = getElements();
+                for (ItemRecord record : records) {
+                    Map<File, ModelElement> dependencyMap = record.getDependencyMap();
+                    for (File depFile : dependencyMap.keySet()) {
+                        ItemRecord depRecord = ItemRecord.findRecord(depFile);
+                        if (!repositoryTree.getChecked(depRecord)) {
+                            repositoryTree.setChecked(depRecord, true);
+                        }
+                    }
+                }
+
+                checkForErrors();
+            }
+        });
+
+        final ViewerFilter treeFilter = new TreeFilter();
+
+        showSelectBTN.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (showSelectBTN.getSelection()) {
+                    repositoryTree.addFilter(treeFilter);
+                } else {
+                    repositoryTree.removeFilter(treeFilter);
+                    repositoryTree.expandAll();
+                }
+
+                repositoryTree.refresh();
+            }
+        });
     }
 
     /**
@@ -361,5 +479,23 @@ public class ExportWizardPage extends WizardPage {
             }
         }
         return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
+    }
+
+    /**
+     * DOC bZhou ExportWizardPage class global comment. Detailled comment
+     */
+    class TreeFilter extends ViewerFilter {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+         * java.lang.Object)
+         */
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            ItemRecord record = (ItemRecord) element;
+            return repositoryTree.getChecked(record);
+        }
     }
 }

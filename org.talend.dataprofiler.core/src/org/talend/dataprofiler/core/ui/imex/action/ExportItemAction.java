@@ -54,7 +54,7 @@ public class ExportItemAction extends Action implements IWorkbenchWindowActionDe
     public void run(IAction action) {
         ExportWizard wizard = new ExportWizard(EImexType.FILE);
         WizardDialog dialog = new WizardDialog(null, wizard);
-        dialog.setPageSize(550, 500);
+        dialog.setPageSize(620, 500);
         dialog.open();
     }
 

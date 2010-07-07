@@ -15,6 +15,8 @@ package org.talend.dq.helper;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch;
+import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.util.XmlSwitch;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -77,6 +79,13 @@ public final class ModelElementIdentifier {
     public static final SoftwaredeploymentSwitch<SoftwareSystem> SOFTWARE = new SoftwaredeploymentSwitch<SoftwareSystem>() {
 
         public SoftwareSystem caseSoftwareSystem(SoftwareSystem object) {
+            return object;
+        };
+    };
+
+    public static final XmlSwitch<TdXMLDocument> XMLDOC = new XmlSwitch<TdXMLDocument>() {
+
+        public TdXMLDocument caseTdXMLDocument(TdXMLDocument object) {
             return object;
         };
     };
@@ -151,6 +160,18 @@ public final class ModelElementIdentifier {
      */
     public static boolean isDataProvider(EObject element) {
         return SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(element) != null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isXMLProvider".
+     * 
+     * Decide it's a XML provider or not.
+     * 
+     * @param element
+     * @return
+     */
+    public static boolean isXMLProvider(EObject element) {
+        return XMLDOC.doSwitch(element) != null;
     }
 
     /**
