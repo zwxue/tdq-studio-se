@@ -94,6 +94,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private Section infomatioinSection = null;
 
     private boolean isUrlChanged = false;
+    private boolean isPassWordChanged = false; 
+    private boolean isLoginChanged = false; 
 
     public ConnectionInfoPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -213,9 +215,33 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
 
         };
-        loginText.addModifyListener(listener);
-        passwordText.addModifyListener(listener);
-        urlText.addModifyListener(listener);
+        
+        // MOD klliu 2010-07-06 bug 14095
+        loginText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                setDirty(true);
+                isLoginChanged = true;
+            }
+
+        });
+        passwordText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                setDirty(true);
+                isPassWordChanged = true;
+            }
+
+        });
+        urlText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                setDirty(true);
+                isUrlChanged = true;
+                // saveTextChange();
+            }
+
+        });
         infomatioinSection.setClient(sectionClient);
     }
 
@@ -401,8 +427,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         ReturnCode rc = new ReturnCode();
         String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.impactAnalyses");
         String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");
+     // MOD klliu 2010-07-06 bug 14095: unnecessary wizard
+        if (this.isUrlChanged || this.isLoginChanged || this.isPassWordChanged) {
         rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
                 new ModelElement[] { tdDataProvider }, dialogTitle, dialogMessage));
+        }
 
         return rc;
     }
