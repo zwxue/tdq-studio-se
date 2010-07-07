@@ -13,11 +13,7 @@
 
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -73,34 +69,20 @@ public class DeleteFolderAction extends Action {
 
     private boolean deleteFolderAndFiles() {
 
-        List<IFile> fileList = new ArrayList<IFile>();
-        getAllSubFiles(folder, fileList);
-        if (fileList.size() > 0) {
-            IFile[] files = fileList.toArray(new IFile[fileList.size()]);
-            DeleteCWMResourceAction action = new DeleteCWMResourceAction(files);
-            action.run();
-            return action.getRunStatus();
+        try {
+            if (folder.members().length != 0) {
+                DeleteObjectsAction action = new DeleteObjectsAction();
+                action.run();
+                return action.getRunStatus();
+            }
+        } catch (CoreException e) {
+            log.error(e, e);
         }
+
         return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), DefaultMessagesImpl
                 .getString("DeleteFolderAction.deleteFold"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("DeleteFolderAction.areYouDeleteFolder")); //$NON-NLS-1$
 
     }
 
-    private void getAllSubFiles(IFolder folder, List<IFile> fileList) {
-        IResource[] members = null;
-        try {
-            members = folder.members();
-        } catch (CoreException e) {
-            log.error(e, e);
-        }
-        for (IResource res : members) {
-            if (res.getType() == IResource.FILE) {
-                fileList.add((IFile) res);
-            } else if (res.getType() == IResource.FOLDER) {
-                getAllSubFiles((IFolder) res, fileList);
-            }
-        }
-
-    }
 }

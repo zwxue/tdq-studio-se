@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.dialog.message;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -23,13 +24,9 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.helpers.ReportHelper;
-import org.talend.dataquality.reports.TdReport;
-import org.talend.dataquality.reports.util.ReportsSwitch;
+import org.talend.dq.factory.ModelElementFileFactory;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -49,7 +46,7 @@ public class DeleteModelElementConfirmDialog {
      */
     static class ImpactNode {
 
-        List<ModelElement> children = new ArrayList<ModelElement>();
+        List<Object> children = new ArrayList<Object>();
 
         private final ModelElement nodeElement;
 
@@ -57,14 +54,14 @@ public class DeleteModelElementConfirmDialog {
             this.nodeElement = modelElement;
         }
 
-        public void addRequireModelElement(ModelElement modelElement) {
-            if (!children.contains(modelElement)) {
-                this.children.add(modelElement);
+        public void addRequireModelElement(Object object) {
+            if (!children.contains(object)) {
+                this.children.add(object);
             }
         }
 
-        public ModelElement[] getChildren() {
-            return children.toArray(new ModelElement[children.size()]);
+        public Object[] getChildren() {
+            return children.toArray(new Object[children.size()]);
         }
 
         public String toString() {
@@ -197,6 +194,39 @@ public class DeleteModelElementConfirmDialog {
     }
 
     /**
+     * DOC bZhou Comment method "showDialog".
+     * 
+     * @param parentShell
+     * @param file
+     * @param dependencyElements
+     * @param dialogMessage
+     * @return
+     */
+    public static int showDialog(Shell parentShell, IFile file, ModelElement[] dependencyElements, String dialogMessage) {
+        for (ModelElement element : dependencyElements) {
+            ImpactNode node = new ImpactNode(element);
+            if (!impactNodes.contains(node)) {
+                node.addRequireModelElement(file);
+                impactNodes.add(node);
+            }
+        }
+
+        ImpactNode[] impactElements = getImpactNodes();
+        if (impactElements.length > 0) {
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, DefaultMessagesImpl
+                    .getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
+                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
+            dialog.setContentProvider(new DialogContentProvider(impactElements));
+            dialog.setLabelProvider(getLabelProvider());
+            dialog.setInput(new Object());
+            clear();
+            dialog.open();
+        }
+
+        return Window.CANCEL;
+    }
+
+    /**
      * DOC rli Comment method "showDialog".
      * 
      * @param parentShell
@@ -287,27 +317,27 @@ public class DeleteModelElementConfirmDialog {
         return messageDialog.open();
     }
 
-    private static void removeReportComponent(ImpactNode[] impactNodes) {
-        ReportsSwitch<TdReport> mySwitch = new ReportsSwitch<TdReport>() {
-
-            public TdReport caseTdReport(TdReport object) {
-                return object;
-            }
-        };
-        TdReport report = null;
-        for (ImpactNode node : impactNodes) {
-            report = mySwitch.doSwitch(node.getNodeElement());
-            if (report != null && node.getChildren().length > 0) {
-                List<Analysis> anaList = new ArrayList<Analysis>();
-                for (ModelElement element : node.getChildren()) {
-                    anaList.add((Analysis) element);
-                }
-                ReportHelper.removeAnalyses(report, anaList);
-                // remove dependencies
-                DependenciesHandler.getInstance().removeDependenciesBetweenModels(report, anaList);
-            }
-        }
-    }
+    // private static void removeReportComponent(ImpactNode[] impactNodes) {
+    // ReportsSwitch<TdReport> mySwitch = new ReportsSwitch<TdReport>() {
+    //
+    // public TdReport caseTdReport(TdReport object) {
+    // return object;
+    // }
+    // };
+    // TdReport report = null;
+    // for (ImpactNode node : impactNodes) {
+    // report = mySwitch.doSwitch(node.getNodeElement());
+    // if (report != null && node.getChildren().length > 0) {
+    // List<Analysis> anaList = new ArrayList<Analysis>();
+    // for (ModelElement element : node.getChildren()) {
+    // anaList.add((Analysis) element);
+    // }
+    // ReportHelper.removeAnalyses(report, anaList);
+    // // remove dependencies
+    // DependenciesHandler.getInstance().removeDependenciesBetweenModels(report, anaList);
+    // }
+    // }
+    // }
 
     protected static LabelProvider getLabelProvider() {
         if (fLabelProvider == null) {
@@ -316,6 +346,12 @@ public class DeleteModelElementConfirmDialog {
                 public String getText(Object obj) {
                     if (obj instanceof ImpactNode) {
                         return ((ImpactNode) obj).toString();
+                    } else if (obj instanceof IFile) {
+                        IFile file = (IFile) obj;
+                        ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
+
+                        String name = modelElement != null ? modelElement.getName() : file.getName();
+                        return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";
                     }
                     return REQUIRES + PluginConstant.SPACE_STRING + "<<" + ((ModelElement) obj).getName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
                 }

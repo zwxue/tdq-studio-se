@@ -22,7 +22,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
-import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.sql.RenameFolderAction;
 import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
@@ -66,7 +65,6 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
         boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
         if (!isSelectFile && !selectedFiles.isEmpty()) {
             menu.add(new OpenSqlFileAction(selectedFiles));
-            menu.add(new DeleteSqlFileAction(selectedFiles));
         }
     }
 
