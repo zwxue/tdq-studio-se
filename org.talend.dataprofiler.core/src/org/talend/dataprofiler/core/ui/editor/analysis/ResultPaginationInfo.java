@@ -83,8 +83,7 @@ public class ResultPaginationInfo extends PaginationInfo {
     // }
 
     public ResultPaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
-            ColumnMasterDetailsPage masterPage,
-            UIPagination uiPagination) {
+            ColumnMasterDetailsPage masterPage, UIPagination uiPagination) {
         super(form, modelElementIndicators, uiPagination);
         this.masterPage = masterPage;
     }
@@ -182,18 +181,20 @@ public class ResultPaginationInfo extends PaginationInfo {
         ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
         // create chart
+        if (!EditorPreferencePage.isHideGraphics()) {
 
-        JFreeChart chart = chartTypeState.getChart();
-        ChartDecorator.decorate(chart);
-        if (chart != null) {
-            ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+            JFreeChart chart = chartTypeState.getChart();
+            ChartDecorator.decorate(chart);
+            if (chart != null) {
+                ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
-            GridData gd = new GridData();
-            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-            cc.setLayoutData(gd);
+                GridData gd = new GridData();
+                gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+                gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+                cc.setLayoutData(gd);
 
-            addMouseListenerForChart(cc, dataExplorer, analysis);
+                addMouseListenerForChart(cc, dataExplorer, analysis);
+            }
         }
 
         subComp.setClient(composite);

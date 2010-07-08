@@ -211,19 +211,22 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
                                     chartTopComp.setLayout(new GridLayout(1, false));
                                     chartTopComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-                                    // create chart
-                                    List<JFreeChart> charts = chartTypeState.getChartList();
-                                    if (charts != null) {
-                                        for (JFreeChart chart2 : charts) {
+                                    if (!EditorPreferencePage.isHideGraphics()) {
+                                        // create chart
+                                        List<JFreeChart> charts = chartTypeState.getChartList();
+                                        if (charts != null) {
+                                            for (JFreeChart chart2 : charts) {
 
-                                            ChartComposite chartComp = new ChartComposite(chartTopComp, SWT.NONE, chart2, true);
+                                                ChartComposite chartComp = new ChartComposite(chartTopComp, SWT.NONE, chart2,
+                                                        true);
 
-                                            GridData gd = new GridData();
-                                            gd.widthHint = 550;
-                                            gd.heightHint = 250;
-                                            chartComp.setLayoutData(gd);
+                                                GridData gd = new GridData();
+                                                gd.widthHint = 550;
+                                                gd.heightHint = 250;
+                                                chartComp.setLayoutData(gd);
 
-                                            addMouseListenerForChart(chartComp, dataExplorer, analysis);
+                                                addMouseListenerForChart(chartComp, dataExplorer, analysis);
+                                            }
                                         }
                                     }
 

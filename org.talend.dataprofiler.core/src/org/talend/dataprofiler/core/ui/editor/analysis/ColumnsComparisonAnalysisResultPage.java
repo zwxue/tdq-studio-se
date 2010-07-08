@@ -63,6 +63,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenerator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
@@ -238,7 +239,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             }
             createTableItems(resultTable);
 
-            creatChart(sectionClient, tableNameA, tableNameB);
+            if (!EditorPreferencePage.isHideGraphics()) {
+                creatChart(sectionClient, tableNameA, tableNameB);
+            }
+
             StringBuilder description = new StringBuilder();
             description.append(setAMatchPercent);
             description.append(DefaultMessagesImpl.getString(

@@ -53,6 +53,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenera
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
@@ -173,7 +174,9 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
         createTable(sectionClient);
 
-        createChart(sectionClient, analysis);
+        if (!EditorPreferencePage.isHideGraphics()) {
+            createChart(sectionClient, analysis);
+        }
 
         resultSection.layout();
     }

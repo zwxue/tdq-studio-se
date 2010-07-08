@@ -68,6 +68,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -144,7 +145,9 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createGraphicsSectionPart(sectionClient);
+            if (!EditorPreferencePage.isHideGraphics()) {
+                this.createGraphicsSectionPart(sectionClient);
+            }
         }
 
         Composite simpleSatisticsComp = toolkit.createComposite(sectionClient);
@@ -407,16 +410,17 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
         // create chart
+        if (!EditorPreferencePage.isHideGraphics()) {
+            JFreeChart chart = chartTypeState.getChart();
+            ChartDecorator.decorate(chart);
+            if (chart != null) {
+                ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
-        JFreeChart chart = chartTypeState.getChart();
-        ChartDecorator.decorate(chart);
-        if (chart != null) {
-            ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
-
-            GridData gd = new GridData();
-            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-            cc.setLayoutData(gd);
+                GridData gd = new GridData();
+                gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+                gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+                cc.setLayoutData(gd);
+            }
         }
     }
 
@@ -449,6 +453,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         // ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
         setupTableGridDataLimitedSize(table, tableRows.size());
         addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
+        columnSetElementSection.setExpanded(false);
         return columnSetElementSection;
     }
 

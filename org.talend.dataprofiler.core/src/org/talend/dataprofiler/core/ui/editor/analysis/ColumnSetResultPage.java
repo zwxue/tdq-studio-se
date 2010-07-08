@@ -51,6 +51,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
@@ -157,14 +158,10 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
-        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
-
-        Composite matchingComposite = toolkit.createComposite(sectionClient);
-        matchingComposite.setLayout(new GridLayout(2, true));
-        matchingComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
         units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator, null));
@@ -173,19 +170,21 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(matchingType, units);
         ChartWithData chartData = new ChartWithData(matchingType, chartTypeState.getChart(), chartTypeState.getDataEntity());
 
-        TableViewer tableviewer = chartTypeState.getTableForm(matchingComposite);
+        TableViewer tableviewer = chartTypeState.getTableForm(sectionClient);
         tableviewer.setInput(chartData);
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
-        JFreeChart chart = chartTypeState.getChart();
-        ChartDecorator.decorate(chart);
-        if (chart != null) {
-            ChartComposite cc = new ChartComposite(matchingComposite, SWT.NONE, chart, true);
+        if (!EditorPreferencePage.isHideGraphics()) {
+            JFreeChart chart = chartTypeState.getChart();
+            ChartDecorator.decorate(chart);
+            if (chart != null) {
+                ChartComposite cc = new ChartComposite(sectionClient, SWT.NONE, chart, true);
 
-            GridData gd = new GridData();
-            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-            cc.setLayoutData(gd);
+                GridData gd = new GridData();
+                gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+                gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+                cc.setLayoutData(gd);
+            }
         }
         section.setClient(sectionClient);
         return section;
@@ -197,16 +196,12 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
-        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
 
-        Composite simpleComposite = toolkit.createComposite(sectionClient);
-        simpleComposite.setLayout(new GridLayout(2, true));
-        simpleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        createSimpleTable2(form, simpleComposite, simpleStatIndicator);
+        createSimpleTable2(form, sectionClient, simpleStatIndicator);
         section.setClient(sectionClient);
         return section;
     }
@@ -233,16 +228,18 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
 
         // create chart
+        if (!EditorPreferencePage.isHideGraphics()) {
 
-        JFreeChart chart = chartTypeState.getChart();
-        ChartDecorator.decorate(chart);
-        if (chart != null) {
-            ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+            JFreeChart chart = chartTypeState.getChart();
+            ChartDecorator.decorate(chart);
+            if (chart != null) {
+                ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
-            GridData gd = new GridData();
-            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-            cc.setLayoutData(gd);
+                GridData gd = new GridData();
+                gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+                gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+                cc.setLayoutData(gd);
+            }
         }
     }
 

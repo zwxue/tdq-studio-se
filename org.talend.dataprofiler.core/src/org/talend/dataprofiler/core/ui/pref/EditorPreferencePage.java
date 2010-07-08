@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.pref;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -60,6 +61,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // default element count in per page
     public static final String DEFAULT_PAGE_SIZE = "5"; //$NON-NLS-1$
 
+    public static final String HIDE_GRAPHICS_FOR_RESULT_PAGE = "HIDE_GRAPHICS_FOR_RESULT_PAGE";
+
     private Text pageSizeText;
 
     // ADD xqliu 2010-03-10 feature 10834
@@ -85,6 +88,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     private Button button4 = null;
 
     private Button button5 = null;
+
+    // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
+    private BooleanFieldEditor hideGraphsField;
 
     public static int getCurrentFolding() {
         int sectionFoldState = ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_MASTER_PAGE_FOLDING);
@@ -116,6 +122,11 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public static void setCurrentIndicators(Boolean currentIndicators) {
         EditorPreferencePage.currentIndicators = currentIndicators;
+    }
+
+    // ADDED yyi 2010-07-08 13964: Hide the Graphics in the Analysis results page
+    public static boolean isHideGraphics() {
+        return CorePlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferencePage.HIDE_GRAPHICS_FOR_RESULT_PAGE);
     }
 
     @Override
@@ -220,11 +231,33 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
+        // ADD yyi 2010-07-07 13964: Hide the Graphics in the Analysis results page
+        createGraphicsGroup(mainComposite);
+        // ~
+
         // MOD xqliu 2010-03-10 feature 10834
         createPageSizeComp(mainComposite);
         // ~10834
 
         return mainComposite;
+    }
+
+    /**
+     * DOC yyi 2010-07-07 13964: Hide the Graphics in the Analysis results page
+     */
+    private void createGraphicsGroup(Composite parent) {
+        Group graphicGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
+        graphicGroup.setText(DefaultMessagesImpl.getString("EditorPreferencePage.Graphics")); //$NON-NLS-1$
+        GridLayout layout = new GridLayout();
+        graphicGroup.setLayout(layout);
+        GridData data = new GridData(GridData.FILL_HORIZONTAL);
+        graphicGroup.setLayoutData(data);
+
+        hideGraphsField = new BooleanFieldEditor(HIDE_GRAPHICS_FOR_RESULT_PAGE, DefaultMessagesImpl
+                .getString("EditorPreferencePage.hideGraphics"), graphicGroup);
+        getPreferenceStore().setDefault(HIDE_GRAPHICS_FOR_RESULT_PAGE, false);
+        hideGraphsField.setPreferenceStore(getPreferenceStore());
+        hideGraphsField.load();
     }
 
     /**
@@ -285,6 +318,8 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         pageSizeText.setText(DEFAULT_PAGE_SIZE);
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
         ResourcesPlugin.getPlugin().savePluginPreferences();
+
+        hideGraphsField.loadDefault();
         super.performDefaults();
     }
 
@@ -305,6 +340,9 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
                 isCurrentAnalyzedElements() ? 0 : 1);
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators() ? 0 : 1);
+        // ADD yyi 2010-07-07 for 13964
+        hideGraphsField.store();
+        // ~ 13964
 
         // MOD xqliu 2010-03-10 feature 10834
         if (checkPageSize(this.pageSizeText.getText()) && checkPageSize(this.dqruleSizeText.getText())) {
@@ -323,6 +361,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             return false;
         }
         // ~10834
+
     }
 
     /**
