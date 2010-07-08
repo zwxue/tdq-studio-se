@@ -80,7 +80,6 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
         }
         // MOD klliu 2010-06-12 bug 13695
         if (regex.equals(this.getJavaPatternMessage())) {
-            this.setJavaPatternMessage(regex);
             return false;
         }
         pattern = java.util.regex.Pattern.compile(regex);
@@ -117,6 +116,11 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                                     String dbType = DataProviderHelper.getDBType(rc.getObject());
 
                                     r = DomainHelper.getRegexp(p, dbType);
+                                    //MOD klliu 2010-07-08 bug 13695 give detail message
+                                    if (r == null) {
+                                        r = p.getName();
+                                        this.setJavaPatternMessage(r);
+                                    }
                                     return r;
                                 }
                             }

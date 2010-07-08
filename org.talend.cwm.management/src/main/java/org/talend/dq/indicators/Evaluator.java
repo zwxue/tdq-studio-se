@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -48,6 +49,7 @@ public abstract class Evaluator<T> {
 
     protected Set<Indicator> allIndicators = new HashSet<Indicator>();
 
+	private String javaPatternMessage;
     /**
      * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators. if needed, this
      * method must be called on the Child indicators of the given indicator.
@@ -95,7 +97,7 @@ public abstract class Evaluator<T> {
         }
         try {
             if (!prepareIndicators()) {
-                rc.setReturnCode(Messages.getString("Evaluator.Problem"), false); //$NON-NLS-1$
+                rc.setReturnCode(Messages.getString("Evaluator.Problem")+javaPatternMessage, false); //$NON-NLS-1$
                 return rc;
             }
             rc = executeSqlQuery(sqlStatement);
@@ -129,6 +131,7 @@ public abstract class Evaluator<T> {
         boolean ok = true;
         for (Indicator indic : allIndicators) {
             if (!indic.prepare()) {
+            	javaPatternMessage=((RegexpMatchingIndicatorImpl) indic).getJavaPatternMessage();
                 ok = false;
             }
         }
