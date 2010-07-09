@@ -20,12 +20,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sql.XSDDataTypeConvertor;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -216,9 +218,15 @@ public class ChartDataEntity {
 
             ModelElement temp = indicator.getAnalyzedElement();
             int sqltype = Types.INTEGER;
-            if (null != temp)
-                sqltype = temp instanceof TdTable ? Types.INTEGER : ((TdColumn) temp).getJavaType();
-
+            if (null != temp) {
+                int tempType = sqltype;
+                if (temp instanceof TdColumn) {
+                    sqltype = ((TdColumn) temp).getJavaType();
+                } else if (temp instanceof TdXMLElement) {
+                    tempType = XSDDataTypeConvertor.convertToJDBCType(((TdXMLElement) temp).getJavaType());
+                }
+                sqltype = temp instanceof TdTable ? Types.INTEGER : tempType;
+            }
             boolean isChildOfRange = IndicatorsPackage.eINSTANCE.getValueIndicator().isSuperTypeOf(indicator.eClass());
             if (Java2SqlType.isDateInSQL(sqltype) && isChildOfRange) {
 
