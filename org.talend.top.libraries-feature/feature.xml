@@ -27,7 +27,7 @@
 
    <requires>
       <import plugin="org.talend.utils"/>
-      <import plugin="org.apache.log4j" version="1.2.13" match="greaterOrEqual"/>
+      <import plugin="org.apache.log4j" version="1.2.15" match="greaterOrEqual"/>
       <import plugin="org.talend.libraries.apache" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.talend.libraries.jdbc.jtds"/>
       <import plugin="org.talend.libraries.jdbc.mysql"/>
