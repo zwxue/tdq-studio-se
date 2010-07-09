@@ -90,6 +90,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public void run() {
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
+        //MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
+		if (selectionFile != null)
+			editor = CorePlugin.getDefault().openEditor(selectionFile, AnalysisEditor.class.getName());
+		//~
         if (editor == null) {
             analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
         } else {
