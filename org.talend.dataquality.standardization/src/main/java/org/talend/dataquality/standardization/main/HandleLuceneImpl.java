@@ -35,7 +35,7 @@ import org.talend.dataquality.standardization.query.FirstNameStandardize;
  */
 public class HandleLuceneImpl implements HandleLucene {
 	private final int hitsPerPage = 10;
-	private final String indexfolder="./data/TalendGivenNames_index";;
+	private final String indexfolder="./data/TalendGivenNames_index";
 	private Map<String,String[]> hits = new HashMap<String,String[]>();
 	private ArrayList<String> soreDoc=null;
 	/**
@@ -47,7 +47,7 @@ public class HandleLuceneImpl implements HandleLucene {
 	 * @return
 	 */
 	public boolean createIndex(String filename, String indexfolder) {
-		IndexBuilder idxBuilder = getIndexBuilder();
+		IndexBuilder idxBuilder = getIndexBuilder(indexfolder);
 		int[] columnsToBeIndexed = new int[] { 0, 1, 2, 3 };
 		try {
 			idxBuilder.initializeIndex(filename, columnsToBeIndexed);
@@ -74,7 +74,7 @@ public class HandleLuceneImpl implements HandleLucene {
 			throws IOException, ParseException {
 		// TODO Auto-generated method stub
 
-		IndexSearcher firtNameIs = getIndexSearcher();
+		IndexSearcher firtNameIs = getIndexSearcher(indexfolder);
 
 		Analyzer searchAnalyzer = getAnalyzer();
 
@@ -82,20 +82,20 @@ public class HandleLuceneImpl implements HandleLucene {
 				searchAnalyzer, hitsPerPage);
 		for (int searchCount = 0; searchCount < searchWords.length; searchCount++) {
 			ScoreDoc[] docs = stdname.standardize(searchType,searchWords[searchCount]);
-			treatSearchResult(searchType,docs,searchWords[searchCount]);
+			treatSearchResult(firtNameIs,searchType,docs,searchWords[searchCount]);
 		}
 		firtNameIs.close();
 
 		return getHits();
 	}
 
-	private void treatSearchResult(String searchType,ScoreDoc[] docs,String searchWords) {
+	private void treatSearchResult(IndexSearcher firtNameIs,String searchType,ScoreDoc[] docs,String searchWords) {
 		soreDoc=new ArrayList<String>();
 		for (int i = 0; i < docs.length; ++i) {
 			int docId = docs[i].doc;
 			Document d = null;
 			try {
-				d = getIndexSearcher().doc(docId);
+				d = firtNameIs.doc(docId);
 				String name = d.get(searchType);
 				soreDoc.add(name);
 			} catch (CorruptIndexException e) {
@@ -116,31 +116,20 @@ public class HandleLuceneImpl implements HandleLucene {
 		return hits;
 	}
 
-	private String getIndexfolder() {
-		return indexfolder;
-	}
-
 	private Analyzer getAnalyzer() {
 		return new SimpleAnalyzer();
 	}
 
-	private IndexBuilder getIndexBuilder() {
-		String tt = getIndexfolder();
-		return new IndexBuilder(tt);
+	private IndexBuilder getIndexBuilder(String folderName) {
+		return new IndexBuilder(folderName);
 	}
 
-	private IndexSearcher getIndexSearcher(){
+	private IndexSearcher getIndexSearcher(String folderName){
 		Directory dir = null;
 		IndexSearcher is = null;
 		try {
-			dir = FSDirectory.open(new File(getIndexfolder()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
+			dir = FSDirectory.open(new File(folderName));
 			is = new IndexSearcher(dir);
-
 		} catch (CorruptIndexException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -149,6 +138,25 @@ public class HandleLuceneImpl implements HandleLucene {
 			e.printStackTrace();
 		}
 		return is;
+	}
+
+	public Map<String, String[]> getSearchResult(String folderName,
+			String searchType, String[] searchWords) throws IOException,
+			ParseException {
+		// TODO Auto-generated method stub
+		IndexSearcher firtNameIs = getIndexSearcher(folderName);
+        
+		Analyzer searchAnalyzer = getAnalyzer();
+
+		FirstNameStandardize stdname = new FirstNameStandardize(firtNameIs,
+				searchAnalyzer, hitsPerPage);
+		for (int searchCount = 0; searchCount < searchWords.length; searchCount++) {
+			ScoreDoc[] docs = stdname.standardize(searchType,searchWords[searchCount]);
+			treatSearchResult(firtNameIs,searchType,docs,searchWords[searchCount]);
+		}
+		firtNameIs.close();
+
+		return getHits();
 	}
 
 }

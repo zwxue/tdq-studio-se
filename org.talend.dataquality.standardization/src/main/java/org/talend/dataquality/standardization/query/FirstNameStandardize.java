@@ -50,7 +50,8 @@ public class FirstNameStandardize {
     }
 
     public ScoreDoc[] standardize(String searchType,String input) throws ParseException, IOException {
-        if (input == null || input.length() == 0) {
+     
+    	if (input == null || input.length() == 0) {
             return new ScoreDoc[0];
         }
         Query q = new QueryParser(Version.LUCENE_30, searchType, analyzer).parse(input); // TODO do not harcode field name

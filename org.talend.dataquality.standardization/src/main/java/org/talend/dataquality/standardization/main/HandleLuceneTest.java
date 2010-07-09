@@ -32,15 +32,15 @@ public class HandleLuceneTest {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String filename = "./data/TalendGivenNames.TXT";
-		String indexfolder = "./data/TalendGivenNames_index";
+//		String filename = "./data/TalendGivenNames.TXT";
+		String indexfolder = "C:\\Documents and Settings\\Administrator\\×ÀÃæ\\data\\TalendGivenNames_index";
 		String[] firstnames = new String[] { "jeants", "rÃ©my", "jean-philippe",
 				"sebastiao", "r*my*" };
 		HandleLucene hl = new HandleLuceneImpl();
-		System.out.print(hl.createIndex(filename, indexfolder));
+//		System.out.print(hl.createIndex(filename, indexfolder));
 
 		try {
-			Map<String, String[]> hits = hl.getSearchResult(
+			Map<String, String[]> hits = hl.getSearchResult(indexfolder,
 					PluginConstant.FIRST_NAME_STANDARDIZE_NAME, firstnames);
 			for (String firstName : firstnames) {
 				String[] soreDocs = hits.get(firstName);

@@ -32,7 +32,7 @@ public interface HandleLucene {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public Map<String, String[]> getSearchResult(String searchType,
+	public Map<String, String[]> getSearchResult(String fileName,String searchType,
 			String[] searchWords) throws IOException, ParseException;
 
 	/**
