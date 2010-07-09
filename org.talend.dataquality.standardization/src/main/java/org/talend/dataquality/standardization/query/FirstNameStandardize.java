@@ -39,14 +39,14 @@ public class FirstNameStandardize {
 
     private IndexSearcher searcher;
 
-    private int hits;
+    private int hitsPerPage;
 
     public FirstNameStandardize(IndexSearcher indexSearcher, Analyzer analyzer, int hitsPerPage) throws IOException {
         assert analyzer != null;
         assert indexSearcher != null;
         this.analyzer = analyzer;
         this.searcher = indexSearcher;
-        this.hits = hitsPerPage;
+        this.hitsPerPage = hitsPerPage;
     }
 
     public ScoreDoc[] standardize(String searchType,String input) throws ParseException, IOException {
@@ -113,9 +113,9 @@ public class FirstNameStandardize {
             SortField sortfield = new SortField(PluginConstant.FIRST_NAME_STANDARDIZE_COUNT, SortField.INT); // TODO do not harcode field name
             Sort sort = new Sort(sortfield);
             // results are sorted according to a score and then to the count value
-            return TopFieldCollector.create(sort, hits, false, false, false, false);
+            return TopFieldCollector.create(sort, hitsPerPage, false, false, false, false);
         } else {
-            return TopScoreDocCollector.create(hits, false);
+            return TopScoreDocCollector.create(hitsPerPage, false);
         }
     }
 }
