@@ -631,7 +631,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     class ModelElementContentProvider implements IStructuredContentProvider {
 
         public Object[] getElements(Object inputElement) {
-            if (!(inputElement instanceof ColumnSet)) {
+            if (!(inputElement instanceof ColumnSet || inputElement instanceof TdXMLDocument || (inputElement instanceof TdXMLElement && !XmlElementHelper
+                    .isLeafNode((TdXMLElement) inputElement)))) {
                 return new Object[0];
             }
             EObject eObj = (EObject) inputElement;
