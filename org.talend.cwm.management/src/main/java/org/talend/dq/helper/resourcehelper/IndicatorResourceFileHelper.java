@@ -103,13 +103,13 @@ public class IndicatorResourceFileHelper extends ResourceFileMap {
      * 
      * DOC mzhao Get all indicators (depend on the folder which is SYSTEM or USER DEFINE).
      * 
-     * @param IndicatorFodler
+     * @param indicatorFodler
      * @return
      */
-    public Collection<IndicatorDefinition> getAllIndicators(IFolder IndicatorFodler) {
+    public Collection<IndicatorDefinition> getAllIndicators(IFolder indicatorFodler) {
 
         try {
-            searchAllIndicators(IndicatorFodler);
+            searchAllIndicators(indicatorFodler);
         } catch (CoreException e) {
             log.error(e, e);
         }
@@ -143,20 +143,20 @@ public class IndicatorResourceFileHelper extends ResourceFileMap {
         Set<IFile> keySet = idsMap.keySet();
         for (IFile file2 : keySet) {
             IndicatorDefinition id2 = idsMap.get(file2);
-            //MOD qiongli bug 13994, if contains java language indicator,handle it as follows
-			EList<TdExpression> ls = id.getSqlGenericExpression();
-			EList<TdExpression> ls2 = id2.getSqlGenericExpression();
-			if (ls.size() == 0) {
-				if (ResourceHelper.areSame(id, id2)) {
-					file = file2;
-					break;
-				} else {
-					continue;
-				}
-			}
-			if (ls2.size() == 0)
-				continue;
-            //~
+            // MOD qiongli bug 13994, if contains java language indicator,handle it as follows
+            EList<TdExpression> ls = id.getSqlGenericExpression();
+            EList<TdExpression> ls2 = id2.getSqlGenericExpression();
+            if (ls.size() == 0) {
+                if (ResourceHelper.areSame(id, id2)) {
+                    file = file2;
+                    break;
+                } else {
+                    continue;
+                }
+            }
+            if (ls2.size() == 0)
+                continue;
+            // ~
             Expression e = id.getSqlGenericExpression().get(0);
             Expression e2 = id2.getSqlGenericExpression().get(0);
             String et = e.getLanguage();
