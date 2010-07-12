@@ -79,13 +79,12 @@ public final class XMLSchemaBuilder {
      * @return
      */
     public List<ModelElement> getRootElements(TdXMLDocument document) {
-        String uri = isMdm(document) ? ResourceManager.getMDMConnectionFolder().getFile(document.getXsdFilePath())
-                .getRawLocation().toOSString() : ResourceManager.getConnectionFolder().getFile(document.getXsdFilePath())
-                .getRawLocation().toOSString();
+        String uri = isMdm(document) ? ResourceManager.getMDMConnectionFolder().getFile(document.getXsdFilePath()).getFullPath()
+                .toString() : ResourceManager.getConnectionFolder().getFile(document.getXsdFilePath()).getFullPath().toString();
         Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("*", new XSDResourceFactoryImpl());
         Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XSDResourceFactoryImpl());
         ResourceSet resourceSet = new ResourceSetImpl();
-        resourceSet.getResource(URI.createFileURI(uri), true);
+        resourceSet.getResource(URI.createPlatformResourceURI(uri, false), true);
         XSDSchema xsdSchema = null;
         for (Iterator<Resource> resources = resourceSet.getResources().iterator(); resources.hasNext(); /* no-op */) {
             // Return the first schema object found, which is the main schema

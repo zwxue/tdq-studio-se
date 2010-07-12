@@ -1171,6 +1171,12 @@
            name="Split system indicators "
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateMDMConnectionXSDPathTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateMDMConnectionXSDPathTask"
+           name="Update MDMConnection XSDPath Task"
+           version="4.0.3">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

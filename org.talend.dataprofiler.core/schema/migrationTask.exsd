@@ -102,6 +102,8 @@
                   </enumeration>
                   <enumeration value="4.0.1">
                   </enumeration>
+                  <enumeration value="4.0.3">
+                  </enumeration>
                   <enumeration value="4.1.0">
                   </enumeration>
                </restriction>
