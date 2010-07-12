@@ -38,7 +38,7 @@ import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.PluginConstant;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -135,7 +135,7 @@ public final class UDIHelper {
         try {
             for (IResource resource : folder.members()) {
                 if (resource instanceof IFile) {
-                    IndicatorDefinition id = UDIResourceFileHelper.getInstance().findUDI((IFile) resource);
+                    IndicatorDefinition id = IndicatorResourceFileHelper.getInstance().findUDI((IFile) resource);
                     if (id != null) {
                         list.add(id.getName());
                     }

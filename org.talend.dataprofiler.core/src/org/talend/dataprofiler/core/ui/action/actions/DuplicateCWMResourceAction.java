@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,7 +33,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ISetSelectionTarget;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -42,13 +40,9 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.helpers.ReportHelper;
-import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.ModelElementIdentifier;
-import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -189,22 +183,22 @@ public class DuplicateCWMResourceAction extends Action {
             AnalysisHelper.setStringDataFilter((Analysis) newObject, AnalysisHelper.getStringDataFilter((Analysis) oldObject));
         }
 
-        // MOD 2010-6-20 integrated duplicated action.
-        if (ModelElementIdentifier.isID(newObject)) {
-            IndicatorDefinition oldID = (IndicatorDefinition) oldObject;
-            IndicatorDefinition newID = (IndicatorDefinition) newObject;
-            TaggedValueHelper.setValidStatus(true, newID);
-            newID.setLabel("");
-
-            Collection<IndicatorCategory> userDefinedIndicatorCategoryList = DefinitionHandler.getInstance()
-                    .getUserDefinedIndicatorCategoryList();
-            IndicatorCategory category = UDIHelper.getUDICategory(oldID);
-            if (userDefinedIndicatorCategoryList.contains(category)) {
-                UDIHelper.setUDICategory(newID, category);
-            } else {
-                UDIHelper.setUDICategory(newID, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
-            }
-        }
+        // MOD 2010-6-20 integrated duplicated action. MOD mzhao feature 13676,split system indicators
+        // if (ModelElementIdentifier.isID(newObject)) {
+        // IndicatorDefinition oldID = (IndicatorDefinition) oldObject;
+        // IndicatorDefinition newID = (IndicatorDefinition) newObject;
+        // TaggedValueHelper.setValidStatus(true, newID);
+        // newID.setLabel("");
+        //
+        // Collection<IndicatorCategory> userDefinedIndicatorCategoryList = DefinitionHandler.getInstance()
+        // .getUserDefinedIndicatorCategoryList();
+        // IndicatorCategory category = UDIHelper.getUDICategory(oldID);
+        // if (userDefinedIndicatorCategoryList.contains(category)) {
+        // UDIHelper.setUDICategory(newID, category);
+        // } else {
+        // UDIHelper.setUDICategory(newID, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
+        // }
+        // }
 
         return newObject;
     }

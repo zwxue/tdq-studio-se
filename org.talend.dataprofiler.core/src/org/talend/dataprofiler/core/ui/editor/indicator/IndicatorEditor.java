@@ -25,7 +25,7 @@ import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -66,7 +66,7 @@ public class IndicatorEditor extends CommonFormEditor {
         if (input instanceof IndicatorEditorInput) {
             return input.getName();
         } else if (input instanceof FileEditorInput) {
-            return UDIResourceFileHelper.getInstance().findUDI(((FileEditorInput) input).getFile()).getName();
+            return IndicatorResourceFileHelper.getInstance().findUDI(((FileEditorInput) input).getFile()).getName();
         }
         return DefaultMessagesImpl.getString("IndicatorEditor.IndicatorEditor"); //$NON-NLS-1$
     }

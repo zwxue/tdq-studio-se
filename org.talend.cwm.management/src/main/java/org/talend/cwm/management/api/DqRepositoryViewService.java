@@ -59,6 +59,7 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXMLContent;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -387,7 +388,7 @@ public final class DqRepositoryViewService {
      * @return
      */
     public static String createLogicalFileName(ModelElement element, String extension) {
-        return createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element) + "." + extension;
+        return createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING + extension;
     }
 
     /**
@@ -399,7 +400,7 @@ public final class DqRepositoryViewService {
      * @return the path "folder/basename.extension"
      */
     public static String createFilename(String basename, String extension) {
-        return createTechnicalName(basename) + "." + extension;
+        return createTechnicalName(basename) + PluginConstant.DOT_STRING + extension;
     }
 
     /**

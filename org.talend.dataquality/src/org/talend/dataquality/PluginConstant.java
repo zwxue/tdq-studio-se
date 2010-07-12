@@ -27,6 +27,8 @@ public final class PluginConstant {
 
     public static final String EMPTY_STRING = "";
 
+    public static final String DOT_STRING = "."; //$NON-NLS-1$
+
     private PluginConstant() {
 
     }

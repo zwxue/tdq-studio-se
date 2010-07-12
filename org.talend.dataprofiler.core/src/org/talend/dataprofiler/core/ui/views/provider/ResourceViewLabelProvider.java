@@ -39,7 +39,7 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ImplementationHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -75,7 +75,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             } else if (FactoriesUtil.isUDIFile(fileExtension)) {
                 image = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
 
-                IndicatorDefinition udi = UDIResourceFileHelper.getInstance().findUDI(file);
+                IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findUDI(file);
                 if (udi != null) {
                     boolean validStatus = TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi);
 

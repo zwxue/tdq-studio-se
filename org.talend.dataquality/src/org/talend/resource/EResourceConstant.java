@@ -52,6 +52,7 @@ public enum EResourceConstant {
                             "User Defined Indicators",
                             "TDQ_Libraries/Indicators/User Defined Indicators",
                             ResourceConstant.READONLY),
+    SYSTEM_INDICATORS("System Indicators", "TDQ_Libraries/Indicators/System Indicators", ResourceConstant.READONLY),
     PATTERN_REGEX("Regex", "TDQ_Libraries/Patterns/Regex", ResourceConstant.READONLY),
     PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY),
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY),

@@ -33,29 +33,30 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC xqliu class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment MOD mzhao 13676,split system indicators. 2010-07-08
  */
-public class UDIResourceFileHelper extends ResourceFileMap {
+public class IndicatorResourceFileHelper extends ResourceFileMap {
 
-    private static Logger log = Logger.getLogger(UDIResourceFileHelper.class);
+    private static Logger log = Logger.getLogger(IndicatorResourceFileHelper.class);
 
-    private static UDIResourceFileHelper instance;
+    private static IndicatorResourceFileHelper instance;
 
     private Map<IFile, IndicatorDefinition> idsMap = new HashMap<IFile, IndicatorDefinition>();
 
-    private UDIResourceFileHelper() {
+    private IndicatorResourceFileHelper() {
         super();
     }
 
-    public static UDIResourceFileHelper getInstance() {
+    public static IndicatorResourceFileHelper getInstance() {
         if (instance == null) {
-            instance = new UDIResourceFileHelper();
+            instance = new IndicatorResourceFileHelper();
         }
         return instance;
     }
@@ -98,10 +99,17 @@ public class UDIResourceFileHelper extends ResourceFileMap {
         return id;
     }
 
-    public Collection<IndicatorDefinition> getAllUDIs(IFolder patternFodler) {
+    /**
+     * 
+     * DOC mzhao Get all indicators (depend on the folder which is SYSTEM or USER DEFINE).
+     * 
+     * @param IndicatorFodler
+     * @return
+     */
+    public Collection<IndicatorDefinition> getAllIndicators(IFolder IndicatorFodler) {
 
         try {
-            searchAllUDIs(patternFodler);
+            searchAllIndicators(IndicatorFodler);
         } catch (CoreException e) {
             log.error(e, e);
         }
@@ -109,17 +117,24 @@ public class UDIResourceFileHelper extends ResourceFileMap {
         return idsMap.values();
     }
 
+    /**
+     * 
+     * DOC mzhao Fetch all user defined indicators.
+     * 
+     * @return
+     */
     public Collection<IndicatorDefinition> getAllUDIs() {
-        IFolder udiFolder = ResourceManager.getLibrariesFolder().getFolder("Indicators");
-        return getAllUDIs(udiFolder);
+        IFolder udiFolder = ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
+                EResourceConstant.USER_DEFINED_INDICATORS.getName());
+        return getAllIndicators(udiFolder);
     }
 
-    public IFile getUDIFile(IndicatorDefinition id, IFolder[] folders) {
+    public IFile getIndicatorFile(IndicatorDefinition id, IFolder[] folders) {
         IFile file = null;
 
         try {
             for (int i = 0; i < folders.length; i++) {
-                searchAllUDIs(folders[i]);
+                searchAllIndicators(folders[i]);
             }
         } catch (CoreException e) {
             log.error(e, e);
@@ -157,10 +172,10 @@ public class UDIResourceFileHelper extends ResourceFileMap {
         return file;
     }
 
-    private void searchAllUDIs(IFolder folder) throws CoreException {
+    private void searchAllIndicators(IFolder folder) throws CoreException {
         for (IResource resource : folder.members()) {
             if (resource.getType() == IResource.FOLDER) {
-                searchAllUDIs(folder.getFolder(resource.getName()));
+                searchAllIndicators(folder.getFolder(resource.getName()));
                 continue;
             }
             IFile file = (IFile) resource;

@@ -69,6 +69,8 @@ public final class DQStructureManager {
 
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
+    private static final String SYSTEM_INDICATOR_PATH = "/indicators";//$NON-NLS-1$
+
     public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
 
     private static DQStructureManager manager;
@@ -117,6 +119,7 @@ public final class DQStructureManager {
             IFolder indicatorFoler = createNewFolder(librariesFoler, EResourceConstant.INDICATORS);
             IFolder udiFoler = createNewFolder(indicatorFoler, EResourceConstant.USER_DEFINED_INDICATORS);
             IFolder jrxmlFolder = createNewFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
+            IFolder systemIndicatorFoler = createNewFolder(indicatorFoler, EResourceConstant.SYSTEM_INDICATORS);
 
             IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
             IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
@@ -126,6 +129,7 @@ public final class DQStructureManager {
             copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null);
             copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null);
             copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null);
+            copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null);
 
             WorkspaceVersionHelper.storeVersion();
 

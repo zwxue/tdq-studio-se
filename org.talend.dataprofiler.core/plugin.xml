@@ -1165,6 +1165,12 @@
            name="Update All Match Indicator Task"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.SplitSysIndicatorTask"
+           id="org.talend.dataprofiler.core.migration.impl.SplitSysIndicatorTask"
+           name="Split system indicators "
+           version="4.1.0">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

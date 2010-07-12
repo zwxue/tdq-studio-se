@@ -31,7 +31,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -96,7 +96,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                 modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules(folderResource));
                 break;
             case UDINDICATOR:
-                modelElements.addAll(UDIResourceFileHelper.getInstance().getAllUDIs(folderResource));
+                modelElements.addAll(IndicatorResourceFileHelper.getInstance().getAllIndicators(folderResource));
                 break;
             default:
                 break;

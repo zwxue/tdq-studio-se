@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_ccHq1BF2Ed2PKb6nEJEvhw" name="Minimal Length" label="Minimal Length">
+  <taggedValue xmi:id="_-VcW0YqnEd-SocVM_rHvUg" tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data"/>
+  <taggedValue xmi:id="_-VcW0oqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the length of the smallest textual record"/>
+  <taggedValue xmi:id="_-VcW2IqnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/Text Statistics/Minimal Length.properties"/>
+  <categories href="../../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
+  <sqlGenericExpression xmi:id="_-VcW04qnEd-SocVM_rHvUg" body="SELECT MIN(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+  <sqlGenericExpression xmi:id="_-VcW1IqnEd-SocVM_rHvUg" body="SELECT MIN(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+  <sqlGenericExpression xmi:id="_-VcW1YqnEd-SocVM_rHvUg" body="SELECT MIN(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+  <sqlGenericExpression xmi:id="_-VcW1oqnEd-SocVM_rHvUg" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
+  <sqlGenericExpression xmi:id="_-VcW14qnEd-SocVM_rHvUg" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Ingres"/>
+</dataquality.indicators.definition:IndicatorDefinition>

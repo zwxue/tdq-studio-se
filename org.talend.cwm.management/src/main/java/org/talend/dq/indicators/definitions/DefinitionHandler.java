@@ -76,6 +76,7 @@ import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -90,6 +91,8 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -154,9 +157,22 @@ public final class DefinitionHandler {
     }
 
     private DefinitionHandler() {
-        this.indicatorDefinitions = loadFromFile();
+        // MOD mzhao feature 13676.
+        this.indicatorDefinitions  = DefinitionFactory.eINSTANCE.createIndicatorsDefinitions();
+        indicatorDefinitions.getIndicatorDefinitions().addAll(
+                IndicatorResourceFileHelper.getInstance().getAllIndicators(
+                        ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
+                                EResourceConstant.SYSTEM_INDICATORS.getName())));
     }
 
+    /**
+     * 
+     * DOC mzhao feature 13676 split system indicators.
+     * 
+     * @deprecated please use: {@link IndicatorResourceFileHelper#getAllIndicators(IFolder)}.
+     * 
+     * @return
+     */
     private IndicatorsDefinitions loadFromFile() {
 
         Resource definitionsFile = getResourceFromFile();
@@ -280,7 +296,8 @@ public final class DefinitionHandler {
      * @return
      */
     public Resource copyDefinitionsIntoFolder(URI destinationUri) {
-        Resource resource = getIndicatorsDefinitions().eResource();
+        // MOD mzhao feature 13676,Reload from original place of .talend.definition file. 2010-07-09
+        Resource resource = getResourceFromFile();
         EMFUtil.changeUri(resource, destinationUri);
         if (EMFUtil.saveResource(resource)) {
             if (log.isInfoEnabled()) {

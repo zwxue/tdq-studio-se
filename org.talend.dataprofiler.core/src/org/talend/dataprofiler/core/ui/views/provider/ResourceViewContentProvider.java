@@ -30,7 +30,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.model.nodes.foldernode.IndicatorFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
@@ -171,7 +170,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      */
     private Object[] getIndicatorsChildren(IFolder folder) {
         List<Object> list = new ArrayList<Object>();
-        list.add(new IndicatorFolderNode("System"));
+        // MOD mzhao feature 13676, split system indicators. 2010-07-08
+        // list.add(new IndicatorFolderNode("System"));
         try {
             list.addAll(Arrays.asList(folder.members()));
         } catch (CoreException e) {

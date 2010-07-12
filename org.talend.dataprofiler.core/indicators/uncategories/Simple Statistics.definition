@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_yb-Y4Dh8Ed2XmO7pl5Yuyg" name="Simple Statistics" label="Simple Statistics">
+  <taggedValue xmi:id="_-YE0EYqnEd-SocVM_rHvUg" tag="Description" value="contain several count indicators"/>
+  <taggedValue xmi:id="_-YE0EoqnEd-SocVM_rHvUg" tag="Purpose" value="analyze the quantity of records"/>
+  <taggedValue xmi:id="_-YE0E4qnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/uncategories/Simple Statistics.properties"/>
+  <aggregatedDefinitions href="../../../.Talend.definition#_ccHq0xF2Ed2PKb6nEJEvhw"/>
+  <aggregatedDefinitions href="../../../.Talend.definition#_ccHq0BF2Ed2PKb6nEJEvhw"/>
+  <aggregatedDefinitions href="../../../.Talend.definition#_ccHq0hF2Ed2PKb6nEJEvhw"/>
+  <aggregatedDefinitions href="../../../.Talend.definition#_ccHq0RF2Ed2PKb6nEJEvhw"/>
+  <aggregatedDefinitions href="../../../.Talend.definition#_GrAeADh9Ed2XmO7pl5Yuyg"/>
+</dataquality.indicators.definition:IndicatorDefinition>

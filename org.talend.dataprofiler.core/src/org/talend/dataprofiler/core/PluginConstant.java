@@ -100,4 +100,7 @@ public final class PluginConstant {
     public static final String DUPLICATE_COUNT = "Duplicate Count";//$NON-NLS-1$
 
     public static final String NULL_COUNT = "Null Count";//$NON-NLS-1$
+
+    public static final String UNCATEGORIES = "uncategories";//$NON-NLS-1$
+
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_ccIR4BF2Ed2PKb6nEJEvhw" name="Average Length" label="Average Length">
+  <taggedValue xmi:id="_-Vwf4YqnEd-SocVM_rHvUg" tag="Description" value="computes the average length of the field. Parameters can be set to avoid counting blank data or null data"/>
+  <taggedValue xmi:id="_-Vwf4oqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the average length of the textual record"/>
+  <taggedValue xmi:id="_-Vwf6IqnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/Text Statistics/Average Length.properties"/>
+  <categories href="../../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
+  <sqlGenericExpression xmi:id="_-Vwf44qnEd-SocVM_rHvUg" body="SELECT SUM(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+  <sqlGenericExpression xmi:id="_-Vwf5IqnEd-SocVM_rHvUg" body="SELECT SUM(LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+  <sqlGenericExpression xmi:id="_-Vwf5YqnEd-SocVM_rHvUg" body="SELECT SUM(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+  <sqlGenericExpression xmi:id="_-Vwf5oqnEd-SocVM_rHvUg" body="SELECT SUM(LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
+  <sqlGenericExpression xmi:id="_-Vwf54qnEd-SocVM_rHvUg" body="SELECT SUM(LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Ingres"/>
+</dataquality.indicators.definition:IndicatorDefinition>

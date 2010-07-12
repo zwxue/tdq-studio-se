@@ -27,7 +27,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ExportFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.utils.io.FilesUtils;
 
 /**
@@ -59,7 +59,7 @@ public class ExportUDIWizard extends Wizard {
             if (element instanceof IFile) {
                 IFile file = (IFile) element;
                 if (FactoriesUtil.DEFINITION.equalsIgnoreCase(file.getFileExtension())) {
-                    seletedIndicators.add(UDIResourceFileHelper.getInstance().findUDI(file));
+                    seletedIndicators.add(IndicatorResourceFileHelper.getInstance().findUDI(file));
                 }
             }
         }

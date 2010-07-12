@@ -32,7 +32,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -69,7 +69,7 @@ public final class ModelElementFileFactory {
         } else if (FactoriesUtil.isPatternFile(fileExtension)) {
             modelElement = PatternResourceFileHelper.getInstance().findPattern(file);
         } else if (FactoriesUtil.isUDIFile(fileExtension)) {
-            modelElement = UDIResourceFileHelper.getInstance().findUDI(file);
+            modelElement = IndicatorResourceFileHelper.getInstance().findUDI(file);
         }
 
         return modelElement;
@@ -96,7 +96,7 @@ public final class ModelElementFileFactory {
         } else if (FactoriesUtil.isPatternFile(fileExtension)) {
             modelElement = PatternResourceFileHelper.getInstance();
         } else if (FactoriesUtil.isUDIFile(fileExtension)) {
-            modelElement = UDIResourceFileHelper.getInstance();
+            modelElement = IndicatorResourceFileHelper.getInstance();
         }
         return modelElement;
     }
@@ -120,7 +120,7 @@ public final class ModelElementFileFactory {
         } else if (element instanceof Pattern) {
             resourceMap = PatternResourceFileHelper.getInstance();
         } else if (element instanceof UserDefIndicator) {
-            resourceMap = UDIResourceFileHelper.getInstance();
+            resourceMap = IndicatorResourceFileHelper.getInstance();
         }
         return resourceMap;
     }
@@ -160,7 +160,7 @@ public final class ModelElementFileFactory {
 
         Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
 
-        Collection<IndicatorDefinition> allUDIs = UDIResourceFileHelper.getInstance().getAllUDIs();
+        Collection<IndicatorDefinition> allUDIs = IndicatorResourceFileHelper.getInstance().getAllUDIs();
 
         List<ModelElement> allElement = new ArrayList<ModelElement>();
         allElement.addAll(allAnalysis);

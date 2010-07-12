@@ -49,7 +49,7 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -284,7 +284,7 @@ public abstract class ModelElementTreeMenuProvider {
             UserDefIndicator indicator = (UserDefIndicator) indicatorUnit.getIndicator();
 
             IFolder userFolder = ResourceManager.getUDIFolder();
-            IFile file = UDIResourceFileHelper.getInstance().getUDIFile(indicator.getIndicatorDefinition(),
+            IFile file = IndicatorResourceFileHelper.getInstance().getIndicatorFile(indicator.getIndicatorDefinition(),
                     new IFolder[] { userFolder });
 
             IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

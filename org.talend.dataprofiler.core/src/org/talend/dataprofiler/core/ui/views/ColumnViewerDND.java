@@ -61,7 +61,7 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -470,7 +470,7 @@ public class ColumnViewerDND {
             if (firstElement instanceof IFile) {
                 IFile fe = (IFile) firstElement;
                 if (FactoriesUtil.DEFINITION.equals(fe.getFileExtension())) {
-                    IndicatorDefinition udi = UDIResourceFileHelper.getInstance().findUDI(fe);
+                    IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findUDI(fe);
                     // MOD yyi 2009-09-16
                     // Feature :8866
                     if (udi != null && (TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi))) {

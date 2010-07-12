@@ -38,8 +38,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -56,7 +54,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -82,8 +79,9 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -163,10 +161,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         return systemIndicator;
     }
 
-    public void setSystemIndicator(boolean systemIndicator) {
-        this.systemIndicator = systemIndicator;
-    }
-
     private static final String BODY_AGGREGATE = "AVG({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)"; //$NON-NLS-1$
 
     private static final String BODY_DATE = "MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)"; //$NON-NLS-1$
@@ -216,10 +210,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(supportTypes));
         // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
-        systemIndicator = this.getEditor().getEditorInput() instanceof IndicatorEditorInput && definition != null
-        && definition.eResource() != null && definition.eResource().getURI().toString().contains(".Talend.definition");
-
-      
+        systemIndicator = definition != null && definition.eResource() != null
+                && definition.eResource().getURI().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
         if (systemIndicator) {
             allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
 
@@ -255,10 +247,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             hasDateExpression = definition.getDate1argFunctions().size() > 0;
             hasCharactersMapping = definition.getCharactersMapping().size() > 0;
         }
-
-        // initialize indicator type
-        systemIndicator = this.getEditor().getEditorInput() instanceof IndicatorEditorInput;
-
         afExpressionMap = new HashMap<String, AggregateDateExpression>();
         afExpressionMapTemp = new HashMap<String, AggregateDateExpression>();
 
@@ -1532,7 +1520,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return editorInput.getIndicatorDefinition();
         } else if (editor.getEditorInput() instanceof FileEditorInput) {
             FileEditorInput editorInput = (FileEditorInput) editor.getEditorInput();
-            return UDIResourceFileHelper.getInstance().findUDI(editorInput.getFile());
+            return IndicatorResourceFileHelper.getInstance().findUDI(editorInput.getFile());
         } else {
             return null;
         }
@@ -1675,7 +1663,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         ReturnCode rc = UDIHelper.validate(definition);
         if (rc.isOk()) {
             // EMFUtil.saveSingleResource(definition.eResource());
-            UDIResourceFileHelper.getInstance().save(definition);
+            IndicatorResourceFileHelper.getInstance().save(definition);
             this.isDirty = false;
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
