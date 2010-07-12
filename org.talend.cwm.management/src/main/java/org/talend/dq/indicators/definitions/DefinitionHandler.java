@@ -76,7 +76,6 @@ import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
-import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -158,18 +157,13 @@ public final class DefinitionHandler {
 
     private DefinitionHandler() {
         // MOD mzhao feature 13676.
-        this.indicatorDefinitions  = DefinitionFactory.eINSTANCE.createIndicatorsDefinitions();
-        indicatorDefinitions.getIndicatorDefinitions().addAll(
-                IndicatorResourceFileHelper.getInstance().getAllIndicators(
-                        ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
-                                EResourceConstant.SYSTEM_INDICATORS.getName())));
+        this.indicatorDefinitions = loadFromFile();
     }
 
     /**
      * 
      * DOC mzhao feature 13676 split system indicators.
      * 
-     * @deprecated please use: {@link IndicatorResourceFileHelper#getAllIndicators(IFolder)}.
      * 
      * @return
      */
@@ -190,11 +184,15 @@ public final class DefinitionHandler {
 
             @Override
             public IndicatorsDefinitions caseIndicatorsDefinitions(IndicatorsDefinitions object) {
+                // Add all system indicators
+                object.getIndicatorDefinitions().addAll(
+                        IndicatorResourceFileHelper.getInstance().getAllIndicators(
+                                ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
+                                        EResourceConstant.SYSTEM_INDICATORS.getName())));
                 return object;
             }
 
         };
-
         return catSwitch.doSwitch(contents.get(0));
     }
 
@@ -323,6 +321,7 @@ public final class DefinitionHandler {
     /**
      * Method "saveResource" saves the indicator definitions (in .Talend.definition file).
      * 
+     * @deprecated
      * @return true if no problem
      */
     public boolean saveResource() {
