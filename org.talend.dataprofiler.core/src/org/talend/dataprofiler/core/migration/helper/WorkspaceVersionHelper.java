@@ -88,13 +88,17 @@ public final class WorkspaceVersionHelper {
         ProductVersion pVersion = null;
         try {
             if (versionFile != null && versionFile.exists()) {
-                Properties pros = new Properties();
+                FileInputStream inStream = new FileInputStream(versionFile);
 
-                pros.load(new FileInputStream(versionFile));
+                Properties pros = new Properties();
+                pros.load(inStream);
+
                 String version = pros.getProperty(VERSION);
                 if (version != null && !"".equals(version)) { //$NON-NLS-1$
                     pVersion = ProductVersion.fromString(version);
                 }
+
+                inStream.close();
             } else {
                 pVersion = new ProductVersion(0, 0, 0);
             }
@@ -114,7 +118,9 @@ public final class WorkspaceVersionHelper {
         Properties pros = new Properties();
         pros.setProperty(VERSION, CorePlugin.getDefault().getProductVersion().toString());
         try {
-            pros.store(new FileOutputStream(new File(versionFile.getLocation().toOSString())), null);
+            FileOutputStream outStream = new FileOutputStream(new File(versionFile.getLocation().toOSString()));
+            pros.store(outStream, null);
+            outStream.close();
         } catch (FileNotFoundException e) {
             log.error(e, e);
         } catch (IOException e) {

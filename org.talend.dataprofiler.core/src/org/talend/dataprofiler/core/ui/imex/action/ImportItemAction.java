@@ -19,7 +19,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.talend.dataprofiler.core.ui.imex.ImportWizard;
-import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -52,7 +51,7 @@ public class ImportItemAction extends Action implements IWorkbenchWindowActionDe
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     public void run(IAction action) {
-        ImportWizard wizard = new ImportWizard(EImexType.FILE);
+        ImportWizard wizard = new ImportWizard();
 
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(550, 500);

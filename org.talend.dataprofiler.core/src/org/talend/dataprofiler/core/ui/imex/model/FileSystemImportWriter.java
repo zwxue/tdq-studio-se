@@ -41,10 +41,12 @@ import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -54,13 +56,15 @@ public class FileSystemImportWriter implements IImexWriter {
 
     private static Logger log = Logger.getLogger(FileSystemImportWriter.class);
 
-    private static final String VERSION_PATH = "/TDQ_Libraries/.version.txt";
+    private static final String VERSION_FILE_NAME = ".version.txt";
 
-    private static final String DEFINITION_PATH = "/TDQ_Libraries/.Talend.definition";
+    private static final String DEFINITION_FILE_NAME = ".Talend.definition";
 
     private File versionFile;
 
-    private String basePath;
+    private File definitionFile;
+
+    private IPath basePath;
 
     private String projectName;
 
@@ -93,7 +97,9 @@ public class FileSystemImportWriter implements IImexWriter {
             retrieveProjectName(anyRecord);
         }
 
-        versionFile = new Path(basePath).append(VERSION_PATH).toFile();
+        versionFile = DqFileUtils.getFile(basePath.toFile(), VERSION_FILE_NAME);
+
+        definitionFile = DqFileUtils.getFile(basePath.toFile(), DEFINITION_FILE_NAME);
 
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
     }
@@ -197,36 +203,45 @@ public class FileSystemImportWriter implements IImexWriter {
     public void finish(ItemRecord[] records) throws IOException {
         ItemRecord.clear();
 
-        File defFile = new Path(basePath).append(DEFINITION_PATH).toFile();
-        if (defFile.exists()) {
-            File defintionFile = ResourceManager.getRootProject().getFile(DEFINITION_PATH).getLocation().toFile();
-            FilesUtils.copyFile(defFile, defintionFile);
+        if (definitionFile != null && definitionFile.exists()) {
+            File defintionFile = ResourceManager.getLibrariesFolder().getFile(DEFINITION_FILE_NAME).getLocation().toFile();
+            FilesUtils.copyFile(definitionFile, defintionFile);
         }
 
-        Display.getDefault().asyncExec(new Runnable() {
+        if (versionFile != null && versionFile.exists()) {
+            ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
+            final List<IMigrationTask> migrationTasks = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE,
+                    version);
+            Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
-
-                if (versionFile != null) {
-                    ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
-                    List<IMigrationTask> migrationTasks = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE,
-                            version);
+                public void run() {
                     MigrationTaskManager.doMigrationTask(migrationTasks);
-                }
 
-                CorePlugin.getDefault().refreshWorkSpace();
-                CorePlugin.getDefault().refreshDQView();
-            }
-        });
+                    CorePlugin.getDefault().refreshWorkSpace();
+                    CorePlugin.getDefault().refreshDQView();
+                }
+            });
+        }
+
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(java.lang.String)
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#computeInput(org.eclipse.core.runtime.IPath)
      */
-    public void setBasePath(String basePath) {
-        this.basePath = basePath;
+    public ItemRecord computeInput(IPath path) {
+        setBasePath(path);
+        return new ItemRecord(path.toFile());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(org.eclipse.core.runtime.IPath)
+     */
+    public void setBasePath(IPath path) {
+        this.basePath = path;
     }
 
     /*
@@ -234,7 +249,27 @@ public class FileSystemImportWriter implements IImexWriter {
      * 
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#getBasePath()
      */
-    public String getBasePath() {
+    public IPath getBasePath() {
         return this.basePath;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#checkBasePath()
+     */
+    public ReturnCode checkBasePath() {
+        ReturnCode rc = new ReturnCode(true);
+        File baseFile = basePath.toFile();
+        if (!baseFile.exists()) {
+            rc.setOk(false);
+            rc.setMessage("The root directory does not exist");
+        } else {
+            if (!DqFileUtils.existFile(baseFile, VERSION_FILE_NAME)) {
+                rc.setOk(false);
+                rc.setMessage("Invalid project!");
+            }
+        }
+        return rc;
     }
 }

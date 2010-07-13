@@ -17,14 +17,16 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -33,7 +35,7 @@ public class FileSystemExportWriter implements IImexWriter {
 
     private static Logger log = Logger.getLogger(FileSystemExportWriter.class);
 
-    private String basePath;
+    private IPath basePath;
 
     /*
      * (non-Javadoc)
@@ -56,7 +58,7 @@ public class FileSystemExportWriter implements IImexWriter {
      */
     public void write(ItemRecord recored) throws IOException, CoreException {
 
-        IPath itemDesPath = new Path(basePath).append(recored.getFullPath());
+        IPath itemDesPath = basePath.append(recored.getFullPath());
         IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
         // export item file
@@ -98,7 +100,7 @@ public class FileSystemExportWriter implements IImexWriter {
      * @throws IOException
      */
     private void copyFileToDest(IFile source) throws IOException {
-        IPath desPath = new Path(basePath).append(source.getFullPath());
+        IPath desPath = basePath.append(source.getFullPath());
         if (source.exists()) {
             copyFile(source.getLocation().toFile(), desPath.toFile());
         }
@@ -122,10 +124,23 @@ public class FileSystemExportWriter implements IImexWriter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(java.lang.String)
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#computeInput(org.eclipse.core.runtime.IPath)
      */
-    public void setBasePath(String basePath) {
-        this.basePath = basePath;
+    public ItemRecord computeInput(IPath path) {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        File file = path == null ? ResourceManager.getRootProject().getLocation().toFile() : workspace.getRoot().getFolder(path)
+                .getLocation().toFile();
+
+        return new ItemRecord(file);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(org.eclipse.core.runtime.IPath)
+     */
+    public void setBasePath(IPath path) {
+        this.basePath = path;
     }
 
     /*
@@ -133,8 +148,22 @@ public class FileSystemExportWriter implements IImexWriter {
      * 
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#getBasePath()
      */
-    public String getBasePath() {
+    public IPath getBasePath() {
         return this.basePath;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#checkBasePath()
+     */
+    public ReturnCode checkBasePath() {
+        ReturnCode rc = new ReturnCode(true);
+
+        if (basePath == null || !basePath.toFile().exists()) {
+            rc.setOk(false);
+            rc.setMessage("The root directory does not exist");
+        }
+        return rc;
+    }
 }

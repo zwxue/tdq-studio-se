@@ -31,6 +31,8 @@ public final class ExportWriterFactory {
         switch (type) {
         case FILE:
             return new FileSystemExportWriter();
+        case ZIP_FILE:
+            return new ZipFileExportWriter();
         default:
             break;
         }

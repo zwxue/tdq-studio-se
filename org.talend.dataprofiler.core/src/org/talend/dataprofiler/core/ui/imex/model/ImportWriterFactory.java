@@ -31,6 +31,8 @@ public final class ImportWriterFactory {
         switch (type) {
         case FILE:
             return new FileSystemImportWriter();
+        case ZIP_FILE:
+            return new ZipFileImportWriter();
         default:
             break;
         }

@@ -18,9 +18,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
-import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
@@ -33,13 +31,10 @@ public class ImportWizard extends Wizard {
 
     private ImportWizardPage importPage;
 
-    private IImexWriter writer;
-
-    public ImportWizard(EImexType type) {
+    public ImportWizard() {
         setWindowTitle("Import Item");
 
-        this.writer = ImportWriterFactory.create(type);
-        this.importPage = new ImportWizardPage(writer);
+        this.importPage = new ImportWizardPage();
     }
 
     /*
@@ -61,6 +56,8 @@ public class ImportWizard extends Wizard {
     public boolean performFinish() {
 
         final ItemRecord[] records = importPage.getElements();
+
+        final IImexWriter writer = importPage.getWriter();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {
 

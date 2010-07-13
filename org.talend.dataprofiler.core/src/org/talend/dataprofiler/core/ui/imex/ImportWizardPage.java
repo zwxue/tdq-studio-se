@@ -31,6 +31,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,9 +45,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
+import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
-import org.talend.resource.EResourceConstant;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -68,15 +71,15 @@ public class ImportWizardPage extends WizardPage {
 
     private IImexWriter writer;
 
+    private String basePath;
+
     private List<String> errors = new ArrayList<String>();
 
     private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
-    public ImportWizardPage(IImexWriter writer) {
+    public ImportWizardPage() {
         super(Messages.getString("ImportWizardPage.2")); //$NON-NLS-1$
         setMessage(Messages.getString("ImportWizardPage.3")); //$NON-NLS-1$
-
-        this.writer = writer;
     }
 
     /*
@@ -110,21 +113,35 @@ public class ImportWizardPage extends WizardPage {
      */
     private void addListeners() {
 
-        dirBTN.addSelectionListener(new SelectionAdapter() {
+        SelectionListener modeSwitchListener = new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                setDirState(dirBTN.getSelection());
+                setDirState(isDirState());
+                setArchState(!isDirState());
             }
-        });
+        };
 
-        archBTN.addSelectionListener(new SelectionAdapter() {
+        dirBTN.addSelectionListener(modeSwitchListener);
 
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                setArchState(archBTN.getSelection());
+        archBTN.addSelectionListener(modeSwitchListener);
+
+        ModifyListener populateListener = new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                if (isDirState()) {
+                    basePath = dirTxt.getText();
+                } else {
+                    basePath = archTxt.getText();
+                }
+
+                textModified(basePath);
             }
-        });
+        };
+
+        dirTxt.addModifyListener(populateListener);
+
+        archTxt.addModifyListener(populateListener);
 
         browseDirBTN.addSelectionListener(new SelectionAdapter() {
 
@@ -133,8 +150,6 @@ public class ImportWizardPage extends WizardPage {
                 String result = openDirectoryDialog();
                 if (result != null) {
                     dirTxt.setText(result);
-
-                    populateElement();
                 }
             }
 
@@ -173,9 +188,7 @@ public class ImportWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                dirTxt.setText(dirTxt.getText());
-
-                populateElement();
+                textModified(basePath);
             }
         });
 
@@ -198,13 +211,6 @@ public class ImportWizardPage extends WizardPage {
                 repositoryTree.refresh();
 
                 checkforErrors();
-            }
-        });
-
-        dirTxt.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                dirTextModified();
             }
         });
     }
@@ -241,10 +247,14 @@ public class ImportWizardPage extends WizardPage {
     /**
      * DOC sgandon Comment method "dirTextModified".
      */
-    protected void dirTextModified() {
-        File file = new File(dirTxt.getText());
-        if (file.exists()) {
-            repositoryTree.setInput(new ItemRecord(file));
+    protected void textModified(String pathStr) {
+        IPath path = new Path(pathStr);
+
+        if (path.toFile().exists()) {
+            ItemRecord input = writer.computeInput(path);
+
+            repositoryTree.setInput(input);
+
             repositoryTree.expandAll();
             TreeItem[] topItems = repositoryTree.getTree().getItems();
             for (TreeItem treeItem : topItems) {
@@ -252,10 +262,12 @@ public class ImportWizardPage extends WizardPage {
             }
             repositoryTree.refresh();
 
-            writer.setBasePath(dirTxt.getText());
         } else {
             repositoryTree.setInput(null);
         }
+
+        populateElement();
+
         checkforErrors();
     }
 
@@ -275,21 +287,17 @@ public class ImportWizardPage extends WizardPage {
     private void checkforErrors() {
         List<String> dErrors = new ArrayList<String>();
 
-        IPath dirPath = new Path(dirTxt.getText());
-        if (!dirPath.toFile().exists()) {
-            dErrors.add(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
+        ReturnCode rc = writer.checkBasePath();
+        if (!rc.isOk()) {
+            dErrors.add(rc.getMessage());
         }
+
         if (repositoryTree.getTree().getItems().length == 0) {
             dErrors.add(Messages.getString("ImportWizardPage.0")); //$NON-NLS-1$
         }
 
         if (repositoryTree.getCheckedElements().length == 0) {
             dErrors.add(Messages.getString("ImportWizardPage.1")); //$NON-NLS-1$
-        }
-
-        IPath versionPath = dirPath.append(EResourceConstant.LIBRARIES.getPath()).append(".version.txt");
-        if (!versionPath.toFile().exists()) {
-            dErrors.add(Messages.getString("ImportWizardPage.invalidProjectFolder"));//$NON-NLS-1$
         }
 
         ItemRecord[] elements = getElements();
@@ -319,6 +327,8 @@ public class ImportWizardPage extends WizardPage {
     private void initControlState() {
         setArchState(false);
         setPageComplete(false);
+
+        this.writer = ImportWriterFactory.create(EImexType.FILE);
     }
 
     /**
@@ -407,6 +417,10 @@ public class ImportWizardPage extends WizardPage {
     protected void setDirState(boolean state) {
         dirTxt.setEnabled(state);
         browseDirBTN.setEnabled(state);
+
+        if (state) {
+            writer = ImportWriterFactory.create(EImexType.FILE);
+        }
     }
 
     /**
@@ -426,6 +440,10 @@ public class ImportWizardPage extends WizardPage {
     protected void setArchState(boolean state) {
         archTxt.setEnabled(state);
         browseArchBTN.setEnabled(state);
+
+        if (state) {
+            writer = ImportWriterFactory.create(EImexType.ZIP_FILE);
+        }
     }
 
     /**
@@ -460,7 +478,6 @@ public class ImportWizardPage extends WizardPage {
 
         archBTN = new Button(selectComp, SWT.RADIO);
         archBTN.setText(Messages.getString("ImportWizardPage.9")); //$NON-NLS-1$
-        archBTN.setEnabled(false); // TODO make it enable after implemence.
         setButtonLayoutData(archBTN);
 
         archTxt = new Text(selectComp, SWT.BORDER);
@@ -490,6 +507,15 @@ public class ImportWizardPage extends WizardPage {
             }
         }
         return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
+    }
+
+    /**
+     * Getter for writer.
+     * 
+     * @return the writer
+     */
+    public IImexWriter getWriter() {
+        return this.writer;
     }
 
     /**

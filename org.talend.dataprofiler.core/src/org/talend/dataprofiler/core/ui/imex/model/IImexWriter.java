@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.ui.imex.model;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -22,18 +24,35 @@ import org.eclipse.core.runtime.CoreException;
 public interface IImexWriter {
 
     /**
+     * DOC bZhou Comment method "computeInput".
+     * 
+     * @param path
+     * @return
+     */
+    public ItemRecord computeInput(IPath path);
+
+    /**
      * DOC bZhou Comment method "setBasePath".
      * 
      * @param basePath
      */
-    public void setBasePath(String basePath);
+    public void setBasePath(IPath path);
 
     /**
      * DOC bZhou Comment method "getBasePath".
      * 
      * @return
      */
-    public String getBasePath();
+    public IPath getBasePath();
+
+    /**
+     * DOC bZhou Comment method "checkBasePath".
+     * 
+     * Check the base path is valid or not.
+     * 
+     * @return
+     */
+    public ReturnCode checkBasePath();
 
     /**
      * DOC bZhou Comment method "populate".

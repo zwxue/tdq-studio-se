@@ -18,8 +18,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.talend.dataprofiler.core.ui.imex.model.EImexType;
-import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
@@ -33,23 +31,20 @@ public class ExportWizard extends Wizard {
 
     private ExportWizardPage exportPage;
 
-    private IImexWriter writer;
-
     /**
      * DOC bZhou ExportWizard constructor comment.
      */
-    public ExportWizard(EImexType type) {
-        this(type, null);
+    public ExportWizard() {
+        this(null);
     }
 
     /**
      * DOC bZhou ExportWizard constructor comment.
      */
-    public ExportWizard(EImexType type, String specifiedPath) {
+    public ExportWizard(String specifiedPath) {
         setWindowTitle("Export Item");
 
-        this.writer = ExportWriterFactory.create(type);
-        this.exportPage = new ExportWizardPage(writer, specifiedPath);
+        this.exportPage = new ExportWizardPage(specifiedPath);
     }
 
     /*
@@ -70,6 +65,7 @@ public class ExportWizard extends Wizard {
     @Override
     public boolean performFinish() {
 
+        final IImexWriter writer = exportPage.getWriter();
         final ItemRecord[] records = exportPage.getElements();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {

@@ -19,7 +19,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.talend.dataprofiler.core.ui.imex.ExportWizard;
-import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -52,7 +51,7 @@ public class ExportItemAction extends Action implements IWorkbenchWindowActionDe
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     public void run(IAction action) {
-        ExportWizard wizard = new ExportWizard(EImexType.FILE);
+        ExportWizard wizard = new ExportWizard();
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(620, 500);
         dialog.open();

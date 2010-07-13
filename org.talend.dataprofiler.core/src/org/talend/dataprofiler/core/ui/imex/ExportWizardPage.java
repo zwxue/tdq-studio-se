@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -29,6 +29,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,9 +40,11 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
+import org.talend.dataprofiler.core.ui.imex.model.EImexType;
+import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
-import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -57,19 +60,19 @@ public class ExportWizardPage extends WizardPage {
 
     private Text dirTxt, archTxt;
 
-    private String specifiedPath;
+    private IPath specifiedPath;
 
     private List<String> errors;
 
     private IImexWriter writer;
 
-    private static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
+    public static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
-    public ExportWizardPage(IImexWriter writer, String specifiedPath) {
+    public ExportWizardPage(String specifiedPath) {
         super(Messages.getString("ExportWizardPage.2")); //$NON-NLS-1$
         setMessage(Messages.getString("ExportWizardPage.3")); //$NON-NLS-1$
-        this.writer = writer;
-        this.specifiedPath = specifiedPath;
+        this.specifiedPath = specifiedPath == null ? null : new Path(specifiedPath);
+        this.writer = ExportWriterFactory.create(EImexType.FILE);
     }
 
     /*
@@ -111,6 +114,10 @@ public class ExportWizardPage extends WizardPage {
     protected void setDirState(boolean state) {
         dirTxt.setEnabled(state);
         browseDirBTN.setEnabled(state);
+
+        if (state) {
+            writer = ExportWriterFactory.create(EImexType.FILE);
+        }
     }
 
     /**
@@ -130,6 +137,10 @@ public class ExportWizardPage extends WizardPage {
     protected void setArchState(boolean state) {
         archTxt.setEnabled(state);
         browseArchBTN.setEnabled(state);
+
+        if (state) {
+            writer = ExportWriterFactory.create(EImexType.ZIP_FILE);
+        }
     }
 
     /**
@@ -146,21 +157,36 @@ public class ExportWizardPage extends WizardPage {
      */
     private void addListeners() {
 
-        dirBTN.addSelectionListener(new SelectionAdapter() {
+        SelectionListener modeSwitchListener = new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                setDirState(dirBTN.getSelection());
+                setDirState(isDirState());
+                setArchState(!isDirState());
             }
-        });
+        };
 
-        archBTN.addSelectionListener(new SelectionAdapter() {
+        dirBTN.addSelectionListener(modeSwitchListener);
 
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                setArchState(archBTN.getSelection());
+        archBTN.addSelectionListener(modeSwitchListener);
+
+        ModifyListener populateListener = new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                String basePath;
+                if (isDirState()) {
+                    basePath = dirTxt.getText();
+                } else {
+                    basePath = archTxt.getText();
+                }
+
+                textModified(basePath);
             }
-        });
+        };
+
+        dirTxt.addModifyListener(populateListener);
+
+        archTxt.addModifyListener(populateListener);
 
         browseDirBTN.addSelectionListener(new SelectionAdapter() {
 
@@ -188,7 +214,12 @@ public class ExportWizardPage extends WizardPage {
             public void widgetSelected(SelectionEvent e) {
                 String result = openFileDialog();
                 if (result != null) {
-                    archTxt.setText(result);
+                    IPath path = new Path(result);
+                    if (StringUtils.isBlank(path.getFileExtension())) {
+                        path = path.addFileExtension("zip");
+                    }
+
+                    archTxt.setText(path.toOSString());
                 }
             }
 
@@ -222,13 +253,16 @@ public class ExportWizardPage extends WizardPage {
             }
         });
 
-        dirTxt.addModifyListener(new ModifyListener() {
+    }
 
-            public void modifyText(ModifyEvent e) {
-                writer.setBasePath(dirTxt.getText());
-                checkForErrors();
-            }
-        });
+    /**
+     * DOC bZhou Comment method "textModified".
+     * 
+     * @param pathStr
+     */
+    protected void textModified(String pathStr) {
+        writer.setBasePath(new Path(pathStr));
+        checkForErrors();
     }
 
     /**
@@ -238,8 +272,9 @@ public class ExportWizardPage extends WizardPage {
     protected void checkForErrors() {
         errors = new ArrayList<String>();
 
-        if (!new File(dirTxt.getText()).exists()) {
-            errors.add(Messages.getString("ExportWizardPage.4")); //$NON-NLS-1$
+        ReturnCode rc = writer.checkBasePath();
+        if (!rc.isOk()) {
+            errors.add(rc.getMessage());
         }
 
         ItemRecord[] elements = getElements();
@@ -295,7 +330,7 @@ public class ExportWizardPage extends WizardPage {
         repositoryTree = new ContainerCheckedTreeViewer(treeComposite);
         repositoryTree.setContentProvider(new FileTreeContentProvider());
         repositoryTree.setLabelProvider(new FileTreeLabelProvider());
-        repositoryTree.setInput(computInput());
+        repositoryTree.setInput(writer.computeInput(specifiedPath));
         repositoryTree.expandAll();
         repositoryTree.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -415,19 +450,6 @@ public class ExportWizardPage extends WizardPage {
     }
 
     /**
-     * DOC bZhou Comment method "computInput".
-     * 
-     * @return
-     */
-    private ItemRecord computInput() {
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        File file = specifiedPath == null ? ResourceManager.getRootProject().getLocation().toFile() : workspace.getRoot()
-                .getFolder(new Path(specifiedPath)).getLocation().toFile();
-
-        return new ItemRecord(file);
-    }
-
-    /**
      * DOC bZhou Comment method "createSelectComposite".
      * 
      * @param top
@@ -450,7 +472,6 @@ public class ExportWizardPage extends WizardPage {
 
         archBTN = new Button(selectComp, SWT.RADIO);
         archBTN.setText(Messages.getString("ExportWizardPage.8")); //$NON-NLS-1$
-        archBTN.setEnabled(false); // TODO make it enable after implemence.
         setButtonLayoutData(archBTN);
 
         archTxt = new Text(selectComp, SWT.BORDER);
@@ -479,6 +500,15 @@ public class ExportWizardPage extends WizardPage {
             }
         }
         return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
+    }
+
+    /**
+     * Getter for writer.
+     * 
+     * @return the writer
+     */
+    public IImexWriter getWriter() {
+        return this.writer;
     }
 
     /**

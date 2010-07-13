@@ -253,7 +253,7 @@ public final class MigrationTaskManager {
 
                         if (task.valid()) {
                             if (!task.execute()) {
-                                log.error("Migration Task failed: " + task.getName());
+                                log.warn("Migration Task failed: " + task.getName());
                             } else {
                                 log.info("Migration Task success: " + task.getName());
                             }
