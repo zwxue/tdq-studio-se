@@ -39,12 +39,12 @@ import org.talend.dataquality.indicators.TextParameters;
 public class IndicatorParametersImpl extends EObjectImpl implements IndicatorParameters {
 
     /**
-	 * The cached value of the '{@link #getIndicatorValidDomain() <em>Indicator Valid Domain</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #getIndicatorValidDomain()
-	 * @generated
-	 * @ordered
-	 */
+     * The cached value of the '{@link #getIndicatorValidDomain() <em>Indicator Valid Domain</em>}' containment reference.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @see #getIndicatorValidDomain()
+     * @generated
+     * @ordered
+     */
     protected Domain indicatorValidDomain;
 
     /**
@@ -58,13 +58,13 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
     protected Domain dataValidDomain;
 
     /**
-	 * The cached value of the '{@link #getBins() <em>Bins</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getBins() <em>Bins</em>}' containment reference.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-	 * @see #getBins()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getBins()
+     * @generated
+     * @ordered
+     */
     protected Domain bins;
 
     /**
@@ -88,416 +88,416 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
     protected TextParameters textParameter;
 
     /**
-	 * The cached value of the '{@link #getDateParameters() <em>Date Parameters</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDateParameters() <em>Date Parameters</em>}' containment reference.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDateParameters()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDateParameters()
+     * @generated
+     * @ordered
+     */
     protected DateParameters dateParameters;
 
     /**
-	 * The default value of the '{@link #getTopN() <em>Top N</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getTopN() <em>Top N</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getTopN()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTopN()
+     * @generated
+     * @ordered
+     */
     protected static final int TOP_N_EDEFAULT = 10;
 
     /**
-	 * The cached value of the '{@link #getTopN() <em>Top N</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getTopN() <em>Top N</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getTopN()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getTopN()
+     * @generated
+     * @ordered
+     */
     protected int topN = TOP_N_EDEFAULT;
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected IndicatorParametersImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.INDICATOR_PARAMETERS;
-	}
+        return IndicatorsPackage.Literals.INDICATOR_PARAMETERS;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Domain getIndicatorValidDomain() {
-		return indicatorValidDomain;
-	}
+        return indicatorValidDomain;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public NotificationChain basicSetIndicatorValidDomain(Domain newIndicatorValidDomain, NotificationChain msgs) {
-		Domain oldIndicatorValidDomain = indicatorValidDomain;
-		indicatorValidDomain = newIndicatorValidDomain;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN, oldIndicatorValidDomain, newIndicatorValidDomain);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Domain oldIndicatorValidDomain = indicatorValidDomain;
+        indicatorValidDomain = newIndicatorValidDomain;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN, oldIndicatorValidDomain, newIndicatorValidDomain);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setIndicatorValidDomain(Domain newIndicatorValidDomain) {
-		if (newIndicatorValidDomain != indicatorValidDomain) {
-			NotificationChain msgs = null;
-			if (indicatorValidDomain != null)
-				msgs = ((InternalEObject)indicatorValidDomain).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN, null, msgs);
-			if (newIndicatorValidDomain != null)
-				msgs = ((InternalEObject)newIndicatorValidDomain).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN, null, msgs);
-			msgs = basicSetIndicatorValidDomain(newIndicatorValidDomain, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN, newIndicatorValidDomain, newIndicatorValidDomain));
-	}
+        if (newIndicatorValidDomain != indicatorValidDomain) {
+            NotificationChain msgs = null;
+            if (indicatorValidDomain != null)
+                msgs = ((InternalEObject)indicatorValidDomain).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN, null, msgs);
+            if (newIndicatorValidDomain != null)
+                msgs = ((InternalEObject)newIndicatorValidDomain).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN, null, msgs);
+            msgs = basicSetIndicatorValidDomain(newIndicatorValidDomain, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN, newIndicatorValidDomain, newIndicatorValidDomain));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Domain getDataValidDomain() {
-		return dataValidDomain;
-	}
+        return dataValidDomain;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public NotificationChain basicSetDataValidDomain(Domain newDataValidDomain, NotificationChain msgs) {
-		Domain oldDataValidDomain = dataValidDomain;
-		dataValidDomain = newDataValidDomain;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN, oldDataValidDomain, newDataValidDomain);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Domain oldDataValidDomain = dataValidDomain;
+        dataValidDomain = newDataValidDomain;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN, oldDataValidDomain, newDataValidDomain);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setDataValidDomain(Domain newDataValidDomain) {
-		if (newDataValidDomain != dataValidDomain) {
-			NotificationChain msgs = null;
-			if (dataValidDomain != null)
-				msgs = ((InternalEObject)dataValidDomain).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN, null, msgs);
-			if (newDataValidDomain != null)
-				msgs = ((InternalEObject)newDataValidDomain).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN, null, msgs);
-			msgs = basicSetDataValidDomain(newDataValidDomain, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN, newDataValidDomain, newDataValidDomain));
-	}
+        if (newDataValidDomain != dataValidDomain) {
+            NotificationChain msgs = null;
+            if (dataValidDomain != null)
+                msgs = ((InternalEObject)dataValidDomain).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN, null, msgs);
+            if (newDataValidDomain != null)
+                msgs = ((InternalEObject)newDataValidDomain).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN, null, msgs);
+            msgs = basicSetDataValidDomain(newDataValidDomain, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN, newDataValidDomain, newDataValidDomain));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Domain getBins() {
-		return bins;
-	}
+        return bins;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public NotificationChain basicSetBins(Domain newBins, NotificationChain msgs) {
-		Domain oldBins = bins;
-		bins = newBins;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__BINS, oldBins, newBins);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        Domain oldBins = bins;
+        bins = newBins;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__BINS, oldBins, newBins);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setBins(Domain newBins) {
-		if (newBins != bins) {
-			NotificationChain msgs = null;
-			if (bins != null)
-				msgs = ((InternalEObject)bins).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__BINS, null, msgs);
-			if (newBins != null)
-				msgs = ((InternalEObject)newBins).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__BINS, null, msgs);
-			msgs = basicSetBins(newBins, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__BINS, newBins, newBins));
-	}
+        if (newBins != bins) {
+            NotificationChain msgs = null;
+            if (bins != null)
+                msgs = ((InternalEObject)bins).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__BINS, null, msgs);
+            if (newBins != null)
+                msgs = ((InternalEObject)newBins).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__BINS, null, msgs);
+            msgs = basicSetBins(newBins, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__BINS, newBins, newBins));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public TextParameters getTextParameter() {
-		return textParameter;
-	}
+        return textParameter;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public NotificationChain basicSetTextParameter(TextParameters newTextParameter, NotificationChain msgs) {
-		TextParameters oldTextParameter = textParameter;
-		textParameter = newTextParameter;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER, oldTextParameter, newTextParameter);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        TextParameters oldTextParameter = textParameter;
+        textParameter = newTextParameter;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER, oldTextParameter, newTextParameter);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setTextParameter(TextParameters newTextParameter) {
-		if (newTextParameter != textParameter) {
-			NotificationChain msgs = null;
-			if (textParameter != null)
-				msgs = ((InternalEObject)textParameter).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER, null, msgs);
-			if (newTextParameter != null)
-				msgs = ((InternalEObject)newTextParameter).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER, null, msgs);
-			msgs = basicSetTextParameter(newTextParameter, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER, newTextParameter, newTextParameter));
-	}
+        if (newTextParameter != textParameter) {
+            NotificationChain msgs = null;
+            if (textParameter != null)
+                msgs = ((InternalEObject)textParameter).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER, null, msgs);
+            if (newTextParameter != null)
+                msgs = ((InternalEObject)newTextParameter).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER, null, msgs);
+            msgs = basicSetTextParameter(newTextParameter, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER, newTextParameter, newTextParameter));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public DateParameters getDateParameters() {
-		return dateParameters;
-	}
+        return dateParameters;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public NotificationChain basicSetDateParameters(DateParameters newDateParameters, NotificationChain msgs) {
-		DateParameters oldDateParameters = dateParameters;
-		dateParameters = newDateParameters;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS, oldDateParameters, newDateParameters);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        DateParameters oldDateParameters = dateParameters;
+        dateParameters = newDateParameters;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS, oldDateParameters, newDateParameters);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setDateParameters(DateParameters newDateParameters) {
-		if (newDateParameters != dateParameters) {
-			NotificationChain msgs = null;
-			if (dateParameters != null)
-				msgs = ((InternalEObject)dateParameters).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS, null, msgs);
-			if (newDateParameters != null)
-				msgs = ((InternalEObject)newDateParameters).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS, null, msgs);
-			msgs = basicSetDateParameters(newDateParameters, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS, newDateParameters, newDateParameters));
-	}
+        if (newDateParameters != dateParameters) {
+            NotificationChain msgs = null;
+            if (dateParameters != null)
+                msgs = ((InternalEObject)dateParameters).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS, null, msgs);
+            if (newDateParameters != null)
+                msgs = ((InternalEObject)newDateParameters).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS, null, msgs);
+            msgs = basicSetDateParameters(newDateParameters, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS, newDateParameters, newDateParameters));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public int getTopN() {
-		return topN;
-	}
+        return topN;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setTopN(int newTopN) {
-		int oldTopN = topN;
-		topN = newTopN;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N, oldTopN, topN));
-	}
+        int oldTopN = topN;
+        topN = newTopN;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N, oldTopN, topN));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
-				return basicSetIndicatorValidDomain(null, msgs);
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
-				return basicSetDataValidDomain(null, msgs);
-			case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
-				return basicSetBins(null, msgs);
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
-				return basicSetTextParameter(null, msgs);
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
-				return basicSetDateParameters(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
+                return basicSetIndicatorValidDomain(null, msgs);
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
+                return basicSetDataValidDomain(null, msgs);
+            case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
+                return basicSetBins(null, msgs);
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
+                return basicSetTextParameter(null, msgs);
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
+                return basicSetDateParameters(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
-				return getIndicatorValidDomain();
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
-				return getDataValidDomain();
-			case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
-				return getBins();
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
-				return getTextParameter();
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
-				return getDateParameters();
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
-				return getTopN();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
+                return getIndicatorValidDomain();
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
+                return getDataValidDomain();
+            case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
+                return getBins();
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
+                return getTextParameter();
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
+                return getDateParameters();
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
+                return getTopN();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
-				setIndicatorValidDomain((Domain)newValue);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
-				setDataValidDomain((Domain)newValue);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
-				setBins((Domain)newValue);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
-				setTextParameter((TextParameters)newValue);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
-				setDateParameters((DateParameters)newValue);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
-				setTopN((Integer)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
+                setIndicatorValidDomain((Domain)newValue);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
+                setDataValidDomain((Domain)newValue);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
+                setBins((Domain)newValue);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
+                setTextParameter((TextParameters)newValue);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
+                setDateParameters((DateParameters)newValue);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
+                setTopN((Integer)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
-				setIndicatorValidDomain((Domain)null);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
-				setDataValidDomain((Domain)null);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
-				setBins((Domain)null);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
-				setTextParameter((TextParameters)null);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
-				setDateParameters((DateParameters)null);
-				return;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
-				setTopN(TOP_N_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
+                setIndicatorValidDomain((Domain)null);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
+                setDataValidDomain((Domain)null);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
+                setBins((Domain)null);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
+                setTextParameter((TextParameters)null);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
+                setDateParameters((DateParameters)null);
+                return;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
+                setTopN(TOP_N_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
-				return indicatorValidDomain != null;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
-				return dataValidDomain != null;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
-				return bins != null;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
-				return textParameter != null;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
-				return dateParameters != null;
-			case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
-				return topN != TOP_N_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.INDICATOR_PARAMETERS__INDICATOR_VALID_DOMAIN:
+                return indicatorValidDomain != null;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATA_VALID_DOMAIN:
+                return dataValidDomain != null;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__BINS:
+                return bins != null;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TEXT_PARAMETER:
+                return textParameter != null;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
+                return dateParameters != null;
+            case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
+                return topN != TOP_N_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (topN: ");
-		result.append(topN);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (topN: ");
+        result.append(topN);
+        result.append(')');
+        return result.toString();
+    }
 
 } // IndicatorParametersImpl

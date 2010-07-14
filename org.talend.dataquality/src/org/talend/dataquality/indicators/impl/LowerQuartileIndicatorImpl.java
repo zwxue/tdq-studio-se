@@ -24,21 +24,21 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
     private TreeMap<Object, Long> frequenceTable = new TreeMap<Object, Long>();
     
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected LowerQuartileIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.LOWER_QUARTILE_INDICATOR;
-	}
+        return IndicatorsPackage.Literals.LOWER_QUARTILE_INDICATOR;
+    }
 
     @Override
     public boolean handle(Object data) {

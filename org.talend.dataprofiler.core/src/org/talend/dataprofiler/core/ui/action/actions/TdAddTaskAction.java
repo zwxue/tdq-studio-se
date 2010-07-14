@@ -24,8 +24,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.markers.MarkerViewUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.model.TdResourceModel;
 import org.talend.dataprofiler.core.ui.dialog.TdTaskPropertiesDialog;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -70,7 +70,7 @@ public class TdAddTaskAction extends Action {
 
             } else if (navObj instanceof ModelElement) {
                 modelElement = (ModelElement) navObj;
-                file = WorkspaceResourceHelper.getModelElementResource(modelElement);
+                file = WorkspaceUtils.getModelElementResource(modelElement);
 
             }
             if (modelElement != null) {

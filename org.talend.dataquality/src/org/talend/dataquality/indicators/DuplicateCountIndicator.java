@@ -28,32 +28,32 @@ import java.util.Set;
 public interface DuplicateCountIndicator extends Indicator {
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @model kind="operation" dataType="org.talend.dataquality.indicators.JavaSet"
-	 * @generated
-	 */
+     * @model kind="operation" dataType="org.talend.dataquality.indicators.JavaSet"
+     * @generated
+     */
     Set<Object> getDuplicateValues();
 
     /**
-	 * Returns the value of the '<em><b>Duplicate Value Count</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Duplicate Value Count</em>' attribute.
-	 * @see #setDuplicateValueCount(Long)
-	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getDuplicateCountIndicator_DuplicateValueCount()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Duplicate Value Count</em>' attribute.
+     * @see #setDuplicateValueCount(Long)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getDuplicateCountIndicator_DuplicateValueCount()
+     * @model
+     * @generated
+     */
     Long getDuplicateValueCount();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.indicators.DuplicateCountIndicator#getDuplicateValueCount <em>Duplicate Value Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.DuplicateCountIndicator#getDuplicateValueCount <em>Duplicate Value Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Duplicate Value Count</em>' attribute.
-	 * @see #getDuplicateValueCount()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Duplicate Value Count</em>' attribute.
+     * @see #getDuplicateValueCount()
+     * @generated
+     */
     void setDuplicateValueCount(Long value);
 } // DuplicateCountIndicator

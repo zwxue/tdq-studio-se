@@ -34,402 +34,402 @@ import org.talend.dataquality.indicators.TextParameters;
  */
 public class TextParametersImpl extends EObjectImpl implements TextParameters {
     /**
-	 * The default value of the '{@link #isUseBlank() <em>Use Blank</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isUseBlank() <em>Use Blank</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isUseBlank()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isUseBlank()
+     * @generated
+     * @ordered
+     */
     protected static final boolean USE_BLANK_EDEFAULT = true;
 
     /**
-	 * The cached value of the '{@link #isUseBlank() <em>Use Blank</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isUseBlank() <em>Use Blank</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isUseBlank()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isUseBlank()
+     * @generated
+     * @ordered
+     */
     protected boolean useBlank = USE_BLANK_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getMatchingAlgorithm() <em>Matching Algorithm</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getMatchingAlgorithm() <em>Matching Algorithm</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getMatchingAlgorithm()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getMatchingAlgorithm()
+     * @generated
+     * @ordered
+     */
     protected static final MatchingAlgorithm MATCHING_ALGORITHM_EDEFAULT = MatchingAlgorithm.EXACT;
 
     /**
-	 * The cached value of the '{@link #getMatchingAlgorithm() <em>Matching Algorithm</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getMatchingAlgorithm() <em>Matching Algorithm</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getMatchingAlgorithm()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getMatchingAlgorithm()
+     * @generated
+     * @ordered
+     */
     protected MatchingAlgorithm matchingAlgorithm = MATCHING_ALGORITHM_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #isIgnoreCase() <em>Ignore Case</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isIgnoreCase() <em>Ignore Case</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isIgnoreCase()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isIgnoreCase()
+     * @generated
+     * @ordered
+     */
     protected static final boolean IGNORE_CASE_EDEFAULT = false;
 
     /**
-	 * The cached value of the '{@link #isIgnoreCase() <em>Ignore Case</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isIgnoreCase() <em>Ignore Case</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isIgnoreCase()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isIgnoreCase()
+     * @generated
+     * @ordered
+     */
     protected boolean ignoreCase = IGNORE_CASE_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #isUseNulls() <em>Use Nulls</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isUseNulls() <em>Use Nulls</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isUseNulls()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isUseNulls()
+     * @generated
+     * @ordered
+     */
     protected static final boolean USE_NULLS_EDEFAULT = false;
 
     /**
-	 * The cached value of the '{@link #isUseNulls() <em>Use Nulls</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isUseNulls() <em>Use Nulls</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isUseNulls()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isUseNulls()
+     * @generated
+     * @ordered
+     */
     protected boolean useNulls = USE_NULLS_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getCharactersToReplace() <em>Characters To Replace</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getCharactersToReplace() <em>Characters To Replace</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getCharactersToReplace()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getCharactersToReplace()
+     * @generated
+     * @ordered
+     */
     protected static final String CHARACTERS_TO_REPLACE_EDEFAULT = "abcdefghijklmnopqrstuvwxyz\u00e7\u00e2\u00ea\u00ee\u00f4\u00fb\u00e9\u00e8\u00f9\u00ef\u00f6\u00fcABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c7\u00c2\u00ca\u00ce\u00d4\u00db\u00c9\u00c8\u00d9\u00cf\u00d6\u00dc0123456789";
 
     /**
-	 * The cached value of the '{@link #getCharactersToReplace() <em>Characters To Replace</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getCharactersToReplace() <em>Characters To Replace</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getCharactersToReplace()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getCharactersToReplace()
+     * @generated
+     * @ordered
+     */
     protected String charactersToReplace = CHARACTERS_TO_REPLACE_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getReplacementCharacters() <em>Replacement Characters</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getReplacementCharacters() <em>Replacement Characters</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getReplacementCharacters()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getReplacementCharacters()
+     * @generated
+     * @ordered
+     */
     protected static final String REPLACEMENT_CHARACTERS_EDEFAULT = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
 
     /**
-	 * The cached value of the '{@link #getReplacementCharacters() <em>Replacement Characters</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getReplacementCharacters() <em>Replacement Characters</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getReplacementCharacters()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getReplacementCharacters()
+     * @generated
+     * @ordered
+     */
     protected String replacementCharacters = REPLACEMENT_CHARACTERS_EDEFAULT;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected TextParametersImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.TEXT_PARAMETERS;
-	}
+        return IndicatorsPackage.Literals.TEXT_PARAMETERS;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public boolean isUseBlank() {
-		return useBlank;
-	}
+        return useBlank;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setUseBlank(boolean newUseBlank) {
-		boolean oldUseBlank = useBlank;
-		useBlank = newUseBlank;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK, oldUseBlank, useBlank));
-	}
+        boolean oldUseBlank = useBlank;
+        useBlank = newUseBlank;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK, oldUseBlank, useBlank));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public MatchingAlgorithm getMatchingAlgorithm() {
-		return matchingAlgorithm;
-	}
+        return matchingAlgorithm;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setMatchingAlgorithm(MatchingAlgorithm newMatchingAlgorithm) {
-		MatchingAlgorithm oldMatchingAlgorithm = matchingAlgorithm;
-		matchingAlgorithm = newMatchingAlgorithm == null ? MATCHING_ALGORITHM_EDEFAULT : newMatchingAlgorithm;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM, oldMatchingAlgorithm, matchingAlgorithm));
-	}
+        MatchingAlgorithm oldMatchingAlgorithm = matchingAlgorithm;
+        matchingAlgorithm = newMatchingAlgorithm == null ? MATCHING_ALGORITHM_EDEFAULT : newMatchingAlgorithm;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM, oldMatchingAlgorithm, matchingAlgorithm));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public boolean isIgnoreCase() {
-		return ignoreCase;
-	}
+        return ignoreCase;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setIgnoreCase(boolean newIgnoreCase) {
-		boolean oldIgnoreCase = ignoreCase;
-		ignoreCase = newIgnoreCase;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE, oldIgnoreCase, ignoreCase));
-	}
+        boolean oldIgnoreCase = ignoreCase;
+        ignoreCase = newIgnoreCase;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE, oldIgnoreCase, ignoreCase));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public boolean isUseNulls() {
-		return useNulls;
-	}
+        return useNulls;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setUseNulls(boolean newUseNulls) {
-		boolean oldUseNulls = useNulls;
-		useNulls = newUseNulls;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS, oldUseNulls, useNulls));
-	}
+        boolean oldUseNulls = useNulls;
+        useNulls = newUseNulls;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS, oldUseNulls, useNulls));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getCharactersToReplace() {
-		return charactersToReplace;
-	}
+        return charactersToReplace;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setCharactersToReplace(String newCharactersToReplace) {
-		String oldCharactersToReplace = charactersToReplace;
-		charactersToReplace = newCharactersToReplace;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE, oldCharactersToReplace, charactersToReplace));
-	}
+        String oldCharactersToReplace = charactersToReplace;
+        charactersToReplace = newCharactersToReplace;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE, oldCharactersToReplace, charactersToReplace));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getReplacementCharacters() {
-		return replacementCharacters;
-	}
+        return replacementCharacters;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setReplacementCharacters(String newReplacementCharacters) {
-		String oldReplacementCharacters = replacementCharacters;
-		replacementCharacters = newReplacementCharacters;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS, oldReplacementCharacters, replacementCharacters));
-	}
+        String oldReplacementCharacters = replacementCharacters;
+        replacementCharacters = newReplacementCharacters;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS, oldReplacementCharacters, replacementCharacters));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
-				return isUseBlank();
-			case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
-				return getMatchingAlgorithm();
-			case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
-				return isIgnoreCase();
-			case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
-				return isUseNulls();
-			case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
-				return getCharactersToReplace();
-			case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
-				return getReplacementCharacters();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
+                return isUseBlank();
+            case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
+                return getMatchingAlgorithm();
+            case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
+                return isIgnoreCase();
+            case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
+                return isUseNulls();
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+                return getCharactersToReplace();
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
+                return getReplacementCharacters();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
-				setUseBlank((Boolean)newValue);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
-				setMatchingAlgorithm((MatchingAlgorithm)newValue);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
-				setIgnoreCase((Boolean)newValue);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
-				setUseNulls((Boolean)newValue);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
-				setCharactersToReplace((String)newValue);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
-				setReplacementCharacters((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
+                setUseBlank((Boolean)newValue);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
+                setMatchingAlgorithm((MatchingAlgorithm)newValue);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
+                setIgnoreCase((Boolean)newValue);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
+                setUseNulls((Boolean)newValue);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+                setCharactersToReplace((String)newValue);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
+                setReplacementCharacters((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
-				setUseBlank(USE_BLANK_EDEFAULT);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
-				setMatchingAlgorithm(MATCHING_ALGORITHM_EDEFAULT);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
-				setIgnoreCase(IGNORE_CASE_EDEFAULT);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
-				setUseNulls(USE_NULLS_EDEFAULT);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
-				setCharactersToReplace(CHARACTERS_TO_REPLACE_EDEFAULT);
-				return;
-			case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
-				setReplacementCharacters(REPLACEMENT_CHARACTERS_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
+                setUseBlank(USE_BLANK_EDEFAULT);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
+                setMatchingAlgorithm(MATCHING_ALGORITHM_EDEFAULT);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
+                setIgnoreCase(IGNORE_CASE_EDEFAULT);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
+                setUseNulls(USE_NULLS_EDEFAULT);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+                setCharactersToReplace(CHARACTERS_TO_REPLACE_EDEFAULT);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
+                setReplacementCharacters(REPLACEMENT_CHARACTERS_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
-				return useBlank != USE_BLANK_EDEFAULT;
-			case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
-				return matchingAlgorithm != MATCHING_ALGORITHM_EDEFAULT;
-			case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
-				return ignoreCase != IGNORE_CASE_EDEFAULT;
-			case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
-				return useNulls != USE_NULLS_EDEFAULT;
-			case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
-				return CHARACTERS_TO_REPLACE_EDEFAULT == null ? charactersToReplace != null : !CHARACTERS_TO_REPLACE_EDEFAULT.equals(charactersToReplace);
-			case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
-				return REPLACEMENT_CHARACTERS_EDEFAULT == null ? replacementCharacters != null : !REPLACEMENT_CHARACTERS_EDEFAULT.equals(replacementCharacters);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
+                return useBlank != USE_BLANK_EDEFAULT;
+            case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
+                return matchingAlgorithm != MATCHING_ALGORITHM_EDEFAULT;
+            case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
+                return ignoreCase != IGNORE_CASE_EDEFAULT;
+            case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
+                return useNulls != USE_NULLS_EDEFAULT;
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+                return CHARACTERS_TO_REPLACE_EDEFAULT == null ? charactersToReplace != null : !CHARACTERS_TO_REPLACE_EDEFAULT.equals(charactersToReplace);
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
+                return REPLACEMENT_CHARACTERS_EDEFAULT == null ? replacementCharacters != null : !REPLACEMENT_CHARACTERS_EDEFAULT.equals(replacementCharacters);
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (useBlank: ");
-		result.append(useBlank);
-		result.append(", matchingAlgorithm: ");
-		result.append(matchingAlgorithm);
-		result.append(", ignoreCase: ");
-		result.append(ignoreCase);
-		result.append(", useNulls: ");
-		result.append(useNulls);
-		result.append(", charactersToReplace: ");
-		result.append(charactersToReplace);
-		result.append(", replacementCharacters: ");
-		result.append(replacementCharacters);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (useBlank: ");
+        result.append(useBlank);
+        result.append(", matchingAlgorithm: ");
+        result.append(matchingAlgorithm);
+        result.append(", ignoreCase: ");
+        result.append(ignoreCase);
+        result.append(", useNulls: ");
+        result.append(useNulls);
+        result.append(", charactersToReplace: ");
+        result.append(charactersToReplace);
+        result.append(", replacementCharacters: ");
+        result.append(replacementCharacters);
+        result.append(')');
+        return result.toString();
+    }
 
 } //TextParametersImpl

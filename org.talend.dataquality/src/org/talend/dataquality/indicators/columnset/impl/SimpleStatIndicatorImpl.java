@@ -20,21 +20,21 @@ import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 public class SimpleStatIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements SimpleStatIndicator {
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected SimpleStatIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return ColumnsetPackage.Literals.SIMPLE_STAT_INDICATOR;
-	}
+        return ColumnsetPackage.Literals.SIMPLE_STAT_INDICATOR;
+    }
 } // SimpleStatIndicatorImpl

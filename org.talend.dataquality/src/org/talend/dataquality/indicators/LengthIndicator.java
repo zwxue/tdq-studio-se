@@ -26,29 +26,29 @@ package org.talend.dataquality.indicators;
  */
 public interface LengthIndicator extends Indicator {
     /**
-	 * Returns the value of the '<em><b>Length</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Length</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Length</em>' attribute.
-	 * @see #setLength(Long)
-	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getLengthIndicator_Length()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Length</em>' attribute.
+     * @see #setLength(Long)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getLengthIndicator_Length()
+     * @model
+     * @generated
+     */
     Long getLength();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.indicators.LengthIndicator#getLength <em>Length</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.LengthIndicator#getLength <em>Length</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Length</em>' attribute.
-	 * @see #getLength()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Length</em>' attribute.
+     * @see #getLength()
+     * @generated
+     */
     void setLength(Long value);
 
 } // LengthIndicator

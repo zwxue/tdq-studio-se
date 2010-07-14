@@ -64,6 +64,12 @@ public enum IndicatorEnum {
 
     MinLengthIndicatorEnum(IndicatorsPackage.MIN_LENGTH_INDICATOR, IndicatorsPackage.Literals.MIN_LENGTH_INDICATOR, "min length", //$NON-NLS-1$
                            null),
+    MinLengthWithNullIndicatorEnum(
+                                   IndicatorsPackage.MIN_LENGTH_WITH_NULL_INDICATOR,
+                                   IndicatorsPackage.Literals.MIN_LENGTH_WITH_NULL_INDICATOR,
+                                   "Minimal Length With Null", //$NON-NLS-1$
+                                   null),
+
     MaxLengthIndicatorEnum(IndicatorsPackage.MAX_LENGTH_INDICATOR, IndicatorsPackage.Literals.MAX_LENGTH_INDICATOR, "max length", //$NON-NLS-1$
                            null),
 
@@ -134,7 +140,8 @@ public enum IndicatorEnum {
                                 UniqueIndicatorEnum, DuplicateCountIndicatorEnum, BlankCountIndicatorEnum,
                                 DefValueCountIndicatorEnum }),
     TextIndicatorEnum(IndicatorsPackage.TEXT_INDICATOR, IndicatorsPackage.Literals.TEXT_INDICATOR, "Text Statistics", //$NON-NLS-1$
-                      new IndicatorEnum[] { MinLengthIndicatorEnum, MaxLengthIndicatorEnum, AverageLengthIndicatorEnum }),
+                      new IndicatorEnum[] { MinLengthIndicatorEnum, MinLengthWithNullIndicatorEnum, MaxLengthIndicatorEnum,
+                              AverageLengthIndicatorEnum }),
     IQRIndicatorEnum(IndicatorsPackage.IQR_INDICATOR, IndicatorsPackage.Literals.IQR_INDICATOR, "Inter Quartile Range", //$NON-NLS-1$
                      new IndicatorEnum[] { LowerQuartileIndicatorEnum, UpperQuartileIndicatorEnum }),
     RangeIndicatorEnum(IndicatorsPackage.RANGE_INDICATOR, IndicatorsPackage.Literals.RANGE_INDICATOR, "Range", //$NON-NLS-1$
@@ -278,6 +285,8 @@ public enum IndicatorEnum {
             returnEnum = BlankCountIndicatorEnum;
         } else if (indicatorType == MinLengthIndicatorEnum.getIndicatorType()) {
             returnEnum = MinLengthIndicatorEnum;
+        } else if (indicatorType == MinLengthWithNullIndicatorEnum.getIndicatorType()) {
+            returnEnum = MinLengthWithNullIndicatorEnum;
         } else if (indicatorType == MaxLengthIndicatorEnum.getIndicatorType()) {
             returnEnum = MaxLengthIndicatorEnum;
         } else if (indicatorType == AverageLengthIndicatorEnum.getIndicatorType()) {

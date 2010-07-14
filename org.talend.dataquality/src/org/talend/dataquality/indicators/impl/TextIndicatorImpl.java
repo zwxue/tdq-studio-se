@@ -36,260 +36,260 @@ import org.talend.dataquality.indicators.TextIndicator;
 public class TextIndicatorImpl extends CompositeIndicatorImpl implements TextIndicator {
 
     /**
-	 * The cached value of the '{@link #getAverageLengthIndicator() <em>Average Length Indicator</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #getAverageLengthIndicator()
-	 * @generated
-	 * @ordered
-	 */
+     * The cached value of the '{@link #getAverageLengthIndicator() <em>Average Length Indicator</em>}' containment reference.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @see #getAverageLengthIndicator()
+     * @generated
+     * @ordered
+     */
     protected AverageLengthIndicator averageLengthIndicator;
 
     /**
-	 * The cached value of the '{@link #getMaxLengthIndicator() <em>Max Length Indicator</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #getMaxLengthIndicator()
-	 * @generated
-	 * @ordered
-	 */
+     * The cached value of the '{@link #getMaxLengthIndicator() <em>Max Length Indicator</em>}' containment reference.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @see #getMaxLengthIndicator()
+     * @generated
+     * @ordered
+     */
     protected MaxLengthIndicator maxLengthIndicator;
 
     /**
-	 * The cached value of the '{@link #getMinLengthIndicator() <em>Min Length Indicator</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #getMinLengthIndicator()
-	 * @generated
-	 * @ordered
-	 */
+     * The cached value of the '{@link #getMinLengthIndicator() <em>Min Length Indicator</em>}' containment reference.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @see #getMinLengthIndicator()
+     * @generated
+     * @ordered
+     */
     protected MinLengthIndicator minLengthIndicator;
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected TextIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.TEXT_INDICATOR;
-	}
+        return IndicatorsPackage.Literals.TEXT_INDICATOR;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public AverageLengthIndicator getAverageLengthIndicator() {
-		return averageLengthIndicator;
-	}
+        return averageLengthIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public NotificationChain basicSetAverageLengthIndicator(AverageLengthIndicator newAverageLengthIndicator,
             NotificationChain msgs) {
-		AverageLengthIndicator oldAverageLengthIndicator = averageLengthIndicator;
-		averageLengthIndicator = newAverageLengthIndicator;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR, oldAverageLengthIndicator, newAverageLengthIndicator);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        AverageLengthIndicator oldAverageLengthIndicator = averageLengthIndicator;
+        averageLengthIndicator = newAverageLengthIndicator;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR, oldAverageLengthIndicator, newAverageLengthIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setAverageLengthIndicator(AverageLengthIndicator newAverageLengthIndicator) {
-		if (newAverageLengthIndicator != averageLengthIndicator) {
-			NotificationChain msgs = null;
-			if (averageLengthIndicator != null)
-				msgs = ((InternalEObject)averageLengthIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR, null, msgs);
-			if (newAverageLengthIndicator != null)
-				msgs = ((InternalEObject)newAverageLengthIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR, null, msgs);
-			msgs = basicSetAverageLengthIndicator(newAverageLengthIndicator, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR, newAverageLengthIndicator, newAverageLengthIndicator));
-	}
+        if (newAverageLengthIndicator != averageLengthIndicator) {
+            NotificationChain msgs = null;
+            if (averageLengthIndicator != null)
+                msgs = ((InternalEObject)averageLengthIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR, null, msgs);
+            if (newAverageLengthIndicator != null)
+                msgs = ((InternalEObject)newAverageLengthIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR, null, msgs);
+            msgs = basicSetAverageLengthIndicator(newAverageLengthIndicator, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR, newAverageLengthIndicator, newAverageLengthIndicator));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public MaxLengthIndicator getMaxLengthIndicator() {
-		return maxLengthIndicator;
-	}
+        return maxLengthIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public NotificationChain basicSetMaxLengthIndicator(MaxLengthIndicator newMaxLengthIndicator, NotificationChain msgs) {
-		MaxLengthIndicator oldMaxLengthIndicator = maxLengthIndicator;
-		maxLengthIndicator = newMaxLengthIndicator;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR, oldMaxLengthIndicator, newMaxLengthIndicator);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        MaxLengthIndicator oldMaxLengthIndicator = maxLengthIndicator;
+        maxLengthIndicator = newMaxLengthIndicator;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR, oldMaxLengthIndicator, newMaxLengthIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setMaxLengthIndicator(MaxLengthIndicator newMaxLengthIndicator) {
-		if (newMaxLengthIndicator != maxLengthIndicator) {
-			NotificationChain msgs = null;
-			if (maxLengthIndicator != null)
-				msgs = ((InternalEObject)maxLengthIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR, null, msgs);
-			if (newMaxLengthIndicator != null)
-				msgs = ((InternalEObject)newMaxLengthIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR, null, msgs);
-			msgs = basicSetMaxLengthIndicator(newMaxLengthIndicator, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR, newMaxLengthIndicator, newMaxLengthIndicator));
-	}
+        if (newMaxLengthIndicator != maxLengthIndicator) {
+            NotificationChain msgs = null;
+            if (maxLengthIndicator != null)
+                msgs = ((InternalEObject)maxLengthIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR, null, msgs);
+            if (newMaxLengthIndicator != null)
+                msgs = ((InternalEObject)newMaxLengthIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR, null, msgs);
+            msgs = basicSetMaxLengthIndicator(newMaxLengthIndicator, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR, newMaxLengthIndicator, newMaxLengthIndicator));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public MinLengthIndicator getMinLengthIndicator() {
-		return minLengthIndicator;
-	}
+        return minLengthIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public NotificationChain basicSetMinLengthIndicator(MinLengthIndicator newMinLengthIndicator, NotificationChain msgs) {
-		MinLengthIndicator oldMinLengthIndicator = minLengthIndicator;
-		minLengthIndicator = newMinLengthIndicator;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR, oldMinLengthIndicator, newMinLengthIndicator);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
+        MinLengthIndicator oldMinLengthIndicator = minLengthIndicator;
+        minLengthIndicator = newMinLengthIndicator;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR, oldMinLengthIndicator, newMinLengthIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setMinLengthIndicator(MinLengthIndicator newMinLengthIndicator) {
-		if (newMinLengthIndicator != minLengthIndicator) {
-			NotificationChain msgs = null;
-			if (minLengthIndicator != null)
-				msgs = ((InternalEObject)minLengthIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR, null, msgs);
-			if (newMinLengthIndicator != null)
-				msgs = ((InternalEObject)newMinLengthIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR, null, msgs);
-			msgs = basicSetMinLengthIndicator(newMinLengthIndicator, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR, newMinLengthIndicator, newMinLengthIndicator));
-	}
+        if (newMinLengthIndicator != minLengthIndicator) {
+            NotificationChain msgs = null;
+            if (minLengthIndicator != null)
+                msgs = ((InternalEObject)minLengthIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR, null, msgs);
+            if (newMinLengthIndicator != null)
+                msgs = ((InternalEObject)newMinLengthIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR, null, msgs);
+            msgs = basicSetMinLengthIndicator(newMinLengthIndicator, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR, newMinLengthIndicator, newMinLengthIndicator));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
-				return basicSetAverageLengthIndicator(null, msgs);
-			case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
-				return basicSetMaxLengthIndicator(null, msgs);
-			case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
-				return basicSetMinLengthIndicator(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
+                return basicSetAverageLengthIndicator(null, msgs);
+            case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
+                return basicSetMaxLengthIndicator(null, msgs);
+            case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
+                return basicSetMinLengthIndicator(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
-				return getAverageLengthIndicator();
-			case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
-				return getMaxLengthIndicator();
-			case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
-				return getMinLengthIndicator();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
+                return getAverageLengthIndicator();
+            case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
+                return getMaxLengthIndicator();
+            case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
+                return getMinLengthIndicator();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
-				setAverageLengthIndicator((AverageLengthIndicator)newValue);
-				return;
-			case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
-				setMaxLengthIndicator((MaxLengthIndicator)newValue);
-				return;
-			case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
-				setMinLengthIndicator((MinLengthIndicator)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
+                setAverageLengthIndicator((AverageLengthIndicator)newValue);
+                return;
+            case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
+                setMaxLengthIndicator((MaxLengthIndicator)newValue);
+                return;
+            case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
+                setMinLengthIndicator((MinLengthIndicator)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
-				setAverageLengthIndicator((AverageLengthIndicator)null);
-				return;
-			case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
-				setMaxLengthIndicator((MaxLengthIndicator)null);
-				return;
-			case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
-				setMinLengthIndicator((MinLengthIndicator)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
+                setAverageLengthIndicator((AverageLengthIndicator)null);
+                return;
+            case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
+                setMaxLengthIndicator((MaxLengthIndicator)null);
+                return;
+            case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
+                setMinLengthIndicator((MinLengthIndicator)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
-				return averageLengthIndicator != null;
-			case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
-				return maxLengthIndicator != null;
-			case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
-				return minLengthIndicator != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
+                return averageLengthIndicator != null;
+            case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
+                return maxLengthIndicator != null;
+            case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
+                return minLengthIndicator != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
     /*
      * (non-Javadoc)

@@ -66,7 +66,7 @@ public class IndicatorEditor extends CommonFormEditor {
         if (input instanceof IndicatorEditorInput) {
             return input.getName();
         } else if (input instanceof FileEditorInput) {
-            return IndicatorResourceFileHelper.getInstance().findUDI(((FileEditorInput) input).getFile()).getName();
+            return IndicatorResourceFileHelper.getInstance().findIndDefinition(((FileEditorInput) input).getFile()).getName();
         }
         return DefaultMessagesImpl.getString("IndicatorEditor.IndicatorEditor"); //$NON-NLS-1$
     }

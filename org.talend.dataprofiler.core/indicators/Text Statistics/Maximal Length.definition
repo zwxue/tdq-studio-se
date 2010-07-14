@@ -2,7 +2,6 @@
 <dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_ccHq1RF2Ed2PKb6nEJEvhw" name="Maximal Length" label="Maximal Length">
   <taggedValue xmi:id="_-VrnYYqnEd-SocVM_rHvUg" tag="Description" value="computes the maximal length of a text field. Parameters can be set to avoid counting blank data or null data"/>
   <taggedValue xmi:id="_-VrnYoqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the length of the longest textual record"/>
-  <taggedValue xmi:id="_-VrnaIqnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/Text Statistics/Maximal Length.properties"/>
   <categories href="../../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="_-VrnY4qnEd-SocVM_rHvUg" body="SELECT MAX(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   <sqlGenericExpression xmi:id="_-VrnZIqnEd-SocVM_rHvUg" body="SELECT MAX(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>

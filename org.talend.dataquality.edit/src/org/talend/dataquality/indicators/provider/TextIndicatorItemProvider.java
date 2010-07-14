@@ -172,6 +172,11 @@ public class TextIndicatorItemProvider
             (createChildParameter
                 (IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_INDICATOR,
                  IndicatorsFactory.eINSTANCE.createMinLengthIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMinLengthWithNullIndicator()));
     }
 
 }

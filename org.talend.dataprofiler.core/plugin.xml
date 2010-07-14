@@ -1142,12 +1142,6 @@
            version="4.0.1">
      </workspacetask>
      <workspacetask
-           class="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
-           id="org.talend.dataprofiler.core.migration.impl.UpdateDefintionFileTask"
-           name="Replace Defintion File For Release Before 4.1.0"
-           version="4.1.0">
-     </workspacetask>
-     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateAccessDistinctQueryTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateAccessDistinctQueryTask"
            name="Update Access Distinct Query Task"

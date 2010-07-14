@@ -69,7 +69,7 @@ public final class ModelElementFileFactory {
         } else if (FactoriesUtil.isPatternFile(fileExtension)) {
             modelElement = PatternResourceFileHelper.getInstance().findPattern(file);
         } else if (FactoriesUtil.isUDIFile(fileExtension)) {
-            modelElement = IndicatorResourceFileHelper.getInstance().findUDI(file);
+            modelElement = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
         }
 
         return modelElement;

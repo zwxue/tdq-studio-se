@@ -23,21 +23,21 @@ import org.talend.utils.collections.MapValueSorter;
 public class LowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements LowFrequencyIndicator {
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected LowFrequencyIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.LOW_FREQUENCY_INDICATOR;
-	}
+        return IndicatorsPackage.Literals.LOW_FREQUENCY_INDICATOR;
+    }
 
     @Override
     protected List<Object> getReducedValues(int n) {

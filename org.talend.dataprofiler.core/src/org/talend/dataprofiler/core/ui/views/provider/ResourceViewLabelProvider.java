@@ -75,7 +75,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             } else if (FactoriesUtil.isUDIFile(fileExtension)) {
                 image = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
 
-                IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findUDI(file);
+                IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
                 if (udi != null) {
                     boolean validStatus = TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi);
 

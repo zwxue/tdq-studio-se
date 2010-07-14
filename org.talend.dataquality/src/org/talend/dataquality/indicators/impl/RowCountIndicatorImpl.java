@@ -22,21 +22,21 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndicator {
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected RowCountIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.ROW_COUNT_INDICATOR;
-	}
+        return IndicatorsPackage.Literals.ROW_COUNT_INDICATOR;
+    }
 
     /*
      * (non-Javadoc)

@@ -168,6 +168,29 @@ public class DefinitionItemProviderAdapterFactory extends DefinitionAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected IndicatorDefinitionParameterItemProvider indicatorDefinitionParameterItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createIndicatorDefinitionParameterAdapter() {
+        if (indicatorDefinitionParameterItemProvider == null) {
+            indicatorDefinitionParameterItemProvider = new IndicatorDefinitionParameterItemProvider(this);
+        }
+
+        return indicatorDefinitionParameterItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -270,6 +293,7 @@ public class DefinitionItemProviderAdapterFactory extends DefinitionAdapterFacto
         if (indicatorDefinitionItemProvider != null) indicatorDefinitionItemProvider.dispose();
         if (indicatorCategoryItemProvider != null) indicatorCategoryItemProvider.dispose();
         if (charactersMappingItemProvider != null) charactersMappingItemProvider.dispose();
+        if (indicatorDefinitionParameterItemProvider != null) indicatorDefinitionParameterItemProvider.dispose();
     }
 
 }

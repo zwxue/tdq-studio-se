@@ -29,180 +29,180 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 public class TableIndicatorImpl extends AbstractTableIndicatorImpl implements TableIndicator {
 
     /**
-	 * The default value of the '{@link #getKeyCount() <em>Key Count</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getKeyCount() <em>Key Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-	 * @see #getKeyCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getKeyCount()
+     * @generated
+     * @ordered
+     */
     protected static final int KEY_COUNT_EDEFAULT = 0;
 
     /**
-	 * The cached value of the '{@link #getKeyCount() <em>Key Count</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getKeyCount() <em>Key Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-	 * @see #getKeyCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getKeyCount()
+     * @generated
+     * @ordered
+     */
     protected int keyCount = KEY_COUNT_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getIndexCount() <em>Index Count</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getIndexCount() <em>Index Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-	 * @see #getIndexCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getIndexCount()
+     * @generated
+     * @ordered
+     */
     protected static final int INDEX_COUNT_EDEFAULT = 0;
 
     /**
-	 * The cached value of the '{@link #getIndexCount() <em>Index Count</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getIndexCount() <em>Index Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-	 * @see #getIndexCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getIndexCount()
+     * @generated
+     * @ordered
+     */
     protected int indexCount = INDEX_COUNT_EDEFAULT;
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected TableIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return SchemaPackage.Literals.TABLE_INDICATOR;
-	}
+        return SchemaPackage.Literals.TABLE_INDICATOR;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public int getKeyCount() {
-		return keyCount;
-	}
+        return keyCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setKeyCount(int newKeyCount) {
-		int oldKeyCount = keyCount;
-		keyCount = newKeyCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.TABLE_INDICATOR__KEY_COUNT, oldKeyCount, keyCount));
-	}
+        int oldKeyCount = keyCount;
+        keyCount = newKeyCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.TABLE_INDICATOR__KEY_COUNT, oldKeyCount, keyCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public int getIndexCount() {
-		return indexCount;
-	}
+        return indexCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setIndexCount(int newIndexCount) {
-		int oldIndexCount = indexCount;
-		indexCount = newIndexCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.TABLE_INDICATOR__INDEX_COUNT, oldIndexCount, indexCount));
-	}
+        int oldIndexCount = indexCount;
+        indexCount = newIndexCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.TABLE_INDICATOR__INDEX_COUNT, oldIndexCount, indexCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
-				return getKeyCount();
-			case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
-				return getIndexCount();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
+                return getKeyCount();
+            case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
+                return getIndexCount();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
-				setKeyCount((Integer)newValue);
-				return;
-			case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
-				setIndexCount((Integer)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
+                setKeyCount((Integer)newValue);
+                return;
+            case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
+                setIndexCount((Integer)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
-				setKeyCount(KEY_COUNT_EDEFAULT);
-				return;
-			case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
-				setIndexCount(INDEX_COUNT_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
+                setKeyCount(KEY_COUNT_EDEFAULT);
+                return;
+            case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
+                setIndexCount(INDEX_COUNT_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
-				return keyCount != KEY_COUNT_EDEFAULT;
-			case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
-				return indexCount != INDEX_COUNT_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
+                return keyCount != KEY_COUNT_EDEFAULT;
+            case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
+                return indexCount != INDEX_COUNT_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (keyCount: ");
-		result.append(keyCount);
-		result.append(", indexCount: ");
-		result.append(indexCount);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (keyCount: ");
+        result.append(keyCount);
+        result.append(", indexCount: ");
+        result.append(indexCount);
+        result.append(')');
+        return result.toString();
+    }
 
     /*
      * (non-Javadoc)

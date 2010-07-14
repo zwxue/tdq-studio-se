@@ -135,7 +135,7 @@ public final class UDIHelper {
         try {
             for (IResource resource : folder.members()) {
                 if (resource instanceof IFile) {
-                    IndicatorDefinition id = IndicatorResourceFileHelper.getInstance().findUDI((IFile) resource);
+                    IndicatorDefinition id = IndicatorResourceFileHelper.getInstance().findIndDefinition((IFile) resource);
                     if (id != null) {
                         list.add(id.getName());
                     }

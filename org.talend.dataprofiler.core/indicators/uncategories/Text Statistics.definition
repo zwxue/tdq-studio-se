@@ -2,7 +2,6 @@
 <dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_yb9x0zh8Ed2XmO7pl5Yuyg" name="Text Statistics" label="Text Statistics">
   <taggedValue xmi:id="_-XdJAYqnEd-SocVM_rHvUg" tag="Purpose" value="analyze textual fields"/>
   <taggedValue xmi:id="_-XdJAoqnEd-SocVM_rHvUg" tag="Description" value="contain indicators for analyzing textual fields"/>
-  <taggedValue xmi:id="_-XdJA4qnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/uncategories/Text Statistics.properties"/>
   <aggregatedDefinitions href="../../../.Talend.definition#_ccIR4BF2Ed2PKb6nEJEvhw"/>
   <aggregatedDefinitions href="../../../.Talend.definition#_ccHq1RF2Ed2PKb6nEJEvhw"/>
   <aggregatedDefinitions href="../../../.Talend.definition#_ccHq1BF2Ed2PKb6nEJEvhw"/>

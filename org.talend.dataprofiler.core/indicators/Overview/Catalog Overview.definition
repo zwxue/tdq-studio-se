@@ -2,7 +2,6 @@
 <dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_QwDiwMYUEd27NP4lvE0A4w" name="Catalog Overview" label="Catalog Overview">
   <taggedValue xmi:id="_-ZSVAYqnEd-SocVM_rHvUg" tag="Purpose" value="Give an overview of the content of a catalog"/>
   <taggedValue xmi:id="_-ZSVAoqnEd-SocVM_rHvUg" tag="Description" value="Counts the number of rows, tables, schemas..."/>
-  <taggedValue xmi:id="_-ZSVA4qnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/Overview/Catalog Overview.properties"/>
   <categories href="../../../.Talend.definition#_wQj8IMYUEd27NP4lvE0A4w"/>
   <aggregatedDefinitions href="../../../.Talend.definition#_V4SA0MYUEd27NP4lvE0A4w"/>
   <aggregatedDefinitions href="../../../.Talend.definition#_hgO7YMYUEd27NP4lvE0A4w"/>

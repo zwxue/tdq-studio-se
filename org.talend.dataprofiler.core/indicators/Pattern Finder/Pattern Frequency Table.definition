@@ -2,7 +2,6 @@
 <dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_kQzTsJR-Ed2XO-JvLwVAwg" name="Pattern Frequency Table" label="Pattern Frequency Table">
   <taggedValue xmi:id="_-Zty0YqnEd-SocVM_rHvUg" tag="Description" value="counts the number of records for each distinct pattern"/>
   <taggedValue xmi:id="_-Zty0oqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the most frequent patterns"/>
-  <taggedValue xmi:id="_-ZuZ5YqnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/Pattern Finder/Pattern Frequency Table.properties"/>
   <categories href="../../../.Talend.definition#_0n3BsJR-Ed2XO-JvLwVAwg"/>
   <sqlGenericExpression xmi:id="_-Zty04qnEd-SocVM_rHvUg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c DESC" language="MySQL"/>
   <sqlGenericExpression xmi:id="_-Zty1IqnEd-SocVM_rHvUg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) AS c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="Oracle"/>

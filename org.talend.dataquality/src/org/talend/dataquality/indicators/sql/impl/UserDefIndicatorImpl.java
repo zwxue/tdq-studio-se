@@ -80,23 +80,23 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     }
 
     /**
-	 * The default value of the '{@link #getUserCount() <em>User Count</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getUserCount() <em>User Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-	 * @see #getUserCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getUserCount()
+     * @generated
+     * @ordered
+     */
     protected static final Long USER_COUNT_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getUserCount() <em>User Count</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getUserCount() <em>User Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-	 * @see #getUserCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getUserCount()
+     * @generated
+     * @ordered
+     */
     protected Long userCount = USER_COUNT_EDEFAULT;
 
     /**
@@ -140,13 +140,13 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     protected Long notMatchingValueCount = NOT_MATCHING_VALUE_COUNT_EDEFAULT;
 
     /**
-	 * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list.
-	 * <!-- begin-user-doc
+     * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-	 * @see #getUniqueValues()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getUniqueValues()
+     * @generated
+     * @ordered
+     */
     protected EList<Object> uniqueValues;
 
     /**
@@ -200,187 +200,187 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     protected static final Long DUPLICATE_VALUE_COUNT_EDEFAULT = null;
 
     /**
-	 * The default value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getValueToFreq()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValueToFreq()
+     * @generated
+     * @ordered
+     */
     protected static final HashMap<Object, Long> VALUE_TO_FREQ_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getValueToFreq()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValueToFreq()
+     * @generated
+     * @ordered
+     */
     protected HashMap<Object, Long> valueToFreq = VALUE_TO_FREQ_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValue()
+     * @generated
+     * @ordered
+     */
     protected static final String VALUE_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getValue()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getValue()
+     * @generated
+     * @ordered
+     */
     protected String value = VALUE_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDatatype()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDatatype()
+     * @generated
+     * @ordered
+     */
     protected static final int DATATYPE_EDEFAULT = 0;
 
     /**
-	 * The cached value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDatatype()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDatatype()
+     * @generated
+     * @ordered
+     */
     protected int datatype = DATATYPE_EDEFAULT;
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected UserDefIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorSqlPackage.Literals.USER_DEF_INDICATOR;
-	}
+        return IndicatorSqlPackage.Literals.USER_DEF_INDICATOR;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Long getUserCount() {
-		return userCount;
-	}
+        return userCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setUserCount(Long newUserCount) {
-		Long oldUserCount = userCount;
-		userCount = newUserCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT, oldUserCount, userCount));
-	}
+        Long oldUserCount = userCount;
+        userCount = newUserCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT, oldUserCount, userCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Long getMatchingValueCount() {
-		return matchingValueCount;
-	}
+        return matchingValueCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setMatchingValueCount(Long newMatchingValueCount) {
-		Long oldMatchingValueCount = matchingValueCount;
-		matchingValueCount = newMatchingValueCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
-	}
+        Long oldMatchingValueCount = matchingValueCount;
+        matchingValueCount = newMatchingValueCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Long getNotMatchingValueCount() {
-		return notMatchingValueCount;
-	}
+        return notMatchingValueCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setNotMatchingValueCount(Long newNotMatchingValueCount) {
-		Long oldNotMatchingValueCount = notMatchingValueCount;
-		notMatchingValueCount = newNotMatchingValueCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount, notMatchingValueCount));
-	}
+        Long oldNotMatchingValueCount = notMatchingValueCount;
+        notMatchingValueCount = newNotMatchingValueCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount, notMatchingValueCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public EList<Object> getUniqueValues() {
-		if (uniqueValues == null) {
-			uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this, IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES);
-		}
-		return uniqueValues;
-	}
+        if (uniqueValues == null) {
+            uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this, IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES);
+        }
+        return uniqueValues;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Long getDistinctValueCount() {
-		return distinctValueCount;
-	}
+        return distinctValueCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setDistinctValueCount(Long newDistinctValueCount) {
-		Long oldDistinctValueCount = distinctValueCount;
-		distinctValueCount = newDistinctValueCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT, oldDistinctValueCount, distinctValueCount));
-	}
+        Long oldDistinctValueCount = distinctValueCount;
+        distinctValueCount = newDistinctValueCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT, oldDistinctValueCount, distinctValueCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Long getUniqueValueCount() {
-		return uniqueValueCount;
-	}
+        return uniqueValueCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setUniqueValueCount(Long newUniqueValueCount) {
-		Long oldUniqueValueCount = uniqueValueCount;
-		uniqueValueCount = newUniqueValueCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT, oldUniqueValueCount, uniqueValueCount));
-	}
+        Long oldUniqueValueCount = uniqueValueCount;
+        uniqueValueCount = newUniqueValueCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT, oldUniqueValueCount, uniqueValueCount));
+    }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -392,65 +392,65 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public HashMap<Object, Long> getValueToFreq() {
-		return valueToFreq;
-	}
+        return valueToFreq;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setValueToFreq(HashMap<Object, Long> newValueToFreq) {
-		HashMap<Object, Long> oldValueToFreq = valueToFreq;
-		valueToFreq = newValueToFreq;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ, oldValueToFreq, valueToFreq));
-	}
+        HashMap<Object, Long> oldValueToFreq = valueToFreq;
+        valueToFreq = newValueToFreq;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ, oldValueToFreq, valueToFreq));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getValue() {
-		return value;
-	}
+        return value;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setValue(String newValue) {
-		String oldValue = value;
-		value = newValue;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE, oldValue, value));
-	}
+        String oldValue = value;
+        value = newValue;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE, oldValue, value));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public int getDatatype() {
-		return datatype;
-	}
+        return datatype;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setDatatype(int newDatatype) {
-		int oldDatatype = datatype;
-		datatype = newDatatype;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE, oldDatatype, datatype));
-	}
+        int oldDatatype = datatype;
+        datatype = newDatatype;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE, oldDatatype, datatype));
+    }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -495,175 +495,175 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
-				return getUserCount();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
-				return getMatchingValueCount();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-				return getNotMatchingValueCount();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
-				return getUniqueValues();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
-				return getDistinctValueCount();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
-				return getUniqueValueCount();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
-				return getDuplicateValueCount();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
-				return getValueToFreq();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
-				return getValue();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
-				return getDatatype();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+                return getUserCount();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+                return getMatchingValueCount();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                return getNotMatchingValueCount();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+                return getUniqueValues();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+                return getDistinctValueCount();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+                return getUniqueValueCount();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
+                return getDuplicateValueCount();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+                return getValueToFreq();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+                return getValue();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
+                return getDatatype();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
-				setUserCount((Long)newValue);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
-				setMatchingValueCount((Long)newValue);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-				setNotMatchingValueCount((Long)newValue);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
-				getUniqueValues().clear();
-				getUniqueValues().addAll((Collection<? extends Object>)newValue);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
-				setDistinctValueCount((Long)newValue);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
-				setUniqueValueCount((Long)newValue);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
-				setValueToFreq((HashMap<Object, Long>)newValue);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
-				setValue((String)newValue);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
-				setDatatype((Integer)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+                setUserCount((Long)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+                setMatchingValueCount((Long)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                setNotMatchingValueCount((Long)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+                getUniqueValues().clear();
+                getUniqueValues().addAll((Collection<? extends Object>)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+                setDistinctValueCount((Long)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+                setUniqueValueCount((Long)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+                setValueToFreq((HashMap<Object, Long>)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+                setValue((String)newValue);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
+                setDatatype((Integer)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
-				setUserCount(USER_COUNT_EDEFAULT);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
-				setMatchingValueCount(MATCHING_VALUE_COUNT_EDEFAULT);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-				setNotMatchingValueCount(NOT_MATCHING_VALUE_COUNT_EDEFAULT);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
-				getUniqueValues().clear();
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
-				setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
-				setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
-				setValueToFreq(VALUE_TO_FREQ_EDEFAULT);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
-				setValue(VALUE_EDEFAULT);
-				return;
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
-				setDatatype(DATATYPE_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+                setUserCount(USER_COUNT_EDEFAULT);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+                setMatchingValueCount(MATCHING_VALUE_COUNT_EDEFAULT);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                setNotMatchingValueCount(NOT_MATCHING_VALUE_COUNT_EDEFAULT);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+                getUniqueValues().clear();
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+                setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+                setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+                setValueToFreq(VALUE_TO_FREQ_EDEFAULT);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+                setValue(VALUE_EDEFAULT);
+                return;
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
+                setDatatype(DATATYPE_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
-				return USER_COUNT_EDEFAULT == null ? userCount != null : !USER_COUNT_EDEFAULT.equals(userCount);
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
-				return MATCHING_VALUE_COUNT_EDEFAULT == null ? matchingValueCount != null : !MATCHING_VALUE_COUNT_EDEFAULT.equals(matchingValueCount);
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-				return NOT_MATCHING_VALUE_COUNT_EDEFAULT == null ? notMatchingValueCount != null : !NOT_MATCHING_VALUE_COUNT_EDEFAULT.equals(notMatchingValueCount);
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
-				return uniqueValues != null && !uniqueValues.isEmpty();
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
-				return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT.equals(distinctValueCount);
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
-				return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT.equals(uniqueValueCount);
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
-				return DUPLICATE_VALUE_COUNT_EDEFAULT == null ? getDuplicateValueCount() != null : !DUPLICATE_VALUE_COUNT_EDEFAULT.equals(getDuplicateValueCount());
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
-				return VALUE_TO_FREQ_EDEFAULT == null ? valueToFreq != null : !VALUE_TO_FREQ_EDEFAULT.equals(valueToFreq);
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
-				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
-			case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
-				return datatype != DATATYPE_EDEFAULT;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+                return USER_COUNT_EDEFAULT == null ? userCount != null : !USER_COUNT_EDEFAULT.equals(userCount);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__MATCHING_VALUE_COUNT:
+                return MATCHING_VALUE_COUNT_EDEFAULT == null ? matchingValueCount != null : !MATCHING_VALUE_COUNT_EDEFAULT.equals(matchingValueCount);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                return NOT_MATCHING_VALUE_COUNT_EDEFAULT == null ? notMatchingValueCount != null : !NOT_MATCHING_VALUE_COUNT_EDEFAULT.equals(notMatchingValueCount);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES:
+                return uniqueValues != null && !uniqueValues.isEmpty();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT:
+                return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT.equals(distinctValueCount);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT:
+                return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT.equals(uniqueValueCount);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT:
+                return DUPLICATE_VALUE_COUNT_EDEFAULT == null ? getDuplicateValueCount() != null : !DUPLICATE_VALUE_COUNT_EDEFAULT.equals(getDuplicateValueCount());
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ:
+                return VALUE_TO_FREQ_EDEFAULT == null ? valueToFreq != null : !VALUE_TO_FREQ_EDEFAULT.equals(valueToFreq);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE:
+                return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__DATATYPE:
+                return datatype != DATATYPE_EDEFAULT;
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (userCount: ");
-		result.append(userCount);
-		result.append(", matchingValueCount: ");
-		result.append(matchingValueCount);
-		result.append(", notMatchingValueCount: ");
-		result.append(notMatchingValueCount);
-		result.append(", uniqueValues: ");
-		result.append(uniqueValues);
-		result.append(", distinctValueCount: ");
-		result.append(distinctValueCount);
-		result.append(", uniqueValueCount: ");
-		result.append(uniqueValueCount);
-		result.append(", valueToFreq: ");
-		result.append(valueToFreq);
-		result.append(", value: ");
-		result.append(value);
-		result.append(", datatype: ");
-		result.append(datatype);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (userCount: ");
+        result.append(userCount);
+        result.append(", matchingValueCount: ");
+        result.append(matchingValueCount);
+        result.append(", notMatchingValueCount: ");
+        result.append(notMatchingValueCount);
+        result.append(", uniqueValues: ");
+        result.append(uniqueValues);
+        result.append(", distinctValueCount: ");
+        result.append(distinctValueCount);
+        result.append(", uniqueValueCount: ");
+        result.append(uniqueValueCount);
+        result.append(", valueToFreq: ");
+        result.append(valueToFreq);
+        result.append(", value: ");
+        result.append(value);
+        result.append(", datatype: ");
+        result.append(datatype);
+        result.append(')');
+        return result.toString();
+    }
 
     /*
      * (non-Javadoc)

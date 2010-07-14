@@ -21,19 +21,19 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
  */
 public interface JavaUserDefIndicator extends UserDefIndicator {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
+     * @model
+     * @generated
+     */
     void setJavaUserDefObject(UserDefIndicator javaUDIObj);
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @model
-	 * @generated
-	 */
+     * @model
+     * @generated
+     */
     void setExecuteEngine(ExecutionLanguage executionLanguage);
 
 } // JavaUserDefIndicator

@@ -34,8 +34,8 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import orgomg.cwm.objectmodel.core.Expression;
 
 import com.csvreader.CsvWriter;
@@ -164,7 +164,7 @@ public final class ExportFactory {
         Map<PatternToExcelEnum, String> idMap = new HashMap<PatternToExcelEnum, String>();
 
         if (folder != null) {
-            IFile file = IndicatorResourceFileHelper.getInstance().getIndicatorFile(indicatorDefinition, new IFolder[] { folder });
+            IFile file = IndicatorResourceFileHelper.getInstance().getIndicatorFile(indicatorDefinition);
             URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
 
             // get the basic information

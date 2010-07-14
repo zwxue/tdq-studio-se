@@ -21,21 +21,21 @@ import org.talend.dataquality.indicators.MinValueIndicator;
 public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValueIndicator {
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected MinValueIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.MIN_VALUE_INDICATOR;
-	}
+        return IndicatorsPackage.Literals.MIN_VALUE_INDICATOR;
+    }
 
     /*
      * (non-Javadoc)

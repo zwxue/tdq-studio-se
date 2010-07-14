@@ -549,6 +549,7 @@
           containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="MinLengthIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MinLengthWithNullIndicator" eSuperTypes="#//indicators/MinLengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MaxLengthIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="AverageLengthIndicator" eSuperTypes="#//indicators/LengthIndicator">
       <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>

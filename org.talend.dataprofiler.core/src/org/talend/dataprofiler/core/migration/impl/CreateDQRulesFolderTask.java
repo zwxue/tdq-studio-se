@@ -30,7 +30,6 @@ public class CreateDQRulesFolderTask extends AWorkspaceTask {
 
     private static final String DQ_RULES = "DQ Rules"; //$NON-NLS-1$
 
-    private static final String RULES_PATH = "/dqrules"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -51,7 +50,7 @@ public class CreateDQRulesFolderTask extends AWorkspaceTask {
     protected boolean doExecute() throws Exception {
         DQStructureManager manager = DQStructureManager.getInstance();
         IFolder folder = manager.createNewFolder(ResourceManager.getLibrariesFolder(), DQ_RULES);
-        manager.copyFilesToFolder(CorePlugin.getDefault(), RULES_PATH, true, folder, null);
+        manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.RULES_PATH, true, folder, null);
 
         return folder != null && folder.exists();
     }

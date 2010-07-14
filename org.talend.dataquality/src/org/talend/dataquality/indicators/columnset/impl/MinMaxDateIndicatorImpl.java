@@ -21,22 +21,22 @@ import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
  */
 public class MinMaxDateIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements MinMaxDateIndicator {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected MinMaxDateIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return ColumnsetPackage.Literals.MIN_MAX_DATE_INDICATOR;
-	}
+        return ColumnsetPackage.Literals.MIN_MAX_DATE_INDICATOR;
+    }
 
 } //MinMaxDateIndicatorImpl

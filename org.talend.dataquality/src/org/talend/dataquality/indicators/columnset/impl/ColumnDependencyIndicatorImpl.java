@@ -37,211 +37,211 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements ColumnDependencyIndicator {
     /**
-	 * The cached value of the '{@link #getColumnA() <em>Column A</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getColumnA() <em>Column A</em>}' reference.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getColumnA()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getColumnA()
+     * @generated
+     * @ordered
+     */
     protected Column columnA;
 
     /**
-	 * The cached value of the '{@link #getColumnB() <em>Column B</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getColumnB() <em>Column B</em>}' reference.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getColumnB()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getColumnB()
+     * @generated
+     * @ordered
+     */
     protected Column columnB;
 
     /**
-	 * The default value of the '{@link #getACount() <em>ACount</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getACount() <em>ACount</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getACount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getACount()
+     * @generated
+     * @ordered
+     */
     protected static final Long ACOUNT_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getACount() <em>ACount</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getACount() <em>ACount</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getACount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getACount()
+     * @generated
+     * @ordered
+     */
     protected Long aCount = ACOUNT_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getDistinctACount() <em>Distinct ACount</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDistinctACount() <em>Distinct ACount</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDistinctACount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDistinctACount()
+     * @generated
+     * @ordered
+     */
     protected static final Long DISTINCT_ACOUNT_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getDistinctACount() <em>Distinct ACount</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDistinctACount() <em>Distinct ACount</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDistinctACount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDistinctACount()
+     * @generated
+     * @ordered
+     */
     protected Long distinctACount = DISTINCT_ACOUNT_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getDependencyFactor() <em>Dependency Factor</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDependencyFactor() <em>Dependency Factor</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDependencyFactor()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDependencyFactor()
+     * @generated
+     * @ordered
+     */
     protected static final Double DEPENDENCY_FACTOR_EDEFAULT = null;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected ColumnDependencyIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR;
-	}
+        return ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Column getColumnA() {
-		if (columnA != null && columnA.eIsProxy()) {
-			InternalEObject oldColumnA = (InternalEObject)columnA;
-			columnA = (Column)eResolveProxy(oldColumnA);
-			if (columnA != oldColumnA) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A, oldColumnA, columnA));
-			}
-		}
-		return columnA;
-	}
+        if (columnA != null && columnA.eIsProxy()) {
+            InternalEObject oldColumnA = (InternalEObject)columnA;
+            columnA = (Column)eResolveProxy(oldColumnA);
+            if (columnA != oldColumnA) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A, oldColumnA, columnA));
+            }
+        }
+        return columnA;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Column basicGetColumnA() {
-		return columnA;
-	}
+        return columnA;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setColumnA(Column newColumnA) {
-		Column oldColumnA = columnA;
-		columnA = newColumnA;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A, oldColumnA, columnA));
-	}
+        Column oldColumnA = columnA;
+        columnA = newColumnA;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A, oldColumnA, columnA));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Column getColumnB() {
-		if (columnB != null && columnB.eIsProxy()) {
-			InternalEObject oldColumnB = (InternalEObject)columnB;
-			columnB = (Column)eResolveProxy(oldColumnB);
-			if (columnB != oldColumnB) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B, oldColumnB, columnB));
-			}
-		}
-		return columnB;
-	}
+        if (columnB != null && columnB.eIsProxy()) {
+            InternalEObject oldColumnB = (InternalEObject)columnB;
+            columnB = (Column)eResolveProxy(oldColumnB);
+            if (columnB != oldColumnB) {
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B, oldColumnB, columnB));
+            }
+        }
+        return columnB;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Column basicGetColumnB() {
-		return columnB;
-	}
+        return columnB;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setColumnB(Column newColumnB) {
-		Column oldColumnB = columnB;
-		columnB = newColumnB;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B, oldColumnB, columnB));
-	}
+        Column oldColumnB = columnB;
+        columnB = newColumnB;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B, oldColumnB, columnB));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Long getACount() {
-		return aCount;
-	}
+        return aCount;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setACount(Long newACount) {
-		Long oldACount = aCount;
-		aCount = newACount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT, oldACount, aCount));
-	}
+        Long oldACount = aCount;
+        aCount = newACount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT, oldACount, aCount));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Long getDistinctACount() {
-		return distinctACount;
-	}
+        return distinctACount;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setDistinctACount(Long newDistinctACount) {
-		Long oldDistinctACount = distinctACount;
-		distinctACount = newDistinctACount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT, oldDistinctACount, distinctACount));
-	}
+        Long oldDistinctACount = distinctACount;
+        distinctACount = newDistinctACount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT, oldDistinctACount, distinctACount));
+    }
 
     @Override
     public boolean storeSqlResults(List<Object[]> objects) {
@@ -286,116 +286,116 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
     }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
-				if (resolve) return getColumnA();
-				return basicGetColumnA();
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
-				if (resolve) return getColumnB();
-				return basicGetColumnB();
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
-				return getACount();
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT:
-				return getDistinctACount();
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DEPENDENCY_FACTOR:
-				return getDependencyFactor();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
+                if (resolve) return getColumnA();
+                return basicGetColumnA();
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
+                if (resolve) return getColumnB();
+                return basicGetColumnB();
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
+                return getACount();
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT:
+                return getDistinctACount();
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DEPENDENCY_FACTOR:
+                return getDependencyFactor();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
-				setColumnA((Column)newValue);
-				return;
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
-				setColumnB((Column)newValue);
-				return;
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
-				setACount((Long)newValue);
-				return;
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT:
-				setDistinctACount((Long)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
+                setColumnA((Column)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
+                setColumnB((Column)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
+                setACount((Long)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT:
+                setDistinctACount((Long)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
-				setColumnA((Column)null);
-				return;
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
-				setColumnB((Column)null);
-				return;
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
-				setACount(ACOUNT_EDEFAULT);
-				return;
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT:
-				setDistinctACount(DISTINCT_ACOUNT_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
+                setColumnA((Column)null);
+                return;
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
+                setColumnB((Column)null);
+                return;
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
+                setACount(ACOUNT_EDEFAULT);
+                return;
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT:
+                setDistinctACount(DISTINCT_ACOUNT_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
-				return columnA != null;
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
-				return columnB != null;
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
-				return ACOUNT_EDEFAULT == null ? aCount != null : !ACOUNT_EDEFAULT.equals(aCount);
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT:
-				return DISTINCT_ACOUNT_EDEFAULT == null ? distinctACount != null : !DISTINCT_ACOUNT_EDEFAULT.equals(distinctACount);
-			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DEPENDENCY_FACTOR:
-				return DEPENDENCY_FACTOR_EDEFAULT == null ? getDependencyFactor() != null : !DEPENDENCY_FACTOR_EDEFAULT.equals(getDependencyFactor());
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
+                return columnA != null;
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
+                return columnB != null;
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
+                return ACOUNT_EDEFAULT == null ? aCount != null : !ACOUNT_EDEFAULT.equals(aCount);
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT:
+                return DISTINCT_ACOUNT_EDEFAULT == null ? distinctACount != null : !DISTINCT_ACOUNT_EDEFAULT.equals(distinctACount);
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DEPENDENCY_FACTOR:
+                return DEPENDENCY_FACTOR_EDEFAULT == null ? getDependencyFactor() != null : !DEPENDENCY_FACTOR_EDEFAULT.equals(getDependencyFactor());
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (aCount: ");
-		result.append(aCount);
-		result.append(", distinctACount: ");
-		result.append(distinctACount);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (aCount: ");
+        result.append(aCount);
+        result.append(", distinctACount: ");
+        result.append(distinctACount);
+        result.append(')');
+        return result.toString();
+    }
 
     @Override
     public Expression getInstantiatedExpressions(String language) {

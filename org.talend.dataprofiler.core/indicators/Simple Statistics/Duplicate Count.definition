@@ -2,7 +2,6 @@
 <dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" label="Duplicate Count">
   <taggedValue xmi:id="_-U49MYqnEd-SocVM_rHvUg" tag="Description" value="counts the number of duplicate rows. This number and the number of unique data equals the number of distinct rows"/>
   <taggedValue xmi:id="_-U49MoqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the number of duplicated records"/>
-  <taggedValue xmi:id="_-U49OYqnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/Simple Statistics/Duplicate Count.properties"/>
   <categories href="../../../.Talend.definition#_ccKHEBF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="_-U49M4qnEd-SocVM_rHvUg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) AS myquery" language="SQL"/>
   <sqlGenericExpression xmi:id="_-U49NIqnEd-SocVM_rHvUg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount > 1) AS myquery" language="MySQL"/>

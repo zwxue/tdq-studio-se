@@ -12,12 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.URI;
+import org.talend.commons.utils.WorkspaceUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -29,28 +26,7 @@ public final class WorkspaceResourceHelper {
     private WorkspaceResourceHelper() {
     }
 
-    /**
-     * 
-     * DOC mzhao Comment method "getModelElementResource".
-     * 
-     * @param me ,modelElement of EObject
-     * @return File this element links.
-     */
-    public static IFile getModelElementResource(ModelElement me) {
-        IFile resourceFile = null;
-        URI uri = me.eResource().getURI();
-        uri = me.eResource().getResourceSet().getURIConverter().normalize(uri);
-        String scheme = uri.scheme();
-        if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) { //$NON-NLS-1$ //$NON-NLS-2$
-            StringBuffer platformResourcePath = new StringBuffer();
-            for (int j = 1, size = uri.segmentCount(); j < size; ++j) {
-                platformResourcePath.append('/');
-                platformResourcePath.append(uri.segment(j));
-            }
-            resourceFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(platformResourcePath.toString()));
-        }
-        return resourceFile;
-    }
+
 
     /**
      * 
@@ -60,7 +36,7 @@ public final class WorkspaceResourceHelper {
      * @return
      */
     public static IPath getModelElementPath(ModelElement me) {
-        return getModelElementResource(me).getFullPath();
+        return WorkspaceUtils.getModelElementResource(me).getFullPath();
     }
 
     /**

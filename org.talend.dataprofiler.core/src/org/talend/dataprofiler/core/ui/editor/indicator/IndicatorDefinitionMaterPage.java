@@ -1744,7 +1744,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return editorInput.getIndicatorDefinition();
         } else if (editor.getEditorInput() instanceof FileEditorInput) {
             FileEditorInput editorInput = (FileEditorInput) editor.getEditorInput();
-            return IndicatorResourceFileHelper.getInstance().findUDI(editorInput.getFile());
+            return IndicatorResourceFileHelper.getInstance().findIndDefinition(editorInput.getFile());
         } else {
             return null;
         }

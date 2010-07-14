@@ -92,6 +92,7 @@ public final class ModelElementIndicatorRule {
         case BlankCountIndicatorEnum:
         case TextIndicatorEnum:
         case MinLengthIndicatorEnum:
+        case MinLengthWithNullIndicatorEnum:
         case MaxLengthIndicatorEnum:
         case AverageLengthIndicatorEnum:
 

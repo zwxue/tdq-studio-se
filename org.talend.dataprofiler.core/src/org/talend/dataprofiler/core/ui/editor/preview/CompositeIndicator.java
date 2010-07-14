@@ -142,6 +142,7 @@ public final class CompositeIndicator {
                 simpleList.add(one);
                 break;
             case MinLengthIndicatorEnum:
+            case MinLengthWithNullIndicatorEnum:
             case MaxLengthIndicatorEnum:
             case AverageLengthIndicatorEnum:
                 textList.add(one);

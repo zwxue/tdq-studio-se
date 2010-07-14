@@ -19,6 +19,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * 
@@ -37,5 +39,28 @@ public final class WorkspaceUtils {
         IPath location = Path.fromOSString(file.getAbsolutePath());
         IFile ifile = workspace.getRoot().getFileForLocation(location);
         return ifile;
+    }
+
+    /**
+     * 
+     * DOC mzhao convert emf resource to workspace resource.
+     * 
+     * @param me ,modelElement of EObject
+     * @return File this element links.
+     */
+    public static IFile getModelElementResource(ModelElement me) {
+        IFile resourceFile = null;
+        URI uri = me.eResource().getURI();
+        uri = me.eResource().getResourceSet().getURIConverter().normalize(uri);
+        String scheme = uri.scheme();
+        if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) { //$NON-NLS-1$ //$NON-NLS-2$
+            StringBuffer platformResourcePath = new StringBuffer();
+            for (int j = 1, size = uri.segmentCount(); j < size; ++j) {
+                platformResourcePath.append('/');
+                platformResourcePath.append(uri.segment(j));
+            }
+            resourceFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(platformResourcePath.toString()));
+        }
+        return resourceFile;
     }
 }

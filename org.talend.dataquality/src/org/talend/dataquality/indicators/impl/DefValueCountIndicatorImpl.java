@@ -42,121 +42,121 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
     protected static final Long DEFAULT_VAL_COUNT_EDEFAULT = new Long(0L);
 
     /**
-	 * The cached value of the '{@link #getDefaultValCount() <em>Default Val Count</em>}' attribute.
-	 * <!-- begin-user-doc
+     * The cached value of the '{@link #getDefaultValCount() <em>Default Val Count</em>}' attribute.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-	 * @see #getDefaultValCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDefaultValCount()
+     * @generated
+     * @ordered
+     */
     protected Long defaultValCount = DEFAULT_VAL_COUNT_EDEFAULT;
 
     protected String defValue = null;
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected DefValueCountIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.DEF_VALUE_COUNT_INDICATOR;
-	}
+        return IndicatorsPackage.Literals.DEF_VALUE_COUNT_INDICATOR;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Long getDefaultValCount() {
-		return defaultValCount;
-	}
+        return defaultValCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setDefaultValCount(Long newDefaultValCount) {
-		Long oldDefaultValCount = defaultValCount;
-		defaultValCount = newDefaultValCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT, oldDefaultValCount, defaultValCount));
-	}
+        Long oldDefaultValCount = defaultValCount;
+        defaultValCount = newDefaultValCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT, oldDefaultValCount, defaultValCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
-				return getDefaultValCount();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
+                return getDefaultValCount();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
-				setDefaultValCount((Long)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
+                setDefaultValCount((Long)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
-				setDefaultValCount(DEFAULT_VAL_COUNT_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
+                setDefaultValCount(DEFAULT_VAL_COUNT_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
-				return DEFAULT_VAL_COUNT_EDEFAULT == null ? defaultValCount != null : !DEFAULT_VAL_COUNT_EDEFAULT.equals(defaultValCount);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT:
+                return DEFAULT_VAL_COUNT_EDEFAULT == null ? defaultValCount != null : !DEFAULT_VAL_COUNT_EDEFAULT.equals(defaultValCount);
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (defaultValCount: ");
-		result.append(defaultValCount);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (defaultValCount: ");
+        result.append(defaultValCount);
+        result.append(')');
+        return result.toString();
+    }
 
     /*
      * (non-Javadoc)

@@ -582,6 +582,29 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MinLengthWithNullIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MinLengthWithNullIndicatorItemProvider minLengthWithNullIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.MinLengthWithNullIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMinLengthWithNullIndicatorAdapter() {
+        if (minLengthWithNullIndicatorItemProvider == null) {
+            minLengthWithNullIndicatorItemProvider = new MinLengthWithNullIndicatorItemProvider(this);
+        }
+
+        return minLengthWithNullIndicatorItemProvider;
+    }
+
+    /**
      * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MaxLengthIndicator} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1093,6 +1116,7 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (iqrIndicatorItemProvider != null) iqrIndicatorItemProvider.dispose();
         if (textIndicatorItemProvider != null) textIndicatorItemProvider.dispose();
         if (minLengthIndicatorItemProvider != null) minLengthIndicatorItemProvider.dispose();
+        if (minLengthWithNullIndicatorItemProvider != null) minLengthWithNullIndicatorItemProvider.dispose();
         if (maxLengthIndicatorItemProvider != null) maxLengthIndicatorItemProvider.dispose();
         if (averageLengthIndicatorItemProvider != null) averageLengthIndicatorItemProvider.dispose();
         if (lengthIndicatorItemProvider != null) lengthIndicatorItemProvider.dispose();

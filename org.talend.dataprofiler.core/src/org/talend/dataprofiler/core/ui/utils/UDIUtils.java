@@ -75,7 +75,7 @@ public final class UDIUtils {
             throws Throwable {
         List<IndicatorUnit> addIndicatorUnits = new ArrayList<IndicatorUnit>();
 
-        IndicatorDefinition udid = IndicatorResourceFileHelper.getInstance().findUDI(pfile);
+        IndicatorDefinition udid = IndicatorResourceFileHelper.getInstance().findIndDefinition(pfile);
         IndicatorCategory ic = UDIHelper.getUDICategory(udid);
 
         // can't add the same user defined indicator
@@ -145,7 +145,7 @@ public final class UDIUtils {
                     if (udi instanceof IFile) {
                         IFile file = (IFile) udi;
                         if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
-                            IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findUDI(file);
+                            IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
                             boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
                             if (!validStatus) {
                                 status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
@@ -195,7 +195,7 @@ class UdiLabelProvider extends LabelProvider {
         }
 
         if (element instanceof IFile) {
-            IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findUDI((IFile) element);
+            IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition((IFile) element);
             boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
             ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
             if (!validStatus) {
@@ -215,7 +215,7 @@ class UdiLabelProvider extends LabelProvider {
     public String getText(Object element) {
         if (element instanceof IFile) {
             IFile file = (IFile) element;
-            IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findUDI(file);
+            IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
             if (udi != null) {
                 return udi.getName();
             }

@@ -29,131 +29,131 @@ import org.talend.dataquality.indicators.schema.ViewIndicator;
  */
 public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
     /**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public static SchemaFactory init() {
-		try {
-			SchemaFactory theSchemaFactory = (SchemaFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.schema"); 
-			if (theSchemaFactory != null) {
-				return theSchemaFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new SchemaFactoryImpl();
-	}
+        try {
+            SchemaFactory theSchemaFactory = (SchemaFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.schema"); 
+            if (theSchemaFactory != null) {
+                return theSchemaFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new SchemaFactoryImpl();
+    }
 
     /**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public SchemaFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case SchemaPackage.SCHEMA_INDICATOR: return createSchemaIndicator();
-			case SchemaPackage.TABLE_INDICATOR: return createTableIndicator();
-			case SchemaPackage.CONNECTION_INDICATOR: return createConnectionIndicator();
-			case SchemaPackage.CATALOG_INDICATOR: return createCatalogIndicator();
-			case SchemaPackage.VIEW_INDICATOR: return createViewIndicator();
-			case SchemaPackage.ABSTRACT_TABLE_INDICATOR: return createAbstractTableIndicator();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case SchemaPackage.SCHEMA_INDICATOR: return createSchemaIndicator();
+            case SchemaPackage.TABLE_INDICATOR: return createTableIndicator();
+            case SchemaPackage.CONNECTION_INDICATOR: return createConnectionIndicator();
+            case SchemaPackage.CATALOG_INDICATOR: return createCatalogIndicator();
+            case SchemaPackage.VIEW_INDICATOR: return createViewIndicator();
+            case SchemaPackage.ABSTRACT_TABLE_INDICATOR: return createAbstractTableIndicator();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+        }
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public SchemaIndicator createSchemaIndicator() {
-		SchemaIndicatorImpl schemaIndicator = new SchemaIndicatorImpl();
-		return schemaIndicator;
-	}
+        SchemaIndicatorImpl schemaIndicator = new SchemaIndicatorImpl();
+        return schemaIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public TableIndicator createTableIndicator() {
-		TableIndicatorImpl tableIndicator = new TableIndicatorImpl();
-		return tableIndicator;
-	}
+        TableIndicatorImpl tableIndicator = new TableIndicatorImpl();
+        return tableIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public ConnectionIndicator createConnectionIndicator() {
-		ConnectionIndicatorImpl connectionIndicator = new ConnectionIndicatorImpl();
-		return connectionIndicator;
-	}
+        ConnectionIndicatorImpl connectionIndicator = new ConnectionIndicatorImpl();
+        return connectionIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public CatalogIndicator createCatalogIndicator() {
-		CatalogIndicatorImpl catalogIndicator = new CatalogIndicatorImpl();
-		return catalogIndicator;
-	}
+        CatalogIndicatorImpl catalogIndicator = new CatalogIndicatorImpl();
+        return catalogIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public ViewIndicator createViewIndicator() {
-		ViewIndicatorImpl viewIndicator = new ViewIndicatorImpl();
-		return viewIndicator;
-	}
+        ViewIndicatorImpl viewIndicator = new ViewIndicatorImpl();
+        return viewIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AbstractTableIndicator createAbstractTableIndicator() {
-		AbstractTableIndicatorImpl abstractTableIndicator = new AbstractTableIndicatorImpl();
-		return abstractTableIndicator;
-	}
+        AbstractTableIndicatorImpl abstractTableIndicator = new AbstractTableIndicatorImpl();
+        return abstractTableIndicator;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public SchemaPackage getSchemaPackage() {
-		return (SchemaPackage)getEPackage();
-	}
+        return (SchemaPackage)getEPackage();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
     @Deprecated
     public static SchemaPackage getPackage() {
-		return SchemaPackage.eINSTANCE;
-	}
+        return SchemaPackage.eINSTANCE;
+    }
 
 } //SchemaFactoryImpl

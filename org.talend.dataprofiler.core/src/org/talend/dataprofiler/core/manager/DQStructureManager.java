@@ -63,13 +63,13 @@ public final class DQStructureManager {
 
     private static final String DEMO_PATH = "/demo"; //$NON-NLS-1$
 
-    private static final String RULES_PATH = "/dqrules"; //$NON-NLS-1$
+    public static final String RULES_PATH = "/dqrules"; //$NON-NLS-1$
 
     private static final String PATTERN_PATH = "/patterns"; //$NON-NLS-1$
 
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
-    private static final String SYSTEM_INDICATOR_PATH = "/indicators";//$NON-NLS-1$
+    public static final String SYSTEM_INDICATOR_PATH = "/indicators";//$NON-NLS-1$
 
     public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
 

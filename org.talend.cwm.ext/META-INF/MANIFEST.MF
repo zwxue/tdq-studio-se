@@ -21,5 +21,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.talend.utils,
  org.eclipse.emf.ecore.xmi,
  org.talend.commons,
- org.eclipse.xsd
+ org.eclipse.xsd,
+ org.apache.log4j
 Bundle-ActivationPolicy: lazy

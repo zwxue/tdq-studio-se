@@ -201,8 +201,7 @@ public final class CategoryHandler {
         // if (showIndicatorDefinitions == null) {
         ArrayList<IndicatorDefinition> showIndicatorDefinitions = new ArrayList<IndicatorDefinition>();
 
-        EList<IndicatorDefinition> indicatorDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions()
-                .getIndicatorDefinitions();
+        List<IndicatorDefinition> indicatorDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions();
 
         for (IndicatorDefinition indicatorDefinition : indicatorDefinitions) {
             if (!indicatorDefinition.getSqlGenericExpression().isEmpty()

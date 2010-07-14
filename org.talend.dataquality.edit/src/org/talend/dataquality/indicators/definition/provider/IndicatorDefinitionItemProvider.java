@@ -187,6 +187,7 @@ public class IndicatorDefinitionItemProvider
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS);
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS);
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__CHARACTERS_MAPPING);
+            childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__INDICATOR_DEFINITION_PARAMETER);
         }
         return childrenFeatures;
     }
@@ -248,6 +249,7 @@ public class IndicatorDefinitionItemProvider
             case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
             case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
             case DefinitionPackage.INDICATOR_DEFINITION__CHARACTERS_MAPPING:
+            case DefinitionPackage.INDICATOR_DEFINITION__INDICATOR_DEFINITION_PARAMETER:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -284,6 +286,11 @@ public class IndicatorDefinitionItemProvider
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__CHARACTERS_MAPPING,
                  DefinitionFactory.eINSTANCE.createCharactersMapping()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__INDICATOR_DEFINITION_PARAMETER,
+                 DefinitionFactory.eINSTANCE.createIndicatorDefinitionParameter()));
     }
 
     /**

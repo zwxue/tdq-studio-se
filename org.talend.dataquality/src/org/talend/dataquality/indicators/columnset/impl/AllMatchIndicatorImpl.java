@@ -84,250 +84,250 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     protected Long notMatchingValueCount = NOT_MATCHING_VALUE_COUNT_EDEFAULT;
 
     /**
-	 * The cached value of the '{@link #getCompositeRegexMatchingIndicators() <em>Composite Regex Matching Indicators</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getCompositeRegexMatchingIndicators() <em>Composite Regex Matching Indicators</em>}' containment reference list.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-	 * @see #getCompositeRegexMatchingIndicators()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getCompositeRegexMatchingIndicators()
+     * @generated
+     * @ordered
+     */
     protected EList<RegexpMatchingIndicator> compositeRegexMatchingIndicators;
 
     private List<java.util.regex.Pattern>[] patterns;
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected AllMatchIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return ColumnsetPackage.Literals.ALL_MATCH_INDICATOR;
-	}
+        return ColumnsetPackage.Literals.ALL_MATCH_INDICATOR;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Long getMatchingValueCount() {
-		return matchingValueCount;
-	}
+        return matchingValueCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setMatchingValueCount(Long newMatchingValueCount) {
-		Long oldMatchingValueCount = matchingValueCount;
-		matchingValueCount = newMatchingValueCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
-	}
+        Long oldMatchingValueCount = matchingValueCount;
+        matchingValueCount = newMatchingValueCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public Long getNotMatchingValueCount() {
-		return notMatchingValueCount;
-	}
+        return notMatchingValueCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setNotMatchingValueCount(Long newNotMatchingValueCount) {
-		Long oldNotMatchingValueCount = notMatchingValueCount;
-		notMatchingValueCount = newNotMatchingValueCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount, notMatchingValueCount));
-	}
+        Long oldNotMatchingValueCount = notMatchingValueCount;
+        notMatchingValueCount = newNotMatchingValueCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount, notMatchingValueCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public EList<RegexpMatchingIndicator> getCompositeRegexMatchingIndicators() {
-		if (compositeRegexMatchingIndicators == null) {
-			compositeRegexMatchingIndicators = new EObjectContainmentEList<RegexpMatchingIndicator>(RegexpMatchingIndicator.class, this, ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS);
-		}
-		return compositeRegexMatchingIndicators;
-	}
+        if (compositeRegexMatchingIndicators == null) {
+            compositeRegexMatchingIndicators = new EObjectContainmentEList<RegexpMatchingIndicator>(RegexpMatchingIndicator.class, this, ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS);
+        }
+        return compositeRegexMatchingIndicators;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public String getRegex() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
-	}
+        // TODO: implement this method
+        // Ensure that you remove @generated or mark it @generated NOT
+        throw new UnsupportedOperationException();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
-				return ((InternalEList<?>)getCompositeRegexMatchingIndicators()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                return ((InternalEList<?>)getCompositeRegexMatchingIndicators()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
-				return getMatchingValueCount();
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-				return getNotMatchingValueCount();
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
-				return getCompositeRegexMatchingIndicators();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
+                return getMatchingValueCount();
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                return getNotMatchingValueCount();
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                return getCompositeRegexMatchingIndicators();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
-				setMatchingValueCount((Long)newValue);
-				return;
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-				setNotMatchingValueCount((Long)newValue);
-				return;
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
-				getCompositeRegexMatchingIndicators().clear();
-				getCompositeRegexMatchingIndicators().addAll((Collection<? extends RegexpMatchingIndicator>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
+                setMatchingValueCount((Long)newValue);
+                return;
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                setNotMatchingValueCount((Long)newValue);
+                return;
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                getCompositeRegexMatchingIndicators().clear();
+                getCompositeRegexMatchingIndicators().addAll((Collection<? extends RegexpMatchingIndicator>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
-				setMatchingValueCount(MATCHING_VALUE_COUNT_EDEFAULT);
-				return;
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-				setNotMatchingValueCount(NOT_MATCHING_VALUE_COUNT_EDEFAULT);
-				return;
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
-				getCompositeRegexMatchingIndicators().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
+                setMatchingValueCount(MATCHING_VALUE_COUNT_EDEFAULT);
+                return;
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                setNotMatchingValueCount(NOT_MATCHING_VALUE_COUNT_EDEFAULT);
+                return;
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                getCompositeRegexMatchingIndicators().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
-				return MATCHING_VALUE_COUNT_EDEFAULT == null ? matchingValueCount != null : !MATCHING_VALUE_COUNT_EDEFAULT.equals(matchingValueCount);
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-				return NOT_MATCHING_VALUE_COUNT_EDEFAULT == null ? notMatchingValueCount != null : !NOT_MATCHING_VALUE_COUNT_EDEFAULT.equals(notMatchingValueCount);
-			case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
-				return compositeRegexMatchingIndicators != null && !compositeRegexMatchingIndicators.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT:
+                return MATCHING_VALUE_COUNT_EDEFAULT == null ? matchingValueCount != null : !MATCHING_VALUE_COUNT_EDEFAULT.equals(matchingValueCount);
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                return NOT_MATCHING_VALUE_COUNT_EDEFAULT == null ? notMatchingValueCount != null : !NOT_MATCHING_VALUE_COUNT_EDEFAULT.equals(notMatchingValueCount);
+            case ColumnsetPackage.ALL_MATCH_INDICATOR__COMPOSITE_REGEX_MATCHING_INDICATORS:
+                return compositeRegexMatchingIndicators != null && !compositeRegexMatchingIndicators.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == MatchingIndicator.class) {
-			switch (derivedFeatureID) {
-				case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT: return IndicatorsPackage.MATCHING_INDICATOR__MATCHING_VALUE_COUNT;
-				case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT: return IndicatorsPackage.MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT;
-				default: return -1;
-			}
-		}
-		if (baseClass == PatternMatchingIndicator.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == RegexpMatchingIndicator.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == MatchingIndicator.class) {
+            switch (derivedFeatureID) {
+                case ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT: return IndicatorsPackage.MATCHING_INDICATOR__MATCHING_VALUE_COUNT;
+                case ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT: return IndicatorsPackage.MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT;
+                default: return -1;
+            }
+        }
+        if (baseClass == PatternMatchingIndicator.class) {
+            switch (derivedFeatureID) {
+                default: return -1;
+            }
+        }
+        if (baseClass == RegexpMatchingIndicator.class) {
+            switch (derivedFeatureID) {
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == MatchingIndicator.class) {
-			switch (baseFeatureID) {
-				case IndicatorsPackage.MATCHING_INDICATOR__MATCHING_VALUE_COUNT: return ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT;
-				case IndicatorsPackage.MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT: return ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT;
-				default: return -1;
-			}
-		}
-		if (baseClass == PatternMatchingIndicator.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == RegexpMatchingIndicator.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == MatchingIndicator.class) {
+            switch (baseFeatureID) {
+                case IndicatorsPackage.MATCHING_INDICATOR__MATCHING_VALUE_COUNT: return ColumnsetPackage.ALL_MATCH_INDICATOR__MATCHING_VALUE_COUNT;
+                case IndicatorsPackage.MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT: return ColumnsetPackage.ALL_MATCH_INDICATOR__NOT_MATCHING_VALUE_COUNT;
+                default: return -1;
+            }
+        }
+        if (baseClass == PatternMatchingIndicator.class) {
+            switch (baseFeatureID) {
+                default: return -1;
+            }
+        }
+        if (baseClass == RegexpMatchingIndicator.class) {
+            switch (baseFeatureID) {
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (matchingValueCount: ");
-		result.append(matchingValueCount);
-		result.append(", notMatchingValueCount: ");
-		result.append(notMatchingValueCount);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (matchingValueCount: ");
+        result.append(matchingValueCount);
+        result.append(", notMatchingValueCount: ");
+        result.append(notMatchingValueCount);
+        result.append(')');
+        return result.toString();
+    }
 
     /*
      * (non-Javadoc)

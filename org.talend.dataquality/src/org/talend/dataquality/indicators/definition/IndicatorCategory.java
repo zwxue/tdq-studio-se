@@ -26,29 +26,29 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public interface IndicatorCategory extends ModelElement {
     /**
-	 * Returns the value of the '<em><b>Label</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Label</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Label</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Label</em>' attribute.
-	 * @see #setLabel(String)
-	 * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorCategory_Label()
-	 * @model id="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Label</em>' attribute.
+     * @see #setLabel(String)
+     * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorCategory_Label()
+     * @model id="true"
+     * @generated
+     */
     String getLabel();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.indicators.definition.IndicatorCategory#getLabel <em>Label</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.definition.IndicatorCategory#getLabel <em>Label</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Label</em>' attribute.
-	 * @see #getLabel()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Label</em>' attribute.
+     * @see #getLabel()
+     * @generated
+     */
     void setLabel(String value);
 
 } // IndicatorCategory

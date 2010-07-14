@@ -35,80 +35,80 @@ import org.talend.dataquality.indicators.schema.SchemaPackage;
 public class CatalogIndicatorImpl extends SchemaIndicatorImpl implements CatalogIndicator {
 
     /**
-	 * The default value of the '{@link #getSchemaCount() <em>Schema Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getSchemaCount() <em>Schema Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getSchemaCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSchemaCount()
+     * @generated
+     * @ordered
+     */
     protected static final int SCHEMA_COUNT_EDEFAULT = 0;
 
     /**
-	 * The cached value of the '{@link #getSchemaCount() <em>Schema Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getSchemaCount() <em>Schema Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getSchemaCount()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSchemaCount()
+     * @generated
+     * @ordered
+     */
     protected int schemaCount = SCHEMA_COUNT_EDEFAULT;
 
     /**
-	 * The cached value of the '{@link #getSchemaIndicators() <em>Schema Indicators</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #getSchemaIndicators()
-	 * @generated
-	 * @ordered
-	 */
+     * The cached value of the '{@link #getSchemaIndicators() <em>Schema Indicators</em>}' containment reference list.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @see #getSchemaIndicators()
+     * @generated
+     * @ordered
+     */
     protected EList<SchemaIndicator> schemaIndicators;
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected CatalogIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return SchemaPackage.Literals.CATALOG_INDICATOR;
-	}
+        return SchemaPackage.Literals.CATALOG_INDICATOR;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public int getSchemaCount() {
-		return schemaCount;
-	}
+        return schemaCount;
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public void setSchemaCount(int newSchemaCount) {
-		int oldSchemaCount = schemaCount;
-		schemaCount = newSchemaCount;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT, oldSchemaCount, schemaCount));
-	}
+        int oldSchemaCount = schemaCount;
+        schemaCount = newSchemaCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT, oldSchemaCount, schemaCount));
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     public EList<SchemaIndicator> getSchemaIndicators() {
-		if (schemaIndicators == null) {
-			schemaIndicators = new EObjectContainmentEList<SchemaIndicator>(SchemaIndicator.class, this, SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS);
-		}
-		return schemaIndicators;
-	}
+        if (schemaIndicators == null) {
+            schemaIndicators = new EObjectContainmentEList<SchemaIndicator>(SchemaIndicator.class, this, SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS);
+        }
+        return schemaIndicators;
+    }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -120,98 +120,98 @@ public class CatalogIndicatorImpl extends SchemaIndicatorImpl implements Catalog
     }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
-				return ((InternalEList<?>)getSchemaIndicators()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
+                return ((InternalEList<?>)getSchemaIndicators()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
-				return getSchemaCount();
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
-				return getSchemaIndicators();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
+                return getSchemaCount();
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
+                return getSchemaIndicators();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
-				setSchemaCount((Integer)newValue);
-				return;
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
-				getSchemaIndicators().clear();
-				getSchemaIndicators().addAll((Collection<? extends SchemaIndicator>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
+                setSchemaCount((Integer)newValue);
+                return;
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
+                getSchemaIndicators().clear();
+                getSchemaIndicators().addAll((Collection<? extends SchemaIndicator>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
-				setSchemaCount(SCHEMA_COUNT_EDEFAULT);
-				return;
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
-				getSchemaIndicators().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
+                setSchemaCount(SCHEMA_COUNT_EDEFAULT);
+                return;
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
+                getSchemaIndicators().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
-				return schemaCount != SCHEMA_COUNT_EDEFAULT;
-			case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
-				return schemaIndicators != null && !schemaIndicators.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
+                return schemaCount != SCHEMA_COUNT_EDEFAULT;
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
+                return schemaIndicators != null && !schemaIndicators.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (schemaCount: ");
-		result.append(schemaCount);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (schemaCount: ");
+        result.append(schemaCount);
+        result.append(')');
+        return result.toString();
+    }
 
     /*
      * (non-Javadoc) ADDED scorreia 2008-07-29 reset implemented.

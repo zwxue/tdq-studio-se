@@ -293,21 +293,21 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
     }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected JavaUserDefIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorSqlPackage.Literals.JAVA_USER_DEF_INDICATOR;
-	}
+        return IndicatorSqlPackage.Literals.JAVA_USER_DEF_INDICATOR;
+    }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

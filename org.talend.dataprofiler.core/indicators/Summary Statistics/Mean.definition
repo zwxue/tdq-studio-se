@@ -2,7 +2,6 @@
 <dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_ccI48RF2Ed2PKb6nEJEvhw" name="Mean" label="Mean">
   <taggedValue xmi:id="_-WrF4YqnEd-SocVM_rHvUg" tag="Description" value="computes the mean (average) of the records"/>
   <taggedValue xmi:id="_-WrF4oqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the mean value of numerical records"/>
-  <taggedValue xmi:id="_-WrF6IqnEd-SocVM_rHvUg" tag="Property File" value="/TOP_DEFAULT_PRJ/TDQ_Libraries/Indicators/System Indicators/Summary Statistics/Mean.properties"/>
   <categories href="../../../.Talend.definition#_ccKuIBF2Ed2PKb6nEJEvhw"/>
   <aggregatedDefinitions href="../../../.Talend.definition#_ccFOkBF2Ed2PKb6nEJEvhw"/>
   <aggregatedDefinitions href="../../../.Talend.definition#_ccJgAhF2Ed2PKb6nEJEvhw"/>

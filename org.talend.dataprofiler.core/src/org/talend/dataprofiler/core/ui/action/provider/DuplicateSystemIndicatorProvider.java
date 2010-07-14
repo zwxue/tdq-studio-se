@@ -19,7 +19,8 @@ import org.talend.dataprofiler.core.ui.action.actions.DuplicateCWMResourceAction
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
 /**
- * DOC yyi 2009-09-07, Feature:8882.
+ * DOC yyi 2009-09-07, Feature:8882. MOD mzhao feature 13676,2010-07-12 split system indicators. use:
+ * {@link DuplicateCWMResourceProvider}
  */
 public class DuplicateSystemIndicatorProvider extends CommonActionProvider {
 

@@ -470,7 +470,7 @@ public class ColumnViewerDND {
             if (firstElement instanceof IFile) {
                 IFile fe = (IFile) firstElement;
                 if (FactoriesUtil.DEFINITION.equals(fe.getFileExtension())) {
-                    IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findUDI(fe);
+                    IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findIndDefinition(fe);
                     // MOD yyi 2009-09-16
                     // Feature :8866
                     if (udi != null && (TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi))) {

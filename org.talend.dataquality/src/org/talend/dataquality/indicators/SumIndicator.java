@@ -27,57 +27,57 @@ package org.talend.dataquality.indicators;
 public interface SumIndicator extends Indicator {
 
     /**
-	 * Returns the value of the '<em><b>Sum Str</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Sum Str</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Sum Str</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Sum Str</em>' attribute.
-	 * @see #setSumStr(String)
-	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getSumIndicator_SumStr()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Sum Str</em>' attribute.
+     * @see #setSumStr(String)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getSumIndicator_SumStr()
+     * @model
+     * @generated
+     */
     String getSumStr();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.indicators.SumIndicator#getSumStr <em>Sum Str</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.SumIndicator#getSumStr <em>Sum Str</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Sum Str</em>' attribute.
-	 * @see #getSumStr()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Sum Str</em>' attribute.
+     * @see #getSumStr()
+     * @generated
+     */
     void setSumStr(String value);
 
     /**
-	 * Returns the value of the '<em><b>Datatype</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Datatype</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Datatype</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Java data type of the summed data
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Datatype</em>' attribute.
-	 * @see #setDatatype(int)
-	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getSumIndicator_Datatype()
-	 * @model
-	 * @generated
-	 */
+     * <!-- begin-model-doc -->
+     * Java data type of the summed data
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Datatype</em>' attribute.
+     * @see #setDatatype(int)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getSumIndicator_Datatype()
+     * @model
+     * @generated
+     */
     int getDatatype();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.indicators.SumIndicator#getDatatype <em>Datatype</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.SumIndicator#getDatatype <em>Datatype</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Datatype</em>' attribute.
-	 * @see #getDatatype()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Datatype</em>' attribute.
+     * @see #getDatatype()
+     * @generated
+     */
     void setDatatype(int value);
 } // SumIndicator

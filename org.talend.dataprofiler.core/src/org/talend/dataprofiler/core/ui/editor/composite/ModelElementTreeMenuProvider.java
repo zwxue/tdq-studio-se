@@ -48,8 +48,8 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -282,11 +282,7 @@ public abstract class ModelElementTreeMenuProvider {
             TreeItem treeItem = selection[0];
             IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY);
             UserDefIndicator indicator = (UserDefIndicator) indicatorUnit.getIndicator();
-
-            IFolder userFolder = ResourceManager.getUDIFolder();
-            IFile file = IndicatorResourceFileHelper.getInstance().getIndicatorFile(indicator.getIndicatorDefinition(),
-                    new IFolder[] { userFolder });
-
+            IFile file = IndicatorResourceFileHelper.getInstance().getIndicatorFile(indicator.getIndicatorDefinition());
             IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             try {
                 activePage.openEditor(new FileEditorInput(file),

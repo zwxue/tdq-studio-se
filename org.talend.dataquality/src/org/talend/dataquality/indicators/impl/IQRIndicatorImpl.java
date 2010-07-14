@@ -21,22 +21,22 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  */
 public class IQRIndicatorImpl extends RangeIndicatorImpl implements IQRIndicator {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected IQRIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.IQR_INDICATOR;
-	}
+        return IndicatorsPackage.Literals.IQR_INDICATOR;
+    }
 
 } //IQRIndicatorImpl

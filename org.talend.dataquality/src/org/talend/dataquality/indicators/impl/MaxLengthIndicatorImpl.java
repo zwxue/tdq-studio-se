@@ -20,21 +20,21 @@ import org.talend.dataquality.indicators.MaxLengthIndicator;
 public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLengthIndicator {
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     protected MaxLengthIndicatorImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return IndicatorsPackage.Literals.MAX_LENGTH_INDICATOR;
-	}
+        return IndicatorsPackage.Literals.MAX_LENGTH_INDICATOR;
+    }
 
     /*
      * (non-Javadoc) ADDED scorreia 2008-04-08 compute max length

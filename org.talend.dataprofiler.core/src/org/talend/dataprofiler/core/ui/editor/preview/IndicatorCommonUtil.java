@@ -33,6 +33,7 @@ import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinLengthIndicator;
+import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
@@ -107,6 +108,10 @@ public final class IndicatorCommonUtil {
 
                 case MinLengthIndicatorEnum:
                     tempObject = ((MinLengthIndicator) indicator).getLength();
+                    break;
+
+                case MinLengthWithNullIndicatorEnum:
+                    tempObject = ((MinLengthWithNullIndicator) indicator).getLength();
                     break;
 
                 case MaxLengthIndicatorEnum:

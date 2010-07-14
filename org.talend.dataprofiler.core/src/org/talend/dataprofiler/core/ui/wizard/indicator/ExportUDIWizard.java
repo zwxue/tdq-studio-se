@@ -59,7 +59,7 @@ public class ExportUDIWizard extends Wizard {
             if (element instanceof IFile) {
                 IFile file = (IFile) element;
                 if (FactoriesUtil.DEFINITION.equalsIgnoreCase(file.getFileExtension())) {
-                    seletedIndicators.add(IndicatorResourceFileHelper.getInstance().findUDI(file));
+                    seletedIndicators.add(IndicatorResourceFileHelper.getInstance().findIndDefinition(file));
                 }
             }
         }

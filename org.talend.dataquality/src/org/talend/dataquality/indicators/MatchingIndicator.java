@@ -26,55 +26,55 @@ package org.talend.dataquality.indicators;
  */
 public interface MatchingIndicator extends Indicator {
     /**
-	 * Returns the value of the '<em><b>Matching Value Count</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Matching Value Count</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Matching Value Count</em>' attribute.
-	 * @see #setMatchingValueCount(Long)
-	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getMatchingIndicator_MatchingValueCount()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Matching Value Count</em>' attribute.
+     * @see #setMatchingValueCount(Long)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getMatchingIndicator_MatchingValueCount()
+     * @model
+     * @generated
+     */
     Long getMatchingValueCount();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.indicators.MatchingIndicator#getMatchingValueCount <em>Matching Value Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.MatchingIndicator#getMatchingValueCount <em>Matching Value Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Matching Value Count</em>' attribute.
-	 * @see #getMatchingValueCount()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Matching Value Count</em>' attribute.
+     * @see #getMatchingValueCount()
+     * @generated
+     */
     void setMatchingValueCount(Long value);
 
     /**
-	 * Returns the value of the '<em><b>Not Matching Value Count</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Not Matching Value Count</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Not Matching Value Count</em>' attribute.
-	 * @see #setNotMatchingValueCount(Long)
-	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getMatchingIndicator_NotMatchingValueCount()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Not Matching Value Count</em>' attribute.
+     * @see #setNotMatchingValueCount(Long)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getMatchingIndicator_NotMatchingValueCount()
+     * @model
+     * @generated
+     */
     Long getNotMatchingValueCount();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.indicators.MatchingIndicator#getNotMatchingValueCount <em>Not Matching Value Count</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.indicators.MatchingIndicator#getNotMatchingValueCount <em>Not Matching Value Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Not Matching Value Count</em>' attribute.
-	 * @see #getNotMatchingValueCount()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Not Matching Value Count</em>' attribute.
+     * @see #getNotMatchingValueCount()
+     * @generated
+     */
     void setNotMatchingValueCount(Long value);
 
 } // MatchingIndicator
