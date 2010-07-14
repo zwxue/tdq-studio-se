@@ -26,29 +26,29 @@ import orgomg.cwm.objectmodel.core.Attribute;
  */
 public interface AttributeReference extends PatternComponent {
     /**
-     * Returns the value of the '<em><b>Referenced Attribute</b></em>' reference.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Referenced Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Referenced Attribute</em>' reference isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Referenced Attribute</em>' reference.
-     * @see #setReferencedAttribute(Attribute)
-     * @see org.talend.dataquality.domain.pattern.PatternPackage#getAttributeReference_ReferencedAttribute()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Referenced Attribute</em>' reference.
+	 * @see #setReferencedAttribute(Attribute)
+	 * @see org.talend.dataquality.domain.pattern.PatternPackage#getAttributeReference_ReferencedAttribute()
+	 * @model
+	 * @generated
+	 */
     Attribute getReferencedAttribute();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.domain.pattern.AttributeReference#getReferencedAttribute <em>Referenced Attribute</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.talend.dataquality.domain.pattern.AttributeReference#getReferencedAttribute <em>Referenced Attribute</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Referenced Attribute</em>' reference.
-     * @see #getReferencedAttribute()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Referenced Attribute</em>' reference.
+	 * @see #getReferencedAttribute()
+	 * @generated
+	 */
     void setReferencedAttribute(Attribute value);
 
 } // AttributeReference

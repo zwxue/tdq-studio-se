@@ -27,19 +27,19 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public interface Pattern extends ModelElement {
     /**
-     * Returns the value of the '<em><b>Components</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.domain.pattern.PatternComponent}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Components</b></em>' containment reference list.
+	 * The list contents are of type {@link org.talend.dataquality.domain.pattern.PatternComponent}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Components</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Components</em>' containment reference list.
-     * @see org.talend.dataquality.domain.pattern.PatternPackage#getPattern_Components()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Components</em>' containment reference list.
+	 * @see org.talend.dataquality.domain.pattern.PatternPackage#getPattern_Components()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<PatternComponent> getComponents();
 
 } // Pattern

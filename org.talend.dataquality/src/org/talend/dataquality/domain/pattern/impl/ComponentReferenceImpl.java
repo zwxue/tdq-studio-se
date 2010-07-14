@@ -29,129 +29,129 @@ import org.talend.dataquality.domain.pattern.PatternPackage;
  */
 public class ComponentReferenceImpl extends PatternComponentImpl implements ComponentReference {
     /**
-     * The cached value of the '{@link #getReferencedComponent() <em>Referenced Component</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getReferencedComponent() <em>Referenced Component</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getReferencedComponent()
-     * @generated
-     * @ordered
-     */
+	 * @see #getReferencedComponent()
+	 * @generated
+	 * @ordered
+	 */
     protected PatternComponent referencedComponent;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ComponentReferenceImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PatternPackage.Literals.COMPONENT_REFERENCE;
-    }
+		return PatternPackage.Literals.COMPONENT_REFERENCE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public PatternComponent getReferencedComponent() {
-        if (referencedComponent != null && referencedComponent.eIsProxy()) {
-            InternalEObject oldReferencedComponent = (InternalEObject)referencedComponent;
-            referencedComponent = (PatternComponent)eResolveProxy(oldReferencedComponent);
-            if (referencedComponent != oldReferencedComponent) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT, oldReferencedComponent, referencedComponent));
-            }
-        }
-        return referencedComponent;
-    }
+		if (referencedComponent != null && referencedComponent.eIsProxy()) {
+			InternalEObject oldReferencedComponent = (InternalEObject)referencedComponent;
+			referencedComponent = (PatternComponent)eResolveProxy(oldReferencedComponent);
+			if (referencedComponent != oldReferencedComponent) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT, oldReferencedComponent, referencedComponent));
+			}
+		}
+		return referencedComponent;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public PatternComponent basicGetReferencedComponent() {
-        return referencedComponent;
-    }
+		return referencedComponent;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setReferencedComponent(PatternComponent newReferencedComponent) {
-        PatternComponent oldReferencedComponent = referencedComponent;
-        referencedComponent = newReferencedComponent;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT, oldReferencedComponent, referencedComponent));
-    }
+		PatternComponent oldReferencedComponent = referencedComponent;
+		referencedComponent = newReferencedComponent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT, oldReferencedComponent, referencedComponent));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT:
-                if (resolve) return getReferencedComponent();
-                return basicGetReferencedComponent();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT:
+				if (resolve) return getReferencedComponent();
+				return basicGetReferencedComponent();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT:
-                setReferencedComponent((PatternComponent)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT:
+				setReferencedComponent((PatternComponent)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT:
-                setReferencedComponent((PatternComponent)null);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT:
+				setReferencedComponent((PatternComponent)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT:
-                return referencedComponent != null;
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case PatternPackage.COMPONENT_REFERENCE__REFERENCED_COMPONENT:
+				return referencedComponent != null;
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //ComponentReferenceImpl

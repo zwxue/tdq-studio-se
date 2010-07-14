@@ -34,118 +34,118 @@ import org.talend.dataquality.analysis.category.CategoryPackage;
  */
 public class AnalysisCategoriesImpl extends EObjectImpl implements AnalysisCategories {
     /**
-     * The cached value of the '{@link #getCategories() <em>Categories</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCategories() <em>Categories</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getCategories()
-     * @generated
-     * @ordered
-     */
+	 * @see #getCategories()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<AnalysisCategory> categories;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected AnalysisCategoriesImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return CategoryPackage.Literals.ANALYSIS_CATEGORIES;
-    }
+		return CategoryPackage.Literals.ANALYSIS_CATEGORIES;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<AnalysisCategory> getCategories() {
-        if (categories == null) {
-            categories = new EObjectContainmentEList<AnalysisCategory>(AnalysisCategory.class, this, CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES);
-        }
-        return categories;
-    }
+		if (categories == null) {
+			categories = new EObjectContainmentEList<AnalysisCategory>(AnalysisCategory.class, this, CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES);
+		}
+		return categories;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
-                return ((InternalEList<?>)getCategories()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
+				return ((InternalEList<?>)getCategories()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
-                return getCategories();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
+				return getCategories();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
-                getCategories().clear();
-                getCategories().addAll((Collection<? extends AnalysisCategory>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
+				getCategories().clear();
+				getCategories().addAll((Collection<? extends AnalysisCategory>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
-                getCategories().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
+				getCategories().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
-                return categories != null && !categories.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case CategoryPackage.ANALYSIS_CATEGORIES__CATEGORIES:
+				return categories != null && !categories.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //AnalysisCategoriesImpl

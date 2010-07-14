@@ -21,22 +21,22 @@ import org.talend.dataquality.indicators.schema.ViewIndicator;
  */
 public class ViewIndicatorImpl extends AbstractTableIndicatorImpl implements ViewIndicator {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ViewIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return SchemaPackage.Literals.VIEW_INDICATOR;
-    }
+		return SchemaPackage.Literals.VIEW_INDICATOR;
+	}
 
 } //ViewIndicatorImpl

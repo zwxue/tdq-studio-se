@@ -22,22 +22,22 @@ import org.talend.dataquality.domain.pattern.PatternPackage;
  */
 public class PatternComponentImpl extends EObjectImpl implements PatternComponent {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PatternComponentImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PatternPackage.Literals.PATTERN_COMPONENT;
-    }
+		return PatternPackage.Literals.PATTERN_COMPONENT;
+	}
 
 } //PatternComponentImpl

@@ -21,22 +21,22 @@ import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
  */
 public class RowMatchingIndicatorImpl extends ColumnsCompareIndicatorImpl implements RowMatchingIndicator {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RowMatchingIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ColumnsetPackage.Literals.ROW_MATCHING_INDICATOR;
-    }
+		return ColumnsetPackage.Literals.ROW_MATCHING_INDICATOR;
+	}
 
 } //RowMatchingIndicatorImpl

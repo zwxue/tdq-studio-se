@@ -21,22 +21,22 @@ import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
  */
 public class ValueMatchingIndicatorImpl extends ColumnsCompareIndicatorImpl implements ValueMatchingIndicator {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ValueMatchingIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ColumnsetPackage.Literals.VALUE_MATCHING_INDICATOR;
-    }
+		return ColumnsetPackage.Literals.VALUE_MATCHING_INDICATOR;
+	}
 
 } //ValueMatchingIndicatorImpl

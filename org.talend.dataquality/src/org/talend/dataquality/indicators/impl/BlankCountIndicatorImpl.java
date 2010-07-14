@@ -29,114 +29,114 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCountIndicator {
 
     /**
-     * The default value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * @see #getBlankCount()
-     * @generated
-     * @ordered
-     */
+	 * @see #getBlankCount()
+	 * @generated
+	 * @ordered
+	 */
     protected static final Long BLANK_COUNT_EDEFAULT = new Long(0L);
 
     /**
-     * The cached value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * @see #getBlankCount()
-     * @generated
-     * @ordered
-     */
+	 * @see #getBlankCount()
+	 * @generated
+	 * @ordered
+	 */
     protected Long blankCount = BLANK_COUNT_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected BlankCountIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.BLANK_COUNT_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.BLANK_COUNT_INDICATOR;
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public Long getBlankCount() {
-        return blankCount;
-    }
+		return blankCount;
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public void setBlankCount(Long newBlankCount) {
-        Long oldBlankCount = blankCount;
-        blankCount = newBlankCount;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT, oldBlankCount, blankCount));
-    }
+		Long oldBlankCount = blankCount;
+		blankCount = newBlankCount;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT, oldBlankCount, blankCount));
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
-                return getBlankCount();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
+				return getBlankCount();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
-                setBlankCount((Long)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
+				setBlankCount((Long)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
-                setBlankCount(BLANK_COUNT_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
+				setBlankCount(BLANK_COUNT_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
-                return BLANK_COUNT_EDEFAULT == null ? blankCount != null : !BLANK_COUNT_EDEFAULT.equals(blankCount);
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case IndicatorsPackage.BLANK_COUNT_INDICATOR__BLANK_COUNT:
+				return BLANK_COUNT_EDEFAULT == null ? blankCount != null : !BLANK_COUNT_EDEFAULT.equals(blankCount);
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

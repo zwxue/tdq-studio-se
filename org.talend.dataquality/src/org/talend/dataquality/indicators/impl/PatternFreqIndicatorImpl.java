@@ -26,21 +26,21 @@ public class PatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected PatternFreqIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.PATTERN_FREQ_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.PATTERN_FREQ_INDICATOR;
+	}
 
     @Override
     public boolean finalizeComputation() {

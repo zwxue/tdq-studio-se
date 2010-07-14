@@ -30,170 +30,170 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
  */
 public class PatternFactoryImpl extends EFactoryImpl implements PatternFactory {
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public static PatternFactory init() {
-        try {
-            PatternFactory thePatternFactory = (PatternFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.domain.pattern"); 
-            if (thePatternFactory != null) {
-                return thePatternFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new PatternFactoryImpl();
-    }
+		try {
+			PatternFactory thePatternFactory = (PatternFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.domain.pattern"); 
+			if (thePatternFactory != null) {
+				return thePatternFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new PatternFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public PatternFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case PatternPackage.PATTERN: return createPattern();
-            case PatternPackage.PATTERN_COMPONENT: return createPatternComponent();
-            case PatternPackage.REGULAR_EXPRESSION: return createRegularExpression();
-            case PatternPackage.ATTRIBUTE_REFERENCE: return createAttributeReference();
-            case PatternPackage.COMPONENT_REFERENCE: return createComponentReference();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case PatternPackage.PATTERN: return createPattern();
+			case PatternPackage.PATTERN_COMPONENT: return createPatternComponent();
+			case PatternPackage.REGULAR_EXPRESSION: return createRegularExpression();
+			case PatternPackage.ATTRIBUTE_REFERENCE: return createAttributeReference();
+			case PatternPackage.COMPONENT_REFERENCE: return createComponentReference();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object createFromString(EDataType eDataType, String initialValue) {
-        switch (eDataType.getClassifierID()) {
-            case PatternPackage.EXPRESSION_TYPE:
-                return createExpressionTypeFromString(eDataType, initialValue);
-            default:
-                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eDataType.getClassifierID()) {
+			case PatternPackage.EXPRESSION_TYPE:
+				return createExpressionTypeFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String convertToString(EDataType eDataType, Object instanceValue) {
-        switch (eDataType.getClassifierID()) {
-            case PatternPackage.EXPRESSION_TYPE:
-                return convertExpressionTypeToString(eDataType, instanceValue);
-            default:
-                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eDataType.getClassifierID()) {
+			case PatternPackage.EXPRESSION_TYPE:
+				return convertExpressionTypeToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Pattern createPattern() {
-        PatternImpl pattern = new PatternImpl();
-        return pattern;
-    }
+		PatternImpl pattern = new PatternImpl();
+		return pattern;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public PatternComponent createPatternComponent() {
-        PatternComponentImpl patternComponent = new PatternComponentImpl();
-        return patternComponent;
-    }
+		PatternComponentImpl patternComponent = new PatternComponentImpl();
+		return patternComponent;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public RegularExpression createRegularExpression() {
-        RegularExpressionImpl regularExpression = new RegularExpressionImpl();
-        return regularExpression;
-    }
+		RegularExpressionImpl regularExpression = new RegularExpressionImpl();
+		return regularExpression;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public AttributeReference createAttributeReference() {
-        AttributeReferenceImpl attributeReference = new AttributeReferenceImpl();
-        return attributeReference;
-    }
+		AttributeReferenceImpl attributeReference = new AttributeReferenceImpl();
+		return attributeReference;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ComponentReference createComponentReference() {
-        ComponentReferenceImpl componentReference = new ComponentReferenceImpl();
-        return componentReference;
-    }
+		ComponentReferenceImpl componentReference = new ComponentReferenceImpl();
+		return componentReference;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ExpressionType createExpressionTypeFromString(EDataType eDataType, String initialValue) {
-        ExpressionType result = ExpressionType.get(initialValue);
-        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-        return result;
-    }
+		ExpressionType result = ExpressionType.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String convertExpressionTypeToString(EDataType eDataType, Object instanceValue) {
-        return instanceValue == null ? null : instanceValue.toString();
-    }
+		return instanceValue == null ? null : instanceValue.toString();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public PatternPackage getPatternPackage() {
-        return (PatternPackage)getEPackage();
-    }
+		return (PatternPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static PatternPackage getPackage() {
-        return PatternPackage.eINSTANCE;
-    }
+		return PatternPackage.eINSTANCE;
+	}
 
 } //PatternFactoryImpl

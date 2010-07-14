@@ -79,386 +79,386 @@ import orgomg.mof.model.ModelPackage;
  */
 public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSqlPackage {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     private EClass userDefIndicatorEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     private EClass whereRuleIndicatorEClass = null;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     private EClass javaUserDefIndicatorEClass = null;
 
     /**
-     * Creates an instance of the model <b>Package</b>, registered with
-     * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-     * package URI value.
-     * <p>Note: the correct way to create the package is via the static
-     * factory method {@link #init init()}, which also performs
-     * initialization of the package, or returns the registered package,
-     * if one already exists.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the model <b>Package</b>, registered with
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.eclipse.emf.ecore.EPackage.Registry
-     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#eNS_URI
-     * @see #init()
-     * @generated
-     */
+	 * @see org.eclipse.emf.ecore.EPackage.Registry
+	 * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#eNS_URI
+	 * @see #init()
+	 * @generated
+	 */
     private IndicatorSqlPackageImpl() {
-        super(eNS_URI, IndicatorSqlFactory.eINSTANCE);
-    }
+		super(eNS_URI, IndicatorSqlFactory.eINSTANCE);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     private static boolean isInited = false;
 
     /**
-     * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-     * 
-     * <p>This method is used to initialize {@link IndicatorSqlPackage#eINSTANCE} when that field is accessed.
-     * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-     * <!-- begin-user-doc -->
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+	 * 
+	 * <p>This method is used to initialize {@link IndicatorSqlPackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #eNS_URI
-     * @see #createPackageContents()
-     * @see #initializePackageContents()
-     * @generated
-     */
+	 * @see #eNS_URI
+	 * @see #createPackageContents()
+	 * @see #initializePackageContents()
+	 * @generated
+	 */
     public static IndicatorSqlPackage init() {
-        if (isInited) return (IndicatorSqlPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI);
+		if (isInited) return (IndicatorSqlPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI);
 
-        // Obtain or create and register package
-        IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new IndicatorSqlPackageImpl());
+		// Obtain or create and register package
+		IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new IndicatorSqlPackageImpl());
 
-        isInited = true;
+		isInited = true;
 
-        // Initialize simple dependencies
-        CorePackage.eINSTANCE.eClass();
-        BehavioralPackage.eINSTANCE.eClass();
-        RelationshipsPackage.eINSTANCE.eClass();
-        InstancePackage.eINSTANCE.eClass();
-        BusinessinformationPackage.eINSTANCE.eClass();
-        DatatypesPackage.eINSTANCE.eClass();
-        ExpressionsPackage.eINSTANCE.eClass();
-        KeysindexesPackage.eINSTANCE.eClass();
-        SoftwaredeploymentPackage.eINSTANCE.eClass();
-        TypemappingPackage.eINSTANCE.eClass();
-        RelationalPackage.eINSTANCE.eClass();
-        RecordPackage.eINSTANCE.eClass();
-        MultidimensionalPackage.eINSTANCE.eClass();
-        XmlPackage.eINSTANCE.eClass();
-        TransformationPackage.eINSTANCE.eClass();
-        OlapPackage.eINSTANCE.eClass();
-        DataminingPackage.eINSTANCE.eClass();
-        InformationvisualizationPackage.eINSTANCE.eClass();
-        BusinessnomenclaturePackage.eINSTANCE.eClass();
-        WarehouseprocessPackage.eINSTANCE.eClass();
-        WarehouseoperationPackage.eINSTANCE.eClass();
-        ErPackage.eINSTANCE.eClass();
-        CoboldataPackage.eINSTANCE.eClass();
-        DmsiiPackage.eINSTANCE.eClass();
-        ImsdatabasePackage.eINSTANCE.eClass();
-        EssbasePackage.eINSTANCE.eClass();
-        ExpressPackage.eINSTANCE.eClass();
-        InformationsetPackage.eINSTANCE.eClass();
-        InformationreportingPackage.eINSTANCE.eClass();
-        CwmmipPackage.eINSTANCE.eClass();
-        ModelPackage.eINSTANCE.eClass();
+		// Initialize simple dependencies
+		CorePackage.eINSTANCE.eClass();
+		BehavioralPackage.eINSTANCE.eClass();
+		RelationshipsPackage.eINSTANCE.eClass();
+		InstancePackage.eINSTANCE.eClass();
+		BusinessinformationPackage.eINSTANCE.eClass();
+		DatatypesPackage.eINSTANCE.eClass();
+		ExpressionsPackage.eINSTANCE.eClass();
+		KeysindexesPackage.eINSTANCE.eClass();
+		SoftwaredeploymentPackage.eINSTANCE.eClass();
+		TypemappingPackage.eINSTANCE.eClass();
+		RelationalPackage.eINSTANCE.eClass();
+		RecordPackage.eINSTANCE.eClass();
+		MultidimensionalPackage.eINSTANCE.eClass();
+		XmlPackage.eINSTANCE.eClass();
+		TransformationPackage.eINSTANCE.eClass();
+		OlapPackage.eINSTANCE.eClass();
+		DataminingPackage.eINSTANCE.eClass();
+		InformationvisualizationPackage.eINSTANCE.eClass();
+		BusinessnomenclaturePackage.eINSTANCE.eClass();
+		WarehouseprocessPackage.eINSTANCE.eClass();
+		WarehouseoperationPackage.eINSTANCE.eClass();
+		ErPackage.eINSTANCE.eClass();
+		CoboldataPackage.eINSTANCE.eClass();
+		DmsiiPackage.eINSTANCE.eClass();
+		ImsdatabasePackage.eINSTANCE.eClass();
+		EssbasePackage.eINSTANCE.eClass();
+		ExpressPackage.eINSTANCE.eClass();
+		InformationsetPackage.eINSTANCE.eClass();
+		InformationreportingPackage.eINSTANCE.eClass();
+		CwmmipPackage.eINSTANCE.eClass();
+		ModelPackage.eINSTANCE.eClass();
 
-        // Obtain or create and register interdependencies
-        AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
-        CategoryPackageImpl theCategoryPackage = (CategoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) instanceof CategoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) : CategoryPackage.eINSTANCE);
-        ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI) instanceof ReportsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI) : ReportsPackage.eINSTANCE);
-        IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
-        SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
-        DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
-        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
-        ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
-        DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
-        PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
-        SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
-        RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
+		// Obtain or create and register interdependencies
+		AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
+		CategoryPackageImpl theCategoryPackage = (CategoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) instanceof CategoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) : CategoryPackage.eINSTANCE);
+		ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI) instanceof ReportsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI) : ReportsPackage.eINSTANCE);
+		IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
+		SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
+		DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
+		ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
+		ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
+		DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
+		PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
+		SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
+		RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
 
-        // Create package meta-data objects
-        theIndicatorSqlPackage.createPackageContents();
-        theAnalysisPackage.createPackageContents();
-        theCategoryPackage.createPackageContents();
-        theReportsPackage.createPackageContents();
-        theIndicatorsPackage.createPackageContents();
-        theSchemaPackage.createPackageContents();
-        theDefinitionPackage.createPackageContents();
-        theColumnsetPackage.createPackageContents();
-        theExpressionsPackage_1.createPackageContents();
-        theDomainPackage.createPackageContents();
-        thePatternPackage.createPackageContents();
-        theSQLPackage.createPackageContents();
-        theRulesPackage.createPackageContents();
+		// Create package meta-data objects
+		theIndicatorSqlPackage.createPackageContents();
+		theAnalysisPackage.createPackageContents();
+		theCategoryPackage.createPackageContents();
+		theReportsPackage.createPackageContents();
+		theIndicatorsPackage.createPackageContents();
+		theSchemaPackage.createPackageContents();
+		theDefinitionPackage.createPackageContents();
+		theColumnsetPackage.createPackageContents();
+		theExpressionsPackage_1.createPackageContents();
+		theDomainPackage.createPackageContents();
+		thePatternPackage.createPackageContents();
+		theSQLPackage.createPackageContents();
+		theRulesPackage.createPackageContents();
 
-        // Initialize created meta-data
-        theIndicatorSqlPackage.initializePackageContents();
-        theAnalysisPackage.initializePackageContents();
-        theCategoryPackage.initializePackageContents();
-        theReportsPackage.initializePackageContents();
-        theIndicatorsPackage.initializePackageContents();
-        theSchemaPackage.initializePackageContents();
-        theDefinitionPackage.initializePackageContents();
-        theColumnsetPackage.initializePackageContents();
-        theExpressionsPackage_1.initializePackageContents();
-        theDomainPackage.initializePackageContents();
-        thePatternPackage.initializePackageContents();
-        theSQLPackage.initializePackageContents();
-        theRulesPackage.initializePackageContents();
+		// Initialize created meta-data
+		theIndicatorSqlPackage.initializePackageContents();
+		theAnalysisPackage.initializePackageContents();
+		theCategoryPackage.initializePackageContents();
+		theReportsPackage.initializePackageContents();
+		theIndicatorsPackage.initializePackageContents();
+		theSchemaPackage.initializePackageContents();
+		theDefinitionPackage.initializePackageContents();
+		theColumnsetPackage.initializePackageContents();
+		theExpressionsPackage_1.initializePackageContents();
+		theDomainPackage.initializePackageContents();
+		thePatternPackage.initializePackageContents();
+		theSQLPackage.initializePackageContents();
+		theRulesPackage.initializePackageContents();
 
-        // Mark meta-data to indicate it can't be changed
-        theIndicatorSqlPackage.freeze();
+		// Mark meta-data to indicate it can't be changed
+		theIndicatorSqlPackage.freeze();
 
   
-        // Update the registry and return the package
-        EPackage.Registry.INSTANCE.put(IndicatorSqlPackage.eNS_URI, theIndicatorSqlPackage);
-        return theIndicatorSqlPackage;
-    }
+		// Update the registry and return the package
+		EPackage.Registry.INSTANCE.put(IndicatorSqlPackage.eNS_URI, theIndicatorSqlPackage);
+		return theIndicatorSqlPackage;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EClass getUserDefIndicator() {
-        return userDefIndicatorEClass;
-    }
+		return userDefIndicatorEClass;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_UserCount() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(0);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(0);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_MatchingValueCount() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(1);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(1);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_NotMatchingValueCount() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(2);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(2);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_UniqueValues() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(3);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(3);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_DistinctValueCount() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(4);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(4);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_UniqueValueCount() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(5);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(5);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_DuplicateValueCount() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(6);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(6);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_ValueToFreq() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(7);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(7);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_Value() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(8);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(8);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EAttribute getUserDefIndicator_Datatype() {
-        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(9);
-    }
+		return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(9);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EClass getWhereRuleIndicator() {
-        return whereRuleIndicatorEClass;
-    }
+		return whereRuleIndicatorEClass;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EClass getJavaUserDefIndicator() {
-        return javaUserDefIndicatorEClass;
-    }
+		return javaUserDefIndicatorEClass;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public IndicatorSqlFactory getIndicatorSqlFactory() {
-        return (IndicatorSqlFactory)getEFactoryInstance();
-    }
+		return (IndicatorSqlFactory)getEFactoryInstance();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     private boolean isCreated = false;
 
     /**
-     * Creates the meta-model objects for the package.  This method is
-     * guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void createPackageContents() {
-        if (isCreated) return;
-        isCreated = true;
+		if (isCreated) return;
+		isCreated = true;
 
-        // Create classes and their features
-        userDefIndicatorEClass = createEClass(USER_DEF_INDICATOR);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__USER_COUNT);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__MATCHING_VALUE_COUNT);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__UNIQUE_VALUES);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__VALUE_TO_FREQ);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__VALUE);
-        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DATATYPE);
+		// Create classes and their features
+		userDefIndicatorEClass = createEClass(USER_DEF_INDICATOR);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__USER_COUNT);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__MATCHING_VALUE_COUNT);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__UNIQUE_VALUES);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__VALUE_TO_FREQ);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__VALUE);
+		createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__DATATYPE);
 
-        whereRuleIndicatorEClass = createEClass(WHERE_RULE_INDICATOR);
+		whereRuleIndicatorEClass = createEClass(WHERE_RULE_INDICATOR);
 
-        javaUserDefIndicatorEClass = createEClass(JAVA_USER_DEF_INDICATOR);
-    }
+		javaUserDefIndicatorEClass = createEClass(JAVA_USER_DEF_INDICATOR);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     private boolean isInitialized = false;
 
     /**
-     * Complete the initialization of the package and its meta-model.  This
-     * method is guarded to have no affect on any invocation but its first.
-     * <!-- begin-user-doc -->
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void initializePackageContents() {
-        if (isInitialized) return;
-        isInitialized = true;
+		if (isInitialized) return;
+		isInitialized = true;
 
-        // Initialize package
-        setName(eNAME);
-        setNsPrefix(eNS_PREFIX);
-        setNsURI(eNS_URI);
+		// Initialize package
+		setName(eNAME);
+		setNsPrefix(eNS_PREFIX);
+		setNsURI(eNS_URI);
 
-        // Obtain other dependent packages
-        IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
-        AnalysisPackage theAnalysisPackage = (AnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
+		// Obtain other dependent packages
+		IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
+		AnalysisPackage theAnalysisPackage = (AnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
 
-        // Create type parameters
+		// Create type parameters
 
-        // Set bounds for type parameters
+		// Set bounds for type parameters
 
-        // Add supertypes to classes
-        userDefIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
-        whereRuleIndicatorEClass.getESuperTypes().add(this.getUserDefIndicator());
-        javaUserDefIndicatorEClass.getESuperTypes().add(this.getUserDefIndicator());
+		// Add supertypes to classes
+		userDefIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
+		whereRuleIndicatorEClass.getESuperTypes().add(this.getUserDefIndicator());
+		javaUserDefIndicatorEClass.getESuperTypes().add(this.getUserDefIndicator());
 
-        // Initialize classes and features; add operations and parameters
-        initEClass(userDefIndicatorEClass, UserDefIndicator.class, "UserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getUserDefIndicator_UserCount(), ecorePackage.getELongObject(), "userCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_UniqueValues(), ecorePackage.getEJavaObject(), "uniqueValues", null, 0, -1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_DistinctValueCount(), ecorePackage.getELongObject(), "distinctValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_UniqueValueCount(), ecorePackage.getELongObject(), "uniqueValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_DuplicateValueCount(), ecorePackage.getELongObject(), "duplicateValueCount", null, 0, 1, UserDefIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_ValueToFreq(), theIndicatorsPackage.getJavaHashMap(), "valueToFreq", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_Value(), ecorePackage.getEString(), "value", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getUserDefIndicator_Datatype(), ecorePackage.getEInt(), "datatype", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		// Initialize classes and features; add operations and parameters
+		initEClass(userDefIndicatorEClass, UserDefIndicator.class, "UserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getUserDefIndicator_UserCount(), ecorePackage.getELongObject(), "userCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_UniqueValues(), ecorePackage.getEJavaObject(), "uniqueValues", null, 0, -1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_DistinctValueCount(), ecorePackage.getELongObject(), "distinctValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_UniqueValueCount(), ecorePackage.getELongObject(), "uniqueValueCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_DuplicateValueCount(), ecorePackage.getELongObject(), "duplicateValueCount", null, 0, 1, UserDefIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_ValueToFreq(), theIndicatorsPackage.getJavaHashMap(), "valueToFreq", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_Value(), ecorePackage.getEString(), "value", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getUserDefIndicator_Datatype(), ecorePackage.getEInt(), "datatype", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        EOperation op = addEOperation(userDefIndicatorEClass, ecorePackage.getEDoubleObject(), "getFrequency", 0, 1, IS_UNIQUE, IS_ORDERED);
-        addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
+		EOperation op = addEOperation(userDefIndicatorEClass, ecorePackage.getEDoubleObject(), "getFrequency", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-        addEOperation(userDefIndicatorEClass, theIndicatorsPackage.getJavaSet(), "getDistinctValues", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEOperation(userDefIndicatorEClass, theIndicatorsPackage.getJavaSet(), "getDistinctValues", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-        op = addEOperation(userDefIndicatorEClass, ecorePackage.getELongObject(), "getCount", 0, 1, IS_UNIQUE, IS_ORDERED);
-        addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(userDefIndicatorEClass, ecorePackage.getELongObject(), "getCount", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-        initEClass(whereRuleIndicatorEClass, WhereRuleIndicator.class, "WhereRuleIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(whereRuleIndicatorEClass, WhereRuleIndicator.class, "WhereRuleIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-        initEClass(javaUserDefIndicatorEClass, JavaUserDefIndicator.class, "JavaUserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(javaUserDefIndicatorEClass, JavaUserDefIndicator.class, "JavaUserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-        op = addEOperation(javaUserDefIndicatorEClass, null, "setJavaUserDefObject", 0, 1, IS_UNIQUE, IS_ORDERED);
-        addEParameter(op, this.getUserDefIndicator(), "javaUDIObj", 0, 1, IS_UNIQUE, IS_ORDERED);
+		op = addEOperation(javaUserDefIndicatorEClass, null, "setJavaUserDefObject", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getUserDefIndicator(), "javaUDIObj", 0, 1, IS_UNIQUE, IS_ORDERED);
 
-        op = addEOperation(javaUserDefIndicatorEClass, null, "setExecuteEngine", 0, 1, IS_UNIQUE, IS_ORDERED);
-        addEParameter(op, theAnalysisPackage.getExecutionLanguage(), "executionLanguage", 0, 1, IS_UNIQUE, IS_ORDERED);
-    }
+		op = addEOperation(javaUserDefIndicatorEClass, null, "setExecuteEngine", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theAnalysisPackage.getExecutionLanguage(), "executionLanguage", 0, 1, IS_UNIQUE, IS_ORDERED);
+	}
 
 } //IndicatorSqlPackageImpl

@@ -23,21 +23,21 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 public abstract class PatternMatchingIndicatorImpl extends MatchingIndicatorImpl implements PatternMatchingIndicator {
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected PatternMatchingIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.PATTERN_MATCHING_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.PATTERN_MATCHING_INDICATOR;
+	}
 
     /*
      * (non-Javadoc)

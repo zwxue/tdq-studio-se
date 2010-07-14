@@ -35,222 +35,222 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class PatternSwitch<T> {
     /**
-     * The cached model package
-     * <!-- begin-user-doc -->
+	 * The cached model package
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected static PatternPackage modelPackage;
 
     /**
-     * Creates an instance of the switch.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the switch.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public PatternSwitch() {
-        if (modelPackage == null) {
-            modelPackage = PatternPackage.eINSTANCE;
-        }
-    }
+		if (modelPackage == null) {
+			modelPackage = PatternPackage.eINSTANCE;
+		}
+	}
 
     /**
-     * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-     * <!-- begin-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the first non-null result returned by a <code>caseXXX</code> call.
-     * @generated
-     */
+	 * @return the first non-null result returned by a <code>caseXXX</code> call.
+	 * @generated
+	 */
     public T doSwitch(EObject theEObject) {
-        return doSwitch(theEObject.eClass(), theEObject);
-    }
+		return doSwitch(theEObject.eClass(), theEObject);
+	}
 
     /**
-     * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-     * <!-- begin-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the first non-null result returned by a <code>caseXXX</code> call.
-     * @generated
-     */
+	 * @return the first non-null result returned by a <code>caseXXX</code> call.
+	 * @generated
+	 */
     protected T doSwitch(EClass theEClass, EObject theEObject) {
-        if (theEClass.eContainer() == modelPackage) {
-            return doSwitch(theEClass.getClassifierID(), theEObject);
-        }
-        else {
-            List<EClass> eSuperTypes = theEClass.getESuperTypes();
-            return
-                eSuperTypes.isEmpty() ?
-                    defaultCase(theEObject) :
-                    doSwitch(eSuperTypes.get(0), theEObject);
-        }
-    }
+		if (theEClass.eContainer() == modelPackage) {
+			return doSwitch(theEClass.getClassifierID(), theEObject);
+		}
+		else {
+			List<EClass> eSuperTypes = theEClass.getESuperTypes();
+			return
+				eSuperTypes.isEmpty() ?
+					defaultCase(theEObject) :
+					doSwitch(eSuperTypes.get(0), theEObject);
+		}
+	}
 
     /**
-     * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-     * <!-- begin-user-doc -->
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the first non-null result returned by a <code>caseXXX</code> call.
-     * @generated
-     */
+	 * @return the first non-null result returned by a <code>caseXXX</code> call.
+	 * @generated
+	 */
     protected T doSwitch(int classifierID, EObject theEObject) {
-        switch (classifierID) {
-            case PatternPackage.PATTERN: {
-                Pattern pattern = (Pattern)theEObject;
-                T result = casePattern(pattern);
-                if (result == null) result = caseModelElement(pattern);
-                if (result == null) result = caseElement(pattern);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case PatternPackage.PATTERN_COMPONENT: {
-                PatternComponent patternComponent = (PatternComponent)theEObject;
-                T result = casePatternComponent(patternComponent);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case PatternPackage.REGULAR_EXPRESSION: {
-                RegularExpression regularExpression = (RegularExpression)theEObject;
-                T result = caseRegularExpression(regularExpression);
-                if (result == null) result = casePatternComponent(regularExpression);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case PatternPackage.ATTRIBUTE_REFERENCE: {
-                AttributeReference attributeReference = (AttributeReference)theEObject;
-                T result = caseAttributeReference(attributeReference);
-                if (result == null) result = casePatternComponent(attributeReference);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case PatternPackage.COMPONENT_REFERENCE: {
-                ComponentReference componentReference = (ComponentReference)theEObject;
-                T result = caseComponentReference(componentReference);
-                if (result == null) result = casePatternComponent(componentReference);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            default: return defaultCase(theEObject);
-        }
-    }
+		switch (classifierID) {
+			case PatternPackage.PATTERN: {
+				Pattern pattern = (Pattern)theEObject;
+				T result = casePattern(pattern);
+				if (result == null) result = caseModelElement(pattern);
+				if (result == null) result = caseElement(pattern);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PatternPackage.PATTERN_COMPONENT: {
+				PatternComponent patternComponent = (PatternComponent)theEObject;
+				T result = casePatternComponent(patternComponent);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PatternPackage.REGULAR_EXPRESSION: {
+				RegularExpression regularExpression = (RegularExpression)theEObject;
+				T result = caseRegularExpression(regularExpression);
+				if (result == null) result = casePatternComponent(regularExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PatternPackage.ATTRIBUTE_REFERENCE: {
+				AttributeReference attributeReference = (AttributeReference)theEObject;
+				T result = caseAttributeReference(attributeReference);
+				if (result == null) result = casePatternComponent(attributeReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case PatternPackage.COMPONENT_REFERENCE: {
+				ComponentReference componentReference = (ComponentReference)theEObject;
+				T result = caseComponentReference(componentReference);
+				if (result == null) result = casePatternComponent(componentReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			default: return defaultCase(theEObject);
+		}
+	}
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Pattern</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Pattern</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Pattern</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Pattern</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public T casePattern(Pattern object) {
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Component</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Component</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Component</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Component</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public T casePatternComponent(PatternComponent object) {
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Regular Expression</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Regular Expression</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Regular Expression</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Regular Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public T caseRegularExpression(RegularExpression object) {
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Attribute Reference</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Attribute Reference</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Attribute Reference</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Attribute Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public T caseAttributeReference(AttributeReference object) {
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Component Reference</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Component Reference</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Component Reference</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Component Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public T caseComponentReference(ComponentReference object) {
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Element</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public T caseElement(Element object) {
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Model Element</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>Model Element</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Model Element</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Model Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public T caseModelElement(ModelElement object) {
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>EObject</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns the result of interpreting the object as an instance of '<em>EObject</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch, but this is the last case anyway.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>EObject</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>EObject</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
+	 * @generated
+	 */
     public T defaultCase(EObject object) {
-        return null;
-    }
+		return null;
+	}
 
 } //PatternSwitch

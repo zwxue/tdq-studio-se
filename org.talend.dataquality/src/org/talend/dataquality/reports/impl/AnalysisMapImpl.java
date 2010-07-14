@@ -33,302 +33,302 @@ import org.talend.dataquality.reports.ReportsPackage;
  */
 public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
     /**
-     * The cached value of the '{@link #getAnalysis() <em>Analysis</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getAnalysis() <em>Analysis</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getAnalysis()
-     * @generated
-     * @ordered
-     */
+	 * @see #getAnalysis()
+	 * @generated
+	 * @ordered
+	 */
     protected Analysis analysis;
 
     /**
-     * The default value of the '{@link #isMustRefresh() <em>Must Refresh</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #isMustRefresh() <em>Must Refresh</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isMustRefresh()
-     * @generated
-     * @ordered
-     */
+	 * @see #isMustRefresh()
+	 * @generated
+	 * @ordered
+	 */
     protected static final boolean MUST_REFRESH_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isMustRefresh() <em>Must Refresh</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isMustRefresh() <em>Must Refresh</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isMustRefresh()
-     * @generated
-     * @ordered
-     */
+	 * @see #isMustRefresh()
+	 * @generated
+	 * @ordered
+	 */
     protected boolean mustRefresh = MUST_REFRESH_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getReportType()
-     * @generated
-     * @ordered
-     */
+	 * @see #getReportType()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String REPORT_TYPE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getReportType()
-     * @generated
-     * @ordered
-     */
+	 * @see #getReportType()
+	 * @generated
+	 * @ordered
+	 */
     protected String reportType = REPORT_TYPE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getJrxmlSource() <em>Jrxml Source</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getJrxmlSource() <em>Jrxml Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getJrxmlSource()
-     * @generated
-     * @ordered
-     */
+	 * @see #getJrxmlSource()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String JRXML_SOURCE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getJrxmlSource() <em>Jrxml Source</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getJrxmlSource() <em>Jrxml Source</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getJrxmlSource()
-     * @generated
-     * @ordered
-     */
+	 * @see #getJrxmlSource()
+	 * @generated
+	 * @ordered
+	 */
     protected String jrxmlSource = JRXML_SOURCE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected AnalysisMapImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ReportsPackage.Literals.ANALYSIS_MAP;
-    }
+		return ReportsPackage.Literals.ANALYSIS_MAP;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Analysis getAnalysis() {
-        if (analysis != null && analysis.eIsProxy()) {
-            InternalEObject oldAnalysis = (InternalEObject)analysis;
-            analysis = (Analysis)eResolveProxy(oldAnalysis);
-            if (analysis != oldAnalysis) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReportsPackage.ANALYSIS_MAP__ANALYSIS, oldAnalysis, analysis));
-            }
-        }
-        return analysis;
-    }
+		if (analysis != null && analysis.eIsProxy()) {
+			InternalEObject oldAnalysis = (InternalEObject)analysis;
+			analysis = (Analysis)eResolveProxy(oldAnalysis);
+			if (analysis != oldAnalysis) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReportsPackage.ANALYSIS_MAP__ANALYSIS, oldAnalysis, analysis));
+			}
+		}
+		return analysis;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Analysis basicGetAnalysis() {
-        return analysis;
-    }
+		return analysis;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setAnalysis(Analysis newAnalysis) {
-        Analysis oldAnalysis = analysis;
-        analysis = newAnalysis;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__ANALYSIS, oldAnalysis, analysis));
-    }
+		Analysis oldAnalysis = analysis;
+		analysis = newAnalysis;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__ANALYSIS, oldAnalysis, analysis));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isMustRefresh() {
-        return mustRefresh;
-    }
+		return mustRefresh;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setMustRefresh(boolean newMustRefresh) {
-        boolean oldMustRefresh = mustRefresh;
-        mustRefresh = newMustRefresh;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__MUST_REFRESH, oldMustRefresh, mustRefresh));
-    }
+		boolean oldMustRefresh = mustRefresh;
+		mustRefresh = newMustRefresh;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__MUST_REFRESH, oldMustRefresh, mustRefresh));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getReportType() {
-        return reportType;
-    }
+		return reportType;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setReportType(String newReportType) {
-        String oldReportType = reportType;
-        reportType = newReportType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__REPORT_TYPE, oldReportType, reportType));
-    }
+		String oldReportType = reportType;
+		reportType = newReportType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__REPORT_TYPE, oldReportType, reportType));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getJrxmlSource() {
-        return jrxmlSource;
-    }
+		return jrxmlSource;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setJrxmlSource(String newJrxmlSource) {
-        String oldJrxmlSource = jrxmlSource;
-        jrxmlSource = newJrxmlSource;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE, oldJrxmlSource, jrxmlSource));
-    }
+		String oldJrxmlSource = jrxmlSource;
+		jrxmlSource = newJrxmlSource;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE, oldJrxmlSource, jrxmlSource));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case ReportsPackage.ANALYSIS_MAP__ANALYSIS:
-                if (resolve) return getAnalysis();
-                return basicGetAnalysis();
-            case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
-                return isMustRefresh();
-            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
-                return getReportType();
-            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
-                return getJrxmlSource();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case ReportsPackage.ANALYSIS_MAP__ANALYSIS:
+				if (resolve) return getAnalysis();
+				return basicGetAnalysis();
+			case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
+				return isMustRefresh();
+			case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+				return getReportType();
+			case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
+				return getJrxmlSource();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case ReportsPackage.ANALYSIS_MAP__ANALYSIS:
-                setAnalysis((Analysis)newValue);
-                return;
-            case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
-                setMustRefresh((Boolean)newValue);
-                return;
-            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
-                setReportType((String)newValue);
-                return;
-            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
-                setJrxmlSource((String)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case ReportsPackage.ANALYSIS_MAP__ANALYSIS:
+				setAnalysis((Analysis)newValue);
+				return;
+			case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
+				setMustRefresh((Boolean)newValue);
+				return;
+			case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+				setReportType((String)newValue);
+				return;
+			case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
+				setJrxmlSource((String)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case ReportsPackage.ANALYSIS_MAP__ANALYSIS:
-                setAnalysis((Analysis)null);
-                return;
-            case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
-                setMustRefresh(MUST_REFRESH_EDEFAULT);
-                return;
-            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
-                setReportType(REPORT_TYPE_EDEFAULT);
-                return;
-            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
-                setJrxmlSource(JRXML_SOURCE_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case ReportsPackage.ANALYSIS_MAP__ANALYSIS:
+				setAnalysis((Analysis)null);
+				return;
+			case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
+				setMustRefresh(MUST_REFRESH_EDEFAULT);
+				return;
+			case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+				setReportType(REPORT_TYPE_EDEFAULT);
+				return;
+			case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
+				setJrxmlSource(JRXML_SOURCE_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case ReportsPackage.ANALYSIS_MAP__ANALYSIS:
-                return analysis != null;
-            case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
-                return mustRefresh != MUST_REFRESH_EDEFAULT;
-            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
-                return REPORT_TYPE_EDEFAULT == null ? reportType != null : !REPORT_TYPE_EDEFAULT.equals(reportType);
-            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
-                return JRXML_SOURCE_EDEFAULT == null ? jrxmlSource != null : !JRXML_SOURCE_EDEFAULT.equals(jrxmlSource);
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case ReportsPackage.ANALYSIS_MAP__ANALYSIS:
+				return analysis != null;
+			case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
+				return mustRefresh != MUST_REFRESH_EDEFAULT;
+			case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+				return REPORT_TYPE_EDEFAULT == null ? reportType != null : !REPORT_TYPE_EDEFAULT.equals(reportType);
+			case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
+				return JRXML_SOURCE_EDEFAULT == null ? jrxmlSource != null : !JRXML_SOURCE_EDEFAULT.equals(jrxmlSource);
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (mustRefresh: ");
-        result.append(mustRefresh);
-        result.append(", reportType: ");
-        result.append(reportType);
-        result.append(", jrxmlSource: ");
-        result.append(jrxmlSource);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (mustRefresh: ");
+		result.append(mustRefresh);
+		result.append(", reportType: ");
+		result.append(reportType);
+		result.append(", jrxmlSource: ");
+		result.append(jrxmlSource);
+		result.append(')');
+		return result.toString();
+	}
 
 } //AnalysisMapImpl

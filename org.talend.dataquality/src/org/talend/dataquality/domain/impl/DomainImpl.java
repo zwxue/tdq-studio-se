@@ -43,245 +43,245 @@ import orgomg.cwm.objectmodel.core.impl.NamespaceImpl;
  */
 public class DomainImpl extends NamespaceImpl implements Domain {
     /**
-     * The cached value of the '{@link #getDataType() <em>Data Type</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getDataType() <em>Data Type</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getDataType()
-     * @generated
-     * @ordered
-     */
+	 * @see #getDataType()
+	 * @generated
+	 * @ordered
+	 */
     protected DataType dataType;
 
     /**
-     * The cached value of the '{@link #getLengthRestriction() <em>Length Restriction</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getLengthRestriction() <em>Length Restriction</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getLengthRestriction()
-     * @generated
-     * @ordered
-     */
+	 * @see #getLengthRestriction()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<LengthRestriction> lengthRestriction;
 
     /**
-     * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRanges() <em>Ranges</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getRanges()
-     * @generated
-     * @ordered
-     */
+	 * @see #getRanges()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<RangeRestriction> ranges;
 
     /**
-     * The cached value of the '{@link #getPatterns() <em>Patterns</em>}' reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPatterns() <em>Patterns</em>}' reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getPatterns()
-     * @generated
-     * @ordered
-     */
+	 * @see #getPatterns()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Pattern> patterns;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected DomainImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return DomainPackage.Literals.DOMAIN;
-    }
+		return DomainPackage.Literals.DOMAIN;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DataType getDataType() {
-        if (dataType != null && dataType.eIsProxy()) {
-            InternalEObject oldDataType = (InternalEObject)dataType;
-            dataType = (DataType)eResolveProxy(oldDataType);
-            if (dataType != oldDataType) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, DomainPackage.DOMAIN__DATA_TYPE, oldDataType, dataType));
-            }
-        }
-        return dataType;
-    }
+		if (dataType != null && dataType.eIsProxy()) {
+			InternalEObject oldDataType = (InternalEObject)dataType;
+			dataType = (DataType)eResolveProxy(oldDataType);
+			if (dataType != oldDataType) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DomainPackage.DOMAIN__DATA_TYPE, oldDataType, dataType));
+			}
+		}
+		return dataType;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DataType basicGetDataType() {
-        return dataType;
-    }
+		return dataType;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setDataType(DataType newDataType) {
-        DataType oldDataType = dataType;
-        dataType = newDataType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, DomainPackage.DOMAIN__DATA_TYPE, oldDataType, dataType));
-    }
+		DataType oldDataType = dataType;
+		dataType = newDataType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DomainPackage.DOMAIN__DATA_TYPE, oldDataType, dataType));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<LengthRestriction> getLengthRestriction() {
-        if (lengthRestriction == null) {
-            lengthRestriction = new EObjectContainmentEList<LengthRestriction>(LengthRestriction.class, this, DomainPackage.DOMAIN__LENGTH_RESTRICTION);
-        }
-        return lengthRestriction;
-    }
+		if (lengthRestriction == null) {
+			lengthRestriction = new EObjectContainmentEList<LengthRestriction>(LengthRestriction.class, this, DomainPackage.DOMAIN__LENGTH_RESTRICTION);
+		}
+		return lengthRestriction;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<RangeRestriction> getRanges() {
-        if (ranges == null) {
-            ranges = new EObjectContainmentEList<RangeRestriction>(RangeRestriction.class, this, DomainPackage.DOMAIN__RANGES);
-        }
-        return ranges;
-    }
+		if (ranges == null) {
+			ranges = new EObjectContainmentEList<RangeRestriction>(RangeRestriction.class, this, DomainPackage.DOMAIN__RANGES);
+		}
+		return ranges;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<Pattern> getPatterns() {
-        if (patterns == null) {
-            patterns = new EObjectResolvingEList<Pattern>(Pattern.class, this, DomainPackage.DOMAIN__PATTERNS);
-        }
-        return patterns;
-    }
+		if (patterns == null) {
+			patterns = new EObjectResolvingEList<Pattern>(Pattern.class, this, DomainPackage.DOMAIN__PATTERNS);
+		}
+		return patterns;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
-                return ((InternalEList<?>)getLengthRestriction()).basicRemove(otherEnd, msgs);
-            case DomainPackage.DOMAIN__RANGES:
-                return ((InternalEList<?>)getRanges()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
+				return ((InternalEList<?>)getLengthRestriction()).basicRemove(otherEnd, msgs);
+			case DomainPackage.DOMAIN__RANGES:
+				return ((InternalEList<?>)getRanges()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case DomainPackage.DOMAIN__DATA_TYPE:
-                if (resolve) return getDataType();
-                return basicGetDataType();
-            case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
-                return getLengthRestriction();
-            case DomainPackage.DOMAIN__RANGES:
-                return getRanges();
-            case DomainPackage.DOMAIN__PATTERNS:
-                return getPatterns();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case DomainPackage.DOMAIN__DATA_TYPE:
+				if (resolve) return getDataType();
+				return basicGetDataType();
+			case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
+				return getLengthRestriction();
+			case DomainPackage.DOMAIN__RANGES:
+				return getRanges();
+			case DomainPackage.DOMAIN__PATTERNS:
+				return getPatterns();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case DomainPackage.DOMAIN__DATA_TYPE:
-                setDataType((DataType)newValue);
-                return;
-            case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
-                getLengthRestriction().clear();
-                getLengthRestriction().addAll((Collection<? extends LengthRestriction>)newValue);
-                return;
-            case DomainPackage.DOMAIN__RANGES:
-                getRanges().clear();
-                getRanges().addAll((Collection<? extends RangeRestriction>)newValue);
-                return;
-            case DomainPackage.DOMAIN__PATTERNS:
-                getPatterns().clear();
-                getPatterns().addAll((Collection<? extends Pattern>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case DomainPackage.DOMAIN__DATA_TYPE:
+				setDataType((DataType)newValue);
+				return;
+			case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
+				getLengthRestriction().clear();
+				getLengthRestriction().addAll((Collection<? extends LengthRestriction>)newValue);
+				return;
+			case DomainPackage.DOMAIN__RANGES:
+				getRanges().clear();
+				getRanges().addAll((Collection<? extends RangeRestriction>)newValue);
+				return;
+			case DomainPackage.DOMAIN__PATTERNS:
+				getPatterns().clear();
+				getPatterns().addAll((Collection<? extends Pattern>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case DomainPackage.DOMAIN__DATA_TYPE:
-                setDataType((DataType)null);
-                return;
-            case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
-                getLengthRestriction().clear();
-                return;
-            case DomainPackage.DOMAIN__RANGES:
-                getRanges().clear();
-                return;
-            case DomainPackage.DOMAIN__PATTERNS:
-                getPatterns().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case DomainPackage.DOMAIN__DATA_TYPE:
+				setDataType((DataType)null);
+				return;
+			case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
+				getLengthRestriction().clear();
+				return;
+			case DomainPackage.DOMAIN__RANGES:
+				getRanges().clear();
+				return;
+			case DomainPackage.DOMAIN__PATTERNS:
+				getPatterns().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case DomainPackage.DOMAIN__DATA_TYPE:
-                return dataType != null;
-            case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
-                return lengthRestriction != null && !lengthRestriction.isEmpty();
-            case DomainPackage.DOMAIN__RANGES:
-                return ranges != null && !ranges.isEmpty();
-            case DomainPackage.DOMAIN__PATTERNS:
-                return patterns != null && !patterns.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case DomainPackage.DOMAIN__DATA_TYPE:
+				return dataType != null;
+			case DomainPackage.DOMAIN__LENGTH_RESTRICTION:
+				return lengthRestriction != null && !lengthRestriction.isEmpty();
+			case DomainPackage.DOMAIN__RANGES:
+				return ranges != null && !ranges.isEmpty();
+			case DomainPackage.DOMAIN__PATTERNS:
+				return patterns != null && !patterns.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //DomainImpl

@@ -18,74 +18,74 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface SchemaFactory extends EFactory {
     /**
-     * The singleton instance of the factory.
-     * <!-- begin-user-doc -->
+	 * The singleton instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     SchemaFactory eINSTANCE = org.talend.dataquality.indicators.schema.impl.SchemaFactoryImpl.init();
 
     /**
-     * Returns a new object of class '<em>Indicator</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Indicator</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Indicator</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Indicator</em>'.
+	 * @generated
+	 */
     SchemaIndicator createSchemaIndicator();
 
     /**
-     * Returns a new object of class '<em>Table Indicator</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Table Indicator</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Table Indicator</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Table Indicator</em>'.
+	 * @generated
+	 */
     TableIndicator createTableIndicator();
 
     /**
-     * Returns a new object of class '<em>Connection Indicator</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Connection Indicator</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Connection Indicator</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Connection Indicator</em>'.
+	 * @generated
+	 */
     ConnectionIndicator createConnectionIndicator();
 
     /**
-     * Returns a new object of class '<em>Catalog Indicator</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Catalog Indicator</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Catalog Indicator</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Catalog Indicator</em>'.
+	 * @generated
+	 */
     CatalogIndicator createCatalogIndicator();
 
     /**
-     * Returns a new object of class '<em>View Indicator</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>View Indicator</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>View Indicator</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>View Indicator</em>'.
+	 * @generated
+	 */
     ViewIndicator createViewIndicator();
 
     /**
-     * Returns a new object of class '<em>Abstract Table Indicator</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Abstract Table Indicator</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Abstract Table Indicator</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Abstract Table Indicator</em>'.
+	 * @generated
+	 */
     AbstractTableIndicator createAbstractTableIndicator();
 
     /**
-     * Returns the package supported by this factory.
-     * <!-- begin-user-doc -->
+	 * Returns the package supported by this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the package supported by this factory.
-     * @generated
-     */
+	 * @return the package supported by this factory.
+	 * @generated
+	 */
     SchemaPackage getSchemaPackage();
 
 } //SchemaFactory

@@ -43,429 +43,429 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
  */
 public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisParameters {
     /**
-     * The cached value of the '{@link #getDataFilter() <em>Data Filter</em>}' reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getDataFilter() <em>Data Filter</em>}' reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getDataFilter()
-     * @generated
-     * @ordered
-     */
+	 * @see #getDataFilter()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Domain> dataFilter;
 
     /**
-     * The cached value of the '{@link #getIndicatorValidationDomains() <em>Indicator Validation Domains</em>}' reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getIndicatorValidationDomains() <em>Indicator Validation Domains</em>}' reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getIndicatorValidationDomains()
-     * @generated
-     * @ordered
-     */
+	 * @see #getIndicatorValidationDomains()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Domain> indicatorValidationDomains;
 
     /**
-     * The cached value of the '{@link #getDataValidationDomains() <em>Data Validation Domains</em>}' reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getDataValidationDomains() <em>Data Validation Domains</em>}' reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getDataValidationDomains()
-     * @generated
-     * @ordered
-     */
+	 * @see #getDataValidationDomains()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Domain> dataValidationDomains;
 
     /**
-     * The default value of the '{@link #getAnalysisType() <em>Analysis Type</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getAnalysisType() <em>Analysis Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getAnalysisType()
-     * @generated
-     * @ordered
-     */
+	 * @see #getAnalysisType()
+	 * @generated
+	 * @ordered
+	 */
     protected static final AnalysisType ANALYSIS_TYPE_EDEFAULT = AnalysisType.COLUMN;
 
     /**
-     * The cached value of the '{@link #getAnalysisType() <em>Analysis Type</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getAnalysisType() <em>Analysis Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getAnalysisType()
-     * @generated
-     * @ordered
-     */
+	 * @see #getAnalysisType()
+	 * @generated
+	 * @ordered
+	 */
     protected AnalysisType analysisType = ANALYSIS_TYPE_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getDeactivatedIndicators() <em>Deactivated Indicators</em>}' reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getDeactivatedIndicators() <em>Deactivated Indicators</em>}' reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getDeactivatedIndicators()
-     * @generated
-     * @ordered
-     */
+	 * @see #getDeactivatedIndicators()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Indicator> deactivatedIndicators;
 
     /**
-     * The default value of the '{@link #getExecutionLanguage() <em>Execution Language</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getExecutionLanguage() <em>Execution Language</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getExecutionLanguage()
-     * @generated
-     * @ordered
-     */
+	 * @see #getExecutionLanguage()
+	 * @generated
+	 * @ordered
+	 */
     protected static final ExecutionLanguage EXECUTION_LANGUAGE_EDEFAULT = ExecutionLanguage.SQL;
 
     /**
-     * The cached value of the '{@link #getExecutionLanguage() <em>Execution Language</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getExecutionLanguage() <em>Execution Language</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getExecutionLanguage()
-     * @generated
-     * @ordered
-     */
+	 * @see #getExecutionLanguage()
+	 * @generated
+	 * @ordered
+	 */
     protected ExecutionLanguage executionLanguage = EXECUTION_LANGUAGE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isStoreData()
-     * @generated
-     * @ordered
-     */
+	 * @see #isStoreData()
+	 * @generated
+	 * @ordered
+	 */
     protected static final boolean STORE_DATA_EDEFAULT = true;
 
     /**
-     * The cached value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isStoreData()
-     * @generated
-     * @ordered
-     */
+	 * @see #isStoreData()
+	 * @generated
+	 * @ordered
+	 */
     protected boolean storeData = STORE_DATA_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMaxNumberRows()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMaxNumberRows()
+	 * @generated
+	 * @ordered
+	 */
     protected static final int MAX_NUMBER_ROWS_EDEFAULT = 50;
 
     /**
-     * The cached value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMaxNumberRows() <em>Max Number Rows</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMaxNumberRows()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMaxNumberRows()
+	 * @generated
+	 * @ordered
+	 */
     protected int maxNumberRows = MAX_NUMBER_ROWS_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected AnalysisParametersImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return AnalysisPackage.Literals.ANALYSIS_PARAMETERS;
-    }
+		return AnalysisPackage.Literals.ANALYSIS_PARAMETERS;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<Domain> getDataFilter() {
-        if (dataFilter == null) {
-            dataFilter = new EObjectResolvingEList<Domain>(Domain.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER);
-        }
-        return dataFilter;
-    }
+		if (dataFilter == null) {
+			dataFilter = new EObjectResolvingEList<Domain>(Domain.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER);
+		}
+		return dataFilter;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<Domain> getIndicatorValidationDomains() {
-        if (indicatorValidationDomains == null) {
-            indicatorValidationDomains = new EObjectResolvingEList<Domain>(Domain.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS);
-        }
-        return indicatorValidationDomains;
-    }
+		if (indicatorValidationDomains == null) {
+			indicatorValidationDomains = new EObjectResolvingEList<Domain>(Domain.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS);
+		}
+		return indicatorValidationDomains;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<Domain> getDataValidationDomains() {
-        if (dataValidationDomains == null) {
-            dataValidationDomains = new EObjectResolvingEList<Domain>(Domain.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS);
-        }
-        return dataValidationDomains;
-    }
+		if (dataValidationDomains == null) {
+			dataValidationDomains = new EObjectResolvingEList<Domain>(Domain.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS);
+		}
+		return dataValidationDomains;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public AnalysisType getAnalysisType() {
-        return analysisType;
-    }
+		return analysisType;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setAnalysisType(AnalysisType newAnalysisType) {
-        AnalysisType oldAnalysisType = analysisType;
-        analysisType = newAnalysisType == null ? ANALYSIS_TYPE_EDEFAULT : newAnalysisType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE, oldAnalysisType, analysisType));
-    }
+		AnalysisType oldAnalysisType = analysisType;
+		analysisType = newAnalysisType == null ? ANALYSIS_TYPE_EDEFAULT : newAnalysisType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE, oldAnalysisType, analysisType));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<Indicator> getDeactivatedIndicators() {
-        if (deactivatedIndicators == null) {
-            deactivatedIndicators = new EObjectResolvingEList<Indicator>(Indicator.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS);
-        }
-        return deactivatedIndicators;
-    }
+		if (deactivatedIndicators == null) {
+			deactivatedIndicators = new EObjectResolvingEList<Indicator>(Indicator.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS);
+		}
+		return deactivatedIndicators;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ExecutionLanguage getExecutionLanguage() {
-        return executionLanguage;
-    }
+		return executionLanguage;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setExecutionLanguage(ExecutionLanguage newExecutionLanguage) {
-        ExecutionLanguage oldExecutionLanguage = executionLanguage;
-        executionLanguage = newExecutionLanguage == null ? EXECUTION_LANGUAGE_EDEFAULT : newExecutionLanguage;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE, oldExecutionLanguage, executionLanguage));
-    }
+		ExecutionLanguage oldExecutionLanguage = executionLanguage;
+		executionLanguage = newExecutionLanguage == null ? EXECUTION_LANGUAGE_EDEFAULT : newExecutionLanguage;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE, oldExecutionLanguage, executionLanguage));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isStoreData() {
-        return storeData;
-    }
+		return storeData;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setStoreData(boolean newStoreData) {
-        boolean oldStoreData = storeData;
-        storeData = newStoreData;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA, oldStoreData, storeData));
-    }
+		boolean oldStoreData = storeData;
+		storeData = newStoreData;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA, oldStoreData, storeData));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public int getMaxNumberRows() {
-        return maxNumberRows;
-    }
+		return maxNumberRows;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setMaxNumberRows(int newMaxNumberRows) {
-        int oldMaxNumberRows = maxNumberRows;
-        maxNumberRows = newMaxNumberRows;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS, oldMaxNumberRows, maxNumberRows));
-    }
+		int oldMaxNumberRows = maxNumberRows;
+		maxNumberRows = newMaxNumberRows;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS, oldMaxNumberRows, maxNumberRows));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER:
-                return getDataFilter();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS:
-                return getIndicatorValidationDomains();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS:
-                return getDataValidationDomains();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
-                return getAnalysisType();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
-                return getDeactivatedIndicators();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
-                return getExecutionLanguage();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
-                return isStoreData();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
-                return getMaxNumberRows();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER:
+				return getDataFilter();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS:
+				return getIndicatorValidationDomains();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS:
+				return getDataValidationDomains();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
+				return getAnalysisType();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
+				return getDeactivatedIndicators();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+				return getExecutionLanguage();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+				return isStoreData();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
+				return getMaxNumberRows();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER:
-                getDataFilter().clear();
-                getDataFilter().addAll((Collection<? extends Domain>)newValue);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS:
-                getIndicatorValidationDomains().clear();
-                getIndicatorValidationDomains().addAll((Collection<? extends Domain>)newValue);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS:
-                getDataValidationDomains().clear();
-                getDataValidationDomains().addAll((Collection<? extends Domain>)newValue);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
-                setAnalysisType((AnalysisType)newValue);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
-                getDeactivatedIndicators().clear();
-                getDeactivatedIndicators().addAll((Collection<? extends Indicator>)newValue);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
-                setExecutionLanguage((ExecutionLanguage)newValue);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
-                setStoreData((Boolean)newValue);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
-                setMaxNumberRows((Integer)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER:
+				getDataFilter().clear();
+				getDataFilter().addAll((Collection<? extends Domain>)newValue);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS:
+				getIndicatorValidationDomains().clear();
+				getIndicatorValidationDomains().addAll((Collection<? extends Domain>)newValue);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS:
+				getDataValidationDomains().clear();
+				getDataValidationDomains().addAll((Collection<? extends Domain>)newValue);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
+				setAnalysisType((AnalysisType)newValue);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
+				getDeactivatedIndicators().clear();
+				getDeactivatedIndicators().addAll((Collection<? extends Indicator>)newValue);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+				setExecutionLanguage((ExecutionLanguage)newValue);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+				setStoreData((Boolean)newValue);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
+				setMaxNumberRows((Integer)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER:
-                getDataFilter().clear();
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS:
-                getIndicatorValidationDomains().clear();
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS:
-                getDataValidationDomains().clear();
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
-                setAnalysisType(ANALYSIS_TYPE_EDEFAULT);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
-                getDeactivatedIndicators().clear();
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
-                setExecutionLanguage(EXECUTION_LANGUAGE_EDEFAULT);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
-                setStoreData(STORE_DATA_EDEFAULT);
-                return;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
-                setMaxNumberRows(MAX_NUMBER_ROWS_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER:
+				getDataFilter().clear();
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS:
+				getIndicatorValidationDomains().clear();
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS:
+				getDataValidationDomains().clear();
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
+				setAnalysisType(ANALYSIS_TYPE_EDEFAULT);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
+				getDeactivatedIndicators().clear();
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+				setExecutionLanguage(EXECUTION_LANGUAGE_EDEFAULT);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+				setStoreData(STORE_DATA_EDEFAULT);
+				return;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
+				setMaxNumberRows(MAX_NUMBER_ROWS_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER:
-                return dataFilter != null && !dataFilter.isEmpty();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS:
-                return indicatorValidationDomains != null && !indicatorValidationDomains.isEmpty();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS:
-                return dataValidationDomains != null && !dataValidationDomains.isEmpty();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
-                return analysisType != ANALYSIS_TYPE_EDEFAULT;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
-                return deactivatedIndicators != null && !deactivatedIndicators.isEmpty();
-            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
-                return executionLanguage != EXECUTION_LANGUAGE_EDEFAULT;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
-                return storeData != STORE_DATA_EDEFAULT;
-            case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
-                return maxNumberRows != MAX_NUMBER_ROWS_EDEFAULT;
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_FILTER:
+				return dataFilter != null && !dataFilter.isEmpty();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS:
+				return indicatorValidationDomains != null && !indicatorValidationDomains.isEmpty();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS:
+				return dataValidationDomains != null && !dataValidationDomains.isEmpty();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
+				return analysisType != ANALYSIS_TYPE_EDEFAULT;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
+				return deactivatedIndicators != null && !deactivatedIndicators.isEmpty();
+			case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+				return executionLanguage != EXECUTION_LANGUAGE_EDEFAULT;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__STORE_DATA:
+				return storeData != STORE_DATA_EDEFAULT;
+			case AnalysisPackage.ANALYSIS_PARAMETERS__MAX_NUMBER_ROWS:
+				return maxNumberRows != MAX_NUMBER_ROWS_EDEFAULT;
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (analysisType: ");
-        result.append(analysisType);
-        result.append(", executionLanguage: ");
-        result.append(executionLanguage);
-        result.append(", storeData: ");
-        result.append(storeData);
-        result.append(", maxNumberRows: ");
-        result.append(maxNumberRows);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (analysisType: ");
+		result.append(analysisType);
+		result.append(", executionLanguage: ");
+		result.append(executionLanguage);
+		result.append(", storeData: ");
+		result.append(storeData);
+		result.append(", maxNumberRows: ");
+		result.append(maxNumberRows);
+		result.append(')');
+		return result.toString();
+	}
 
 } //AnalysisParametersImpl

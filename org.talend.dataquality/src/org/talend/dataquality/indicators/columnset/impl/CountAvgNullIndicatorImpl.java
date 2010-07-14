@@ -21,22 +21,22 @@ import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
  */
 public class CountAvgNullIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements CountAvgNullIndicator {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected CountAvgNullIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ColumnsetPackage.Literals.COUNT_AVG_NULL_INDICATOR;
-    }
+		return ColumnsetPackage.Literals.COUNT_AVG_NULL_INDICATOR;
+	}
 
 } //CountAvgNullIndicatorImpl

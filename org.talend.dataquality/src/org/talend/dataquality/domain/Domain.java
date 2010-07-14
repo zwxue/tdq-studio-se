@@ -32,77 +32,77 @@ import orgomg.cwm.objectmodel.core.Namespace;
  */
 public interface Domain extends Namespace {
     /**
-     * Returns the value of the '<em><b>Data Type</b></em>' reference.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Data Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Data Type</em>' reference isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Data Type</em>' reference.
-     * @see #setDataType(DataType)
-     * @see org.talend.dataquality.domain.DomainPackage#getDomain_DataType()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Data Type</em>' reference.
+	 * @see #setDataType(DataType)
+	 * @see org.talend.dataquality.domain.DomainPackage#getDomain_DataType()
+	 * @model
+	 * @generated
+	 */
     DataType getDataType();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.domain.Domain#getDataType <em>Data Type</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.talend.dataquality.domain.Domain#getDataType <em>Data Type</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Data Type</em>' reference.
-     * @see #getDataType()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Data Type</em>' reference.
+	 * @see #getDataType()
+	 * @generated
+	 */
     void setDataType(DataType value);
 
     /**
-     * Returns the value of the '<em><b>Length Restriction</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.domain.LengthRestriction}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Length Restriction</b></em>' containment reference list.
+	 * The list contents are of type {@link org.talend.dataquality.domain.LengthRestriction}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Length Restriction</em>' reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Length Restriction</em>' containment reference list.
-     * @see org.talend.dataquality.domain.DomainPackage#getDomain_LengthRestriction()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Length Restriction</em>' containment reference list.
+	 * @see org.talend.dataquality.domain.DomainPackage#getDomain_LengthRestriction()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<LengthRestriction> getLengthRestriction();
 
     /**
-     * Returns the value of the '<em><b>Ranges</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.domain.RangeRestriction}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Ranges</b></em>' containment reference list.
+	 * The list contents are of type {@link org.talend.dataquality.domain.RangeRestriction}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Ranges</em>' reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Ranges</em>' containment reference list.
-     * @see org.talend.dataquality.domain.DomainPackage#getDomain_Ranges()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Ranges</em>' containment reference list.
+	 * @see org.talend.dataquality.domain.DomainPackage#getDomain_Ranges()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<RangeRestriction> getRanges();
 
     /**
-     * Returns the value of the '<em><b>Patterns</b></em>' reference list.
-     * The list contents are of type {@link org.talend.dataquality.domain.pattern.Pattern}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Patterns</b></em>' reference list.
+	 * The list contents are of type {@link org.talend.dataquality.domain.pattern.Pattern}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Patterns</em>' reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Patterns</em>' reference list.
-     * @see org.talend.dataquality.domain.DomainPackage#getDomain_Patterns()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Patterns</em>' reference list.
+	 * @see org.talend.dataquality.domain.DomainPackage#getDomain_Patterns()
+	 * @model
+	 * @generated
+	 */
     EList<Pattern> getPatterns();
 
 } // Domain

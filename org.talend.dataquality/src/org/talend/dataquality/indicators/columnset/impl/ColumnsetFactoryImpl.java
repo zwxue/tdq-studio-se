@@ -33,213 +33,213 @@ import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
  */
 public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFactory {
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public static ColumnsetFactory init() {
-        try {
-            ColumnsetFactory theColumnsetFactory = (ColumnsetFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.columnset"); 
-            if (theColumnsetFactory != null) {
-                return theColumnsetFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new ColumnsetFactoryImpl();
-    }
+		try {
+			ColumnsetFactory theColumnsetFactory = (ColumnsetFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.columnset"); 
+			if (theColumnsetFactory != null) {
+				return theColumnsetFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new ColumnsetFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ColumnsetFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case ColumnsetPackage.VALUE_MATCHING_INDICATOR: return createValueMatchingIndicator();
-            case ColumnsetPackage.ROW_MATCHING_INDICATOR: return createRowMatchingIndicator();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR: return createColumnSetMultiValueIndicator();
-            case ColumnsetPackage.ALL_MATCH_INDICATOR: return createAllMatchIndicator();
-            case ColumnsetPackage.COUNT_AVG_NULL_INDICATOR: return createCountAvgNullIndicator();
-            case ColumnsetPackage.MIN_MAX_DATE_INDICATOR: return createMinMaxDateIndicator();
-            case ColumnsetPackage.WEAK_CORRELATION_INDICATOR: return createWeakCorrelationIndicator();
-            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR: return createColumnDependencyIndicator();
-            case ColumnsetPackage.SIMPLE_STAT_INDICATOR: return createSimpleStatIndicator();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case ColumnsetPackage.VALUE_MATCHING_INDICATOR: return createValueMatchingIndicator();
+			case ColumnsetPackage.ROW_MATCHING_INDICATOR: return createRowMatchingIndicator();
+			case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR: return createColumnSetMultiValueIndicator();
+			case ColumnsetPackage.ALL_MATCH_INDICATOR: return createAllMatchIndicator();
+			case ColumnsetPackage.COUNT_AVG_NULL_INDICATOR: return createCountAvgNullIndicator();
+			case ColumnsetPackage.MIN_MAX_DATE_INDICATOR: return createMinMaxDateIndicator();
+			case ColumnsetPackage.WEAK_CORRELATION_INDICATOR: return createWeakCorrelationIndicator();
+			case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR: return createColumnDependencyIndicator();
+			case ColumnsetPackage.SIMPLE_STAT_INDICATOR: return createSimpleStatIndicator();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object createFromString(EDataType eDataType, String initialValue) {
-        switch (eDataType.getClassifierID()) {
-            case ColumnsetPackage.LIST_OBJECT:
-                return createListObjectFromString(eDataType, initialValue);
-            default:
-                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eDataType.getClassifierID()) {
+			case ColumnsetPackage.LIST_OBJECT:
+				return createListObjectFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String convertToString(EDataType eDataType, Object instanceValue) {
-        switch (eDataType.getClassifierID()) {
-            case ColumnsetPackage.LIST_OBJECT:
-                return convertListObjectToString(eDataType, instanceValue);
-            default:
-                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eDataType.getClassifierID()) {
+			case ColumnsetPackage.LIST_OBJECT:
+				return convertListObjectToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ValueMatchingIndicator createValueMatchingIndicator() {
-        ValueMatchingIndicatorImpl valueMatchingIndicator = new ValueMatchingIndicatorImpl();
-        return valueMatchingIndicator;
-    }
+		ValueMatchingIndicatorImpl valueMatchingIndicator = new ValueMatchingIndicatorImpl();
+		return valueMatchingIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public RowMatchingIndicator createRowMatchingIndicator() {
-        RowMatchingIndicatorImpl rowMatchingIndicator = new RowMatchingIndicatorImpl();
-        return rowMatchingIndicator;
-    }
+		RowMatchingIndicatorImpl rowMatchingIndicator = new RowMatchingIndicatorImpl();
+		return rowMatchingIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ColumnSetMultiValueIndicator createColumnSetMultiValueIndicator() {
-        ColumnSetMultiValueIndicatorImpl columnSetMultiValueIndicator = new ColumnSetMultiValueIndicatorImpl();
-        return columnSetMultiValueIndicator;
-    }
+		ColumnSetMultiValueIndicatorImpl columnSetMultiValueIndicator = new ColumnSetMultiValueIndicatorImpl();
+		return columnSetMultiValueIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public AllMatchIndicator createAllMatchIndicator() {
-        AllMatchIndicatorImpl allMatchIndicator = new AllMatchIndicatorImpl();
-        return allMatchIndicator;
-    }
+		AllMatchIndicatorImpl allMatchIndicator = new AllMatchIndicatorImpl();
+		return allMatchIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public CountAvgNullIndicator createCountAvgNullIndicator() {
-        CountAvgNullIndicatorImpl countAvgNullIndicator = new CountAvgNullIndicatorImpl();
-        return countAvgNullIndicator;
-    }
+		CountAvgNullIndicatorImpl countAvgNullIndicator = new CountAvgNullIndicatorImpl();
+		return countAvgNullIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public MinMaxDateIndicator createMinMaxDateIndicator() {
-        MinMaxDateIndicatorImpl minMaxDateIndicator = new MinMaxDateIndicatorImpl();
-        return minMaxDateIndicator;
-    }
+		MinMaxDateIndicatorImpl minMaxDateIndicator = new MinMaxDateIndicatorImpl();
+		return minMaxDateIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public WeakCorrelationIndicator createWeakCorrelationIndicator() {
-        WeakCorrelationIndicatorImpl weakCorrelationIndicator = new WeakCorrelationIndicatorImpl();
-        return weakCorrelationIndicator;
-    }
+		WeakCorrelationIndicatorImpl weakCorrelationIndicator = new WeakCorrelationIndicatorImpl();
+		return weakCorrelationIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ColumnDependencyIndicator createColumnDependencyIndicator() {
-        ColumnDependencyIndicatorImpl columnDependencyIndicator = new ColumnDependencyIndicatorImpl();
-        return columnDependencyIndicator;
-    }
+		ColumnDependencyIndicatorImpl columnDependencyIndicator = new ColumnDependencyIndicatorImpl();
+		return columnDependencyIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public SimpleStatIndicator createSimpleStatIndicator() {
-        SimpleStatIndicatorImpl simpleStatIndicator = new SimpleStatIndicatorImpl();
-        return simpleStatIndicator;
-    }
+		SimpleStatIndicatorImpl simpleStatIndicator = new SimpleStatIndicatorImpl();
+		return simpleStatIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     public List createListObjectFromString(EDataType eDataType, String initialValue) {
-        return (List)super.createFromString(initialValue);
-    }
+		return (List)super.createFromString(initialValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String convertListObjectToString(EDataType eDataType, Object instanceValue) {
-        return super.convertToString(instanceValue);
-    }
+		return super.convertToString(instanceValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ColumnsetPackage getColumnsetPackage() {
-        return (ColumnsetPackage)getEPackage();
-    }
+		return (ColumnsetPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static ColumnsetPackage getPackage() {
-        return ColumnsetPackage.eINSTANCE;
-    }
+		return ColumnsetPackage.eINSTANCE;
+	}
 
 } //ColumnsetFactoryImpl

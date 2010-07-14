@@ -24,90 +24,90 @@ import org.talend.dataquality.reports.TdReport;
 public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
 
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public static ReportsFactory init() {
-        try {
-            ReportsFactory theReportsFactory = (ReportsFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.reports"); 
-            if (theReportsFactory != null) {
-                return theReportsFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new ReportsFactoryImpl();
-    }
+		try {
+			ReportsFactory theReportsFactory = (ReportsFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.reports"); 
+			if (theReportsFactory != null) {
+				return theReportsFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new ReportsFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public ReportsFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case ReportsPackage.TD_REPORT: return createTdReport();
-            case ReportsPackage.PRESENTATION_PARAMETER: return createPresentationParameter();
-            case ReportsPackage.ANALYSIS_MAP: return createAnalysisMap();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case ReportsPackage.TD_REPORT: return createTdReport();
+			case ReportsPackage.PRESENTATION_PARAMETER: return createPresentationParameter();
+			case ReportsPackage.ANALYSIS_MAP: return createAnalysisMap();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public TdReport createTdReport() {
-        TdReportImpl tdReport = new TdReportImpl();
-        return tdReport;
-    }
+		TdReportImpl tdReport = new TdReportImpl();
+		return tdReport;
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public PresentationParameter createPresentationParameter() {
-        PresentationParameterImpl presentationParameter = new PresentationParameterImpl();
-        return presentationParameter;
-    }
+		PresentationParameterImpl presentationParameter = new PresentationParameterImpl();
+		return presentationParameter;
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public AnalysisMap createAnalysisMap() {
-        AnalysisMapImpl analysisMap = new AnalysisMapImpl();
-        return analysisMap;
-    }
+		AnalysisMapImpl analysisMap = new AnalysisMapImpl();
+		return analysisMap;
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public ReportsPackage getReportsPackage() {
-        return (ReportsPackage)getEPackage();
-    }
+		return (ReportsPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static ReportsPackage getPackage() {
-        return ReportsPackage.eINSTANCE;
-    }
+		return ReportsPackage.eINSTANCE;
+	}
 
 } // ReportsFactoryImpl

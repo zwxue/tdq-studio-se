@@ -47,21 +47,21 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected RegexpMatchingIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.REGEXP_MATCHING_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.REGEXP_MATCHING_INDICATOR;
+	}
 
     private String regex = null;
 

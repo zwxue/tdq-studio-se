@@ -33,175 +33,175 @@ import org.talend.dataquality.domain.TextValue;
  */
 public class DomainFactoryImpl extends EFactoryImpl implements DomainFactory {
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public static DomainFactory init() {
-        try {
-            DomainFactory theDomainFactory = (DomainFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.domain"); 
-            if (theDomainFactory != null) {
-                return theDomainFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new DomainFactoryImpl();
-    }
+		try {
+			DomainFactory theDomainFactory = (DomainFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.domain"); 
+			if (theDomainFactory != null) {
+				return theDomainFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new DomainFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DomainFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case DomainPackage.DOMAIN: return createDomain();
-            case DomainPackage.ENUMERATION_RULE: return createEnumerationRule();
-            case DomainPackage.RANGE_RESTRICTION: return createRangeRestriction();
-            case DomainPackage.LITERAL_VALUE: return createLiteralValue();
-            case DomainPackage.LENGTH_RESTRICTION: return createLengthRestriction();
-            case DomainPackage.NUMERIC_VALUE: return createNumericValue();
-            case DomainPackage.TEXT_VALUE: return createTextValue();
-            case DomainPackage.INTEGER_VALUE: return createIntegerValue();
-            case DomainPackage.REAL_NUMBER_VALUE: return createRealNumberValue();
-            case DomainPackage.DATE_VALUE: return createDateValue();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case DomainPackage.DOMAIN: return createDomain();
+			case DomainPackage.ENUMERATION_RULE: return createEnumerationRule();
+			case DomainPackage.RANGE_RESTRICTION: return createRangeRestriction();
+			case DomainPackage.LITERAL_VALUE: return createLiteralValue();
+			case DomainPackage.LENGTH_RESTRICTION: return createLengthRestriction();
+			case DomainPackage.NUMERIC_VALUE: return createNumericValue();
+			case DomainPackage.TEXT_VALUE: return createTextValue();
+			case DomainPackage.INTEGER_VALUE: return createIntegerValue();
+			case DomainPackage.REAL_NUMBER_VALUE: return createRealNumberValue();
+			case DomainPackage.DATE_VALUE: return createDateValue();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Domain createDomain() {
-        DomainImpl domain = new DomainImpl();
-        return domain;
-    }
+		DomainImpl domain = new DomainImpl();
+		return domain;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EnumerationRule createEnumerationRule() {
-        EnumerationRuleImpl enumerationRule = new EnumerationRuleImpl();
-        return enumerationRule;
-    }
+		EnumerationRuleImpl enumerationRule = new EnumerationRuleImpl();
+		return enumerationRule;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public RangeRestriction createRangeRestriction() {
-        RangeRestrictionImpl rangeRestriction = new RangeRestrictionImpl();
-        return rangeRestriction;
-    }
+		RangeRestrictionImpl rangeRestriction = new RangeRestrictionImpl();
+		return rangeRestriction;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public LiteralValue createLiteralValue() {
-        LiteralValueImpl literalValue = new LiteralValueImpl();
-        return literalValue;
-    }
+		LiteralValueImpl literalValue = new LiteralValueImpl();
+		return literalValue;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public LengthRestriction createLengthRestriction() {
-        LengthRestrictionImpl lengthRestriction = new LengthRestrictionImpl();
-        return lengthRestriction;
-    }
+		LengthRestrictionImpl lengthRestriction = new LengthRestrictionImpl();
+		return lengthRestriction;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public NumericValue createNumericValue() {
-        NumericValueImpl numericValue = new NumericValueImpl();
-        return numericValue;
-    }
+		NumericValueImpl numericValue = new NumericValueImpl();
+		return numericValue;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public TextValue createTextValue() {
-        TextValueImpl textValue = new TextValueImpl();
-        return textValue;
-    }
+		TextValueImpl textValue = new TextValueImpl();
+		return textValue;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public IntegerValue createIntegerValue() {
-        IntegerValueImpl integerValue = new IntegerValueImpl();
-        return integerValue;
-    }
+		IntegerValueImpl integerValue = new IntegerValueImpl();
+		return integerValue;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public RealNumberValue createRealNumberValue() {
-        RealNumberValueImpl realNumberValue = new RealNumberValueImpl();
-        return realNumberValue;
-    }
+		RealNumberValueImpl realNumberValue = new RealNumberValueImpl();
+		return realNumberValue;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DateValue createDateValue() {
-        DateValueImpl dateValue = new DateValueImpl();
-        return dateValue;
-    }
+		DateValueImpl dateValue = new DateValueImpl();
+		return dateValue;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DomainPackage getDomainPackage() {
-        return (DomainPackage)getEPackage();
-    }
+		return (DomainPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static DomainPackage getPackage() {
-        return DomainPackage.eINSTANCE;
-    }
+		return DomainPackage.eINSTANCE;
+	}
 
 } //DomainFactoryImpl

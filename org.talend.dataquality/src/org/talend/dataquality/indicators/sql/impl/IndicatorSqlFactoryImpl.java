@@ -25,98 +25,98 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
  */
 public class IndicatorSqlFactoryImpl extends EFactoryImpl implements IndicatorSqlFactory {
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public static IndicatorSqlFactory init() {
-        try {
-            IndicatorSqlFactory theIndicatorSqlFactory = (IndicatorSqlFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.sql"); 
-            if (theIndicatorSqlFactory != null) {
-                return theIndicatorSqlFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new IndicatorSqlFactoryImpl();
-    }
+		try {
+			IndicatorSqlFactory theIndicatorSqlFactory = (IndicatorSqlFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.sql"); 
+			if (theIndicatorSqlFactory != null) {
+				return theIndicatorSqlFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new IndicatorSqlFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public IndicatorSqlFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case IndicatorSqlPackage.USER_DEF_INDICATOR: return createUserDefIndicator();
-            case IndicatorSqlPackage.WHERE_RULE_INDICATOR: return createWhereRuleIndicator();
-            case IndicatorSqlPackage.JAVA_USER_DEF_INDICATOR: return createJavaUserDefIndicator();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case IndicatorSqlPackage.USER_DEF_INDICATOR: return createUserDefIndicator();
+			case IndicatorSqlPackage.WHERE_RULE_INDICATOR: return createWhereRuleIndicator();
+			case IndicatorSqlPackage.JAVA_USER_DEF_INDICATOR: return createJavaUserDefIndicator();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public UserDefIndicator createUserDefIndicator() {
-        UserDefIndicatorImpl userDefIndicator = new UserDefIndicatorImpl();
-        return userDefIndicator;
-    }
+		UserDefIndicatorImpl userDefIndicator = new UserDefIndicatorImpl();
+		return userDefIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public WhereRuleIndicator createWhereRuleIndicator() {
-        WhereRuleIndicatorImpl whereRuleIndicator = new WhereRuleIndicatorImpl();
-        return whereRuleIndicator;
-    }
+		WhereRuleIndicatorImpl whereRuleIndicator = new WhereRuleIndicatorImpl();
+		return whereRuleIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public JavaUserDefIndicator createJavaUserDefIndicator() {
-        JavaUserDefIndicatorImpl javaUserDefIndicator = new JavaUserDefIndicatorImpl();
-        return javaUserDefIndicator;
-    }
+		JavaUserDefIndicatorImpl javaUserDefIndicator = new JavaUserDefIndicatorImpl();
+		return javaUserDefIndicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public IndicatorSqlPackage getIndicatorSqlPackage() {
-        return (IndicatorSqlPackage)getEPackage();
-    }
+		return (IndicatorSqlPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static IndicatorSqlPackage getPackage() {
-        return IndicatorSqlPackage.eINSTANCE;
-    }
+		return IndicatorSqlPackage.eINSTANCE;
+	}
 
 } //IndicatorSqlFactoryImpl

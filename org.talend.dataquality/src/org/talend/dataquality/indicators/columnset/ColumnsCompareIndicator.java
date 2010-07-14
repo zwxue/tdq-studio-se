@@ -29,35 +29,35 @@ import orgomg.cwm.resource.relational.Column;
  */
 public interface ColumnsCompareIndicator extends MatchingIndicator {
     /**
-     * Returns the value of the '<em><b>Column Set A</b></em>' reference list.
-     * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Column Set A</b></em>' reference list.
+	 * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Column Set A</em>' reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Column Set A</em>' reference list.
-     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnsCompareIndicator_ColumnSetA()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Column Set A</em>' reference list.
+	 * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnsCompareIndicator_ColumnSetA()
+	 * @model
+	 * @generated
+	 */
     EList<Column> getColumnSetA();
 
     /**
-     * Returns the value of the '<em><b>Column Set B</b></em>' reference list.
-     * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Column Set B</b></em>' reference list.
+	 * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Column Set B</em>' reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Column Set B</em>' reference list.
-     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnsCompareIndicator_ColumnSetB()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Column Set B</em>' reference list.
+	 * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnsCompareIndicator_ColumnSetB()
+	 * @model
+	 * @generated
+	 */
     EList<Column> getColumnSetB();
 
 } // ColumnsCompareIndicator

@@ -28,35 +28,35 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public interface IndicatorsDefinitions extends ModelElement {
     /**
-     * Returns the value of the '<em><b>Indicator Definitions</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.indicators.definition.IndicatorDefinition}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Indicator Definitions</b></em>' containment reference list.
+	 * The list contents are of type {@link org.talend.dataquality.indicators.definition.IndicatorDefinition}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Indicator Definitions</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Indicator Definitions</em>' containment reference list.
-     * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorsDefinitions_IndicatorDefinitions()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Indicator Definitions</em>' containment reference list.
+	 * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorsDefinitions_IndicatorDefinitions()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<IndicatorDefinition> getIndicatorDefinitions();
 
     /**
-     * Returns the value of the '<em><b>Categories</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.indicators.definition.IndicatorCategory}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Categories</b></em>' containment reference list.
+	 * The list contents are of type {@link org.talend.dataquality.indicators.definition.IndicatorCategory}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Categories</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Categories</em>' containment reference list.
-     * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorsDefinitions_Categories()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Categories</em>' containment reference list.
+	 * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorsDefinitions_Categories()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<IndicatorCategory> getCategories();
 
 } // IndicatorsDefinitions

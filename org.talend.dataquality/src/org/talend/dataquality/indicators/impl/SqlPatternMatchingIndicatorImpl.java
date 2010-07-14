@@ -21,22 +21,22 @@ import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
  */
 public class SqlPatternMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements SqlPatternMatchingIndicator {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected SqlPatternMatchingIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.SQL_PATTERN_MATCHING_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.SQL_PATTERN_MATCHING_INDICATOR;
+	}
 
 } //SqlPatternMatchingIndicatorImpl

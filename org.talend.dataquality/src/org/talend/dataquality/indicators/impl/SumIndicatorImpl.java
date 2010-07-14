@@ -28,43 +28,43 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
     private static Logger log = Logger.getLogger(SumIndicatorImpl.class);
 
     /**
-     * The default value of the '{@link #getSumStr() <em>Sum Str</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getSumStr() <em>Sum Str</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * @see #getSumStr()
-     * @generated
-     * @ordered
-     */
+	 * @see #getSumStr()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String SUM_STR_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getSumStr() <em>Sum Str</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getSumStr() <em>Sum Str</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * @see #getSumStr()
-     * @generated
-     * @ordered
-     */
+	 * @see #getSumStr()
+	 * @generated
+	 * @ordered
+	 */
     protected String sumStr = SUM_STR_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * @see #getDatatype()
-     * @generated
-     * @ordered
-     */
+	 * @see #getDatatype()
+	 * @generated
+	 * @ordered
+	 */
     protected static final int DATATYPE_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * @see #getDatatype()
-     * @generated
-     * @ordered
-     */
+	 * @see #getDatatype()
+	 * @generated
+	 * @ordered
+	 */
     protected int datatype = DATATYPE_EDEFAULT;
 
     /**
@@ -110,140 +110,140 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
     protected GenericSum<?> genericSum;
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected SumIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.SUM_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.SUM_INDICATOR;
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public String getSumStr() {
-        return sumStr;
-    }
+		return sumStr;
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public void setSumStr(String newSumStr) {
-        String oldSumStr = sumStr;
-        sumStr = newSumStr;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.SUM_INDICATOR__SUM_STR, oldSumStr, sumStr));
-    }
+		String oldSumStr = sumStr;
+		sumStr = newSumStr;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.SUM_INDICATOR__SUM_STR, oldSumStr, sumStr));
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public int getDatatype() {
-        return datatype;
-    }
+		return datatype;
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public void setDatatype(int newDatatype) {
-        int oldDatatype = datatype;
-        datatype = newDatatype;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.SUM_INDICATOR__DATATYPE, oldDatatype, datatype));
-    }
+		int oldDatatype = datatype;
+		datatype = newDatatype;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.SUM_INDICATOR__DATATYPE, oldDatatype, datatype));
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
-                return getSumStr();
-            case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
-                return getDatatype();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
+				return getSumStr();
+			case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
+				return getDatatype();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
-                setSumStr((String)newValue);
-                return;
-            case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
-                setDatatype((Integer)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
+				setSumStr((String)newValue);
+				return;
+			case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
+				setDatatype((Integer)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
-                setSumStr(SUM_STR_EDEFAULT);
-                return;
-            case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
-                setDatatype(DATATYPE_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
+				setSumStr(SUM_STR_EDEFAULT);
+				return;
+			case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
+				setDatatype(DATATYPE_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
-                return SUM_STR_EDEFAULT == null ? sumStr != null : !SUM_STR_EDEFAULT.equals(sumStr);
-            case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
-                return datatype != DATATYPE_EDEFAULT;
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case IndicatorsPackage.SUM_INDICATOR__SUM_STR:
+				return SUM_STR_EDEFAULT == null ? sumStr != null : !SUM_STR_EDEFAULT.equals(sumStr);
+			case IndicatorsPackage.SUM_INDICATOR__DATATYPE:
+				return datatype != DATATYPE_EDEFAULT;
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (sumStr: ");
-        result.append(sumStr);
-        result.append(", datatype: ");
-        result.append(datatype);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (sumStr: ");
+		result.append(sumStr);
+		result.append(", datatype: ");
+		result.append(datatype);
+		result.append(')');
+		return result.toString();
+	}
 
     /*
      * (non-Javadoc) ADDED scorreia 2008-04-08 handle object

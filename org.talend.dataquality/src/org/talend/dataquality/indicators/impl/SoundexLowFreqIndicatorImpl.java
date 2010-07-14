@@ -25,21 +25,21 @@ import org.talend.utils.collections.MapValueSorter;
 public class SoundexLowFreqIndicatorImpl extends SoundexFreqIndicatorImpl implements SoundexLowFreqIndicator {
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected SoundexLowFreqIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.SOUNDEX_LOW_FREQ_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.SOUNDEX_LOW_FREQ_INDICATOR;
+	}
 
     @Override
     public boolean handle(Object data) {

@@ -25,28 +25,28 @@ package org.talend.dataquality.indicators;
  */
 public interface ModeIndicator extends Indicator {
     /**
-     * Returns the value of the '<em><b>Mode</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Mode</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * most frequent value
-     * <!-- end-model-doc -->
-     * @return the value of the '<em>Mode</em>' attribute.
-     * @see #setMode(Object)
-     * @see org.talend.dataquality.indicators.IndicatorsPackage#getModeIndicator_Mode()
-     * @model
-     * @generated
-     */
+	 * <!-- begin-model-doc -->
+	 * most frequent value
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Mode</em>' attribute.
+	 * @see #setMode(Object)
+	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getModeIndicator_Mode()
+	 * @model
+	 * @generated
+	 */
     Object getMode();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.ModeIndicator#getMode <em>Mode</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.talend.dataquality.indicators.ModeIndicator#getMode <em>Mode</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Mode</em>' attribute.
-     * @see #getMode()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Mode</em>' attribute.
+	 * @see #getMode()
+	 * @generated
+	 */
     void setMode(Object value);
 
 } // ModeIndicator

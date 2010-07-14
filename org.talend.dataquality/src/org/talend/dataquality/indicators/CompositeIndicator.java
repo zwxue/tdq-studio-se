@@ -20,36 +20,36 @@ import org.eclipse.emf.common.util.EList;
 public interface CompositeIndicator extends Indicator {
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * Returns the direct children of this composite indicator.
-     * <!-- end-model-doc -->
-     * @model kind="operation"
-     * @generated
-     */
+	 * <!-- begin-model-doc -->
+	 * Returns the direct children of this composite indicator.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
     EList<Indicator> getChildIndicators();
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * Returns the indicators that are leaf of the tree.
-     * <!-- end-model-doc -->
-     * @model kind="operation"
-     * @generated
-     */
+	 * <!-- begin-model-doc -->
+	 * Returns the indicators that are leaf of the tree.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
     EList<Indicator> getLeafIndicators();
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * Returns all the child indicators (leaf indicators or intermediate composite indicators) as a flat list.
-     * <!-- end-model-doc -->
-     * @model kind="operation"
-     * @generated
-     */
+	 * <!-- begin-model-doc -->
+	 * Returns all the child indicators (leaf indicators or intermediate composite indicators) as a flat list.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
     EList<Indicator> getAllChildIndicators();
 
 } // CompositeIndicator

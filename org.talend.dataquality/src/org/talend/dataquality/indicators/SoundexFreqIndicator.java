@@ -28,36 +28,36 @@ import java.util.HashMap;
 public interface SoundexFreqIndicator extends FrequencyIndicator {
 
     /**
-     * Returns the value of the '<em><b>Value To Distinct Freq</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Value To Distinct Freq</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Value To Distinct Freq</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Value To Distinct Freq</em>' attribute.
-     * @see #setValueToDistinctFreq(HashMap)
-     * @see org.talend.dataquality.indicators.IndicatorsPackage#getSoundexFreqIndicator_ValueToDistinctFreq()
-     * @model dataType="org.talend.dataquality.indicators.JavaHashMap"
-     * @generated
-     */
+	 * @return the value of the '<em>Value To Distinct Freq</em>' attribute.
+	 * @see #setValueToDistinctFreq(HashMap)
+	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getSoundexFreqIndicator_ValueToDistinctFreq()
+	 * @model dataType="org.talend.dataquality.indicators.JavaHashMap"
+	 * @generated
+	 */
     HashMap<Object, Long> getValueToDistinctFreq();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.SoundexFreqIndicator#getValueToDistinctFreq <em>Value To Distinct Freq</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.talend.dataquality.indicators.SoundexFreqIndicator#getValueToDistinctFreq <em>Value To Distinct Freq</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Value To Distinct Freq</em>' attribute.
-     * @see #getValueToDistinctFreq()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Value To Distinct Freq</em>' attribute.
+	 * @see #getValueToDistinctFreq()
+	 * @generated
+	 */
     void setValueToDistinctFreq(HashMap<Object, Long> value);
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @model
-     * @generated
-     */
+	 * @model
+	 * @generated
+	 */
     Long getDistinctCount(Object dataValue);
 } // SoundexFreqIndicator

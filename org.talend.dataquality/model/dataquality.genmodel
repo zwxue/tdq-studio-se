@@ -22,6 +22,7 @@
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/CATALOG"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/COLUMN_CORRELATION"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/COLUMN_SET"/>
+        <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/BUSINESS_RULE"/>
       </genEnums>
       <genEnums typeSafeEnumCompatible="false" ecoreEnum="dataquality.ecore#//analysis/ExecutionLanguage">
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/ExecutionLanguage/SQL"/>
@@ -78,6 +79,8 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/AnalyzedDataSet/dataCount"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/AnalyzedDataSet/recordSize"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/AnalyzedDataSet/data"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/AnalyzedDataSet/patternData"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/AnalyzedDataSet/frequencyData"/>
       </genClasses>
       <nestedGenPackages prefix="Category" basePackage="org.talend.dataquality.analysis"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//analysis/category">
@@ -214,6 +217,8 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/computed"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/Indicator/joinConditions"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/maxNumberRows"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/validRow"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/inValidRow"/>
         <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/handle">
           <genParameters ecoreParameter="dataquality.ecore#//indicators/Indicator/handle/data"/>
         </genOperations>
@@ -363,7 +368,9 @@
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/PatternMatchingIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/SqlPatternMatchingIndicator"/>
-      <genClasses ecoreClass="dataquality.ecore#//indicators/RegexpMatchingIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/RegexpMatchingIndicator">
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/RegexpMatchingIndicator/getRegex"/>
+      </genClasses>
       <genClasses image="false" ecoreClass="dataquality.ecore#//indicators/MatchingIndicator">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/MatchingIndicator/matchingValueCount"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/MatchingIndicator/notMatchingValueCount"/>
@@ -443,6 +450,7 @@
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/aggregate1argFunctions"/>
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/date1argFunctions"/>
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/charactersMapping"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/indicatorDefinitionParameter"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/definition/IndicatorCategory">
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/IndicatorCategory/label"/>
@@ -451,6 +459,10 @@
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/CharactersMapping/language"/>
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/CharactersMapping/charactersToReplace"/>
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/CharactersMapping/replacementCharacters"/>
+        </genClasses>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/definition/IndicatorDefinitionParameter">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/IndicatorDefinitionParameter/key"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/IndicatorDefinitionParameter/value"/>
         </genClasses>
       </nestedGenPackages>
       <nestedGenPackages prefix="IndicatorSql" basePackage="org.talend.dataquality.indicators"
@@ -514,6 +526,9 @@
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/distinctCountIndicator"/>
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/duplicateCountIndicator"/>
         </genClasses>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/AllMatchIndicator">
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/AllMatchIndicator/compositeRegexMatchingIndicators"/>
+        </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/CountAvgNullIndicator"/>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/MinMaxDateIndicator"/>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/WeakCorrelationIndicator"/>
@@ -532,6 +547,10 @@
     <nestedGenPackages prefix="Expressions" basePackage="org.talend.dataquality" disposableProviderFactory="true"
         ecorePackage="dataquality.ecore#//expressions">
       <genClasses ecoreClass="dataquality.ecore#//expressions/BooleanExpressionNode"/>
+      <genClasses ecoreClass="dataquality.ecore#//expressions/TdExpression">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//expressions/TdExpression/version"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//expressions/TdExpression/modificationDate"/>
+      </genClasses>
     </nestedGenPackages>
     <nestedGenPackages prefix="Domain" basePackage="org.talend.dataquality" disposableProviderFactory="true"
         ecorePackage="dataquality.ecore#//domain">

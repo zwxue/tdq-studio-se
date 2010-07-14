@@ -27,53 +27,53 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface ConnectionIndicator extends CatalogIndicator {
     /**
-     * Returns the value of the '<em><b>Catalog Indicators</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.indicators.schema.CatalogIndicator}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Catalog Indicators</b></em>' containment reference list.
+	 * The list contents are of type {@link org.talend.dataquality.indicators.schema.CatalogIndicator}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Catalog Indicators</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Catalog Indicators</em>' containment reference list.
-     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getConnectionIndicator_CatalogIndicators()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Catalog Indicators</em>' containment reference list.
+	 * @see org.talend.dataquality.indicators.schema.SchemaPackage#getConnectionIndicator_CatalogIndicators()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<CatalogIndicator> getCatalogIndicators();
 
     /**
-     * Returns the value of the '<em><b>Catalog Count</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Catalog Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Catalog Count</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Catalog Count</em>' attribute.
-     * @see #setCatalogCount(int)
-     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getConnectionIndicator_CatalogCount()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Catalog Count</em>' attribute.
+	 * @see #setCatalogCount(int)
+	 * @see org.talend.dataquality.indicators.schema.SchemaPackage#getConnectionIndicator_CatalogCount()
+	 * @model
+	 * @generated
+	 */
     int getCatalogCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.schema.ConnectionIndicator#getCatalogCount <em>Catalog Count</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.talend.dataquality.indicators.schema.ConnectionIndicator#getCatalogCount <em>Catalog Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Catalog Count</em>' attribute.
-     * @see #getCatalogCount()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Catalog Count</em>' attribute.
+	 * @see #getCatalogCount()
+	 * @generated
+	 */
     void setCatalogCount(int value);
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @model
-     * @generated
-     */
+	 * @model
+	 * @generated
+	 */
     boolean addCatalogIndicator(CatalogIndicator catalogIndicator);
 
 } // ConnectionIndicator

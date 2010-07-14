@@ -22,21 +22,21 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements WhereRuleIndicator {
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected WhereRuleIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorSqlPackage.Literals.WHERE_RULE_INDICATOR;
-    }
+		return IndicatorSqlPackage.Literals.WHERE_RULE_INDICATOR;
+	}
 
     /*
      * (non-Javadoc)

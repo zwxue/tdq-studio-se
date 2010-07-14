@@ -34,171 +34,171 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class DQRuleImpl extends IndicatorDefinitionImpl implements DQRule {
     /**
-     * The default value of the '{@link #getCriticalityLevel() <em>Criticality Level</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getCriticalityLevel() <em>Criticality Level</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getCriticalityLevel()
-     * @generated
-     * @ordered
-     */
+	 * @see #getCriticalityLevel()
+	 * @generated
+	 * @ordered
+	 */
     protected static final int CRITICALITY_LEVEL_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getCriticalityLevel() <em>Criticality Level</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCriticalityLevel() <em>Criticality Level</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getCriticalityLevel()
-     * @generated
-     * @ordered
-     */
+	 * @see #getCriticalityLevel()
+	 * @generated
+	 * @ordered
+	 */
     protected int criticalityLevel = CRITICALITY_LEVEL_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getElements() <em>Elements</em>}' reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getElements() <em>Elements</em>}' reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getElements()
-     * @generated
-     * @ordered
-     */
+	 * @see #getElements()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<ModelElement> elements;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected DQRuleImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return RulesPackage.Literals.DQ_RULE;
-    }
+		return RulesPackage.Literals.DQ_RULE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public int getCriticalityLevel() {
-        return criticalityLevel;
-    }
+		return criticalityLevel;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setCriticalityLevel(int newCriticalityLevel) {
-        int oldCriticalityLevel = criticalityLevel;
-        criticalityLevel = newCriticalityLevel;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.DQ_RULE__CRITICALITY_LEVEL, oldCriticalityLevel, criticalityLevel));
-    }
+		int oldCriticalityLevel = criticalityLevel;
+		criticalityLevel = newCriticalityLevel;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.DQ_RULE__CRITICALITY_LEVEL, oldCriticalityLevel, criticalityLevel));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<ModelElement> getElements() {
-        if (elements == null) {
-            elements = new EObjectResolvingEList<ModelElement>(ModelElement.class, this, RulesPackage.DQ_RULE__ELEMENTS);
-        }
-        return elements;
-    }
+		if (elements == null) {
+			elements = new EObjectResolvingEList<ModelElement>(ModelElement.class, this, RulesPackage.DQ_RULE__ELEMENTS);
+		}
+		return elements;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
-                return getCriticalityLevel();
-            case RulesPackage.DQ_RULE__ELEMENTS:
-                return getElements();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
+				return getCriticalityLevel();
+			case RulesPackage.DQ_RULE__ELEMENTS:
+				return getElements();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
-                setCriticalityLevel((Integer)newValue);
-                return;
-            case RulesPackage.DQ_RULE__ELEMENTS:
-                getElements().clear();
-                getElements().addAll((Collection<? extends ModelElement>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
+				setCriticalityLevel((Integer)newValue);
+				return;
+			case RulesPackage.DQ_RULE__ELEMENTS:
+				getElements().clear();
+				getElements().addAll((Collection<? extends ModelElement>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
-                setCriticalityLevel(CRITICALITY_LEVEL_EDEFAULT);
-                return;
-            case RulesPackage.DQ_RULE__ELEMENTS:
-                getElements().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
+				setCriticalityLevel(CRITICALITY_LEVEL_EDEFAULT);
+				return;
+			case RulesPackage.DQ_RULE__ELEMENTS:
+				getElements().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
-                return criticalityLevel != CRITICALITY_LEVEL_EDEFAULT;
-            case RulesPackage.DQ_RULE__ELEMENTS:
-                return elements != null && !elements.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
+				return criticalityLevel != CRITICALITY_LEVEL_EDEFAULT;
+			case RulesPackage.DQ_RULE__ELEMENTS:
+				return elements != null && !elements.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (criticalityLevel: ");
-        result.append(criticalityLevel);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (criticalityLevel: ");
+		result.append(criticalityLevel);
+		result.append(')');
+		return result.toString();
+	}
 
 } //DQRuleImpl

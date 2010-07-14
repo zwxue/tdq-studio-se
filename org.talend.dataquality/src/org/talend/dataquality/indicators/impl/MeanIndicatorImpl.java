@@ -17,21 +17,21 @@ import org.talend.dataquality.indicators.MeanIndicator;
 public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator {
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected MeanIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.MEAN_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.MEAN_INDICATOR;
+	}
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -85,14 +85,14 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     public Double getMeanWithNulls(double valueForNull) {
-        // TODO: implement this method
-        // Ensure that you remove @generated or mark it @generated NOT
-        throw new UnsupportedOperationException();
-    }
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
 
     /*
      * (non-Javadoc)

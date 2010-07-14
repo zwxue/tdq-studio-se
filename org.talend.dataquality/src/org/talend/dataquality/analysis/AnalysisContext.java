@@ -30,44 +30,44 @@ import orgomg.cwmx.analysis.informationreporting.ReportGroup;
  */
 public interface AnalysisContext extends ReportGroup {
     /**
-     * Returns the value of the '<em><b>Connection</b></em>' reference.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Connection</b></em>' reference.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Connection</em>' reference isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Connection</em>' reference.
-     * @see #setConnection(DataManager)
-     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisContext_Connection()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Connection</em>' reference.
+	 * @see #setConnection(DataManager)
+	 * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisContext_Connection()
+	 * @model
+	 * @generated
+	 */
     DataManager getConnection();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.analysis.AnalysisContext#getConnection <em>Connection</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.talend.dataquality.analysis.AnalysisContext#getConnection <em>Connection</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Connection</em>' reference.
-     * @see #getConnection()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Connection</em>' reference.
+	 * @see #getConnection()
+	 * @generated
+	 */
     void setConnection(DataManager value);
 
     /**
-     * Returns the value of the '<em><b>Analysed Elements</b></em>' reference list.
-     * The list contents are of type {@link orgomg.cwm.objectmodel.core.ModelElement}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Analysed Elements</b></em>' reference list.
+	 * The list contents are of type {@link orgomg.cwm.objectmodel.core.ModelElement}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * the analysed object (could be a Catalog, a Schema, a Table, a ColumnSet, a Column, ...)
-     * <!-- end-model-doc -->
-     * @return the value of the '<em>Analysed Elements</em>' reference list.
-     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisContext_AnalysedElements()
-     * @model
-     * @generated
-     */
+	 * <!-- begin-model-doc -->
+	 * the analysed object (could be a Catalog, a Schema, a Table, a ColumnSet, a Column, ...)
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Analysed Elements</em>' reference list.
+	 * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisContext_AnalysedElements()
+	 * @model
+	 * @generated
+	 */
     EList<ModelElement> getAnalysedElements();
 
 } // AnalysisContext

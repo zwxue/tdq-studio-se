@@ -27,20 +27,20 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 public interface AllMatchIndicator extends ColumnSetMultiValueIndicator, RegexpMatchingIndicator {
 
     /**
-     * Returns the value of the '<em><b>Composite Regex Matching Indicators</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.dataquality.indicators.RegexpMatchingIndicator}.
-     * <!-- begin-user-doc
+	 * Returns the value of the '<em><b>Composite Regex Matching Indicators</b></em>' containment reference list.
+	 * The list contents are of type {@link org.talend.dataquality.indicators.RegexpMatchingIndicator}.
+	 * <!-- begin-user-doc
      * -->
      * <p>
      * If the meaning of the '<em>Composite Regex Matching Indicators</em>' reference list isn't clear, there really
      * should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Composite Regex Matching Indicators</em>' containment reference list.
-     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getAllMatchIndicator_CompositeRegexMatchingIndicators()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Composite Regex Matching Indicators</em>' containment reference list.
+	 * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getAllMatchIndicator_CompositeRegexMatchingIndicators()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<RegexpMatchingIndicator> getCompositeRegexMatchingIndicators();
 
 } // AllMatchIndicator

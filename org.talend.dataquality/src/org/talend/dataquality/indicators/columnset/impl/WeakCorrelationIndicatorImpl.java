@@ -21,22 +21,22 @@ import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
  */
 public class WeakCorrelationIndicatorImpl extends ColumnSetMultiValueIndicatorImpl implements WeakCorrelationIndicator {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected WeakCorrelationIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ColumnsetPackage.Literals.WEAK_CORRELATION_INDICATOR;
-    }
+		return ColumnsetPackage.Literals.WEAK_CORRELATION_INDICATOR;
+	}
 
 } //WeakCorrelationIndicatorImpl

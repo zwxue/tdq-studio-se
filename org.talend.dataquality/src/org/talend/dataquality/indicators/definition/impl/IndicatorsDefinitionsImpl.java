@@ -37,153 +37,153 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  */
 public class IndicatorsDefinitionsImpl extends ModelElementImpl implements IndicatorsDefinitions {
     /**
-     * The cached value of the '{@link #getIndicatorDefinitions() <em>Indicator Definitions</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getIndicatorDefinitions() <em>Indicator Definitions</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getIndicatorDefinitions()
-     * @generated
-     * @ordered
-     */
+	 * @see #getIndicatorDefinitions()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<IndicatorDefinition> indicatorDefinitions;
 
     /**
-     * The cached value of the '{@link #getCategories() <em>Categories</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCategories() <em>Categories</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getCategories()
-     * @generated
-     * @ordered
-     */
+	 * @see #getCategories()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<IndicatorCategory> categories;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected IndicatorsDefinitionsImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return DefinitionPackage.Literals.INDICATORS_DEFINITIONS;
-    }
+		return DefinitionPackage.Literals.INDICATORS_DEFINITIONS;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<IndicatorDefinition> getIndicatorDefinitions() {
-        if (indicatorDefinitions == null) {
-            indicatorDefinitions = new EObjectContainmentEList<IndicatorDefinition>(IndicatorDefinition.class, this, DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS);
-        }
-        return indicatorDefinitions;
-    }
+		if (indicatorDefinitions == null) {
+			indicatorDefinitions = new EObjectContainmentEList<IndicatorDefinition>(IndicatorDefinition.class, this, DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS);
+		}
+		return indicatorDefinitions;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<IndicatorCategory> getCategories() {
-        if (categories == null) {
-            categories = new EObjectContainmentEList<IndicatorCategory>(IndicatorCategory.class, this, DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES);
-        }
-        return categories;
-    }
+		if (categories == null) {
+			categories = new EObjectContainmentEList<IndicatorCategory>(IndicatorCategory.class, this, DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES);
+		}
+		return categories;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
-                return ((InternalEList<?>)getIndicatorDefinitions()).basicRemove(otherEnd, msgs);
-            case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
-                return ((InternalEList<?>)getCategories()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
+				return ((InternalEList<?>)getIndicatorDefinitions()).basicRemove(otherEnd, msgs);
+			case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
+				return ((InternalEList<?>)getCategories()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
-                return getIndicatorDefinitions();
-            case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
-                return getCategories();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
+				return getIndicatorDefinitions();
+			case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
+				return getCategories();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
-                getIndicatorDefinitions().clear();
-                getIndicatorDefinitions().addAll((Collection<? extends IndicatorDefinition>)newValue);
-                return;
-            case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
-                getCategories().clear();
-                getCategories().addAll((Collection<? extends IndicatorCategory>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
+				getIndicatorDefinitions().clear();
+				getIndicatorDefinitions().addAll((Collection<? extends IndicatorDefinition>)newValue);
+				return;
+			case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
+				getCategories().clear();
+				getCategories().addAll((Collection<? extends IndicatorCategory>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
-                getIndicatorDefinitions().clear();
-                return;
-            case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
-                getCategories().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
+				getIndicatorDefinitions().clear();
+				return;
+			case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
+				getCategories().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
-                return indicatorDefinitions != null && !indicatorDefinitions.isEmpty();
-            case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
-                return categories != null && !categories.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case DefinitionPackage.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS:
+				return indicatorDefinitions != null && !indicatorDefinitions.isEmpty();
+			case DefinitionPackage.INDICATORS_DEFINITIONS__CATEGORIES:
+				return categories != null && !categories.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //IndicatorsDefinitionsImpl

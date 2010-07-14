@@ -18,74 +18,74 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface AnalysisFactory extends EFactory {
     /**
-     * The singleton instance of the factory.
-     * <!-- begin-user-doc -->
+	 * The singleton instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     AnalysisFactory eINSTANCE = org.talend.dataquality.analysis.impl.AnalysisFactoryImpl.init();
 
     /**
-     * Returns a new object of class '<em>Analysis</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Analysis</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Analysis</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Analysis</em>'.
+	 * @generated
+	 */
     Analysis createAnalysis();
 
     /**
-     * Returns a new object of class '<em>Context</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Context</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Context</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Context</em>'.
+	 * @generated
+	 */
     AnalysisContext createAnalysisContext();
 
     /**
-     * Returns a new object of class '<em>Parameters</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Parameters</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Parameters</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Parameters</em>'.
+	 * @generated
+	 */
     AnalysisParameters createAnalysisParameters();
 
     /**
-     * Returns a new object of class '<em>Result</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Result</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Result</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Result</em>'.
+	 * @generated
+	 */
     AnalysisResult createAnalysisResult();
 
     /**
-     * Returns a new object of class '<em>Execution Informations</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Execution Informations</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Execution Informations</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Execution Informations</em>'.
+	 * @generated
+	 */
     ExecutionInformations createExecutionInformations();
 
     /**
-     * Returns a new object of class '<em>Analyzed Data Set</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Analyzed Data Set</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Analyzed Data Set</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Analyzed Data Set</em>'.
+	 * @generated
+	 */
     AnalyzedDataSet createAnalyzedDataSet();
 
     /**
-     * Returns the package supported by this factory.
-     * <!-- begin-user-doc -->
+	 * Returns the package supported by this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the package supported by this factory.
-     * @generated
-     */
+	 * @return the package supported by this factory.
+	 * @generated
+	 */
     AnalysisPackage getAnalysisPackage();
 
 } //AnalysisFactory

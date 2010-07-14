@@ -20,21 +20,21 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
 public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLengthIndicator {
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected MinLengthIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.MIN_LENGTH_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.MIN_LENGTH_INDICATOR;
+	}
 
     /*
      * (non-Javadoc) ADDED scorreia 2008-04-08 compute min length

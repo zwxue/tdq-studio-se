@@ -34,118 +34,118 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  */
 public class PatternImpl extends ModelElementImpl implements Pattern {
     /**
-     * The cached value of the '{@link #getComponents() <em>Components</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getComponents() <em>Components</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getComponents()
-     * @generated
-     * @ordered
-     */
+	 * @see #getComponents()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<PatternComponent> components;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PatternImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return PatternPackage.Literals.PATTERN;
-    }
+		return PatternPackage.Literals.PATTERN;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<PatternComponent> getComponents() {
-        if (components == null) {
-            components = new EObjectContainmentEList<PatternComponent>(PatternComponent.class, this, PatternPackage.PATTERN__COMPONENTS);
-        }
-        return components;
-    }
+		if (components == null) {
+			components = new EObjectContainmentEList<PatternComponent>(PatternComponent.class, this, PatternPackage.PATTERN__COMPONENTS);
+		}
+		return components;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case PatternPackage.PATTERN__COMPONENTS:
-                return ((InternalEList<?>)getComponents()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case PatternPackage.PATTERN__COMPONENTS:
+				return ((InternalEList<?>)getComponents()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case PatternPackage.PATTERN__COMPONENTS:
-                return getComponents();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case PatternPackage.PATTERN__COMPONENTS:
+				return getComponents();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case PatternPackage.PATTERN__COMPONENTS:
-                getComponents().clear();
-                getComponents().addAll((Collection<? extends PatternComponent>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case PatternPackage.PATTERN__COMPONENTS:
+				getComponents().clear();
+				getComponents().addAll((Collection<? extends PatternComponent>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case PatternPackage.PATTERN__COMPONENTS:
-                getComponents().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case PatternPackage.PATTERN__COMPONENTS:
+				getComponents().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case PatternPackage.PATTERN__COMPONENTS:
-                return components != null && !components.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case PatternPackage.PATTERN__COMPONENTS:
+				return components != null && !components.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //PatternImpl

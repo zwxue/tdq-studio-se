@@ -33,21 +33,21 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     private DatePatternRetriever dateRetriever;
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected DatePatternFreqIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.DATE_PATTERN_FREQ_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.DATE_PATTERN_FREQ_INDICATOR;
+	}
 
     /*
      * (non-Javadoc)

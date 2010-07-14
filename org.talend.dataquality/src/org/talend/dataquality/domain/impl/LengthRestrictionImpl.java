@@ -29,190 +29,190 @@ import org.talend.dataquality.domain.LengthRestriction;
  */
 public class LengthRestrictionImpl extends EObjectImpl implements LengthRestriction {
     /**
-     * The default value of the '{@link #getMaximum() <em>Maximum</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getMaximum() <em>Maximum</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMaximum()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMaximum()
+	 * @generated
+	 * @ordered
+	 */
     protected static final int MAXIMUM_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getMaximum() <em>Maximum</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMaximum() <em>Maximum</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMaximum()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMaximum()
+	 * @generated
+	 * @ordered
+	 */
     protected int maximum = MAXIMUM_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getMinimum() <em>Minimum</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getMinimum() <em>Minimum</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMinimum()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMinimum()
+	 * @generated
+	 * @ordered
+	 */
     protected static final int MINIMUM_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getMinimum() <em>Minimum</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMinimum() <em>Minimum</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMinimum()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMinimum()
+	 * @generated
+	 * @ordered
+	 */
     protected int minimum = MINIMUM_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected LengthRestrictionImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return DomainPackage.Literals.LENGTH_RESTRICTION;
-    }
+		return DomainPackage.Literals.LENGTH_RESTRICTION;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public int getMaximum() {
-        return maximum;
-    }
+		return maximum;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setMaximum(int newMaximum) {
-        int oldMaximum = maximum;
-        maximum = newMaximum;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, DomainPackage.LENGTH_RESTRICTION__MAXIMUM, oldMaximum, maximum));
-    }
+		int oldMaximum = maximum;
+		maximum = newMaximum;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DomainPackage.LENGTH_RESTRICTION__MAXIMUM, oldMaximum, maximum));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public int getMinimum() {
-        return minimum;
-    }
+		return minimum;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setMinimum(int newMinimum) {
-        int oldMinimum = minimum;
-        minimum = newMinimum;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, DomainPackage.LENGTH_RESTRICTION__MINIMUM, oldMinimum, minimum));
-    }
+		int oldMinimum = minimum;
+		minimum = newMinimum;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DomainPackage.LENGTH_RESTRICTION__MINIMUM, oldMinimum, minimum));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
-                return getMaximum();
-            case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
-                return getMinimum();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
+				return getMaximum();
+			case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
+				return getMinimum();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
-                setMaximum((Integer)newValue);
-                return;
-            case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
-                setMinimum((Integer)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
+				setMaximum((Integer)newValue);
+				return;
+			case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
+				setMinimum((Integer)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
-                setMaximum(MAXIMUM_EDEFAULT);
-                return;
-            case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
-                setMinimum(MINIMUM_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
+				setMaximum(MAXIMUM_EDEFAULT);
+				return;
+			case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
+				setMinimum(MINIMUM_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
-                return maximum != MAXIMUM_EDEFAULT;
-            case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
-                return minimum != MINIMUM_EDEFAULT;
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
+				return maximum != MAXIMUM_EDEFAULT;
+			case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
+				return minimum != MINIMUM_EDEFAULT;
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (maximum: ");
-        result.append(maximum);
-        result.append(", minimum: ");
-        result.append(minimum);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (maximum: ");
+		result.append(maximum);
+		result.append(", minimum: ");
+		result.append(minimum);
+		result.append(')');
+		return result.toString();
+	}
 
 } //LengthRestrictionImpl

@@ -28,32 +28,32 @@ import java.util.Set;
 public interface UniqueCountIndicator extends Indicator {
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @model kind="operation" dataType="org.talend.dataquality.indicators.JavaSet"
-     * @generated
-     */
+	 * @model kind="operation" dataType="org.talend.dataquality.indicators.JavaSet"
+	 * @generated
+	 */
     Set<Object> getUniqueValues();
 
     /**
-     * Returns the value of the '<em><b>Unique Value Count</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Unique Value Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Unique Value Count</em>' attribute.
-     * @see #setUniqueValueCount(Long)
-     * @see org.talend.dataquality.indicators.IndicatorsPackage#getUniqueCountIndicator_UniqueValueCount()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Unique Value Count</em>' attribute.
+	 * @see #setUniqueValueCount(Long)
+	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getUniqueCountIndicator_UniqueValueCount()
+	 * @model
+	 * @generated
+	 */
     Long getUniqueValueCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.UniqueCountIndicator#getUniqueValueCount <em>Unique Value Count</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.talend.dataquality.indicators.UniqueCountIndicator#getUniqueValueCount <em>Unique Value Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Unique Value Count</em>' attribute.
-     * @see #getUniqueValueCount()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Unique Value Count</em>' attribute.
+	 * @see #getUniqueValueCount()
+	 * @generated
+	 */
     void setUniqueValueCount(Long value);
 } // UniqueCountIndicator

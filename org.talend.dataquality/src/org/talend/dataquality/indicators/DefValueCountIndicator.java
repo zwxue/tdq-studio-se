@@ -29,30 +29,30 @@ package org.talend.dataquality.indicators;
  */
 public interface DefValueCountIndicator extends Indicator {
     /**
-     * Returns the value of the '<em><b>Default Val Count</b></em>' attribute.
-     * The default value is <code>"0"</code>.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Default Val Count</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Default Val Count</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Default Val Count</em>' attribute.
-     * @see #setDefaultValCount(Long)
-     * @see org.talend.dataquality.indicators.IndicatorsPackage#getDefValueCountIndicator_DefaultValCount()
-     * @model default="0"
-     * @generated
-     */
+	 * @return the value of the '<em>Default Val Count</em>' attribute.
+	 * @see #setDefaultValCount(Long)
+	 * @see org.talend.dataquality.indicators.IndicatorsPackage#getDefValueCountIndicator_DefaultValCount()
+	 * @model default="0"
+	 * @generated
+	 */
     Long getDefaultValCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.DefValueCountIndicator#getDefaultValCount <em>Default Val Count</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.talend.dataquality.indicators.DefValueCountIndicator#getDefaultValCount <em>Default Val Count</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Default Val Count</em>' attribute.
-     * @see #getDefaultValCount()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Default Val Count</em>' attribute.
+	 * @see #getDefaultValCount()
+	 * @generated
+	 */
     void setDefaultValCount(Long value);
 
 } // DefValueCountIndicator

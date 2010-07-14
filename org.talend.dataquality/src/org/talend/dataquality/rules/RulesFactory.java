@@ -29,65 +29,65 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface RulesFactory extends EFactory {
     /**
-     * The singleton instance of the factory.
-     * <!-- begin-user-doc -->
+	 * The singleton instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     RulesFactory eINSTANCE = org.talend.dataquality.rules.impl.RulesFactoryImpl.init();
 
     /**
-     * Returns a new object of class '<em>DQ Rule</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>DQ Rule</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>DQ Rule</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>DQ Rule</em>'.
+	 * @generated
+	 */
     DQRule createDQRule();
 
     /**
-     * Returns a new object of class '<em>Specified DQ Rule</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Specified DQ Rule</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Specified DQ Rule</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Specified DQ Rule</em>'.
+	 * @generated
+	 */
     SpecifiedDQRule createSpecifiedDQRule();
 
     /**
-     * Returns a new object of class '<em>Inferred DQ Rule</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Inferred DQ Rule</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Inferred DQ Rule</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Inferred DQ Rule</em>'.
+	 * @generated
+	 */
     InferredDQRule createInferredDQRule();
 
     /**
-     * Returns a new object of class '<em>Where Rule</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Where Rule</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Where Rule</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Where Rule</em>'.
+	 * @generated
+	 */
     WhereRule createWhereRule();
 
     /**
-     * Returns a new object of class '<em>Join Element</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Join Element</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Join Element</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Join Element</em>'.
+	 * @generated
+	 */
     JoinElement createJoinElement();
 
     /**
-     * Returns the package supported by this factory.
-     * <!-- begin-user-doc -->
+	 * Returns the package supported by this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the package supported by this factory.
-     * @generated
-     */
+	 * @return the package supported by this factory.
+	 * @generated
+	 */
     RulesPackage getRulesPackage();
 
 } //RulesFactory

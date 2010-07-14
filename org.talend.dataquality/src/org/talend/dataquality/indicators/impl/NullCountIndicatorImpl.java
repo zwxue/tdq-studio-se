@@ -22,21 +22,21 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 public class NullCountIndicatorImpl extends IndicatorImpl implements NullCountIndicator {
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected NullCountIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.NULL_COUNT_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.NULL_COUNT_INDICATOR;
+	}
 
     /*
      * (non-Javadoc) ADDED scorreia 2008-04-08 toString()

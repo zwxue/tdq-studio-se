@@ -26,109 +26,120 @@ import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
  */
 public class DefinitionFactoryImpl extends EFactoryImpl implements DefinitionFactory {
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public static DefinitionFactory init() {
-        try {
-            DefinitionFactory theDefinitionFactory = (DefinitionFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.definition"); 
-            if (theDefinitionFactory != null) {
-                return theDefinitionFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new DefinitionFactoryImpl();
-    }
+		try {
+			DefinitionFactory theDefinitionFactory = (DefinitionFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.indicators.definition"); 
+			if (theDefinitionFactory != null) {
+				return theDefinitionFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new DefinitionFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DefinitionFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case DefinitionPackage.INDICATORS_DEFINITIONS: return createIndicatorsDefinitions();
-            case DefinitionPackage.INDICATOR_DEFINITION: return createIndicatorDefinition();
-            case DefinitionPackage.INDICATOR_CATEGORY: return createIndicatorCategory();
-            case DefinitionPackage.CHARACTERS_MAPPING: return createCharactersMapping();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case DefinitionPackage.INDICATORS_DEFINITIONS: return createIndicatorsDefinitions();
+			case DefinitionPackage.INDICATOR_DEFINITION: return createIndicatorDefinition();
+			case DefinitionPackage.INDICATOR_CATEGORY: return createIndicatorCategory();
+			case DefinitionPackage.CHARACTERS_MAPPING: return createCharactersMapping();
+			case DefinitionPackage.INDICATOR_DEFINITION_PARAMETER: return createIndicatorDefinitionParameter();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public IndicatorsDefinitions createIndicatorsDefinitions() {
-        IndicatorsDefinitionsImpl indicatorsDefinitions = new IndicatorsDefinitionsImpl();
-        return indicatorsDefinitions;
-    }
+		IndicatorsDefinitionsImpl indicatorsDefinitions = new IndicatorsDefinitionsImpl();
+		return indicatorsDefinitions;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public IndicatorDefinition createIndicatorDefinition() {
-        IndicatorDefinitionImpl indicatorDefinition = new IndicatorDefinitionImpl();
-        return indicatorDefinition;
-    }
+		IndicatorDefinitionImpl indicatorDefinition = new IndicatorDefinitionImpl();
+		return indicatorDefinition;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public IndicatorCategory createIndicatorCategory() {
-        IndicatorCategoryImpl indicatorCategory = new IndicatorCategoryImpl();
-        return indicatorCategory;
-    }
+		IndicatorCategoryImpl indicatorCategory = new IndicatorCategoryImpl();
+		return indicatorCategory;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public CharactersMapping createCharactersMapping() {
-        CharactersMappingImpl charactersMapping = new CharactersMappingImpl();
-        return charactersMapping;
-    }
+		CharactersMappingImpl charactersMapping = new CharactersMappingImpl();
+		return charactersMapping;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IndicatorDefinitionParameter createIndicatorDefinitionParameter() {
+		IndicatorDefinitionParameterImpl indicatorDefinitionParameter = new IndicatorDefinitionParameterImpl();
+		return indicatorDefinitionParameter;
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DefinitionPackage getDefinitionPackage() {
-        return (DefinitionPackage)getEPackage();
-    }
+		return (DefinitionPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static DefinitionPackage getPackage() {
-        return DefinitionPackage.eINSTANCE;
-    }
+		return DefinitionPackage.eINSTANCE;
+	}
 
 } //DefinitionFactoryImpl

@@ -31,196 +31,196 @@ import orgomg.cwm.analysis.informationvisualization.impl.RenderingImpl;
  */
 public class PresentationParameterImpl extends RenderingImpl implements PresentationParameter {
     /**
-     * The default value of the '{@link #getPlotType() <em>Plot Type</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getPlotType() <em>Plot Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getPlotType()
-     * @generated
-     * @ordered
-     */
+	 * @see #getPlotType()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String PLOT_TYPE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getPlotType() <em>Plot Type</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPlotType() <em>Plot Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getPlotType()
-     * @generated
-     * @ordered
-     */
+	 * @see #getPlotType()
+	 * @generated
+	 * @ordered
+	 */
     protected String plotType = PLOT_TYPE_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getIndicator() <em>Indicator</em>}' reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getIndicator() <em>Indicator</em>}' reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getIndicator()
-     * @generated
-     * @ordered
-     */
+	 * @see #getIndicator()
+	 * @generated
+	 * @ordered
+	 */
     protected Indicator indicator;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PresentationParameterImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ReportsPackage.Literals.PRESENTATION_PARAMETER;
-    }
+		return ReportsPackage.Literals.PRESENTATION_PARAMETER;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getPlotType() {
-        return plotType;
-    }
+		return plotType;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setPlotType(String newPlotType) {
-        String oldPlotType = plotType;
-        plotType = newPlotType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE, oldPlotType, plotType));
-    }
+		String oldPlotType = plotType;
+		plotType = newPlotType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE, oldPlotType, plotType));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Indicator getIndicator() {
-        if (indicator != null && indicator.eIsProxy()) {
-            InternalEObject oldIndicator = (InternalEObject)indicator;
-            indicator = (Indicator)eResolveProxy(oldIndicator);
-            if (indicator != oldIndicator) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReportsPackage.PRESENTATION_PARAMETER__INDICATOR, oldIndicator, indicator));
-            }
-        }
-        return indicator;
-    }
+		if (indicator != null && indicator.eIsProxy()) {
+			InternalEObject oldIndicator = (InternalEObject)indicator;
+			indicator = (Indicator)eResolveProxy(oldIndicator);
+			if (indicator != oldIndicator) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ReportsPackage.PRESENTATION_PARAMETER__INDICATOR, oldIndicator, indicator));
+			}
+		}
+		return indicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Indicator basicGetIndicator() {
-        return indicator;
-    }
+		return indicator;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setIndicator(Indicator newIndicator) {
-        Indicator oldIndicator = indicator;
-        indicator = newIndicator;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.PRESENTATION_PARAMETER__INDICATOR, oldIndicator, indicator));
-    }
+		Indicator oldIndicator = indicator;
+		indicator = newIndicator;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.PRESENTATION_PARAMETER__INDICATOR, oldIndicator, indicator));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE:
-                return getPlotType();
-            case ReportsPackage.PRESENTATION_PARAMETER__INDICATOR:
-                if (resolve) return getIndicator();
-                return basicGetIndicator();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE:
+				return getPlotType();
+			case ReportsPackage.PRESENTATION_PARAMETER__INDICATOR:
+				if (resolve) return getIndicator();
+				return basicGetIndicator();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE:
-                setPlotType((String)newValue);
-                return;
-            case ReportsPackage.PRESENTATION_PARAMETER__INDICATOR:
-                setIndicator((Indicator)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE:
+				setPlotType((String)newValue);
+				return;
+			case ReportsPackage.PRESENTATION_PARAMETER__INDICATOR:
+				setIndicator((Indicator)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE:
-                setPlotType(PLOT_TYPE_EDEFAULT);
-                return;
-            case ReportsPackage.PRESENTATION_PARAMETER__INDICATOR:
-                setIndicator((Indicator)null);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE:
+				setPlotType(PLOT_TYPE_EDEFAULT);
+				return;
+			case ReportsPackage.PRESENTATION_PARAMETER__INDICATOR:
+				setIndicator((Indicator)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE:
-                return PLOT_TYPE_EDEFAULT == null ? plotType != null : !PLOT_TYPE_EDEFAULT.equals(plotType);
-            case ReportsPackage.PRESENTATION_PARAMETER__INDICATOR:
-                return indicator != null;
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case ReportsPackage.PRESENTATION_PARAMETER__PLOT_TYPE:
+				return PLOT_TYPE_EDEFAULT == null ? plotType != null : !PLOT_TYPE_EDEFAULT.equals(plotType);
+			case ReportsPackage.PRESENTATION_PARAMETER__INDICATOR:
+				return indicator != null;
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (plotType: ");
-        result.append(plotType);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (plotType: ");
+		result.append(plotType);
+		result.append(')');
+		return result.toString();
+	}
 
 } //PresentationParameterImpl

@@ -29,21 +29,21 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
     private TreeMap<Object, Long> frequenceTable = new TreeMap<Object, Long>();
     
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     protected UpperQuartileIndicatorImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.UPPER_QUARTILE_INDICATOR;
-    }
+		return IndicatorsPackage.Literals.UPPER_QUARTILE_INDICATOR;
+	}
 
     /*
      * (non-Javadoc)

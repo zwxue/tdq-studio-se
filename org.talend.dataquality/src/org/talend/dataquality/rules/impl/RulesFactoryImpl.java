@@ -28,120 +28,120 @@ import org.talend.dataquality.rules.WhereRule;
  */
 public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public static RulesFactory init() {
-        try {
-            RulesFactory theRulesFactory = (RulesFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.rules"); 
-            if (theRulesFactory != null) {
-                return theRulesFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new RulesFactoryImpl();
-    }
+		try {
+			RulesFactory theRulesFactory = (RulesFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.rules"); 
+			if (theRulesFactory != null) {
+				return theRulesFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new RulesFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public RulesFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case RulesPackage.DQ_RULE: return createDQRule();
-            case RulesPackage.SPECIFIED_DQ_RULE: return createSpecifiedDQRule();
-            case RulesPackage.INFERRED_DQ_RULE: return createInferredDQRule();
-            case RulesPackage.WHERE_RULE: return createWhereRule();
-            case RulesPackage.JOIN_ELEMENT: return createJoinElement();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case RulesPackage.DQ_RULE: return createDQRule();
+			case RulesPackage.SPECIFIED_DQ_RULE: return createSpecifiedDQRule();
+			case RulesPackage.INFERRED_DQ_RULE: return createInferredDQRule();
+			case RulesPackage.WHERE_RULE: return createWhereRule();
+			case RulesPackage.JOIN_ELEMENT: return createJoinElement();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DQRule createDQRule() {
-        DQRuleImpl dqRule = new DQRuleImpl();
-        return dqRule;
-    }
+		DQRuleImpl dqRule = new DQRuleImpl();
+		return dqRule;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public SpecifiedDQRule createSpecifiedDQRule() {
-        SpecifiedDQRuleImpl specifiedDQRule = new SpecifiedDQRuleImpl();
-        return specifiedDQRule;
-    }
+		SpecifiedDQRuleImpl specifiedDQRule = new SpecifiedDQRuleImpl();
+		return specifiedDQRule;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public InferredDQRule createInferredDQRule() {
-        InferredDQRuleImpl inferredDQRule = new InferredDQRuleImpl();
-        return inferredDQRule;
-    }
+		InferredDQRuleImpl inferredDQRule = new InferredDQRuleImpl();
+		return inferredDQRule;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public WhereRule createWhereRule() {
-        WhereRuleImpl whereRule = new WhereRuleImpl();
-        return whereRule;
-    }
+		WhereRuleImpl whereRule = new WhereRuleImpl();
+		return whereRule;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public JoinElement createJoinElement() {
-        JoinElementImpl joinElement = new JoinElementImpl();
-        return joinElement;
-    }
+		JoinElementImpl joinElement = new JoinElementImpl();
+		return joinElement;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public RulesPackage getRulesPackage() {
-        return (RulesPackage)getEPackage();
-    }
+		return (RulesPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static RulesPackage getPackage() {
-        return RulesPackage.eINSTANCE;
-    }
+		return RulesPackage.eINSTANCE;
+	}
 
 } //RulesFactoryImpl
