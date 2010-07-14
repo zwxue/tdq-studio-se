@@ -57,6 +57,9 @@ public class AnalysisWriter extends AElementPersistance {
 
         List<IndicatorDefinition> udis = AnalysisHelper.getUserDefinedIndicators(analysis);
         for (IndicatorDefinition udi : udis) {
+            if (udi == null) {
+                continue;
+            }
             InternalEObject iudi = (InternalEObject) udi;
             if (!iudi.eIsProxy()) {
                 TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis, udi);

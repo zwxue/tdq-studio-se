@@ -96,7 +96,7 @@ public final class DefinitionHandler {
     /**
      * plugin relative path to the default file.
      */
-    private static final String FILENAME = ".Talend." + FactoriesUtil.DEFINITION; //$NON-NLS-1$
+    public static final String FILENAME = ".Talend." + FactoriesUtil.DEFINITION; //$NON-NLS-1$
 
     private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME; //$NON-NLS-1$
 
@@ -354,14 +354,21 @@ public final class DefinitionHandler {
      * @return the default indicator definition of the DQ rule.
      */
     public IndicatorDefinition getDQRuleDefaultIndicatorDefinition() {
-        return getDefaultIndicatorDefinition(DQ_RULE_DEFINITION);
+        return getDefinitionById(DQ_RULE_DEFINITION);
     }
 
     public IndicatorDefinition getFDRuleDefaultIndicatorDefinition() {
-        return getDefaultIndicatorDefinition(FD_RULE_DEFINITION);
+        return getDefinitionById(FD_RULE_DEFINITION);
     }
 
-    private IndicatorDefinition getDefaultIndicatorDefinition(String definitionId) {
+    /**
+     * 
+     * DOC mzhao Get indicator definition by definition id (xmi id)
+     * 
+     * @param definitionId
+     * @return
+     */
+    public IndicatorDefinition getDefinitionById(String definitionId) {
 
         for (IndicatorDefinition indDef : indicatorDefinitions) {
             CwmResource resource = (CwmResource) indDef.eResource();
