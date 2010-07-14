@@ -29,11 +29,13 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -66,6 +68,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
@@ -496,7 +499,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 			column.getColumn().setMoveable(true);
 		}
 		Table table = viewer.getTable();
-
 		table.setLayout(new FillLayout(SWT.VERTICAL | SWT.V_SCROLL));
 		GridData tableData = new GridData(GridData.FILL_VERTICAL);
 		tableData.horizontalSpan = 2;
@@ -504,6 +506,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 		table.setLayoutData(tableData);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+		TableLayout tl=new TableLayout();
+		tl.addColumnData(new ColumnWeightData(60));  
+		tl.addColumnData(new ColumnWeightData(60));  
+		table.setLayout(tl);  
 		attachDefiniationParameterCellEditors(viewer, table, titles);
 	}
 
@@ -523,20 +529,22 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 			}
 
 			public Object getValue(Object element, String property) {
-				if ("Parameters Key".equals(property))
+				if ("Parameters Key".equals(property)) {
 					return ((IndicatorDefinitionParameter) element).getKey();
-				else
+				} else {
 					return ((IndicatorDefinitionParameter) element).getValue();
+				}
 			}
 
 			public void modify(Object element, String property, Object value) {
 				TableItem tableItem = (TableItem) element;
 				IndicatorDefinitionParameter data = (IndicatorDefinitionParameter) tableItem
 						.getData();
-				if ("Parameters Key".equals(property))
+				if ("Parameters Key".equals(property)) {
 					data.setKey(value.toString());
-				else
+				} else {
 					data.setValue((String)value) ;
+				}
 
 				viewer.refresh(data);
 			    setDirty(true);
@@ -1112,7 +1120,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Composite compoDetail = new Composite(composite, SWT.NONE);
         compoDetail.setLayout(new GridLayout(1, false));
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-        data.heightHint = 300;
+        data.heightHint = 60;
         data.widthHint = 300;
         compoDetail.setLayoutData(data);
 
@@ -1875,17 +1883,29 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
-
+        //Save difinition UDI Parameters
+        saveDefinitionParameters(definition);
         ReturnCode rc = UDIHelper.validate(definition);
         if (rc.isOk()) {
-            // EMFUtil.saveSingleResource(definition.eResource());
+//             EMFUtil.saveSingleResource(definition.eResource());
             IndicatorResourceFileHelper.getInstance().save(definition);
             this.isDirty = false;
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
         }
     }
-
+    /**
+	 * DDOC klliu Comment method "saveDefinitionParameters". ADD klliu figure 13429 2010-07-12
+	 * @param definitionUDI
+	 */
+	private void saveDefinitionParameters(IndicatorDefinition definitionUDI) {
+		// TODO Auto-generated method stub
+		EList<IndicatorDefinitionParameter> params = definitionUDI.getIndicatorDefinitionParameter();
+		if (params != null) {
+			params.clear();
+			params.addAll(tempParameters);
+		}
+	}
     /**
      * DOC klliu Comment method "checkJavaUDIBeforeSave".
      * 
@@ -1957,8 +1977,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             } catch (ClassNotFoundException e1) {
                 return false;
             }
-        } else
-            return false;
+        } else {
+			return false;
+		}
 
         return false;
     }
