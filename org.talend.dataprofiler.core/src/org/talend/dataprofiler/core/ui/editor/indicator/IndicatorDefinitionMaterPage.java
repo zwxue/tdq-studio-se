@@ -31,10 +31,13 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -434,15 +437,21 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 	 * @param composite
 	 * @param parView
 	 */
-	private void createDefinitionParametersButton(Composite composite,
+	private void createDefinitionParametersButton(Composite comp,
 			final TableViewer parView) {
 		// TODO Auto-generated method stub
+	    Composite composite =toolkit.createComposite(comp);
+	    GridData gd=new GridData();
+	    gd.horizontalSpan=2;
+	    gd.horizontalAlignment=SWT.CENTER;
+	    composite.setLayout(new GridLayout(2,false));
+	    composite.setLayoutData(gd);
 		final Button addButton = new Button(composite, SWT.NONE);
 		addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
 		addButton.setToolTipText(DefaultMessagesImpl
 				.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
 		GridData labelGd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
-		// labelGd.horizontalAlignment = SWT.RIGHT;
+		labelGd.horizontalAlignment = SWT.RIGHT;
 		labelGd.widthHint = 65;
 		addButton.setLayoutData(labelGd);
 		addButton.addListener(SWT.MouseDown,new Listener() {
@@ -464,7 +473,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 		romveButton.setToolTipText(DefaultMessagesImpl
 				.getString("PatternMasterDetailsPage.del")); //$NON-NLS-1$
 		GridData reGd = new GridData();
-		reGd.horizontalAlignment = SWT.CENTER;
+		reGd.horizontalAlignment = SWT.LEFT;
 		reGd.widthHint = 65;
 		romveButton.setLayoutData(reGd);
 		romveButton.addListener(SWT.MouseDown,new Listener() {
@@ -1546,6 +1555,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
         detailComp.getParent().layout();
+        
         definitionSection.setExpanded(false);
         definitionSection.setExpanded(true);
     }
@@ -1561,7 +1571,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             detailComp.dispose();
         }
         detailComp = new Composite(combo.getParent(), SWT.NONE);
-        widgetMap.put(combo, detailComp);
+      
         detailComp.setLayout(new GridLayout(4, false));
         final Text classNameText = new Text(detailComp, SWT.BORDER);
         classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -1582,7 +1592,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 if (path != null) {
                     jarPathText.setText(path);
                     // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                    validateJavaUDI( classNameText, jarPathText);
+                    validateJavaUDI(classNameText, jarPathText);
                 }
             }
         });
@@ -1600,6 +1610,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         combo.setData(PluginConstant.JAR_FILE_PATH, jarPathText);
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
+        detailComp.getParent().layout();
+        widgetMap.put(combo, detailComp);
         definitionSection.setExpanded(false);
         definitionSection.setExpanded(true);
     }
