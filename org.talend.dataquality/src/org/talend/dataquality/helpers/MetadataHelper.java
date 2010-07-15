@@ -297,7 +297,7 @@ public final class MetadataHelper {
         org.talend.core.model.properties.Project loadProject = null;
         try {
             loadProject = loadProject();
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             log.error(e, e);
             return null;
         }

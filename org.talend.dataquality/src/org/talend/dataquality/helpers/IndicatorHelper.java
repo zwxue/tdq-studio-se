@@ -269,8 +269,12 @@ public final class IndicatorHelper {
         List<Indicator> leafIndicators = new ArrayList<Indicator>();
         if (indicator instanceof CompositeIndicator) {
             CompositeIndicator compositeIndicator = (CompositeIndicator) indicator;
-            for (Indicator ind : compositeIndicator.getChildIndicators()) {
-                leafIndicators.addAll(getIndicatorLeaves(ind));
+            try {
+                for (Indicator ind : compositeIndicator.getChildIndicators()) {
+                    leafIndicators.addAll(getIndicatorLeaves(ind));
+                }
+            } catch (Exception e) {
+                log.error(e);
             }
         } else {
             leafIndicators.add(indicator);
