@@ -168,21 +168,24 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private void setJarPathForSave(String jarPathForSave) {
         this.jarPathForSave = jarPathForSave;
     }
+
     public boolean isSystemIndicator() {
         return systemIndicator;
     }
-    //Add klliu figure 13429
-	private List<IndicatorDefinitionParameter> tempParameters;
-	
-	private IndicatorDefinitionParameter element=null;
-	
-	private Section parametersSection;
-	
-	private Composite parametersComp;
-	
-	private TableViewer parView;
-	//End klliu figure 13429
-	
+
+    // Add klliu figure 13429
+    private List<IndicatorDefinitionParameter> tempParameters;
+
+    private IndicatorDefinitionParameter element = null;
+
+    private Section parametersSection;
+
+    private Composite parametersComp;
+
+    private TableViewer parView;
+
+    // End klliu figure 13429
+
     private static final String BODY_AGGREGATE = "AVG({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)"; //$NON-NLS-1$
 
     private static final String BODY_DATE = "MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)"; //$NON-NLS-1$
@@ -198,8 +201,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private Map<String, CharactersMapping> charactersMappingMap, charactersMappingMapTemp;
 
     private List<String> remainDBTypeListCM;
-
-
 
     private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDE"
             + "FGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789"; //$NON-NLS-1$
@@ -239,7 +240,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (systemIndicator) {
             allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
 
-        } 
+        }
         // MOD xqliu 2010-03-23 feature 11201
         // remainDBTypeList = new ArrayList<String>();
         // remainDBTypeList.addAll(allDBTypeList);
@@ -258,7 +259,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             widgetMap.clear();
         }
-
 
         if (definition != null && definition.getCategories().size() > 0) {
             category = definition.getCategories().get(0);
@@ -279,38 +279,40 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         // ADD xqliu 2010-03-23 feature 11201
         initTempExpressionList(definition);
-    	// ADD klliu 2010-07-14 feature 13429
-		initTempIndicatorDefinitionParameter(definition);
-	}
+        // ADD klliu 2010-07-14 feature 13429
+        initTempIndicatorDefinitionParameter(definition);
+    }
 
-	/**
-	 * DOC klliu Comment method "initTempIndicatorDefinitionParameter".ADD klliu 2010-07-12 bug 13429
-	 * @param definition2
-	 */
-	private void initTempIndicatorDefinitionParameter(
-			IndicatorDefinition definition2) {
-//		if (tempParameters == null) {
-//			tempParameters = new ArrayList<IndicatorDefinitionParameter>();
-//		} 
-		if (definition != null) {
-			tempParameters = cloneIndicatorDefParameter(definition.getIndicatorDefinitionParameter());
-		}else {
-			tempParameters.clear();
-		}
-	}
-	/**
-	 * DOC klliu Comment method "cloneIndicatorDefParameter".ADD klliu 2010-07-12 bug 13429
-	 * @param indicatorDefParameter
-	 * @return
-	 */
-	private List<IndicatorDefinitionParameter> cloneIndicatorDefParameter(
-			EList<IndicatorDefinitionParameter> indicatorDefParameter) {
-		List<IndicatorDefinitionParameter> result = new ArrayList<IndicatorDefinitionParameter>();
-		for (IndicatorDefinitionParameter param: indicatorDefParameter) {
-			result.add(param.clone());
-		}
-		return result;
-	}
+    /**
+     * DOC klliu Comment method "initTempIndicatorDefinitionParameter".ADD klliu 2010-07-12 bug 13429
+     * 
+     * @param definition2
+     */
+    private void initTempIndicatorDefinitionParameter(IndicatorDefinition definition2) {
+        // if (tempParameters == null) {
+        // tempParameters = new ArrayList<IndicatorDefinitionParameter>();
+        // }
+        if (definition != null) {
+            tempParameters = cloneIndicatorDefParameter(definition.getIndicatorDefinitionParameter());
+        } else {
+            tempParameters.clear();
+        }
+    }
+
+    /**
+     * DOC klliu Comment method "cloneIndicatorDefParameter".ADD klliu 2010-07-12 bug 13429
+     * 
+     * @param indicatorDefParameter
+     * @return
+     */
+    private List<IndicatorDefinitionParameter> cloneIndicatorDefParameter(
+            EList<IndicatorDefinitionParameter> indicatorDefParameter) {
+        List<IndicatorDefinitionParameter> result = new ArrayList<IndicatorDefinitionParameter>();
+        for (IndicatorDefinitionParameter param : indicatorDefParameter) {
+            result.add(param.clone());
+        }
+        return result;
+    }
 
     /**
      * DOC klliu 2Comment method "checkJavaUDIBeforeOpen".ADD klliu 2010-06-02 bug 13451
@@ -387,184 +389,187 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             createDefinitionParametersSection(topComp);
         }
     }
+
     /**
-	 * DOC klliu Comment method "createDefinitionParametersSection". ADD klliu figure 13429 2010-07-12
-	 * 
-	 * @param topComp
-	 */
-	private void createDefinitionParametersSection(Composite topComp) {
-		// TODO Auto-generated method stub
-		parametersSection = createSection(form, topComp, DefaultMessagesImpl
-				.getString("IndicatorDefinitionMaterPage.parameters"), null); //$NON-NLS-1$
+     * DOC klliu Comment method "createDefinitionParametersSection". ADD klliu figure 13429 2010-07-12
+     * 
+     * @param topComp
+     */
+    private void createDefinitionParametersSection(Composite topComp) {
+        // TODO Auto-generated method stub
+        parametersSection = createSection(form, topComp,
+                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.parameters"), null); //$NON-NLS-1$
 
-		Label label = new Label(parametersSection, SWT.WRAP);
-		label.setText(DefaultMessagesImpl
-						.getString("IndicatorDefinitionMaterPage.parametersDecription")); //$NON-NLS-1$
-		parametersSection.setDescriptionControl(label);
+        Label label = new Label(parametersSection, SWT.WRAP);
+        label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.parametersDecription")); //$NON-NLS-1$
+        parametersSection.setDescriptionControl(label);
 
-		parametersComp = createDefinitionParametersComp(parametersSection);
+        parametersComp = createDefinitionParametersComp(parametersSection);
 
-		parametersSection.setClient(parametersComp);
-	}
+        parametersSection.setClient(parametersComp);
+    }
 
-	/**
-	 * DOC klliu Comment method "createDefinitionParametersComp" ADD klliu figure 13429  2010-07-12
-	 * 
-	 * @param definitionSection2
-	 * @return
-	 */
-	private Composite createDefinitionParametersComp(Section parametersSection) {
-		// TODO Auto-generated method stub
-		Composite composite = toolkit.createComposite(parametersSection);
-		GridData parData = new GridData(GridData.FILL_BOTH);
-		composite.setLayoutData(parData);
-		GridLayout layout = new GridLayout(2, false);
-		composite.setLayout(layout);
+    /**
+     * DOC klliu Comment method "createDefinitionParametersComp" ADD klliu figure 13429 2010-07-12
+     * 
+     * @param definitionSection2
+     * @return
+     */
+    private Composite createDefinitionParametersComp(Section parametersSection) {
+        // TODO Auto-generated method stub
+        Composite composite = toolkit.createComposite(parametersSection);
+        GridData parData = new GridData(GridData.FILL_BOTH);
+        composite.setLayoutData(parData);
+        GridLayout layout = new GridLayout(2, false);
+        composite.setLayout(layout);
 
-		parView = new TableViewer(composite);
-		createDefiniationParameterColumns(parView);
-		IndicatorParametersContentProvider provider = new IndicatorParametersContentProvider();
-		parView.setContentProvider(provider);
-		parView.setLabelProvider(new IndicatorParametersLabelProvider());
-		parView.setInput(tempParameters);
-		createDefinitionParametersButton(composite,parView);
-		return composite;
+        parView = new TableViewer(composite);
+        createDefiniationParameterColumns(parView);
+        IndicatorParametersContentProvider provider = new IndicatorParametersContentProvider();
+        parView.setContentProvider(provider);
+        parView.setLabelProvider(new IndicatorParametersLabelProvider());
+        parView.setInput(tempParameters);
+        createDefinitionParametersButton(composite, parView);
+        return composite;
 
-	}
+    }
 
-	/**
-	 *  DOC klliu Comment method "createDefinitionParametersButton".ADD klliu figure 13429 2010-07-12
-	 * @param composite
-	 * @param parView
-	 */
-	private void createDefinitionParametersButton(Composite comp,
-			final TableViewer parView) {
-		// TODO Auto-generated method stub
-	    Composite composite =toolkit.createComposite(comp);
-	    GridData gd=new GridData();
-	    gd.horizontalSpan=2;
-	    gd.horizontalAlignment=SWT.CENTER;
-	    composite.setLayout(new GridLayout(2,false));
-	    composite.setLayoutData(gd);
-		final Button addButton = new Button(composite, SWT.NONE);
-		addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-		addButton.setToolTipText(DefaultMessagesImpl
-				.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
-		GridData labelGd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
-		labelGd.horizontalAlignment = SWT.RIGHT;
-		labelGd.widthHint = 65;
-		addButton.setLayoutData(labelGd);
-		addButton.addListener(SWT.MouseDown,new Listener() {
-			
-			public void handleEvent(Event event) {
-				// TODO Auto-generated method stub
-				IndicatorDefinitionParameter ip = DefinitionFactory.eINSTANCE.createIndicatorDefinitionParameter();
-				ip.setKey("paraKey");
-				ip.setValue("paraValue");
-				tempParameters.add(ip);
-				if (parView != null) {
-					parView.refresh(tempParameters);
-					setDirty(true);
-				}
-			}
-		});
-		final Button romveButton = new Button(composite, SWT.NONE);
-		romveButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-		romveButton.setToolTipText(DefaultMessagesImpl
-				.getString("PatternMasterDetailsPage.del")); //$NON-NLS-1$
-		GridData reGd = new GridData();
-		reGd.horizontalAlignment = SWT.LEFT;
-		reGd.widthHint = 65;
-		romveButton.setLayoutData(reGd);
-		romveButton.addListener(SWT.MouseDown,new Listener() {
-			public void handleEvent(Event event) {
-				IStructuredSelection selection = (IStructuredSelection) parView
-						.getSelection();
-				Object o =  selection.getFirstElement();
-				if(o instanceof IndicatorDefinitionParameter){
-					element=(IndicatorDefinitionParameter) o;
-					tempParameters.remove(element);
-					parView.refresh(tempParameters);
-					setDirty(true);
-				}	
-			}
-		});
-	}
+    /**
+     * DOC klliu Comment method "createDefinitionParametersButton".ADD klliu figure 13429 2010-07-12
+     * 
+     * @param composite
+     * @param parView
+     */
+    private void createDefinitionParametersButton(Composite comp, final TableViewer parView) {
+        // TODO Auto-generated method stub
+        Composite composite = toolkit.createComposite(comp);
+        GridData gd = new GridData();
+        gd.horizontalSpan = 2;
+        gd.horizontalAlignment = SWT.CENTER;
+        composite.setLayout(new GridLayout(2, false));
+        composite.setLayoutData(gd);
+        final Button addButton = new Button(composite, SWT.NONE);
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
+        GridData labelGd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+        labelGd.horizontalAlignment = SWT.RIGHT;
+        labelGd.widthHint = 65;
+        addButton.setLayoutData(labelGd);
+        addButton.addListener(SWT.MouseDown, new Listener() {
 
-	/**
-	 * DOC klliu Comment method "createDefiniationParameterColumns". ADD klliu figure 13429 2010-07-12
-	 * 
-	 * @param viewer
-	 */
-	private void createDefiniationParameterColumns(TableViewer viewer) {
+            public void handleEvent(Event event) {
+                // TODO Auto-generated method stub
+                IndicatorDefinitionParameter ip = DefinitionFactory.eINSTANCE.createIndicatorDefinitionParameter();
+                ip.setKey("paraKey");
+                ip.setValue("paraValue");
+                tempParameters.add(ip);
+                if (parView != null) {
+                    parView.refresh(tempParameters);
+                    setDirty(true);
+                }
+            }
+        });
+        final Button romveButton = new Button(composite, SWT.NONE);
+        romveButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        romveButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.del")); //$NON-NLS-1$
+        GridData reGd = new GridData();
+        reGd.horizontalAlignment = SWT.LEFT;
+        reGd.widthHint = 65;
+        romveButton.setLayoutData(reGd);
+        romveButton.addListener(SWT.MouseDown, new Listener() {
 
-		String[] titles = { "Parameters Key", "Parameters Value" };
-		int[] bounds = { 200, 200 };
-		for (int i = 0; i < titles.length; i++) {
-			TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
-			column.getColumn().setText(titles[i]);
-			column.getColumn().setWidth(bounds[i]);
-			column.getColumn().setResizable(false);
-			column.getColumn().setMoveable(true);
-		}
-		Table table = viewer.getTable();
-		table.setLayout(new FillLayout(SWT.VERTICAL | SWT.V_SCROLL));
-		GridData tableData = new GridData(GridData.FILL_VERTICAL);
-		tableData.horizontalSpan = 2;
-		tableData.heightHint = 150;
-		table.setLayoutData(tableData);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		TableLayout tl=new TableLayout();
-		tl.addColumnData(new ColumnWeightData(60));  
-		tl.addColumnData(new ColumnWeightData(60));  
-		table.setLayout(tl);  
-		attachDefiniationParameterCellEditors(viewer, table, titles);
-	}
+            public void handleEvent(Event event) {
+                IStructuredSelection selection = (IStructuredSelection) parView.getSelection();
+                Object o = selection.getFirstElement();
+                if (o instanceof IndicatorDefinitionParameter) {
+                    element = (IndicatorDefinitionParameter) o;
+                    tempParameters.remove(element);
+                    parView.refresh(tempParameters);
+                    setDirty(true);
+                }
+            }
+        });
+    }
 
-	/**
-	 * DOC klliu Comment method "attachDefiniationParameterCellEditors". ADD klliu figure 13429 2010-07-12
-	 * 
-	 * @param viewer
-	 * @param table
-	 * @param titles
-	 */
-	private void attachDefiniationParameterCellEditors(final TableViewer viewer, Composite table,
-			String[] titles) {
-		// TODO Auto-generated method stub
-		viewer.setCellModifier(new ICellModifier() {
-			public boolean canModify(Object element, String property) {
-				return true;
-			}
+    /**
+     * DOC klliu Comment method "createDefiniationParameterColumns". ADD klliu figure 13429 2010-07-12
+     * 
+     * @param viewer
+     */
+    private void createDefiniationParameterColumns(TableViewer viewer) {
 
-			public Object getValue(Object element, String property) {
-				if ("Parameters Key".equals(property)) {
-					return ((IndicatorDefinitionParameter) element).getKey();
-				} else {
-					return ((IndicatorDefinitionParameter) element).getValue();
-				}
-			}
+        String[] titles = { "Parameters Key", "Parameters Value" };
+        int[] bounds = { 200, 200 };
+        for (int i = 0; i < titles.length; i++) {
+            TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
+            column.getColumn().setText(titles[i]);
+            column.getColumn().setWidth(bounds[i]);
+            column.getColumn().setResizable(false);
+            column.getColumn().setMoveable(true);
+        }
+        Table table = viewer.getTable();
+        table.setLayout(new FillLayout(SWT.VERTICAL | SWT.V_SCROLL));
+        GridData tableData = new GridData(GridData.FILL_VERTICAL);
+        tableData.horizontalSpan = 2;
+        tableData.heightHint = 150;
+        table.setLayoutData(tableData);
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+        TableLayout tl = new TableLayout();
+        tl.addColumnData(new ColumnWeightData(60));
+        tl.addColumnData(new ColumnWeightData(60));
+        table.setLayout(tl);
+        attachDefiniationParameterCellEditors(viewer, table, titles);
+    }
 
-			public void modify(Object element, String property, Object value) {
-				TableItem tableItem = (TableItem) element;
-				IndicatorDefinitionParameter data = (IndicatorDefinitionParameter) tableItem
-						.getData();
-				if ("Parameters Key".equals(property)) {
-					data.setKey(value.toString());
-				} else {
-					data.setValue((String)value) ;
-				}
+    /**
+     * DOC klliu Comment method "attachDefiniationParameterCellEditors". ADD klliu figure 13429 2010-07-12
+     * 
+     * @param viewer
+     * @param table
+     * @param titles
+     */
+    private void attachDefiniationParameterCellEditors(final TableViewer viewer, Composite table, String[] titles) {
+        // TODO Auto-generated method stub
+        viewer.setCellModifier(new ICellModifier() {
 
-				viewer.refresh(data);
-			    setDirty(true);
-			}
-		});
-		viewer.setColumnProperties(titles);
-		
-		viewer.setCellEditors(new CellEditor[] { new TextCellEditor(table),
-				new TextCellEditor(table) });
+            public boolean canModify(Object element, String property) {
+                return true;
+            }
 
-	}
+            public Object getValue(Object element, String property) {
+                if ("Parameters Key".equals(property)) {
+                    return ((IndicatorDefinitionParameter) element).getKey();
+                } else if ("Parameters Value".equals(property)) {
+                    return ((IndicatorDefinitionParameter) element).getValue();
+                }
+                return null;
+            }
+
+            public void modify(Object element, String property, Object value) {
+                TableItem tableItem = (TableItem) element;
+                IndicatorDefinitionParameter data = (IndicatorDefinitionParameter) tableItem.getData();
+                if ("Parameters Key".equals(property)) {
+                    if (!data.getKey().equals(value.toString())) {
+                        data.setKey(value.toString());
+                        viewer.refresh(data);
+                        setDirty(true);
+                    }
+                } else if ("Parameters Value".equals(property)) {
+                    if (!data.getValue().equals(value)) {
+                        data.setValue((String) value);
+                        viewer.refresh(data);
+                        setDirty(true);
+                    }
+                }
+            }
+        });
+        viewer.setColumnProperties(titles);
+
+        viewer.setCellEditors(new CellEditor[] { new TextCellEditor(table), new TextCellEditor(table) });
+
+    }
+
     /**
      * DOC xqliu Comment method "createCharactersMappingSection".
      * 
@@ -1169,22 +1174,22 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ADD xqliu 2010-02-26 bug 11201
         addTitleComp(expressionComp);
         // ADD klliu 2010-06-02 bug 13451: Class name of Java User Define Indicator must be validated
-       //MOD backport klliu2010-06-10
-        //if (!checkJavaUDIBeforeOpen()) {
-            if (tempExpressionMap.size() == 0) {
-                if (definition != null) {
-                    // MOD xqliu 2010-03-23 feature 11201
-                    // EList<Expression> expList = definition.getSqlGenericExpression();
-                    // for (Expression expression : expList) {
-                    for (TdExpression expression : tempExpressionList) {
-                        createNewLineWithExpression(expression);
-                    }
-                    createNewLineWithJavaUDI();
+        // MOD backport klliu2010-06-10
+        // if (!checkJavaUDIBeforeOpen()) {
+        if (tempExpressionMap.size() == 0) {
+            if (definition != null) {
+                // MOD xqliu 2010-03-23 feature 11201
+                // EList<Expression> expList = definition.getSqlGenericExpression();
+                // for (Expression expression : expList) {
+                for (TdExpression expression : tempExpressionList) {
+                    createNewLineWithExpression(expression);
                 }
+                createNewLineWithJavaUDI();
             }
-            createAddButton(composite);
-        //} else
-          
+        }
+        createAddButton(composite);
+        // } else
+
         // if (tempExpressionMap.size() == 0) {
         // if (definition != null) {
         // // MOD xqliu 2010-03-23 feature 11201
@@ -1250,7 +1255,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         ((GridData) combo.getLayoutData()).widthHint = 150;
         combo.setEditable(false);
         // MOD klliu 2010-06-10 bug 13104
-        //combo.setEnabled(false);
+        // combo.setEnabled(false);
         // MOD xqliu 2010-03-23 feature 11201
         // combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
         combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
@@ -1283,12 +1288,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 if (path != null) {
                     jarPathText.setText(path);
                     // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                    validateJavaUDI( classNameText, jarPathText);
+                    validateJavaUDI(classNameText, jarPathText);
                 }
             }
         });
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-     
+
         classNameText.addListener(SWT.Modify, new Listener() {
 
             public void handleEvent(Event event) {
@@ -1323,6 +1328,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         return false;
     }
+
     /**
      * 
      * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
@@ -1555,7 +1561,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
         detailComp.getParent().layout();
-        
+
         definitionSection.setExpanded(false);
         definitionSection.setExpanded(true);
     }
@@ -1571,7 +1577,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             detailComp.dispose();
         }
         detailComp = new Composite(combo.getParent(), SWT.NONE);
-      
+
         detailComp.setLayout(new GridLayout(4, false));
         final Text classNameText = new Text(detailComp, SWT.BORDER);
         classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -1895,36 +1901,39 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
-        //Save difinition UDI Parameters
+        // Save difinition UDI Parameters
         saveDefinitionParameters(definition);
         ReturnCode rc = UDIHelper.validate(definition);
         if (rc.isOk()) {
-//             EMFUtil.saveSingleResource(definition.eResource());
+            // EMFUtil.saveSingleResource(definition.eResource());
             IndicatorResourceFileHelper.getInstance().save(definition);
             this.isDirty = false;
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
         }
     }
+
     /**
-	 * DDOC klliu Comment method "saveDefinitionParameters". ADD klliu figure 13429 2010-07-12
-	 * @param definitionUDI
-	 */
-	private void saveDefinitionParameters(IndicatorDefinition definitionUDI) {
-		// TODO Auto-generated method stub
-		EList<IndicatorDefinitionParameter> params = definitionUDI.getIndicatorDefinitionParameter();
-		if (params != null) {
-			params.clear();
-			params.addAll(tempParameters);
-		}
-	}
+     * DDOC klliu Comment method "saveDefinitionParameters". ADD klliu figure 13429 2010-07-12
+     * 
+     * @param definitionUDI
+     */
+    private void saveDefinitionParameters(IndicatorDefinition definitionUDI) {
+        // TODO Auto-generated method stub
+        EList<IndicatorDefinitionParameter> params = definitionUDI.getIndicatorDefinitionParameter();
+        if (params != null) {
+            params.clear();
+            params.addAll(tempParameters);
+        }
+    }
+
     /**
      * DOC klliu Comment method "checkJavaUDIBeforeSave".
      * 
      * @return
      */
     private boolean checkJavaUDIBeforeSave() {
-    	if (!systemIndicator) {
+        if (!systemIndicator) {
 
             EList<TaggedValue> tvs = definition.getTaggedValue();
             boolean isHaveJavaComb = checkIsHaveJavaComb();
@@ -1948,6 +1957,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         return true;
 
     }
+
     /**
      * DOC klliu Comment method "checkContainsJavaUDI".
      * 
@@ -1990,8 +2000,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 return false;
             }
         } else {
-			return false;
-		}
+            return false;
+        }
 
         return false;
     }
