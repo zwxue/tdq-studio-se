@@ -1056,4 +1056,15 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         }
         return null;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
+     */
+    @Override
+    public void updateAnalysisClientDependency() {
+        // do nothing
+    }
 }

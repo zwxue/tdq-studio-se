@@ -191,9 +191,10 @@ public final class ModelElementHelper {
     public static final TdDataProvider getTdDataProvider(ModelElement element) {
         if (element instanceof Column) {
             return DataProviderHelper.getTdDataProvider((Column) element);
-        }
-        if (element instanceof TdXMLElement) {
+        } else if (element instanceof TdXMLElement) {
             return DataProviderHelper.getTdDataProvider((TdXMLElement) element);
+        } else if (element instanceof orgomg.cwm.objectmodel.core.Package) {
+            return DataProviderHelper.getTdDataProvider((orgomg.cwm.objectmodel.core.Package) element);
         }
         return null;
     }

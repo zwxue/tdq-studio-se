@@ -675,4 +675,16 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (null != indicatorsViewer)
             indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
+     */
+    @Override
+    public void updateAnalysisClientDependency() {
+        // TODO Auto-generated method stub
+
+    }
 }

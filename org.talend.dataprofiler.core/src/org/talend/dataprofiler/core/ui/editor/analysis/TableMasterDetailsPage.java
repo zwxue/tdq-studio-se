@@ -678,4 +678,16 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             this.dataFilterComp.removePropertyChangeListener(this);
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
+     */
+    @Override
+    public void updateAnalysisClientDependency() {
+        // TODO Auto-generated method stub
+
+    }
 }

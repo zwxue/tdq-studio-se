@@ -89,6 +89,9 @@ public abstract class AbstractPagePart {
                 tdProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
             }
             setConnectionState(masterPage, tdProvider);
+            // ADD xqliu 2010-07-15 bug 14014
+            masterPage.updateAnalysisClientDependency();
+            // ~ 14014
         }
     }
 

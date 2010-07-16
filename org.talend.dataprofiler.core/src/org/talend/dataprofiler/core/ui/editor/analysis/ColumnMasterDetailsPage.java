@@ -933,4 +933,24 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
+     */
+    @Override
+    public void updateAnalysisClientDependency() {
+        if (this.getTreeViewer() != null) {
+            ModelElementIndicator[] modelElementIndicator = this.getTreeViewer().getModelElementIndicator();
+            if (modelElementIndicator != null && modelElementIndicator.length > 0) {
+                ModelElementIndicator meIndicator = modelElementIndicator[0];
+                if (meIndicator != null) {
+                    ModelElement modelElement = meIndicator.getModelElement();
+                    updateAnalysisClientDependency(ModelElementHelper.getTdDataProvider(modelElement));
+                }
+            }
+        }
+    }
+
 }

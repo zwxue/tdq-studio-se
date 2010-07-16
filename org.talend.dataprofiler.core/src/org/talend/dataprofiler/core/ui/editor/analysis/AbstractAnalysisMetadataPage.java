@@ -18,6 +18,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -29,6 +30,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -40,6 +42,7 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -183,5 +186,23 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         if (index > 0) {
             connCombo.select(0);
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "updateAnalysisClientDependency".
+     */
+    public abstract void updateAnalysisClientDependency();
+
+    /**
+     * DOC xqliu Comment method "updateAnalysisClientDependency".
+     * 
+     * @param tdDataProvider
+     */
+    protected void updateAnalysisClientDependency(TdDataProvider tdDataProvider) {
+        EList<Dependency> clientDependency = analysis.getClientDependency();
+        if (clientDependency != null) {
+            clientDependency.clear();
+        }
+        DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
     }
 }
