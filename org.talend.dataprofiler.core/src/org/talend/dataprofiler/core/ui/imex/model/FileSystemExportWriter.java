@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -25,6 +27,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -88,6 +91,9 @@ public class FileSystemExportWriter implements IImexWriter {
             IFile projFile = ResourceManager.getRootProject().getFile("talend.project");
             copyFileToDest(projFile);
         }
+
+        IFile definitonFIle = DefinitionHandler.getTalendDefinitionFile();
+        copyFileToDest(definitonFIle);
 
         IFile versionFile = WorkspaceVersionHelper.getVersionFile();
         copyFileToDest(versionFile);
@@ -165,5 +171,20 @@ public class FileSystemExportWriter implements IImexWriter {
             rc.setMessage("The root directory does not exist");
         }
         return rc;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#check()
+     */
+    public List<String> check() {
+        List<String> errors = new ArrayList<String>();
+
+        if (basePath == null || !basePath.toFile().exists()) {
+            errors.add("The root directory does not exist");
+        }
+
+        return errors;
     }
 }

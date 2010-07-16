@@ -13,10 +13,10 @@
 package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -46,13 +46,11 @@ public interface IImexWriter {
     public IPath getBasePath();
 
     /**
-     * DOC bZhou Comment method "checkBasePath".
-     * 
-     * Check the base path is valid or not.
+     * DOC bZhou Comment method "check".
      * 
      * @return
      */
-    public ReturnCode checkBasePath();
+    public List<String> check();
 
     /**
      * DOC bZhou Comment method "populate".

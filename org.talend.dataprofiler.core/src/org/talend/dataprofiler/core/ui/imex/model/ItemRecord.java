@@ -367,4 +367,13 @@ public class ItemRecord {
 
         return null;
     }
+
+    /**
+     * Getter for allItemRecords.
+     * 
+     * @return the allItemRecords
+     */
+    public static List<ItemRecord> getAllItemRecords() {
+        return allItemRecords;
+    }
 }

@@ -44,9 +44,9 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -89,12 +89,6 @@ public class FileSystemImportWriter implements IImexWriter {
             if (!record.isValid()) {
                 inValidRecords.add(record);
             }
-        }
-
-        if (elements.length != 0) {
-            ItemRecord anyRecord = elements[0];
-
-            retrieveProjectName(anyRecord);
         }
 
         versionFile = DqFileUtils.getFile(basePath.toFile(), VERSION_FILE_NAME);
@@ -203,9 +197,15 @@ public class FileSystemImportWriter implements IImexWriter {
     public void finish(ItemRecord[] records) throws IOException {
         ItemRecord.clear();
 
+        IFile defFile = ResourceManager.getLibrariesFolder().getFile(DEFINITION_FILE_NAME);
+
         if (definitionFile != null && definitionFile.exists()) {
-            File defintionFile = ResourceManager.getLibrariesFolder().getFile(DEFINITION_FILE_NAME).getLocation().toFile();
+            File defintionFile = defFile.getLocation().toFile();
             FilesUtils.copyFile(definitionFile, defintionFile);
+        } else {
+            if (!defFile.exists()) {
+                DefinitionHandler.getInstance();
+            }
         }
 
         if (versionFile != null && versionFile.exists()) {
@@ -256,20 +256,55 @@ public class FileSystemImportWriter implements IImexWriter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#checkBasePath()
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#check()
      */
-    public ReturnCode checkBasePath() {
-        ReturnCode rc = new ReturnCode(true);
-        File baseFile = basePath.toFile();
-        if (!baseFile.exists()) {
-            rc.setOk(false);
-            rc.setMessage("The root directory does not exist");
-        } else {
-            if (!DqFileUtils.existFile(baseFile, VERSION_FILE_NAME)) {
-                rc.setOk(false);
-                rc.setMessage("Invalid project!");
-            }
+    public List<String> check() {
+        List<String> errors = new ArrayList<String>();
+
+        if (!checkBasePath()) {
+            errors.add("The root directory does not exist!");
+        } else if (!checkVersion()) {
+            errors.add("Can't verify the imporeted version!");
+        } else if (!checkProject()) {
+            errors.add("Invalid Project! Can't load the project setting.");
         }
-        return rc;
+
+        return errors;
+    }
+
+    /**
+     * DOC bZhou Comment method "checkProject".
+     * 
+     * @return
+     */
+    private boolean checkProject() {
+        try {
+            List<ItemRecord> allItemRecords = ItemRecord.getAllItemRecords();
+            if (!allItemRecords.isEmpty()) {
+                ItemRecord record = allItemRecords.get(0);
+                retrieveProjectName(record);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "checkVersion".
+     * 
+     * @return
+     */
+    private boolean checkVersion() {
+        return DqFileUtils.existFile(basePath.toFile(), VERSION_FILE_NAME);
+    }
+
+    /**
+     * DOC bZhou Comment method "checkBasePath".
+     * 
+     * @return
+     */
+    private boolean checkBasePath() {
+        return basePath != null && basePath.toFile().exists();
     }
 }

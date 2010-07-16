@@ -49,7 +49,6 @@ import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -287,10 +286,7 @@ public class ImportWizardPage extends WizardPage {
     private void checkforErrors() {
         List<String> dErrors = new ArrayList<String>();
 
-        ReturnCode rc = writer.checkBasePath();
-        if (!rc.isOk()) {
-            dErrors.add(rc.getMessage());
-        }
+        dErrors.addAll(writer.check());
 
         if (repositoryTree.getTree().getItems().length == 0) {
             dErrors.add(Messages.getString("ImportWizardPage.0")); //$NON-NLS-1$

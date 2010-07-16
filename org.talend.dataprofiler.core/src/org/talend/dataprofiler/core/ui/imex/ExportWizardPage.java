@@ -44,7 +44,6 @@ import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -272,10 +271,7 @@ public class ExportWizardPage extends WizardPage {
     protected void checkForErrors() {
         errors = new ArrayList<String>();
 
-        ReturnCode rc = writer.checkBasePath();
-        if (!rc.isOk()) {
-            errors.add(rc.getMessage());
-        }
+        errors.addAll(writer.check());
 
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
