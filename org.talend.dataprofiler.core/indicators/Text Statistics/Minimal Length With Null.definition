@@ -2,7 +2,7 @@
 <dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_a4KsoI1qEd-xwI2imLgHRA" name="Minimal Length With Null" label="Minimal Length With Null">
   <taggedValue xmi:id="_a4KsoY1qEd-xwI2imLgHRA" tag="Description" value="computes the minimal length of a text field, counting null in the mean time."/>
   <taggedValue xmi:id="_a4Ksoo1qEd-xwI2imLgHRA" tag="Purpose" value="evaluates the length of the smallest textual record"/>
-  <categories href="../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
+  <categories href="../../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="_a4KspI1qEd-xwI2imLgHRA" body="SELECT MIN(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   <sqlGenericExpression xmi:id="_a4KspY1qEd-xwI2imLgHRA" body="SELECT MIN(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
   <sqlGenericExpression xmi:id="_a4Kspo1qEd-xwI2imLgHRA" body="SELECT MIN(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
