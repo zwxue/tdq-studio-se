@@ -114,7 +114,8 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
-        StringBuilder sql = new StringBuilder("for $");
+        int paginationNum = analysis.getParameters().getMaxNumberRows();
+        StringBuilder sql = new StringBuilder("let $_leres0_ := //");
         StringBuilder selectElement = new StringBuilder();
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
@@ -172,14 +173,9 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
                     .getParentElement(SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analysedElements.get(0))));
             parentAnalyzedElementName = parentElement.getName();
             List<TdXMLElement> columnList = DqRepositoryViewService.getXMLElements(parentElement);
-            // List<TdColumn> columnList =
-            // TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysedElements.get(0)
-            // .eContainer()));
             Iterator<TdXMLElement> iter = columnList.iterator();
             while (iter.hasNext()) {
                 TdXMLElement xmlElemenet = iter.next();
-                // sql.append(xmlElemenet.getName());
-                // append comma if more columns exist
                 if (DqRepositoryViewService.hasChildren(xmlElemenet)) {
                     continue;
                 }
@@ -201,9 +197,14 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             return null;
         }
         // for
+        sql.append(parentAnalyzedElementName);// remaind on version 2
+        sql.append(" let $_page_ := for $");
+
         sql.append(parentAnalyzedElementName);
-        sql.append(" in //");
-        sql.append(parentAnalyzedElementName);
+
+        sql.append(" in subsequence($_leres0_,1,");
+        sql.append(paginationNum);
+        sql.append(") ");
 
         // where--- get data filter
         ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();
@@ -216,10 +217,12 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             sql.append(stringDataFilter);
         }
         // return
-        sql.append(" return data(");
-        selectElement.append(")");
+        sql.append("return <result>{if ($");
+        sql.append(parentAnalyzedElementName);
+        sql.append(") then ");
         sql.append(selectElement);
 
+        sql.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres0_)}</totalCount>)");
         return sql.toString();
     }
 

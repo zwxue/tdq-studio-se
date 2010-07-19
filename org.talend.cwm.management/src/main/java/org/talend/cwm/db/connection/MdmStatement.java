@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.rpc.ServiceException;
 
@@ -73,16 +75,35 @@ public class MdmStatement {
             return resultSetList;
         }
         int arraySize = columnTitle.length;
-        for (int i = 0; i < resultSet.length; i += arraySize) {
-            // String[] strArray = new String[arraySize];
+        for (int i = 1; i < resultSet.length; i++) {//
             Map<String, String> rowMap = new HashMap<String, String>();
             for (int j = 0; j < arraySize; j++) {
-                rowMap.put(columnTitle[j].getName(), resultSet[i + j]);
-                // strArray[j] = resultSet[i + j];
+                String columnTitleName = columnTitle[j].getName();
+                rowMap.put(columnTitleName, getXmlNodeValue(resultSet[i], columnTitleName));
             }
             resultSetList.add(rowMap);
         }
-
         return resultSetList;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "getXmlNodeValue".
+     * 
+     * @param xmlValue
+     * @param columnTitleName
+     * @return
+     */
+    private String getXmlNodeValue(String xmlValue, String columnTitleName) {
+        String matchStrHaveValue = "<" + columnTitleName + ">([^>^<]*)</" + columnTitleName + ">";
+        String matchStrNoValue = "<" + columnTitleName + "/>";
+        Pattern pattern = Pattern.compile(matchStrHaveValue);
+        Matcher matcher = pattern.matcher(xmlValue);
+        if (matcher.find(1)) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
+
     }
 }
