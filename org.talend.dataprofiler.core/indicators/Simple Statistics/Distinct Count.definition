@@ -5,5 +5,5 @@
   <categories href="../../../.Talend.definition#_ccKHEBF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="_9bugkoqnEd-SocVM_rHvUg" body="SELECT COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   <sqlGenericExpression xmi:id="_9bugk4qnEd-SocVM_rHvUg" body="SELECT COUNT (&lt;%=__COLUMN_NAMES__%>) FROM (SELECT DISTINCT (&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>)" language="Access"/>
-  <sqlGenericExpression xmi:id="_9buglIqnEd-SocVM_rHvUg" body="count(distinct-values(//&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%>))" language="MDM"/>
+  <sqlGenericExpression xmi:id="_9buglIqnEd-SocVM_rHvUg" body="count(distinct-values(for $x in //&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%> return if($x!='') then $x else ()))" language="MDM"/>
 </dataquality.indicators.definition:IndicatorDefinition>
