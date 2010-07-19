@@ -3,13 +3,16 @@
       title="Create a new schema analysis">
    <intro>
       <description>
-         This type of analysis analyzes one specific shema in a database. The result of the analysis gives information about the content of the schema.
+         This type of analysis examines one specific schema in a database. The analysis returns information about the physical structure of the database.
       </description>
    </intro>
    <item skip="false" dialog="true"
          title="Select schema to analyse">
       <description>
-         Note that schema analysis is possible only with databases that include schema entities in their physical structure. This step opens the <b> Create New Analysis </b> wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a schema</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens the corresponding editor in which you can define the settings of the analysis.
+         Note that schema analysis is only possible in databases that include schema entities in their physical structure. 
+		 
+		 To open the <b>Create New Analysis</b> wizard, right click <b>Analyzes</b> on the <b>DQ Repository</b> view and select <b>New Analysis</b>. Then select <b>Schema Structure Overview</b> in order to browse to and select the schema to analyze. The wizard prompts you to provide the schema analysis metadata (name, purpose, description...). Add table or view filters if required, using SQL language. Upon completion, an editor opens in which you can modify the analysis metadata or settings, if necessary. 
+		  
       </description>
        <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core"  param1="5" confirm="false"/>
    </item>
@@ -17,13 +20,13 @@
          skip="true"
          title="Review your settings">
       <description>
-         This step allows you to review and change your analysis settings, if necessary, in the open schema editor.
+         In the editor you can modify the analysis metadata or settings. Click Analysis Parameters to expand the editor. In this view of the editor you can check or modify the table or view filters.
       </description>
    </item>
    <item
          title="Analyze">
-      <description>
-         To execute the analysis, click on the &quot;Run&quot; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &quot;Analysis&quot; object in the &quot;DQ Repository&quot; view.
+      <description>         
+		 Click the <b>Run</b> icon, located towards the top left of the editor, to execute the analysis. Alternatively, right click the analysis on the <b>DQ Repository</b> tree view and click the <b>Run</b> icon on the list which appears.		 
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
    </item>

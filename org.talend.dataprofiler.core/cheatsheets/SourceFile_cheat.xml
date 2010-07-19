@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
       title="create a new sql file">
-   <intro>
+   <intro
+         href="http://en.wikipedia.org/wiki/Sql">
       <description>
-         create a new sql file
+         This cheat guides you through the creation of a new SQL source file.
       </description>
    </intro>
    <item
          title="Set file name and sql content">
       <description>
-         This step opens the source sql creation wizard. You can <b> right click</b> on the &quot;Libraries->source sql&quot; folder or <b>click the link below</b>. This wizard helps you to fill the source sql metadata (name and location). At the end it opens an editor in which you can define the settings of the content of sql.
+         To open the <b>Create SQL file</b> wizard, expand the <b>Libraries</b> node on the <b>DQ Repository</b> view and right click <b>Source Files</b>. Click <b>Create SQL File</b> on the context menu. Alternatively, click the link below. Indicate the SQL file metadata (name and location). Upon completion, an editor opens in which you can define the SQL content settings.		 		 		 .
       </description>
       <action class="org.talend.dataprofiler.core.sql.AddSqlFileAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
    </item>

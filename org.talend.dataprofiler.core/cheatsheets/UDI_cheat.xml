@@ -3,31 +3,30 @@
       title="Create a new User Defined Indicator">
    <intro>
       <description>
-         This tutorial guides you through the creation of a user defined indicator.
+         You can create your own personalized indicators and manage them in the same way that you manage any system indicators. This tutorial guides you through the creation of a user defined indicator.
       </description>
    </intro>
    <item
-         title="Create the User Defined Indicator" dialog="true" skip="false">
+         title="Define the User Defined Indicator metadata and settings" dialog="true" skip="false">
       <description>
-         This step opens the &quot;New Indicator&quot; wizard.  <b>Right click on the folder &quot;Libraries/Indicators/User Defined Indicators&quot;</b> and select the menu &quot;New Indicator&quot;.
-
-At the end of this wizard, a User Defined Indicator is created and opened in the appropriate editor for editing.
+         To open the <b>New Indicator</b> wizard, expand the <b>Libraries</b> node and the <b>Indicators</b> folder on the <b>DQ Repository</b> tree view. Right click <b>User Defined Indicators</b> and select <b>New Indicator</b>. The wizard prompts you to provide the metadata (name, purpose, description...). Select the database type from the <b>Language Selection</b> list and depending on the indicator you want to create, enter the corresponding SQL template statement in the SQL Template field. Upon completion,an editor opens in which you can review and modify the indicator settings, if required.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateUDIAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
    <item
-         href="http://en.wikipedia.org/wiki/Database_management_system"
-         title="Review the content of the indicator">
+         title="Review the indicator settings">
       <description>
-         Please select the database specific language (or &quot;All Database Type&quot; if the query is generic enough to work on any database) and review the SQL template in the wizard. 
-The indicator template is a SQL query with some variables represented by the following keywords:
+         You can review and modify the indicator settings in the <b>Indicator Settings</b> editor. 
+		 Click <b>Indicator Definition</b> to expand the editor. Click the <b>[+]</b> button if you want to add indicators. Under <b>Database</b>, select the database specific language from the list, or select <b>ALL_DATABASE_TYPE</b> if the query is generic enough to work in any database. Enter the corresponding SQL template statement in the SQL Template field.	 
+		 
+The SQL Template is an SQL query with the following variable representations, for instance:
 &lt;%=__COLUMN_NAMES__%&gt; replaces the column(s),
 &lt;%=__TABLE_NAME__%&gt; replaces the table name,
 &lt;%=__WHERE_CLAUSE__%&gt; replaces the where clause provided by the data filter,
-&lt;%=__GROUP_BY_ALIAS__%&gt; replaces &quot;group by&quot; whole clause.
+&lt;%=__GROUP_BY_ALIAS__%&gt; replaces the &quot;group by&quot; whole clause.
 
-The default category of the new indicator is &quot;User Defined Count&quot;. Choose the category depending on the kind of output the indicator will return.
+By default, the new indicator category is set as <b>User Defined Count</b>. Select the relevant category depending on the kind of output the indicator is set to return.
       </description>
    </item>
 </cheatsheet>

@@ -3,20 +3,20 @@
       title="Create a nominal correlation analysis">
    <intro>
       <description>
-         This type of analysis analyzes works with only nominal values and shows the relations between pairs of data in network graph. It highlights weak relationships between pairs of data in order to find potential incorrect relationships.
+         This type of analysis examines minimal correlations between nominal columns in a particular table and displays the results in a chart. It highlights weak relationships between pairs of data in order to indicate potentially incorrect relationships.
       </description>
    </intro>
    <item dialog="true"
          title="Set the analysis metadata">
       <description>
-         This step opens the <b> Create New Analysis </b> wizard. You can <b> right click on the &quot;Analysis&quot; folder </b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens the corresponding editor in which you can define the settings of the analysis.
+         To open the <b> Create New Analysis </b> wizard <b> right click the <b>Analyses</b> folder </b> on the <b>DQ Repository</b> tree view and select <b>New Analysis</b> (or click the link below). Browse to and select <b>Nominal Correlation Analysis </b>in the wizard. The wizard prompts you to provide the analysis metadata (name, purpose, description....). Upon completion, an editor opens in which you can define the analysis settings.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="true" param1="8" param2="1"/>
    </item>
    <item
-         title="Select the columns to analysis">
+         title="Select the columns to analyse">
       <description>
-         Click the <b> &quot;Analyzed Columns&quot;</b> hyperlink (or <b> click the link below</b>). Then click <b> &quot;Select columns to analyze&quot;</b> to open a dialog box where you can select the nominal and interval columns to analyze.
+         Click the <b>Analyzed Columns</b> to open the corresponding view(or click the link below). Then click <b>Select columns to analyze</b> to open a dialog box in which you can browse to and select the nominal and interval columns to analyze.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
       </action>
@@ -25,20 +25,20 @@
          skip="true"
          title="Select the right data mining type">
       <description>
-         <b>Body</b>
+         Next to each column, there is a corresponding Data Mining Type box. Select the relevant data mining type from the list.
       </description>
    </item>
    <item
          title="Analyze">
       <description>
-         To execute the analysis, click on the &quot;Run&quot; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &quot;Analysis&quot; object in the &quot;DQ Repository&quot; view.
+         To execute the analysis, click the <b>Run</b> icon located to the top left of the editor (or click the link below). Alternatively, right click the analysis under the <b>Analyses</b> folder on the <b>DQ Repository</b> tree view and select the Run icon on the context menu.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
       <item title="Refresh the graphics" dialog="true" skip="false">
       <description>
-         To generate the graphics of the analysis, click on the <b>&quot;Refresh the graphics&quot;</b>  hyperlink (<b>or click the link below</b>). &quot;Refresh the graphics&quot; means that graphics are displayed with the last computed data.  
+       To view the analysis graphics, click the <b>Refresh the graphics</b>  hyperlink (or click the link below). The graphics displayed will reflect the most recently computed data.     
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
       </action>

@@ -2,12 +2,12 @@
 <compositeCheatsheet name="Talend Data Profiler">
    <taskGroup kind="set" name="Talend Data Profiler" skip="false">
       <intro>
-         This cheat sheet guides you through the creation of your first analysis.
+         This cheat sheet guides you through the creation of an analysis.
       </intro>
       <onCompletion>
          <b>Conclusion</b>
       </onCompletion>
-      <task kind="cheatsheet" name="DBconnection" skip="false">
+      <task kind="cheatsheet" name="Create a database connection" skip="false">
          <intro>
             This tutorial guides you through the creation of a database connection.
          </intro>
@@ -17,19 +17,9 @@
          <param name="path" value="DBconnection_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="ColumnAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a connection analysis" skip="false">
          <intro>
-            This tutorial guides you through the creation of an analysis of the content of a set of columns.
-         </intro>
-         <onCompletion>
-            <b>Conclusion</b>
-         </onCompletion>
-         <param name="path" value="ColumnAnalysis_cheat.xml">
-         </param>
-      </task>
-      <task kind="cheatsheet" name="ConnectionAnalysis" skip="false">
-         <intro>
-            This tutorial guides you through the creation of an overview analysis of the content of a database.
+            This tutorial guides you through the creation of a database content analysis.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -37,9 +27,9 @@
          <param name="path" value="ConnectionAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="CatalogAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a catalog analysis" skip="false">
          <intro>
-            This tutorial guides you through the creation of an analysis of the content of a catalog.
+            This tutorial guides you through the creation of a Catalog Analysis.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -47,9 +37,9 @@
          <param name="path" value="CatalogAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="SchemaAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a schema analysis" skip="false">
          <intro>
-            <b>Introduction</b>
+            This tutorial guides you through the creation of a Schema Analysis.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -57,9 +47,19 @@
          <param name="path" value="SchemaAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="ColumnsComparisonAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a column analysis" skip="false">
          <intro>
-            <b>Introduction</b>
+            This tutorial guides you through the creation of a column analysis.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="ColumnAnalysis_cheat.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Create a columns comparison analysis" skip="false">
+         <intro>
+            This tutorial guides you through the creation of a Column Comparison Analysis.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -67,9 +67,9 @@
          <param name="path" value="ColumnsComparisonAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="NumericalColumnCorrelationAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a numerical correlation analysis" skip="false">
          <intro>
-            <b>Introduction</b>
+            This tutorial guides you through the creation of a Numerical Column Correlation Analysis.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -77,7 +77,7 @@
          <param name="path" value="NumericalColumnCorrelationAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="NominalCorrelationAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a nominal correlation analysis" skip="false">
          <intro>
             <b>Introduction</b>
          </intro>
@@ -87,7 +87,7 @@
          <param name="path" value="NominalCorrelationAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="TimeColumnCorrelationAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a time correlation analysis" skip="false">
          <intro>
             <b>Introduction</b>
          </intro>
@@ -97,9 +97,9 @@
          <param name="path" value="TimeColumnCorrelationAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="UserDefinedIndicator" skip="false">
+      <task kind="cheatsheet" name="Create a user defined indicator" skip="false">
          <intro>
-            This tutorial guides you through the creation of a user defined indicator.
+            This tutorial guides you through the creation of a User Defined Indicator.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -107,7 +107,7 @@
          <param name="path" value="UDI_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="MDMConnection" skip="false">
+      <task kind="cheatsheet" name="Create an MDM connection" skip="false">
          <intro>
             This tutorial guides you through the creation of a MDM connection.
          </intro>
@@ -117,13 +117,9 @@
          <param name="path" value="MdmConnection_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="ColumnSetAnnlysis" skip="false">
+      <task kind="cheatsheet" name="Create a column set analysis" skip="false">
          <intro>
-            This tutorial guides you through the creation of an analysis of the content of a set of columns.And the result of this analysis will give the following information:
-         	row count
-			distinct count
-			unique count
-			duplicate count
+            This tutorial guides you through the creation of an analysis of the content of a set of columns. The analysis computes the row count, distinct count, unique count and duplicate count
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -131,7 +127,7 @@
          <param name="path" value="ColumnSetAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="FunctionialDependencyAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a functional dependency analysis" skip="false">
          <intro>
             This analysis helps you to detect anomalies in your column dependencies.
          </intro>
@@ -141,9 +137,9 @@
          <param name="path" value="FunctionalDependAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="BusinessRuleAnalysis" skip="false">
+      <task kind="cheatsheet" name="Create a business rule analysis" skip="false">
          <intro>
-            This kind of analysis enables you to apply your Data Quality rules (DQ Rules) on a selected table.
+            This kind of analysis enables you to apply your Business Rules to a selected table.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -151,7 +147,7 @@
          <param name="path" value="BusinessRuleAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="PatternSql" skip="false">
+      <task kind="cheatsheet" name="Create an SQL pattern" skip="false">
          <intro>
             This tutorial guides you through the creation of an sql pattern.
          </intro>
@@ -161,7 +157,7 @@
          <param name="path" value="PatternSql_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="PatternRegex" skip="false">
+      <task kind="cheatsheet" name="Create a regular expresion pattern" skip="false">
          <intro>
             This tutorial guides you through the creation of an regex pattern.
          </intro>
@@ -171,9 +167,9 @@
          <param name="path" value="PatternRegex_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="DqRule" skip="false">
+      <task kind="cheatsheet" name="Create a business rule" skip="false">
          <intro>
-            This tutorial guides you through the creation of an Dq Rule.
+            This tutorial guides you through the creation of an Business Rule.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
@@ -181,7 +177,7 @@
          <param name="path" value="DqRule_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="SourceFile" skip="false">
+      <task kind="cheatsheet" name="Create an SQL source file" skip="false">
          <intro>
             This tutorial guides you through the creation of an source file.
          </intro>
