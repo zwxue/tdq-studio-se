@@ -143,6 +143,7 @@ public abstract class AbstractFormPage extends FormPage {
      */
     public void registerSection(ExpandableComposite composite) {
         expandCompositeList.add(composite);
+        currentEditor.getToolBar().getEditorBarWrap().addExpandableComposite(composite);
     }
 
     /**
