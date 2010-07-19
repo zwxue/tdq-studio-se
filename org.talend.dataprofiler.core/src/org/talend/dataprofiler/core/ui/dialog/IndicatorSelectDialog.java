@@ -385,6 +385,9 @@ public class IndicatorSelectDialog extends TrayDialog {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                if (null == e.item) {
+                    return;
+                }
                 IIndicatorNode indicatorNode = ((IIndicatorNode) e.item.getData(INDICATORITEM));
                 if (indicatorNode == null) {
                     purposeLabel.setText(PURPOSE + ((TreeItem) e.item).getText());
