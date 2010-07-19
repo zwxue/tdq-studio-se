@@ -676,9 +676,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         // MOD mzhao 2009-05-5, bug 6587.
         // MOD mzhao 2009-06-8, bug 5887.
         // updateBindConnection(masterPage, getColumnIndicator(), tree);
-        // ADD xqliu 2010-07-16 bug 14014
-        this.absMasterPage.updateAnalysisClientDependency();
-        // ~ 14014
     }
 
     private String isExpressionNull(TreeItem item) {

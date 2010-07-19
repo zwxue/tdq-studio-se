@@ -774,7 +774,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             DomainHelper.setDataFilterViewPattern(dataFilters, viewFilterText.getText());
             latestViewFilterValue = this.viewFilterText.getText();
         }
-
+        // ADD xqliu 2010-07-19 bug 14014
+        this.updateAnalysisClientDependency();
+        // ~ 14014
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
@@ -1055,16 +1057,5 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             }
         }
         return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
-     */
-    @Override
-    public void updateAnalysisClientDependency() {
-        // do nothing
     }
 }

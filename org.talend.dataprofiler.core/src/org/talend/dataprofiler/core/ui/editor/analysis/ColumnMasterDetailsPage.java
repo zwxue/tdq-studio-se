@@ -728,6 +728,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // FIXME after i set the options of bins designer, and when saving the
         // file, it cause a exception.
 
+        // ADD xqliu 2010-07-19 bug 14014
+        this.updateAnalysisClientDependency();
+        // ~ 14014
+
         // File file = new File(editorInput.getFile().getParent() +
         // File.separator + fileName);
         // ReturnCode saved = writer.save(analysisHandler.getAnalysis(), file);
@@ -928,26 +932,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     this.execCombo.select(i);
                 } else {
                     i++;
-                }
-            }
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
-     */
-    @Override
-    public void updateAnalysisClientDependency() {
-        if (this.getTreeViewer() != null) {
-            ModelElementIndicator[] modelElementIndicator = this.getTreeViewer().getModelElementIndicator();
-            if (modelElementIndicator != null && modelElementIndicator.length > 0) {
-                ModelElementIndicator meIndicator = modelElementIndicator[0];
-                if (meIndicator != null) {
-                    ModelElement modelElement = meIndicator.getModelElement();
-                    updateAnalysisClientDependency(ModelElementHelper.getTdDataProvider(modelElement));
                 }
             }
         }

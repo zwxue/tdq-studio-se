@@ -620,7 +620,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         String urlString = analysis.eResource() != null ? analysis.eResource().getURI().toFileString()
                 : PluginConstant.EMPTY_STRING;
-
+        // ADD xqliu 2010-07-19 bug 14014
+        this.updateAnalysisClientDependency();
+        // ~ 14014
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
@@ -677,17 +679,5 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (dataFilterComp != null) {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
-     */
-    @Override
-    public void updateAnalysisClientDependency() {
-        // TODO Auto-generated method stub
-
     }
 }

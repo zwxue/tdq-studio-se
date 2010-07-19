@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.Indicator;
@@ -324,6 +325,36 @@ public final class DependenciesHandler {
 
     public TypedReturnCode<Dependency> setDependencyOn(Analysis analysis, IndicatorDefinition indicatorDefinition) {
         return setUsageDependencyOn(analysis, indicatorDefinition);
+    }
+
+    /**
+     * DOC xqliu Comment method "updateAnalysisClientDependencyConnection". bug 14014
+     * 
+     * @param analysis
+     */
+    public void updateAnalysisClientDependencyConnection(Analysis analysis) {
+        List<Dependency> realDependency = new ArrayList<Dependency>();
+        EList<Dependency> clientDependency = analysis.getClientDependency();
+        DataManager connection = analysis.getContext().getConnection();
+        if (clientDependency != null) {
+            for (Dependency dependency : clientDependency) {
+                EList<ModelElement> supplier = dependency.getSupplier();
+                if (supplier != null && supplier.size() > 0) {
+                    ModelElement modelElement = supplier.get(0);
+                    if (modelElement != null) {
+                        if (modelElement instanceof TdDataProvider) {
+                            if (modelElement.equals(connection)) {
+                                realDependency.add(dependency);
+                            }
+                        } else {
+                            realDependency.add(dependency);
+                        }
+                    }
+                }
+            }
+            clientDependency.clear();
+            clientDependency.addAll(realDependency);
+        }
     }
 
     // /**

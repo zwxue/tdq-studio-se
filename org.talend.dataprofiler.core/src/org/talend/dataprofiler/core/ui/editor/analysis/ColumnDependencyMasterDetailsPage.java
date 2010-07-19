@@ -236,7 +236,9 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
         }
-
+        // ADD xqliu 2010-07-19 bug 14014
+        this.updateAnalysisClientDependency();
+        // ~ 14014
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
@@ -322,17 +324,4 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     public void openColumnsSetBSelectionDialog() {
         anaColumnCompareViewer.openColumnsSetBSelectionDialog();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
-     */
-    @Override
-    public void updateAnalysisClientDependency() {
-        // TODO Auto-generated method stub
-
-    }
-
 }

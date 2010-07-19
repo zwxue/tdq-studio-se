@@ -263,6 +263,9 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         }
         anaBuilder.addElementsToAnalyze(analysedElements.toArray(new ModelElement[analysedElements.size()]), new Indicator[] {
                 rowMatchingIndicatorA, rowMatchingIndicatorB });
+        // ADD xqliu 2010-07-19 bug 14014
+        this.updateAnalysisClientDependency();
+        // ~ 14014
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
@@ -348,17 +351,5 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.setDirty(true);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateAnalysisClientDependency()
-     */
-    @Override
-    public void updateAnalysisClientDependency() {
-        // TODO Auto-generated method stub
-
     }
 }

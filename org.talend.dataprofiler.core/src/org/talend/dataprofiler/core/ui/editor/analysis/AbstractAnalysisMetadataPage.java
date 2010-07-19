@@ -18,7 +18,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -42,7 +41,6 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -189,20 +187,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * DOC xqliu Comment method "updateAnalysisClientDependency".
+     * DOC Update the client dependency of the analysis. bug 14014
      */
-    public abstract void updateAnalysisClientDependency();
-
-    /**
-     * DOC xqliu Comment method "updateAnalysisClientDependency".
-     * 
-     * @param tdDataProvider
-     */
-    protected void updateAnalysisClientDependency(TdDataProvider tdDataProvider) {
-        EList<Dependency> clientDependency = analysis.getClientDependency();
-        if (clientDependency != null) {
-            clientDependency.clear();
-        }
-        DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
+    public void updateAnalysisClientDependency() {
+        DependenciesHandler.getInstance().updateAnalysisClientDependencyConnection(analysis);
     }
 }
