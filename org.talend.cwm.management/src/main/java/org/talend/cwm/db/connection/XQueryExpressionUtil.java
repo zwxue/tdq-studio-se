@@ -17,15 +17,13 @@ package org.talend.cwm.db.connection;
  */
 public final class XQueryExpressionUtil {
 
-    public static final int ROWS_PER_PAGE = 100;
+    public static final int ROWS_PER_PAGE = 10;
 
     private static StringBuffer expression = new StringBuffer();
 
     private static String tableNode;
 
     private static int startNum = 0;
-
-    private static int endNum = 100;
 
     private static String columnNodeNameArraystr = null;
 
@@ -48,9 +46,6 @@ public final class XQueryExpressionUtil {
         beginIndex = xqueryStr.indexOf(",", endIndex) + 1;
         endIndex = xqueryStr.indexOf(",", beginIndex);
         startNum = Integer.parseInt(xqueryStr.substring(beginIndex, endIndex));
-        beginIndex = endIndex + 1;
-        endIndex = xqueryStr.indexOf(")", beginIndex);
-        endNum = Integer.parseInt(xqueryStr.substring(beginIndex, endIndex));
         beginIndex = xqueryStr.indexOf(" then ", endIndex) + 6;
         endIndex = xqueryStr.indexOf(" else ", beginIndex);
         columnNodeNameArraystr = xqueryStr.substring(beginIndex, endIndex);
@@ -74,7 +69,7 @@ public final class XQueryExpressionUtil {
         expression.append(" in subsequence($_leres0_,");
         expression.append(startNum);
         expression.append(",");
-        expression.append(endNum);
+        expression.append(ROWS_PER_PAGE);
         expression.append(") return <result>{if ($");
         expression.append(tableNode);
         expression.append(") then ");
@@ -100,14 +95,6 @@ public final class XQueryExpressionUtil {
         startNum = startNumPar;
     }
 
-    public static int getEndNum() {
-        return endNum;
-    }
-
-    public static void setEndNum(int endNumPar) {
-        endNum = endNumPar;
-    }
-
     public static String getNodeNameArraystr() {
         return columnNodeNameArraystr;
     }
@@ -120,7 +107,6 @@ public final class XQueryExpressionUtil {
      * make the value range to increase DOC zshen Comment method "increamVernier".
      */
     public static void increaseVernier() {
-        endNum += XQueryExpressionUtil.ROWS_PER_PAGE;
         startNum += XQueryExpressionUtil.ROWS_PER_PAGE;
     }
 
@@ -129,7 +115,6 @@ public final class XQueryExpressionUtil {
      */
     public static void decreaseVernier() {
         if (startNum >= XQueryExpressionUtil.ROWS_PER_PAGE) {
-            endNum -= XQueryExpressionUtil.ROWS_PER_PAGE;
             startNum -= XQueryExpressionUtil.ROWS_PER_PAGE;
         }
     }
