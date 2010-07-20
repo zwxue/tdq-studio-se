@@ -73,9 +73,7 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
         statement = mdmconn.createStatement();
         String[] resultSet = null;
         if (continueRun()) {
-            if (log.isInfoEnabled()) {
-                log.info("Executing query: " + sqlStatement);
-            }
+
             try {
                 List<String> strResultList = new ArrayList<String>();
                 int totalcount = 0;
@@ -83,6 +81,9 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
                 // init xQuery expression.
                 XQueryExpressionUtil.toParseXquery(sqlStatement);
                 do {
+                    if (log.isInfoEnabled()) {
+                        log.info("Executing query: " + XQueryExpressionUtil.getExpression());
+                    }
                     returnCode.setOk(returnCode.isOk() && statement.execute(tdXmlDocument, XQueryExpressionUtil.getExpression()));
                     List<String> strResultListTemp = Arrays.asList(statement.getResultSet());
                     String totalNum = statement.getXmlNodeValue(strResultListTemp.get(0), "totalCount");
