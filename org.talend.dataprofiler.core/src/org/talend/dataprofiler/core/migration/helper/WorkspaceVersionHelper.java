@@ -36,8 +36,6 @@ public final class WorkspaceVersionHelper {
 
     public static final String VERSION = "version"; //$NON-NLS-1$
 
-    private static ProductVersion productVersion;
-
     private WorkspaceVersionHelper() {
 
     }
@@ -58,11 +56,7 @@ public final class WorkspaceVersionHelper {
      * @return
      */
     public static ProductVersion getVesion() {
-        if (productVersion == null) {
-            productVersion = getVesion(getVersionFile());
-        }
-
-        return productVersion;
+        return getVesion(getVersionFile());
     }
 
     /**
