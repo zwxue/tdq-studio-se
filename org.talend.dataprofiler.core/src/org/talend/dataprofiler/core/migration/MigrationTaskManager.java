@@ -84,11 +84,14 @@ public final class MigrationTaskManager {
     }
 
     /**
-     * DOC bZhou Comment method "findValidMigrationTasks".
+     * DOC bZhou Comment method "getValidTasks".
      * 
+     * @param workspaceVersion
+     * @param currentVersion
+     * @param tasks
      * @return
      */
-    public static List<IMigrationTask> findValidTasks(ProductVersion workspaceVersion, ProductVersion currentVersion,
+    public static List<IMigrationTask> getValidTasks(ProductVersion workspaceVersion, ProductVersion currentVersion,
             List<IMigrationTask> tasks) {
 
         List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
@@ -112,14 +115,14 @@ public final class MigrationTaskManager {
     }
 
     /**
-     * DOC bZhou Comment method "findValidMigrationTasks".
+     * DOC bZhou Comment method "getValidTasks".
      * 
      * @return
      */
-    public static List<IMigrationTask> findValidTasks() {
+    public static List<IMigrationTask> getValidTasks() {
         ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
         ProductVersion cVersion = CorePlugin.getDefault().getProductVersion();
-        return findValidTasks(wVersion, cVersion, allTasks);
+        return getValidTasks(wVersion, cVersion, allTasks);
     }
 
     /**
@@ -128,7 +131,7 @@ public final class MigrationTaskManager {
      * @return
      */
     public static List<IMigrationTask> findWorksapceTasks() {
-        List<IMigrationTask> validTasks = findValidTasks();
+        List<IMigrationTask> validTasks = getValidTasks();
 
         Iterator<IMigrationTask> it = validTasks.iterator();
 
@@ -177,27 +180,23 @@ public final class MigrationTaskManager {
     }
 
     /**
-     * DOC bZhou Comment method "findMigrationTaskByType".
+     * DOC bZhou Comment method "findWorkspaceTaskByType".
      * 
      * @param type
+     * @param specifiedVersion
      * @return
      */
     public static List<IMigrationTask> findWorkspaceTaskByType(MigrationTaskType type, ProductVersion specifiedVersion) {
-        List<IMigrationTask> wTasks = findTasksByCategory(MigrationTaskCategory.WORKSPACE);
         List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
 
-        for (IMigrationTask task : wTasks) {
+        for (IMigrationTask task : allTasks) {
             if (task.getMigrationTaskType() == type) {
                 validTasks.add(task);
             }
         }
 
-        if (specifiedVersion != null) {
-            ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
-            return findValidTasks(specifiedVersion, currentVersion, validTasks);
-        }
-
-        return validTasks;
+        ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
+        return getValidTasks(specifiedVersion, currentVersion, validTasks);
     }
 
     /**
