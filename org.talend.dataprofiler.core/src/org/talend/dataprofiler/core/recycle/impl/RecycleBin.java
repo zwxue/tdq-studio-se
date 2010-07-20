@@ -16,8 +16,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.IRecycleBin;
 
 /**
- * @author Administrator
- *
+ * @author qiongli
+ * Recycle bin node
  */
 public class RecycleBin implements IRecycleBin {
 

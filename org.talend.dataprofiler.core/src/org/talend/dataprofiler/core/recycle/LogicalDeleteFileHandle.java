@@ -51,7 +51,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author qiongli
- * 
+ * handle logical delete and restore
  */
 public class LogicalDeleteFileHandle {
 

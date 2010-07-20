@@ -23,8 +23,8 @@ import org.talend.dataprofiler.core.ui.action.actions.DeleteFolderAction;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
 
 /**
- * @author Administrator
- *
+ * @author qiongli
+ * 
  */
 public class DeleteForeverProvider extends CommonActionProvider {
 

@@ -13,7 +13,7 @@
 package org.talend.dataprofiler.core.recycle;
 
 /**
- * @author Administrator
+ * @author qiongli
  *
  */
 public interface IRecycleBin {

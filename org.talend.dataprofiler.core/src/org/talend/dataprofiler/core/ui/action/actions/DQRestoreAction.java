@@ -38,7 +38,7 @@ import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * @author qiongli
- * 
+ * Restore recycle bin element
  */
 public class DQRestoreAction extends Action {
 

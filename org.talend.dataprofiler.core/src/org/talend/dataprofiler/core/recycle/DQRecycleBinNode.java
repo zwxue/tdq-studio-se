@@ -16,8 +16,8 @@ package org.talend.dataprofiler.core.recycle;
 import java.util.List;
 
 /**
- * @author Administrator
- *
+ * @author qiongli
+ * As a subNode under Recycle bin
  */
 public class DQRecycleBinNode {
 	
@@ -30,36 +30,31 @@ public class DQRecycleBinNode {
    }
 
 
-   /*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.talend.dataprofiler.core.recycle.IRecycleBinNode#getObject()
-	 */
+    /**
+     * store file or folder
+     * @return
+     */
 	public Object getObject() {
-		// TODO Auto-generated method stub
 		return obj;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.talend.dataprofiler.core.recycle.IRecycleBinNode#setObject(java.lang
-	 * .Object)
-	 */
+    /**
+     * 
+     * @param object
+     */
 	public void setObject(Object object) {
-		// TODO Auto-generated method stub
 		this.obj = object;
 
 	}
-	
+	/**
+	 * get its children
+	 * @return
+	 */
 	public List<Object> getDeletedChildren() {
-		// TODO Auto-generated method stub
 		return deletedChildren;
 	}
 
 	public void setDeletedChildren(List<Object> deletedChildren) {
-		// TODO Auto-generated method stub
 		this.deletedChildren=deletedChildren;
 		
 	}

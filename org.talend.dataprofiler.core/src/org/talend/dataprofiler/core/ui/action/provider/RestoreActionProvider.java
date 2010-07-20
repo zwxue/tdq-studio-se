@@ -17,7 +17,7 @@ import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.DQRestoreAction;
 
 /**
- * @author Administrator
+ * @author qiongli
  *
  */
 public class RestoreActionProvider extends CommonActionProvider {
@@ -25,7 +25,6 @@ public class RestoreActionProvider extends CommonActionProvider {
 	private DQRestoreAction restoreAction;
 	public RestoreActionProvider() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	/**
      * Adds a submenu to the given menu with the name "New Component".
@@ -33,7 +32,6 @@ public class RestoreActionProvider extends CommonActionProvider {
     public void fillContextMenu(IMenuManager menu) {
     	restoreAction = new DQRestoreAction();
         menu.add(restoreAction);
-//        restoreAction.run();
     }
 
 }

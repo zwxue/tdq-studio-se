@@ -31,8 +31,8 @@ import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * @author Administrator
- * 
+ * @author qiongli
+ * Get all selected elements which used to delete forever
  */
 public class SelectedResources {
 
