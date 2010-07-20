@@ -164,7 +164,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         return super.decorateText(input, element);
     }
 
-    private int getFileCount(IFolder parent, String[] filterExtensions) {
+    protected int getFileCount(IFolder parent, String[] filterExtensions) {
         int i = 0;
         List<String> extensions = Arrays.asList(filterExtensions);
         try {
