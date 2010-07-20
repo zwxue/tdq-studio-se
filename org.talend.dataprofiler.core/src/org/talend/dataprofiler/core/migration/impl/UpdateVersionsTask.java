@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.migration.impl;
 
 import org.talend.dataprofiler.core.migration.AProjectTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 
 /**
@@ -31,5 +32,14 @@ public class UpdateVersionsTask extends AProjectTask {
         WorkspaceVersionHelper.storeVersion();
 
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IMigrationTask#getMigrationTaskType()
+     */
+    public MigrationTaskType getMigrationTaskType() {
+        return MigrationTaskType.FILE;
     }
 }

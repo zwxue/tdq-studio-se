@@ -127,20 +127,15 @@ public final class MigrationTaskManager {
      * 
      * @return
      */
-    public static List<IMigrationTask> findNonDBValidTasks() {
-        ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
-        ProductVersion cVersion = CorePlugin.getDefault().getProductVersion();
-        List<IMigrationTask> validTasks = findValidTasks(wVersion, cVersion, allTasks);
+    public static List<IMigrationTask> findWorksapceTasks() {
+        List<IMigrationTask> validTasks = findValidTasks();
 
         Iterator<IMigrationTask> it = validTasks.iterator();
 
         while (it.hasNext()) {
             IMigrationTask task = it.next();
-            if (task.getTaskCategory() == MigrationTaskCategory.WORKSPACE) {
-                IWorkspaceMigrationTask wTask = (IWorkspaceMigrationTask) task;
-                if (wTask.getMigrationTaskType() == MigrationTaskType.DATABASE) {
-                    it.remove();
-                }
+            if (task.getMigrationTaskType() == MigrationTaskType.DATABASE) {
+                it.remove();
             }
         }
 
@@ -192,8 +187,7 @@ public final class MigrationTaskManager {
         List<IMigrationTask> validTasks = new ArrayList<IMigrationTask>();
 
         for (IMigrationTask task : wTasks) {
-            IWorkspaceMigrationTask wTask = (IWorkspaceMigrationTask) task;
-            if (wTask.getMigrationTaskType() == type) {
+            if (task.getMigrationTaskType() == type) {
                 validTasks.add(task);
             }
         }

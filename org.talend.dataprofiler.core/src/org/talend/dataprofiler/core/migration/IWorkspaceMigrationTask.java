@@ -23,7 +23,8 @@ public interface IWorkspaceMigrationTask {
     public enum MigrationTaskType {
         STUCTRUE,
         DATABASE,
-        FILE;
+        FILE,
+        SQLEXPLORER;
     }
 
     /**
@@ -39,11 +40,4 @@ public interface IWorkspaceMigrationTask {
      * @param version
      */
     public void setVersion(String version);
-
-    /**
-     * DOC bZhou Comment method "getMigrationTaskType".
-     * 
-     * @return
-     */
-    public MigrationTaskType getMigrationTaskType();
 }

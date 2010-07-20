@@ -21,6 +21,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.talend.dataprofiler.core.migration.AProjectTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -61,4 +62,12 @@ public class UpdateSQLExplorerDriversTask extends AProjectTask {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IMigrationTask#getMigrationTaskType()
+     */
+    public MigrationTaskType getMigrationTaskType() {
+        return MigrationTaskType.SQLEXPLORER;
+    }
 }

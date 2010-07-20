@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.migration;
 
 import java.util.Date;
 
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
+
 /**
  * DOC bZhou class global comment. Detailled comment
  */
@@ -99,4 +101,11 @@ public interface IMigrationTask {
      * @return
      */
     public MigrationTaskCategory getTaskCategory();
+
+    /**
+     * DOC bZhou Comment method "getMigrationTaskType".
+     * 
+     * @return
+     */
+    public MigrationTaskType getMigrationTaskType();
 }
