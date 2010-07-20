@@ -17,7 +17,7 @@ package org.talend.cwm.db.connection;
  */
 public final class XQueryExpressionUtil {
 
-    public static final int ROWS_PER_PAGE = 10;
+    public static final int ROWS_PER_PAGE = 100;
 
     private static StringBuffer expression = new StringBuffer();
 
