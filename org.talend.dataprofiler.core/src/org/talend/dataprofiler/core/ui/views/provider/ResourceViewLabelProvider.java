@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IMemento;
@@ -38,8 +39,8 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ImplementationHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -168,10 +169,20 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         List<String> extensions = Arrays.asList(filterExtensions);
         try {
             IResource[] members = parent.members();
+            //MOD qiongli,feature 9486.except the logical delete resources
+            IFile propFile=null;
             for (IResource resource : members) {
                 if (resource instanceof IFile) {
-                    if (extensions.contains(((IFile) resource).getFileExtension()))
-                        i++;
+                    if (extensions.contains(((IFile) resource).getFileExtension())){
+                    	propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+                    			((IFile)resource).getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
+                    	if (propFile.exists()) {
+                    		Property property = PropertyHelper.getProperty(propFile);
+                            if(!property.getItem().getState().isDeleted())
+                    		   i++;
+                    	}
+                    	
+                    }    
                     // MOD by zshen for bug 13755
                 } else if (resource instanceof IFolder) {
                     i += getFileCount((IFolder) resource, filterExtensions);

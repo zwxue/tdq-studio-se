@@ -181,6 +181,12 @@ public final class ImageLib {
     public static final String ICON_PROCESS_WIZARD = "process_wiz.png";
 
     public static final String ICON_ERROR_INFO = "error.gif";
+    
+    public static final String RECYCLEBIN_EMPTY = "recyclebinempty.png";
+    
+    public static final String RECYCLEBIN_OVERLAY = "recycle_bino_verlay.gif";
+    
+    public static final String RECYCLEBIN_FULL = "recyclebinfull.png";
 
     /**
      * DOC bzhou ImageLib constructor comment.

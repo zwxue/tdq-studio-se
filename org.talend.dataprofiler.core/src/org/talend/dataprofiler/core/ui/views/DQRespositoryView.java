@@ -354,7 +354,7 @@ public class DQRespositoryView extends CommonNavigator {
         IContextService contextService = (IContextService) getSite().getService(IContextService.class);
         contextService.activateContext(VIEW_CONTEXT_ID);
 
-        DeleteObjectsAction deleteObjectsAction = new DeleteObjectsAction();
+        DeleteObjectsAction deleteObjectsAction = new DeleteObjectsAction(false);
         IHandlerService service = (IHandlerService) getViewSite().getService(IHandlerService.class);
         service.activateHandler(deleteObjectsAction.getActionDefinitionId(), new ActionHandler(deleteObjectsAction));
     }

@@ -187,6 +187,12 @@
                 <instanceof
                       value="java.lang.String">
                 </instanceof>  
+                <instanceof
+                      value="org.talend.dataprofiler.core.recycle.IRecycleBin">
+                </instanceof>
+                <instanceof
+                      value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
+                </instanceof> 
               </or> 
            </possibleChildren>   
       </navigatorContent>    
@@ -685,6 +691,31 @@
              <instanceof
                    value="org.talend.dataquality.indicators.definition.IndicatorDefinition">
              </instanceof>
+          </enablement>
+       </actionProvider>
+       <actionProvider
+             class="org.talend.dataprofiler.core.ui.action.provider.RestoreActionProvider"
+             id="org.talend.dataprofiler.core.ui.action.provider.RestoreActionProvider">
+          <enablement>
+             <instanceof
+                   value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
+             </instanceof>
+          </enablement>
+       </actionProvider>
+       <actionProvider
+             class="org.talend.dataprofiler.core.ui.action.provider.DeleteForeverProvider"
+             id="org.talend.dataprofiler.core.ui.action.provider.DeleteForeverProvider">
+          <enablement>
+             <or>
+                <instanceof
+                      value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
+                </instanceof>
+                <and>
+                   <instanceof
+                         value="org.eclipse.core.resources.IFile">
+                   </instanceof>
+                </and>
+             </or>
           </enablement>
        </actionProvider>
   </extension>

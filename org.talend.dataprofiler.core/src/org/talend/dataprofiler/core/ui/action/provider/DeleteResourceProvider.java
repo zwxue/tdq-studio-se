@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
 
 /**
@@ -25,8 +28,13 @@ public class DeleteResourceProvider extends CommonActionProvider {
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
-        DeleteObjectsAction action = new DeleteObjectsAction();
-        menu.add(action);
+    	Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+		IFile file = (IFile) obj;
+		DeleteObjectsAction action = null;
+		if (FactoriesUtil.isEmfFile(file.getFileExtension())){
+			action = new DeleteObjectsAction(false);
+		}
+		menu.add(action);
     }
 
 }
