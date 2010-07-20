@@ -4,5 +4,5 @@
   <taggedValue xmi:id="_8mgIw4qnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the number of records"/>
   <categories href="../../../.Talend.definition#_ccKHEBF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="_8mgIxIqnEd-SocVM_rHvUg" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
-  <sqlGenericExpression xmi:id="_8mgv0IqnEd-SocVM_rHvUg" body="count(//&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%>)" language="MDM"/>
+  <sqlGenericExpression xmi:id="_8mgv0IqnEd-SocVM_rHvUg" body="count(//&lt;%=__TABLE_NAME__%>)" language="MDM"/>
 </dataquality.indicators.definition:IndicatorDefinition>

@@ -4,5 +4,5 @@
   <taggedValue xmi:id="_-Ypb0oqnEd-SocVM_rHvUg" tag="Description" value="counts the number of null rows"/>
   <categories href="../../../.Talend.definition#_ccKHEBF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="_-Ypb04qnEd-SocVM_rHvUg" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NULL &lt;%=__AND_WHERE_CLAUSE__%>" language="SQL"/>
-  <sqlGenericExpression xmi:id="_-Ypb1IqnEd-SocVM_rHvUg" body="count(for $x in //&lt;%=__TABLE_NAME__%>/&lt;%=__COLUMN_NAMES__%> return if ($x = '') then ($x) else())" language="MDM"/>
+  <sqlGenericExpression xmi:id="_-Ypb1IqnEd-SocVM_rHvUg" body="count(for $x in //&lt;%=__TABLE_NAME__%> return if ($x/&lt;%=__COLUMN_NAMES__%> != '') then () else($x))" language="MDM"/>
 </dataquality.indicators.definition:IndicatorDefinition>
