@@ -75,7 +75,7 @@ public class MdmStatement {
             return resultSetList;
         }
         int arraySize = columnTitle.length;
-        for (int i = 1; i < resultSet.length; i++) {//
+        for (int i = 0; i < resultSet.length; i++) {//
             Map<String, String> rowMap = new HashMap<String, String>();
             for (int j = 0; j < arraySize; j++) {
                 String columnTitleName = columnTitle[j].getName();
@@ -94,12 +94,11 @@ public class MdmStatement {
      * @param columnTitleName
      * @return
      */
-    private String getXmlNodeValue(String xmlValue, String columnTitleName) {
+    public String getXmlNodeValue(String xmlValue, String columnTitleName) {
         String matchStrHaveValue = "<" + columnTitleName + ">([^>^<]*)</" + columnTitleName + ">";
-        String matchStrNoValue = "<" + columnTitleName + "/>";
         Pattern pattern = Pattern.compile(matchStrHaveValue);
         Matcher matcher = pattern.matcher(xmlValue);
-        if (matcher.find(1)) {
+        if (matcher.find()) {
             return matcher.group(1);
         } else {
             return null;

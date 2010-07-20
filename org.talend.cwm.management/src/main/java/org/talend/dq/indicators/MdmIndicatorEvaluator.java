@@ -15,6 +15,7 @@ package org.talend.dq.indicators;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
 import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.db.connection.MdmStatement;
+import org.talend.cwm.db.connection.XQueryExpressionUtil;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -69,19 +71,33 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
         }
         MdmStatement statement = null;
         statement = mdmconn.createStatement();
+        String[] resultSet = null;
         if (continueRun()) {
             if (log.isInfoEnabled()) {
                 log.info("Executing query: " + sqlStatement);
             }
             try {
-                returnCode.setOk(statement.execute(tdXmlDocument, sqlStatement));
+                List<String> strResultList = new ArrayList<String>();
+                int totalcount = 0;
+                returnCode.setOk(true);
+                // init xQuery expression.
+                XQueryExpressionUtil.toParseXquery(sqlStatement);
+                do {
+                    returnCode.setOk(returnCode.isOk() && statement.execute(tdXmlDocument, XQueryExpressionUtil.getExpression()));
+                    List<String> strResultListTemp = Arrays.asList(statement.getResultSet());
+                    String totalNum = statement.getXmlNodeValue(strResultListTemp.get(0), "totalCount");
+                    totalcount = totalNum == null ? 0 : Integer.parseInt(totalNum);
+                    strResultList.addAll(strResultListTemp.subList(1, strResultListTemp.size()));
+                    XQueryExpressionUtil.increaseVernier();
+                } while (totalcount > strResultList.size());
+                resultSet = strResultList.toArray(new String[strResultList.size()]);
+
             } catch (RemoteException e) {
                 returnCode.setMessage(e.getMessage());
             } catch (ServiceException e) {
                 returnCode.setMessage(e.getMessage());
             }
         }
-        String[] resultSet = statement.getResultSet();
         if (resultSet == null) {
             String mess = "No result set for this statement: " + sqlStatement;
             log.warn(mess);

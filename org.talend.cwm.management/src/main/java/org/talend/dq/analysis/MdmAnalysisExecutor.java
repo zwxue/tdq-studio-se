@@ -21,6 +21,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.MdmConnection;
+import org.talend.cwm.db.connection.XQueryExpressionUtil;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -114,7 +115,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
-        int paginationNum = analysis.getParameters().getMaxNumberRows();
+        // int paginationNum = analysis.getParameters().getMaxNumberRows();
         StringBuilder sql = new StringBuilder("let $_leres0_ := //");
         StringBuilder selectElement = new StringBuilder();
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
@@ -203,7 +204,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         sql.append(parentAnalyzedElementName);
 
         sql.append(" in subsequence($_leres0_,1,");
-        sql.append(paginationNum);
+        sql.append(XQueryExpressionUtil.ROWS_PER_PAGE);
         sql.append(") ");
 
         // where--- get data filter
