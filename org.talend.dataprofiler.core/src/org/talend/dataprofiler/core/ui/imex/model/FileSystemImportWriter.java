@@ -91,9 +91,11 @@ public class FileSystemImportWriter implements IImexWriter {
             }
         }
 
-        versionFile = DqFileUtils.getFile(basePath.toFile(), VERSION_FILE_NAME);
+        if (basePath != null) {
+            versionFile = DqFileUtils.getFile(basePath.toFile(), VERSION_FILE_NAME);
 
-        definitionFile = DqFileUtils.getFile(basePath.toFile(), DEFINITION_FILE_NAME);
+            definitionFile = DqFileUtils.getFile(basePath.toFile(), DEFINITION_FILE_NAME);
+        }
 
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
     }

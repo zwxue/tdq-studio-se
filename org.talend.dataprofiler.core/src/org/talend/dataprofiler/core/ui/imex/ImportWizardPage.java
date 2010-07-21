@@ -286,8 +286,6 @@ public class ImportWizardPage extends WizardPage {
     private void checkforErrors() {
         List<String> dErrors = new ArrayList<String>();
 
-        dErrors.addAll(writer.check());
-
         if (repositoryTree.getTree().getItems().length == 0) {
             dErrors.add(Messages.getString("ImportWizardPage.0")); //$NON-NLS-1$
         }
@@ -295,6 +293,8 @@ public class ImportWizardPage extends WizardPage {
         if (repositoryTree.getCheckedElements().length == 0) {
             dErrors.add(Messages.getString("ImportWizardPage.1")); //$NON-NLS-1$
         }
+
+        dErrors.addAll(writer.check());
 
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
