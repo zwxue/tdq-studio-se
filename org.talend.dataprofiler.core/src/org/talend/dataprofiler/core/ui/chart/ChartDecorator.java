@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.jfree.chart.JFreeChart;
@@ -75,10 +76,30 @@ public final class ChartDecorator {
 
                 int count = chart.getXYPlot().getDataset().getSeriesCount();
                 for (int i = 0; i < count; i++) {
+                    // by zshen bug 14173 add the color in the colorList when chart neend more the color than 8.
+                    if (i >= colorList.size()) {
+                        colorList.add(generalRandomColor());
+                    }
+                    // ~14173
                     ((XYPlot) plot).getRenderer().setSeriesPaint(i, colorList.get(i));
                 }
             }
         }
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "generalRandomColor".
+     * 
+     * @return a object of color and don't contain into colorList
+     */
+    private static Color generalRandomColor() {
+        Random rad = new Random();
+        Color newColor = null;
+        do {
+            newColor = new Color(rad.nextInt(255), rad.nextInt(255), rad.nextInt(255));
+        } while (colorList.contains(newColor) || Color.white.equals(newColor));
+        return new Color(rad.nextInt(255), rad.nextInt(255), rad.nextInt(255));
     }
 
     /**

@@ -104,6 +104,13 @@ public class HideSeriesChartComposite extends ChartComposite {
         createHideSeriesArea();
 
         addSpecifiedListeners();
+        // by zshen for bug 14173: make the height to incream by itself when have more than 8 column to be choosed in
+        // the analysis.
+        GridData gd = new GridData();
+        gd.heightHint = indicator.getAnalyzedColumns().size() * 30 < 230 ? 230 : indicator.getAnalyzedColumns().size() * 30;
+        gd.widthHint = 460;
+        this.setLayoutData(gd);
+        // ~14173
     }
 
     private void addSpecifiedListeners() {

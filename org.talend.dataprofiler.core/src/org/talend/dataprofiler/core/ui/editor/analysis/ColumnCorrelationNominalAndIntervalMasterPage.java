@@ -150,7 +150,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         analyzedColumns = correlationAnalysisHandler.getAnalyzedColumns();
         if (correlationAnalysisHandler.getIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
-            //MOD qiongli 2010-6-18 bug 12766
+            // MOD qiongli 2010-6-18 bug 12766
             if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
                 columnSetMultiIndicator = columnsetFactory.createCountAvgNullIndicator();
                 // MOD xqliu 2010-04-06 bug 12161
@@ -430,14 +430,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                             Display.getDefault().asyncExec(new Runnable() {
 
                                 public void run() {
-                                    // carete chart
-                                    GridData gd = new GridData();
-                                    gd.heightHint = 230;
-                                    gd.widthHint = 460;
-
-                                    HideSeriesChartComposite hcc = new HideSeriesChartComposite(comp, analysis,
-                                            columnSetMultiIndicator, tdColumn, false);
-                                    hcc.setLayoutData(gd);
+                                    new HideSeriesChartComposite(comp, analysis, columnSetMultiIndicator, tdColumn, false);
                                 }
 
                             });
