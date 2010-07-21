@@ -59,36 +59,52 @@ public class HandleLuceneImpl implements HandleLucene {
 
 		return true;
 	}
+    /**
+     * 
+     * DOC Override getSearchResult
+     */
+    public Map<String, String[]> getSearchResult(String folderName,
+            String inputName, Map<String,String> information2value,boolean fuzzyQuery) throws IOException,
+            ParseException {
+        // TODO Auto-generated method stub
+        IndexSearcher searcher = getIndexSearcher(folderName);
+        
+        Analyzer searchAnalyzer = getAnalyzer();
 
-	/**
-	 * Expect that by accepting parameter and returns the correct result, if not
-	 * correspond with the result of searchwords, do a fuzzy query, returns the
-	 * result of the similar.
-	 * 
-	 * @param searchWords
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	public Map<String,String[]> getSearchResult(String searchType,String[] searchWords)
-			throws IOException, ParseException {
-		// TODO Auto-generated method stub
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher,
+                searchAnalyzer, hitsPerPage);
+        
+            ScoreDoc[] docs = stdname.standardize(inputName, information2value, fuzzyQuery);
+            treatSearchResult(searcher,inputName,docs);
+     
+            searcher.close();
 
-		IndexSearcher firtNameIs = getIndexSearcher(indexfolder);
+        return getHits();
+    }
 
-		Analyzer searchAnalyzer = getAnalyzer();
-
-		FirstNameStandardize stdname = new FirstNameStandardize(firtNameIs,
-				searchAnalyzer, hitsPerPage);
-		for (int searchCount = 0; searchCount < searchWords.length; searchCount++) {
-			ScoreDoc[] docs = stdname.standardize(searchType,searchWords[searchCount]);
-			treatSearchResult(firtNameIs,searchType,docs,searchWords[searchCount]);
-		}
-		firtNameIs.close();
-
-		return getHits();
-	}
-	/**
+	private void treatSearchResult(IndexSearcher searcher, String inputName, ScoreDoc[] docs) {
+        // TODO Auto-generated method stub
+	    soreDoc=new ArrayList<String>();
+        for (int i = 0; i < docs.length; ++i) {
+            int docId = docs[i].doc;
+            Document d = null;
+            try {
+                d = searcher.doc(docId);
+                String name = d.get("name");
+                soreDoc.add(name);
+            } catch (CorruptIndexException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        String[] resultArray =new String[soreDoc.size()];
+        hits.put(inputName, soreDoc.toArray(resultArray));
+        
+    }
+    /**
 	 * 
 	 * DOC Override getSearchResult
 	 */

@@ -32,9 +32,9 @@ public interface HandleLucene {
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	public Map<String, String[]> getSearchResult(String folderName,String searchType,
-			String[] searchWords) throws IOException, ParseException;
-
+	 public Map<String, String[]> getSearchResult(String folderName,
+	            String inputName, Map<String,String> information2value,boolean fuzzyQuery) throws IOException,
+	            ParseException ;
 	/**
 	 * Input filename to be indexed once for all and indexfolder to store the
 	 * files of indexing.
