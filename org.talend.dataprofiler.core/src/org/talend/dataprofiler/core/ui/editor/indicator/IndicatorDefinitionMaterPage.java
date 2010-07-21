@@ -31,13 +31,10 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -71,7 +68,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
@@ -1794,7 +1790,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ADD klliu 2010-06-01 bug 13451: Class name of Java User Define Indicator must be validated
         if (!checkJavaUDIBeforeSave()) {
             ((IndicatorEditor) this.getEditor()).setSaveActionButtonState(false);
-            String message = "Please checking the Class Name of Java or JarPath is right !";
+            String message = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.classPathError");//$NON-NLS-1$
             MessageUI.openWarning(message);
             return;
         }
