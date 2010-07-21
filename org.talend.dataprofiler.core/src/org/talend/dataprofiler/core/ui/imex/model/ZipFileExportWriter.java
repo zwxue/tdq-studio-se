@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -72,10 +74,12 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.imex.model.FileSystemExportWriter#checkBasePath()
+     * @see org.talend.dataprofiler.core.ui.imex.model.FileSystemExportWriter#check()
      */
     @Override
-    public ReturnCode checkBasePath() {
+    public List<String> check() {
+        List<String> errors = new ArrayList<String>();
+
         ReturnCode rc = new ReturnCode("The root file extension is invalid!", false);
 
         if (fileExtension != null) {
@@ -88,6 +92,10 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
             }
         }
 
-        return rc;
+        if (!rc.isOk()) {
+            errors.add(rc.getMessage());
+        }
+
+        return errors;
     }
 }

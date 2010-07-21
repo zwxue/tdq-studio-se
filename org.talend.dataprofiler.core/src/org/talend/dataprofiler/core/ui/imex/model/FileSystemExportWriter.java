@@ -29,7 +29,6 @@ import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -156,21 +155,6 @@ public class FileSystemExportWriter implements IImexWriter {
      */
     public IPath getBasePath() {
         return this.basePath;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#checkBasePath()
-     */
-    public ReturnCode checkBasePath() {
-        ReturnCode rc = new ReturnCode(true);
-
-        if (basePath == null || !basePath.toFile().exists()) {
-            rc.setOk(false);
-            rc.setMessage("The root directory does not exist");
-        }
-        return rc;
     }
 
     /*
