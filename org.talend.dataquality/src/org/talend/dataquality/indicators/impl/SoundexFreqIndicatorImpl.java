@@ -264,7 +264,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 			String array[] = new String[3];
 			Object obj = iterator.next();
 			if (obj == null) {
-				array[0] = SpecialValueDisplay.NULL_FIELD;// col value
+				array[0] = null;
 				array[2] = String.valueOf(0);// distinct count
 			} else {
 				array[0] = obj.toString();
@@ -286,9 +286,18 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 		// remove duplicate key of valueToFreqLs, and get total count every key for valueToFreq.
 		for (int i = 0; i < valueToFreqLs.size(); i++) {
 			foreArray = (String[]) valueToFreqLs.get(i);
+			//MOD qiongli 7-21
+			if(foreArray[0]==null){
+				disctinctVfMap.put(SpecialValueDisplay.NULL_FIELD, Long.valueOf(foreArray[2]));
+				vfMap.put(SpecialValueDisplay.NULL_FIELD, valueToFreq.get(foreArray[0]));
+				continue;
+			}
 			vfMap.put(foreArray[0], valueToFreq.get(foreArray[0]));
 			for (int j = i + 1; j < valueToFreqLs.size(); j++) {
 				afterArray = (String[]) valueToFreqLs.get(j);
+				if(afterArray[0]==null){
+					continue;
+				}
 				if (afterArray[1].equals(foreArray[1])) {
 					foreArray[2] = Long.valueOf(foreArray[2]).intValue() + 1+ "";
 					valueToFreqLs.remove(afterArray);
