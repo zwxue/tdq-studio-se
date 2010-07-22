@@ -93,7 +93,6 @@ public class FileSystemImportWriter implements IImexWriter {
 
         if (basePath != null) {
             versionFile = DqFileUtils.getFile(basePath.toFile(), VERSION_FILE_NAME);
-
             definitionFile = DqFileUtils.getFile(basePath.toFile(), DEFINITION_FILE_NAME);
         }
 
@@ -102,7 +101,7 @@ public class FileSystemImportWriter implements IImexWriter {
 
     private void retrieveProjectName(ItemRecord anyRecord) {
         Property property = anyRecord.getProperty();
-        if (projectName == null && property != null) {
+        if (property != null) {
 
             InternalEObject author = (InternalEObject) property.getAuthor();
             if (author != null && !author.eIsProxy()) {
