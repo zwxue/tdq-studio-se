@@ -287,15 +287,17 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 		for (int i = 0; i < valueToFreqLs.size(); i++) {
 			foreArray = (String[]) valueToFreqLs.get(i);
 			//MOD qiongli 7-21
-			if(foreArray[0]==null){
-				disctinctVfMap.put(SpecialValueDisplay.NULL_FIELD, Long.valueOf(foreArray[2]));
-				vfMap.put(SpecialValueDisplay.NULL_FIELD, valueToFreq.get(foreArray[0]));
+			if (foreArray[0] == null) {
+				disctinctVfMap.put(SpecialValueDisplay.NULL_FIELD, Long
+						.valueOf(foreArray[2]));
+				vfMap.put(SpecialValueDisplay.NULL_FIELD, valueToFreq
+						.get(foreArray[0]));
 				continue;
 			}
 			vfMap.put(foreArray[0], valueToFreq.get(foreArray[0]));
 			for (int j = i + 1; j < valueToFreqLs.size(); j++) {
 				afterArray = (String[]) valueToFreqLs.get(j);
-				if(afterArray[0]==null){
+				if (afterArray[0] == null) {
 					continue;
 				}
 				if (afterArray[1].equals(foreArray[1])) {
