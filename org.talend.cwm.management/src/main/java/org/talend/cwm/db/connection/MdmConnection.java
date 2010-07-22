@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -182,8 +184,23 @@ public class MdmConnection implements IXMLDBConnection {
             xsdFolder.create(true, true, new NullProgressMonitor());
         }
         IFile file = xsdFolder.getFile(resName + XSD_SUFIX);
-        file.create(new ByteArrayInputStream(resXSD.getBytes()), true, new NullProgressMonitor());
-
+        // zshen bug 14089: unfolder MDM node get exception.because of the encoding of stream
+        file.create(null, true, new NullProgressMonitor());
+        File f = file.getLocation().toFile();
+        FileOutputStream fos = null;
+        BufferedOutputStream bos = null;
+        DataOutputStream dos = null;
+        try {
+            fos = new FileOutputStream(f);
+            bos = new BufferedOutputStream(bos);
+            dos = new DataOutputStream(fos);
+            dos.writeUTF(resXSD);// UTF
+            dos.close();
+        } catch (Exception e) {
+            log.error(e);
+        }
+        // file.create(new ByteArrayInputStream(resXSD.getBytes()), true, new NullProgressMonitor());
+        // ~14089
         TdXMLDocument tdXmlDoc = XmlFactory.eINSTANCE.createTdXMLDocument();
         tdXmlDoc.setName(resName);
         // TODO Specify unique xsd file name.
