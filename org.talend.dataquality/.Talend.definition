@@ -96,4 +96,8 @@
     <taggedValue xmi:id="__dyW0HsXEd63r-VLO3_0OQ" tag="Description" value="contains user defined time correlation indicators"/>
     <taggedValue xmi:id="_A0qDIHsYEd63r-VLO3_0OQ" tag="Purpose" value="analyze the time correlations"/>
   </categories>
+  <categories xmi:id="_dXMWkJU7Ed-bydhkMeCarg" name="Business Rule" label="Business Rule">
+    <taggedValue xmi:id="_02aaEJU7Ed-bydhkMeCarg" tag="Description" value="applying business rules on analyzed tables"/>
+    <taggedValue xmi:id="_D2pfEJU8Ed-bydhkMeCarg" tag="Purpose" value="Analyze tables with rules"/>
+  </categories>
 </dataquality.indicators.definition:IndicatorsDefinitions>
