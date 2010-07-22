@@ -131,8 +131,16 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.TEXT_INDICATOR: return createTextIndicator();
             case IndicatorsPackage.MIN_LENGTH_INDICATOR: return createMinLengthIndicator();
             case IndicatorsPackage.MIN_LENGTH_WITH_NULL_INDICATOR: return createMinLengthWithNullIndicator();
+            case IndicatorsPackage.MIN_LENGTH_WITH_BLANK_INDICATOR: return createMinLengthWithBlankIndicator();
+            case IndicatorsPackage.MIN_LENGTH_WITH_BLANK_NULL_INDICATOR: return createMinLengthWithBlankNullIndicator();
             case IndicatorsPackage.MAX_LENGTH_INDICATOR: return createMaxLengthIndicator();
+            case IndicatorsPackage.MAX_LENGTH_WITH_NULL_INDICATOR: return createMaxLengthWithNullIndicator();
+            case IndicatorsPackage.MAX_LENGTH_WITH_BLANK_INDICATOR: return createMaxLengthWithBlankIndicator();
+            case IndicatorsPackage.MAX_LENGTH_WITH_BLANK_NULL_INDICATOR: return createMaxLengthWithBlankNullIndicator();
             case IndicatorsPackage.AVERAGE_LENGTH_INDICATOR: return createAverageLengthIndicator();
+            case IndicatorsPackage.AVG_LENGTH_WITH_NULL_INDICATOR: return createAvgLengthWithNullIndicator();
+            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR: return createAvgLengthWithBlankIndicator();
+            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_NULL_INDICATOR: return createAvgLengthWithBlankNullIndicator();
             case IndicatorsPackage.LENGTH_INDICATOR: return createLengthIndicator();
             case IndicatorsPackage.TEXT_PARAMETERS: return createTextParameters();
             case IndicatorsPackage.LOWER_QUARTILE_INDICATOR: return createLowerQuartileIndicator();
@@ -450,6 +458,26 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      * <!-- end-user-doc -->
      * @generated
      */
+    public MinLengthWithBlankIndicator createMinLengthWithBlankIndicator() {
+        MinLengthWithBlankIndicatorImpl minLengthWithBlankIndicator = new MinLengthWithBlankIndicatorImpl();
+        return minLengthWithBlankIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MinLengthWithBlankNullIndicator createMinLengthWithBlankNullIndicator() {
+        MinLengthWithBlankNullIndicatorImpl minLengthWithBlankNullIndicator = new MinLengthWithBlankNullIndicatorImpl();
+        return minLengthWithBlankNullIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public MaxLengthIndicator createMaxLengthIndicator() {
         MaxLengthIndicatorImpl maxLengthIndicator = new MaxLengthIndicatorImpl();
         return maxLengthIndicator;
@@ -460,9 +488,69 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      * <!-- end-user-doc -->
      * @generated
      */
+    public MaxLengthWithNullIndicator createMaxLengthWithNullIndicator() {
+        MaxLengthWithNullIndicatorImpl maxLengthWithNullIndicator = new MaxLengthWithNullIndicatorImpl();
+        return maxLengthWithNullIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MaxLengthWithBlankIndicator createMaxLengthWithBlankIndicator() {
+        MaxLengthWithBlankIndicatorImpl maxLengthWithBlankIndicator = new MaxLengthWithBlankIndicatorImpl();
+        return maxLengthWithBlankIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MaxLengthWithBlankNullIndicator createMaxLengthWithBlankNullIndicator() {
+        MaxLengthWithBlankNullIndicatorImpl maxLengthWithBlankNullIndicator = new MaxLengthWithBlankNullIndicatorImpl();
+        return maxLengthWithBlankNullIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public AverageLengthIndicator createAverageLengthIndicator() {
         AverageLengthIndicatorImpl averageLengthIndicator = new AverageLengthIndicatorImpl();
         return averageLengthIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public AvgLengthWithNullIndicator createAvgLengthWithNullIndicator() {
+        AvgLengthWithNullIndicatorImpl avgLengthWithNullIndicator = new AvgLengthWithNullIndicatorImpl();
+        return avgLengthWithNullIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public AvgLengthWithBlankIndicator createAvgLengthWithBlankIndicator() {
+        AvgLengthWithBlankIndicatorImpl avgLengthWithBlankIndicator = new AvgLengthWithBlankIndicatorImpl();
+        return avgLengthWithBlankIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public AvgLengthWithBlankNullIndicator createAvgLengthWithBlankNullIndicator() {
+        AvgLengthWithBlankNullIndicatorImpl avgLengthWithBlankNullIndicator = new AvgLengthWithBlankNullIndicatorImpl();
+        return avgLengthWithBlankNullIndicator;
     }
 
     /**

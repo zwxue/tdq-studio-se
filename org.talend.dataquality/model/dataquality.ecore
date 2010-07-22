@@ -550,8 +550,28 @@
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="MinLengthIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MinLengthWithNullIndicator" eSuperTypes="#//indicators/MinLengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MinLengthWithBlankIndicator" eSuperTypes="#//indicators/MinLengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MinLengthWithBlankNullIndicator" eSuperTypes="#//indicators/MinLengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MaxLengthIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithNullIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithBlankIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithBlankNullIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="AverageLengthIndicator" eSuperTypes="#//indicators/LengthIndicator">
+      <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sumLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
+          defaultValueLiteral="0"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithNullIndicator" eSuperTypes="#//indicators/LengthIndicator">
+      <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sumLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
+          defaultValueLiteral="0"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithBlankIndicator" eSuperTypes="#//indicators/LengthIndicator">
+      <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sumLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
+          defaultValueLiteral="0"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithBlankNullIndicator" eSuperTypes="#//indicators/LengthIndicator">
       <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="sumLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
           defaultValueLiteral="0"/>

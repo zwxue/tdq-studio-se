@@ -93,8 +93,16 @@ public final class ModelElementIndicatorRule {
         case TextIndicatorEnum:
         case MinLengthIndicatorEnum:
         case MinLengthWithNullIndicatorEnum:
+        case MinLengthWithBlankIndicatorEnum:
+        case MinLengthWithBlankNullIndicatorEnum:
         case MaxLengthIndicatorEnum:
+        case MaxLengthWithNullIndicatorEnum:
+        case MaxLengthWithBlankIndicatorEnum:
+        case MaxLengthWithBlankNullIndicatorEnum:
         case AverageLengthIndicatorEnum:
+        case AverageLengthWithNullIndicatorEnum:
+        case AverageLengthWithBlankIndicatorEnum:
+        case AverageLengthWithNullBlankIndicatorEnum:
 
             if (Java2SqlType.isTextInSQL(javaType)) {
                 if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.UNSTRUCTURED_TEXT) {

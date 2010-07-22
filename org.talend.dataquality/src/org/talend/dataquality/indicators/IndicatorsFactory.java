@@ -233,6 +233,24 @@ public interface IndicatorsFactory extends EFactory {
     MinLengthWithNullIndicator createMinLengthWithNullIndicator();
 
     /**
+     * Returns a new object of class '<em>Min Length With Blank Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Min Length With Blank Indicator</em>'.
+     * @generated
+     */
+    MinLengthWithBlankIndicator createMinLengthWithBlankIndicator();
+
+    /**
+     * Returns a new object of class '<em>Min Length With Blank Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Min Length With Blank Null Indicator</em>'.
+     * @generated
+     */
+    MinLengthWithBlankNullIndicator createMinLengthWithBlankNullIndicator();
+
+    /**
      * Returns a new object of class '<em>Max Length Indicator</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -242,6 +260,33 @@ public interface IndicatorsFactory extends EFactory {
     MaxLengthIndicator createMaxLengthIndicator();
 
     /**
+     * Returns a new object of class '<em>Max Length With Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Max Length With Null Indicator</em>'.
+     * @generated
+     */
+    MaxLengthWithNullIndicator createMaxLengthWithNullIndicator();
+
+    /**
+     * Returns a new object of class '<em>Max Length With Blank Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Max Length With Blank Indicator</em>'.
+     * @generated
+     */
+    MaxLengthWithBlankIndicator createMaxLengthWithBlankIndicator();
+
+    /**
+     * Returns a new object of class '<em>Max Length With Blank Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Max Length With Blank Null Indicator</em>'.
+     * @generated
+     */
+    MaxLengthWithBlankNullIndicator createMaxLengthWithBlankNullIndicator();
+
+    /**
      * Returns a new object of class '<em>Average Length Indicator</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -249,6 +294,33 @@ public interface IndicatorsFactory extends EFactory {
      * @generated
      */
     AverageLengthIndicator createAverageLengthIndicator();
+
+    /**
+     * Returns a new object of class '<em>Avg Length With Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Avg Length With Null Indicator</em>'.
+     * @generated
+     */
+    AvgLengthWithNullIndicator createAvgLengthWithNullIndicator();
+
+    /**
+     * Returns a new object of class '<em>Avg Length With Blank Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Avg Length With Blank Indicator</em>'.
+     * @generated
+     */
+    AvgLengthWithBlankIndicator createAvgLengthWithBlankIndicator();
+
+    /**
+     * Returns a new object of class '<em>Avg Length With Blank Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Avg Length With Blank Null Indicator</em>'.
+     * @generated
+     */
+    AvgLengthWithBlankNullIndicator createAvgLengthWithBlankNullIndicator();
 
     /**
      * Returns a new object of class '<em>Length Indicator</em>'.

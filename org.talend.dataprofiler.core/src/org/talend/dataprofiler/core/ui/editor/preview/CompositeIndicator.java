@@ -143,8 +143,16 @@ public final class CompositeIndicator {
                 break;
             case MinLengthIndicatorEnum:
             case MinLengthWithNullIndicatorEnum:
+            case MinLengthWithBlankIndicatorEnum:
+            case MinLengthWithBlankNullIndicatorEnum:
             case MaxLengthIndicatorEnum:
+            case MaxLengthWithNullIndicatorEnum:
+            case MaxLengthWithBlankIndicatorEnum:
+            case MaxLengthWithBlankNullIndicatorEnum:
             case AverageLengthIndicatorEnum:
+            case AverageLengthWithNullIndicatorEnum:
+            case AverageLengthWithBlankIndicatorEnum:
+            case AverageLengthWithNullBlankIndicatorEnum:
                 textList.add(one);
                 break;
             case FrequencyIndicatorEnum:

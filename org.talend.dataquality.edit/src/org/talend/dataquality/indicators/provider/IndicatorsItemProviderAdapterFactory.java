@@ -605,6 +605,52 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MinLengthWithBlankIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MinLengthWithBlankIndicatorItemProvider minLengthWithBlankIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.MinLengthWithBlankIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMinLengthWithBlankIndicatorAdapter() {
+        if (minLengthWithBlankIndicatorItemProvider == null) {
+            minLengthWithBlankIndicatorItemProvider = new MinLengthWithBlankIndicatorItemProvider(this);
+        }
+
+        return minLengthWithBlankIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MinLengthWithBlankNullIndicatorItemProvider minLengthWithBlankNullIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMinLengthWithBlankNullIndicatorAdapter() {
+        if (minLengthWithBlankNullIndicatorItemProvider == null) {
+            minLengthWithBlankNullIndicatorItemProvider = new MinLengthWithBlankNullIndicatorItemProvider(this);
+        }
+
+        return minLengthWithBlankNullIndicatorItemProvider;
+    }
+
+    /**
      * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MaxLengthIndicator} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -628,6 +674,75 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MaxLengthWithNullIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MaxLengthWithNullIndicatorItemProvider maxLengthWithNullIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.MaxLengthWithNullIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMaxLengthWithNullIndicatorAdapter() {
+        if (maxLengthWithNullIndicatorItemProvider == null) {
+            maxLengthWithNullIndicatorItemProvider = new MaxLengthWithNullIndicatorItemProvider(this);
+        }
+
+        return maxLengthWithNullIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MaxLengthWithBlankIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MaxLengthWithBlankIndicatorItemProvider maxLengthWithBlankIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.MaxLengthWithBlankIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMaxLengthWithBlankIndicatorAdapter() {
+        if (maxLengthWithBlankIndicatorItemProvider == null) {
+            maxLengthWithBlankIndicatorItemProvider = new MaxLengthWithBlankIndicatorItemProvider(this);
+        }
+
+        return maxLengthWithBlankIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MaxLengthWithBlankNullIndicatorItemProvider maxLengthWithBlankNullIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMaxLengthWithBlankNullIndicatorAdapter() {
+        if (maxLengthWithBlankNullIndicatorItemProvider == null) {
+            maxLengthWithBlankNullIndicatorItemProvider = new MaxLengthWithBlankNullIndicatorItemProvider(this);
+        }
+
+        return maxLengthWithBlankNullIndicatorItemProvider;
+    }
+
+    /**
      * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.AverageLengthIndicator} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -648,6 +763,75 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         }
 
         return averageLengthIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.AvgLengthWithNullIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AvgLengthWithNullIndicatorItemProvider avgLengthWithNullIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.AvgLengthWithNullIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAvgLengthWithNullIndicatorAdapter() {
+        if (avgLengthWithNullIndicatorItemProvider == null) {
+            avgLengthWithNullIndicatorItemProvider = new AvgLengthWithNullIndicatorItemProvider(this);
+        }
+
+        return avgLengthWithNullIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.AvgLengthWithBlankIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AvgLengthWithBlankIndicatorItemProvider avgLengthWithBlankIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.AvgLengthWithBlankIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAvgLengthWithBlankIndicatorAdapter() {
+        if (avgLengthWithBlankIndicatorItemProvider == null) {
+            avgLengthWithBlankIndicatorItemProvider = new AvgLengthWithBlankIndicatorItemProvider(this);
+        }
+
+        return avgLengthWithBlankIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AvgLengthWithBlankNullIndicatorItemProvider avgLengthWithBlankNullIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAvgLengthWithBlankNullIndicatorAdapter() {
+        if (avgLengthWithBlankNullIndicatorItemProvider == null) {
+            avgLengthWithBlankNullIndicatorItemProvider = new AvgLengthWithBlankNullIndicatorItemProvider(this);
+        }
+
+        return avgLengthWithBlankNullIndicatorItemProvider;
     }
 
     /**
@@ -1117,8 +1301,16 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (textIndicatorItemProvider != null) textIndicatorItemProvider.dispose();
         if (minLengthIndicatorItemProvider != null) minLengthIndicatorItemProvider.dispose();
         if (minLengthWithNullIndicatorItemProvider != null) minLengthWithNullIndicatorItemProvider.dispose();
+        if (minLengthWithBlankIndicatorItemProvider != null) minLengthWithBlankIndicatorItemProvider.dispose();
+        if (minLengthWithBlankNullIndicatorItemProvider != null) minLengthWithBlankNullIndicatorItemProvider.dispose();
         if (maxLengthIndicatorItemProvider != null) maxLengthIndicatorItemProvider.dispose();
+        if (maxLengthWithNullIndicatorItemProvider != null) maxLengthWithNullIndicatorItemProvider.dispose();
+        if (maxLengthWithBlankIndicatorItemProvider != null) maxLengthWithBlankIndicatorItemProvider.dispose();
+        if (maxLengthWithBlankNullIndicatorItemProvider != null) maxLengthWithBlankNullIndicatorItemProvider.dispose();
         if (averageLengthIndicatorItemProvider != null) averageLengthIndicatorItemProvider.dispose();
+        if (avgLengthWithNullIndicatorItemProvider != null) avgLengthWithNullIndicatorItemProvider.dispose();
+        if (avgLengthWithBlankIndicatorItemProvider != null) avgLengthWithBlankIndicatorItemProvider.dispose();
+        if (avgLengthWithBlankNullIndicatorItemProvider != null) avgLengthWithBlankNullIndicatorItemProvider.dispose();
         if (lengthIndicatorItemProvider != null) lengthIndicatorItemProvider.dispose();
         if (textParametersItemProvider != null) textParametersItemProvider.dispose();
         if (lowerQuartileIndicatorItemProvider != null) lowerQuartileIndicatorItemProvider.dispose();

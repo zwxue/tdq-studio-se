@@ -343,6 +343,28 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.MIN_LENGTH_WITH_BLANK_INDICATOR: {
+                MinLengthWithBlankIndicator minLengthWithBlankIndicator = (MinLengthWithBlankIndicator)theEObject;
+                T result = caseMinLengthWithBlankIndicator(minLengthWithBlankIndicator);
+                if (result == null) result = caseMinLengthIndicator(minLengthWithBlankIndicator);
+                if (result == null) result = caseLengthIndicator(minLengthWithBlankIndicator);
+                if (result == null) result = caseIndicator(minLengthWithBlankIndicator);
+                if (result == null) result = caseModelElement(minLengthWithBlankIndicator);
+                if (result == null) result = caseElement(minLengthWithBlankIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.MIN_LENGTH_WITH_BLANK_NULL_INDICATOR: {
+                MinLengthWithBlankNullIndicator minLengthWithBlankNullIndicator = (MinLengthWithBlankNullIndicator)theEObject;
+                T result = caseMinLengthWithBlankNullIndicator(minLengthWithBlankNullIndicator);
+                if (result == null) result = caseMinLengthIndicator(minLengthWithBlankNullIndicator);
+                if (result == null) result = caseLengthIndicator(minLengthWithBlankNullIndicator);
+                if (result == null) result = caseIndicator(minLengthWithBlankNullIndicator);
+                if (result == null) result = caseModelElement(minLengthWithBlankNullIndicator);
+                if (result == null) result = caseElement(minLengthWithBlankNullIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             case IndicatorsPackage.MAX_LENGTH_INDICATOR: {
                 MaxLengthIndicator maxLengthIndicator = (MaxLengthIndicator)theEObject;
                 T result = caseMaxLengthIndicator(maxLengthIndicator);
@@ -353,6 +375,36 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.MAX_LENGTH_WITH_NULL_INDICATOR: {
+                MaxLengthWithNullIndicator maxLengthWithNullIndicator = (MaxLengthWithNullIndicator)theEObject;
+                T result = caseMaxLengthWithNullIndicator(maxLengthWithNullIndicator);
+                if (result == null) result = caseLengthIndicator(maxLengthWithNullIndicator);
+                if (result == null) result = caseIndicator(maxLengthWithNullIndicator);
+                if (result == null) result = caseModelElement(maxLengthWithNullIndicator);
+                if (result == null) result = caseElement(maxLengthWithNullIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.MAX_LENGTH_WITH_BLANK_INDICATOR: {
+                MaxLengthWithBlankIndicator maxLengthWithBlankIndicator = (MaxLengthWithBlankIndicator)theEObject;
+                T result = caseMaxLengthWithBlankIndicator(maxLengthWithBlankIndicator);
+                if (result == null) result = caseLengthIndicator(maxLengthWithBlankIndicator);
+                if (result == null) result = caseIndicator(maxLengthWithBlankIndicator);
+                if (result == null) result = caseModelElement(maxLengthWithBlankIndicator);
+                if (result == null) result = caseElement(maxLengthWithBlankIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.MAX_LENGTH_WITH_BLANK_NULL_INDICATOR: {
+                MaxLengthWithBlankNullIndicator maxLengthWithBlankNullIndicator = (MaxLengthWithBlankNullIndicator)theEObject;
+                T result = caseMaxLengthWithBlankNullIndicator(maxLengthWithBlankNullIndicator);
+                if (result == null) result = caseLengthIndicator(maxLengthWithBlankNullIndicator);
+                if (result == null) result = caseIndicator(maxLengthWithBlankNullIndicator);
+                if (result == null) result = caseModelElement(maxLengthWithBlankNullIndicator);
+                if (result == null) result = caseElement(maxLengthWithBlankNullIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             case IndicatorsPackage.AVERAGE_LENGTH_INDICATOR: {
                 AverageLengthIndicator averageLengthIndicator = (AverageLengthIndicator)theEObject;
                 T result = caseAverageLengthIndicator(averageLengthIndicator);
@@ -360,6 +412,36 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = caseIndicator(averageLengthIndicator);
                 if (result == null) result = caseModelElement(averageLengthIndicator);
                 if (result == null) result = caseElement(averageLengthIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.AVG_LENGTH_WITH_NULL_INDICATOR: {
+                AvgLengthWithNullIndicator avgLengthWithNullIndicator = (AvgLengthWithNullIndicator)theEObject;
+                T result = caseAvgLengthWithNullIndicator(avgLengthWithNullIndicator);
+                if (result == null) result = caseLengthIndicator(avgLengthWithNullIndicator);
+                if (result == null) result = caseIndicator(avgLengthWithNullIndicator);
+                if (result == null) result = caseModelElement(avgLengthWithNullIndicator);
+                if (result == null) result = caseElement(avgLengthWithNullIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR: {
+                AvgLengthWithBlankIndicator avgLengthWithBlankIndicator = (AvgLengthWithBlankIndicator)theEObject;
+                T result = caseAvgLengthWithBlankIndicator(avgLengthWithBlankIndicator);
+                if (result == null) result = caseLengthIndicator(avgLengthWithBlankIndicator);
+                if (result == null) result = caseIndicator(avgLengthWithBlankIndicator);
+                if (result == null) result = caseModelElement(avgLengthWithBlankIndicator);
+                if (result == null) result = caseElement(avgLengthWithBlankIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_NULL_INDICATOR: {
+                AvgLengthWithBlankNullIndicator avgLengthWithBlankNullIndicator = (AvgLengthWithBlankNullIndicator)theEObject;
+                T result = caseAvgLengthWithBlankNullIndicator(avgLengthWithBlankNullIndicator);
+                if (result == null) result = caseLengthIndicator(avgLengthWithBlankNullIndicator);
+                if (result == null) result = caseIndicator(avgLengthWithBlankNullIndicator);
+                if (result == null) result = caseModelElement(avgLengthWithBlankNullIndicator);
+                if (result == null) result = caseElement(avgLengthWithBlankNullIndicator);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -1116,6 +1198,36 @@ public class IndicatorsSwitch<T> {
     }
 
     /**
+     * Returns the result of interpreting the object as an instance of '<em>Min Length With Blank Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Min Length With Blank Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMinLengthWithBlankIndicator(MinLengthWithBlankIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Min Length With Blank Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Min Length With Blank Null Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMinLengthWithBlankNullIndicator(MinLengthWithBlankNullIndicator object) {
+        return null;
+    }
+
+    /**
      * Returns the result of interpreting the object as an instance of '<em>Max Length Indicator</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
@@ -1131,6 +1243,51 @@ public class IndicatorsSwitch<T> {
     }
 
     /**
+     * Returns the result of interpreting the object as an instance of '<em>Max Length With Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Max Length With Null Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMaxLengthWithNullIndicator(MaxLengthWithNullIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Max Length With Blank Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Max Length With Blank Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMaxLengthWithBlankIndicator(MaxLengthWithBlankIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Max Length With Blank Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Max Length With Blank Null Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMaxLengthWithBlankNullIndicator(MaxLengthWithBlankNullIndicator object) {
+        return null;
+    }
+
+    /**
      * Returns the result of interpreting the object as an instance of '<em>Average Length Indicator</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
@@ -1142,6 +1299,51 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseAverageLengthIndicator(AverageLengthIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Avg Length With Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Avg Length With Null Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAvgLengthWithNullIndicator(AvgLengthWithNullIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Avg Length With Blank Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Avg Length With Blank Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAvgLengthWithBlankIndicator(AvgLengthWithBlankIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Avg Length With Blank Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Avg Length With Blank Null Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAvgLengthWithBlankNullIndicator(AvgLengthWithBlankNullIndicator object) {
         return null;
     }
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_-_UFUJSOEd-TE5ti6XNR2Q" name="Maximal Length With Null" label="Maximal Length With Null">
+  <taggedValue xmi:id="_-_UFUZSOEd-TE5ti6XNR2Q" tag="Description" value="computes the maximal length of a text field. counting null data in the mean time."/>
+  <taggedValue xmi:id="_-_UFUpSOEd-TE5ti6XNR2Q" tag="Purpose" value="evaluates the length of the longest textual record"/>
+  <categories href="../../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
+  <sqlGenericExpression xmi:id="_-_UFVJSOEd-TE5ti6XNR2Q" body="SELECT MAX(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+  <sqlGenericExpression xmi:id="_-_UFVZSOEd-TE5ti6XNR2Q" body="SELECT MAX(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+  <sqlGenericExpression xmi:id="_-_UFVpSOEd-TE5ti6XNR2Q" body="SELECT MAX(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+  <sqlGenericExpression xmi:id="_-_UFV5SOEd-TE5ti6XNR2Q" body="SELECT MAX(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
+  <sqlGenericExpression xmi:id="_-_UFWJSOEd-TE5ti6XNR2Q" body="SELECT MAX(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Ingres"/>
+</dataquality.indicators.definition:IndicatorDefinition>

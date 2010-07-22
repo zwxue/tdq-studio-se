@@ -70,14 +70,56 @@ public enum IndicatorEnum {
                                    "Minimal Length With Null", //$NON-NLS-1$
                                    null),
 
+    MinLengthWithBlankIndicatorEnum(
+                                    IndicatorsPackage.MIN_LENGTH_WITH_BLANK_INDICATOR,
+                                    IndicatorsPackage.Literals.MIN_LENGTH_WITH_BLANK_INDICATOR,
+                                    "Minimal Length With Blank", //$NON-NLS-1$
+                                    null),
+
+    MinLengthWithBlankNullIndicatorEnum(
+                                        IndicatorsPackage.MIN_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                                        IndicatorsPackage.Literals.MIN_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                                        "Minimal Length With Blank and Null", //$NON-NLS-1$
+                                        null),
+
     MaxLengthIndicatorEnum(IndicatorsPackage.MAX_LENGTH_INDICATOR, IndicatorsPackage.Literals.MAX_LENGTH_INDICATOR, "max length", //$NON-NLS-1$
                            null),
+    MaxLengthWithNullIndicatorEnum(
+                                   IndicatorsPackage.MAX_LENGTH_WITH_NULL_INDICATOR,
+                                   IndicatorsPackage.Literals.MAX_LENGTH_WITH_NULL_INDICATOR,
+                                   "Maximal Length With Null", //$NON-NLS-1$
+                                   null),
+    MaxLengthWithBlankIndicatorEnum(
+                                    IndicatorsPackage.MAX_LENGTH_WITH_BLANK_INDICATOR,
+                                    IndicatorsPackage.Literals.MAX_LENGTH_WITH_BLANK_INDICATOR,
+                                    "Maximal Length With Blank", //$NON-NLS-1$
+                                    null),
+    MaxLengthWithBlankNullIndicatorEnum(
+                                        IndicatorsPackage.MAX_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                                        IndicatorsPackage.Literals.MAX_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                                        "Maximal Length With Blank and Null", //$NON-NLS-1$
+                                        null),
 
     AverageLengthIndicatorEnum(
                                IndicatorsPackage.AVERAGE_LENGTH_INDICATOR,
                                IndicatorsPackage.Literals.AVERAGE_LENGTH_INDICATOR,
                                "average length", //$NON-NLS-1$
                                null),
+    AverageLengthWithNullIndicatorEnum(
+                                       IndicatorsPackage.AVG_LENGTH_WITH_NULL_INDICATOR,
+                                       IndicatorsPackage.Literals.AVG_LENGTH_WITH_NULL_INDICATOR,
+                                       "Average Length With Null", //$NON-NLS-1$
+                                       null),
+    AverageLengthWithBlankIndicatorEnum(
+                                        IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR,
+                                        IndicatorsPackage.Literals.AVG_LENGTH_WITH_BLANK_INDICATOR,
+                                        "Average Length With Blank", //$NON-NLS-1$
+                                        null),
+    AverageLengthWithNullBlankIndicatorEnum(
+                                            IndicatorsPackage.AVG_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                                            IndicatorsPackage.Literals.AVG_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                                            "Average Length With Blank and Null", //$NON-NLS-1$
+                                            null),
 
     ModeIndicatorEnum(IndicatorsPackage.MODE_INDICATOR, IndicatorsPackage.Literals.MODE_INDICATOR, "mode", null), //$NON-NLS-1$
     FrequencyIndicatorEnum(
@@ -140,8 +182,12 @@ public enum IndicatorEnum {
                                 UniqueIndicatorEnum, DuplicateCountIndicatorEnum, BlankCountIndicatorEnum,
                                 DefValueCountIndicatorEnum }),
     TextIndicatorEnum(IndicatorsPackage.TEXT_INDICATOR, IndicatorsPackage.Literals.TEXT_INDICATOR, "Text Statistics", //$NON-NLS-1$
-                      new IndicatorEnum[] { MinLengthIndicatorEnum, MinLengthWithNullIndicatorEnum, MaxLengthIndicatorEnum,
-                              AverageLengthIndicatorEnum }),
+                      new IndicatorEnum[] { MinLengthIndicatorEnum, MinLengthWithNullIndicatorEnum,
+                              MinLengthWithBlankIndicatorEnum, MinLengthWithBlankNullIndicatorEnum, MaxLengthIndicatorEnum,
+                              MaxLengthWithNullIndicatorEnum, MaxLengthWithBlankIndicatorEnum,
+                              MaxLengthWithBlankNullIndicatorEnum, AverageLengthIndicatorEnum,
+                              AverageLengthWithNullIndicatorEnum, AverageLengthWithBlankIndicatorEnum,
+                              AverageLengthWithNullBlankIndicatorEnum }),
     IQRIndicatorEnum(IndicatorsPackage.IQR_INDICATOR, IndicatorsPackage.Literals.IQR_INDICATOR, "Inter Quartile Range", //$NON-NLS-1$
                      new IndicatorEnum[] { LowerQuartileIndicatorEnum, UpperQuartileIndicatorEnum }),
     RangeIndicatorEnum(IndicatorsPackage.RANGE_INDICATOR, IndicatorsPackage.Literals.RANGE_INDICATOR, "Range", //$NON-NLS-1$
@@ -287,10 +333,26 @@ public enum IndicatorEnum {
             returnEnum = MinLengthIndicatorEnum;
         } else if (indicatorType == MinLengthWithNullIndicatorEnum.getIndicatorType()) {
             returnEnum = MinLengthWithNullIndicatorEnum;
+        } else if (indicatorType == MinLengthWithBlankIndicatorEnum.getIndicatorType()) {
+            returnEnum = MinLengthWithBlankIndicatorEnum;
+        } else if (indicatorType == MinLengthWithBlankNullIndicatorEnum.getIndicatorType()) {
+            returnEnum = MinLengthWithBlankNullIndicatorEnum;
+        } else if (indicatorType == MaxLengthWithNullIndicatorEnum.getIndicatorType()) {
+            returnEnum = MaxLengthWithNullIndicatorEnum;
         } else if (indicatorType == MaxLengthIndicatorEnum.getIndicatorType()) {
             returnEnum = MaxLengthIndicatorEnum;
+        } else if (indicatorType == MaxLengthWithBlankIndicatorEnum.getIndicatorType()) {
+            returnEnum = MaxLengthWithBlankIndicatorEnum;
+        } else if (indicatorType == MaxLengthWithBlankNullIndicatorEnum.getIndicatorType()) {
+            returnEnum = MaxLengthWithBlankNullIndicatorEnum;
         } else if (indicatorType == AverageLengthIndicatorEnum.getIndicatorType()) {
             returnEnum = AverageLengthIndicatorEnum;
+        } else if (indicatorType == AverageLengthWithBlankIndicatorEnum.getIndicatorType()) {
+            returnEnum = AverageLengthWithBlankIndicatorEnum;
+        } else if (indicatorType == AverageLengthWithNullIndicatorEnum.getIndicatorType()) {
+            returnEnum = AverageLengthWithNullIndicatorEnum;
+        } else if (indicatorType == AverageLengthWithNullBlankIndicatorEnum.getIndicatorType()) {
+            returnEnum = AverageLengthWithNullBlankIndicatorEnum;
         } else if (indicatorType == ModeIndicatorEnum.getIndicatorType()) {
             returnEnum = ModeIndicatorEnum;
         } else if (indicatorType == MeanIndicatorEnum.getIndicatorType()) {

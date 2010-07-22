@@ -14,6 +14,9 @@ package org.talend.dq.indicators.definitions;
 
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
@@ -28,10 +31,15 @@ import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinLengthIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
@@ -75,7 +83,6 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  * mzhao split system indicators. feature 13676, 2010-07-12
  */
 public class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
-
 
     public IndcatorSwitchImp() {
     }
@@ -404,6 +411,16 @@ public class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     }
 
     @Override
+    public Boolean caseMinLengthWithBlankIndicator(MinLengthWithBlankIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.MinLengthWithBlankIndicatorEnum.getLabel());
+    }
+
+    @Override
+    public Boolean caseMinLengthWithBlankNullIndicator(MinLengthWithBlankNullIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.MinLengthWithBlankNullIndicatorEnum.getLabel());
+    }
+
+    @Override
     public Boolean caseMedianIndicator(MedianIndicator object) {
         return setIndicatorDefinition(object, "Median"); //$NON-NLS-1$
     }
@@ -416,6 +433,21 @@ public class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     @Override
     public Boolean caseMaxValueIndicator(MaxValueIndicator object) {
         return setIndicatorDefinition(object, "Maximum"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseMaxLengthWithNullIndicator(MaxLengthWithNullIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.MaxLengthWithNullIndicatorEnum.getLabel());
+    }
+
+    @Override
+    public Boolean caseMaxLengthWithBlankIndicator(MaxLengthWithBlankIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.MaxLengthWithBlankIndicatorEnum.getLabel());
+    }
+
+    @Override
+    public Boolean caseMaxLengthWithBlankNullIndicator(MaxLengthWithBlankNullIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.MaxLengthWithBlankNullIndicatorEnum.getLabel());
     }
 
     @Override
@@ -483,6 +515,21 @@ public class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     @Override
     public Boolean caseAverageLengthIndicator(AverageLengthIndicator object) {
         return setIndicatorDefinition(object, "Average Length"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseAvgLengthWithNullIndicator(AvgLengthWithNullIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.AverageLengthWithNullIndicatorEnum.getLabel());
+    }
+
+    @Override
+    public Boolean caseAvgLengthWithBlankIndicator(AvgLengthWithBlankIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.AverageLengthWithBlankIndicatorEnum.getLabel());
+    }
+
+    @Override
+    public Boolean caseAvgLengthWithBlankNullIndicator(AvgLengthWithBlankNullIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.AverageLengthWithNullBlankIndicatorEnum.getLabel());
     }
 
     @Override

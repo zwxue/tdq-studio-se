@@ -204,12 +204,44 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
                 return createMinLengthWithNullIndicatorAdapter();
             }
             @Override
+            public Adapter caseMinLengthWithBlankIndicator(MinLengthWithBlankIndicator object) {
+                return createMinLengthWithBlankIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseMinLengthWithBlankNullIndicator(MinLengthWithBlankNullIndicator object) {
+                return createMinLengthWithBlankNullIndicatorAdapter();
+            }
+            @Override
             public Adapter caseMaxLengthIndicator(MaxLengthIndicator object) {
                 return createMaxLengthIndicatorAdapter();
             }
             @Override
+            public Adapter caseMaxLengthWithNullIndicator(MaxLengthWithNullIndicator object) {
+                return createMaxLengthWithNullIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseMaxLengthWithBlankIndicator(MaxLengthWithBlankIndicator object) {
+                return createMaxLengthWithBlankIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseMaxLengthWithBlankNullIndicator(MaxLengthWithBlankNullIndicator object) {
+                return createMaxLengthWithBlankNullIndicatorAdapter();
+            }
+            @Override
             public Adapter caseAverageLengthIndicator(AverageLengthIndicator object) {
                 return createAverageLengthIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseAvgLengthWithNullIndicator(AvgLengthWithNullIndicator object) {
+                return createAvgLengthWithNullIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseAvgLengthWithBlankIndicator(AvgLengthWithBlankIndicator object) {
+                return createAvgLengthWithBlankIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseAvgLengthWithBlankNullIndicator(AvgLengthWithBlankNullIndicator object) {
+                return createAvgLengthWithBlankNullIndicatorAdapter();
             }
             @Override
             public Adapter caseLengthIndicator(LengthIndicator object) {
@@ -630,6 +662,34 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MinLengthWithBlankIndicator <em>Min Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.MinLengthWithBlankIndicator
+     * @generated
+     */
+    public Adapter createMinLengthWithBlankIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator <em>Min Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator
+     * @generated
+     */
+    public Adapter createMinLengthWithBlankNullIndicatorAdapter() {
+        return null;
+    }
+
+    /**
      * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MaxLengthIndicator <em>Max Length Indicator</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
@@ -644,6 +704,48 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MaxLengthWithNullIndicator <em>Max Length With Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.MaxLengthWithNullIndicator
+     * @generated
+     */
+    public Adapter createMaxLengthWithNullIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MaxLengthWithBlankIndicator <em>Max Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.MaxLengthWithBlankIndicator
+     * @generated
+     */
+    public Adapter createMaxLengthWithBlankIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator <em>Max Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator
+     * @generated
+     */
+    public Adapter createMaxLengthWithBlankNullIndicatorAdapter() {
+        return null;
+    }
+
+    /**
      * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.AverageLengthIndicator <em>Average Length Indicator</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
@@ -654,6 +756,48 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createAverageLengthIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.AvgLengthWithNullIndicator <em>Avg Length With Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.AvgLengthWithNullIndicator
+     * @generated
+     */
+    public Adapter createAvgLengthWithNullIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.AvgLengthWithBlankIndicator <em>Avg Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.AvgLengthWithBlankIndicator
+     * @generated
+     */
+    public Adapter createAvgLengthWithBlankIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator <em>Avg Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator
+     * @generated
+     */
+    public Adapter createAvgLengthWithBlankNullIndicatorAdapter() {
         return null;
     }
 

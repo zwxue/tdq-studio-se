@@ -29,10 +29,15 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinLengthIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
@@ -114,11 +119,43 @@ public final class IndicatorCommonUtil {
                     tempObject = ((MinLengthWithNullIndicator) indicator).getLength();
                     break;
 
+                case MinLengthWithBlankIndicatorEnum:
+                    tempObject = ((MinLengthWithBlankIndicator) indicator).getLength();
+                    break;
+
+                case MinLengthWithBlankNullIndicatorEnum:
+                    tempObject = ((MinLengthWithBlankNullIndicator) indicator).getLength();
+                    break;
+
                 case MaxLengthIndicatorEnum:
                     tempObject = ((MaxLengthIndicator) indicator).getLength();
                     break;
 
+                case MaxLengthWithNullIndicatorEnum:
+                    tempObject = ((MaxLengthWithNullIndicator) indicator).getLength();
+                    break;
+
+                case MaxLengthWithBlankIndicatorEnum:
+                    tempObject = ((MaxLengthWithBlankIndicator) indicator).getLength();
+                    break;
+
+                case MaxLengthWithBlankNullIndicatorEnum:
+                    tempObject = ((MaxLengthWithBlankNullIndicator) indicator).getLength();
+                    break;
+
                 case AverageLengthIndicatorEnum:
+                    tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
+                    break;
+
+                case AverageLengthWithNullIndicatorEnum:
+                    tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
+                    break;
+
+                case AverageLengthWithBlankIndicatorEnum:
+                    tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
+                    break;
+
+                case AverageLengthWithNullBlankIndicatorEnum:
                     tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
                     break;
 

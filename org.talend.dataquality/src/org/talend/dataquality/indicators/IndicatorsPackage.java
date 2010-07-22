@@ -6445,7 +6445,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getLengthIndicator()
      * @generated
      */
-    int LENGTH_INDICATOR = 25;
+    int LENGTH_INDICATOR = 33;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7359,6 +7359,620 @@ public interface IndicatorsPackage extends EPackage {
     int MIN_LENGTH_WITH_NULL_INDICATOR_FEATURE_COUNT = MIN_LENGTH_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MinLengthWithBlankIndicatorImpl <em>Min Length With Blank Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MinLengthWithBlankIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMinLengthWithBlankIndicator()
+     * @generated
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR = 23;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__NAME = MIN_LENGTH_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__VISIBILITY = MIN_LENGTH_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__CLIENT_DEPENDENCY = MIN_LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__SUPPLIER_DEPENDENCY = MIN_LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__CONSTRAINT = MIN_LENGTH_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__NAMESPACE = MIN_LENGTH_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__IMPORTER = MIN_LENGTH_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__STEREOTYPE = MIN_LENGTH_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__TAGGED_VALUE = MIN_LENGTH_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__DOCUMENT = MIN_LENGTH_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__DESCRIPTION = MIN_LENGTH_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__RESPONSIBLE_PARTY = MIN_LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__ELEMENT_NODE = MIN_LENGTH_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__SET = MIN_LENGTH_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__RENDERED_OBJECT = MIN_LENGTH_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__VOCABULARY_ELEMENT = MIN_LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__MEASUREMENT = MIN_LENGTH_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__CHANGE_REQUEST = MIN_LENGTH_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__DASDL_PROPERTY = MIN_LENGTH_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__COUNT = MIN_LENGTH_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__NULL_COUNT = MIN_LENGTH_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__PARAMETERS = MIN_LENGTH_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__ANALYZED_ELEMENT = MIN_LENGTH_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__DATAMINING_TYPE = MIN_LENGTH_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__INDICATOR_DEFINITION = MIN_LENGTH_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__INSTANTIATED_EXPRESSIONS = MIN_LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__COMPUTED = MIN_LENGTH_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__JOIN_CONDITIONS = MIN_LENGTH_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__MAX_NUMBER_ROWS = MIN_LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__VALID_ROW = MIN_LENGTH_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = MIN_LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__LENGTH = MIN_LENGTH_INDICATOR__LENGTH;
+
+    /**
+     * The number of structural features of the '<em>Min Length With Blank Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR_FEATURE_COUNT = MIN_LENGTH_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MinLengthWithBlankNullIndicatorImpl <em>Min Length With Blank Null Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MinLengthWithBlankNullIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMinLengthWithBlankNullIndicator()
+     * @generated
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR = 24;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__NAME = MIN_LENGTH_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__VISIBILITY = MIN_LENGTH_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__CLIENT_DEPENDENCY = MIN_LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__SUPPLIER_DEPENDENCY = MIN_LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__CONSTRAINT = MIN_LENGTH_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__NAMESPACE = MIN_LENGTH_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__IMPORTER = MIN_LENGTH_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__STEREOTYPE = MIN_LENGTH_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__TAGGED_VALUE = MIN_LENGTH_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__DOCUMENT = MIN_LENGTH_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__DESCRIPTION = MIN_LENGTH_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__RESPONSIBLE_PARTY = MIN_LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__ELEMENT_NODE = MIN_LENGTH_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__SET = MIN_LENGTH_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__RENDERED_OBJECT = MIN_LENGTH_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__VOCABULARY_ELEMENT = MIN_LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__MEASUREMENT = MIN_LENGTH_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__CHANGE_REQUEST = MIN_LENGTH_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__DASDL_PROPERTY = MIN_LENGTH_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__COUNT = MIN_LENGTH_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__NULL_COUNT = MIN_LENGTH_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__PARAMETERS = MIN_LENGTH_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__ANALYZED_ELEMENT = MIN_LENGTH_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__DATAMINING_TYPE = MIN_LENGTH_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__INDICATOR_DEFINITION = MIN_LENGTH_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = MIN_LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__COMPUTED = MIN_LENGTH_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__JOIN_CONDITIONS = MIN_LENGTH_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__MAX_NUMBER_ROWS = MIN_LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__VALID_ROW = MIN_LENGTH_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = MIN_LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__LENGTH = MIN_LENGTH_INDICATOR__LENGTH;
+
+    /**
+     * The number of structural features of the '<em>Min Length With Blank Null Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR_FEATURE_COUNT = MIN_LENGTH_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MaxLengthIndicatorImpl <em>Max Length Indicator</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7366,7 +7980,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMaxLengthIndicator()
      * @generated
      */
-    int MAX_LENGTH_INDICATOR = 23;
+    int MAX_LENGTH_INDICATOR = 25;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7666,6 +8280,927 @@ public interface IndicatorsPackage extends EPackage {
     int MAX_LENGTH_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MaxLengthWithNullIndicatorImpl <em>Max Length With Null Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MaxLengthWithNullIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMaxLengthWithNullIndicator()
+     * @generated
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR = 26;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__SET = LENGTH_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+
+    /**
+     * The number of structural features of the '<em>Max Length With Null Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MaxLengthWithBlankIndicatorImpl <em>Max Length With Blank Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MaxLengthWithBlankIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMaxLengthWithBlankIndicator()
+     * @generated
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR = 27;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__SET = LENGTH_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+
+    /**
+     * The number of structural features of the '<em>Max Length With Blank Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MaxLengthWithBlankNullIndicatorImpl <em>Max Length With Blank Null Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MaxLengthWithBlankNullIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMaxLengthWithBlankNullIndicator()
+     * @generated
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR = 28;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__SET = LENGTH_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+
+    /**
+     * The number of structural features of the '<em>Max Length With Blank Null Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.AverageLengthIndicatorImpl <em>Average Length Indicator</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7673,7 +9208,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getAverageLengthIndicator()
      * @generated
      */
-    int AVERAGE_LENGTH_INDICATOR = 24;
+    int AVERAGE_LENGTH_INDICATOR = 29;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7982,6 +9517,954 @@ public interface IndicatorsPackage extends EPackage {
     int AVERAGE_LENGTH_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 1;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithNullIndicatorImpl <em>Avg Length With Null Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.AvgLengthWithNullIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getAvgLengthWithNullIndicator()
+     * @generated
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR = 30;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__SET = LENGTH_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+
+    /**
+     * The feature id for the '<em><b>Sum Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__SUM_LENGTH = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Avg Length With Null Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl <em>Avg Length With Blank Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getAvgLengthWithBlankIndicator()
+     * @generated
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR = 31;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__SET = LENGTH_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+
+    /**
+     * The feature id for the '<em><b>Sum Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Avg Length With Blank Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankNullIndicatorImpl <em>Avg Length With Blank Null Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.AvgLengthWithBlankNullIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getAvgLengthWithBlankNullIndicator()
+     * @generated
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR = 32;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SET = LENGTH_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+
+    /**
+     * The feature id for the '<em><b>Sum Length</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUM_LENGTH = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Avg Length With Blank Null Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.TextParametersImpl <em>Text Parameters</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7989,7 +10472,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getTextParameters()
      * @generated
      */
-    int TEXT_PARAMETERS = 26;
+    int TEXT_PARAMETERS = 34;
 
     /**
      * The feature id for the '<em><b>Use Blank</b></em>' attribute.
@@ -8062,7 +10545,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getLowerQuartileIndicator()
      * @generated
      */
-    int LOWER_QUARTILE_INDICATOR = 27;
+    int LOWER_QUARTILE_INDICATOR = 35;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8378,7 +10861,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getUpperQuartileIndicator()
      * @generated
      */
-    int UPPER_QUARTILE_INDICATOR = 28;
+    int UPPER_QUARTILE_INDICATOR = 36;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8694,7 +11177,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getCountsIndicator()
      * @generated
      */
-    int COUNTS_INDICATOR = 29;
+    int COUNTS_INDICATOR = 37;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9055,7 +11538,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateParameters()
      * @generated
      */
-    int DATE_PARAMETERS = 30;
+    int DATE_PARAMETERS = 38;
 
     /**
      * The feature id for the '<em><b>Date Aggregation Type</b></em>' attribute.
@@ -9083,7 +11566,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingIndicator()
      * @generated
      */
-    int MATCHING_INDICATOR = 34;
+    int MATCHING_INDICATOR = 42;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9399,7 +11882,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPatternMatchingIndicator()
      * @generated
      */
-    int PATTERN_MATCHING_INDICATOR = 31;
+    int PATTERN_MATCHING_INDICATOR = 39;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9715,7 +12198,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getSqlPatternMatchingIndicator()
      * @generated
      */
-    int SQL_PATTERN_MATCHING_INDICATOR = 32;
+    int SQL_PATTERN_MATCHING_INDICATOR = 40;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10031,7 +12514,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getRegexpMatchingIndicator()
      * @generated
      */
-    int REGEXP_MATCHING_INDICATOR = 33;
+    int REGEXP_MATCHING_INDICATOR = 41;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10347,7 +12830,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getLowFrequencyIndicator()
      * @generated
      */
-    int LOW_FREQUENCY_INDICATOR = 35;
+    int LOW_FREQUENCY_INDICATOR = 43;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10690,7 +13173,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPatternFreqIndicator()
      * @generated
      */
-    int PATTERN_FREQ_INDICATOR = 36;
+    int PATTERN_FREQ_INDICATOR = 44;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11033,7 +13516,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPatternLowFreqIndicator()
      * @generated
      */
-    int PATTERN_LOW_FREQ_INDICATOR = 37;
+    int PATTERN_LOW_FREQ_INDICATOR = 45;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11376,7 +13859,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDefValueCountIndicator()
      * @generated
      */
-    int DEF_VALUE_COUNT_INDICATOR = 38;
+    int DEF_VALUE_COUNT_INDICATOR = 46;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11683,7 +14166,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getSoundexFreqIndicator()
      * @generated
      */
-    int SOUNDEX_FREQ_INDICATOR = 39;
+    int SOUNDEX_FREQ_INDICATOR = 47;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12035,7 +14518,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getSoundexLowFreqIndicator()
      * @generated
      */
-    int SOUNDEX_LOW_FREQ_INDICATOR = 40;
+    int SOUNDEX_LOW_FREQ_INDICATOR = 48;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12387,7 +14870,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDatePatternFreqIndicator()
      * @generated
      */
-    int DATE_PATTERN_FREQ_INDICATOR = 41;
+    int DATE_PATTERN_FREQ_INDICATOR = 49;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12730,7 +15213,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getEnumStatistics()
      * @generated
      */
-    int ENUM_STATISTICS = 42;
+    int ENUM_STATISTICS = 50;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DataminingType <em>Datamining Type</em>}' enum.
@@ -12740,7 +15223,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDataminingType()
      * @generated
      */
-    int DATAMINING_TYPE = 43;
+    int DATAMINING_TYPE = 51;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DateGrain <em>Date Grain</em>}' enum.
@@ -12750,7 +15233,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateGrain()
      * @generated
      */
-    int DATE_GRAIN = 44;
+    int DATE_GRAIN = 52;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.MatchingAlgorithm <em>Matching Algorithm</em>}' enum.
@@ -12760,7 +15243,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingAlgorithm()
      * @generated
      */
-    int MATCHING_ALGORITHM = 45;
+    int MATCHING_ALGORITHM = 53;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.IndicatorValueType <em>Indicator Value Type</em>}' enum.
@@ -12770,7 +15253,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getIndicatorValueType()
      * @generated
      */
-    int INDICATOR_VALUE_TYPE = 46;
+    int INDICATOR_VALUE_TYPE = 54;
 
     /**
      * The meta object id for the '<em>Java Set</em>' data type.
@@ -12780,7 +15263,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaSet()
      * @generated
      */
-    int JAVA_SET = 47;
+    int JAVA_SET = 55;
 
     /**
      * The meta object id for the '<em>Java Hash Map</em>' data type.
@@ -12790,7 +15273,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaHashMap()
      * @generated
      */
-    int JAVA_HASH_MAP = 48;
+    int JAVA_HASH_MAP = 56;
 
     /**
      * The meta object id for the '<em>Java Tree Map</em>' data type.
@@ -12800,7 +15283,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaTreeMap()
      * @generated
      */
-    int JAVA_TREE_MAP = 49;
+    int JAVA_TREE_MAP = 57;
 
     /**
      * The meta object id for the '<em>Object Array</em>' data type.
@@ -12809,7 +15292,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getObjectArray()
      * @generated
      */
-    int OBJECT_ARRAY = 50;
+    int OBJECT_ARRAY = 58;
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
@@ -13548,6 +16031,26 @@ public interface IndicatorsPackage extends EPackage {
     EClass getMinLengthWithNullIndicator();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.MinLengthWithBlankIndicator <em>Min Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Min Length With Blank Indicator</em>'.
+     * @see org.talend.dataquality.indicators.MinLengthWithBlankIndicator
+     * @generated
+     */
+    EClass getMinLengthWithBlankIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator <em>Min Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Min Length With Blank Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator
+     * @generated
+     */
+    EClass getMinLengthWithBlankNullIndicator();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.MaxLengthIndicator <em>Max Length Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -13556,6 +16059,36 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      */
     EClass getMaxLengthIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.MaxLengthWithNullIndicator <em>Max Length With Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Max Length With Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.MaxLengthWithNullIndicator
+     * @generated
+     */
+    EClass getMaxLengthWithNullIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.MaxLengthWithBlankIndicator <em>Max Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Max Length With Blank Indicator</em>'.
+     * @see org.talend.dataquality.indicators.MaxLengthWithBlankIndicator
+     * @generated
+     */
+    EClass getMaxLengthWithBlankIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator <em>Max Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Max Length With Blank Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator
+     * @generated
+     */
+    EClass getMaxLengthWithBlankNullIndicator();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.AverageLengthIndicator <em>Average Length Indicator</em>}'.
@@ -13577,6 +16110,69 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      */
     EAttribute getAverageLengthIndicator_SumLength();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.AvgLengthWithNullIndicator <em>Avg Length With Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Avg Length With Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.AvgLengthWithNullIndicator
+     * @generated
+     */
+    EClass getAvgLengthWithNullIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.AvgLengthWithNullIndicator#getSumLength <em>Sum Length</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Sum Length</em>'.
+     * @see org.talend.dataquality.indicators.AvgLengthWithNullIndicator#getSumLength()
+     * @see #getAvgLengthWithNullIndicator()
+     * @generated
+     */
+    EAttribute getAvgLengthWithNullIndicator_SumLength();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.AvgLengthWithBlankIndicator <em>Avg Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Avg Length With Blank Indicator</em>'.
+     * @see org.talend.dataquality.indicators.AvgLengthWithBlankIndicator
+     * @generated
+     */
+    EClass getAvgLengthWithBlankIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.AvgLengthWithBlankIndicator#getSumLength <em>Sum Length</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Sum Length</em>'.
+     * @see org.talend.dataquality.indicators.AvgLengthWithBlankIndicator#getSumLength()
+     * @see #getAvgLengthWithBlankIndicator()
+     * @generated
+     */
+    EAttribute getAvgLengthWithBlankIndicator_SumLength();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator <em>Avg Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Avg Length With Blank Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator
+     * @generated
+     */
+    EClass getAvgLengthWithBlankNullIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator#getSumLength <em>Sum Length</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Sum Length</em>'.
+     * @see org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator#getSumLength()
+     * @see #getAvgLengthWithBlankNullIndicator()
+     * @generated
+     */
+    EAttribute getAvgLengthWithBlankNullIndicator_SumLength();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.LengthIndicator <em>Length Indicator</em>}'.
@@ -14671,6 +17267,26 @@ public interface IndicatorsPackage extends EPackage {
         EClass MIN_LENGTH_WITH_NULL_INDICATOR = eINSTANCE.getMinLengthWithNullIndicator();
 
         /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MinLengthWithBlankIndicatorImpl <em>Min Length With Blank Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.MinLengthWithBlankIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMinLengthWithBlankIndicator()
+         * @generated
+         */
+        EClass MIN_LENGTH_WITH_BLANK_INDICATOR = eINSTANCE.getMinLengthWithBlankIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MinLengthWithBlankNullIndicatorImpl <em>Min Length With Blank Null Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.MinLengthWithBlankNullIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMinLengthWithBlankNullIndicator()
+         * @generated
+         */
+        EClass MIN_LENGTH_WITH_BLANK_NULL_INDICATOR = eINSTANCE.getMinLengthWithBlankNullIndicator();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MaxLengthIndicatorImpl <em>Max Length Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -14679,6 +17295,36 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass MAX_LENGTH_INDICATOR = eINSTANCE.getMaxLengthIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MaxLengthWithNullIndicatorImpl <em>Max Length With Null Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.MaxLengthWithNullIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMaxLengthWithNullIndicator()
+         * @generated
+         */
+        EClass MAX_LENGTH_WITH_NULL_INDICATOR = eINSTANCE.getMaxLengthWithNullIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MaxLengthWithBlankIndicatorImpl <em>Max Length With Blank Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.MaxLengthWithBlankIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMaxLengthWithBlankIndicator()
+         * @generated
+         */
+        EClass MAX_LENGTH_WITH_BLANK_INDICATOR = eINSTANCE.getMaxLengthWithBlankIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MaxLengthWithBlankNullIndicatorImpl <em>Max Length With Blank Null Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.MaxLengthWithBlankNullIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMaxLengthWithBlankNullIndicator()
+         * @generated
+         */
+        EClass MAX_LENGTH_WITH_BLANK_NULL_INDICATOR = eINSTANCE.getMaxLengthWithBlankNullIndicator();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.AverageLengthIndicatorImpl <em>Average Length Indicator</em>}' class.
@@ -14697,6 +17343,60 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EAttribute AVERAGE_LENGTH_INDICATOR__SUM_LENGTH = eINSTANCE.getAverageLengthIndicator_SumLength();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithNullIndicatorImpl <em>Avg Length With Null Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.AvgLengthWithNullIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getAvgLengthWithNullIndicator()
+         * @generated
+         */
+        EClass AVG_LENGTH_WITH_NULL_INDICATOR = eINSTANCE.getAvgLengthWithNullIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Sum Length</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute AVG_LENGTH_WITH_NULL_INDICATOR__SUM_LENGTH = eINSTANCE.getAvgLengthWithNullIndicator_SumLength();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl <em>Avg Length With Blank Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getAvgLengthWithBlankIndicator()
+         * @generated
+         */
+        EClass AVG_LENGTH_WITH_BLANK_INDICATOR = eINSTANCE.getAvgLengthWithBlankIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Sum Length</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH = eINSTANCE.getAvgLengthWithBlankIndicator_SumLength();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankNullIndicatorImpl <em>Avg Length With Blank Null Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.AvgLengthWithBlankNullIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getAvgLengthWithBlankNullIndicator()
+         * @generated
+         */
+        EClass AVG_LENGTH_WITH_BLANK_NULL_INDICATOR = eINSTANCE.getAvgLengthWithBlankNullIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Sum Length</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUM_LENGTH = eINSTANCE.getAvgLengthWithBlankNullIndicator_SumLength();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.LengthIndicatorImpl <em>Length Indicator</em>}' class.
