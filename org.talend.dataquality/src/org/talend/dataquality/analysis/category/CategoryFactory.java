@@ -18,38 +18,38 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface CategoryFactory extends EFactory {
     /**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     CategoryFactory eINSTANCE = org.talend.dataquality.analysis.category.impl.CategoryFactoryImpl.init();
 
     /**
-	 * Returns a new object of class '<em>Analysis Category</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Analysis Category</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Analysis Category</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Analysis Category</em>'.
+     * @generated
+     */
     AnalysisCategory createAnalysisCategory();
 
     /**
-	 * Returns a new object of class '<em>Analysis Categories</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Analysis Categories</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Analysis Categories</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Analysis Categories</em>'.
+     * @generated
+     */
     AnalysisCategories createAnalysisCategories();
 
     /**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
     CategoryPackage getCategoryPackage();
 
 } //CategoryFactory

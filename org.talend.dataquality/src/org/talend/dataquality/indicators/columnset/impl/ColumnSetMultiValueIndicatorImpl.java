@@ -34,7 +34,6 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.CompositeIndicatorImpl;
 import org.talend.utils.sql.Java2SqlType;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Column Set Multi Value Indicator</b></em>'.
@@ -74,7 +73,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @generated
      * @ordered
      */
-    protected EList<Column> analyzedColumns;
+    protected EList<TdColumn> analyzedColumns;
 
     /**
      * The default value of the '{@link #getListRows() <em>List Rows</em>}' attribute.
@@ -124,7 +123,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @generated
      * @ordered
      */
-    protected EList<Column> dateColumns;
+    protected EList<TdColumn> dateColumns;
 
     /**
      * The default value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute.
@@ -233,9 +232,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public EList<Column> getAnalyzedColumns() {
+    public EList<TdColumn> getAnalyzedColumns() {
         if (analyzedColumns == null) {
-            analyzedColumns = new EObjectResolvingEList<Column>(Column.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
+            analyzedColumns = new EObjectResolvingEList<TdColumn>(TdColumn.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
         }
         return analyzedColumns;
     }
@@ -275,11 +274,11 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<Column> getNominalColumns() {
-        EList<Column> nominalColumns = new BasicElistExtend<Column>();// bug 10578 by zshen,fix the exception when
+    public EList<TdColumn> getNominalColumns() {
+        EList<TdColumn> nominalColumns = new BasicElistExtend<TdColumn>();// bug 10578 by zshen,fix the exception when
         // correlation analysis to be move
         if (analyzedColumns != null) {
-            for (Column column : analyzedColumns) {
+            for (TdColumn column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
                 if (column != null && tdColumn == null) {
                     log.error("Analyzed element should be a TdColumn instead of a Column. Analyzed element is "
@@ -305,11 +304,11 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<Column> getNumericColumns() {
-        EList<Column> computedColumns = new BasicElistExtend<Column>();// bug 10578 by zshen,fix the exception when
+    public EList<TdColumn> getNumericColumns() {
+        EList<TdColumn> computedColumns = new BasicElistExtend<TdColumn>();// bug 10578 by zshen,fix the exception when
         // correlation analysis to be move
         if (analyzedColumns != null) {
-            for (Column column : analyzedColumns) {
+            for (TdColumn column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
                 // MOD mzhao bug 9605 If a column is removed out of tdq studio, here column would be a proxy. see {@link
                 // ReloadDatabaseAction#impactExistingAnalyses(DataProvider)
@@ -340,16 +339,16 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     public EList<String> getColumnHeaders() {
         EList<String> headers = new BasicEList<String>();
-        for (Column column : this.getNominalColumns()) {
+        for (TdColumn column : this.getNominalColumns()) {
             headers.add(column.getName());
         }
-        for (Column column : this.getNumericColumns()) {
+        for (TdColumn column : this.getNumericColumns()) {
             // call functions for each column
             for (String f : this.getNumericFunctions()) {
                 headers.add(MessageFormat.format(f, column.getName()));
             }
         }
-        for (Column column : this.getDateColumns()) {
+        for (TdColumn column : this.getDateColumns()) {
             // call functions for each column
             for (String f : this.getDateFunctions()) {
                 headers.add(MessageFormat.format(f, column.getName()));
@@ -375,10 +374,10 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<Column> getDateColumns() {
-        EList<Column> dateColumns = new BasicEList<Column>();
+    public EList<TdColumn> getDateColumns() {
+        EList<TdColumn> dateColumns = new BasicEList<TdColumn>();
         if (analyzedColumns != null) {
-            for (Column column : analyzedColumns) {
+            for (TdColumn column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
                 final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
                 if (DataminingType.INTERVAL.equals(dmType) && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
@@ -736,7 +735,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         switch (featureID) {
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
                 getAnalyzedColumns().clear();
-                getAnalyzedColumns().addAll((Collection<? extends Column>)newValue);
+                getAnalyzedColumns().addAll((Collection<? extends TdColumn>)newValue);
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
                 setListRows((List<Object[]>)newValue);
@@ -751,7 +750,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
                 getDateColumns().clear();
-                getDateColumns().addAll((Collection<? extends Column>)newValue);
+                getDateColumns().addAll((Collection<? extends TdColumn>)newValue);
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
                 setUniqueCount((Long)newValue);

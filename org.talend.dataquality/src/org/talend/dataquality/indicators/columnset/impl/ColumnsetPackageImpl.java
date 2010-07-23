@@ -11,11 +11,11 @@ import java.util.List;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EGenericType;
-import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
+import org.talend.cwm.relational.RelationalPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.category.CategoryPackage;
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;
@@ -26,6 +26,7 @@ import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.impl.PatternPackageImpl;
 import org.talend.dataquality.domain.sql.SQLPackage;
 import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
+import org.talend.dataquality.expressions.ExpressionsPackage;
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
@@ -51,37 +52,6 @@ import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.impl.RulesPackageImpl;
-import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
-import orgomg.cwm.analysis.datamining.DataminingPackage;
-import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
-import orgomg.cwm.analysis.olap.OlapPackage;
-import orgomg.cwm.analysis.transformation.TransformationPackage;
-import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
-import orgomg.cwm.foundation.datatypes.DatatypesPackage;
-import orgomg.cwm.foundation.expressions.ExpressionsPackage;
-import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
-import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
-import orgomg.cwm.foundation.typemapping.TypemappingPackage;
-import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
-import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
-import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
-import orgomg.cwm.objectmodel.core.CorePackage;
-import orgomg.cwm.objectmodel.instance.InstancePackage;
-import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
-import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
-import orgomg.cwm.resource.record.RecordPackage;
-import orgomg.cwm.resource.relational.RelationalPackage;
-import orgomg.cwm.resource.xml.XmlPackage;
-import orgomg.cwmmip.CwmmipPackage;
-import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
-import orgomg.cwmx.analysis.informationset.InformationsetPackage;
-import orgomg.cwmx.foundation.er.ErPackage;
-import orgomg.cwmx.resource.coboldata.CoboldataPackage;
-import orgomg.cwmx.resource.dmsii.DmsiiPackage;
-import orgomg.cwmx.resource.essbase.EssbasePackage;
-import orgomg.cwmx.resource.express.ExpressPackage;
-import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
-import orgomg.mof.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -213,37 +183,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         isInited = true;
 
         // Initialize simple dependencies
-        CorePackage.eINSTANCE.eClass();
-        BehavioralPackage.eINSTANCE.eClass();
-        RelationshipsPackage.eINSTANCE.eClass();
-        InstancePackage.eINSTANCE.eClass();
-        BusinessinformationPackage.eINSTANCE.eClass();
-        DatatypesPackage.eINSTANCE.eClass();
-        ExpressionsPackage.eINSTANCE.eClass();
-        KeysindexesPackage.eINSTANCE.eClass();
-        SoftwaredeploymentPackage.eINSTANCE.eClass();
-        TypemappingPackage.eINSTANCE.eClass();
-        RelationalPackage.eINSTANCE.eClass();
-        RecordPackage.eINSTANCE.eClass();
-        MultidimensionalPackage.eINSTANCE.eClass();
-        XmlPackage.eINSTANCE.eClass();
-        TransformationPackage.eINSTANCE.eClass();
-        OlapPackage.eINSTANCE.eClass();
-        DataminingPackage.eINSTANCE.eClass();
-        InformationvisualizationPackage.eINSTANCE.eClass();
-        BusinessnomenclaturePackage.eINSTANCE.eClass();
-        WarehouseprocessPackage.eINSTANCE.eClass();
-        WarehouseoperationPackage.eINSTANCE.eClass();
-        ErPackage.eINSTANCE.eClass();
-        CoboldataPackage.eINSTANCE.eClass();
-        DmsiiPackage.eINSTANCE.eClass();
-        ImsdatabasePackage.eINSTANCE.eClass();
-        EssbasePackage.eINSTANCE.eClass();
-        ExpressPackage.eINSTANCE.eClass();
-        InformationsetPackage.eINSTANCE.eClass();
-        InformationreportingPackage.eINSTANCE.eClass();
-        CwmmipPackage.eINSTANCE.eClass();
-        ModelPackage.eINSTANCE.eClass();
+        ConnectionPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
         AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
@@ -253,7 +193,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
-        ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
+        ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
         SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
@@ -268,7 +208,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         theSchemaPackage.createPackageContents();
         theDefinitionPackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
-        theExpressionsPackage_1.createPackageContents();
+        theExpressionsPackage.createPackageContents();
         theDomainPackage.createPackageContents();
         thePatternPackage.createPackageContents();
         theSQLPackage.createPackageContents();
@@ -283,7 +223,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         theSchemaPackage.initializePackageContents();
         theDefinitionPackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
-        theExpressionsPackage_1.initializePackageContents();
+        theExpressionsPackage.initializePackageContents();
         theDomainPackage.initializePackageContents();
         thePatternPackage.initializePackageContents();
         theSQLPackage.initializePackageContents();
@@ -725,22 +665,22 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
 
         // Initialize classes and features; add operations and parameters
         initEClass(columnsCompareIndicatorEClass, ColumnsCompareIndicator.class, "ColumnsCompareIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getColumnsCompareIndicator_ColumnSetA(), theRelationalPackage.getColumn(), null, "columnSetA", null, 0, -1, ColumnsCompareIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getColumnsCompareIndicator_ColumnSetB(), theRelationalPackage.getColumn(), null, "columnSetB", null, 0, -1, ColumnsCompareIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnsCompareIndicator_ColumnSetA(), theRelationalPackage.getTdColumn(), null, "columnSetA", null, 0, -1, ColumnsCompareIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnsCompareIndicator_ColumnSetB(), theRelationalPackage.getTdColumn(), null, "columnSetB", null, 0, -1, ColumnsCompareIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(valueMatchingIndicatorEClass, ValueMatchingIndicator.class, "ValueMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(rowMatchingIndicatorEClass, RowMatchingIndicator.class, "RowMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(columnSetMultiValueIndicatorEClass, ColumnSetMultiValueIndicator.class, "ColumnSetMultiValueIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getColumnSetMultiValueIndicator_AnalyzedColumns(), theRelationalPackage.getColumn(), null, "analyzedColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnSetMultiValueIndicator_AnalyzedColumns(), theRelationalPackage.getTdColumn(), null, "analyzedColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_ListRows(), theIndicatorsPackage.getObjectArray(), "listRows", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_NumericFunctions(), ecorePackage.getEString(), "numericFunctions", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getColumnSetMultiValueIndicator_NominalColumns(), theRelationalPackage.getColumn(), null, "nominalColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getColumnSetMultiValueIndicator_NumericColumns(), theRelationalPackage.getColumn(), null, "numericColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnSetMultiValueIndicator_NominalColumns(), theRelationalPackage.getTdColumn(), null, "nominalColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnSetMultiValueIndicator_NumericColumns(), theRelationalPackage.getTdColumn(), null, "numericColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_ColumnHeaders(), ecorePackage.getEString(), "columnHeaders", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_DateFunctions(), ecorePackage.getEString(), "dateFunctions", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getColumnSetMultiValueIndicator_DateColumns(), theRelationalPackage.getColumn(), null, "dateColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnSetMultiValueIndicator_DateColumns(), theRelationalPackage.getTdColumn(), null, "dateColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_UniqueCount(), ecorePackage.getELongObject(), "uniqueCount", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_DistinctCount(), ecorePackage.getELongObject(), "distinctCount", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_DuplicateCount(), ecorePackage.getELongObject(), "duplicateCount", null, 0, 1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -759,8 +699,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         initEClass(weakCorrelationIndicatorEClass, WeakCorrelationIndicator.class, "WeakCorrelationIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(columnDependencyIndicatorEClass, ColumnDependencyIndicator.class, "ColumnDependencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getColumnDependencyIndicator_ColumnA(), theRelationalPackage.getColumn(), null, "columnA", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getColumnDependencyIndicator_ColumnB(), theRelationalPackage.getColumn(), null, "columnB", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnDependencyIndicator_ColumnA(), theRelationalPackage.getTdColumn(), null, "columnA", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnDependencyIndicator_ColumnB(), theRelationalPackage.getTdColumn(), null, "columnB", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnDependencyIndicator_ACount(), ecorePackage.getELongObject(), "aCount", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnDependencyIndicator_DistinctACount(), ecorePackage.getELongObject(), "distinctACount", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnDependencyIndicator_DependencyFactor(), ecorePackage.getEDoubleObject(), "dependencyFactor", null, 0, 1, ColumnDependencyIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

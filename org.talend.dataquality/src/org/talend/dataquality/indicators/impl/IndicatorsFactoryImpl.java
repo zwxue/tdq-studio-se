@@ -19,6 +19,9 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.talend.dataquality.indicators.*;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -26,6 +29,7 @@ import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -42,10 +46,16 @@ import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MatchingAlgorithm;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinLengthIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
@@ -720,6 +730,16 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      * <!-- end-user-doc -->
      * @generated
      */
+    public DateFrequencyIndicator createDateFrequencyIndicator() {
+        DateFrequencyIndicatorImpl dateFrequencyIndicator = new DateFrequencyIndicatorImpl();
+        return dateFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public WeekFrequencyIndicator createWeekFrequencyIndicator() {
         WeekFrequencyIndicatorImpl weekFrequencyIndicator = new WeekFrequencyIndicatorImpl();
         return weekFrequencyIndicator;
@@ -823,16 +843,6 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public BinLowFrequencyIndicator createBinLowFrequencyIndicator() {
         BinLowFrequencyIndicatorImpl binLowFrequencyIndicator = new BinLowFrequencyIndicatorImpl();
         return binLowFrequencyIndicator;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public DateFrequencyIndicator createDateFrequencyIndicator() {
-        DateFrequencyIndicatorImpl dateFrequencyIndicator = new DateFrequencyIndicatorImpl();
-        return dateFrequencyIndicator;
     }
 
     /**

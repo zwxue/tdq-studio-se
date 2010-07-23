@@ -15,6 +15,7 @@ import org.talend.dataquality.expressions.*;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.expressions.ExpressionsPackage;
+import org.talend.dataquality.expressions.TdExpression;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,87 +25,87 @@ import org.talend.dataquality.expressions.ExpressionsPackage;
  */
 public class ExpressionsFactoryImpl extends EFactoryImpl implements ExpressionsFactory {
     /**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public static ExpressionsFactory init() {
-		try {
-			ExpressionsFactory theExpressionsFactory = (ExpressionsFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.expressions"); 
-			if (theExpressionsFactory != null) {
-				return theExpressionsFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new ExpressionsFactoryImpl();
-	}
+        try {
+            ExpressionsFactory theExpressionsFactory = (ExpressionsFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.expressions"); 
+            if (theExpressionsFactory != null) {
+                return theExpressionsFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new ExpressionsFactoryImpl();
+    }
 
     /**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public ExpressionsFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case ExpressionsPackage.BOOLEAN_EXPRESSION_NODE: return createBooleanExpressionNode();
-			case ExpressionsPackage.TD_EXPRESSION: return createTdExpression();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case ExpressionsPackage.BOOLEAN_EXPRESSION_NODE: return createBooleanExpressionNode();
+            case ExpressionsPackage.TD_EXPRESSION: return createTdExpression();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+        }
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public BooleanExpressionNode createBooleanExpressionNode() {
-		BooleanExpressionNodeImpl booleanExpressionNode = new BooleanExpressionNodeImpl();
-		return booleanExpressionNode;
-	}
+        BooleanExpressionNodeImpl booleanExpressionNode = new BooleanExpressionNodeImpl();
+        return booleanExpressionNode;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public TdExpression createTdExpression() {
-		TdExpressionImpl tdExpression = new TdExpressionImpl();
-		return tdExpression;
-	}
+        TdExpressionImpl tdExpression = new TdExpressionImpl();
+        return tdExpression;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public ExpressionsPackage getExpressionsPackage() {
-		return (ExpressionsPackage)getEPackage();
-	}
+        return (ExpressionsPackage)getEPackage();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
     @Deprecated
     public static ExpressionsPackage getPackage() {
-		return ExpressionsPackage.eINSTANCE;
-	}
+        return ExpressionsPackage.eINSTANCE;
+    }
 
 } //ExpressionsFactoryImpl

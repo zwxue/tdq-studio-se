@@ -12,9 +12,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -25,7 +23,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 
@@ -67,6 +64,8 @@ public class AnalyzedDataSetItemProvider
             addDataCountPropertyDescriptor(object);
             addRecordSizePropertyDescriptor(object);
             addDataPropertyDescriptor(object);
+            addPatternDataPropertyDescriptor(object);
+            addFrequencyDataPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -138,6 +137,50 @@ public class AnalyzedDataSetItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Pattern Data feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addPatternDataPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AnalyzedDataSet_patternData_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AnalyzedDataSet_patternData_feature", "_UI_AnalyzedDataSet_type"),
+                 AnalysisPackage.Literals.ANALYZED_DATA_SET__PATTERN_DATA,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Frequency Data feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addFrequencyDataPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AnalyzedDataSet_frequencyData_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AnalyzedDataSet_frequencyData_feature", "_UI_AnalyzedDataSet_type"),
+                 AnalysisPackage.Literals.ANALYZED_DATA_SET__FREQUENCY_DATA,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns AnalyzedDataSet.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -175,6 +218,8 @@ public class AnalyzedDataSetItemProvider
             case AnalysisPackage.ANALYZED_DATA_SET__DATA_COUNT:
             case AnalysisPackage.ANALYZED_DATA_SET__RECORD_SIZE:
             case AnalysisPackage.ANALYZED_DATA_SET__DATA:
+            case AnalysisPackage.ANALYZED_DATA_SET__PATTERN_DATA:
+            case AnalysisPackage.ANALYZED_DATA_SET__FREQUENCY_DATA:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

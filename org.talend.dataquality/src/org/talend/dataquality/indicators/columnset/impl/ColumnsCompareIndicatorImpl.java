@@ -11,10 +11,10 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.MatchingIndicatorImpl;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Columns Compare Indicator</b></em>'. <!--
@@ -39,7 +39,7 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
      * @generated
      * @ordered
      */
-    protected EList<Column> columnSetA;
+    protected EList<TdColumn> columnSetA;
 
     /**
      * The cached value of the '{@link #getColumnSetB() <em>Column Set B</em>}' reference list.
@@ -49,7 +49,7 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
      * @generated
      * @ordered
      */
-    protected EList<Column> columnSetB;
+    protected EList<TdColumn> columnSetB;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -72,9 +72,9 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public EList<Column> getColumnSetA() {
+    public EList<TdColumn> getColumnSetA() {
         if (columnSetA == null) {
-            columnSetA = new EObjectResolvingEList<Column>(Column.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A);
+            columnSetA = new EObjectResolvingEList<TdColumn>(TdColumn.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A);
         }
         return columnSetA;
     }
@@ -83,9 +83,9 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public EList<Column> getColumnSetB() {
+    public EList<TdColumn> getColumnSetB() {
         if (columnSetB == null) {
-            columnSetB = new EObjectResolvingEList<Column>(Column.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B);
+            columnSetB = new EObjectResolvingEList<TdColumn>(TdColumn.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B);
         }
         return columnSetB;
     }
@@ -115,11 +115,11 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
         switch (featureID) {
             case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
                 getColumnSetA().clear();
-                getColumnSetA().addAll((Collection<? extends Column>)newValue);
+                getColumnSetA().addAll((Collection<? extends TdColumn>)newValue);
                 return;
             case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
                 getColumnSetB().clear();
-                getColumnSetB().addAll((Collection<? extends Column>)newValue);
+                getColumnSetB().addAll((Collection<? extends TdColumn>)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

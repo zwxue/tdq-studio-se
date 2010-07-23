@@ -15206,116 +15206,6 @@ public interface IndicatorsPackage extends EPackage {
     int DATE_PATTERN_FREQ_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl <em>Week Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWeekFrequencyIndicator()
-     * @generated
-     */
-    int WEEK_FREQUENCY_INDICATOR = 51;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MonthFrequencyIndicatorImpl <em>Month Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.MonthFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMonthFrequencyIndicator()
-     * @generated
-     */
-    int MONTH_FREQUENCY_INDICATOR = 52;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.QuarterFrequencyIndicatorImpl <em>Quarter Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.QuarterFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getQuarterFrequencyIndicator()
-     * @generated
-     */
-    int QUARTER_FREQUENCY_INDICATOR = 53;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.YearFrequencyIndicatorImpl <em>Year Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.YearFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getYearFrequencyIndicator()
-     * @generated
-     */
-    int YEAR_FREQUENCY_INDICATOR = 54;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl <em>Bin Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getBinFrequencyIndicator()
-     * @generated
-     */
-    int BIN_FREQUENCY_INDICATOR = 55;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.DateLowFrequencyIndicatorImpl <em>Date Low Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.DateLowFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateLowFrequencyIndicator()
-     * @generated
-     */
-    int DATE_LOW_FREQUENCY_INDICATOR = 56;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl <em>Week Low Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWeekLowFrequencyIndicator()
-     * @generated
-     */
-    int WEEK_LOW_FREQUENCY_INDICATOR = 57;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl <em>Month Low Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMonthLowFrequencyIndicator()
-     * @generated
-     */
-    int MONTH_LOW_FREQUENCY_INDICATOR = 58;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl <em>Quarter Low Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getQuarterLowFrequencyIndicator()
-     * @generated
-     */
-    int QUARTER_LOW_FREQUENCY_INDICATOR = 59;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl <em>Year Low Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getYearLowFrequencyIndicator()
-     * @generated
-     */
-    int YEAR_LOW_FREQUENCY_INDICATOR = 60;
-
-    /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl <em>Bin Low Frequency Indicator</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl
-     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getBinLowFrequencyIndicator()
-     * @generated
-     */
-    int BIN_LOW_FREQUENCY_INDICATOR = 61;
-
-    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl <em>Date Frequency Indicator</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -15659,6 +15549,16 @@ public interface IndicatorsPackage extends EPackage {
     int DATE_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl <em>Week Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWeekFrequencyIndicator()
+     * @generated
+     */
+    int WEEK_FREQUENCY_INDICATOR = 51;
+
+    /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -15990,6 +15890,16 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int WEEK_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MonthFrequencyIndicatorImpl <em>Month Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MonthFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMonthFrequencyIndicator()
+     * @generated
+     */
+    int MONTH_FREQUENCY_INDICATOR = 52;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -16325,6 +16235,16 @@ public interface IndicatorsPackage extends EPackage {
     int MONTH_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.QuarterFrequencyIndicatorImpl <em>Quarter Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.QuarterFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getQuarterFrequencyIndicator()
+     * @generated
+     */
+    int QUARTER_FREQUENCY_INDICATOR = 53;
+
+    /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -16656,6 +16576,16 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int QUARTER_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.YearFrequencyIndicatorImpl <em>Year Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.YearFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getYearFrequencyIndicator()
+     * @generated
+     */
+    int YEAR_FREQUENCY_INDICATOR = 54;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -16991,6 +16921,16 @@ public interface IndicatorsPackage extends EPackage {
     int YEAR_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl <em>Bin Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getBinFrequencyIndicator()
+     * @generated
+     */
+    int BIN_FREQUENCY_INDICATOR = 55;
+
+    /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -17322,6 +17262,16 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int BIN_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.DateLowFrequencyIndicatorImpl <em>Date Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.DateLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateLowFrequencyIndicator()
+     * @generated
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR = 56;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -17657,6 +17607,16 @@ public interface IndicatorsPackage extends EPackage {
     int DATE_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl <em>Week Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWeekLowFrequencyIndicator()
+     * @generated
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR = 57;
+
+    /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -17988,6 +17948,16 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int WEEK_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl <em>Month Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMonthLowFrequencyIndicator()
+     * @generated
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR = 58;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -18323,6 +18293,16 @@ public interface IndicatorsPackage extends EPackage {
     int MONTH_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl <em>Quarter Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getQuarterLowFrequencyIndicator()
+     * @generated
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR = 59;
+
+    /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -18656,6 +18636,16 @@ public interface IndicatorsPackage extends EPackage {
     int QUARTER_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl <em>Year Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getYearLowFrequencyIndicator()
+     * @generated
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR = 60;
+
+    /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -18987,6 +18977,16 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int YEAR_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl <em>Bin Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getBinLowFrequencyIndicator()
+     * @generated
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR = 61;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -20670,6 +20670,16 @@ public interface IndicatorsPackage extends EPackage {
     EClass getDatePatternFreqIndicator();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.DateFrequencyIndicator <em>Date Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Date Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.DateFrequencyIndicator
+     * @generated
+     */
+    EClass getDateFrequencyIndicator();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.WeekFrequencyIndicator <em>Week Frequency Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -20778,16 +20788,6 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      */
     EClass getBinLowFrequencyIndicator();
-
-    /**
-     * Returns the meta object for class '{@link org.talend.dataquality.indicators.DateFrequencyIndicator <em>Date Frequency Indicator</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Date Frequency Indicator</em>'.
-     * @see org.talend.dataquality.indicators.DateFrequencyIndicator
-     * @generated
-     */
-    EClass getDateFrequencyIndicator();
 
     /**
      * Returns the meta object for enum '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}'.
@@ -21957,6 +21957,16 @@ public interface IndicatorsPackage extends EPackage {
         EClass DATE_PATTERN_FREQ_INDICATOR = eINSTANCE.getDatePatternFreqIndicator();
 
         /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl <em>Date Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateFrequencyIndicator()
+         * @generated
+         */
+        EClass DATE_FREQUENCY_INDICATOR = eINSTANCE.getDateFrequencyIndicator();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl <em>Week Frequency Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -22065,16 +22075,6 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass BIN_LOW_FREQUENCY_INDICATOR = eINSTANCE.getBinLowFrequencyIndicator();
-
-        /**
-         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl <em>Date Frequency Indicator</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @see org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl
-         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateFrequencyIndicator()
-         * @generated
-         */
-        EClass DATE_FREQUENCY_INDICATOR = eINSTANCE.getDateFrequencyIndicator();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

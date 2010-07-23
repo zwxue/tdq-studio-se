@@ -4,7 +4,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText=""
     modelDirectory="/org.talend.dataquality/src" modelPluginID="org.talend.dataquality"
     modelName="Dataquality" importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0"
-    copyrightFields="false" usedGenPackages="../../org.talend.cwm.mip/model/cwm_mip.genmodel#//orgomg">
+    copyrightFields="false" usedGenPackages="../../org.talend.cwm.mip/model/cwm_mip.genmodel#//orgomg ../../org.talend.model/model/metadata.genmodel#//connection">
   <foreignModel>dataquality.ecore</foreignModel>
   <genPackages prefix="Dataquality" basePackage="org.talend" disposableProviderFactory="true"
       ecorePackage="dataquality.ecore#/">
@@ -336,10 +336,28 @@
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/TextIndicator/MinLengthIndicator"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/MinLengthIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/MinLengthWithNullIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/MinLengthWithBlankIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/MinLengthWithBlankNullIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/MaxLengthIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/MaxLengthWithNullIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/MaxLengthWithBlankIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/MaxLengthWithBlankNullIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/AverageLengthIndicator">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/AverageLengthIndicator/sumLength"/>
         <genOperations ecoreOperation="dataquality.ecore#//indicators/AverageLengthIndicator/getAverageLength"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/AvgLengthWithNullIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/AvgLengthWithNullIndicator/sumLength"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/AvgLengthWithNullIndicator/getAverageLength"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/AvgLengthWithBlankIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/AvgLengthWithBlankIndicator/sumLength"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/AvgLengthWithBlankIndicator/getAverageLength"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/AvgLengthWithBlankNullIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/AvgLengthWithBlankNullIndicator/sumLength"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/AvgLengthWithBlankNullIndicator/getAverageLength"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/LengthIndicator">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/LengthIndicator/length"/>
@@ -389,6 +407,18 @@
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/SoundexLowFreqIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/DatePatternFreqIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/DateFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/WeekFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/MonthFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/QuarterFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/YearFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/BinFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/DateLowFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/WeekLowFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/MonthLowFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/QuarterLowFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/YearLowFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/BinLowFrequencyIndicator"/>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">

@@ -7,21 +7,12 @@
 package org.talend.dataquality.indicators.definition.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
-
 import orgomg.mof.model.impl.ModelElementImpl;
-import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.Stereotype;
-
-import orgomg.cwm.objectmodel.core.impl.ElementImpl;
 
 /**
  * <!-- begin-user-doc -->

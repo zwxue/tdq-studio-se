@@ -18,65 +18,65 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface PatternFactory extends EFactory {
     /**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     PatternFactory eINSTANCE = org.talend.dataquality.domain.pattern.impl.PatternFactoryImpl.init();
 
     /**
-	 * Returns a new object of class '<em>Pattern</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Pattern</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Pattern</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Pattern</em>'.
+     * @generated
+     */
     Pattern createPattern();
 
     /**
-	 * Returns a new object of class '<em>Component</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Component</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Component</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Component</em>'.
+     * @generated
+     */
     PatternComponent createPatternComponent();
 
     /**
-	 * Returns a new object of class '<em>Regular Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Regular Expression</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Regular Expression</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Regular Expression</em>'.
+     * @generated
+     */
     RegularExpression createRegularExpression();
 
     /**
-	 * Returns a new object of class '<em>Attribute Reference</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Attribute Reference</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Attribute Reference</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Attribute Reference</em>'.
+     * @generated
+     */
     AttributeReference createAttributeReference();
 
     /**
-	 * Returns a new object of class '<em>Component Reference</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Component Reference</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Component Reference</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Component Reference</em>'.
+     * @generated
+     */
     ComponentReference createComponentReference();
 
     /**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
     PatternPackage getPatternPackage();
 
 } //PatternFactory

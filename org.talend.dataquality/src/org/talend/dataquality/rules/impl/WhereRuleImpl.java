@@ -37,238 +37,238 @@ import org.talend.dataquality.rules.WhereRule;
  */
 public class WhereRuleImpl extends SpecifiedDQRuleImpl implements WhereRule {
     /**
-	 * The default value of the '{@link #getWhereExpression() <em>Where Expression</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getWhereExpression() <em>Where Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getWhereExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getWhereExpression()
+     * @generated
+     * @ordered
+     */
     protected static final String WHERE_EXPRESSION_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getWhereExpression() <em>Where Expression</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getWhereExpression() <em>Where Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getWhereExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getWhereExpression()
+     * @generated
+     * @ordered
+     */
     protected String whereExpression = WHERE_EXPRESSION_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getJoinExpression() <em>Join Expression</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getJoinExpression() <em>Join Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getJoinExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getJoinExpression()
+     * @generated
+     * @ordered
+     */
     protected static final String JOIN_EXPRESSION_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getJoinExpression() <em>Join Expression</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getJoinExpression() <em>Join Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getJoinExpression()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getJoinExpression()
+     * @generated
+     * @ordered
+     */
     protected String joinExpression = JOIN_EXPRESSION_EDEFAULT;
 
     /**
-	 * The cached value of the '{@link #getJoins() <em>Joins</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getJoins() <em>Joins</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getJoins()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getJoins()
+     * @generated
+     * @ordered
+     */
     protected EList<JoinElement> joins;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected WhereRuleImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return RulesPackage.Literals.WHERE_RULE;
-	}
+        return RulesPackage.Literals.WHERE_RULE;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getWhereExpression() {
-		return whereExpression;
-	}
+        return whereExpression;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setWhereExpression(String newWhereExpression) {
-		String oldWhereExpression = whereExpression;
-		whereExpression = newWhereExpression;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.WHERE_RULE__WHERE_EXPRESSION, oldWhereExpression, whereExpression));
-	}
+        String oldWhereExpression = whereExpression;
+        whereExpression = newWhereExpression;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.WHERE_RULE__WHERE_EXPRESSION, oldWhereExpression, whereExpression));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getJoinExpression() {
-		return joinExpression;
-	}
+        return joinExpression;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setJoinExpression(String newJoinExpression) {
-		String oldJoinExpression = joinExpression;
-		joinExpression = newJoinExpression;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.WHERE_RULE__JOIN_EXPRESSION, oldJoinExpression, joinExpression));
-	}
+        String oldJoinExpression = joinExpression;
+        joinExpression = newJoinExpression;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.WHERE_RULE__JOIN_EXPRESSION, oldJoinExpression, joinExpression));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<JoinElement> getJoins() {
-		if (joins == null) {
-			joins = new EObjectContainmentEList<JoinElement>(JoinElement.class, this, RulesPackage.WHERE_RULE__JOINS);
-		}
-		return joins;
-	}
+        if (joins == null) {
+            joins = new EObjectContainmentEList<JoinElement>(JoinElement.class, this, RulesPackage.WHERE_RULE__JOINS);
+        }
+        return joins;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case RulesPackage.WHERE_RULE__JOINS:
-				return ((InternalEList<?>)getJoins()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case RulesPackage.WHERE_RULE__JOINS:
+                return ((InternalEList<?>)getJoins()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case RulesPackage.WHERE_RULE__WHERE_EXPRESSION:
-				return getWhereExpression();
-			case RulesPackage.WHERE_RULE__JOIN_EXPRESSION:
-				return getJoinExpression();
-			case RulesPackage.WHERE_RULE__JOINS:
-				return getJoins();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case RulesPackage.WHERE_RULE__WHERE_EXPRESSION:
+                return getWhereExpression();
+            case RulesPackage.WHERE_RULE__JOIN_EXPRESSION:
+                return getJoinExpression();
+            case RulesPackage.WHERE_RULE__JOINS:
+                return getJoins();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case RulesPackage.WHERE_RULE__WHERE_EXPRESSION:
-				setWhereExpression((String)newValue);
-				return;
-			case RulesPackage.WHERE_RULE__JOIN_EXPRESSION:
-				setJoinExpression((String)newValue);
-				return;
-			case RulesPackage.WHERE_RULE__JOINS:
-				getJoins().clear();
-				getJoins().addAll((Collection<? extends JoinElement>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case RulesPackage.WHERE_RULE__WHERE_EXPRESSION:
+                setWhereExpression((String)newValue);
+                return;
+            case RulesPackage.WHERE_RULE__JOIN_EXPRESSION:
+                setJoinExpression((String)newValue);
+                return;
+            case RulesPackage.WHERE_RULE__JOINS:
+                getJoins().clear();
+                getJoins().addAll((Collection<? extends JoinElement>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case RulesPackage.WHERE_RULE__WHERE_EXPRESSION:
-				setWhereExpression(WHERE_EXPRESSION_EDEFAULT);
-				return;
-			case RulesPackage.WHERE_RULE__JOIN_EXPRESSION:
-				setJoinExpression(JOIN_EXPRESSION_EDEFAULT);
-				return;
-			case RulesPackage.WHERE_RULE__JOINS:
-				getJoins().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case RulesPackage.WHERE_RULE__WHERE_EXPRESSION:
+                setWhereExpression(WHERE_EXPRESSION_EDEFAULT);
+                return;
+            case RulesPackage.WHERE_RULE__JOIN_EXPRESSION:
+                setJoinExpression(JOIN_EXPRESSION_EDEFAULT);
+                return;
+            case RulesPackage.WHERE_RULE__JOINS:
+                getJoins().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case RulesPackage.WHERE_RULE__WHERE_EXPRESSION:
-				return WHERE_EXPRESSION_EDEFAULT == null ? whereExpression != null : !WHERE_EXPRESSION_EDEFAULT.equals(whereExpression);
-			case RulesPackage.WHERE_RULE__JOIN_EXPRESSION:
-				return JOIN_EXPRESSION_EDEFAULT == null ? joinExpression != null : !JOIN_EXPRESSION_EDEFAULT.equals(joinExpression);
-			case RulesPackage.WHERE_RULE__JOINS:
-				return joins != null && !joins.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case RulesPackage.WHERE_RULE__WHERE_EXPRESSION:
+                return WHERE_EXPRESSION_EDEFAULT == null ? whereExpression != null : !WHERE_EXPRESSION_EDEFAULT.equals(whereExpression);
+            case RulesPackage.WHERE_RULE__JOIN_EXPRESSION:
+                return JOIN_EXPRESSION_EDEFAULT == null ? joinExpression != null : !JOIN_EXPRESSION_EDEFAULT.equals(joinExpression);
+            case RulesPackage.WHERE_RULE__JOINS:
+                return joins != null && !joins.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (whereExpression: ");
-		result.append(whereExpression);
-		result.append(", joinExpression: ");
-		result.append(joinExpression);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (whereExpression: ");
+        result.append(whereExpression);
+        result.append(", joinExpression: ");
+        result.append(joinExpression);
+        result.append(')');
+        return result.toString();
+    }
 
 } //WhereRuleImpl

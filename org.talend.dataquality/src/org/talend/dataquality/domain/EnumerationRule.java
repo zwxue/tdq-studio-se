@@ -33,45 +33,45 @@ import orgomg.cwm.foundation.datatypes.Enumeration;
  */
 public interface EnumerationRule extends EObject {
     /**
-	 * Returns the value of the '<em><b>Domain</b></em>' reference list.
-	 * The list contents are of type {@link org.talend.dataquality.domain.Domain}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Domain</b></em>' reference list.
+     * The list contents are of type {@link org.talend.dataquality.domain.Domain}.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Domain</em>' reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Domain</em>' reference list.
-	 * @see org.talend.dataquality.domain.DomainPackage#getEnumerationRule_Domain()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Domain</em>' reference list.
+     * @see org.talend.dataquality.domain.DomainPackage#getEnumerationRule_Domain()
+     * @model
+     * @generated
+     */
     EList<Domain> getDomain();
 
     /**
-	 * Returns the value of the '<em><b>Enumeration</b></em>' reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Enumeration</b></em>' reference.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Enumeration</em>' reference isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Enumeration</em>' reference.
-	 * @see #setEnumeration(Enumeration)
-	 * @see org.talend.dataquality.domain.DomainPackage#getEnumerationRule_Enumeration()
-	 * @model
-	 * @generated
-	 */
+     * @return the value of the '<em>Enumeration</em>' reference.
+     * @see #setEnumeration(Enumeration)
+     * @see org.talend.dataquality.domain.DomainPackage#getEnumerationRule_Enumeration()
+     * @model
+     * @generated
+     */
     Enumeration getEnumeration();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.domain.EnumerationRule#getEnumeration <em>Enumeration</em>}' reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.domain.EnumerationRule#getEnumeration <em>Enumeration</em>}' reference.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Enumeration</em>' reference.
-	 * @see #getEnumeration()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Enumeration</em>' reference.
+     * @see #getEnumeration()
+     * @generated
+     */
     void setEnumeration(Enumeration value);
 
 } // EnumerationRule

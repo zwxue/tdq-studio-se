@@ -458,6 +458,15 @@ public interface IndicatorsFactory extends EFactory {
     DatePatternFreqIndicator createDatePatternFreqIndicator();
 
     /**
+     * Returns a new object of class '<em>Date Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Date Frequency Indicator</em>'.
+     * @generated
+     */
+    DateFrequencyIndicator createDateFrequencyIndicator();
+
+    /**
      * Returns a new object of class '<em>Week Frequency Indicator</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -555,15 +564,6 @@ public interface IndicatorsFactory extends EFactory {
      * @generated
      */
     BinLowFrequencyIndicator createBinLowFrequencyIndicator();
-
-    /**
-     * Returns a new object of class '<em>Date Frequency Indicator</em>'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return a new object of class '<em>Date Frequency Indicator</em>'.
-     * @generated
-     */
-    DateFrequencyIndicator createDateFrequencyIndicator();
 
     /**
      * Returns the package supported by this factory.

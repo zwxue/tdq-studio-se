@@ -21,22 +21,22 @@ import org.talend.dataquality.domain.NumericValue;
  */
 public class NumericValueImpl extends LiteralValueImpl implements NumericValue {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected NumericValueImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return DomainPackage.Literals.NUMERIC_VALUE;
-	}
+        return DomainPackage.Literals.NUMERIC_VALUE;
+    }
 
 } //NumericValueImpl

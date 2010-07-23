@@ -19,17 +19,14 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.rules.WhereRule;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
-import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
@@ -183,14 +180,7 @@ public enum EResourceConstant {
      * @return
      */
     private static boolean isMDMConnection(DataProvider provider) {
-        ProviderConnection connection = DataProviderHelper.getTdProviderConnection(provider).getObject();
-
-        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBTYPE, connection.getTaggedValue());
-        if (tv != null) {
-            return StringUtils.equalsIgnoreCase("MDM", tv.getValue());
-        }
-
-        return false;
+        return SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(provider) == null ? false : true;
     }
 
     /**

@@ -12,11 +12,11 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
 import orgomg.cwm.objectmodel.core.Expression;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * <!-- begin-user-doc -->
@@ -44,7 +44,7 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      * @generated
      * @ordered
      */
-    protected Column columnA;
+    protected TdColumn columnA;
 
     /**
      * The cached value of the '{@link #getColumnB() <em>Column B</em>}' reference.
@@ -54,7 +54,7 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      * @generated
      * @ordered
      */
-    protected Column columnB;
+    protected TdColumn columnB;
 
     /**
      * The default value of the '{@link #getACount() <em>ACount</em>}' attribute.
@@ -130,10 +130,10 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      * <!-- end-user-doc -->
      * @generated
      */
-    public Column getColumnA() {
+    public TdColumn getColumnA() {
         if (columnA != null && columnA.eIsProxy()) {
             InternalEObject oldColumnA = (InternalEObject)columnA;
-            columnA = (Column)eResolveProxy(oldColumnA);
+            columnA = (TdColumn)eResolveProxy(oldColumnA);
             if (columnA != oldColumnA) {
                 if (eNotificationRequired())
                     eNotify(new ENotificationImpl(this, Notification.RESOLVE, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A, oldColumnA, columnA));
@@ -147,7 +147,7 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      * <!-- end-user-doc -->
      * @generated
      */
-    public Column basicGetColumnA() {
+    public TdColumn basicGetColumnA() {
         return columnA;
     }
 
@@ -156,8 +156,8 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setColumnA(Column newColumnA) {
-        Column oldColumnA = columnA;
+    public void setColumnA(TdColumn newColumnA) {
+        TdColumn oldColumnA = columnA;
         columnA = newColumnA;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A, oldColumnA, columnA));
@@ -168,10 +168,10 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      * <!-- end-user-doc -->
      * @generated
      */
-    public Column getColumnB() {
+    public TdColumn getColumnB() {
         if (columnB != null && columnB.eIsProxy()) {
             InternalEObject oldColumnB = (InternalEObject)columnB;
-            columnB = (Column)eResolveProxy(oldColumnB);
+            columnB = (TdColumn)eResolveProxy(oldColumnB);
             if (columnB != oldColumnB) {
                 if (eNotificationRequired())
                     eNotify(new ENotificationImpl(this, Notification.RESOLVE, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B, oldColumnB, columnB));
@@ -185,7 +185,7 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      * <!-- end-user-doc -->
      * @generated
      */
-    public Column basicGetColumnB() {
+    public TdColumn basicGetColumnB() {
         return columnB;
     }
 
@@ -194,8 +194,8 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setColumnB(Column newColumnB) {
-        Column oldColumnB = columnB;
+    public void setColumnB(TdColumn newColumnB) {
+        TdColumn oldColumnB = columnB;
         columnB = newColumnB;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B, oldColumnB, columnB));
@@ -318,10 +318,10 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
-                setColumnA((Column)newValue);
+                setColumnA((TdColumn)newValue);
                 return;
             case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
-                setColumnB((Column)newValue);
+                setColumnB((TdColumn)newValue);
                 return;
             case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
                 setACount((Long)newValue);
@@ -342,10 +342,10 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
     public void eUnset(int featureID) {
         switch (featureID) {
             case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A:
-                setColumnA((Column)null);
+                setColumnA((TdColumn)null);
                 return;
             case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B:
-                setColumnB((Column)null);
+                setColumnB((TdColumn)null);
                 return;
             case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__ACOUNT:
                 setACount(ACOUNT_EDEFAULT);

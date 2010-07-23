@@ -21,22 +21,22 @@ import org.talend.dataquality.rules.RulesPackage;
  */
 public class InferredDQRuleImpl extends DQRuleImpl implements InferredDQRule {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected InferredDQRuleImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return RulesPackage.Literals.INFERRED_DQ_RULE;
-	}
+        return RulesPackage.Literals.INFERRED_DQ_RULE;
+    }
 
 } //InferredDQRuleImpl

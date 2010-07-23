@@ -22,22 +22,22 @@ import orgomg.cwm.foundation.expressions.impl.ExpressionNodeImpl;
  */
 public class BooleanExpressionNodeImpl extends ExpressionNodeImpl implements BooleanExpressionNode {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected BooleanExpressionNodeImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return ExpressionsPackage.Literals.BOOLEAN_EXPRESSION_NODE;
-	}
+        return ExpressionsPackage.Literals.BOOLEAN_EXPRESSION_NODE;
+    }
 
 } //BooleanExpressionNodeImpl

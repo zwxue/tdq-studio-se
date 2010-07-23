@@ -12,11 +12,15 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.*;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -30,10 +34,16 @@ import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MatchingIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinLengthIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
@@ -1258,6 +1268,21 @@ public class IndicatorsSwitch<T> {
     }
 
     /**
+     * Returns the result of interpreting the object as an instance of '<em>Date Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Date Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseDateFrequencyIndicator(DateFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
      * Returns the result of interpreting the object as an instance of '<em>Week Frequency Indicator</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
@@ -1419,21 +1444,6 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseBinLowFrequencyIndicator(BinLowFrequencyIndicator object) {
-        return null;
-    }
-
-    /**
-     * Returns the result of interpreting the object as an instance of '<em>Date Frequency Indicator</em>'.
-     * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Date Frequency Indicator</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
-    public T caseDateFrequencyIndicator(DateFrequencyIndicator object) {
         return null;
     }
 

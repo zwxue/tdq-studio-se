@@ -21,22 +21,22 @@ import org.talend.dataquality.rules.SpecifiedDQRule;
  */
 public class SpecifiedDQRuleImpl extends DQRuleImpl implements SpecifiedDQRule {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected SpecifiedDQRuleImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return RulesPackage.Literals.SPECIFIED_DQ_RULE;
-	}
+        return RulesPackage.Literals.SPECIFIED_DQ_RULE;
+    }
 
 } //SpecifiedDQRuleImpl

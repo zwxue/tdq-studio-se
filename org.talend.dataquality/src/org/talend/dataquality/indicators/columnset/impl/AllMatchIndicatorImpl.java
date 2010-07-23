@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MatchingIndicator;
@@ -25,7 +26,6 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>All Match Indicator</b></em>'. <!--
@@ -407,7 +407,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
 
     private boolean instantiatePatterns() {
 
-        EList<Column> columns = this.getAnalyzedColumns();
+        EList<TdColumn> columns = this.getAnalyzedColumns();
         this.patterns = new List[columns.size()];
         EList<RegexpMatchingIndicator> indicators = this.getCompositeRegexMatchingIndicators();
         String r = null;

@@ -7,6 +7,7 @@
 package org.talend.dataquality.analysis.impl;
 
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -14,7 +15,6 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.talend.dataquality.analysis.*;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -22,8 +22,10 @@ import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.indicators.Indicator;
 
 /**
  * <!-- begin-user-doc -->
@@ -33,216 +35,216 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
  */
 public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory {
     /**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public static AnalysisFactory init() {
-		try {
-			AnalysisFactory theAnalysisFactory = (AnalysisFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.analysis"); 
-			if (theAnalysisFactory != null) {
-				return theAnalysisFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new AnalysisFactoryImpl();
-	}
+        try {
+            AnalysisFactory theAnalysisFactory = (AnalysisFactory)EPackage.Registry.INSTANCE.getEFactory("http://dataquality.analysis"); 
+            if (theAnalysisFactory != null) {
+                return theAnalysisFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new AnalysisFactoryImpl();
+    }
 
     /**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalysisFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case AnalysisPackage.ANALYSIS: return createAnalysis();
-			case AnalysisPackage.ANALYSIS_CONTEXT: return createAnalysisContext();
-			case AnalysisPackage.ANALYSIS_PARAMETERS: return createAnalysisParameters();
-			case AnalysisPackage.ANALYSIS_RESULT: return createAnalysisResult();
-			case AnalysisPackage.EXECUTION_INFORMATIONS: return createExecutionInformations();
-			case AnalysisPackage.INDIC_TO_ROWS_MAP: return (EObject)createIndicToRowsMap();
-			case AnalysisPackage.ANALYZED_DATA_SET: return createAnalyzedDataSet();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case AnalysisPackage.ANALYSIS: return createAnalysis();
+            case AnalysisPackage.ANALYSIS_CONTEXT: return createAnalysisContext();
+            case AnalysisPackage.ANALYSIS_PARAMETERS: return createAnalysisParameters();
+            case AnalysisPackage.ANALYSIS_RESULT: return createAnalysisResult();
+            case AnalysisPackage.EXECUTION_INFORMATIONS: return createExecutionInformations();
+            case AnalysisPackage.INDIC_TO_ROWS_MAP: return (EObject)createIndicToRowsMap();
+            case AnalysisPackage.ANALYZED_DATA_SET: return createAnalyzedDataSet();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+        }
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Object createFromString(EDataType eDataType, String initialValue) {
-		switch (eDataType.getClassifierID()) {
-			case AnalysisPackage.ANALYSIS_TYPE:
-				return createAnalysisTypeFromString(eDataType, initialValue);
-			case AnalysisPackage.EXECUTION_LANGUAGE:
-				return createExecutionLanguageFromString(eDataType, initialValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-		}
-	}
+        switch (eDataType.getClassifierID()) {
+            case AnalysisPackage.ANALYSIS_TYPE:
+                return createAnalysisTypeFromString(eDataType, initialValue);
+            case AnalysisPackage.EXECUTION_LANGUAGE:
+                return createExecutionLanguageFromString(eDataType, initialValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+        }
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-			case AnalysisPackage.ANALYSIS_TYPE:
-				return convertAnalysisTypeToString(eDataType, instanceValue);
-			case AnalysisPackage.EXECUTION_LANGUAGE:
-				return convertExecutionLanguageToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-		}
-	}
+        switch (eDataType.getClassifierID()) {
+            case AnalysisPackage.ANALYSIS_TYPE:
+                return convertAnalysisTypeToString(eDataType, instanceValue);
+            case AnalysisPackage.EXECUTION_LANGUAGE:
+                return convertExecutionLanguageToString(eDataType, instanceValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+        }
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Analysis createAnalysis() {
-		AnalysisImpl analysis = new AnalysisImpl();
-		return analysis;
-	}
+        AnalysisImpl analysis = new AnalysisImpl();
+        return analysis;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalysisContext createAnalysisContext() {
-		AnalysisContextImpl analysisContext = new AnalysisContextImpl();
-		return analysisContext;
-	}
+        AnalysisContextImpl analysisContext = new AnalysisContextImpl();
+        return analysisContext;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalysisParameters createAnalysisParameters() {
-		AnalysisParametersImpl analysisParameters = new AnalysisParametersImpl();
-		return analysisParameters;
-	}
+        AnalysisParametersImpl analysisParameters = new AnalysisParametersImpl();
+        return analysisParameters;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalysisResult createAnalysisResult() {
-		AnalysisResultImpl analysisResult = new AnalysisResultImpl();
-		return analysisResult;
-	}
+        AnalysisResultImpl analysisResult = new AnalysisResultImpl();
+        return analysisResult;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public ExecutionInformations createExecutionInformations() {
-		ExecutionInformationsImpl executionInformations = new ExecutionInformationsImpl();
-		return executionInformations;
-	}
+        ExecutionInformationsImpl executionInformations = new ExecutionInformationsImpl();
+        return executionInformations;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Map.Entry<Indicator, AnalyzedDataSet> createIndicToRowsMap() {
-		IndicToRowsMapImpl indicToRowsMap = new IndicToRowsMapImpl();
-		return indicToRowsMap;
-	}
+        IndicToRowsMapImpl indicToRowsMap = new IndicToRowsMapImpl();
+        return indicToRowsMap;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalyzedDataSet createAnalyzedDataSet() {
-		AnalyzedDataSetImpl analyzedDataSet = new AnalyzedDataSetImpl();
-		return analyzedDataSet;
-	}
+        AnalyzedDataSetImpl analyzedDataSet = new AnalyzedDataSetImpl();
+        return analyzedDataSet;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalysisType createAnalysisTypeFromString(EDataType eDataType, String initialValue) {
-		AnalysisType result = AnalysisType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
+        AnalysisType result = AnalysisType.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+        return result;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String convertAnalysisTypeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
+        return instanceValue == null ? null : instanceValue.toString();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public ExecutionLanguage createExecutionLanguageFromString(EDataType eDataType, String initialValue) {
-		ExecutionLanguage result = ExecutionLanguage.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
+        ExecutionLanguage result = ExecutionLanguage.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+        return result;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String convertExecutionLanguageToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
+        return instanceValue == null ? null : instanceValue.toString();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalysisPackage getAnalysisPackage() {
-		return (AnalysisPackage)getEPackage();
-	}
+        return (AnalysisPackage)getEPackage();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
     @Deprecated
     public static AnalysisPackage getPackage() {
-		return AnalysisPackage.eINSTANCE;
-	}
+        return AnalysisPackage.eINSTANCE;
+    }
 
 } //AnalysisFactoryImpl

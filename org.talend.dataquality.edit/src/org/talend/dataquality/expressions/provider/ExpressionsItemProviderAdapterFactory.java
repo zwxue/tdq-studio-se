@@ -12,7 +12,6 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -24,7 +23,6 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-
 import org.talend.dataquality.expressions.util.ExpressionsAdapterFactory;
 
 /**
@@ -96,6 +94,29 @@ public class ExpressionsItemProviderAdapterFactory extends ExpressionsAdapterFac
         }
 
         return booleanExpressionNodeItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.expressions.TdExpression} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected TdExpressionItemProvider tdExpressionItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.expressions.TdExpression}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createTdExpressionAdapter() {
+        if (tdExpressionItemProvider == null) {
+            tdExpressionItemProvider = new TdExpressionItemProvider(this);
+        }
+
+        return tdExpressionItemProvider;
     }
 
     /**
@@ -198,6 +219,7 @@ public class ExpressionsItemProviderAdapterFactory extends ExpressionsAdapterFac
      */
     public void dispose() {
         if (booleanExpressionNodeItemProvider != null) booleanExpressionNodeItemProvider.dispose();
+        if (tdExpressionItemProvider != null) tdExpressionItemProvider.dispose();
     }
 
 }

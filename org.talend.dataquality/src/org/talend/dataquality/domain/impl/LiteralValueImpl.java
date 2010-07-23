@@ -28,137 +28,137 @@ import org.talend.dataquality.domain.LiteralValue;
  */
 public class LiteralValueImpl extends EObjectImpl implements LiteralValue {
     /**
-	 * The default value of the '{@link #getEncodeValueMeaning() <em>Encode Value Meaning</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getEncodeValueMeaning() <em>Encode Value Meaning</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getEncodeValueMeaning()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEncodeValueMeaning()
+     * @generated
+     * @ordered
+     */
     protected static final String ENCODE_VALUE_MEANING_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getEncodeValueMeaning() <em>Encode Value Meaning</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getEncodeValueMeaning() <em>Encode Value Meaning</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getEncodeValueMeaning()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEncodeValueMeaning()
+     * @generated
+     * @ordered
+     */
     protected String encodeValueMeaning = ENCODE_VALUE_MEANING_EDEFAULT;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected LiteralValueImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     protected EClass eStaticClass() {
-		return DomainPackage.Literals.LITERAL_VALUE;
-	}
+        return DomainPackage.Literals.LITERAL_VALUE;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getEncodeValueMeaning() {
-		return encodeValueMeaning;
-	}
+        return encodeValueMeaning;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setEncodeValueMeaning(String newEncodeValueMeaning) {
-		String oldEncodeValueMeaning = encodeValueMeaning;
-		encodeValueMeaning = newEncodeValueMeaning;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING, oldEncodeValueMeaning, encodeValueMeaning));
-	}
+        String oldEncodeValueMeaning = encodeValueMeaning;
+        encodeValueMeaning = newEncodeValueMeaning;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING, oldEncodeValueMeaning, encodeValueMeaning));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING:
-				return getEncodeValueMeaning();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING:
+                return getEncodeValueMeaning();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING:
-				setEncodeValueMeaning((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING:
+                setEncodeValueMeaning((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public void eUnset(int featureID) {
-		switch (featureID) {
-			case DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING:
-				setEncodeValueMeaning(ENCODE_VALUE_MEANING_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING:
+                setEncodeValueMeaning(ENCODE_VALUE_MEANING_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING:
-				return ENCODE_VALUE_MEANING_EDEFAULT == null ? encodeValueMeaning != null : !ENCODE_VALUE_MEANING_EDEFAULT.equals(encodeValueMeaning);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case DomainPackage.LITERAL_VALUE__ENCODE_VALUE_MEANING:
+                return ENCODE_VALUE_MEANING_EDEFAULT == null ? encodeValueMeaning != null : !ENCODE_VALUE_MEANING_EDEFAULT.equals(encodeValueMeaning);
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (encodeValueMeaning: ");
-		result.append(encodeValueMeaning);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (encodeValueMeaning: ");
+        result.append(encodeValueMeaning);
+        result.append(')');
+        return result.toString();
+    }
 
 } //LiteralValueImpl

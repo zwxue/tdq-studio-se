@@ -906,9 +906,9 @@
       <eClassifiers xsi:type="ecore:EClass" name="ColumnsCompareIndicator" abstract="true"
           eSuperTypes="#//indicators/MatchingIndicator">
         <eStructuralFeatures xsi:type="ecore:EReference" name="columnSetA" upperBound="-1"
-            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+            eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdColumn"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="columnSetB" upperBound="-1"
-            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+            eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdColumn"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="ValueMatchingIndicator" eSuperTypes="#//indicators/columnset/ColumnsCompareIndicator">
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -922,15 +922,15 @@
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="ColumnSetMultiValueIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eStructuralFeatures xsi:type="ecore:EReference" name="analyzedColumns" upperBound="-1"
-            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+            eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdColumn"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="listRows" eType="#//indicators/ObjectArray"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="numericFunctions" upperBound="-1"
             eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="nominalColumns" upperBound="-1"
-            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"
+            eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdColumn"
             changeable="false" volatile="true" transient="true"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="numericColumns" upperBound="-1"
-            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"
+            eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdColumn"
             changeable="false" volatile="true" transient="true"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnHeaders" upperBound="-1"
             eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -938,7 +938,7 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateFunctions" upperBound="-1"
             eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="dateColumns" upperBound="-1"
-            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+            eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdColumn"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="uniqueCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="distinctCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="duplicateCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
@@ -964,8 +964,8 @@
         <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
           <details key="name" value="ColumnDependencyIndicator"/>
         </eAnnotations>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="columnA" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
-        <eStructuralFeatures xsi:type="ecore:EReference" name="columnB" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="columnA" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdColumn"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="columnB" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdColumn"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="aCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="distinctACount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="dependencyFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"

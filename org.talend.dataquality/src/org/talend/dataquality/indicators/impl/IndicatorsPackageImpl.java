@@ -14,11 +14,11 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.category.CategoryPackage;
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;
@@ -29,6 +29,7 @@ import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.impl.PatternPackageImpl;
 import org.talend.dataquality.domain.sql.SQLPackage;
 import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
+import org.talend.dataquality.expressions.ExpressionsPackage;
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
@@ -111,37 +112,7 @@ import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.impl.RulesPackageImpl;
-import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
-import orgomg.cwm.analysis.datamining.DataminingPackage;
-import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
-import orgomg.cwm.analysis.olap.OlapPackage;
-import orgomg.cwm.analysis.transformation.TransformationPackage;
-import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
-import orgomg.cwm.foundation.datatypes.DatatypesPackage;
-import orgomg.cwm.foundation.expressions.ExpressionsPackage;
-import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
-import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
-import orgomg.cwm.foundation.typemapping.TypemappingPackage;
-import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
-import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
-import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
-import orgomg.cwm.objectmodel.instance.InstancePackage;
-import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
-import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
-import orgomg.cwm.resource.record.RecordPackage;
-import orgomg.cwm.resource.relational.RelationalPackage;
-import orgomg.cwm.resource.xml.XmlPackage;
-import orgomg.cwmmip.CwmmipPackage;
-import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
-import orgomg.cwmx.analysis.informationset.InformationsetPackage;
-import orgomg.cwmx.foundation.er.ErPackage;
-import orgomg.cwmx.resource.coboldata.CoboldataPackage;
-import orgomg.cwmx.resource.dmsii.DmsiiPackage;
-import orgomg.cwmx.resource.essbase.EssbasePackage;
-import orgomg.cwmx.resource.express.ExpressPackage;
-import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
-import orgomg.mof.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
@@ -476,6 +447,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * <!-- end-user-doc -->
      * @generated
      */
+    private EClass dateFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     private EClass weekFrequencyIndicatorEClass = null;
 
     /**
@@ -547,13 +525,6 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass binLowFrequencyIndicatorEClass = null;
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    private EClass dateFrequencyIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -653,37 +624,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         isInited = true;
 
         // Initialize simple dependencies
-        CorePackage.eINSTANCE.eClass();
-        BehavioralPackage.eINSTANCE.eClass();
-        RelationshipsPackage.eINSTANCE.eClass();
-        InstancePackage.eINSTANCE.eClass();
-        BusinessinformationPackage.eINSTANCE.eClass();
-        DatatypesPackage.eINSTANCE.eClass();
-        ExpressionsPackage.eINSTANCE.eClass();
-        KeysindexesPackage.eINSTANCE.eClass();
-        SoftwaredeploymentPackage.eINSTANCE.eClass();
-        TypemappingPackage.eINSTANCE.eClass();
-        RelationalPackage.eINSTANCE.eClass();
-        RecordPackage.eINSTANCE.eClass();
-        MultidimensionalPackage.eINSTANCE.eClass();
-        XmlPackage.eINSTANCE.eClass();
-        TransformationPackage.eINSTANCE.eClass();
-        OlapPackage.eINSTANCE.eClass();
-        DataminingPackage.eINSTANCE.eClass();
-        InformationvisualizationPackage.eINSTANCE.eClass();
-        BusinessnomenclaturePackage.eINSTANCE.eClass();
-        WarehouseprocessPackage.eINSTANCE.eClass();
-        WarehouseoperationPackage.eINSTANCE.eClass();
-        ErPackage.eINSTANCE.eClass();
-        CoboldataPackage.eINSTANCE.eClass();
-        DmsiiPackage.eINSTANCE.eClass();
-        ImsdatabasePackage.eINSTANCE.eClass();
-        EssbasePackage.eINSTANCE.eClass();
-        ExpressPackage.eINSTANCE.eClass();
-        InformationsetPackage.eINSTANCE.eClass();
-        InformationreportingPackage.eINSTANCE.eClass();
-        CwmmipPackage.eINSTANCE.eClass();
-        ModelPackage.eINSTANCE.eClass();
+        ConnectionPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
         AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
@@ -693,7 +634,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
         ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
-        ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
+        ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
         SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
@@ -708,7 +649,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         theDefinitionPackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
         theColumnsetPackage.createPackageContents();
-        theExpressionsPackage_1.createPackageContents();
+        theExpressionsPackage.createPackageContents();
         theDomainPackage.createPackageContents();
         thePatternPackage.createPackageContents();
         theSQLPackage.createPackageContents();
@@ -723,7 +664,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         theDefinitionPackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
         theColumnsetPackage.initializePackageContents();
-        theExpressionsPackage_1.initializePackageContents();
+        theExpressionsPackage.initializePackageContents();
         theDomainPackage.initializePackageContents();
         thePatternPackage.initializePackageContents();
         theSQLPackage.initializePackageContents();
@@ -1745,6 +1686,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getDateFrequencyIndicator() {
+        return dateFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getWeekFrequencyIndicator() {
         return weekFrequencyIndicatorEClass;
     }
@@ -1837,15 +1787,6 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      */
     public EClass getBinLowFrequencyIndicator() {
         return binLowFrequencyIndicatorEClass;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EClass getDateFrequencyIndicator() {
-        return dateFrequencyIndicatorEClass;
     }
 
     /**

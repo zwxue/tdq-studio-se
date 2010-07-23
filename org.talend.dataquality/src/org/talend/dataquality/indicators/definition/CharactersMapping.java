@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.definition;
 
 import orgomg.cwm.objectmodel.core.ModelElement;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->

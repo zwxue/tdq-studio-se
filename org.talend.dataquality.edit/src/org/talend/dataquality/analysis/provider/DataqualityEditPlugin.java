@@ -7,9 +7,8 @@
 package org.talend.dataquality.analysis.provider;
 
 import org.eclipse.emf.common.EMFPlugin;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
+import org.talend.designer.business.model.business.provider.MetadataEditPlugin;
 import orgomg.cwm.objectmodel.core.provider.Cwm_mipEditPlugin;
 
 /**
@@ -45,6 +44,7 @@ public final class DataqualityEditPlugin extends EMFPlugin {
         super
           (new ResourceLocator [] {
              Cwm_mipEditPlugin.INSTANCE,
+             MetadataEditPlugin.INSTANCE,
            });
     }
 

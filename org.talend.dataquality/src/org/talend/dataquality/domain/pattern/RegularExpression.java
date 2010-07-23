@@ -29,53 +29,53 @@ import orgomg.cwm.objectmodel.core.Expression;
 public interface RegularExpression extends PatternComponent {
 
     /**
-	 * Returns the value of the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Expression</b></em>' containment reference.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Expression</em>' containment reference isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Expression</em>' containment reference.
-	 * @see #setExpression(Expression)
-	 * @see org.talend.dataquality.domain.pattern.PatternPackage#getRegularExpression_Expression()
-	 * @model containment="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Expression</em>' containment reference.
+     * @see #setExpression(Expression)
+     * @see org.talend.dataquality.domain.pattern.PatternPackage#getRegularExpression_Expression()
+     * @model containment="true"
+     * @generated
+     */
     Expression getExpression();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpression <em>Expression</em>}' containment reference.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpression <em>Expression</em>}' containment reference.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expression</em>' containment reference.
-	 * @see #getExpression()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Expression</em>' containment reference.
+     * @see #getExpression()
+     * @generated
+     */
     void setExpression(Expression value);
 
     /**
-	 * Returns the value of the '<em><b>Expression Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Expression Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The type of regular expression: can be either "regexp" or "sql like" to differentiate between the regular patterns and the SQL expressions available for the LIKE clause.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Expression Type</em>' attribute.
-	 * @see #setExpressionType(String)
-	 * @see org.talend.dataquality.domain.pattern.PatternPackage#getRegularExpression_ExpressionType()
-	 * @model
-	 * @generated
-	 */
+     * <!-- begin-model-doc -->
+     * The type of regular expression: can be either "regexp" or "sql like" to differentiate between the regular patterns and the SQL expressions available for the LIKE clause.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Expression Type</em>' attribute.
+     * @see #setExpressionType(String)
+     * @see org.talend.dataquality.domain.pattern.PatternPackage#getRegularExpression_ExpressionType()
+     * @model
+     * @generated
+     */
     String getExpressionType();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpressionType <em>Expression Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpressionType <em>Expression Type</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Expression Type</em>' attribute.
-	 * @see #getExpressionType()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Expression Type</em>' attribute.
+     * @see #getExpressionType()
+     * @generated
+     */
     void setExpressionType(String value);
 } // RegularExpression

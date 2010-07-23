@@ -9,12 +9,12 @@ package org.talend.dataquality.indicators.columnset;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * <!-- begin-user-doc -->
@@ -49,7 +49,7 @@ import orgomg.cwm.resource.relational.Column;
 public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
     /**
      * Returns the value of the '<em><b>Analyzed Columns</b></em>' reference list.
-     * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
+     * The list contents are of type {@link org.talend.cwm.relational.TdColumn}.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Analyzed Columns</em>' reference list isn't clear,
@@ -61,7 +61,7 @@ public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
      * @model
      * @generated
      */
-    EList<Column> getAnalyzedColumns();
+    EList<TdColumn> getAnalyzedColumns();
 
     /**
      * Returns the value of the '<em><b>List Rows</b></em>' attribute.
@@ -108,7 +108,7 @@ public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
 
     /**
      * Returns the value of the '<em><b>Nominal Columns</b></em>' reference list.
-     * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
+     * The list contents are of type {@link org.talend.cwm.relational.TdColumn}.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Nominal Columns</em>' reference list isn't clear,
@@ -120,11 +120,11 @@ public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
      * @model transient="true" changeable="false" volatile="true"
      * @generated
      */
-    EList<Column> getNominalColumns();
+    EList<TdColumn> getNominalColumns();
 
     /**
      * Returns the value of the '<em><b>Numeric Columns</b></em>' reference list.
-     * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
+     * The list contents are of type {@link org.talend.cwm.relational.TdColumn}.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Numeric Columns</em>' reference list isn't clear,
@@ -136,7 +136,7 @@ public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
      * @model transient="true" changeable="false" volatile="true"
      * @generated
      */
-    EList<Column> getNumericColumns();
+    EList<TdColumn> getNumericColumns();
 
     /**
      * Returns the value of the '<em><b>Column Headers</b></em>' attribute list.
@@ -172,7 +172,7 @@ public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
 
     /**
      * Returns the value of the '<em><b>Date Columns</b></em>' reference list.
-     * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
+     * The list contents are of type {@link org.talend.cwm.relational.TdColumn}.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Date Columns</em>' reference list isn't clear,
@@ -184,7 +184,7 @@ public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
      * @model
      * @generated
      */
-    EList<Column> getDateColumns();
+    EList<TdColumn> getDateColumns();
     
     /**
      * Returns the value of the '<em><b>Unique Count</b></em>' attribute.

@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.definition;
 
 import org.talend.dataquality.expressions.TdExpression;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * <!-- begin-user-doc -->

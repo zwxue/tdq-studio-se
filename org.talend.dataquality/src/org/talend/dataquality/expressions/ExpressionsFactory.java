@@ -18,38 +18,38 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface ExpressionsFactory extends EFactory {
     /**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     ExpressionsFactory eINSTANCE = org.talend.dataquality.expressions.impl.ExpressionsFactoryImpl.init();
 
     /**
-	 * Returns a new object of class '<em>Boolean Expression Node</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Boolean Expression Node</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Boolean Expression Node</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Boolean Expression Node</em>'.
+     * @generated
+     */
     BooleanExpressionNode createBooleanExpressionNode();
 
     /**
-	 * Returns a new object of class '<em>Td Expression</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Td Expression</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Td Expression</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Td Expression</em>'.
+     * @generated
+     */
     TdExpression createTdExpression();
 
     /**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
     ExpressionsPackage getExpressionsPackage();
 
 } //ExpressionsFactory

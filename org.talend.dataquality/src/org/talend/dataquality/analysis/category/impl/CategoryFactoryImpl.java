@@ -25,87 +25,87 @@ import org.talend.dataquality.analysis.category.CategoryPackage;
  */
 public class CategoryFactoryImpl extends EFactoryImpl implements CategoryFactory {
     /**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc -->
+     * Creates the default factory implementation.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public static CategoryFactory init() {
-		try {
-			CategoryFactory theCategoryFactory = (CategoryFactory)EPackage.Registry.INSTANCE.getEFactory("http://org.talend.dataquality.category"); 
-			if (theCategoryFactory != null) {
-				return theCategoryFactory;
-			}
-		}
-		catch (Exception exception) {
-			EcorePlugin.INSTANCE.log(exception);
-		}
-		return new CategoryFactoryImpl();
-	}
+        try {
+            CategoryFactory theCategoryFactory = (CategoryFactory)EPackage.Registry.INSTANCE.getEFactory("http://org.talend.dataquality.category"); 
+            if (theCategoryFactory != null) {
+                return theCategoryFactory;
+            }
+        }
+        catch (Exception exception) {
+            EcorePlugin.INSTANCE.log(exception);
+        }
+        return new CategoryFactoryImpl();
+    }
 
     /**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public CategoryFactoryImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
     public EObject create(EClass eClass) {
-		switch (eClass.getClassifierID()) {
-			case CategoryPackage.ANALYSIS_CATEGORY: return createAnalysisCategory();
-			case CategoryPackage.ANALYSIS_CATEGORIES: return createAnalysisCategories();
-			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-		}
-	}
+        switch (eClass.getClassifierID()) {
+            case CategoryPackage.ANALYSIS_CATEGORY: return createAnalysisCategory();
+            case CategoryPackage.ANALYSIS_CATEGORIES: return createAnalysisCategories();
+            default:
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+        }
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalysisCategory createAnalysisCategory() {
-		AnalysisCategoryImpl analysisCategory = new AnalysisCategoryImpl();
-		return analysisCategory;
-	}
+        AnalysisCategoryImpl analysisCategory = new AnalysisCategoryImpl();
+        return analysisCategory;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public AnalysisCategories createAnalysisCategories() {
-		AnalysisCategoriesImpl analysisCategories = new AnalysisCategoriesImpl();
-		return analysisCategories;
-	}
+        AnalysisCategoriesImpl analysisCategories = new AnalysisCategoriesImpl();
+        return analysisCategories;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public CategoryPackage getCategoryPackage() {
-		return (CategoryPackage)getEPackage();
-	}
+        return (CategoryPackage)getEPackage();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
+     * @deprecated
+     * @generated
+     */
     @Deprecated
     public static CategoryPackage getPackage() {
-		return CategoryPackage.eINSTANCE;
-	}
+        return CategoryPackage.eINSTANCE;
+    }
 
 } //CategoryFactoryImpl

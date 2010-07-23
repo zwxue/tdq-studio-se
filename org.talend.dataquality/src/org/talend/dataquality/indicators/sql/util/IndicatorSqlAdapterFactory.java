@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.*;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
+import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import orgomg.cwm.objectmodel.core.Element;

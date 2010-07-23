@@ -44,43 +44,43 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public interface DQRule extends IndicatorDefinition {
     /**
-	 * Returns the value of the '<em><b>Criticality Level</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Criticality Level</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * The criticality level. An integer specified by the user. The higher it is, the more critical is the Data quality rule. Suggested values are between 1 and 10, but they are not restricted to this range.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Criticality Level</em>' attribute.
-	 * @see #setCriticalityLevel(int)
-	 * @see org.talend.dataquality.rules.RulesPackage#getDQRule_CriticalityLevel()
-	 * @model
-	 * @generated
-	 */
+     * <!-- begin-model-doc -->
+     * The criticality level. An integer specified by the user. The higher it is, the more critical is the Data quality rule. Suggested values are between 1 and 10, but they are not restricted to this range.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Criticality Level</em>' attribute.
+     * @see #setCriticalityLevel(int)
+     * @see org.talend.dataquality.rules.RulesPackage#getDQRule_CriticalityLevel()
+     * @model
+     * @generated
+     */
     int getCriticalityLevel();
 
     /**
-	 * Sets the value of the '{@link org.talend.dataquality.rules.DQRule#getCriticalityLevel <em>Criticality Level</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.talend.dataquality.rules.DQRule#getCriticalityLevel <em>Criticality Level</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Criticality Level</em>' attribute.
-	 * @see #getCriticalityLevel()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Criticality Level</em>' attribute.
+     * @see #getCriticalityLevel()
+     * @generated
+     */
     void setCriticalityLevel(int value);
 
     /**
-	 * Returns the value of the '<em><b>Elements</b></em>' reference list.
-	 * The list contents are of type {@link orgomg.cwm.objectmodel.core.ModelElement}.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Elements</b></em>' reference list.
+     * The list contents are of type {@link orgomg.cwm.objectmodel.core.ModelElement}.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * the elements to which the DQ rule applies.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Elements</em>' reference list.
-	 * @see org.talend.dataquality.rules.RulesPackage#getDQRule_Elements()
-	 * @model
-	 * @generated
-	 */
+     * <!-- begin-model-doc -->
+     * the elements to which the DQ rule applies.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Elements</em>' reference list.
+     * @see org.talend.dataquality.rules.RulesPackage#getDQRule_Elements()
+     * @model
+     * @generated
+     */
     EList<ModelElement> getElements();
 
 } // DQRule
