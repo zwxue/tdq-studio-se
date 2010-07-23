@@ -1180,6 +1180,282 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.DateFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected DateFrequencyIndicatorItemProvider dateFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.DateFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createDateFrequencyIndicatorAdapter() {
+        if (dateFrequencyIndicatorItemProvider == null) {
+            dateFrequencyIndicatorItemProvider = new DateFrequencyIndicatorItemProvider(this);
+        }
+
+        return dateFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.WeekFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected WeekFrequencyIndicatorItemProvider weekFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.WeekFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createWeekFrequencyIndicatorAdapter() {
+        if (weekFrequencyIndicatorItemProvider == null) {
+            weekFrequencyIndicatorItemProvider = new WeekFrequencyIndicatorItemProvider(this);
+        }
+
+        return weekFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MonthFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MonthFrequencyIndicatorItemProvider monthFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.MonthFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMonthFrequencyIndicatorAdapter() {
+        if (monthFrequencyIndicatorItemProvider == null) {
+            monthFrequencyIndicatorItemProvider = new MonthFrequencyIndicatorItemProvider(this);
+        }
+
+        return monthFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.QuarterFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected QuarterFrequencyIndicatorItemProvider quarterFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.QuarterFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createQuarterFrequencyIndicatorAdapter() {
+        if (quarterFrequencyIndicatorItemProvider == null) {
+            quarterFrequencyIndicatorItemProvider = new QuarterFrequencyIndicatorItemProvider(this);
+        }
+
+        return quarterFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.YearFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected YearFrequencyIndicatorItemProvider yearFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.YearFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createYearFrequencyIndicatorAdapter() {
+        if (yearFrequencyIndicatorItemProvider == null) {
+            yearFrequencyIndicatorItemProvider = new YearFrequencyIndicatorItemProvider(this);
+        }
+
+        return yearFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.BinFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected BinFrequencyIndicatorItemProvider binFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.BinFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createBinFrequencyIndicatorAdapter() {
+        if (binFrequencyIndicatorItemProvider == null) {
+            binFrequencyIndicatorItemProvider = new BinFrequencyIndicatorItemProvider(this);
+        }
+
+        return binFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.DateLowFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected DateLowFrequencyIndicatorItemProvider dateLowFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.DateLowFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createDateLowFrequencyIndicatorAdapter() {
+        if (dateLowFrequencyIndicatorItemProvider == null) {
+            dateLowFrequencyIndicatorItemProvider = new DateLowFrequencyIndicatorItemProvider(this);
+        }
+
+        return dateLowFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.WeekLowFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected WeekLowFrequencyIndicatorItemProvider weekLowFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.WeekLowFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createWeekLowFrequencyIndicatorAdapter() {
+        if (weekLowFrequencyIndicatorItemProvider == null) {
+            weekLowFrequencyIndicatorItemProvider = new WeekLowFrequencyIndicatorItemProvider(this);
+        }
+
+        return weekLowFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.MonthLowFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MonthLowFrequencyIndicatorItemProvider monthLowFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.MonthLowFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMonthLowFrequencyIndicatorAdapter() {
+        if (monthLowFrequencyIndicatorItemProvider == null) {
+            monthLowFrequencyIndicatorItemProvider = new MonthLowFrequencyIndicatorItemProvider(this);
+        }
+
+        return monthLowFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.QuarterLowFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected QuarterLowFrequencyIndicatorItemProvider quarterLowFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.QuarterLowFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createQuarterLowFrequencyIndicatorAdapter() {
+        if (quarterLowFrequencyIndicatorItemProvider == null) {
+            quarterLowFrequencyIndicatorItemProvider = new QuarterLowFrequencyIndicatorItemProvider(this);
+        }
+
+        return quarterLowFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.YearLowFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected YearLowFrequencyIndicatorItemProvider yearLowFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.YearLowFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createYearLowFrequencyIndicatorAdapter() {
+        if (yearLowFrequencyIndicatorItemProvider == null) {
+            yearLowFrequencyIndicatorItemProvider = new YearLowFrequencyIndicatorItemProvider(this);
+        }
+
+        return yearLowFrequencyIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.BinLowFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected BinLowFrequencyIndicatorItemProvider binLowFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.BinLowFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createBinLowFrequencyIndicatorAdapter() {
+        if (binLowFrequencyIndicatorItemProvider == null) {
+            binLowFrequencyIndicatorItemProvider = new BinLowFrequencyIndicatorItemProvider(this);
+        }
+
+        return binLowFrequencyIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1326,6 +1602,18 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (soundexFreqIndicatorItemProvider != null) soundexFreqIndicatorItemProvider.dispose();
         if (soundexLowFreqIndicatorItemProvider != null) soundexLowFreqIndicatorItemProvider.dispose();
         if (datePatternFreqIndicatorItemProvider != null) datePatternFreqIndicatorItemProvider.dispose();
+        if (dateFrequencyIndicatorItemProvider != null) dateFrequencyIndicatorItemProvider.dispose();
+        if (weekFrequencyIndicatorItemProvider != null) weekFrequencyIndicatorItemProvider.dispose();
+        if (monthFrequencyIndicatorItemProvider != null) monthFrequencyIndicatorItemProvider.dispose();
+        if (quarterFrequencyIndicatorItemProvider != null) quarterFrequencyIndicatorItemProvider.dispose();
+        if (yearFrequencyIndicatorItemProvider != null) yearFrequencyIndicatorItemProvider.dispose();
+        if (binFrequencyIndicatorItemProvider != null) binFrequencyIndicatorItemProvider.dispose();
+        if (dateLowFrequencyIndicatorItemProvider != null) dateLowFrequencyIndicatorItemProvider.dispose();
+        if (weekLowFrequencyIndicatorItemProvider != null) weekLowFrequencyIndicatorItemProvider.dispose();
+        if (monthLowFrequencyIndicatorItemProvider != null) monthLowFrequencyIndicatorItemProvider.dispose();
+        if (quarterLowFrequencyIndicatorItemProvider != null) quarterLowFrequencyIndicatorItemProvider.dispose();
+        if (yearLowFrequencyIndicatorItemProvider != null) yearLowFrequencyIndicatorItemProvider.dispose();
+        if (binLowFrequencyIndicatorItemProvider != null) binLowFrequencyIndicatorItemProvider.dispose();
     }
 
 }
