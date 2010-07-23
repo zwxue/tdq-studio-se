@@ -37,6 +37,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -227,7 +228,11 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         if (parentRelation instanceof TdSchema) {
             sql.append(dbms().toQualifiedName(null, parentRelation.getName(), element.getName()));
         } else if (parentRelation instanceof TdCatalog) {
-            sql.append(dbms().toQualifiedName(parentRelation.getName(), null, element.getName()));
+            String ownerUser = null;
+            if (dbms() instanceof SybaseASEDbmsLanguage) {
+                ownerUser = ColumnSetHelper.getTableOwner((ModelElement) element);
+            }
+            sql.append(dbms().toQualifiedName(parentRelation.getName(), ownerUser, element.getName()));
         }
         // String catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(element);
 

@@ -46,9 +46,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String toQualifiedName(String catalog, String schema, String table) {
-        if (schema == null) { // use default (backward compatibility with TOP 1.1.0
-            schema = quote("dbo"); //$NON-NLS-1$
-        }
+
         return super.toQualifiedName(catalog, schema, table);
     }
 
