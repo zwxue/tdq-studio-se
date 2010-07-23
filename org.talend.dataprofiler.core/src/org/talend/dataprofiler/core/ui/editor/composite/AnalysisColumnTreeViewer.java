@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -796,6 +797,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     @Override
     public boolean canDrop(ModelElement modelElement) {
+        // MOD mzhao, 2010-07-23 bug 14014: If the editor is dirty, save it firstly before drag and drop an elements.
+        if (masterPage.isDirty()) {
+            masterPage.doSave(new NullProgressMonitor());
+            return false;
+        }
         List<ModelElement> existModelElements = new ArrayList<ModelElement>();
         for (ModelElementIndicator modelElementIndicator : this.getModelElementIndicator()) {
             existModelElements.add(modelElementIndicator.getModelElement());
