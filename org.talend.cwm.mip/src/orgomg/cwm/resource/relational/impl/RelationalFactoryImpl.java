@@ -9,12 +9,33 @@ package orgomg.cwm.resource.relational.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.resource.relational.*;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.CheckConstraint;
+import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ColumnValue;
+import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.NamedColumnSet;
+import orgomg.cwm.resource.relational.PrimaryKey;
+import orgomg.cwm.resource.relational.Procedure;
+import orgomg.cwm.resource.relational.QueryColumnSet;
+import orgomg.cwm.resource.relational.RelationalFactory;
+import orgomg.cwm.resource.relational.RelationalPackage;
+import orgomg.cwm.resource.relational.Row;
+import orgomg.cwm.resource.relational.RowSet;
+import orgomg.cwm.resource.relational.SQLDistinctType;
+import orgomg.cwm.resource.relational.SQLIndex;
+import orgomg.cwm.resource.relational.SQLIndexColumn;
+import orgomg.cwm.resource.relational.SQLParameter;
+import orgomg.cwm.resource.relational.SQLSimpleType;
+import orgomg.cwm.resource.relational.SQLStructuredType;
+import orgomg.cwm.resource.relational.Schema;
+import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.Trigger;
+import orgomg.cwm.resource.relational.UniqueConstraint;
+import orgomg.cwm.resource.relational.View;
 
 /**
  * <!-- begin-user-doc -->

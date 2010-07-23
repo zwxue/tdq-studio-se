@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,6 +21,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -29,10 +29,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
@@ -44,8 +41,9 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -54,13 +52,13 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
-    private TdDataProvider dataprovider;
+    private Connection dataprovider;
 
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
 
     protected Map<ModelElement, Package> schemata = new HashMap<ModelElement, Package>();
 
-    protected boolean isAccessWith(TdDataProvider dp) {
+    protected boolean isAccessWith(Connection dp) {
         if (dataprovider == null) {
             dataprovider = dp;
             return true;
@@ -95,7 +93,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         }
 
         // open a connection
-        TypedReturnCode<Connection> connection = getConnection(analysis);
+        TypedReturnCode<java.sql.Connection> connection = getConnection(analysis);
         if (!connection.isOk()) {
             log.error(connection.getMessage());
             this.errorMessage = connection.getMessage();
@@ -225,9 +223,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         // if(CatalogHelper.fromPart.iterator().next())
         ModelElement element = fromPart.iterator().next();
         Package parentRelation = TableHelper.getParentCatalogOrSchema(fromPart.iterator().next());
-        if (parentRelation instanceof TdSchema) {
+        if (parentRelation instanceof Schema) {
             sql.append(dbms().toQualifiedName(null, parentRelation.getName(), element.getName()));
-        } else if (parentRelation instanceof TdCatalog) {
+        } else if (parentRelation instanceof Catalog) {
             String ownerUser = null;
             if (dbms() instanceof SybaseASEDbmsLanguage) {
                 ownerUser = ColumnSetHelper.getTableOwner((ModelElement) element);
@@ -306,7 +304,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             }
 
             // --- get the data provider
-            TdDataProvider dp = DataProviderHelper.getTdDataProvider(column);
+            Connection dp = DataProviderHelper.getTdDataProvider(column);
             if (!isAccessWith(dp)) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
                         column.getName(), dataprovider.getName());
@@ -322,7 +320,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @param column a column
      * @return the quoted column name
      */
-    protected String getQuotedColumnName(Column column) {
+    protected String getQuotedColumnName(TdColumn column) {
         assert column != null;
         String quotedColName = quote(column.getName());
         return quotedColName;
@@ -334,7 +332,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @param column
      * @return the quoted table name
      */
-    protected String getQuotedTableName(Column column) {
+    protected String getQuotedTableName(TdColumn column) {
         String table = quote(ColumnHelper.getColumnSetFullName(column));
         return table;
     }

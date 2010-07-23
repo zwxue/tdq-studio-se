@@ -12,14 +12,13 @@
 // ============================================================================
 package org.talend.cwm.management.api;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -51,8 +50,8 @@ public final class SoftwareSystemManager {
      * @param dataProvider
      * @return the software system that is referenced by the data provider.
      */
-    public TdSoftwareSystem getSoftwareSystem(TdDataProvider dataProvider) {
-        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
+    public TdSoftwareSystem getSoftwareSystem(Connection dataProvider) {
+        TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(dataProvider);
         if (softwareSystem == null) {
             // else create it and store it
             if (log.isDebugEnabled()) {
@@ -60,12 +59,12 @@ public final class SoftwareSystemManager {
             }
             try {
                 // create it
-                TypedReturnCode<Connection> trc = JavaSqlFactory.createConnection(dataProvider);
+                TypedReturnCode<java.sql.Connection> trc = JavaSqlFactory.createConnection(dataProvider);
                 if (trc.isOk()) {
-                    Connection connection = trc.getObject();
+                    java.sql.Connection connection = trc.getObject();
                     softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
                     if (softwareSystem != null) { // store it
-                        if (DataProviderHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
+                        if (ConnectionHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
                                 DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
                             }
                         }

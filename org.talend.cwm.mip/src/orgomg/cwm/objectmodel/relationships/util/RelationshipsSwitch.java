@@ -10,15 +10,16 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
-import orgomg.cwm.objectmodel.relationships.*;
+import orgomg.cwm.objectmodel.relationships.Association;
+import orgomg.cwm.objectmodel.relationships.AssociationEnd;
+import orgomg.cwm.objectmodel.relationships.Generalization;
+import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
 
 /**
  * <!-- begin-user-doc -->

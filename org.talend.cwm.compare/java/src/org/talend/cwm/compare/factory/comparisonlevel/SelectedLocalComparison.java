@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -27,7 +28,6 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -48,13 +48,13 @@ public class SelectedLocalComparison implements IComparisonLevel {
 
     private Object firstSelectedObj = null, secondSelectedObj = null;
 
-    private TdDataProvider firstSelectedDataProvider;
+    private Connection firstSelectedDataProvider;
 
-    private TdDataProvider secondSelectedDataProvider;
+    private Connection secondSelectedDataProvider;
 
-    private TdDataProvider tempFirstSelectedDataProvider;
+    private Connection tempFirstSelectedDataProvider;
 
-    private TdDataProvider tempSecondSelectedDataProvider;
+    private Connection tempSecondSelectedDataProvider;
 
     private Map<String, Object> options;
 
@@ -96,7 +96,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
         IFile selectedFile1 = PrvResourceFileHelper.getInstance().findCorrespondingFile(firstSelectedDataProvider);
         IFile firstConnectionFile = DQStructureComparer.getFirstComparisonLocalFile();
         IFile copyedFile1 = DQStructureComparer.copyedToDestinationFile(selectedFile1, firstConnectionFile);
-        TypedReturnCode<TdDataProvider> returnProvider = DqRepositoryViewService.readFromFile(copyedFile1);
+        TypedReturnCode<Connection> returnProvider = DqRepositoryViewService.readFromFile(copyedFile1);
         if (!returnProvider.isOk()) {
             throw new ReloadCompareException(returnProvider.getMessage());
         }
@@ -106,7 +106,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
         IFile selectedFile2 = PrvResourceFileHelper.getInstance().findCorrespondingFile(secondSelectedDataProvider);
         IFile secondConnectionFile = DQStructureComparer.getSecondComparisonLocalFile();
         IFile copyedFile2 = DQStructureComparer.copyedToDestinationFile(selectedFile2, secondConnectionFile);
-        TypedReturnCode<TdDataProvider> returnProvider2 = DqRepositoryViewService.readFromFile(copyedFile2);
+        TypedReturnCode<Connection> returnProvider2 = DqRepositoryViewService.readFromFile(copyedFile2);
         if (!returnProvider2.isOk()) {
             throw new ReloadCompareException(returnProvider2.getMessage());
         }
@@ -114,7 +114,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
     }
 
     private Resource getResource(int pos) throws ReloadCompareException {
-        TdDataProvider tdProvider = null;
+        Connection tdProvider = null;
         Object selectedObj = null;
         switch (pos) {
         case LEFT_RESOURCE:
@@ -152,12 +152,12 @@ public class SelectedLocalComparison implements IComparisonLevel {
      */
     private class ModelElementAdapter {
 
-        public TdDataProvider getAdaptableProvider(Object element) {
-            TdDataProvider adaptedDataProvider = null;
+        public Connection getAdaptableProvider(Object element) {
+            Connection adaptedDataProvider = null;
 
             if (element instanceof IFile) {
                 // IFile
-                TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) element);
+                TypedReturnCode<Connection> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) element);
                 adaptedDataProvider = returnVlaue.getObject();
             } else {
 
@@ -170,7 +170,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
                     if (columnSet1 != null) {
                         adaptedDataProvider = DataProviderHelper.getDataProvider(columnSet1);
                     } else {
-                        Column column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((Column) element);
+                        TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((Column) element);
                         if (column1 != null) {
                             adaptedDataProvider = DataProviderHelper.getTdDataProvider(column1);
                         }
@@ -181,7 +181,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
             return adaptedDataProvider;
         }
 
-        public Object getListModelElements(Object element, TdDataProvider tdProvider) throws ReloadCompareException {
+        public Object getListModelElements(Object element, Connection tdProvider) throws ReloadCompareException {
 
             Object rootElement = null;
             // List<ModelElement> meList = new ArrayList<ModelElement>();
@@ -205,9 +205,9 @@ public class SelectedLocalComparison implements IComparisonLevel {
                         // meList.addAll(ColumnSetHelper
                         // .getColumns(findMatchedColumnSet));
                     } else {
-                        Column column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((Column) element);
+                        TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((Column) element);
                         if (column1 != null) {
-                            Column findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
+                            TdColumn findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
                             rootElement = findMathedColumn;
 
                             if (findMathedColumn instanceof TdColumn) {
@@ -234,7 +234,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
         }
     }
 
-    public TdDataProvider reloadCurrentLevelElement() throws ReloadCompareException {
+    public Connection reloadCurrentLevelElement() throws ReloadCompareException {
         // TODO Auto-generated method stub
         return null;
     }

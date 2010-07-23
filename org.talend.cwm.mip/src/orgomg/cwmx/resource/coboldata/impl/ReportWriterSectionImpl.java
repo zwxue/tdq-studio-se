@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.coboldata.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwmx.resource.coboldata.CoboldataPackage;
 import orgomg.cwmx.resource.coboldata.ReportWriterSection;
 

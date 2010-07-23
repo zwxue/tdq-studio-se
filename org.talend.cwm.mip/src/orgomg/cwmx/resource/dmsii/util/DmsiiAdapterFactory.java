@@ -8,15 +8,10 @@ package orgomg.cwmx.resource.dmsii.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.foundation.businessinformation.Description;
-
 import orgomg.cwm.foundation.keysindexes.IndexedFeature;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
@@ -24,11 +19,31 @@ import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.resource.record.Field;
 import orgomg.cwm.resource.record.RecordDef;
-
-import orgomg.cwmx.resource.dmsii.*;
+import orgomg.cwmx.resource.dmsii.Access;
+import orgomg.cwmx.resource.dmsii.AutomaticSubset;
+import orgomg.cwmx.resource.dmsii.DASDLComment;
+import orgomg.cwmx.resource.dmsii.DASDLProperty;
+import orgomg.cwmx.resource.dmsii.DataItem;
+import orgomg.cwmx.resource.dmsii.DataSet;
+import orgomg.cwmx.resource.dmsii.Database;
+import orgomg.cwmx.resource.dmsii.DmsiiPackage;
+import orgomg.cwmx.resource.dmsii.FieldBit;
+import orgomg.cwmx.resource.dmsii.KeyItem;
+import orgomg.cwmx.resource.dmsii.PhysicalAccessOverride;
+import orgomg.cwmx.resource.dmsii.PhysicalDataSet;
+import orgomg.cwmx.resource.dmsii.PhysicalDataSetOverride;
+import orgomg.cwmx.resource.dmsii.PhysicalDatabase;
+import orgomg.cwmx.resource.dmsii.PhysicalSet;
+import orgomg.cwmx.resource.dmsii.PhysicalSetOverride;
+import orgomg.cwmx.resource.dmsii.Remap;
+import orgomg.cwmx.resource.dmsii.RemapItem;
+import orgomg.cwmx.resource.dmsii.Remark;
+import orgomg.cwmx.resource.dmsii.Set;
+import orgomg.cwmx.resource.dmsii.SetStructure;
+import orgomg.cwmx.resource.dmsii.Subset;
+import orgomg.cwmx.resource.dmsii.VariableFormatPart;
 
 /**
  * <!-- begin-user-doc -->

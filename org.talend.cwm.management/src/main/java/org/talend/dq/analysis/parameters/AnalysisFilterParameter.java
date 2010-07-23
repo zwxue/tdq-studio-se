@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis.parameters;
 
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -26,7 +26,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
 
     private String viewFilter;
 
-    private TdDataProvider tdDataProvider;
+    private Connection tdDataProvider;
 
     /**
      * Getter for tableFilter.
@@ -69,7 +69,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
      * 
      * @return the tdDataProvider
      */
-    public TdDataProvider getTdDataProvider() {
+    public Connection getTdDataProvider() {
         return this.tdDataProvider;
     }
 
@@ -78,7 +78,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
      * 
      * @param tdDataProvider the tdDataProvider to set
      */
-    public void setTdDataProvider(TdDataProvider tdDataProvider) {
+    public void setTdDataProvider(Connection tdDataProvider) {
         this.tdDataProvider = tdDataProvider;
     }
 

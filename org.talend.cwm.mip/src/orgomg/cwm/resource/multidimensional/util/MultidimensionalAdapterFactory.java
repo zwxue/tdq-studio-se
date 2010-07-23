@@ -8,11 +8,8 @@ package orgomg.cwm.resource.multidimensional.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
@@ -20,12 +17,16 @@ import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.objectmodel.instance.DataValue;
 import orgomg.cwm.objectmodel.instance.Extent;
 import orgomg.cwm.objectmodel.instance.Instance;
-
-import orgomg.cwm.resource.multidimensional.*;
+import orgomg.cwm.resource.multidimensional.Dimension;
+import orgomg.cwm.resource.multidimensional.DimensionedObject;
+import orgomg.cwm.resource.multidimensional.Member;
+import orgomg.cwm.resource.multidimensional.MemberSet;
+import orgomg.cwm.resource.multidimensional.MemberValue;
+import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
+import orgomg.cwm.resource.multidimensional.Schema;
 
 /**
  * <!-- begin-user-doc -->

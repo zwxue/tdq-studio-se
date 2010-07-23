@@ -20,13 +20,13 @@ package net.sourceforge.sqlexplorer.connections.actions;
 
 import java.util.Collection;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
-
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
+
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Implements "Examine Database Structure"

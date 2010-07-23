@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.record;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwmx.resource.coboldata.Section;
 
 /**

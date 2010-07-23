@@ -10,12 +10,26 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.resource.imsdatabase.imstypes.*;
+import orgomg.cwmx.resource.imsdatabase.imstypes.AccessMethodType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.AlgorithmType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.ChildPointerType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.DeviceType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.FlagsType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.ImstypesFactory;
+import orgomg.cwmx.resource.imsdatabase.imstypes.ImstypesPackage;
+import orgomg.cwmx.resource.imsdatabase.imstypes.LPointerType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.LTermType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.MSDBtype;
+import orgomg.cwmx.resource.imsdatabase.imstypes.ModelType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.PCBType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.PSBLanguageType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.ParentType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.PointerType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.PositioningType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.RECFMType;
+import orgomg.cwmx.resource.imsdatabase.imstypes.RulesType;
 
 /**
  * <!-- begin-user-doc -->

@@ -8,16 +8,11 @@ package orgomg.cwm.resource.xml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import orgomg.cwm.objectmodel.core.impl.AttributeImpl;
-
 import orgomg.cwm.resource.xml.MixedContent;
 import orgomg.cwm.resource.xml.Text;
 import orgomg.cwm.resource.xml.XmlPackage;

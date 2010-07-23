@@ -41,8 +41,8 @@ import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -256,7 +256,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
                                     Display.getDefault().asyncExec(new Runnable() {
 
                                         public void run() {
-                                            TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                            Connection tdDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analysis
                                                     .getContext().getConnection());
                                             String query = itemEntity.getQuery();
                                             String editorName = ColumnDependencyHelper.getIndicatorName(indicator);

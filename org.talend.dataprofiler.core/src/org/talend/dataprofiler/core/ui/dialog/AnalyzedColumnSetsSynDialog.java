@@ -17,10 +17,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -37,7 +37,8 @@ public class AnalyzedColumnSetsSynDialog extends AnalyzedElementSynDialog {
 	private EList<ModelElement> analyzedElements = null;
 
 	public AnalyzedColumnSetsSynDialog(Shell parent, Analysis analysis,
-			TdDataProvider dataprovider, EList<ModelElement> analyzedElements) {
+ Connection dataprovider,
+            EList<ModelElement> analyzedElements) {
 		super(parent, analysis, dataprovider);
 		this.analyzedElements = analyzedElements;
 	}

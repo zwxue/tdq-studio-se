@@ -7,9 +7,7 @@
 package orgomg.cwmx.resource.coboldata.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.impl.DataTypeImpl;
-
 import orgomg.cwmx.resource.coboldata.CoboldataPackage;
 import orgomg.cwmx.resource.coboldata.Usage;
 

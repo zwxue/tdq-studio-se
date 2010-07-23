@@ -21,10 +21,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
 import org.talend.sqltools.ZQueryHelper;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 import Zql.ZExpression;
@@ -64,7 +64,7 @@ public class CwmZQuery {
         return addSelect(ColumnSetHelper.getColumns(columnSet));
     }
 
-    public boolean addSelect(Collection<? extends Column> columns) {
+    public boolean addSelect(Collection<? extends TdColumn> columns) {
         String[] columnFullNames = ColumnHelper.getColumnFullNames(columns);
         if (columnFullNames.length == 0) {
             return false;
@@ -73,7 +73,7 @@ public class CwmZQuery {
         return true;
     }
 
-    public boolean addSelect(Column column) {
+    public boolean addSelect(TdColumn column) {
         return this.addSelect(Collections.singleton(column));
     }
 
@@ -98,7 +98,7 @@ public class CwmZQuery {
         return evalFromStatement(ColumnSetHelper.getColumns(columnSet));
     }
 
-    public List<ColumnSet> evalFromStatement(Collection<? extends Column> columns) {
+    public List<ColumnSet> evalFromStatement(Collection<? extends TdColumn> columns) {
         // TODO implement me
         return null;
     }

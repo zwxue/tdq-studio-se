@@ -10,48 +10,34 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.analysis.transformation.ClassifierFeatureMap;
 import orgomg.cwm.analysis.transformation.ClassifierMap;
 import orgomg.cwm.analysis.transformation.TransformationPackage;
-
 import orgomg.cwm.foundation.datatypes.DatatypesPackage;
 import orgomg.cwm.foundation.datatypes.TypeAlias;
-
 import orgomg.cwm.foundation.expressions.ExpressionNode;
 import orgomg.cwm.foundation.expressions.ExpressionsPackage;
-
 import orgomg.cwm.foundation.typemapping.TypeMapping;
 import orgomg.cwm.foundation.typemapping.TypemappingPackage;
-
 import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
 import orgomg.cwm.objectmodel.behavioral.Parameter;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.objectmodel.instance.Instance;
 import orgomg.cwm.objectmodel.instance.InstancePackage;
-
 import orgomg.cwm.objectmodel.relationships.Generalization;
 import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
-
 import orgomg.cwmx.foundation.er.Domain;
 import orgomg.cwmx.foundation.er.ErPackage;
-
 import orgomg.cwmx.resource.express.ExpressPackage;
 import orgomg.cwmx.resource.express.SimpleDimension;
 

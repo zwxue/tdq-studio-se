@@ -18,8 +18,8 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ConnectionsContentProvider;
@@ -83,7 +83,7 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                         return;
                     }
 
-                    TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
+                    TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
 
                     if (tdProvider != null && connPanameter != null) {
 

@@ -24,8 +24,8 @@ import javax.xml.rpc.ServiceException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
-import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.db.connection.MdmStatement;
+import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -177,12 +177,12 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;
-        TypedReturnCode<MdmConnection> trc = this.getMdmConnection(analysis);
+        TypedReturnCode<MdmWebserviceConnection> trc = this.getMdmConnection(analysis);
         if (!trc.isOk()) {
             return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
         }
 
-        MdmConnection connection = trc.getObject();
+        MdmWebserviceConnection connection = trc.getObject();
         try {
             // store map of element to each indicator used for computation (leaf indicator)
             Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
@@ -215,7 +215,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @throws ServiceException
      * @throws RemoteException
      */
-    private boolean runAnalysisIndicators(MdmConnection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
+    private boolean runAnalysisIndicators(MdmWebserviceConnection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
             Collection<Indicator> indicators) throws RemoteException, ServiceException {
         boolean ok = true;
         for (Indicator indicator : indicators) {
@@ -258,7 +258,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @throws ServiceException
      * @throws RemoteException
      */
-    protected boolean executeQuery(Indicator indicator, MdmConnection connection, String queryStmt) throws RemoteException,
+    protected boolean executeQuery(Indicator indicator, MdmWebserviceConnection connection, String queryStmt) throws RemoteException,
             ServiceException {
         TdXMLElement analyzedElement = (TdXMLElement) indicator.getAnalyzedElement();
         TdXMLDocument xmlDocument = analyzedElement.getOwnedDocument();
@@ -287,7 +287,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @throws ServiceException
      * @throws RemoteException
      */
-    protected List<Object[]> executeQuery(TdXMLDocument xmlDocument, MdmConnection connection, String queryStmt)
+    protected List<Object[]> executeQuery(TdXMLDocument xmlDocument, MdmWebserviceConnection connection, String queryStmt)
             throws RemoteException, ServiceException {
         // create query statement
         MdmStatement statement = connection.createStatement();

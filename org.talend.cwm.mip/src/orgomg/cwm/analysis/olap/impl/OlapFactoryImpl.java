@@ -9,12 +9,28 @@ package orgomg.cwm.analysis.olap.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.analysis.olap.*;
+import orgomg.cwm.analysis.olap.CodedLevel;
+import orgomg.cwm.analysis.olap.ContentMap;
+import orgomg.cwm.analysis.olap.Cube;
+import orgomg.cwm.analysis.olap.CubeDeployment;
+import orgomg.cwm.analysis.olap.CubeDimensionAssociation;
+import orgomg.cwm.analysis.olap.CubeRegion;
+import orgomg.cwm.analysis.olap.DeploymentGroup;
+import orgomg.cwm.analysis.olap.Dimension;
+import orgomg.cwm.analysis.olap.DimensionDeployment;
+import orgomg.cwm.analysis.olap.HierarchyLevelAssociation;
+import orgomg.cwm.analysis.olap.Level;
+import orgomg.cwm.analysis.olap.LevelBasedHierarchy;
+import orgomg.cwm.analysis.olap.Measure;
+import orgomg.cwm.analysis.olap.MemberSelection;
+import orgomg.cwm.analysis.olap.MemberSelectionGroup;
+import orgomg.cwm.analysis.olap.OlapFactory;
+import orgomg.cwm.analysis.olap.OlapPackage;
+import orgomg.cwm.analysis.olap.Schema;
+import orgomg.cwm.analysis.olap.StructureMap;
+import orgomg.cwm.analysis.olap.ValueBasedHierarchy;
 
 /**
  * <!-- begin-user-doc -->

@@ -40,7 +40,11 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
         return super.caseDataType(object);
     }
 
-    @Override
+    /**
+     * @deprecated
+     * @param object
+     * @return
+     */
     public Boolean casePackage(Package object) {
         if (recentElement instanceof Package) {
             Package pkg = (Package) recentElement;
@@ -84,7 +88,7 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
             TdColumn c = (TdColumn) recentElement;
             object.setName(c.getName());
             object.setLength(c.getLength());
-            object.setJavaType(c.getJavaType());
+            object.getSqlDataType().setJavaDataType(c.getJavaType());
             return true;
         }
         return false;

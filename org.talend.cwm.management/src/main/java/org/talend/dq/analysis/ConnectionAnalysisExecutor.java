@@ -13,8 +13,8 @@
 package org.talend.dq.analysis;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.ConnectionEvaluator;
@@ -44,7 +44,7 @@ public class ConnectionAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
             if (analyzedElement == null) {
                 continue;
             }
-            TdDataProvider dataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analyzedElement);
+            Connection dataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analyzedElement);
             if (dataProvider == null) {
                 continue;
             }

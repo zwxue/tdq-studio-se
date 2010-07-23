@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,11 +42,11 @@ import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -174,10 +173,10 @@ public final class PatternUtilities {
         // DB type, DB number version, existence of UDF)
         DataManager dm = analysis.getContext().getConnection();
         if (dm != null) {
-            TypedReturnCode<Connection> trc = JavaSqlFactory.createConnection((TdDataProvider) dm);
+            TypedReturnCode<java.sql.Connection> trc = JavaSqlFactory.createConnection((Connection) dm);
 
             if (trc != null) {
-                Connection conn = trc.getObject();
+                java.sql.Connection conn = trc.getObject();
 
                 try {
                     SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);

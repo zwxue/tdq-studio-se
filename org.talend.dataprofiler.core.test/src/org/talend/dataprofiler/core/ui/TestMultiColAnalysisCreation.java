@@ -18,15 +18,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
@@ -50,7 +49,7 @@ import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -107,7 +106,7 @@ public class TestMultiColAnalysisCreation {
         Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized);
 
         // get the connection
-        TdDataProvider dataManager = getDataManager();
+        Connection dataManager = getDataManager();
         Assert.assertNotNull("No datamanager found!", dataManager);
         analysisBuilder.setAnalysisConnection(dataManager);
 
@@ -180,7 +179,7 @@ public class TestMultiColAnalysisCreation {
      * @param column
      * @return
      */
-    private Domain getDataFilter(TdDataProvider dataManager, Column column) {
+    private Domain getDataFilter(Connection dataManager, TdColumn column) {
         Domain domain = DOMAIN.createDomain();
         RangeRestriction rangeRestriction = DOMAIN.createRangeRestriction();
         domain.getRanges().add(rangeRestriction);
@@ -196,7 +195,7 @@ public class TestMultiColAnalysisCreation {
      * 
      * @return
      */
-    private BooleanExpressionNode getExpression(Column column) {
+    private BooleanExpressionNode getExpression(TdColumn column) {
         CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
         expre.setOperands(column, "\"sunny\"");
         return expre.generateExpressions();
@@ -232,10 +231,10 @@ public class TestMultiColAnalysisCreation {
      * @return
      * @throws TalendException
      */
-    private List<TdColumn> getColumns(TdDataProvider dataManager) throws TalendException {
-        List<TdCatalog> tdCatalogs = CatalogHelper.getTdCatalogs(dataManager.getDataPackage());
-        TdCatalog catalog = null;
-        for (TdCatalog tdCatalog : tdCatalogs) {
+    private List<TdColumn> getColumns(Connection dataManager) throws TalendException {
+        List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(dataManager.getDataPackage());
+        Catalog catalog = null;
+        for (Catalog tdCatalog : tdCatalogs) {
             if (CATALOG.equals(tdCatalog.getName())) {
                 catalog = tdCatalog;
                 break;
@@ -286,7 +285,7 @@ public class TestMultiColAnalysisCreation {
      * 
      * @return
      */
-    public TdDataProvider getDataManager() {
+    public Connection getDataManager() {
         TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties");
         String driverClassName = connectionParams.getProperty("driver");
         String dbUrl = connectionParams.getProperty("url");
@@ -300,7 +299,7 @@ public class TestMultiColAnalysisCreation {
 
         // create connection
 
-        TdDataProvider dataProvider = ConnectionService.createConnection(params).getObject();
+        Connection dataProvider = ConnectionService.createConnection(params).getObject();
 
         dataProvider.setName("My data provider");
         return dataProvider;

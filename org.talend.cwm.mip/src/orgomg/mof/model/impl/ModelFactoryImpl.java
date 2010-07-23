@@ -9,12 +9,12 @@ package orgomg.mof.model.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.mof.model.*;
+import orgomg.mof.model.Association;
+import orgomg.mof.model.ModelElement;
+import orgomg.mof.model.ModelFactory;
+import orgomg.mof.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->

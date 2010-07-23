@@ -7,7 +7,6 @@
 package orgomg.cwm.management.warehouseprocess.events;
 
 import orgomg.cwm.management.warehouseprocess.WarehouseProcess;
-
 import orgomg.cwm.objectmodel.behavioral.Event;
 
 /**

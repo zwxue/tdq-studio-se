@@ -7,9 +7,7 @@
 package orgomg.cwmx.resource.imsdatabase;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.resource.record.RecordDef;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.ChildPointerType;
 import orgomg.cwmx.resource.imsdatabase.imstypes.RulesType;
 

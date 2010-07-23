@@ -14,9 +14,9 @@ package org.talend.dataprofiler.core.ui.wizard.database;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
@@ -38,7 +38,7 @@ public class TableViewFilterWizard extends AbstractWizard {
 
     private Package packageObj;
 
-    private TdDataProvider tdDataProvider;
+    private Connection tdDataProvider;
 
     private String oldTableFilter, oldViewFilter;
 
@@ -66,11 +66,11 @@ public class TableViewFilterWizard extends AbstractWizard {
         this.packageObj = packageObj;
     }
 
-    public TdDataProvider getTdDataProvider() {
+    public Connection getTdDataProvider() {
         return tdDataProvider;
     }
 
-    public void setTdDataProvider(TdDataProvider tdDataProvider) {
+    public void setTdDataProvider(Connection tdDataProvider) {
         this.tdDataProvider = tdDataProvider;
     }
 

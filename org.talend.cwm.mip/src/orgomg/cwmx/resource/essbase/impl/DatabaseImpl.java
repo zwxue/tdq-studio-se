@@ -8,14 +8,10 @@ package orgomg.cwmx.resource.essbase.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.resource.multidimensional.impl.SchemaImpl;
-
 import orgomg.cwmx.resource.essbase.Database;
 import orgomg.cwmx.resource.essbase.EssbasePackage;
 import orgomg.cwmx.resource.essbase.Outline;

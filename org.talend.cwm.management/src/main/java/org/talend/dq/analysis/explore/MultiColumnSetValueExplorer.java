@@ -19,7 +19,6 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.utils.sql.Java2SqlType;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * 
@@ -48,13 +47,13 @@ public class MultiColumnSetValueExplorer extends DataExplorer {
         return null;
     }
 
-    public String getQueryStirng(Column column, Analysis ana, EList<Column> nominalList, String columnName, String columnValue) {
+    public String getQueryStirng(TdColumn column, Analysis ana, EList<TdColumn> nominalList, String columnName, String columnValue) {
         setAnalysis(ana);
         // MOD by hcheng for 6530
         String queryString = SELECT_ALL_FROM + getFullyQualifiedTableName(column);
         int col = columnName.indexOf(" "); //$NON-NLS-1$
         int val = columnValue.indexOf("|"); //$NON-NLS-1$
-        for (Column nominal : nominalList) {
+        for (TdColumn nominal : nominalList) {
             final TdColumn tdColumn = (TdColumn) nominal;
 
             if (col > 0 && val > 0) {

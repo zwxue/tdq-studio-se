@@ -1,6 +1,11 @@
 
-import java.io.*;
-import Zql.*;
+import java.io.ByteArrayInputStream;
+
+import Zql.ParseException;
+import Zql.ZConstant;
+import Zql.ZExpression;
+import Zql.ZQuery;
+import Zql.ZqlParser;
 
 public class TestOp {
 

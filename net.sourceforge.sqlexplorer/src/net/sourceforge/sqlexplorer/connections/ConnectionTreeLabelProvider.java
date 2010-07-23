@@ -20,11 +20,12 @@ package net.sourceforge.sqlexplorer.connections;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
+import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.util.ImageUtil;
-import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;

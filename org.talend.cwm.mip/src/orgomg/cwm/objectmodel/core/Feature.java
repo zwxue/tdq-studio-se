@@ -7,10 +7,8 @@
 package orgomg.cwm.objectmodel.core;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.analysis.transformation.ClassifierFeatureMap;
 import orgomg.cwm.analysis.transformation.FeatureMap;
-
 import orgomg.cwm.foundation.expressions.FeatureNode;
 
 /**

@@ -7,9 +7,7 @@
 package orgomg.cwmx.resource.imsdatabase;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.AlgorithmType;
 import orgomg.cwmx.resource.imsdatabase.imstypes.DeviceType;
 import orgomg.cwmx.resource.imsdatabase.imstypes.ModelType;

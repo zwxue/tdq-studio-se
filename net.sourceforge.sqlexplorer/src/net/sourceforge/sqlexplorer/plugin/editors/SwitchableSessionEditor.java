@@ -18,9 +18,9 @@
  */
 package net.sourceforge.sqlexplorer.plugin.editors;
 
-import org.eclipse.ui.IWorkbenchSite;
-
 import net.sourceforge.sqlexplorer.dbproduct.Session;
+
+import org.eclipse.ui.IWorkbenchSite;
 
 /**
  * Interface implemented by editors which want to support SQLEditorSessionSwitcher

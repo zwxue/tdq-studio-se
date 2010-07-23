@@ -17,19 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.RelationalPackage;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
-import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.RelationalPackage;
 import orgomg.cwm.resource.relational.Table;
 import orgomg.cwm.resource.relational.View;
 
@@ -144,7 +143,7 @@ public class AnalysisHandler {
         String str = ""; //$NON-NLS-1$
         for (ColumnSet columnSet : getColumnSets()) {
             Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-            if (schema != null && RelationalPackage.eINSTANCE.getTdSchema().equals(schema.eClass())) {
+            if (schema != null && RelationalPackage.eINSTANCE.getSchema().equals(schema.eClass())) {
                 str = str + schema.getName() + " "; //$NON-NLS-1$
             }
         }
@@ -163,7 +162,7 @@ public class AnalysisHandler {
             if (schema == null) {
                 continue;
             }
-            if (RelationalPackage.eINSTANCE.getTdCatalog().equals(schema.eClass())) {
+            if (RelationalPackage.eINSTANCE.getCatalog().equals(schema.eClass())) {
                 str = str + schema.getName() + " "; //$NON-NLS-1$
             } else {
                 Package catalog = ColumnSetHelper.getParentCatalogOrSchema(schema);
@@ -188,7 +187,7 @@ public class AnalysisHandler {
 
         for (ModelElement element : getAnalyzedColumns()) {
             if (element instanceof Column) {
-                ColumnSet columnSet = ColumnHelper.getColumnSetOwner((Column) element);
+                ColumnSet columnSet = ColumnHelper.getColumnSetOwner((TdColumn) element);
                 if (!existingTables.contains(columnSet)) {
                     existingTables.add(columnSet);
                 }
@@ -211,8 +210,8 @@ public class AnalysisHandler {
         List<String> existingTables = new ArrayList<String>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            if (element instanceof Column && element.eContainer() instanceof Table) {
-                String tableName = ColumnHelper.getColumnSetFullName((Column) element);
+            if (element instanceof TdColumn && element.eContainer() instanceof Table) {
+                String tableName = ColumnHelper.getColumnSetFullName((TdColumn) element);
                 if (!existingTables.contains(tableName)) {
                     existingTables.add(tableName);
                 }
@@ -233,8 +232,8 @@ public class AnalysisHandler {
         List<String> existingViews = new ArrayList<String>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            if (element instanceof Column && element.eContainer() instanceof View) {
-                String viewName = ColumnHelper.getColumnSetFullName((Column) element);
+            if (element instanceof TdColumn && element.eContainer() instanceof View) {
+                String viewName = ColumnHelper.getColumnSetFullName((TdColumn) element);
                 if (!existingViews.contains(viewName)) {
                     existingViews.add(viewName);
                 }
@@ -256,12 +255,9 @@ public class AnalysisHandler {
      */
     public boolean isMdmConnection() {
         if (this.analysis != null) {
-            TdDataProvider dataProvider = (TdDataProvider) this.analysis.getContext().getConnection();
+            Connection dataProvider = (Connection) this.analysis.getContext().getConnection();
             if (dataProvider != null) {
-                EList<ProviderConnection> connections = dataProvider.getResourceConnection();
-                if (connections != null && connections.size() > 0) {
-                    return ConnectionUtils.isMdmConnection((TdProviderConnection) connections.get(0));
-                }
+                return dataProvider instanceof MDMConnection;
             }
         }
         return false;

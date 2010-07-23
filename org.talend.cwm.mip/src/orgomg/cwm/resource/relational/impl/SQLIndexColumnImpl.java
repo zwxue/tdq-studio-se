@@ -7,9 +7,7 @@
 package orgomg.cwm.resource.relational.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.foundation.keysindexes.impl.IndexedFeatureImpl;
-
 import orgomg.cwm.resource.relational.RelationalPackage;
 import orgomg.cwm.resource.relational.SQLIndexColumn;
 

@@ -7,10 +7,8 @@
 package orgomg.cwm.analysis.businessnomenclature.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.analysis.businessnomenclature.BusinessDomain;
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
 
 /**

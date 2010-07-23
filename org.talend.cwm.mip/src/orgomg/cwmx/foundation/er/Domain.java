@@ -7,7 +7,6 @@
 package orgomg.cwmx.foundation.er;
 
 import orgomg.cwm.foundation.expressions.ExpressionNode;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 
 /**

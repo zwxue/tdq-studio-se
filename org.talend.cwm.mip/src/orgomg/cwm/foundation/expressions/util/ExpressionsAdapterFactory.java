@@ -8,13 +8,13 @@ package orgomg.cwm.foundation.expressions.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.foundation.expressions.*;
-
+import orgomg.cwm.foundation.expressions.ConstantNode;
+import orgomg.cwm.foundation.expressions.ElementNode;
+import orgomg.cwm.foundation.expressions.ExpressionNode;
+import orgomg.cwm.foundation.expressions.ExpressionsPackage;
+import orgomg.cwm.foundation.expressions.FeatureNode;
 import orgomg.cwm.objectmodel.core.Element;
 
 /**

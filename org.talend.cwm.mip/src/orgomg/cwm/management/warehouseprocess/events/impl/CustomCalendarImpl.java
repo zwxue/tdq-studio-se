@@ -9,19 +9,14 @@ package orgomg.cwm.management.warehouseprocess.events.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.management.warehouseprocess.events.CustomCalendar;
 import orgomg.cwm.management.warehouseprocess.events.CustomCalendarEvent;
 import orgomg.cwm.management.warehouseprocess.events.EventsPackage;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
 
 /**

@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.Messages;
@@ -59,7 +60,6 @@ import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -224,7 +224,7 @@ public class RenameComparedElementAction extends Action {
 
     private Resource getLeftResource() throws ReloadCompareException {
         ColumnSet selectedColumnSet = (ColumnSet) theSelectedElement;
-        TdDataProvider copyedDataProvider = createCopyedProvider();
+        Connection copyedDataProvider = createCopyedProvider();
         ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
         List<TdColumn> columnList = new ArrayList<TdColumn>();
         columnList.addAll(ColumnSetHelper.getColumns(findMatchedColumnSet));
@@ -249,13 +249,13 @@ public class RenameComparedElementAction extends Action {
         return leftResource;
     }
 
-    private TdDataProvider createCopyedProvider() {
+    private Connection createCopyedProvider() {
         Package catalogOrSchema = getTopLevelPackage();
         IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
-                (TdDataProvider) catalogOrSchema.getDataManager().get(0));
+                (Connection) catalogOrSchema.getDataManager().get(0));
         IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
-        TypedReturnCode<TdDataProvider> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
+        TypedReturnCode<Connection> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
         return returnValue.getObject();
 
     }
@@ -271,7 +271,7 @@ public class RenameComparedElementAction extends Action {
     }
 
     private Resource getRightResource(ColumnSet selectedColumnSet) throws ReloadCompareException {
-        TdDataProvider tempReloadProvider = createTempConnectionFile();
+        Connection tempReloadProvider = createTempConnectionFile();
         Package matchedPackage = DQStructureComparer.findMatchedPackage((Package) originCompareElement, tempReloadProvider);
         IFolderNode columnSetFolderNode = FolderNodeHelper.getFolderNode(matchedPackage, selectedColumnSet);
         columnSetFolderNode.loadChildren();
@@ -299,17 +299,17 @@ public class RenameComparedElementAction extends Action {
         return rightResource;
     }
 
-    private TdDataProvider createTempConnectionFile() throws ReloadCompareException {
+    private Connection createTempConnectionFile() throws ReloadCompareException {
         Package catalogOrSchema = getTopLevelPackage();
-        TdDataProvider oldDataProvider = (TdDataProvider) catalogOrSchema.getDataManager().get(0);
+        Connection oldDataProvider = (Connection) catalogOrSchema.getDataManager().get(0);
         IFile tempConnectionFile = DQStructureComparer.getSecondComparisonLocalFile();
         // MOD mzhao ,Extract method getRefreshedDataProvider to class
         // DQStructureComparer for common use.
-        TypedReturnCode<TdDataProvider> returnProvider = DQStructureComparer.getRefreshedDataProvider(oldDataProvider);
+        TypedReturnCode<Connection> returnProvider = DQStructureComparer.getRefreshedDataProvider(oldDataProvider);
         if (!returnProvider.isOk()) {
             throw new ReloadCompareException(returnProvider.getMessage());
         }
-        TdDataProvider tempReloadProvider = returnProvider.getObject();
+        Connection tempReloadProvider = returnProvider.getObject();
         tempReloadProvider.setComponent(oldDataProvider.getComponent());
         ElementWriterFactory.getInstance().createDataProviderWriter().save(tempReloadProvider, tempConnectionFile);
         tempReloadProvider.setComponent(null);

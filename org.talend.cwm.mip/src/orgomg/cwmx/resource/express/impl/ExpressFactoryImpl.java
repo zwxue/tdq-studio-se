@@ -9,12 +9,25 @@ package orgomg.cwmx.resource.express.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.resource.express.*;
+import orgomg.cwmx.resource.express.AggMap;
+import orgomg.cwmx.resource.express.AggMapComponent;
+import orgomg.cwmx.resource.express.AliasDimension;
+import orgomg.cwmx.resource.express.Composite;
+import orgomg.cwmx.resource.express.Conjoint;
+import orgomg.cwmx.resource.express.Database;
+import orgomg.cwmx.resource.express.ExpressFactory;
+import orgomg.cwmx.resource.express.ExpressPackage;
+import orgomg.cwmx.resource.express.Formula;
+import orgomg.cwmx.resource.express.Model;
+import orgomg.cwmx.resource.express.PreComputeClause;
+import orgomg.cwmx.resource.express.Program;
+import orgomg.cwmx.resource.express.Relation;
+import orgomg.cwmx.resource.express.SimpleDimension;
+import orgomg.cwmx.resource.express.ValueSet;
+import orgomg.cwmx.resource.express.Variable;
+import orgomg.cwmx.resource.express.Worksheet;
 
 /**
  * <!-- begin-user-doc -->

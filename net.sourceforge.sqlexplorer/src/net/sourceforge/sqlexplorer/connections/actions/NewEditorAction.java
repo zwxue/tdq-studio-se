@@ -22,6 +22,7 @@ import java.util.Set;
 
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.util.ImageUtil;
+
 import org.eclipse.ui.IViewActionDelegate;
 
 /**

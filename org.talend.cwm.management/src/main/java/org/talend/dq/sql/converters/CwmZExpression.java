@@ -13,12 +13,12 @@
 package org.talend.dq.sql.converters;
 
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsFactory;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
-import orgomg.cwm.resource.relational.Column;
 
 import Zql.ZConstant;
 import Zql.ZExp;
@@ -34,9 +34,9 @@ public class CwmZExpression<T> {
 
     private SqlPredicate operator;
 
-    private Column column1;
+    private TdColumn column1;
 
-    private Column column2;
+    private TdColumn column2;
 
     private T instance;
 
@@ -49,19 +49,19 @@ public class CwmZExpression<T> {
         return this.operator.getLiteral();
     }
 
-    public void setOperands(Column column, T value) {
+    public void setOperands(TdColumn column, T value) {
         this.column1 = column;
         this.column2 = null;
         this.instance = value;
     }
 
-    public void setOperands(Column col1, Column col2) {
+    public void setOperands(TdColumn col1, TdColumn col2) {
         this.column1 = col1;
         this.column2 = col2;
         this.instance = null;
     }
 
-    public void setNullOperand(Column col1) {
+    public void setNullOperand(TdColumn col1) {
         this.column1 = col1;
         this.column2 = null;
         this.instance = null;

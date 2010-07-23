@@ -11,11 +11,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
-
 import orgomg.cwm.resource.record.RecordPackage;
 
 /**

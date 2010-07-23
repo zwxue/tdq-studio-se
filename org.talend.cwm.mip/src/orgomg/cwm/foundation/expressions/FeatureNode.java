@@ -7,7 +7,6 @@
 package orgomg.cwm.foundation.expressions;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.Feature;
 
 /**

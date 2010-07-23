@@ -18,10 +18,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * 
@@ -89,6 +89,6 @@ public class SchemaContentProvider extends AdapterFactoryContentProvider {
      */
     @Override
     public boolean hasChildren(Object element) {
-        return !(element instanceof TdSchema);
+        return !(element instanceof Schema);
     }
 }

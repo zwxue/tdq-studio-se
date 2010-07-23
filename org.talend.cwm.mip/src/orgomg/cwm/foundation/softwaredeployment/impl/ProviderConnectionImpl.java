@@ -8,19 +8,14 @@ package orgomg.cwm.foundation.softwaredeployment.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
-
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**

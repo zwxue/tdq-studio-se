@@ -9,12 +9,32 @@ package orgomg.cwmx.resource.dmsii.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.resource.dmsii.*;
+import orgomg.cwmx.resource.dmsii.Access;
+import orgomg.cwmx.resource.dmsii.AutomaticSubset;
+import orgomg.cwmx.resource.dmsii.DASDLComment;
+import orgomg.cwmx.resource.dmsii.DASDLProperty;
+import orgomg.cwmx.resource.dmsii.DataItem;
+import orgomg.cwmx.resource.dmsii.DataSet;
+import orgomg.cwmx.resource.dmsii.Database;
+import orgomg.cwmx.resource.dmsii.DmsiiFactory;
+import orgomg.cwmx.resource.dmsii.DmsiiPackage;
+import orgomg.cwmx.resource.dmsii.FieldBit;
+import orgomg.cwmx.resource.dmsii.KeyItem;
+import orgomg.cwmx.resource.dmsii.PhysicalAccessOverride;
+import orgomg.cwmx.resource.dmsii.PhysicalDataSet;
+import orgomg.cwmx.resource.dmsii.PhysicalDataSetOverride;
+import orgomg.cwmx.resource.dmsii.PhysicalDatabase;
+import orgomg.cwmx.resource.dmsii.PhysicalSet;
+import orgomg.cwmx.resource.dmsii.PhysicalSetOverride;
+import orgomg.cwmx.resource.dmsii.Remap;
+import orgomg.cwmx.resource.dmsii.RemapItem;
+import orgomg.cwmx.resource.dmsii.Remark;
+import orgomg.cwmx.resource.dmsii.Set;
+import orgomg.cwmx.resource.dmsii.SetStructure;
+import orgomg.cwmx.resource.dmsii.Subset;
+import orgomg.cwmx.resource.dmsii.VariableFormatPart;
 
 /**
  * <!-- begin-user-doc -->

@@ -10,12 +10,13 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.management.warehouseprocess.datatype.*;
+import orgomg.cwm.management.warehouseprocess.datatype.DatatypeFactory;
+import orgomg.cwm.management.warehouseprocess.datatype.DatatypePackage;
+import orgomg.cwm.management.warehouseprocess.datatype.DayOfWeek;
+import orgomg.cwm.management.warehouseprocess.datatype.RecurringType;
+import orgomg.cwm.management.warehouseprocess.datatype.WaitRuleType;
 
 /**
  * <!-- begin-user-doc -->

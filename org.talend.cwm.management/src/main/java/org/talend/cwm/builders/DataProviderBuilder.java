@@ -12,22 +12,19 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
-import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
-import java.util.Properties;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.management.connection.DatabaseContentRetriever;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.helper.ConnectionHelper;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
 public class DataProviderBuilder extends CwmBuilder {
 
-    private final TdDataProvider dataProvider;
+    private final Connection dataProvider;
 
     /**
      * DataProviderBuilder constructor.
@@ -38,21 +35,17 @@ public class DataProviderBuilder extends CwmBuilder {
      * @param driverProperties the properties passed to the driver (could be null)
      * @throws SQLException
      */
-    public DataProviderBuilder(Connection conn, Driver driver, String databaseUrl, Properties driverProperties)
+    public DataProviderBuilder(Connection databaseConn, java.sql.Connection conn, Driver driver, String databaseUrl)
             throws SQLException {
         super(conn);
-        this.dataProvider = DatabaseContentRetriever.getDataProvider(driver, databaseUrl, driverProperties);
+        dataProvider = databaseConn;
+
         // MOD xqliu 2009-07-13 bug 7888
         String identifierQuote = ConnectionUtils.getConnectionMetadata(conn).getIdentifierQuoteString();
         // ~
         // MOD xqliu 2009-11-24 bug 7888
-        DataProviderHelper.setIdentifierQuoteString(identifierQuote == null ? "" : identifierQuote, dataProvider);
+        ConnectionHelper.setIdentifierQuoteString(identifierQuote == null ? "" : identifierQuote, dataProvider);
         // ~
     }
 
-    // TODO scorreia ctor with TdProviderConnection
-
-    public TdDataProvider getDataProvider() {
-        return this.dataProvider;
-    }
 }

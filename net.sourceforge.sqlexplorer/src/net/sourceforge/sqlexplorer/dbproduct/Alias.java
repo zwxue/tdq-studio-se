@@ -22,11 +22,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
 
-import org.dom4j.Element;
-import org.dom4j.tree.DefaultElement;
-
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
+import org.dom4j.Element;
+import org.dom4j.tree.DefaultElement;
 
 /**
  * Represents a configured Alias, maintaining a pool of available 

@@ -8,14 +8,10 @@ package orgomg.cwmx.resource.dmsii.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.resource.record.impl.RecordDefImpl;
-
 import orgomg.cwmx.resource.dmsii.DataSet;
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
 import orgomg.cwmx.resource.dmsii.Set;

@@ -14,7 +14,6 @@ package org.talend.cwm.management.connection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverPropertyInfo;
@@ -23,14 +22,14 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
@@ -42,15 +41,11 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.metadata.constants.GetColumn;
@@ -59,9 +54,10 @@ import org.talend.utils.sql.metadata.constants.TypeInfoColumns;
 import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.foundation.typemapping.TypeSystem;
 import orgomg.cwm.foundation.typemapping.TypemappingFactory;
-import orgomg.cwm.objectmodel.core.TaggedValue;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.QueryColumnSet;
+import orgomg.cwm.resource.relational.Schema;
+import orgomg.cwm.resource.relational.enumerations.NullableType;
 
 /**
  * @author scorreia
@@ -82,7 +78,7 @@ public final class DatabaseContentRetriever {
      * @return a map [name of catalog, catalog]
      * @throws SQLException
      */
-    public static Collection<TdCatalog> getCatalogs(Connection connection) throws SQLException {
+    public static Collection<Catalog> getCatalogs(java.sql.Connection connection) throws SQLException {
         CatalogBuilder builder = new CatalogBuilder(connection);
         return builder.getCatalogs();
     }
@@ -94,7 +90,7 @@ public final class DatabaseContentRetriever {
             String columnName = metaData.getColumnName(i);
             // String columnClassName = metaData.getColumnClassName(i);
             // TODO add other informations
-            Column column = ColumnHelper.createColumn(columnName);
+            TdColumn column = ColumnHelper.createColumn(columnName);
             ColumnSetHelper.addColumn(column, columnSet);
         }
 
@@ -108,8 +104,8 @@ public final class DatabaseContentRetriever {
      * @return
      * @throws SQLException
      */
-    public static Map<String, List<TdSchema>> getMSSQLSchemas(Connection connection) throws SQLException {
-        Map<String, List<TdSchema>> catalogName2schemas = new HashMap<String, List<TdSchema>>();
+    public static Map<String, List<Schema>> getMSSQLSchemas(java.sql.Connection connection) throws SQLException {
+        Map<String, List<Schema>> catalogName2schemas = new HashMap<String, List<Schema>>();
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         ResultSet rsc = connectionMetadata.getCatalogs();
         while (rsc.next()) {
@@ -150,7 +146,7 @@ public final class DatabaseContentRetriever {
                 // MOD mzhao bug 9606 filter duplicated schemas.
                 if (!schemaNameCacheTmp.contains(schemaName)) {
                     schemaNameCacheTmp.add(schemaName);
-                    TdSchema schema = createSchema(schemaName);
+                    Schema schema = createSchema(schemaName);
                     MultiMapHelper.addUniqueObjectToListMap(cl, schema, catalogName2schemas);
                 }
 
@@ -178,8 +174,8 @@ public final class DatabaseContentRetriever {
      * @return a map [catalog's name -> list of Schemas ].
      * @throws SQLException
      */
-    public static Map<String, List<TdSchema>> getSchemas(Connection connection) throws SQLException {
-        Map<String, List<TdSchema>> catalogName2schemas = new HashMap<String, List<TdSchema>>();
+    public static Map<String, List<Schema>> getSchemas(java.sql.Connection connection) throws SQLException {
+        Map<String, List<Schema>> catalogName2schemas = new HashMap<String, List<Schema>>();
         // MOD xqliu 2009-12-08 bug 9822
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         final List<String> catalogNames = new ArrayList<String>();
@@ -273,7 +269,7 @@ public final class DatabaseContentRetriever {
                 // handle case of SQLite (no schema no catalog)
                 if (!hasSchema && catalogName2schemas.isEmpty()) {
                     // create a fake schema with an empty name (otherwise queries will use the name and will fail)
-                    TdSchema schema = createSchema(" "); //$NON-NLS-1$
+                    Schema schema = createSchema(" "); //$NON-NLS-1$
                     MultiMapHelper.addUniqueObjectToListMap(null, schema, catalogName2schemas);
                 }
             }
@@ -299,7 +295,7 @@ public final class DatabaseContentRetriever {
      * @param catalogNames the list of catalogs of the given connection
      * @throws SQLException
      */
-    private static void fillListOfCatalogs(Connection connection, List<String> catalogNames) throws SQLException {
+    private static void fillListOfCatalogs(java.sql.Connection connection, List<String> catalogNames) throws SQLException {
         if (catalogNames.isEmpty()) {
             // MOD xqliu 2010-01-18 bug 9840
             // MOD xqliu 2009-10-29 bug 9838
@@ -338,8 +334,7 @@ public final class DatabaseContentRetriever {
      * @return
      * @throws SQLException
      */
-    private static String getSchemaName(ResultSet schemas)
-            throws SQLException {
+    private static String getSchemaName(ResultSet schemas) throws SQLException {
         String schemaName = null;
         try {
             schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
@@ -371,9 +366,9 @@ public final class DatabaseContentRetriever {
      * @param catalogName2schemas
      * @throws SQLException
      */
-    private static void createSchema(String schemaName, String catalogName, Map<String, List<TdSchema>> catalogName2schemas)
+    private static void createSchema(String schemaName, String catalogName, Map<String, List<Schema>> catalogName2schemas)
             throws SQLException {
-        TdSchema schema = createSchema(schemaName);
+        Schema schema = createSchema(schemaName);
         if (schema != null) {
             MultiMapHelper.addUniqueObjectToListMap(catalogName, schema, catalogName2schemas);
         }
@@ -390,7 +385,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdTable> getTablesWithColumns(String catalogName, String schemaPattern, String tablePattern,
-            Connection connection) throws SQLException {
+            java.sql.Connection connection) throws SQLException {
         TableBuilder tableBuilder = new TableBuilder(connection);
         tableBuilder.setColumnsRequested(true);
         return tableBuilder.getColumnSets(catalogName, schemaPattern, tablePattern);
@@ -407,7 +402,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdTable> getTablesWithoutColumns(String catalogName, String schemaPattern, String tablePattern,
-            Connection connection) throws SQLException {
+            java.sql.Connection connection) throws SQLException {
         TableBuilder tableBuilder = new TableBuilder(connection);
         return tableBuilder.getColumnSets(catalogName, schemaPattern, tablePattern);
     }
@@ -423,7 +418,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdView> getViewsWithColumns(String catalogName, String schemaPattern, String viewPattern,
-            Connection connection) throws SQLException {
+            java.sql.Connection connection) throws SQLException {
         ViewBuilder viewBuilder = new ViewBuilder(connection);
         viewBuilder.setColumnsRequested(true);
         return viewBuilder.getColumnSets(catalogName, schemaPattern, viewPattern);
@@ -440,7 +435,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdView> getViewsWithoutColumns(String catalogName, String schemaPattern, String viewPattern,
-            Connection connection) throws SQLException {
+            java.sql.Connection connection) throws SQLException {
         ViewBuilder viewBuilder = new ViewBuilder(connection);
         return viewBuilder.getColumnSets(catalogName, schemaPattern, viewPattern);
     }
@@ -454,9 +449,9 @@ public final class DatabaseContentRetriever {
      * @return the data provider with a null name. Its name has to be set elsewhere.
      * @throws SQLException
      */
-    public static TdDataProvider getDataProvider(Driver driver, String databaseUrl, Properties driverProperties)
+    public static DatabaseConnection getDataProvider(Driver driver, String databaseUrl, Properties driverProperties)
             throws SQLException {
-        TdDataProvider provider = DataProviderHelper.createTdDataProvider(null);
+        DatabaseConnection provider = DataProviderHelper.createDatabaseConnection(null);
 
         // MOD xqliu 2009-10-23 bug 5327
         // print driver properties
@@ -499,39 +494,37 @@ public final class DatabaseContentRetriever {
         return provider;
     }
 
-    public static TdProviderConnection getProviderConnection(String dbUrl, String driverClassName, Properties props,
-            Connection connection) throws SQLException {
-        TdProviderConnection prov = SoftwaredeploymentFactory.eINSTANCE.createTdProviderConnection();
-        prov.setName(driverClassName + EcoreUtil.generateUUID()); // TODO scorreia change default name of provider
-        // connection
-        prov.setDriverClassName(driverClassName);
-        prov.setConnectionString(dbUrl);
-        try {
-            prov.setIsReadOnly(connection.isReadOnly());
-        } catch (Exception e) {
-            log.warn(e, e);
-        }
-
-        // ---add properties as tagged value of the provider connection.
-        Enumeration<?> propertyNames = props.propertyNames();
-        while (propertyNames.hasMoreElements()) {
-            String key = propertyNames.nextElement().toString();
-            // hcheng encode password here
-            String property = props.getProperty(key);
-            if (TaggedValueHelper.PASSWORD.equals(key)) {
-                DataProviderHelper.encryptAndSetPassword(prov, property);
-            } else {
-                TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(key, property);
-                prov.getTaggedValue().add(taggedValue);
-            }
-        }
-
-        // TODO scorreia set name? or let it be set outside of this class?
-
-        return prov;
+    // MOD mzhao feature 10814, 2010-05-26
+    public static DatabaseConnection fillConnectionInfo(Connection prov, String dbUrl, String driverClassName, Properties props,
+            java.sql.Connection connection) throws SQLException {
+//        prov.setName(driverClassName + EcoreUtil.generateUUID()); // TODO
+        // // scorreia change default name of provider connection
+//        prov.setDriverClass(driverClassName);
+//        prov.setURL(dbUrl);
+//        try {
+//            prov.setReadOnly(connection.isReadOnly());
+//        } catch (Exception e) {
+//            log.warn(e, e);
+//        }
+//
+//        Enumeration<?> propertyNames = props.propertyNames();
+//        while (propertyNames.hasMoreElements()) {
+//            String key = propertyNames.nextElement().toString();
+//            String property = props.getProperty(key);
+//            if (TaggedValueHelper.PASSWORD.equals(key)) {
+//                prov.setPassword(property);
+//            } else if (TaggedValueHelper.USER.equals(key)) {
+//                prov.setUsername(property);
+//            }
+        // }
+        //
+        // // TODO scorreia set name? or let it be set outside of this class?
+        //
+        // return prov;
+        return null;
     }
 
-    public static TdSoftwareSystem getSoftwareSystem(Connection connection) throws SQLException {
+    public static TdSoftwareSystem getSoftwareSystem(java.sql.Connection connection) throws SQLException {
         // MOD xqliu 2009-07-13 bug 7888
         DatabaseMetaData databaseMetadata = ConnectionUtils.getConnectionMetadata(connection);
         // ~
@@ -587,7 +580,7 @@ public final class DatabaseContentRetriever {
         return system;
     }
 
-    public static TypeSystem getTypeSystem(Connection connection) throws SQLException {
+    public static TypeSystem getTypeSystem(java.sql.Connection connection) throws SQLException {
         // MOD xqliu 2009-07-13 bug 7888
         DatabaseMetaData databaseMetadata = ConnectionUtils.getConnectionMetadata(connection);
         // ~
@@ -621,7 +614,7 @@ public final class DatabaseContentRetriever {
             }
 
             try {
-                dataType.setNullable(typeInfo.getShort(TypeInfoColumns.NULLABLE.name()));
+                dataType.setNullable(convertDbNullable(typeInfo.getShort(TypeInfoColumns.NULLABLE.name())));
             } catch (Exception e) {
                 log.warn(e, e);
             }
@@ -698,7 +691,7 @@ public final class DatabaseContentRetriever {
      * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
     public static List<TdColumn> getColumns(String catalogName, String schemaPattern, String tablePattern, String columnPattern,
-            Connection connection) throws SQLException {
+            java.sql.Connection connection) throws SQLException {
         return new ColumnBuilder(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
     }
 
@@ -714,7 +707,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdSqlDataType> getDataType(String catalogName, String schemaPattern, String tablePattern,
-            String columnPattern, Connection connection) throws SQLException {
+            String columnPattern, java.sql.Connection connection) throws SQLException {
         List<TdSqlDataType> sqlDatatypes = new ArrayList<TdSqlDataType>();
         ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         while (columns.next()) {
@@ -724,7 +717,7 @@ public final class DatabaseContentRetriever {
         return sqlDatatypes;
     }
 
-    private static DatabaseMetaData getConnectionMetadata(Connection connection) throws SQLException {
+    private static DatabaseMetaData getConnectionMetadata(java.sql.Connection connection) throws SQLException {
         assert connection != null : "Connection should not be null in DatabaseContentRetriever.getConnectionMetadata() "
                 + getConnectionInformations(connection);
         // MOD xqliu 2009-07-13 bug 7888
@@ -752,7 +745,7 @@ public final class DatabaseContentRetriever {
         return sqlDataType;
     }
 
-    private static String getConnectionInformations(Connection connection) {
+    private static String getConnectionInformations(java.sql.Connection connection) {
         return connection.toString(); // TODO scorreia give more user friendly informations.
     }
 
@@ -762,11 +755,11 @@ public final class DatabaseContentRetriever {
      * @param name a schema name (or null)
      * @return the created schema or null
      */
-    private static TdSchema createSchema(String name) {
+    private static Schema createSchema(String name) {
         if (name == null) {
             return null;
         }
-        TdSchema schema = RelationalFactory.eINSTANCE.createTdSchema();
+        Schema schema = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createSchema();
         schema.setName(name);
         return schema;
     }
@@ -787,5 +780,24 @@ public final class DatabaseContentRetriever {
         sqlDataType.setNumericPrecision(decimalDigits);
         sqlDataType.setNumericPrecisionRadix(numPrecRadix);
         return sqlDataType;
+    }
+
+    /**
+     * Convert the jdbc nullable short value to the cwm NullableType
+     * 
+     * @param value the jdbc nullable value
+     * @return the NullableType corresponding enum
+     */
+    public static NullableType convertDbNullable(Short value) {
+        switch (value) {
+        case ResultSetMetaData.columnNoNulls:
+            return NullableType.COLUMN_NO_NULLS;
+        case ResultSetMetaData.columnNullable:
+            return NullableType.COLUMN_NULLABLE;
+        case ResultSetMetaData.columnNullableUnknown:
+            return NullableType.COLUMN_NULLABLE_UNKNOWN;
+        default:
+            return NullableType.COLUMN_NULLABLE_UNKNOWN;
+        }
     }
 }

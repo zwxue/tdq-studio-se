@@ -60,8 +60,8 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -337,7 +337,7 @@ public class ColumnViewerDND {
 
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
-            List<Column> selectedColumn = new ArrayList<Column>();
+            List<TdColumn> selectedColumn = new ArrayList<TdColumn>();
 
             while (it.hasNext()) {
                 // MOD mzhao 9848 2010-01-14, Allowing drag table.
@@ -352,15 +352,16 @@ public class ColumnViewerDND {
                             }
                         }
                     } else if (isAnalysisColumnNominalIntervalTreeViewer) {
-                        List<Column> oriColumns = ((AnalysisColumnNominalIntervalTreeViewer) viewer).getColumnSetMultiValueList();
-                        for (Column column : oriColumns) {
+                        List<TdColumn> oriColumns = ((AnalysisColumnNominalIntervalTreeViewer) viewer)
+                                .getColumnSetMultiValueList();
+                        for (TdColumn column : oriColumns) {
                             if (columns.contains(column)) {
                                 columns.remove(column);
                             }
                         }
                     } else if (isAnalysisColumnSetTreeViewer) {
-                        List<Column> oriColumns = ((AnalysisColumnSetTreeViewer) viewer).getColumnSetMultiValueList();
-                        for (Column column : oriColumns) {
+                        List<TdColumn> oriColumns = ((AnalysisColumnSetTreeViewer) viewer).getColumnSetMultiValueList();
+                        for (TdColumn column : oriColumns) {
                             if (columns.contains(column)) {
                                 columns.remove(column);
                             }
@@ -368,7 +369,7 @@ public class ColumnViewerDND {
                     }
                     selectedColumn.addAll(columns);
                 } else {
-                    Column column = (Column) next;
+                    TdColumn column = (TdColumn) next;
                     selectedColumn.add(column);
                 }
 

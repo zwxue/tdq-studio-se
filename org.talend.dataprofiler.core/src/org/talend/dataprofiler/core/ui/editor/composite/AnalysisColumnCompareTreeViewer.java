@@ -84,7 +84,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private ScrolledForm form = null;
 
-    private List<Column> columnListA;
+    private List<TdColumn> columnListA;
 
     // MOD mzhao 2009-06-17 feature 5887
     private SelectionListener selectionListener = null;
@@ -93,7 +93,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     // right position.
     private List<TableViewer> tableViewerPosStack = null;
 
-    private List<Column> columnListB;
+    private List<TdColumn> columnListB;
 
     private Section columnsComparisonSection = null;
 
@@ -119,8 +119,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private Button columnReverseButtion;
 
-    public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, List<Column> columnSetA,
-            List<Column> columnSetB, String mainTitle, String description, boolean showCheckButton, boolean allowColumnDupcation) {
+    public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, List<TdColumn> columnSetA,
+            List<TdColumn> columnSetB, String mainTitle, String description, boolean showCheckButton, boolean allowColumnDupcation) {
         this.masterPage = masterPage;
         this.analysis = masterPage.getAnalysis();
         form = masterPage.getScrolledForm();
@@ -128,8 +128,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
 
-        columnListA = new ArrayList<Column>();
-        columnListB = new ArrayList<Column>();
+        columnListA = new ArrayList<TdColumn>();
+        columnListB = new ArrayList<TdColumn>();
         tableViewerPosStack = new ArrayList<TableViewer>();
 
         columnListA.addAll(columnSetA);
@@ -148,8 +148,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         form = masterPage.getScrolledForm();
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
-        columnListA = new ArrayList<Column>();
-        columnListB = new ArrayList<Column>();
+        columnListA = new ArrayList<TdColumn>();
+        columnListB = new ArrayList<TdColumn>();
         tableViewerPosStack = new ArrayList<TableViewer>();
         this.showCheckButton = true;
         this.allowColumnDupcation = allowColumnDupcation;
@@ -281,7 +281,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         leftTable.refresh();
     }
 
-    private TableViewer createSectionPart(Composite parentComp, final List<Column> columnList, String title, String hyperlinkText) {
+    private TableViewer createSectionPart(Composite parentComp, final List<TdColumn> columnList, String title,
+            String hyperlinkText) {
         Section columnSetElementSection = masterPage.createSection(form, parentComp, title, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
         sectionComp.setLayout(new GridLayout());
@@ -371,7 +372,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         });
         this.enabledButtons(new Button[] { delButton, moveUpButton, moveDownButton }, false);
-        final List<Column> columnsOfSectionPart = columnList;
+        final List<TdColumn> columnsOfSectionPart = columnList;
         selectColumnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
@@ -392,15 +393,15 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * MOD mzhao 2009-02-03,remove the first parameter, extract it to class property filed for the convenience of
      * invoking this method from cheat sheets.
      */
-    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<Column> columnsOfSectionPart) {
+    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<TdColumn> columnsOfSectionPart) {
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(masterPage, null, DefaultMessagesImpl
                 .getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, //$NON-NLS-1$
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
-            List<Column> columnSet = new ArrayList<Column>();
+            List<TdColumn> columnSet = new ArrayList<TdColumn>();
             for (Object obj : columns) {
-                columnSet.add((Column) obj);
+                columnSet.add((TdColumn) obj);
             }
             columnsElementViewer.setInput(columnSet);
             columnsOfSectionPart.clear();
@@ -420,7 +421,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * @param columnList
      * @param columnsElementViewer
      */
-    private void moveElement(List<Column> columnList, TableViewer columnsElementViewer, boolean isDown) {
+    private void moveElement(List<TdColumn> columnList, TableViewer columnsElementViewer, boolean isDown) {
         // Object firstElement = ((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement();
         // int index = columnList.indexOf(firstElement);
         // if (isDown) {
@@ -439,7 +440,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         Object[] elementArray = ((IStructuredSelection) columnsElementViewer.getSelection()).toArray();
         if (isDown) {
             for (int i = elementArray.length - 1; i >= 0; i--) {
-                Column currentElement = (Column) elementArray[i];
+                TdColumn currentElement = (TdColumn) elementArray[i];
                 int index = columnList.indexOf(currentElement);
                 if ((index + 1) < columnList.size()) {
                     columnList.remove(currentElement);
@@ -450,7 +451,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             }
         } else {
             for (int i = 0; i < elementArray.length; i++) {
-                Column currentElement = (Column) elementArray[i];
+                TdColumn currentElement = (TdColumn) elementArray[i];
                 int index = columnList.indexOf(currentElement);
                 if ((index - 1) >= 0) {
                     columnList.remove(currentElement);
@@ -471,7 +472,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * @param columnsElementViewer
      * @param asc
      */
-    private void sortElement(List<Column> columnList, TableViewer columnsElementViewer) {
+    private void sortElement(List<TdColumn> columnList, TableViewer columnsElementViewer) {
         Collections.sort(columnList, new CaseInsensitiveComparator());
         columnsElementViewer.setInput(columnList);
     }
@@ -494,8 +495,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     /**
      * DOC rli Comment method "setColumnAB".
      */
-    public void setColumnABForMatchingIndicator(RowMatchingIndicator rowMatchingIndicator, List<Column> columnsA,
-            List<Column> columnsB) {
+    public void setColumnABForMatchingIndicator(RowMatchingIndicator rowMatchingIndicator, List<TdColumn> columnsA,
+            List<TdColumn> columnsB) {
         if (columnsA.size() != 0) {
             ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner((TdColumn) columnsA.get(0));
             rowMatchingIndicator.setAnalyzedElement(columnSetOwner);
@@ -506,7 +507,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         rowMatchingIndicator.getColumnSetB().addAll(columnsB);
     }
 
-    private TableViewer createTreeViewer(final List<Column> columnList, Composite columsComp) {
+    private TableViewer createTreeViewer(final List<TdColumn> columnList, Composite columsComp) {
         TableViewer columnsElementViewer = new TableViewer(columsComp, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
 
         Table table = columnsElementViewer.getTable();
@@ -532,7 +533,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     }
 
-    private void createTableViewerMenu(final TableViewer columnsElementViewer, final List<Column> columnList,
+    private void createTableViewerMenu(final TableViewer columnsElementViewer, final List<TdColumn> columnList,
             final Button[] buttons) {
         Table table = columnsElementViewer.getTable();
 
@@ -706,11 +707,11 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         return checkComputeButton;
     }
 
-    public List<Column> getColumnListA() {
+    public List<TdColumn> getColumnListA() {
         return columnListA;
     }
 
-    public List<Column> getColumnListB() {
+    public List<TdColumn> getColumnListB() {
         return columnListB;
     }
 
@@ -725,7 +726,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         if (columnListA != null && columnListA.size() > 0) {
             int idx = 0;
             List<Integer> needToReverseIndex = new ArrayList<Integer>();
-            for (Column column : columnListA) {
+            for (TdColumn column : columnListA) {
                 if (canReverse(column, columnListB.get(idx))) {
                     needToReverseIndex.add(idx);
                 }
@@ -744,9 +745,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     }
 
-    private Boolean canReverse(Column colA, Column colB) {
+    private Boolean canReverse(TdColumn colA, TdColumn colB) {
         int idx = 0;
-        for (Column col : columnListA) {
+        for (TdColumn col : columnListA) {
             if (col == colB) {
                 if (idx > columnListB.size() - 1) {
                     return false;

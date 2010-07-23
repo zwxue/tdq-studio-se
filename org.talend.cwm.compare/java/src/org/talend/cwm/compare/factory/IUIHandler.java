@@ -13,8 +13,8 @@
 package org.talend.cwm.compare.factory;
 
 import org.eclipse.core.runtime.IPath;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 
 /**
  * @author scorreia
@@ -39,5 +39,5 @@ public interface IUIHandler {
      * 
      * @param provider the data provider which is to be changed.
      */
-    public void popRemoveElement(final TdDataProvider provider);
+    public void popRemoveElement(final Connection provider);
 }

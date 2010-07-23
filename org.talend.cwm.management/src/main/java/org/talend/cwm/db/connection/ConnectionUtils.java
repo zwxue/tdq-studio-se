@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -41,12 +40,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -54,7 +54,6 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * Utility class for database connection handling.
@@ -105,7 +104,7 @@ public final class ConnectionUtils {
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    public static Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
+    public static java.sql.Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
             InstantiationException, IllegalAccessException, ClassNotFoundException {
         Driver driver = getClassDriver(driverClassName);
         if (driver != null) {
@@ -118,7 +117,7 @@ public final class ConnectionUtils {
                     log.debug(drivers.nextElement());
                 }
             }
-            Connection connection = null;
+            java.sql.Connection connection = null;
             if (driverClassName.equals("org.hsqldb.jdbcDriver")) { //$NON-NLS-1$getClassDriver 
                 // MOD mzhao 2009-04-13, Try to load driver first as there will
                 // cause exception: No suitable driver
@@ -154,9 +153,9 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public synchronized static Connection createConnectionWithTimeout(Driver driver, String url, Properties props)
+    public synchronized static java.sql.Connection createConnectionWithTimeout(Driver driver, String url, Properties props)
             throws SQLException {
-        Connection ret = null;
+        java.sql.Connection ret = null;
         if (isTimeout()) {
             ConnectionCreator cc = new ConnectionCreator(driver, url, props);
             new Thread(cc).start();
@@ -268,7 +267,7 @@ public final class ConnectionUtils {
      * @param connection the connection to test
      * @return a return code with the appropriate message (never null)
      */
-    public static ReturnCode isValid(final Connection connection) {
+    public static ReturnCode isValid(final java.sql.Connection connection) {
         return org.talend.utils.sql.ConnectionUtils.isValid(connection);
     }
 
@@ -279,7 +278,7 @@ public final class ConnectionUtils {
      * @return a ReturnCode with true if ok, false if problem. {@link ReturnCode#getMessage()} gives the error message
      * when there is a problem.
      */
-    public static ReturnCode closeConnection(final Connection connection) {
+    public static ReturnCode closeConnection(final java.sql.Connection connection) {
         return org.talend.utils.sql.ConnectionUtils.closeConnection(connection);
     }
 
@@ -291,7 +290,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
 
-    public static DatabaseMetaData getConnectionMetadata(Connection conn) throws SQLException {
+    public static DatabaseMetaData getConnectionMetadata(java.sql.Connection conn) throws SQLException {
         DatabaseMetaData dbMetaData = conn.getMetaData();
         // MOD xqliu 2009-11-17 bug 7888
         if (dbMetaData != null && dbMetaData.getDatabaseProductName() != null
@@ -309,7 +308,7 @@ public final class ConnectionUtils {
      * @param conn2
      * @return
      */
-    private static DatabaseMetaData createFakeDatabaseMetaData(Connection conn) {
+    private static DatabaseMetaData createFakeDatabaseMetaData(java.sql.Connection conn) {
         DB2ForZosDataBaseMetadata dmd = new DB2ForZosDataBaseMetadata(conn);
         return dmd;
     }
@@ -327,7 +326,7 @@ public final class ConnectionUtils {
      * @return
      */
     public static boolean existTable(String url, String driver, Properties props, String tableName) {
-        Connection connection = null;
+        java.sql.Connection connection = null;
         if (tableName == null || "".equals(tableName.trim())) {
             tableName = DEFAULT_TABLE_NAME;
         }
@@ -360,7 +359,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static boolean isOdbcMssql(Connection connection) throws SQLException {
+    public static boolean isOdbcMssql(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -378,7 +377,7 @@ public final class ConnectionUtils {
      * @return decide to whether is mssql connection
      * @throws SQLException
      */
-    public static boolean isMssql(Connection connection) throws SQLException {
+    public static boolean isMssql(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && !connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -396,7 +395,7 @@ public final class ConnectionUtils {
      * @return decide to whether is sybase connection
      * @throws SQLException
      */
-    public static boolean isSybase(Connection connection) throws SQLException {
+    public static boolean isSybase(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null && connectionMetadata.getDatabaseProductName() != null
                 && connectionMetadata.getDatabaseProductName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
@@ -408,29 +407,11 @@ public final class ConnectionUtils {
     /**
      * DOC xqliu Comment method "isMdmConnection".
      * 
-     * @param connection
-     * @return
-     */
-    public static boolean isMdmConnection(ProviderConnection connection) {
-        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBTYPE, connection.getTaggedValue());
-        if (tv != null) {
-            return SupportDBUrlType.MDM.getDBKey().equals(tv.getValue());
-        }
-        return false;
-    }
-
-    /**
-     * DOC xqliu Comment method "isMdmConnection".
-     * 
-     * @param connection
+     * @param dataprovider
      * @return
      */
     public static boolean isMdmConnection(DataProvider dataprovider) {
-        ProviderConnection providerConnection = DataProviderHelper.getTdProviderConnection(dataprovider).getObject();
-        if (providerConnection != null) {
-            return isMdmConnection(providerConnection);
-        }
-        return false;
+        return dataprovider instanceof MDMConnection;
     }
 
     /**
@@ -461,7 +442,7 @@ public final class ConnectionUtils {
     public static boolean isMdmConnection(IFile file) {
         if (FactoriesUtil.PROV.equals(file.getFileExtension())) {
             PrvResourceFileHelper prvHelper = PrvResourceFileHelper.getInstance();
-            TypedReturnCode<TdDataProvider> findProvider = prvHelper.findProvider(file);
+            TypedReturnCode<Connection> findProvider = prvHelper.findProvider(file);
             if (findProvider != null && findProvider.getObject() != null) {
                 if (ConnectionUtils.isMdmConnection(findProvider.getObject())) {
                     return true;
@@ -478,7 +459,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static boolean isOdbcExcel(Connection connection) throws SQLException {
+    public static boolean isOdbcExcel(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -496,7 +477,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static boolean isOdbcConnection(Connection connection) throws SQLException {
+    public static boolean isOdbcConnection(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)) {
@@ -512,7 +493,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static boolean isPostgresql(Connection connection) throws SQLException {
+    public static boolean isPostgresql(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData metaData = connection.getMetaData();
         if (metaData != null) {
             String databaseProductName = metaData.getDatabaseProductName();
@@ -530,7 +511,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static boolean isOdbcPostgresql(Connection connection) throws SQLException {
+    public static boolean isOdbcPostgresql(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -548,7 +529,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static boolean isOdbcOracle(Connection connection) throws SQLException {
+    public static boolean isOdbcOracle(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -566,7 +547,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static boolean isOdbcIngres(Connection connection) throws SQLException {
+    public static boolean isOdbcIngres(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -584,7 +565,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static boolean isJdbcIngres(Connection connection) throws SQLException {
+    public static boolean isJdbcIngres(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().equals(DatabaseConstant.JDBC_INGRES_DEIVER_NAME)
@@ -610,5 +591,23 @@ public final class ConnectionUtils {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "getDatabaseType".
+     * 
+     * @param connection
+     * @return the database type string or null
+     */
+    public static String getDatabaseType(Connection connection) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            return dbConn.getDatabaseType();
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(connection);
+        if (mdmConn != null) {
+            return SupportDBUrlType.MDM.getDBName();
+        }
+        return null;
     }
 }

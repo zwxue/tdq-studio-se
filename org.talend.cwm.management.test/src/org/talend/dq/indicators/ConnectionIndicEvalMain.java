@@ -13,16 +13,14 @@
 package org.talend.dq.indicators;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
@@ -31,6 +29,7 @@ import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -53,9 +52,9 @@ public final class ConnectionIndicEvalMain {
         String dbUrl = connectionParams.getProperty("url");
         try {
             // create connection
-            Connection connection = ConnectionUtils.createConnection(dbUrl, driverClassName, connectionParams);
+            java.sql.Connection connection = ConnectionUtils.createConnection(dbUrl, driverClassName, connectionParams);
 
-            TdDataProvider dataProvider = new TestAnalysisCreation().getDataManager();
+            Connection dataProvider = new TestAnalysisCreation().getDataManager();
 
             // --- test connection evaluator
             String catalog = "test";
@@ -86,8 +85,8 @@ public final class ConnectionIndicEvalMain {
             File dp = new File("out/dp.prv");
             // util.addPoolToResourceSet(new File("out/dp.prv"), dataProvider);
             util.addPoolToResourceSet(dp, dataProvider);
-            List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(dataProvider);
-            for (TdCatalog tdCatalog : tdCatalogs) {
+            List<Catalog> tdCatalogs = ConnectionHelper.getCatalogs(dataProvider);
+            for (Catalog tdCatalog : tdCatalogs) {
                 util.addPoolToResourceSet(new File("out/" + tdCatalog.getName() + "." + FactoriesUtil.CAT), tdCatalog);
             }
             util.save();

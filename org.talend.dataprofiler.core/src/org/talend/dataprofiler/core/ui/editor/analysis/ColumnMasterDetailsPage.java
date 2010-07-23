@@ -52,10 +52,10 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -680,7 +680,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         analysisHandler.clearAnalysis();
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
-        TdDataProvider tdProvider = null;
+        Connection tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         // MOD zshen feature 12919 to save analysisParameter.

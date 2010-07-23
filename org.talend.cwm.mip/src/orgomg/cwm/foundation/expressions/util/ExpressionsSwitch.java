@@ -10,9 +10,11 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.foundation.expressions.*;
-
+import orgomg.cwm.foundation.expressions.ConstantNode;
+import orgomg.cwm.foundation.expressions.ElementNode;
+import orgomg.cwm.foundation.expressions.ExpressionNode;
+import orgomg.cwm.foundation.expressions.ExpressionsPackage;
+import orgomg.cwm.foundation.expressions.FeatureNode;
 import orgomg.cwm.objectmodel.core.Element;
 
 /**

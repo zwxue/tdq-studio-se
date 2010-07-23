@@ -65,19 +65,16 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
@@ -101,6 +98,7 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -181,7 +179,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private Text viewFilterText;
 
-    protected TdDataProvider tdDataProvider;
+    protected Connection tdDataProvider;
 
     private String latestTableFilterValue;
 
@@ -455,8 +453,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         Composite rightComp = new Composite(sumSectionClient, SWT.NONE);
         rightComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(rightComp);
-        TdProviderConnection providerConnection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
-        String connectionStr = providerConnection.getConnectionString();
+        String connectionStr = ConnectionHelper.getURL(tdDataProvider);
         Properties pameterProperties = SupportDBUrlStore.getInstance().getDBPameterProperties(connectionStr);
         String labelContent = pameterProperties.getProperty(org.talend.dq.PluginConstant.DBTYPE_PROPERTY);
         Label leftLabel = new Label(leftComp, SWT.NONE);
@@ -474,13 +471,13 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        labelContent = DataProviderHelper.getUser(providerConnection);
+        labelContent = ConnectionHelper.getUsername(tdDataProvider);
         leftLabel
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
 
-        List<TdCatalog> tdCatalogs = getCatalogs();
-        List<TdSchema> tdSchema = DataProviderHelper.getTdSchema(tdDataProvider);
+        List<Catalog> tdCatalogs = getCatalogs();
+        List<Schema> tdSchema = ConnectionHelper.getSchema(tdDataProvider);
         leftLabel = new Label(leftComp, SWT.NONE);
         leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs", tdCatalogs.size())); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
@@ -550,10 +547,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         table.setBackgroundMode(SWT.INHERIT_FORCE);
         table.setLinesVisible(true);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(table);
-        List<TdCatalog> catalogs = getCatalogs();
+        List<Catalog> catalogs = getCatalogs();
         boolean containSubSchema = false;
         for (Catalog catalog : catalogs) {
-            List<TdSchema> schemas = CatalogHelper.getSchemas(catalog);
+            List<Schema> schemas = CatalogHelper.getSchemas(catalog);
             if (schemas.size() > 0) {
                 containSubSchema = true;
                 break;
@@ -631,7 +628,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * 
      * @return
      */
-    protected abstract List<TdCatalog> getCatalogs();
+    protected abstract List<Catalog> getCatalogs();
 
     /**
      * DOC qzhang Comment method "doSetInput".
@@ -840,10 +837,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     if (currentCatalogIndicator != null)
                         parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
 
-                    TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-                    TdProviderConnection providerConnection = tdPc.getObject();
                     TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
-                            providerConnection, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
+                            tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
 
                     if (!findSqlExplorerTableNode.isOk()) {
                         log.error(findSqlExplorerTableNode.getMessage());
@@ -862,11 +857,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     if (currentCatalogIndicator != null)
                         parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
 
-                    TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-                    TdProviderConnection providerConnection = tdPc.getObject();
-
                     TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
-                            providerConnection, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
+                            tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
 
                     if (!findSqlExplorerTableNode.isOk()) {
                         log.error(findSqlExplorerTableNode.getMessage());

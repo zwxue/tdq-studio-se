@@ -10,9 +10,12 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.management.warehouseoperation.*;
-
+import orgomg.cwm.management.warehouseoperation.ActivityExecution;
+import orgomg.cwm.management.warehouseoperation.ChangeRequest;
+import orgomg.cwm.management.warehouseoperation.Measurement;
+import orgomg.cwm.management.warehouseoperation.StepExecution;
+import orgomg.cwm.management.warehouseoperation.TransformationExecution;
+import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

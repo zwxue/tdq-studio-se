@@ -20,9 +20,9 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
@@ -59,14 +59,14 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
         addListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
-                TdDataProvider oldTdDataProvider = null;
+                Connection oldTdDataProvider = null;
                 NamedColumnSetAnalysisParameter paraneter = (NamedColumnSetAnalysisParameter) getConnectionParams();
                 List tempList = ((IStructuredSelection) event.getSelection()).toList();
                 List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
                 for (Object object : tempList) {
                     if (object instanceof NamedColumnSet) {
                         NamedColumnSet set = (NamedColumnSet) object;
-                        TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper
+                        Connection tdProvider = DataProviderHelper.getTdDataProvider(TableHelper
                                 .getParentCatalogOrSchema(set));
                         oldTdDataProvider = oldTdDataProvider == null ? tdProvider : oldTdDataProvider;
                         if (oldTdDataProvider != null && !oldTdDataProvider.equals(tdProvider)) {

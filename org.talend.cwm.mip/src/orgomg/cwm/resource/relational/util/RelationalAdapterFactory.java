@@ -8,22 +8,16 @@ package orgomg.cwm.resource.relational.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.foundation.datatypes.TypeAlias;
-
 import orgomg.cwm.foundation.keysindexes.Index;
 import orgomg.cwm.foundation.keysindexes.IndexedFeature;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
-
 import orgomg.cwm.objectmodel.behavioral.BehavioralFeature;
 import orgomg.cwm.objectmodel.behavioral.Method;
 import orgomg.cwm.objectmodel.behavioral.Parameter;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Constraint;
@@ -33,12 +27,34 @@ import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.objectmodel.instance.DataValue;
 import orgomg.cwm.objectmodel.instance.Extent;
 import orgomg.cwm.objectmodel.instance.Instance;
-
-import orgomg.cwm.resource.relational.*;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.CheckConstraint;
+import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ColumnValue;
+import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.NamedColumnSet;
+import orgomg.cwm.resource.relational.PrimaryKey;
+import orgomg.cwm.resource.relational.Procedure;
+import orgomg.cwm.resource.relational.QueryColumnSet;
+import orgomg.cwm.resource.relational.RelationalPackage;
+import orgomg.cwm.resource.relational.Row;
+import orgomg.cwm.resource.relational.RowSet;
+import orgomg.cwm.resource.relational.SQLDataType;
+import orgomg.cwm.resource.relational.SQLDistinctType;
+import orgomg.cwm.resource.relational.SQLIndex;
+import orgomg.cwm.resource.relational.SQLIndexColumn;
+import orgomg.cwm.resource.relational.SQLParameter;
+import orgomg.cwm.resource.relational.SQLSimpleType;
+import orgomg.cwm.resource.relational.SQLStructuredType;
+import orgomg.cwm.resource.relational.Schema;
+import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.Trigger;
+import orgomg.cwm.resource.relational.UniqueConstraint;
+import orgomg.cwm.resource.relational.View;
 
 /**
  * <!-- begin-user-doc -->

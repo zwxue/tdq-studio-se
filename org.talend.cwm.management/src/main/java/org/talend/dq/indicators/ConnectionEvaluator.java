@@ -16,13 +16,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
@@ -33,6 +31,8 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -41,7 +41,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
     private static Logger log = Logger.getLogger(ConnectionEvaluator.class);
 
-    private DataProvider dataProvider;
+    private Connection dataProvider;
 
     private List<Indicator> elementIndics;
 
@@ -51,10 +51,10 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
      * @see org.talend.dq.indicators.AbstractSchemaEvaluator#getDataManager()
      */
     @Override
-    protected TdDataProvider getDataManager() {
+    protected Connection getDataManager() {
         DataProvider dp = this.getAnalyzedElements().iterator().next();
         if (dp != null) {
-            TdDataProvider tdp = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(dp);
+            Connection tdp = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dp);
             return tdp;
         }
         return null;
@@ -99,31 +99,31 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         ConnectionIndicator connectionIndicator = getConnectionIndicator();
         this.resetCounts(connectionIndicator); // TODO reset other indicators
 
-        List<TdCatalog> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
+        List<Catalog> catalogs = DataProviderHelper.getCatalogs(dataProvider);
 
         if (catalogs.isEmpty()) { // no catalog, only schemata
-            List<TdSchema> schemata = DataProviderHelper.getTdSchema(dataProvider);
+            List<Schema> schemata = DataProviderHelper.getSchema(dataProvider);
             // MOD yyi 2009-11-30 10187
-            for (TdSchema tdSchema : schemata) {
+            for (Schema tdSchema : schemata) {
                 if (!checkSchema(tdSchema)) {
                     ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", tdSchema.getName()), false);
                     return ok;
                 }
             }
             // ~
-            for (TdSchema tdSchema : schemata) {
+            for (Schema tdSchema : schemata) {
                 evalSchemaIndic(tdSchema, ok);
             }
         } else { // catalogs exist
             // MOD yyi 2009-11-30 10187
-            for (TdCatalog tdCatalog : catalogs) {
+            for (Catalog tdCatalog : catalogs) {
                 if (!checkCatalog(tdCatalog.getName())) {
                     ok.setReturnCode(Messages.getString("Evaluator.catalogNotExist", tdCatalog.getName()), false);
                     return ok;
                 }
             }
             // ~
-            for (TdCatalog tdCatalog : catalogs) {
+            for (Catalog tdCatalog : catalogs) {
                 String catName = tdCatalog.getName();
                 try {
                     connection.setCatalog(catName);
@@ -133,13 +133,13 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
                 // MOD xqliu 2009-1-21 feature 4715
                 DefinitionHandler.getInstance().setDefaultIndicatorDefinition(catalogIndic);
-                List<TdSchema> schemas = CatalogHelper.getSchemas(tdCatalog);
+                List<Schema> schemas = CatalogHelper.getSchemas(tdCatalog);
                 if (schemas.isEmpty()) { // no schema
                     evalCatalogIndic(catalogIndic, tdCatalog, ok);
                 } else {
                     catalogIndic.setAnalyzedElement(tdCatalog);
                     // --- create SchemaIndicator for each pair of catalog schema
-                    for (TdSchema tdSchema : schemas) {
+                    for (Schema tdSchema : schemas) {
                         // --- create SchemaIndicator for each catalog
                         SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
                         // MOD xqliu 2009-1-21 feature 4715

@@ -10,12 +10,24 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.analysis.transformation.*;
+import orgomg.cwm.analysis.transformation.ClassifierFeatureMap;
+import orgomg.cwm.analysis.transformation.ClassifierMap;
+import orgomg.cwm.analysis.transformation.DataObjectSet;
+import orgomg.cwm.analysis.transformation.FeatureMap;
+import orgomg.cwm.analysis.transformation.PrecedenceConstraint;
+import orgomg.cwm.analysis.transformation.StepPrecedence;
+import orgomg.cwm.analysis.transformation.Transformation;
+import orgomg.cwm.analysis.transformation.TransformationActivity;
+import orgomg.cwm.analysis.transformation.TransformationFactory;
+import orgomg.cwm.analysis.transformation.TransformationMap;
+import orgomg.cwm.analysis.transformation.TransformationPackage;
+import orgomg.cwm.analysis.transformation.TransformationStep;
+import orgomg.cwm.analysis.transformation.TransformationTask;
+import orgomg.cwm.analysis.transformation.TransformationTree;
+import orgomg.cwm.analysis.transformation.TransformationUse;
+import orgomg.cwm.analysis.transformation.TreeType;
 
 /**
  * <!-- begin-user-doc -->

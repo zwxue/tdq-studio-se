@@ -29,8 +29,8 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
@@ -168,13 +168,13 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected void reloadDataproviderAndFillConnCombo() {
         IFolder connFolder = ResourceManager.getConnectionFolder();
         IFolder mdmFolder = ResourceManager.getMDMConnectionFolder();
-        List<TdDataProvider> dataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(connFolder);
-        List<TdDataProvider> mdmProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(mdmFolder);
+        List<Connection> dataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(connFolder);
+        List<Connection> mdmProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(mdmFolder);
         dataProviders.addAll(mdmProviders);
 
         int index = 0;
         connCombo.removeAll();
-        for (TdDataProvider prov : dataProviders) {
+        for (Connection prov : dataProviders) {
             connCombo.add(prov.getName(), index);
             String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
             connCombo.setData(prvFileName, index);

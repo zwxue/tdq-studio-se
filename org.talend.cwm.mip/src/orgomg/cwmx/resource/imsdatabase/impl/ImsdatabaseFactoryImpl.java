@@ -9,12 +9,32 @@ package orgomg.cwmx.resource.imsdatabase.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.resource.imsdatabase.*;
+import orgomg.cwmx.resource.imsdatabase.ACBLIB;
+import orgomg.cwmx.resource.imsdatabase.AccessMethod;
+import orgomg.cwmx.resource.imsdatabase.DBD;
+import orgomg.cwmx.resource.imsdatabase.DBDLib;
+import orgomg.cwmx.resource.imsdatabase.DEDB;
+import orgomg.cwmx.resource.imsdatabase.Dataset;
+import orgomg.cwmx.resource.imsdatabase.Exit;
+import orgomg.cwmx.resource.imsdatabase.Field;
+import orgomg.cwmx.resource.imsdatabase.HDAM;
+import orgomg.cwmx.resource.imsdatabase.HIDAM;
+import orgomg.cwmx.resource.imsdatabase.INDEX;
+import orgomg.cwmx.resource.imsdatabase.ImsdatabaseFactory;
+import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
+import orgomg.cwmx.resource.imsdatabase.LCHILD;
+import orgomg.cwmx.resource.imsdatabase.MSDB;
+import orgomg.cwmx.resource.imsdatabase.PCB;
+import orgomg.cwmx.resource.imsdatabase.PSB;
+import orgomg.cwmx.resource.imsdatabase.PSBLib;
+import orgomg.cwmx.resource.imsdatabase.SecondaryIndex;
+import orgomg.cwmx.resource.imsdatabase.Segment;
+import orgomg.cwmx.resource.imsdatabase.SegmentComplex;
+import orgomg.cwmx.resource.imsdatabase.SegmentLogical;
+import orgomg.cwmx.resource.imsdatabase.SenField;
+import orgomg.cwmx.resource.imsdatabase.SenSegment;
 
 /**
  * <!-- begin-user-doc -->

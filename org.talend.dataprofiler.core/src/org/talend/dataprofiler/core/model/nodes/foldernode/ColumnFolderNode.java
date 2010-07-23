@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -23,7 +24,6 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -90,7 +90,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             if (parentCatalogOrSchema == null) {
                 return;
             }
-            TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+            Connection provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
             if (provider == null) {
                 return;
             }

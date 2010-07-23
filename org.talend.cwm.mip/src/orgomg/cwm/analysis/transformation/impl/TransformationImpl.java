@@ -10,24 +10,17 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.analysis.transformation.DataObjectSet;
 import orgomg.cwm.analysis.transformation.Transformation;
 import orgomg.cwm.analysis.transformation.TransformationPackage;
 import orgomg.cwm.analysis.transformation.TransformationTask;
-
 import orgomg.cwm.objectmodel.core.ProcedureExpression;
-
 import orgomg.cwm.objectmodel.core.impl.NamespaceImpl;
 
 /**

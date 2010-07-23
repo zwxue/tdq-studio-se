@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,6 +23,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
@@ -35,9 +35,6 @@ import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
@@ -55,6 +52,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.NamedColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -103,7 +101,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         return this.dbmsLanguage;
     }
 
-    protected abstract TdDataProvider getDataManager();
+    protected abstract Connection getDataManager();
 
     private Set<String> catalogsName = new HashSet<String>();
 
@@ -286,8 +284,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (!connClosed.isOk()) {
             log.error("Problem reloading connection: " + connClosed.getMessage());
         }
-        TdDataProvider dp = this.getDataManager();
-        TypedReturnCode<Connection> conn = JavaSqlFactory.createConnection(dp);
+        Connection dp = this.getDataManager();
+        TypedReturnCode<java.sql.Connection> conn = JavaSqlFactory.createConnection(dp);
         if (!conn.isOk()) {
             log.error(conn.getMessage());
             return;
@@ -400,7 +398,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @param ok
      * @throws SQLException
      */
-    protected void evalSchemaIndic(TdSchema tdSchema, ReturnCode ok) throws SQLException {
+    protected void evalSchemaIndic(Schema tdSchema, ReturnCode ok) throws SQLException {
         // --- create SchemaIndicator for each catalog
         SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
         // MOD xqliu 2009-1-21 feature 4715
@@ -409,7 +407,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     }
 
     protected void evalSchemaIndicLow(final CatalogIndicator catalogIndic, final SchemaIndicator schemaIndic,
-            final Catalog tdCatalog, final TdSchema tdSchema, ReturnCode ok) throws SQLException {
+            final Catalog tdCatalog, final Schema tdSchema, ReturnCode ok) throws SQLException {
         boolean hasSchema = tdSchema != null;
         boolean hasCatalog = tdCatalog != null;
 
@@ -570,8 +568,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     public boolean checkCatalog(String catName) {
 
         if (0 == catalogsName.size()) {
-            Collection<TdCatalog> catalogs = new CatalogBuilder(connection).getCatalogs();
-            for (TdCatalog tc : catalogs) {
+            Collection<Catalog> catalogs = new CatalogBuilder(connection).getCatalogs();
+            for (Catalog tc : catalogs) {
                 catalogsName.add(tc.getName());
             }
         }
@@ -592,8 +590,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     protected boolean checkSchemaByName(String catName) {
 
         if (0 == schemasName.size()) {
-            Collection<TdSchema> schemas = new CatalogBuilder(connection).getSchemata();
-            for (TdSchema ts : schemas) {
+            Collection<Schema> schemas = new CatalogBuilder(connection).getSchemata();
+            for (Schema ts : schemas) {
                 schemasName.add(ts.getName());
             }
         }
@@ -611,16 +609,16 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @param catName
      * @return
      */
-    public boolean checkSchema(TdSchema schema) {
+    public boolean checkSchema(Schema schema) {
         EObject container = schema.eContainer();
         if (container != null) {
-            TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);
+            Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);
             if (catalog != null) {
                 try {
                     connection.setCatalog(catalog.getName());
                     DatabaseContentRetriever.getCatalogs(connection);
                     // MOD xqliu 2010-01-20 bug 9841
-                    List<TdSchema> schemas = null;
+                    List<Schema> schemas = null;
                     if (connection.getMetaData().getDriverName().equals(DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0)) {
                         schemas = DatabaseContentRetriever.getMSSQLSchemas(connection).get(catalog.getName());
                     } else if (ConnectionUtils.isPostgresql(connection)) {
@@ -634,7 +632,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                         schemas = DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
                     }
                     if (schemas != null) {
-                        for (TdSchema tdSchema : schemas) {
+                        for (Schema tdSchema : schemas) {
                             if (tdSchema.getName().equals(schema.getName()))
                                 return true;
                         }

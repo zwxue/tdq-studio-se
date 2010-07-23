@@ -9,17 +9,12 @@ package orgomg.cwm.foundation.softwaredeployment.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.foundation.businessinformation.impl.LocationImpl;
-
 import orgomg.cwm.foundation.softwaredeployment.Machine;
 import orgomg.cwm.foundation.softwaredeployment.Site;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;

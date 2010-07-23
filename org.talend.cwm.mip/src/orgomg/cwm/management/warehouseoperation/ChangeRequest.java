@@ -7,7 +7,6 @@
 package orgomg.cwm.management.warehouseoperation;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

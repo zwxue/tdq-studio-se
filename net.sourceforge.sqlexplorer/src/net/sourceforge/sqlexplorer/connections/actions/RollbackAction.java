@@ -22,6 +22,7 @@ import java.sql.SQLException;
 
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.eclipse.ui.IViewActionDelegate;
 
 /**

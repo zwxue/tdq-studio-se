@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
@@ -70,7 +70,7 @@ public class DBPackagesViewLabelProvider extends AdapterFactoryLabelProvider {
         } else if (element instanceof IFile) {
             if (FactoriesUtil.isProvFile(((IFile) element).getFileExtension())) {
                 IFile file = (IFile) element;
-                TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(file);
+                TypedReturnCode<Connection> rc = PrvResourceFileHelper.getInstance().findProvider(file);
                 String decorateText = PluginConstant.EMPTY_STRING;
                 if (rc.isOk()) {
                     decorateText = rc.getObject().getName();

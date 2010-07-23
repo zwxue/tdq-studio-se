@@ -7,11 +7,8 @@
 package orgomg.cwm.resource.xml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.resource.xml.Attribute;
 import orgomg.cwm.resource.xml.AttributeDefault;
 import orgomg.cwm.resource.xml.XmlPackage;

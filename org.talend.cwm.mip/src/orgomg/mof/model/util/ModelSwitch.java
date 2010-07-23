@@ -10,8 +10,9 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.mof.model.*;
+import orgomg.mof.model.Association;
+import orgomg.mof.model.ModelElement;
+import orgomg.mof.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->

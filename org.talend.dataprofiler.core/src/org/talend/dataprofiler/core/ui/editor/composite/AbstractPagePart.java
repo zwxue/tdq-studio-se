@@ -26,9 +26,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -84,7 +85,8 @@ public abstract class AbstractPagePart {
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ModelElementIndicator[] indicators, Tree tree) {
         if (indicators != null && indicators.length != 0) {
-            TdDataProvider tdProvider = (TdDataProvider) masterPage.getAnalysis().getContext().getConnection();
+            Connection tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(masterPage.getAnalysis().getContext()
+                    .getConnection());
             if (tdProvider == null) {
                 tdProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
             }
@@ -101,7 +103,7 @@ public abstract class AbstractPagePart {
         // if (!isAnalyzedColumnsEmpty(tree)) {
         // List<TdDataProvider> providerList = new
         // ArrayList<TdDataProvider>();
-        TdDataProvider tdProvider = null;
+        Connection tdProvider = null;
         if (indicators != null && indicators.length != 0) {
             tdProvider = DataProviderHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH
                     .doSwitch(indicators[0].getColumnSet()));
@@ -121,11 +123,11 @@ public abstract class AbstractPagePart {
             if (dataManager == null) {
                 if (tree.getData() instanceof AnalysisColumnNominalIntervalTreeViewer) {
                     AnalysisColumnNominalIntervalTreeViewer treeViewer = (AnalysisColumnNominalIntervalTreeViewer) tree.getData();
-                    Column column = treeViewer.getColumnSetMultiValueList().get(0);
+                    TdColumn column = treeViewer.getColumnSetMultiValueList().get(0);
                     dataManager = DataProviderHelper.getTdDataProvider(column);
                 } else if (tree.getData() instanceof AnalysisColumnSetTreeViewer) {
                     AnalysisColumnSetTreeViewer treeViewer = (AnalysisColumnSetTreeViewer) tree.getData();
-                    Column column = treeViewer.getColumnSetMultiValueList().get(0);
+                    TdColumn column = treeViewer.getColumnSetMultiValueList().get(0);
                     dataManager = DataProviderHelper.getTdDataProvider(column);
                 }
             }
@@ -152,9 +154,9 @@ public abstract class AbstractPagePart {
             } else {
                 columnsElementViewer = tableViewerPosStack.get(1);
             }
-            TdDataProvider tdProvider = null;
+            Connection tdProvider = null;
             Object input = columnsElementViewer.getInput();
-            List<Column> columnSet = (List<Column>) input;
+            List<TdColumn> columnSet = (List<TdColumn>) input;
             if (columnSet != null && columnSet.size() != 0) {
                 tdProvider = DataProviderHelper.getTdDataProvider(columnSet.get(0));
                 setConnectionState(masterPage, tdProvider);
@@ -179,7 +181,7 @@ public abstract class AbstractPagePart {
 
                     private int prevSelect = masterPage.getConnCombo().getSelectionIndex();
 
-                    private TdDataProvider dataProvider = (TdDataProvider) dataManager;
+                    private Connection dataProvider = (Connection) dataManager;
 
                     public void widgetDefaultSelected(SelectionEvent e) {
                     }
@@ -201,8 +203,8 @@ public abstract class AbstractPagePart {
     }
 
     // MOD mzhao 2009-06-09 feature 5887
-    private TdDataProvider callChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, final int oldSelect,
-            TdDataProvider tdProvider) {
+    private Connection callChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, final int oldSelect,
+            Connection tdProvider) {
         ChangeConnectionAction changeConnAction = new ChangeConnectionAction(masterPage, tdProvider);
         changeConnAction.run();
         ReturnCode ret = changeConnAction.getStatus();
@@ -232,7 +234,7 @@ public abstract class AbstractPagePart {
 
             // The newest dataprovider now would be the old one for next
             // time connection changes.
-            tdProvider = (TdDataProvider) masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
+            tdProvider = (Connection) masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
             // MOD mzhao bug 12766, 2010-04-22 save the editor automatically.
             masterPage.doSave(new NullProgressMonitor());
             //

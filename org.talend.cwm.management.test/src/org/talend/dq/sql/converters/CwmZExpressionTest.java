@@ -17,10 +17,10 @@ import static org.junit.Assert.fail;
 import org.junit.Assert;
 import org.junit.Test;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 
 import Zql.ZExpression;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -63,13 +63,13 @@ public class CwmZExpressionTest {
     public void testSetOperandsColumnT() {
         CwmZExpression<Integer> exp = new CwmZExpression<Integer>(SqlPredicate.EQUAL);
         String name = "USER_ID";
-        Column column = getColumn(name);
+        TdColumn column = getColumn(name);
         Integer value = new Integer(5);
         exp.setOperands(column, value);
         Assert.assertEquals(value.toString(), exp.getInstance().toString());
     }
 
-    private Column getColumn(String name) {
+    private TdColumn getColumn(String name) {
         return ColumnHelper.createColumn(name);
     }
 
@@ -105,7 +105,7 @@ public class CwmZExpressionTest {
     public void testGetInstance() {
         CwmZExpression<Double> exp = new CwmZExpression<Double>(SqlPredicate.EQUAL);
         String name = "USER_ID";
-        Column column = getColumn(name);
+        TdColumn column = getColumn(name);
         Double value = new Double(5.0);
         exp.setOperands(column, value);
         Assert.assertEquals(value.toString(), exp.getInstance().toString());
@@ -150,7 +150,7 @@ public class CwmZExpressionTest {
      */
     private <T> void generateExpression(SqlPredicate operator, String name, T value) {
         CwmZExpression<T> exp = new CwmZExpression<T>(operator);
-        Column column = getColumn(name);
+        TdColumn column = getColumn(name);
         exp.setOperands(column, value);
 
         ZExpression zExpression = exp.generateZExpression();

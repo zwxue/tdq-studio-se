@@ -7,7 +7,6 @@
 package orgomg.cwm.foundation.softwaredeployment;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.foundation.businessinformation.Location;
 
 /**

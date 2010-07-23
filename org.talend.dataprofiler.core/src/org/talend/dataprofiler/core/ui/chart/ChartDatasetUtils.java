@@ -30,13 +30,13 @@ import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.time.SimpleTimePeriod;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.utils.collections.DoubleValueAggregate;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.collections.MultipleKey;
 import org.talend.utils.collections.ValueAggregate;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -88,10 +88,10 @@ public final class ChartDatasetUtils {
      * @param numericColumn a numeric column which is in the list of numeric column of the indicator
      * @return a series of datasets for the given numeric column
      */
-    public static Map<String, ValueAggregator> createXYZDatasets(ColumnSetMultiValueIndicator indicator, Column numericColumn) {
+    public static Map<String, ValueAggregator> createXYZDatasets(ColumnSetMultiValueIndicator indicator, TdColumn numericColumn) {
 
-        final EList<Column> nominalColumns = indicator.getNominalColumns();
-        final EList<Column> numericColumns = indicator.getNumericColumns();
+        final EList<TdColumn> nominalColumns = indicator.getNominalColumns();
+        final EList<TdColumn> numericColumns = indicator.getNumericColumns();
         final EList<String> numericFunctions = indicator.getNumericFunctions();
 
         final int indexOfNumericCol = numericColumns.indexOf(numericColumn);
@@ -107,10 +107,10 @@ public final class ChartDatasetUtils {
         return fillDataset(nominalColumns, listRows, nbNominalColumns + nbNumericFunctions * indexOfNumericCol);
     }
 
-    public static Map<String, DateValueAggregate> createGanttDatasets(ColumnSetMultiValueIndicator indicator, Column dateColumn) {
+    public static Map<String, DateValueAggregate> createGanttDatasets(ColumnSetMultiValueIndicator indicator, TdColumn dateColumn) {
 
-        final EList<Column> nominalColumns = indicator.getNominalColumns();
-        final EList<Column> dateColumns = indicator.getDateColumns();
+        final EList<TdColumn> nominalColumns = indicator.getNominalColumns();
+        final EList<TdColumn> dateColumns = indicator.getDateColumns();
         final EList<String> dateFunctions = indicator.getDateFunctions();
         final int indexOfDateCol = dateColumns.indexOf(dateColumn);
         assert indexOfDateCol != -1;
@@ -133,7 +133,7 @@ public final class ChartDatasetUtils {
      * @param firstNumericColumnIdx the index of the first numeric column
      * @return a map [key -> aggregated values] where identifies a level of aggregation
      */
-    private static Map<String, ValueAggregator> fillDataset(final EList<Column> nominalColumns, final List<Object[]> listRows,
+    private static Map<String, ValueAggregator> fillDataset(final EList<TdColumn> nominalColumns, final List<Object[]> listRows,
             final int firstNumericColumnIdx) {
         Map<String, ValueAggregator> valueAggregators = new HashMap<String, ValueAggregator>();
 
@@ -170,7 +170,7 @@ public final class ChartDatasetUtils {
     /**
      * 
      */
-    private static Map<String, DateValueAggregate> fillGanttDataset(final EList<Column> nominalColumns,
+    private static Map<String, DateValueAggregate> fillGanttDataset(final EList<TdColumn> nominalColumns,
             final List<Object[]> listRows, final int firstDateColumnIdx) {
         Map<String, DateValueAggregate> valueAggregators = new TreeMap<String, DateValueAggregate>();
 
@@ -203,7 +203,7 @@ public final class ChartDatasetUtils {
      * @param n
      * @return a key
      */
-    private static String createKey(EList<Column> nominalColumns, int n) {
+    private static String createKey(EList<TdColumn> nominalColumns, int n) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < n; i++) {
             builder.append(nominalColumns.get(i).getName()).append(" "); //$NON-NLS-1$

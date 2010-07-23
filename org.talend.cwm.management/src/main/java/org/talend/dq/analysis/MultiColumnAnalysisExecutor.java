@@ -27,9 +27,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -45,7 +43,6 @@ import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -84,23 +81,23 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private void instantiateQuery(Indicator indicator) {
         if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
             ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
-            final EList<Column> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
+            final EList<TdColumn> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
             final EList<String> numericFunctions = initializeNumericFunctions(colSetMultValIndicator);
             final EList<String> dateFunctions = initializeDateFunctions(colSetMultValIndicator);
 
             // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
-            for (Column column : colSetMultValIndicator.getNominalColumns()) {
+            for (TdColumn column : colSetMultValIndicator.getNominalColumns()) {
                 nominalColumns.add(getQuotedColumnName(column));
             }
             List<String> computedColumns = new ArrayList<String>();
-            for (Column column : colSetMultValIndicator.getNumericColumns()) {
+            for (TdColumn column : colSetMultValIndicator.getNumericColumns()) {
                 // call functions for each column
                 for (String f : numericFunctions) {
                     computedColumns.add(replaceVariablesLow(f, getQuotedColumnName(column)));
                 }
             }
-            for (Column column : colSetMultValIndicator.getDateColumns()) {
+            for (TdColumn column : colSetMultValIndicator.getDateColumns()) {
                 // call functions for each column
                 for (String f : dateFunctions) {
                     computedColumns.add(replaceVariablesLow(f, getQuotedColumnName(column)));
@@ -173,7 +170,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param analyzedColumns
      * @return the quoted table name
      */
-    private String getTableName(final EList<Column> analyzedColumns) {
+    private String getTableName(final EList<TdColumn> analyzedColumns) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(analyzedColumns.get(0));
         String tableName = columnSetOwner.getName();
 
@@ -193,8 +190,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String catalogName = getQuotedCatalogName(columnSetOwner);
         if (catalogName == null && schemaName != null) {
             // try to get catalog above schema
-            final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+            final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+            final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
         // MOD by zshen: change schemaName of sybase database to Table's owner.

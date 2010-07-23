@@ -56,11 +56,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
@@ -819,7 +819,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
         for (Object obj : objs) {
             NamedColumnSet table = (NamedColumnSet) obj;
-            TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+            Connection tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
             if (tdProvider == null) {
                 MessageUI
                         .openError(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.TableProviderIsNull", table.getName())); //$NON-NLS-1$
@@ -860,7 +860,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
         TableIndicator tableIndicator = (TableIndicator) item.getData(TABLE_INDICATOR_KEY);
         NamedColumnSet set = tableIndicator.getColumnSet();
-        TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(ColumnSetHelper.getParentCatalogOrSchema(set));
+        Connection dataprovider = DataProviderHelper.getTdDataProvider(ColumnSetHelper.getParentCatalogOrSchema(set));
 
         DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
         Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
@@ -937,7 +937,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     @Override
     public boolean canDrop(NamedColumnSet set) {
-        TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(set));
+        Connection tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(set));
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null
@@ -1194,7 +1194,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             for (TreeItem item : selection) {
                 TableIndicator tableIndicator = (TableIndicator) item.getData(TABLE_INDICATOR_KEY);
                 NamedColumnSet set = tableIndicator.getColumnSet();
-                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(set));
+                Connection dataprovider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(set));
                 Object temp = item.getData(INDICATOR_UNIT_KEY);
                 if (temp != null) {
                     TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);

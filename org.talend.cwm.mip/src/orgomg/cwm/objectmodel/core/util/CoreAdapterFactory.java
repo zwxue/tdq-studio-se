@@ -8,11 +8,8 @@ package orgomg.cwm.objectmodel.core.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.BooleanExpression;
 import orgomg.cwm.objectmodel.core.Classifier;

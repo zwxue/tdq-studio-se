@@ -20,26 +20,26 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.db.connection.MdmConnection;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.db.connection.XQueryExpressionUtil;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.MdmIndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -47,13 +47,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MdmAnalysisExecutor extends AnalysisExecutor {
 
-    private TdDataProvider dataprovider;
+    private Connection dataprovider;
 
-    protected MdmConnection mdmConnection;
+    protected MdmWebserviceConnection mdmConnection;
 
     private static Logger log = Logger.getLogger(MdmAnalysisExecutor.class);
 
-    protected boolean isAccessWith(TdDataProvider dp) {
+    protected boolean isAccessWith(Connection dp) {
         if (dataprovider == null) {
             dataprovider = dp;
             return true;
@@ -85,7 +85,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             eval.storeIndicator(tdXmlElement.getName(), indicator);
             eval.setTdXmlDocument(tdXmlElement.getOwnedDocument());
         }
-        TypedReturnCode<MdmConnection> mdmReturnObj = getMdmConnection(analysis);
+        TypedReturnCode<MdmWebserviceConnection> mdmReturnObj = getMdmConnection(analysis);
         // open a connection
         if (!mdmReturnObj.isOk()) {
             log.error(mdmReturnObj.getMessage());
@@ -281,7 +281,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             }
 
             // --- get the data provider
-            TdDataProvider dp = DataProviderHelper.getTdDataProvider(xmlElement);
+            Connection dp = ConnectionHelper.getTdDataProvider(xmlElement.getOwnedDocument());
             if (!isAccessWith(dp)) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
                         xmlElement.getName(), dataprovider.getName());
@@ -297,31 +297,18 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
      * @param analysis
      * @return
      */
-    protected TypedReturnCode<MdmConnection> getMdmConnection(Analysis analysis) {
-
-        TypedReturnCode<MdmConnection> rc = new TypedReturnCode<MdmConnection>(false);
-        if (mdmConnection != null) {
-            rc.setObject(mdmConnection);
-            rc.setOk(true);
-            return rc;
-        }
-        TdDataProvider dataProvider = (TdDataProvider) analysis.getContext().getConnection();
-        EList<ProviderConnection> resourceConnections = dataProvider.getResourceConnection();
-        if (resourceConnections != null && resourceConnections.size() > 0) {
-            TdProviderConnection providerConnection = (TdProviderConnection) resourceConnections.get(0);
-            String url = providerConnection.getConnectionString();
-            Properties props = new Properties();
-            props.setProperty(TaggedValueHelper.USER, DataProviderHelper.getUser(providerConnection));
-            props.setProperty(TaggedValueHelper.PASSWORD, DataProviderHelper.getClearTextPassword(providerConnection));
-            props.setProperty(TaggedValueHelper.UNIVERSE, DataProviderHelper.getUniverse(providerConnection));
-            MdmConnection mdmConnection = new MdmConnection(url, props);
-            rc.setObject(mdmConnection);
-            rc.setOk(mdmConnection.checkDatabaseConnection().isOk());
-            rc.setMessage(url);
-        }
-        if (rc.isOk()) {
-            mdmConnection = rc.getObject();
-        }
+    protected TypedReturnCode<MdmWebserviceConnection> getMdmConnection(Analysis analysis) {
+        TypedReturnCode<MdmWebserviceConnection> rc = new TypedReturnCode<MdmWebserviceConnection>(true);
+        MDMConnection dataProvider = (MDMConnection) analysis.getContext().getConnection();
+        Properties props = new Properties();
+        props.setProperty(TaggedValueHelper.USER, dataProvider.getUsername());
+        props.setProperty(TaggedValueHelper.PASSWORD, dataProvider.getPassword());
+        props.setProperty(TaggedValueHelper.UNIVERSE, dataProvider.getUniverse() == null ? PluginConstant.EMPTY_STRING
+                : dataProvider.getUniverse());
+        MdmWebserviceConnection mdmConnection = new MdmWebserviceConnection(dataProvider.getPathname(), props);
+        rc.setObject(mdmConnection);
+        rc.setOk(mdmConnection.checkDatabaseConnection().isOk());
+        rc.setMessage(dataProvider.getPathname());
         return rc;
     }
 

@@ -10,25 +10,18 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.foundation.datatypes.DatatypesPackage;
 import orgomg.cwm.foundation.datatypes.Union;
-
 import orgomg.cwm.foundation.keysindexes.IndexedFeature;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
-
 import orgomg.cwm.objectmodel.core.ChangeableKind;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.CorePackage;
@@ -36,10 +29,8 @@ import orgomg.cwm.objectmodel.core.Multiplicity;
 import orgomg.cwm.objectmodel.core.OrderingKind;
 import orgomg.cwm.objectmodel.core.ScopeKind;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.objectmodel.instance.InstancePackage;
 import orgomg.cwm.objectmodel.instance.Slot;
-
 import orgomg.cwmx.resource.dmsii.DataItem;
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
 import orgomg.cwmx.resource.dmsii.Remap;

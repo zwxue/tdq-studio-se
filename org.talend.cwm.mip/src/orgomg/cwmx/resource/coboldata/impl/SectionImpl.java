@@ -9,20 +9,14 @@ package orgomg.cwmx.resource.coboldata.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.objectmodel.core.impl.ClassifierImpl;
-
 import orgomg.cwm.resource.record.RecordDef;
 import orgomg.cwm.resource.record.RecordPackage;
-
 import orgomg.cwmx.resource.coboldata.CoboldataPackage;
 import orgomg.cwmx.resource.coboldata.Section;
 

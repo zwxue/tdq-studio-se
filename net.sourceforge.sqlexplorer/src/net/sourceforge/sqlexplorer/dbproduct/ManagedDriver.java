@@ -8,16 +8,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import org.dom4j.Element;
-import org.dom4j.tree.DefaultElement;
-
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
-import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.squirrel_sql.fw.id.IIdentifier;
 import net.sourceforge.squirrel_sql.fw.persist.ValidationException;
 import net.sourceforge.squirrel_sql.fw.sql.ISQLDriver;
 import net.sourceforge.squirrel_sql.fw.util.beanwrapper.StringWrapper;
+
+import org.dom4j.Element;
+import org.dom4j.tree.DefaultElement;
 
 /**
  * Manages a JDBC Driver

@@ -7,7 +7,6 @@
 package orgomg.cwm.foundation.keysindexes;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
 

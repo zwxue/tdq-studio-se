@@ -49,13 +49,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -406,7 +405,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private void initializedConnection(ModelElementIndicator[] indicators) {
         Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
         DataManager connection = analysis.getContext().getConnection();
-        TdDataProvider tdDataProvider = null;
+        Connection tdDataProvider = null;
 
         if (indicators != null && indicators.length > 0) {
             if (connection == null) {
@@ -542,9 +541,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 }
 
                 // TODO 10238
-                if (dm != null && dm instanceof TdDataProvider) {
-                    TdDataProvider dp = (TdDataProvider) dm;
-                    if (ConnectionUtils.isMdmConnection(DataProviderHelper.getTdProviderConnection(dp).getObject())) {
+                if (dm != null && dm instanceof Connection) {
+                    Connection dp = (Connection) dm;
+                    if (ConnectionUtils.isMdmConnection(dp)) {
                         MessageUI.openWarning(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dontSupport"));
                         return;
                     }
@@ -684,7 +683,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
         ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
         ModelElement me = meIndicator.getModelElement();
-        TdDataProvider dataprovider = ModelElementHelper.getTdDataProvider(me);
+        Connection dataprovider = ModelElementHelper.getTdDataProvider(me);
         DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
         Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
         if (expression != null) {

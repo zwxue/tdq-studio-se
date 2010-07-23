@@ -16,11 +16,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.editor.ModelElementCompareEditorLauncher;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -54,7 +54,7 @@ public class UiHandler implements IUIHandler {
 	 * org.talend.cwm.compare.factory.IUIHandler#popRemoveElement(org.talend
 	 * .cwm.softwaredeployment.TdDataProvider)
 	 */
-	public void popRemoveElement(final TdDataProvider provider) {
+    public void popRemoveElement(final Connection provider) {
 		// TODO Auto-generated method stub
 		final Display display = PlatformUI.getWorkbench().getDisplay();
 		display.asyncExec(new Runnable() {

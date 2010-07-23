@@ -11,69 +11,37 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
-
 import orgomg.cwm.analysis.businessnomenclature.impl.BusinessnomenclaturePackageImpl;
-
 import orgomg.cwm.analysis.datamining.DataminingPackage;
-
 import orgomg.cwm.analysis.datamining.impl.DataminingPackageImpl;
-
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
-
 import orgomg.cwm.analysis.informationvisualization.impl.InformationvisualizationPackageImpl;
-
 import orgomg.cwm.analysis.olap.OlapPackage;
-
 import orgomg.cwm.analysis.olap.impl.OlapPackageImpl;
-
 import orgomg.cwm.analysis.transformation.TransformationPackage;
-
 import orgomg.cwm.analysis.transformation.impl.TransformationPackageImpl;
-
 import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
-
 import orgomg.cwm.foundation.businessinformation.impl.BusinessinformationPackageImpl;
-
 import orgomg.cwm.foundation.datatypes.DatatypesPackage;
-
 import orgomg.cwm.foundation.datatypes.impl.DatatypesPackageImpl;
-
 import orgomg.cwm.foundation.expressions.ExpressionsPackage;
-
 import orgomg.cwm.foundation.expressions.impl.ExpressionsPackageImpl;
-
 import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
-
 import orgomg.cwm.foundation.keysindexes.impl.KeysindexesPackageImpl;
-
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
-
 import orgomg.cwm.foundation.softwaredeployment.impl.SoftwaredeploymentPackageImpl;
-
 import orgomg.cwm.foundation.typemapping.TypemappingPackage;
-
 import orgomg.cwm.foundation.typemapping.impl.TypemappingPackageImpl;
-
 import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
-
 import orgomg.cwm.management.warehouseoperation.impl.WarehouseoperationPackageImpl;
-
 import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
-
 import orgomg.cwm.management.warehouseprocess.datatype.DatatypePackage;
-
 import orgomg.cwm.management.warehouseprocess.datatype.impl.DatatypePackageImpl;
-
 import orgomg.cwm.management.warehouseprocess.events.EventsPackage;
-
 import orgomg.cwm.management.warehouseprocess.events.impl.EventsPackageImpl;
-
 import orgomg.cwm.management.warehouseprocess.impl.WarehouseprocessPackageImpl;
-
 import orgomg.cwm.objectmodel.behavioral.Argument;
 import orgomg.cwm.objectmodel.behavioral.BehavioralFactory;
 import orgomg.cwm.objectmodel.behavioral.BehavioralFeature;
@@ -85,81 +53,43 @@ import orgomg.cwm.objectmodel.behavioral.Method;
 import orgomg.cwm.objectmodel.behavioral.Operation;
 import orgomg.cwm.objectmodel.behavioral.Parameter;
 import orgomg.cwm.objectmodel.behavioral.ParameterDirectionKind;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
-
 import orgomg.cwm.objectmodel.core.impl.CorePackageImpl;
-
 import orgomg.cwm.objectmodel.instance.InstancePackage;
-
 import orgomg.cwm.objectmodel.instance.impl.InstancePackageImpl;
-
 import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
-
 import orgomg.cwm.objectmodel.relationships.impl.RelationshipsPackageImpl;
-
 import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
-
 import orgomg.cwm.resource.multidimensional.impl.MultidimensionalPackageImpl;
-
 import orgomg.cwm.resource.record.RecordPackage;
-
 import orgomg.cwm.resource.record.impl.RecordPackageImpl;
-
 import orgomg.cwm.resource.relational.RelationalPackage;
-
 import orgomg.cwm.resource.relational.enumerations.EnumerationsPackage;
-
 import orgomg.cwm.resource.relational.enumerations.impl.EnumerationsPackageImpl;
-
 import orgomg.cwm.resource.relational.impl.RelationalPackageImpl;
-
 import orgomg.cwm.resource.xml.XmlPackage;
-
 import orgomg.cwm.resource.xml.impl.XmlPackageImpl;
-
 import orgomg.cwmmip.CwmmipPackage;
-
 import orgomg.cwmmip.impl.CwmmipPackageImpl;
-
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
-
 import orgomg.cwmx.analysis.informationreporting.impl.InformationreportingPackageImpl;
-
 import orgomg.cwmx.analysis.informationset.InformationsetPackage;
-
 import orgomg.cwmx.analysis.informationset.impl.InformationsetPackageImpl;
-
 import orgomg.cwmx.foundation.er.ErPackage;
-
 import orgomg.cwmx.foundation.er.impl.ErPackageImpl;
-
 import orgomg.cwmx.resource.coboldata.CoboldataPackage;
-
 import orgomg.cwmx.resource.coboldata.impl.CoboldataPackageImpl;
-
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
-
 import orgomg.cwmx.resource.dmsii.impl.DmsiiPackageImpl;
-
 import orgomg.cwmx.resource.essbase.EssbasePackage;
-
 import orgomg.cwmx.resource.essbase.impl.EssbasePackageImpl;
-
 import orgomg.cwmx.resource.express.ExpressPackage;
-
 import orgomg.cwmx.resource.express.impl.ExpressPackageImpl;
-
 import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
-
 import orgomg.cwmx.resource.imsdatabase.impl.ImsdatabasePackageImpl;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.ImstypesPackage;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.impl.ImstypesPackageImpl;
-
 import orgomg.mof.model.ModelPackage;
-
 import orgomg.mof.model.impl.ModelPackageImpl;
 
 /**

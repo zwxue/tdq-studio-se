@@ -7,9 +7,7 @@
 package orgomg.cwm.resource.relational.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
-
 import orgomg.cwm.resource.relational.RelationalPackage;
 import orgomg.cwm.resource.relational.Schema;
 

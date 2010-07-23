@@ -13,8 +13,8 @@
 package org.talend.dataprofiler.core.ui.wizard.urlsetup;
 
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
@@ -52,8 +52,8 @@ public class URLSetupControlFactory {
         }
     }
 
-    public static URLSetupControl createEditControl(SupportDBUrlType dbType, Composite composite,
-            TdProviderConnection connection, DBConnectionParameter parameter) {
+    public static URLSetupControl createEditControl(SupportDBUrlType dbType, Composite composite, Connection connection,
+            DBConnectionParameter parameter) {
 
         URLSetupControl control = new EditConnectionURLSetupControl(composite, dbType, connection);
         control.createPart(parameter);

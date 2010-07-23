@@ -7,11 +7,8 @@
 package orgomg.cwmx.resource.dmsii;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.foundation.expressions.ExpressionNode;
-
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.resource.record.Field;
 
 /**

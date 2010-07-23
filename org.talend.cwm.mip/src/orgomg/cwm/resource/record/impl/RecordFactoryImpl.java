@@ -9,12 +9,18 @@ package orgomg.cwm.resource.record.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.resource.record.*;
+import orgomg.cwm.resource.record.Field;
+import orgomg.cwm.resource.record.FieldValue;
+import orgomg.cwm.resource.record.FixedOffsetField;
+import orgomg.cwm.resource.record.Group;
+import orgomg.cwm.resource.record.Record;
+import orgomg.cwm.resource.record.RecordDef;
+import orgomg.cwm.resource.record.RecordFactory;
+import orgomg.cwm.resource.record.RecordFile;
+import orgomg.cwm.resource.record.RecordPackage;
+import orgomg.cwm.resource.record.RecordSet;
 
 /**
  * <!-- begin-user-doc -->

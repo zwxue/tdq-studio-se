@@ -7,13 +7,9 @@
 package orgomg.cwm.resource.relational.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
-
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.RelationalPackage;
 

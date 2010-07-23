@@ -50,6 +50,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -310,8 +311,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
                 break;
             } else if (tableAliasA.equals(tableAliasB)) {
                 ret = false;
-                String tableA = ColumnHelper.getColumnSetOwner((Column) join.getColA()).getName();
-                String tableB = ColumnHelper.getColumnSetOwner((Column) join.getColB()).getName();
+                String tableA = ColumnHelper.getColumnSetOwner((TdColumn) join.getColA()).getName();
+                String tableB = ColumnHelper.getColumnSetOwner((TdColumn) join.getColB()).getName();
                 msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.sameTableAlias", tableA, tableB) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
             } else {
                 if (!checkAlias(tableAliasA)) {

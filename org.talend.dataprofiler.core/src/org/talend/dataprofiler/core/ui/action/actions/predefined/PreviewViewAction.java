@@ -25,21 +25,19 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.RelationalPackage;
-import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.RelationalPackage;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -71,10 +69,8 @@ public class PreviewViewAction extends Action {
         // perspectiveAction.run();
         SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
         Collection<Alias> aliases = default1.getAliasManager().getAliases();
-        TdDataProvider tdDataProvider = DataProviderHelper.getDataProvider(view);
-        TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-        TdProviderConnection providerConnection = tdPc.getObject();
-        String url = providerConnection.getConnectionString();
+        Connection tdDataProvider = ConnectionHelper.getDataProvider(view);
+        String url = ConnectionHelper.getURL(tdDataProvider);
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
                 String qualifiedName = getTableQualifiedName(tdDataProvider);
@@ -102,7 +98,7 @@ public class PreviewViewAction extends Action {
      * @param tdDataProvider
      * @return
      */
-    private String getTableQualifiedName(TdDataProvider tdDataProvider) {
+    private String getTableQualifiedName(Connection tdDataProvider) {
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
         Package catalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(view);
         if (catalogOrSchema == null) {
@@ -111,9 +107,9 @@ public class PreviewViewAction extends Action {
         // else
         String catalogName = null;
         String schemaName = null;
-        if (catalogOrSchema != null && RelationalPackage.eINSTANCE.getTdSchema().equals(catalogOrSchema.eClass())) {
+        if (catalogOrSchema != null && RelationalPackage.eINSTANCE.getSchema().equals(catalogOrSchema.eClass())) {
             schemaName = catalogOrSchema.getName();
-            TdCatalog parentCatalog = CatalogHelper.getParentCatalog(catalogOrSchema);
+            Catalog parentCatalog = CatalogHelper.getParentCatalog(catalogOrSchema);
             if (parentCatalog != null) {
                 catalogName = parentCatalog.getName();
             }

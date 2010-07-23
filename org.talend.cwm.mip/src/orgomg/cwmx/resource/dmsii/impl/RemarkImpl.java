@@ -7,13 +7,9 @@
 package orgomg.cwmx.resource.dmsii.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.objectmodel.core.impl.StructuralFeatureImpl;
-
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
 import orgomg.cwmx.resource.dmsii.Remark;
 

@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.perspective;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>

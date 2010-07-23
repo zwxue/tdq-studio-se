@@ -19,13 +19,13 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -34,7 +34,7 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
 
     private List<SchemaIndicator> schemaIndicatorList = new ArrayList<SchemaIndicator>();
 
-    private List<TdSchema> schemas = new ArrayList<TdSchema>();
+    private List<Schema> schemas = new ArrayList<Schema>();
 
     public SchemaAnalysisMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -56,7 +56,7 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
     }
 
     @Override
-    protected List<TdCatalog> getCatalogs() {
+    protected List<Catalog> getCatalogs() {
         return Collections.emptyList();
     }
 

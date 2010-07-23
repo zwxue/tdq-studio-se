@@ -7,10 +7,8 @@
 package orgomg.cwm.analysis.olap.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.analysis.olap.Measure;
 import orgomg.cwm.analysis.olap.OlapPackage;
-
 import orgomg.cwm.objectmodel.core.impl.AttributeImpl;
 
 /**

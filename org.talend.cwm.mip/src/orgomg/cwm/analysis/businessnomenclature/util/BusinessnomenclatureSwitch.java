@@ -10,9 +10,14 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.analysis.businessnomenclature.*;
-
+import orgomg.cwm.analysis.businessnomenclature.BusinessDomain;
+import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
+import orgomg.cwm.analysis.businessnomenclature.Concept;
+import orgomg.cwm.analysis.businessnomenclature.Glossary;
+import orgomg.cwm.analysis.businessnomenclature.Nomenclature;
+import orgomg.cwm.analysis.businessnomenclature.Taxonomy;
+import orgomg.cwm.analysis.businessnomenclature.Term;
+import orgomg.cwm.analysis.businessnomenclature.VocabularyElement;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;

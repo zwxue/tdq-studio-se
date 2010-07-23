@@ -7,9 +7,7 @@
 package orgomg.cwmx.foundation.er.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.foundation.keysindexes.impl.UniqueKeyImpl;
-
 import orgomg.cwmx.foundation.er.CandidateKey;
 import orgomg.cwmx.foundation.er.ErPackage;
 

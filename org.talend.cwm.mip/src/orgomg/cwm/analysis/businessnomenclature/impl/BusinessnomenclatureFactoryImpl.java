@@ -9,12 +9,17 @@ package orgomg.cwm.analysis.businessnomenclature.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.analysis.businessnomenclature.*;
+import orgomg.cwm.analysis.businessnomenclature.BusinessDomain;
+import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclatureFactory;
+import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
+import orgomg.cwm.analysis.businessnomenclature.Concept;
+import orgomg.cwm.analysis.businessnomenclature.Glossary;
+import orgomg.cwm.analysis.businessnomenclature.Nomenclature;
+import orgomg.cwm.analysis.businessnomenclature.Taxonomy;
+import orgomg.cwm.analysis.businessnomenclature.Term;
+import orgomg.cwm.analysis.businessnomenclature.VocabularyElement;
 
 /**
  * <!-- begin-user-doc -->

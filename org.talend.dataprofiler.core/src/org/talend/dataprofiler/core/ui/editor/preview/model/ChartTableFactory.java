@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PartInitException;
 import org.jfree.util.Log;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginChecker;
@@ -72,7 +72,7 @@ public final class ChartTableFactory {
         final boolean isJAVALanguage = ExecutionLanguage.JAVA == currentEngine;
 
         final Table table = tbViewer.getTable();
-        final TdDataProvider tdDataProvider = (TdDataProvider) analysis.getContext().getConnection();
+        final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
         final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
 
         table.addMouseListener(new MouseAdapter() {

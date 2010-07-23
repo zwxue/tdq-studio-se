@@ -19,12 +19,12 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -33,7 +33,7 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
 
     private List<CatalogIndicator> catalogIndicatorList = new ArrayList<CatalogIndicator>();
 
-    private List<TdCatalog> catalogs = new ArrayList<TdCatalog>();
+    private List<Catalog> catalogs = new ArrayList<Catalog>();
 
     /**
      * DOC rli CatalogMasterDetailsPage constructor comment.
@@ -82,11 +82,11 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getCatalogs()
      */
     @Override
-    protected List<TdCatalog> getCatalogs() {
+    protected List<Catalog> getCatalogs() {
         catalogs.clear();
         EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
         for (ModelElement element : analysedElements) {
-            catalogs.add((TdCatalog) element);
+            catalogs.add((Catalog) element);
         }
         return catalogs;
     }

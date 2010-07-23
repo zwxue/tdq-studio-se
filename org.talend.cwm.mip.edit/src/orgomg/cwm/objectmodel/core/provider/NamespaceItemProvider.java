@@ -12,11 +12,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -24,67 +21,37 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ViewerNotification;
-
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclatureFactory;
-
 import orgomg.cwm.analysis.datamining.DataminingFactory;
-
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationFactory;
-
 import orgomg.cwm.analysis.olap.OlapFactory;
-
 import orgomg.cwm.analysis.transformation.TransformationFactory;
-
 import orgomg.cwm.foundation.businessinformation.BusinessinformationFactory;
-
 import orgomg.cwm.foundation.datatypes.DatatypesFactory;
-
 import orgomg.cwm.foundation.keysindexes.KeysindexesFactory;
-
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory;
-
 import orgomg.cwm.foundation.typemapping.TypemappingFactory;
-
 import orgomg.cwm.management.warehouseoperation.WarehouseoperationFactory;
-
 import orgomg.cwm.management.warehouseprocess.WarehouseprocessFactory;
-
 import orgomg.cwm.management.warehouseprocess.events.EventsFactory;
-
 import orgomg.cwm.objectmodel.behavioral.BehavioralFactory;
-
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.Namespace;
-
 import orgomg.cwm.objectmodel.instance.InstanceFactory;
-
 import orgomg.cwm.objectmodel.relationships.RelationshipsFactory;
-
 import orgomg.cwm.resource.multidimensional.MultidimensionalFactory;
-
 import orgomg.cwm.resource.record.RecordFactory;
-
 import orgomg.cwm.resource.relational.RelationalFactory;
-
 import orgomg.cwm.resource.xml.XmlFactory;
-
 import orgomg.cwmmip.CwmmipFactory;
-
 import orgomg.cwmx.analysis.informationreporting.InformationreportingFactory;
-
 import orgomg.cwmx.analysis.informationset.InformationsetFactory;
-
 import orgomg.cwmx.foundation.er.ErFactory;
-
 import orgomg.cwmx.resource.coboldata.CoboldataFactory;
-
 import orgomg.cwmx.resource.dmsii.DmsiiFactory;
-
 import orgomg.cwmx.resource.essbase.EssbaseFactory;
-
 import orgomg.cwmx.resource.express.ExpressFactory;
-
 import orgomg.cwmx.resource.imsdatabase.ImsdatabaseFactory;
 
 /**

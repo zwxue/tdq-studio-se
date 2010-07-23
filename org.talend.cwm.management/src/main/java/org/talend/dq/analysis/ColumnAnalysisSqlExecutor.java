@@ -42,10 +42,7 @@ import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.RelationalPackage;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
@@ -76,7 +73,10 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.RelationalPackage;
+import orgomg.cwm.resource.relational.Schema;
 
 import Zql.ParseException;
 
@@ -251,8 +251,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String catalogName = getQuotedCatalogName(columnSetOwner);
         if (catalogName == null && schemaName != null) {
             // try to get catalog above schema
-            final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+            final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+            final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
         // MOD by zshen: change schemaName of sybase database to Table's owner.
@@ -1235,8 +1235,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return null;
         }
         // else
-        if (RelationalPackage.eINSTANCE.getTdSchema().equals(schema.eClass())) {
-            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schema);
+        if (RelationalPackage.eINSTANCE.getSchema().equals(schema.eClass())) {
+            final Catalog parentCatalog = CatalogHelper.getParentCatalog(schema);
             if (parentCatalog != null) {
                 return parentCatalog.getName();
             }
@@ -1248,9 +1248,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * DOC scorreia Comment method "executeQuery".
      * 
      * @param indicator
-     * 
      * @param connection
-     * 
      * @param queryStmt
      * @return
      * @throws SQLException

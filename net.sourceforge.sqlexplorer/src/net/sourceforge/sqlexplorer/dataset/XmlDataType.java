@@ -18,8 +18,9 @@
  */
 package net.sourceforge.sqlexplorer.dataset;
 
-import org.dom4j.Element;
 import net.sourceforge.sqlexplorer.ExplorerException;
+
+import org.dom4j.Element;
 
 /**
  * DataType that provides XML.  Must be implemented by the database platform.

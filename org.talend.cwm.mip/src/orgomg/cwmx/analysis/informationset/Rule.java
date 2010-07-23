@@ -7,7 +7,6 @@
 package orgomg.cwmx.analysis.informationset;
 
 import orgomg.cwm.foundation.expressions.ExpressionNode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.xml;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 
 /**

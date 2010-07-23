@@ -30,14 +30,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -49,12 +50,12 @@ public final class SqlExplorerBridge {
     }
 
     @SuppressWarnings("unchecked")
-    public static TypedReturnCode<TableNode> findSqlExplorerTableNode(TdProviderConnection providerConnection,
+    public static TypedReturnCode<TableNode> findSqlExplorerTableNode(Connection providerConnection,
             Package parentPackageElement, String tableName, String activeTabName) {
         // Open data explore perspective.
         new ChangePerspectiveAction(PluginConstant.SE_ID).run();
         Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
-        String url = providerConnection.getConnectionString();
+        String url = ConnectionHelper.getURL(providerConnection);
         User currentUser = null;
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
@@ -80,7 +81,7 @@ public final class SqlExplorerBridge {
         root.load();
         List<INode> catalogs = root.getCatalogs();
         List<INode> schemas = root.getSchemas();
-        TdCatalog doSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPackageElement);
+        Catalog doSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPackageElement);
         INode catalogOrSchemaNode = null;
         if (doSwitch != null) {
             for (INode catalogNode : catalogs) {

@@ -7,10 +7,8 @@
 package orgomg.cwm.management.warehouseprocess.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.management.warehouseprocess.ProcessPackage;
 import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
 
 /**

@@ -27,8 +27,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -324,7 +324,7 @@ public abstract class ModelElementTreeMenuProvider {
             ModelElementIndicator meIndicator = (ModelElementIndicator) item
                     .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
             ModelElement me = meIndicator.getModelElement();
-            TdDataProvider dataprovider = ModelElementHelper.getTdDataProvider(me);
+            Connection dataprovider = ModelElementHelper.getTdDataProvider(me);
             IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY);
             DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
             Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());

@@ -16,17 +16,16 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -42,7 +41,7 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
      * @see org.talend.dq.indicators.AbstractSchemaEvaluator#getDataManager()
      */
     @Override
-    protected TdDataProvider getDataManager() {
+    protected Connection getDataManager() {
         Schema schema = this.getAnalyzedElements().iterator().next();
         return schema != null ? DataProviderHelper.getTdDataProvider(schema) : null;
     }
@@ -72,7 +71,7 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             if (schemaIndicator == null) {
                 continue;
             }
-            TdSchema schema = (TdSchema) schemaIndicator.getAnalyzedElement();
+            Schema schema = (Schema) schemaIndicator.getAnalyzedElement();
             String catName = schema.getName();
             // MOD yyi 2009-11-30 10187
             if (!checkSchema(schema)) {
@@ -83,7 +82,7 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             // ADD xqliu 2010-01-06 bug 10919
             EObject container = schema.eContainer();
             if (container != null) {
-                TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);
+                Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);
                 if (catalog != null) {
                     catName = catalog.getName();
                 }

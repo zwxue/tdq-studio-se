@@ -24,9 +24,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
 import org.osgi.framework.BundleContext;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
-import org.talend.utils.sugars.TypedReturnCode;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
@@ -80,33 +80,35 @@ public class CWMPlugin extends Plugin {
 
         for (DataProvider dataProvider : dataproviders) {
             try {
-                TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(dataProvider);
-                TdProviderConnection providerConnection = tdPc.getObject();
+                Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
+                if (connection != null) {
 
-                Alias alias = new Alias(dataProvider.getName());
+                    Alias alias = new Alias(dataProvider.getName());
 
-                String clearTextUser = DataProviderHelper.getUser(providerConnection);
-                String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
-                String password = DataProviderHelper.getClearTextPassword(providerConnection);
+                    String clearTextUser = ConnectionHelper.getUsername(connection);
+                    String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
+                    String password = ConnectionHelper.getPassword(connection);
 
-                String url = providerConnection.getConnectionString();
+                    String url = ConnectionHelper.getURL(connection);
 
-                User previousUser = new User(user, password);
-                alias.setDefaultUser(previousUser);
+                    User previousUser = new User(user, password);
+                    alias.setDefaultUser(previousUser);
 
-                alias.setAutoLogon(false);
-                alias.setConnectAtStartup(true);
-                alias.setUrl(url);
-                ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
-                        EDriverName.getId(providerConnection.getDriverClassName()));
-                if (manDr != null) {
-                    alias.setDriver(manDr);
+                    alias.setAutoLogon(false);
+                    alias.setConnectAtStartup(true);
+                    alias.setUrl(url);
+
+                    ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
+                            EDriverName.getId(ConnectionHelper.getDriverClass(connection)));
+
+                    if (manDr != null) {
+                        alias.setDriver(manDr);
+                    }
+
+                    if (!aliasManager.contains(alias)) {
+                        aliasManager.addAlias(alias);
+                    }
                 }
-
-                if (!aliasManager.contains(alias)) {
-                    aliasManager.addAlias(alias);
-                }
-
             } catch (ExplorerException e) {
                 log.error(e, e);
             }

@@ -7,11 +7,9 @@
 package orgomg.cwm.resource.relational;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.BooleanExpression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.ProcedureExpression;
-
 import orgomg.cwm.resource.relational.enumerations.ActionOrientationType;
 import orgomg.cwm.resource.relational.enumerations.ConditionTimingType;
 import orgomg.cwm.resource.relational.enumerations.EventManipulationType;

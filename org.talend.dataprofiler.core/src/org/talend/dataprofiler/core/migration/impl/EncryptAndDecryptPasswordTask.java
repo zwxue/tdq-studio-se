@@ -18,15 +18,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.security.CryptoHelper;
-import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
@@ -50,7 +49,7 @@ public class EncryptAndDecryptPasswordTask extends AWorkspaceTask {
             for (IResource re : resource) {
                 if (re instanceof IFile) {
                     IFile file = (IFile) re;
-                    TdDataProvider tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
+                    Connection tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
                     encryptDataProvider(tdDataProvider);
                 }
 
@@ -66,7 +65,7 @@ public class EncryptAndDecryptPasswordTask extends AWorkspaceTask {
      * @param dataProvider
      * @return
      */
-    public static TdDataProvider encryptDataProvider(TdDataProvider dataProvider) {
+    public static Connection encryptDataProvider(Connection dataProvider) {
         // Delete DataProvider password tag
         EList<TaggedValue> dpList = dataProvider.getTaggedValue();
         if (dpList != null && dpList.size() > 0) {
@@ -85,22 +84,17 @@ public class EncryptAndDecryptPasswordTask extends AWorkspaceTask {
         }
 
         // Connection password encrypt
-        EList<ProviderConnection> elist = dataProvider.getResourceConnection();
-
-        for (int i = 0; i < elist.size(); ++i) {
-            Object obj = elist.get(i);
-            if (obj != null) {
-                TdProviderConnection tdpConn = (TdProviderConnection) obj;
-                EList<TaggedValue> tvList = tdpConn.getTaggedValue();
-                if (tvList != null && tvList.size() > 0) {
-                    int tvSize = tvList.size();
-                    for (int j = 0; j < tvSize; ++j) {
-                        Object tvObj = tvList.get(j);
-                        if (tvObj != null) {
-                            TaggedValue tv = (TaggedValue) tvObj;
-                            if (TaggedValueHelper.PASSWORD.equals(tv.getTag())) {
-                                tv.setValue(new CryptoHelper(DataProviderHelper.PASSPHRASE).encrypt(tv.getValue()));
-                            }
+        Connection tdpConn = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
+        if (tdpConn != null) {
+            EList<TaggedValue> tvList = tdpConn.getTaggedValue();
+            if (tvList != null && tvList.size() > 0) {
+                int tvSize = tvList.size();
+                for (int j = 0; j < tvSize; ++j) {
+                    Object tvObj = tvList.get(j);
+                    if (tvObj != null) {
+                        TaggedValue tv = (TaggedValue) tvObj;
+                        if (TaggedValueHelper.PASSWORD.equals(tv.getTag())) {
+                            tv.setValue(new CryptoHelper(DataProviderHelper.PASSPHRASE).encrypt(tv.getValue()));
                         }
                     }
                 }

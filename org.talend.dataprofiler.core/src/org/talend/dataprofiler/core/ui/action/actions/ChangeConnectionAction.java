@@ -28,13 +28,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -71,9 +71,9 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
     private static Logger log = Logger.getLogger(ChangeConnectionAction.class);
 
-    private TdDataProvider oldDataProvider;
+    private Connection oldDataProvider;
 
-    private TdDataProvider newDataProvider;
+    private Connection newDataProvider;
 
     private Analysis synAnalysis = null;
 
@@ -81,15 +81,15 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
     private ReturnCode changeActionStatus;
 
-    public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, TdDataProvider tdProvider) {
-        this.newDataProvider = (TdDataProvider) masterPage.getConnCombo().getData(
+    public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, Connection tdProvider) {
+        this.newDataProvider = (Connection) masterPage.getConnCombo().getData(
                 masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
         this.oldDataProvider = tdProvider;
         this.synAnalysis = masterPage.getAnalysis();
         changeActionStatus = new ReturnCode(Boolean.FALSE);
     }
 
-    public ChangeConnectionAction(TdDataProvider oldDataProvider, TdDataProvider newDataProvider, Analysis analysis) {
+    public ChangeConnectionAction(Connection oldDataProvider, Connection newDataProvider, Analysis analysis) {
         this.oldDataProvider = oldDataProvider;
         this.newDataProvider = newDataProvider;
         this.synAnalysis = analysis;
@@ -130,7 +130,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 DefaultMessagesImpl.getString("ChangeConnectionAction.MayCauseAsynProblem")); //$NON-NLS-1$
         if (retCode) {
 
-            if (analyzedElements.get(0) instanceof Column) {
+            if (analyzedElements.get(0) instanceof TdColumn) {
                 anaEleSynDialog = new AnalyzedColumnsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
             } else if (analyzedElements.get(0) instanceof ColumnSet) {
                 anaEleSynDialog = new AnalyzedColumnSetsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
@@ -228,14 +228,14 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
     }
 
     private void reloadByColumnSetFolderLevel(List<SynTreeModel> treeModelLs, AnalyzedElementSynDialog anaEleSynDialog,
-            TdDataProvider newDataProv) throws ReloadCompareException {
+            Connection newDataProv) throws ReloadCompareException {
         ModelElement oldDataProviderModel = treeModelLs.get(0).getOldDataProvElement();
         // Reload columnSet folder
         ColumnSet columnset = null;
         if (oldDataProviderModel instanceof ColumnSet) {
             columnset = (ColumnSet) oldDataProviderModel;
-        } else if (oldDataProviderModel instanceof Column) {
-            columnset = ColumnHelper.getColumnSetOwner((Column) oldDataProviderModel);
+        } else if (oldDataProviderModel instanceof TdColumn) {
+            columnset = ColumnHelper.getColumnSetOwner((TdColumn) oldDataProviderModel);
         } else {
             return;
         }
@@ -252,15 +252,15 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
     }
 
     private void reloadByColumnFolderLevel(List<SynTreeModel> treeModelLs, AnalyzedElementSynDialog anaEleSynDialog,
-            TdDataProvider newDataProv) throws ReloadCompareException {
+            Connection newDataProv) throws ReloadCompareException {
         ModelElement newDataProviderModel = treeModelLs.get(0).getNewDataProvElement();
         // If schema or catalog changed, we did not load anymore.
         // Reload column folder
         ColumnSet columnset = null;
         if (newDataProviderModel instanceof ColumnSet) {
             columnset = (ColumnSet) newDataProviderModel;
-        } else if (newDataProviderModel instanceof Column) {
-            columnset = ColumnHelper.getColumnSetOwner((Column) newDataProviderModel);
+        } else if (newDataProviderModel instanceof TdColumn) {
+            columnset = ColumnHelper.getColumnSetOwner((TdColumn) newDataProviderModel);
         } else {
             return;
         }
@@ -275,7 +275,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
     }
 
     private boolean synAnalyzedElements(AnalyzedElementSynDialog anaEleSynDialog, Analysis synAnalysis,
-            TdDataProvider oldDataProvider, TdDataProvider newDataProv) {
+            Connection oldDataProvider, Connection newDataProv) {
         // Change connection uuid.
         Map<ModelElement, ModelElement> synEleMap = anaEleSynDialog.getSynedEleMap();
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
@@ -369,19 +369,19 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 // Analyzed element(Table)
                 ModelElement oldAnaEle = compInd.getAnalyzedElement();
                 compInd.setAnalyzedElement(null);
-                ColumnSet oldColSetA = ColumnHelper.getColumnSetOwner((Column) mesA[0]);
-                ColumnSet oldColSetB = ColumnHelper.getColumnSetOwner((Column) mesB[0]);
+                ColumnSet oldColSetA = ColumnHelper.getColumnSetOwner((TdColumn) mesA[0]);
+                ColumnSet oldColSetB = ColumnHelper.getColumnSetOwner((TdColumn) mesB[0]);
                 if (oldColSetA == oldAnaEle) {
                 	if(synEleMap.get(mesA[0])!=null){
 						compInd.setAnalyzedElement(ColumnHelper
-								.getColumnSetOwner((Column) synEleMap
+.getColumnSetOwner((TdColumn) synEleMap
 										.get(mesA[0])));
                 	}
                 }
                 if (oldColSetB == oldAnaEle) {
                 	if(synEleMap.get(mesB[0])!=null){
 						compInd.setAnalyzedElement(ColumnHelper
-								.getColumnSetOwner((Column) synEleMap
+.getColumnSetOwner((TdColumn) synEleMap
 										.get(mesB[0])));
                 	}
                 }
@@ -421,14 +421,14 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 if (oldColSetA == oldAnaEle) {
                 	if(synEleMap.get(funDepInd.getColumnA())!=null){
 						funDepInd.setAnalyzedElement(ColumnHelper
-								.getColumnSetOwner((Column) synEleMap
+.getColumnSetOwner((TdColumn) synEleMap
 										.get(funDepInd.getColumnA())));
                 	}
                 }
                 if (oldColSetB == oldAnaEle) {
                 	if(synEleMap.get(funDepInd.getColumnB())!=null){
 						funDepInd.setAnalyzedElement(ColumnHelper
-								.getColumnSetOwner((Column) synEleMap
+.getColumnSetOwner((TdColumn) synEleMap
 										.get(funDepInd.getColumnB())));
                 	}
                 }

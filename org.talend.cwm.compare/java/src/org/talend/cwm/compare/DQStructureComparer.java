@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
@@ -47,18 +48,15 @@ import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.writer.EMFSharedResources;
@@ -66,8 +64,9 @@ import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -261,17 +260,16 @@ public final class DQStructureComparer {
         return file;
     }
 
-    public static TypedReturnCode<TdDataProvider> getRefreshedDataProvider(TdDataProvider prevDataProvider) {
+    public static TypedReturnCode<Connection> getRefreshedDataProvider(Connection prevDataProvider) {
         // ADD xqliu 2010-03-29 bug 11951
-        TypedReturnCode<TdDataProvider> returnProvider = new TypedReturnCode<TdDataProvider>();
+        TypedReturnCode<Connection> returnProvider = new TypedReturnCode<Connection>();
         boolean mdm = ConnectionUtils.isMdmConnection(prevDataProvider);
         // ~11951
-        TypedReturnCode<TdProviderConnection> tdProviderConnection = DataProviderHelper.getTdProviderConnection(prevDataProvider);
-        String urlString = tdProviderConnection.getObject().getConnectionString();
-        String driverClassName = tdProviderConnection.getObject().getDriverClassName();
+        String urlString = ConnectionHelper.getURL(prevDataProvider);
+        String driverClassName = ConnectionHelper.getDriverClass(prevDataProvider);
         Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.USER, DataProviderHelper.getUser(tdProviderConnection.getObject()));
-        properties.setProperty(TaggedValueHelper.PASSWORD, DataProviderHelper.getClearTextPassword(prevDataProvider));
+        properties.setProperty(TaggedValueHelper.USER, ConnectionHelper.getUsername(prevDataProvider));
+        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionHelper.getPassword(prevDataProvider));
         DBConnectionParameter connectionParameters = new DBConnectionParameter();
 
         connectionParameters.setName(prevDataProvider.getName());
@@ -284,8 +282,8 @@ public final class DQStructureComparer {
         connectionParameters.setDriverClassName(driverClassName);
         connectionParameters.setParameters(properties);
         // ADD xqliu 2010-03-04 feature 11412
-        connectionParameters.setDbName(DataProviderHelper.getDBName(tdProviderConnection.getObject()));
-        connectionParameters.setRetrieveAllMetadata(DataProviderHelper.getRetrieveAllMetadata(tdProviderConnection.getObject()));
+        connectionParameters.setDbName(ConnectionHelper.getSID(prevDataProvider));
+        connectionParameters.setRetrieveAllMetadata(ConnectionHelper.getRetrieveAllMetadata(prevDataProvider));
         // ~11412
         // MOD xqliu 2010-03-29 bug 11951
         if (mdm) {
@@ -305,21 +303,21 @@ public final class DQStructureComparer {
      * @return
      * @throws ReloadCompareException
      */
-    public static Package findMatchedPackage(Package selectedPackage, TdDataProvider matchDataProvider)
+    public static Package findMatchedPackage(Package selectedPackage, Connection matchDataProvider)
             throws ReloadCompareException {
-        TdCatalog catalogCase = SwitchHelpers.CATALOG_SWITCH.doSwitch(selectedPackage);
+        Catalog catalogCase = SwitchHelpers.CATALOG_SWITCH.doSwitch(selectedPackage);
         if (catalogCase != null) {
             return findMatchedCatalogObj(catalogCase, matchDataProvider);
         } else {
-            TdSchema schemaCase = (TdSchema) selectedPackage;
-            TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schemaCase);
+            Schema schemaCase = (Schema) selectedPackage;
+            Catalog parentCatalog = CatalogHelper.getParentCatalog(schemaCase);
             if (parentCatalog != null) {
-                TdCatalog matchCatalog = findMatchedCatalogObj(parentCatalog, matchDataProvider);
-                List<TdSchema> schemas = CatalogHelper.getSchemas(matchCatalog);
+                Catalog matchCatalog = findMatchedCatalogObj(parentCatalog, matchDataProvider);
+                List<Schema> schemas = CatalogHelper.getSchemas(matchCatalog);
                 return findMatchedSchema(schemaCase, schemas);
             } else {
-                List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(matchDataProvider);
-                return findMatchedSchema(schemaCase, tdSchemas);
+                List<Schema> schemas = ConnectionHelper.getSchema(matchDataProvider);
+                return findMatchedSchema(schemaCase, schemas);
             }
         }
     }
@@ -331,7 +329,7 @@ public final class DQStructureComparer {
      * @return
      * @throws ReloadCompareException
      */
-    public static ColumnSet findMatchedColumnSet(ColumnSet selectedColumnSet, TdDataProvider toMatchDataProvider)
+    public static ColumnSet findMatchedColumnSet(ColumnSet selectedColumnSet, Connection toMatchDataProvider)
             throws ReloadCompareException {
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(selectedColumnSet);
 
@@ -381,7 +379,7 @@ public final class DQStructureComparer {
      * @return
      * @throws ReloadCompareException
      */
-    public static Column findMatchedColumn(Column column, TdDataProvider toMatchDataProvider) throws ReloadCompareException {
+    public static TdColumn findMatchedColumn(TdColumn column, Connection toMatchDataProvider) throws ReloadCompareException {
         ColumnSet columnSet = ColumnHelper.getColumnSetOwner(column);
         ColumnSet toReloadColumnSet = DQStructureComparer.findMatchedColumnSet(columnSet, toMatchDataProvider);
         List<TdColumn> columns = ColumnSetHelper.getColumns(toReloadColumnSet);
@@ -411,8 +409,8 @@ public final class DQStructureComparer {
      * @param schemas
      * @throws ReloadCompareException
      */
-    private static TdSchema findMatchedSchema(TdSchema schemaCase, List<TdSchema> schemas) throws ReloadCompareException {
-        for (TdSchema schema : schemas) {
+    private static Schema findMatchedSchema(Schema schemaCase, List<Schema> schemas) throws ReloadCompareException {
+        for (Schema schema : schemas) {
             if (schemaCase.getName().equals(schema.getName())) {
                 return schema;
             }
@@ -427,10 +425,10 @@ public final class DQStructureComparer {
      * @param catalog
      * @throws ReloadCompareException
      */
-    private static TdCatalog findMatchedCatalogObj(TdCatalog catalog, TdDataProvider matchDataProvider)
+    private static Catalog findMatchedCatalogObj(Catalog catalog, Connection matchDataProvider)
             throws ReloadCompareException {
-        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(matchDataProvider);
-        for (TdCatalog matchCatalog : tdCatalogs) {
+        List<Catalog> tdCatalogs = DataProviderHelper.getCatalogs(matchDataProvider);
+        for (Catalog matchCatalog : tdCatalogs) {
             if (catalog.getName().equals(matchCatalog.getName())) {
                 return matchCatalog;
             }
@@ -440,22 +438,22 @@ public final class DQStructureComparer {
     }
 
     public static void clearSubNode(ModelElement needReloadElement) {
-        TdDataProvider dataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(needReloadElement);
+        Connection dataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(needReloadElement);
         if (dataProvider != null) {
-            List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(dataProvider);
-            for (TdCatalog catalog : tdCatalogs) {
+            List<Catalog> tdCatalogs = ConnectionHelper.getCatalogs(dataProvider);
+            for (Catalog catalog : tdCatalogs) {
                 clearSubNode(catalog);
             }
-            List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(dataProvider);
-            for (TdSchema schema : tdSchemas) {
+            List<Schema> tdSchemas = ConnectionHelper.getSchema(dataProvider);
+            for (Schema schema : tdSchemas) {
                 clearSubNode(schema);
             }
             return;
         }
-        TdCatalog tdCatalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(needReloadElement);
+        Catalog tdCatalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(needReloadElement);
         if (tdCatalog != null) {
-            List<TdSchema> schemas = CatalogHelper.getSchemas(tdCatalog);
-            for (TdSchema schema : schemas) {
+            List<Schema> schemas = CatalogHelper.getSchemas(tdCatalog);
+            for (Schema schema : schemas) {
                 clearSubNode(schema);
             }
             if (schemas.size() == 0) {
@@ -463,7 +461,7 @@ public final class DQStructureComparer {
             }
             return;
         }
-        TdSchema tdSchema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(needReloadElement);
+        Schema tdSchema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(needReloadElement);
         if (tdSchema != null) {
             tdSchema.getOwnedElement().clear();
             return;

@@ -7,7 +7,6 @@
 package orgomg.cwmmip;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.Element;
 
 /**

@@ -10,12 +10,17 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.resource.relational.enumerations.*;
+import orgomg.cwm.resource.relational.enumerations.ActionOrientationType;
+import orgomg.cwm.resource.relational.enumerations.ConditionTimingType;
+import orgomg.cwm.resource.relational.enumerations.DeferrabilityType;
+import orgomg.cwm.resource.relational.enumerations.EnumerationsFactory;
+import orgomg.cwm.resource.relational.enumerations.EnumerationsPackage;
+import orgomg.cwm.resource.relational.enumerations.EventManipulationType;
+import orgomg.cwm.resource.relational.enumerations.NullableType;
+import orgomg.cwm.resource.relational.enumerations.ProcedureType;
+import orgomg.cwm.resource.relational.enumerations.ReferentialRuleType;
 
 /**
  * <!-- begin-user-doc -->

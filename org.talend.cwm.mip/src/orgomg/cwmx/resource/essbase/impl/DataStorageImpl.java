@@ -7,9 +7,7 @@
 package orgomg.cwmx.resource.essbase.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.resource.multidimensional.impl.DimensionedObjectImpl;
-
 import orgomg.cwmx.resource.essbase.DataStorage;
 import orgomg.cwmx.resource.essbase.EssbasePackage;
 

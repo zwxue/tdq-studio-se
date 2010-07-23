@@ -9,12 +9,14 @@ package orgomg.cwm.foundation.keysindexes.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.foundation.keysindexes.*;
+import orgomg.cwm.foundation.keysindexes.Index;
+import orgomg.cwm.foundation.keysindexes.IndexedFeature;
+import orgomg.cwm.foundation.keysindexes.KeyRelationship;
+import orgomg.cwm.foundation.keysindexes.KeysindexesFactory;
+import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
+import orgomg.cwm.foundation.keysindexes.UniqueKey;
 
 /**
  * <!-- begin-user-doc -->

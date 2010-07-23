@@ -17,15 +17,15 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.SchemaContentProvider;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * 
@@ -51,7 +51,7 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
             public void doubleClick(DoubleClickEvent event) {
                 // TODO Auto-generated method stub
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                if (object instanceof TdSchema) {
+                if (object instanceof Schema) {
                     advanceToNextPageOrFinish();
                 }
             }
@@ -62,9 +62,9 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
             public void selectionChanged(SelectionChangedEvent event) {
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 PackagesAnalyisParameter schemaPanameter = (PackagesAnalyisParameter) getConnectionParams();
-                if (object instanceof TdSchema) {
-                    TdSchema schema = (TdSchema) object;
-                    TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
+                if (object instanceof Schema) {
+                    Schema schema = (Schema) object;
+                    Connection tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
                             .doSwitch(schema));
                     if (tdProvider != null && schemaPanameter != null) {
                         schemaPanameter.setTdDataProvider(tdProvider);

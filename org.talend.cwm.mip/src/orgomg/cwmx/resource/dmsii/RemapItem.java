@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.dmsii;
 
 import orgomg.cwm.foundation.expressions.ExpressionNode;
-
 import orgomg.cwm.resource.record.Field;
 
 /**

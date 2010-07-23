@@ -12,11 +12,11 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
@@ -24,7 +24,6 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.management.connection.DatabaseConstant;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -56,13 +55,13 @@ public final class DbmsLanguageFactory {
         if (dataManager == null) {
             return dbmsLanguage;
         }
-        TdDataProvider dataprovider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(dataManager);
+        Connection dataprovider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataManager);
         if (dataprovider == null) {
             return dbmsLanguage;
         }
 
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
-        boolean isMdm = ConnectionUtils.isMdmConnection(DataProviderHelper.getTdProviderConnection(dataprovider).getObject());
+        boolean isMdm = ConnectionUtils.isMdmConnection(dataprovider);
         if (softwareSystem != null || isMdm) {
             final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : softwareSystem.getSubtype();
             if (log.isDebugEnabled()) {
@@ -180,7 +179,7 @@ public final class DbmsLanguageFactory {
      * @param connection a connection (must be open)
      * @return the appropriate DbmsLanguage or a default one if something failed with the connection.
      */
-    public static DbmsLanguage createDbmsLanguage(Connection connection) {
+    public static DbmsLanguage createDbmsLanguage(java.sql.Connection connection) {
         assert connection != null;
         // MOD xqliu 2009-07-13 bug 7888
         String databaseProductName = null;

@@ -9,12 +9,14 @@ package orgomg.cwm.analysis.informationvisualization.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.analysis.informationvisualization.*;
+import orgomg.cwm.analysis.informationvisualization.InformationvisualizationFactory;
+import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
+import orgomg.cwm.analysis.informationvisualization.RenderedObject;
+import orgomg.cwm.analysis.informationvisualization.RenderedObjectSet;
+import orgomg.cwm.analysis.informationvisualization.Rendering;
+import orgomg.cwm.analysis.informationvisualization.XSLRendering;
 
 /**
  * <!-- begin-user-doc -->

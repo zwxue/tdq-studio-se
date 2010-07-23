@@ -7,7 +7,6 @@
 package orgomg.cwm.analysis.datamining.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.analysis.datamining.DataminingPackage;
 import orgomg.cwm.analysis.datamining.StatisticsSettings;
 

@@ -7,7 +7,6 @@
 package orgomg.cwm.objectmodel.core.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.BooleanExpression;
 import orgomg.cwm.objectmodel.core.CorePackage;
 

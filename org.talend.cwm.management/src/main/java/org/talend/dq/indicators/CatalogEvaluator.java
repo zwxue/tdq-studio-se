@@ -16,11 +16,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
@@ -30,6 +29,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -44,7 +44,7 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
      * @see org.talend.dq.indicators.AbstractSchemaEvaluator#getDataManager()
      */
     @Override
-    protected TdDataProvider getDataManager() {
+    protected Connection getDataManager() {
         Catalog catalog = this.getAnalyzedElements().iterator().next();
         return catalog != null ? DataProviderHelper.getTdDataProvider(catalog) : null;
     }
@@ -82,13 +82,13 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
             }
             // ~
             connection.setCatalog(catName);
-            List<TdSchema> schemas = CatalogHelper.getSchemas(catalog);
+            List<Schema> schemas = CatalogHelper.getSchemas(catalog);
             if (schemas.isEmpty()) { // no schema
                 evalCatalogIndic(catalogIndicator, catalog, ok);
             } else {
                 catalogIndicator.setAnalyzedElement(catalog);
                 // --- create SchemaIndicator for each pair of catalog schema
-                for (TdSchema tdSchema : schemas) {
+                for (Schema tdSchema : schemas) {
                     // --- create SchemaIndicator for each catalog
                     SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
                     // MOD xqliu 2009-1-21 feature 4715

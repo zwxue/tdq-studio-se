@@ -19,9 +19,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -33,8 +31,9 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -186,7 +185,7 @@ public abstract class DataExplorer implements IDataExplorer {
      * @param column
      * @return
      */
-    protected String getFullyQualifiedTableName(Column column) {
+    protected String getFullyQualifiedTableName(TdColumn column) {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         return getFullyQualifiedTableName(columnSetOwner);
     }
@@ -198,8 +197,8 @@ public abstract class DataExplorer implements IDataExplorer {
      * @return
      */
     protected String getFullyQualifiedTableName(ColumnSet set) {
-        TdSchema parentSchema = SchemaHelper.getParentSchema(set);
-        TdCatalog parentCatalog = CatalogHelper.getParentCatalog(set);
+        Schema parentSchema = SchemaHelper.getParentSchema(set);
+        Catalog parentCatalog = CatalogHelper.getParentCatalog(set);
         if (parentSchema != null) {
             parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
         }

@@ -9,9 +9,7 @@ package orgomg.cwm.resource.multidimensional;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
-
 import orgomg.cwm.objectmodel.instance.InstancePackage;
 
 /**

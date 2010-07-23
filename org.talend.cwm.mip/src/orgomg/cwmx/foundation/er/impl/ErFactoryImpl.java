@@ -9,12 +9,22 @@ package orgomg.cwmx.foundation.er.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.foundation.er.*;
+import orgomg.cwmx.foundation.er.Attribute;
+import orgomg.cwmx.foundation.er.CandidateKey;
+import orgomg.cwmx.foundation.er.Domain;
+import orgomg.cwmx.foundation.er.Entity;
+import orgomg.cwmx.foundation.er.ErFactory;
+import orgomg.cwmx.foundation.er.ErPackage;
+import orgomg.cwmx.foundation.er.ForeignKey;
+import orgomg.cwmx.foundation.er.Model;
+import orgomg.cwmx.foundation.er.ModelLibrary;
+import orgomg.cwmx.foundation.er.NonuniqueKey;
+import orgomg.cwmx.foundation.er.PrimaryKey;
+import orgomg.cwmx.foundation.er.Relationship;
+import orgomg.cwmx.foundation.er.RelationshipEnd;
+import orgomg.cwmx.foundation.er.SubjectArea;
 
 /**
  * <!-- begin-user-doc -->

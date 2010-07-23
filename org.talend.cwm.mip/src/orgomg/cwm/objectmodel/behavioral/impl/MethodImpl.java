@@ -8,16 +8,12 @@ package orgomg.cwm.objectmodel.behavioral.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
 import orgomg.cwm.objectmodel.behavioral.Method;
 import orgomg.cwm.objectmodel.behavioral.Operation;
-
 import orgomg.cwm.objectmodel.core.ProcedureExpression;
 
 /**

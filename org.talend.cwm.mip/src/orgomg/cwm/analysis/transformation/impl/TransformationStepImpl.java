@@ -10,27 +10,19 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.analysis.transformation.TransformationPackage;
 import orgomg.cwm.analysis.transformation.TransformationStep;
 import orgomg.cwm.analysis.transformation.TransformationTask;
-
 import orgomg.cwm.management.warehouseoperation.StepExecution;
 import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
-
 import orgomg.cwm.management.warehouseprocess.WarehouseStep;
 import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
-
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**

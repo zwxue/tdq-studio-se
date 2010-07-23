@@ -7,9 +7,7 @@
 package orgomg.cwm.objectmodel.relationships.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.impl.ClassImpl;
-
 import orgomg.cwm.objectmodel.relationships.Association;
 import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
 

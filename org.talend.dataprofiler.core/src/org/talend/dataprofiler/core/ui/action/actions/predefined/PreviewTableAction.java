@@ -13,8 +13,8 @@
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.action.Action;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -52,7 +52,7 @@ public class PreviewTableAction extends Action {
         // MOD scorreia 2008-12-12 do not switch perspective for preview
         // new ChangePerspectiveAction(PluginConstant.SE_ID).run();
 
-        TdDataProvider tdDataProvider = DataProviderHelper.getDataProvider(set);
+        Connection tdDataProvider = DataProviderHelper.getDataProvider(set);
         String qualifiedName = ColumnSetNameHelper.getColumnSetQualifiedName(tdDataProvider, set);
         String query = "select * from " + qualifiedName; //$NON-NLS-1$
         CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, qualifiedName);

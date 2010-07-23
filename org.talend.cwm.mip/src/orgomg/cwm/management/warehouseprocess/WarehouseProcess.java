@@ -7,10 +7,8 @@
 package orgomg.cwm.management.warehouseprocess;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.management.warehouseprocess.events.InternalEvent;
 import orgomg.cwm.management.warehouseprocess.events.WarehouseEvent;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

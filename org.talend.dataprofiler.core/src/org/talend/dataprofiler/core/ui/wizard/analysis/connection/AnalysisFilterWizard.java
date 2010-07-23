@@ -16,9 +16,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
@@ -33,6 +32,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * The wizard contains a table and table/view filter wizard page.
@@ -63,7 +63,7 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
 
         // MOD by hcheng for 7173:Broken dependency between analyses and connection
         if (saveCWMFile.isOk()) {
-            PrvResourceFileHelper.getInstance().save((TdDataProvider) connection);
+            PrvResourceFileHelper.getInstance().save((Connection) connection);
         }
 
         return saveCWMFile;
@@ -86,8 +86,8 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
         return analysis;
     }
 
-    protected void addSchemaIndicator(List<TdSchema> tdSchemas, CatalogIndicator catalogIndicator) {
-        for (TdSchema schema : tdSchemas) {
+    protected void addSchemaIndicator(List<Schema> tdSchemas, CatalogIndicator catalogIndicator) {
+        for (Schema schema : tdSchemas) {
             SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
             // MOD xqliu 2009-1-21 feature 4715
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createSchemaIndicator);

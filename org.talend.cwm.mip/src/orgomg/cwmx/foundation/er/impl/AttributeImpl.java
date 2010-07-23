@@ -7,7 +7,6 @@
 package orgomg.cwmx.foundation.er.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwmx.foundation.er.Attribute;
 import orgomg.cwmx.foundation.er.ErPackage;
 

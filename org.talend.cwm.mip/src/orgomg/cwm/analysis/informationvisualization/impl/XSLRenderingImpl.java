@@ -7,7 +7,6 @@
 package orgomg.cwm.analysis.informationvisualization.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
 import orgomg.cwm.analysis.informationvisualization.XSLRendering;
 

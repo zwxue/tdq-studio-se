@@ -7,9 +7,7 @@
 package orgomg.cwmx.resource.express.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.resource.multidimensional.impl.SchemaImpl;
-
 import orgomg.cwmx.resource.express.Database;
 import orgomg.cwmx.resource.express.ExpressPackage;
 

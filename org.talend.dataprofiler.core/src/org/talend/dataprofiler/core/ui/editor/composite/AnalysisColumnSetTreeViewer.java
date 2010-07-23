@@ -66,7 +66,6 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * 
@@ -90,7 +89,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private Map<String, Button> buttons = new HashMap<String, Button>();
 
-    private List<Column> columnSetMultiValueList;
+    private List<TdColumn> columnSetMultiValueList;
 
     // private final List<String> comboTextList = new ArrayList<String>();
 
@@ -106,7 +105,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         parentComp = parent;
         tree = createTree(parent);
         tree.setData(this);
-        columnSetMultiValueList = new ArrayList<Column>();
+        columnSetMultiValueList = new ArrayList<TdColumn>();
         this.masterPage = masterPage;
         this.createButtonSection(parent.getParent());
         this.setElements(masterPage.getCurrentModelElementIndicators());
@@ -211,7 +210,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             public void widgetSelected(SelectionEvent e) {
                 Tree currentTree = tree;
                 Object[] selectItem = currentTree.getSelection();
-                List<Column> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
+                List<TdColumn> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
                 for (int i = 0; i < selectItem.length; i++) {
                     Object removeElement = ((TreeItem) selectItem[i])
                             .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
@@ -255,13 +254,13 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     private void moveElement(AnalysisColumnSetTreeViewer columnsElementViewer, int step) {
         Tree currentTree = columnsElementViewer.getTree();
         Object[] selectItem = currentTree.getSelection();
-        List<Column> columnList = columnsElementViewer.getColumnSetMultiValueList();
+        List<TdColumn> columnList = columnsElementViewer.getColumnSetMultiValueList();
         int index = 0;
         List<Integer> indexArray = new ArrayList<Integer>();
         for (int i = 0; i < selectItem.length; i++) {
             index = currentTree.indexOf((TreeItem) selectItem[i]);
             if (index + step > -1 && index + step < columnList.size()) {
-                Column moveElement = (Column) ((TreeItem) selectItem[i])
+                TdColumn moveElement = (TdColumn) ((TreeItem) selectItem[i])
                         .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                 columnList.remove(moveElement);
                 columnList.add((index + step), moveElement);
@@ -284,8 +283,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         }
     }
 
-    private List<Column> convertList(List<Column> columnList) {
-        List<Column> resultList = new ArrayList();
+    private List<TdColumn> convertList(List<TdColumn> columnList) {
+        List<TdColumn> resultList = new ArrayList();
         for (int i = columnList.size() - 1; i >= 0; i--) {
             resultList.add(columnList.get(i));
         }
@@ -307,7 +306,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 return;
             }
         }
-        List<Column> columnList = new ArrayList<Column>();
+        List<TdColumn> columnList = new ArrayList<TdColumn>();
         for (Object obj : objs) {
             columnList.add((TdColumn) obj);
         }
@@ -453,8 +452,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         for (int i = 0; i < elements.length; i++) {
             columns[i] = (TdColumn) elements[i].getModelElement();
         }
-        List<Column> oriColumns = getColumnSetMultiValueList();
-        for (Column column : columns) {
+        List<TdColumn> oriColumns = getColumnSetMultiValueList();
+        for (TdColumn column : columns) {
             if (!oriColumns.contains(column)) {
                 oriColumns.add(column);
             }
@@ -471,7 +470,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * @param deleteColumnIndiciators
      */
     private void deleteColumnItems(TdColumn deleteColumn) {
-        List<Column> remainColumns = columnSetMultiValueList;
+        List<TdColumn> remainColumns = columnSetMultiValueList;
         for (int j = 0; j < columnSetMultiValueList.size(); j++) {
             TdColumn column = (TdColumn) columnSetMultiValueList.get(j);
             if (deleteColumn.equals(column)) {
@@ -481,7 +480,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         this.columnSetMultiValueList = remainColumns;
     }
 
-    public List<Column> getColumnSetMultiValueList() {
+    public List<TdColumn> getColumnSetMultiValueList() {
         return this.columnSetMultiValueList;
     }
 
@@ -655,7 +654,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     @Override
     public boolean canDrop(ModelElement modelElement) {
         List<TdColumn> existColumns = new ArrayList<TdColumn>();
-        for (Column columnFromMultiValueList : this.getColumnSetMultiValueList()) {
+        for (TdColumn columnFromMultiValueList : this.getColumnSetMultiValueList()) {
             existColumns.add((TdColumn) columnFromMultiValueList);
         }
 

@@ -8,21 +8,26 @@ package orgomg.cwm.resource.xml.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.objectmodel.instance.Extent;
 import orgomg.cwm.objectmodel.instance.Instance;
-
-import orgomg.cwm.resource.xml.*;
+import orgomg.cwm.resource.xml.Attribute;
+import orgomg.cwm.resource.xml.Content;
+import orgomg.cwm.resource.xml.Document;
+import orgomg.cwm.resource.xml.Element;
+import orgomg.cwm.resource.xml.ElementContent;
+import orgomg.cwm.resource.xml.ElementType;
+import orgomg.cwm.resource.xml.ElementTypeReference;
+import orgomg.cwm.resource.xml.MixedContent;
+import orgomg.cwm.resource.xml.Schema;
+import orgomg.cwm.resource.xml.Text;
+import orgomg.cwm.resource.xml.XmlPackage;
 
 /**
  * <!-- begin-user-doc -->

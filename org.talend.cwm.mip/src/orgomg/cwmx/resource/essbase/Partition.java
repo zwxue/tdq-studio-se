@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.essbase;
 
 import orgomg.cwm.analysis.olap.CubeRegion;
-
 import orgomg.cwm.foundation.expressions.ExpressionNode;
 
 /**

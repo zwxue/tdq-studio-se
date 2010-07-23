@@ -10,9 +10,13 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.foundation.datatypes.*;
-
+import orgomg.cwm.foundation.datatypes.DatatypesPackage;
+import orgomg.cwm.foundation.datatypes.Enumeration;
+import orgomg.cwm.foundation.datatypes.EnumerationLiteral;
+import orgomg.cwm.foundation.datatypes.QueryExpression;
+import orgomg.cwm.foundation.datatypes.TypeAlias;
+import orgomg.cwm.foundation.datatypes.Union;
+import orgomg.cwm.foundation.datatypes.UnionMember;
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.DataType;

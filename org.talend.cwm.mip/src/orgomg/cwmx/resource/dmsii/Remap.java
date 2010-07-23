@@ -8,7 +8,6 @@ package orgomg.cwmx.resource.dmsii;
 
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.resource.record.RecordDef;
 
 /**

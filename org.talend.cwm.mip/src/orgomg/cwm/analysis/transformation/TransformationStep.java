@@ -7,11 +7,8 @@
 package orgomg.cwm.analysis.transformation;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.management.warehouseoperation.StepExecution;
-
 import orgomg.cwm.management.warehouseprocess.WarehouseStep;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

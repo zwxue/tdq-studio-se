@@ -35,9 +35,7 @@ import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.xml.TdXMLContent;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
@@ -45,9 +43,7 @@ import org.talend.cwm.xml.XmlFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
-import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC mzhao class global comment. Detailled comment
@@ -236,13 +232,8 @@ public final class XMLSchemaBuilder {
         EList<DataManager> dataManagers = document.getDataManager();
         if (dataManagers != null && dataManagers.size() > 0) {
             DataManager dataManager = dataManagers.get(0);
-            EList<ProviderConnection> clientConnections = ((TdDataProvider) dataManager).getResourceConnection();
-            if (clientConnections != null && clientConnections.size() > 0) {
-                ProviderConnection providerConnection = clientConnections.get(0);
-                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBTYPE, providerConnection.getTaggedValue());
-                if (tv != null && SupportDBUrlType.MDM.getDBKey().equals(tv.getValue())) {
-                    return true;
-                }
+            if (dataManager != null) {
+                return dataManager instanceof MDMConnection;
             }
         }
         return false;

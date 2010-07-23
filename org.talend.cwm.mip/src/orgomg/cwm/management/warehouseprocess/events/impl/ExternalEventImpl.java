@@ -7,7 +7,6 @@
 package orgomg.cwm.management.warehouseprocess.events.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.management.warehouseprocess.events.EventsPackage;
 import orgomg.cwm.management.warehouseprocess.events.ExternalEvent;
 

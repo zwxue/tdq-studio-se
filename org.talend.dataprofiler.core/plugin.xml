@@ -1202,6 +1202,12 @@
            name="Update MDMConnection XSDPath Task"
            version="4.0.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.MergeMetadataTask"
+           id="org.talend.dataprofiler.core.migration.impl.MergeMetadataTask"
+           name="org.talend.dataprofiler.core.migration.impl.MergeMetadataTask"
+           version="4.1.0">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

@@ -36,7 +36,6 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC yyi class global comment. Detailled comment
@@ -56,7 +55,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
      * @return
      */
 
-    public boolean addIndicator(List<Column> columns, Indicator indicator) {
+    public boolean addIndicator(List<TdColumn> columns, Indicator indicator) {
         for (ModelElement tdColumn : columns) {
             if (!analysis.getContext().getAnalysedElements().contains(tdColumn)) {
                 analysis.getContext().getAnalysedElements().add(tdColumn);

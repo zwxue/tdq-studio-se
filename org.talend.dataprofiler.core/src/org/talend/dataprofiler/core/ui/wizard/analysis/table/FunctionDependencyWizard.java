@@ -13,15 +13,11 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 

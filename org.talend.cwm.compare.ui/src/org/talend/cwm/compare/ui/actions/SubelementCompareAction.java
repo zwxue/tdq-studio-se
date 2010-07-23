@@ -21,21 +21,19 @@ import org.eclipse.emf.compare.ui.viewer.content.part.diff.ModelContentMergeDiff
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
-
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * 
@@ -93,13 +91,12 @@ public class SubelementCompareAction extends Action {
 						parentPackage, selectedElement);
 				folderNode = FolderNodeHelper.getFolderNodes(matchedElement)[0];
 				openComparisonEditor(folderNode);
-			} else if (selectedElement instanceof TdCatalog) {
+            } else if (selectedElement instanceof Catalog) {
 				// Judge and see if there are schemas under the catalog.(Case of
 				// SQL Servers)
-				List<TdSchema> schemas = CatalogHelper
-						.getSchemas((TdCatalog) selectedElement);
+                List<Schema> schemas = CatalogHelper.getSchemas((Catalog) selectedElement);
 				if (schemas != null && schemas.size() > 0) {
-					TdDataProvider dataProvider = PrvResourceFileHelper
+                    Connection dataProvider = PrvResourceFileHelper
 							.getInstance().findProvider((IFile) selectedOjbect)
 							.getObject();
 					popCompUIAction.setSelectedObject(findMatchedModelElement(
@@ -109,7 +106,7 @@ public class SubelementCompareAction extends Action {
 					folderNode = getTableOrViewFolder(selectedElement);
 					openComparisonEditor(folderNode);
 				}
-			} else if (selectedElement instanceof TdSchema) {
+            } else if (selectedElement instanceof Schema) {
 				folderNode = getTableOrViewFolder(selectedElement);
 				openComparisonEditor(folderNode);
 			} else {
@@ -138,10 +135,9 @@ public class SubelementCompareAction extends Action {
 
 	private IFolderNode getTableOrViewFolder(EObject selectedElement) {
 		IFolderNode folderNode = null;
-		TdDataProvider dataProvider = null;
-		if (selectedOjbect instanceof TdCatalog) {
-			dataProvider = DataProviderHelper
-					.getTdDataProvider(((TdCatalog) selectedOjbect));
+        Connection dataProvider = null;
+        if (selectedOjbect instanceof Catalog) {
+            dataProvider = ConnectionHelper.getTdDataProvider(((Catalog) selectedOjbect));
 		} else {
 			dataProvider = PrvResourceFileHelper.getInstance().findProvider(
 					(IFile) selectedOjbect).getObject();
@@ -160,43 +156,39 @@ public class SubelementCompareAction extends Action {
 
 	private ModelElement findMatchedModelElement(EObject parent,
 			EObject similarElement) {
-		if (parent instanceof TdDataProvider) {
-			if (similarElement instanceof TdSchema) {
+        if (parent instanceof Connection) {
+            if (similarElement instanceof Schema) {
 				// Case of MS SQL Server.
-				if (selectedOjbect instanceof TdCatalog) {
-					List<TdSchema> schemas = CatalogHelper
-							.getSchemas((TdCatalog) selectedOjbect);
+                if (selectedOjbect instanceof Catalog) {
+                    List<Schema> schemas = CatalogHelper.getSchemas((Catalog) selectedOjbect);
 					if (schemas != null && schemas.size() > 0) {
-						for (TdSchema tdSchema : schemas) {
+                        for (Schema tdSchema : schemas) {
 							if (tdSchema.getName().equalsIgnoreCase(
-									((TdSchema) similarElement).getName())) {
+((Schema) similarElement).getName())) {
 								return tdSchema;
 							}
 						}
 					}
 				}
 				// Case of Oracle
-				List<TdSchema> schames = DataProviderHelper
-						.getTdSchema((DataProvider) parent);
-				for (TdSchema schame : schames) {
+                List<Schema> schames = ConnectionHelper.getSchema((Connection) parent);
+                for (Schema schame : schames) {
 					if (schame.getName().equalsIgnoreCase(
-							((TdSchema) similarElement).getName())) {
+((Schema) similarElement).getName())) {
 						return schame;
 					}
 				}
 			}
 
 			// Case of Mysql
-			if (similarElement instanceof TdCatalog) {
-				List<TdCatalog> catalogs = DataProviderHelper
-						.getTdCatalogs((DataProvider) parent);
-				for (TdCatalog catalog : catalogs) {
-					if (catalog.getName().equalsIgnoreCase(
-							((TdCatalog) similarElement).getName())) {
-						return catalog;
-					}
-				}
-			}
+            if (similarElement instanceof Catalog) {
+                List<Catalog> catalogs = ConnectionHelper.getCatalogs((Connection) parent);
+                for (Catalog catalog : catalogs) {
+                    if (catalog.getName().equalsIgnoreCase(((Catalog) similarElement).getName())) {
+                        return catalog;
+                    }
+                }
+            }
 
 		} else if (parent instanceof Package) {
 			// MOD mzhao bug 8581 2009-08-05

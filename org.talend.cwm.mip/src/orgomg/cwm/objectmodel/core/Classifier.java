@@ -7,24 +7,15 @@
 package orgomg.cwm.objectmodel.core;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.analysis.transformation.ClassifierFeatureMap;
 import orgomg.cwm.analysis.transformation.ClassifierMap;
-
 import orgomg.cwm.foundation.datatypes.TypeAlias;
-
 import orgomg.cwm.foundation.expressions.ExpressionNode;
-
 import orgomg.cwm.foundation.typemapping.TypeMapping;
-
 import orgomg.cwm.objectmodel.behavioral.Parameter;
-
 import orgomg.cwm.objectmodel.instance.Instance;
-
 import orgomg.cwm.objectmodel.relationships.Generalization;
-
 import orgomg.cwmx.foundation.er.Domain;
-
 import orgomg.cwmx.resource.express.SimpleDimension;
 
 /**

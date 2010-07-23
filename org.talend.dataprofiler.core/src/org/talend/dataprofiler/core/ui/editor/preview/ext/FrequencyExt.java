@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.ext;
 
-import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>

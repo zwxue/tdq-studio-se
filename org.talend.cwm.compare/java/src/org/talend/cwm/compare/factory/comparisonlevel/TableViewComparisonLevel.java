@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -31,6 +30,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
@@ -42,12 +42,11 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
@@ -63,7 +62,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     /**
      * 
      */
-    private static final List<Column> EMPTY_COLUMN_LIST = Collections.emptyList();
+    private static final List<TdColumn> EMPTY_COLUMN_LIST = Collections.emptyList();
 
     public TableViewComparisonLevel(AbstractDatabaseFolderNode dbFolderNode) {
         super(dbFolderNode);
@@ -86,7 +85,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
         URI uri = URI.createPlatformResourceURI(tempConnectionFile.getFullPath().toString(), false);
         Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
-        Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(resource.getContents());
+        Collection<Connection> tdDataProviders = DataProviderHelper.getTdDataProviders(resource.getContents());
 
         if (tdDataProviders.isEmpty()) {
             throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoDataProviderFound", //$NON-NLS-1$
@@ -137,10 +136,10 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected TdDataProvider findDataProvider() {
+    protected Connection findDataProvider() {
         ColumnSet columnSet = (ColumnSet) selectedObj;
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-        TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+        Connection provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
         return provider;
     }
 
@@ -228,33 +227,18 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         if (columnSetSwitch != null) {
             ColumnSet columnSet = (ColumnSet) selectedObj;
             ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
-            // MOD zshen 2010.06.10 for feature 12842.
             // Case of pk
             PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
             if (primaryKey != null) {
-                PrimaryKey newPrimaryKey = TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
-                columnSetSwitch.getUniqueKey().remove(primaryKey);
-                columnSetSwitch.getUniqueKey().add(newPrimaryKey);
+                TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
+                columnSetSwitch.getUniqueKey().add(primaryKey);
             }
             // Case of fk
-            Set<ForeignKey> foreignKeySet = ColumnHelper.getForeignKey(columnSetSwitch);
-            for (ForeignKey foreignKey : foreignKeySet) {
-                if (foreignKey != null) {
-                    ForeignKey newForeignKey = TableHelper.addForeignKey((Table) columnSet, foreignKey);
-                    columnSetSwitch.getKeyRelationship().remove(foreignKey);
-                    columnSetSwitch.getKeyRelationship().add(newForeignKey);
-                }
+            ForeignKey foreignKey = ColumnHelper.getForeignKey(columnSetSwitch);
+            if (foreignKey != null) {
+                TableHelper.addForeignKey((TdTable) columnSet, foreignKey);
+                columnSetSwitch.getKeyRelationship().add(foreignKey);
             }
-        }
-        // MOD handle default value for a column
-        TdColumn parentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement.eContainer());
-        if (parentColumn != null) {
-            ColumnSet columnSet = (ColumnSet) selectedObj;
-            // MOD by zshen for bug 13978
-            TdColumn leftParentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(addElement.getLeftParent());
-            ColumnSetHelper.removeColumn(leftParentColumn, columnSet);
-            // ~13978
-            ColumnSetHelper.addColumn(parentColumn, columnSet);
         }
     }
 

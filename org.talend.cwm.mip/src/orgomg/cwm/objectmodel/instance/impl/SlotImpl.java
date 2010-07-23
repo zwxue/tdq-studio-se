@@ -8,19 +8,13 @@ package orgomg.cwm.objectmodel.instance.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
-
 import orgomg.cwm.objectmodel.instance.Instance;
 import orgomg.cwm.objectmodel.instance.InstancePackage;
 import orgomg.cwm.objectmodel.instance.Slot;

@@ -12,9 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -78,7 +78,7 @@ public final class ModelElementIndicatorHelper {
         return null;
     }
 
-    public static final TdDataProvider getTdDataProvider(ModelElementIndicator indicator) {
+    public static final Connection getTdDataProvider(ModelElementIndicator indicator) {
         return ModelElementHelper.getTdDataProvider(indicator.getModelElement());
     }
 

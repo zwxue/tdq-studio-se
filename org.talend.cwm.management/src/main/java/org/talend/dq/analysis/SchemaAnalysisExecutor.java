@@ -14,11 +14,11 @@ package org.talend.dq.analysis;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.SchemaEvaluator;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -44,7 +44,7 @@ public class SchemaAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
                 continue;
             }
 
-            TdSchema cat = SwitchHelpers.SCHEMA_SWITCH.doSwitch(analyzedElement);
+            Schema cat = SwitchHelpers.SCHEMA_SWITCH.doSwitch(analyzedElement);
             if (cat == null) {
                 continue;
             }

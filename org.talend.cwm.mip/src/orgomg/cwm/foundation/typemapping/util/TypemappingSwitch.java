@@ -10,9 +10,9 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.foundation.typemapping.*;
-
+import orgomg.cwm.foundation.typemapping.TypeMapping;
+import orgomg.cwm.foundation.typemapping.TypeSystem;
+import orgomg.cwm.foundation.typemapping.TypemappingPackage;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;

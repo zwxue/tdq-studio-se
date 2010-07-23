@@ -25,23 +25,22 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author rli
@@ -59,11 +58,11 @@ public final class EObjectHelper {
     }
 
     public static Package getParent(ColumnSet columnSet) {
-        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(columnSet.eContainer());
+        Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(columnSet.eContainer());
         if (catalog != null) {
             return catalog;
         } else {
-            TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(columnSet.eContainer());
+            Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(columnSet.eContainer());
             return schema;
         }
     }
@@ -73,14 +72,14 @@ public final class EObjectHelper {
      * 
      * @deprecated it's probably better to use {@link DataProviderHelper#getTdDataProvider(TdColumn)}
      */
-    public static TdDataProvider getTdDataProvider(Column column) {
+    public static Connection getTdDataProvider(TdColumn column) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
         return DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
 
     }
 
-    public static TdDataProvider getTdDataProvider(Table table) {
+    public static Connection getTdDataProvider(TdTable table) {
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(table);
         return DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
 

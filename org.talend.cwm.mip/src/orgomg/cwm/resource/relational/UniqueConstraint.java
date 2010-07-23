@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.relational;
 
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
-
 import orgomg.cwm.resource.relational.enumerations.DeferrabilityType;
 
 /**

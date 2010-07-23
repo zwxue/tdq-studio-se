@@ -7,13 +7,9 @@
 package orgomg.cwmmip.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.objectmodel.core.impl.ElementImpl;
-
 import orgomg.cwmmip.CwmmipPackage;
 import orgomg.cwmmip.PatternConstraint;
 

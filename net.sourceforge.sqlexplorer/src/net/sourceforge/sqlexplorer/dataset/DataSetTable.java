@@ -18,9 +18,9 @@
  */
 package net.sourceforge.sqlexplorer.dataset;
 
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.Messages;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.views.DataPreviewView;
 
 import org.eclipse.jface.action.IMenuListener;

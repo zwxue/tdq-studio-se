@@ -10,12 +10,17 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.analysis.informationreporting.*;
+import orgomg.cwmx.analysis.informationreporting.InformationreportingFactory;
+import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
+import orgomg.cwmx.analysis.informationreporting.Report;
+import orgomg.cwmx.analysis.informationreporting.ReportAttribute;
+import orgomg.cwmx.analysis.informationreporting.ReportExecution;
+import orgomg.cwmx.analysis.informationreporting.ReportField;
+import orgomg.cwmx.analysis.informationreporting.ReportGroup;
+import orgomg.cwmx.analysis.informationreporting.ReportGroupType;
+import orgomg.cwmx.analysis.informationreporting.ReportPackage;
 
 /**
  * <!-- begin-user-doc -->

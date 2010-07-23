@@ -7,9 +7,7 @@
 package orgomg.cwmx.analysis.informationreporting.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.analysis.informationvisualization.impl.RenderedObjectSetImpl;
-
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
 import orgomg.cwmx.analysis.informationreporting.ReportPackage;
 

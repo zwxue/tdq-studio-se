@@ -7,9 +7,7 @@
 package orgomg.cwm.analysis.informationvisualization;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.foundation.expressions.ExpressionNode;
-
 import orgomg.cwm.objectmodel.core.Feature;
 
 /**

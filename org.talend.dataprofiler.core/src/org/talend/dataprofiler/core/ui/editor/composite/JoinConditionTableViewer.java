@@ -60,7 +60,6 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -102,7 +101,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         this.myTable = createTable(parent);
 
         if (this.myJoinElement.size() > 0) {
-            updateColumnSetPackage((Column) this.myJoinElement.get(0).getColA());
+            updateColumnSetPackage((TdColumn) this.myJoinElement.get(0).getColA());
         }
     }
 
@@ -112,7 +111,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
      * @param column
      * @return
      */
-    private boolean updateColumnSetPackage(Column column) {
+    private boolean updateColumnSetPackage(TdColumn column) {
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(ColumnHelper.getColumnSetOwner(column));
         if (this.columnSetPackage == null) {
             this.columnSetPackage = parentCatalogOrSchema;
@@ -556,7 +555,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     @Override
     public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
-        List<Column> columns = new ArrayList<Column>();
+        List<TdColumn> columns = new ArrayList<TdColumn>();
         for (ModelElement element : modelElements) {
             TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             if (column != null) {
@@ -572,7 +571,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             }
             if (join != null) {
                 boolean dirty = false;
-                for (Column column : columns) {
+                for (TdColumn column : columns) {
                     if (column != null) {
                         if (!updateColumnSetPackage(column)) {
                             break;

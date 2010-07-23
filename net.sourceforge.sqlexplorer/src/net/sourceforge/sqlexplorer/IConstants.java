@@ -1,8 +1,8 @@
 package net.sourceforge.sqlexplorer;
 
-import org.eclipse.swt.graphics.Color;
-
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
+
+import org.eclipse.swt.graphics.Color;
 
 /*
  * Copyright (C) 2002-2004 Andrea Mazzolini

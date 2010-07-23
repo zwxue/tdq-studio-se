@@ -9,12 +9,12 @@ package orgomg.cwm.foundation.typemapping.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.foundation.typemapping.*;
+import orgomg.cwm.foundation.typemapping.TypeMapping;
+import orgomg.cwm.foundation.typemapping.TypeSystem;
+import orgomg.cwm.foundation.typemapping.TypemappingFactory;
+import orgomg.cwm.foundation.typemapping.TypemappingPackage;
 
 /**
  * <!-- begin-user-doc -->

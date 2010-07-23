@@ -18,16 +18,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
@@ -54,7 +53,7 @@ import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -119,7 +118,7 @@ public class TestAnalysisCreation {
         Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized);
 
         // get the connection
-        TdDataProvider dataManager = getDataManager();
+        Connection dataManager = getDataManager();
         Assert.assertNotNull("No datamanager found!", dataManager);
         analysisBuilder.setAnalysisConnection(dataManager);
 
@@ -130,7 +129,7 @@ public class TestAnalysisCreation {
         analysisBuilder.addElementToAnalyze(column, indicators);
 
         // get the domain constraint
-        Domain dataFilter = getDataFilter(dataManager, (Column) column); // CAST here for test
+        Domain dataFilter = getDataFilter(dataManager, (TdColumn) column); // CAST here for test
         // analysisBuilder.addFilterOnData(dataFilter);
 
         // TODO scorreia save domain with analysisbuilder?
@@ -166,7 +165,7 @@ public class TestAnalysisCreation {
         Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized);
 
         // get the connection
-        TdDataProvider dataManager = getDataManager();
+        Connection dataManager = getDataManager();
         Assert.assertNotNull("No datamanager found!", dataManager);
         analysisBuilder.setAnalysisConnection(dataManager);
 
@@ -177,7 +176,7 @@ public class TestAnalysisCreation {
         analysisBuilder.addElementToAnalyze(column, indicators);
 
         // get the domain constraint
-        Domain dataFilter = getDataFilter(dataManager, (Column) column); // CAST here for test
+        Domain dataFilter = getDataFilter(dataManager, (TdColumn) column); // CAST here for test
         analysisBuilder.addFilterOnData(dataFilter);
 
         // run analysis
@@ -196,7 +195,7 @@ public class TestAnalysisCreation {
      * @param column
      * @return
      */
-    private Domain getDataFilter(TdDataProvider dataManager, Column column) {
+    private Domain getDataFilter(Connection dataManager, TdColumn column) {
         Domain domain = DOMAIN.createDomain();
         RangeRestriction rangeRestriction = DOMAIN.createRangeRestriction();
         domain.getRanges().add(rangeRestriction);
@@ -212,7 +211,7 @@ public class TestAnalysisCreation {
      * 
      * @return
      */
-    private BooleanExpressionNode getExpression(Column column) {
+    private BooleanExpressionNode getExpression(TdColumn column) {
         CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
         expre.setOperands(column, "\"sunny\"");
         return expre.generateExpressions();
@@ -300,12 +299,12 @@ public class TestAnalysisCreation {
      * @return
      * @throws TalendException
      */
-    private ModelElement getColumn(TdDataProvider dataManager) throws TalendException {
-        List<TdCatalog> tdCatalogs = CatalogHelper.getTdCatalogs(dataManager.getDataPackage());
+    private ModelElement getColumn(Connection dataManager) throws TalendException {
+        List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(dataManager.getDataPackage());
         System.out.println("Catalogs: " + tdCatalogs);
         Assert.assertFalse(tdCatalogs.isEmpty());
-        TdCatalog catalog = tdCatalogs.get(0);
-        for (TdCatalog tdCatalog : tdCatalogs) {
+        Catalog catalog = tdCatalogs.get(0);
+        for (Catalog tdCatalog : tdCatalogs) {
             if (DB_TO_ANALYZE.equals(tdCatalog.getName())) {
                 catalog = tdCatalog;
                 break;
@@ -349,7 +348,7 @@ public class TestAnalysisCreation {
      * 
      * @return
      */
-    public TdDataProvider getDataManager() {
+    public Connection getDataManager() {
         TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties");
         String driverClassName = connectionParams.getProperty("driver");
         String dbUrl = connectionParams.getProperty("url");
@@ -362,7 +361,7 @@ public class TestAnalysisCreation {
 
         // create connection
         ConnectionUtils.setTimeout(false);
-        TdDataProvider dataProvider = ConnectionService.createConnection(params).getObject();
+        Connection dataProvider = ConnectionService.createConnection(params).getObject();
 
         dataProvider.setName("My data provider");
         return dataProvider;

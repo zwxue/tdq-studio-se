@@ -27,6 +27,7 @@ import net.sourceforge.sqlexplorer.dbstructure.nodes.CatalogNode;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.DatabaseNode;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.SchemaNode;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.IStructuredContentProvider;

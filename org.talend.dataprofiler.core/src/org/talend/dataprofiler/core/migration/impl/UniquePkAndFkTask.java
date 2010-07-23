@@ -23,22 +23,21 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * 
@@ -68,7 +67,7 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
                 if (re instanceof IFile && FactoriesUtil.isProvFile(re.getFileExtension())) {
                     IFile file = (IFile) re;
                     boolean saveFalg = false;
-                    TdDataProvider tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
+                    Connection tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
                     List<orgomg.cwm.objectmodel.core.Package> dataManagerList = tdDataProvider.getDataPackage();
                     for (orgomg.cwm.objectmodel.core.Package firstLevelElement : dataManagerList) {
                         if (getTables(firstLevelElement).isOk()) {
@@ -101,11 +100,11 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
             List<PrimaryKey> primaryKeyList = TableHelper.getPrimaryKeys(element);
             for (int i = 1; i < primaryKeyList.size(); i++) {
                 PrimaryKey pk = primaryKeyList.get(i);
-                Column column = (Column) pk.getFeature().get(pk.getFeature().size() - 1);
+                TdColumn column = (TdColumn) pk.getFeature().get(pk.getFeature().size() - 1);
                 ColumnHelper.removePrimaryKey(column);// remove old pk from column
                 column.getUniqueKey().add(primaryKeyList.get(0));// add new pk to column
                 primaryKeyList.get(0).getFeature().add(column);// add column to new pk
-                TableHelper.removePrimaryKey(element, pk);// remove old pk from table
+                TableHelper.removeTableKey(element, pk);// remove old pk from table
             }
             needToSave = true;
         }
@@ -141,16 +140,16 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
         returnCode.setObject(tableList);
         if (element == null)
             return returnCode;
-        if (element instanceof TdCatalog) {
-            for (ModelElement subElement : ((TdCatalog) element).getOwnedElement()) {
+        if (element instanceof Catalog) {
+            for (ModelElement subElement : ((Catalog) element).getOwnedElement()) {
                 TypedReturnCode<List<TdTable>> newreturnCode = getTables(subElement);
                 tableList.addAll(newreturnCode.getObject());
                 if (newreturnCode.isOk()) {
                     returnCode.setOk(newreturnCode.isOk());
                 }
             }
-        } else if (element instanceof TdSchema) {
-            for (ModelElement subElement : ((TdSchema) element).getOwnedElement()) {
+        } else if (element instanceof Schema) {
+            for (ModelElement subElement : ((Schema) element).getOwnedElement()) {
                 TypedReturnCode<List<TdTable>> newreturnCode = getTables(subElement);
                 tableList.addAll(newreturnCode.getObject());
                 if (newreturnCode.isOk()) {

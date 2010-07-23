@@ -10,12 +10,14 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.objectmodel.relationships.*;
+import orgomg.cwm.objectmodel.relationships.AggregationKind;
+import orgomg.cwm.objectmodel.relationships.Association;
+import orgomg.cwm.objectmodel.relationships.AssociationEnd;
+import orgomg.cwm.objectmodel.relationships.Generalization;
+import orgomg.cwm.objectmodel.relationships.RelationshipsFactory;
+import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
 
 /**
  * <!-- begin-user-doc -->

@@ -7,9 +7,7 @@
 package orgomg.cwm.resource.record.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.instance.impl.ExtentImpl;
-
 import orgomg.cwm.resource.record.RecordPackage;
 import orgomg.cwm.resource.record.RecordSet;
 

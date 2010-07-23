@@ -7,22 +7,15 @@
 package orgomg.cwm.objectmodel.core;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.analysis.businessnomenclature.VocabularyElement;
-
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
-
 import orgomg.cwm.analysis.transformation.DataObjectSet;
-
 import orgomg.cwm.foundation.businessinformation.Description;
 import orgomg.cwm.foundation.businessinformation.Document;
 import orgomg.cwm.foundation.businessinformation.ResponsibleParty;
-
 import orgomg.cwm.foundation.expressions.ElementNode;
-
 import orgomg.cwm.management.warehouseoperation.ChangeRequest;
 import orgomg.cwm.management.warehouseoperation.Measurement;
-
 import orgomg.cwmx.resource.dmsii.DASDLProperty;
 
 /**

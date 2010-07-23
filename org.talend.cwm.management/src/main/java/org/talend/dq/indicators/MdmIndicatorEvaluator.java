@@ -23,8 +23,8 @@ import javax.xml.rpc.ServiceException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
-import org.talend.cwm.db.connection.MdmConnection;
 import org.talend.cwm.db.connection.MdmStatement;
+import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.db.connection.XQueryExpressionUtil;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
@@ -45,7 +45,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MdmIndicatorEvaluator extends IndicatorEvaluator {
 
-    protected MdmConnection mdmconn;
+    protected MdmWebserviceConnection mdmconn;
 
     private static Logger log = Logger.getLogger(MdmIndicatorEvaluator.class);
 
@@ -188,11 +188,11 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
 
     }
 
-    public MdmConnection getMdmconn() {
+    public MdmWebserviceConnection getMdmconn() {
         return mdmconn;
     }
 
-    public void setMdmconn(MdmConnection mdmconn) {
+    public void setMdmconn(MdmWebserviceConnection mdmconn) {
         this.mdmconn = mdmconn;
     }
 

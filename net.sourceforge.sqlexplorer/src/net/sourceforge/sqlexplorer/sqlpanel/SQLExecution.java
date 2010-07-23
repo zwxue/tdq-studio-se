@@ -20,6 +20,7 @@ package net.sourceforge.sqlexplorer.sqlpanel;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;

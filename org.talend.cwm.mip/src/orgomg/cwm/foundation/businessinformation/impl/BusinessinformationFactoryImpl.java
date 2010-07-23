@@ -9,12 +9,18 @@ package orgomg.cwm.foundation.businessinformation.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.foundation.businessinformation.*;
+import orgomg.cwm.foundation.businessinformation.BusinessinformationFactory;
+import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
+import orgomg.cwm.foundation.businessinformation.Contact;
+import orgomg.cwm.foundation.businessinformation.Description;
+import orgomg.cwm.foundation.businessinformation.Document;
+import orgomg.cwm.foundation.businessinformation.Email;
+import orgomg.cwm.foundation.businessinformation.Location;
+import orgomg.cwm.foundation.businessinformation.ResourceLocator;
+import orgomg.cwm.foundation.businessinformation.ResponsibleParty;
+import orgomg.cwm.foundation.businessinformation.Telephone;
 
 /**
  * <!-- begin-user-doc -->

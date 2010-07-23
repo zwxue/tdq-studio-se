@@ -10,24 +10,18 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.analysis.datamining.AssociationRulesSettings;
 import orgomg.cwm.analysis.datamining.AttributeUsageRelation;
 import orgomg.cwm.analysis.datamining.DataminingPackage;
 import orgomg.cwm.analysis.datamining.MiningAttribute;
 import orgomg.cwm.analysis.datamining.MiningDataSpecification;
-
 import orgomg.cwm.objectmodel.core.impl.AttributeImpl;
 
 /**

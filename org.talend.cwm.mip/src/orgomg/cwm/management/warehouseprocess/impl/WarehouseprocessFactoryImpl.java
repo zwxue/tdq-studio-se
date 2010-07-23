@@ -9,12 +9,13 @@ package orgomg.cwm.management.warehouseprocess.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.management.warehouseprocess.*;
+import orgomg.cwm.management.warehouseprocess.ProcessPackage;
+import orgomg.cwm.management.warehouseprocess.WarehouseActivity;
+import orgomg.cwm.management.warehouseprocess.WarehouseStep;
+import orgomg.cwm.management.warehouseprocess.WarehouseprocessFactory;
+import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
 
 /**
  * <!-- begin-user-doc -->

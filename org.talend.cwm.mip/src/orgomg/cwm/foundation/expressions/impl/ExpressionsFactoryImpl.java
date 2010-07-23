@@ -9,12 +9,14 @@ package orgomg.cwm.foundation.expressions.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.foundation.expressions.*;
+import orgomg.cwm.foundation.expressions.ConstantNode;
+import orgomg.cwm.foundation.expressions.ElementNode;
+import orgomg.cwm.foundation.expressions.ExpressionNode;
+import orgomg.cwm.foundation.expressions.ExpressionsFactory;
+import orgomg.cwm.foundation.expressions.ExpressionsPackage;
+import orgomg.cwm.foundation.expressions.FeatureNode;
 
 /**
  * <!-- begin-user-doc -->

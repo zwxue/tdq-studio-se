@@ -10,9 +10,15 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.objectmodel.behavioral.*;
-
+import orgomg.cwm.objectmodel.behavioral.Argument;
+import orgomg.cwm.objectmodel.behavioral.BehavioralFeature;
+import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
+import orgomg.cwm.objectmodel.behavioral.CallAction;
+import orgomg.cwm.objectmodel.behavioral.Event;
+import orgomg.cwm.objectmodel.behavioral.Interface;
+import orgomg.cwm.objectmodel.behavioral.Method;
+import orgomg.cwm.objectmodel.behavioral.Operation;
+import orgomg.cwm.objectmodel.behavioral.Parameter;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.Feature;

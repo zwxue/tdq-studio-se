@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.essbase.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwmx.resource.essbase.EssbasePackage;
 import orgomg.cwmx.resource.essbase.ReplicatedPartition;
 

@@ -10,9 +10,11 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.foundation.keysindexes.*;
-
+import orgomg.cwm.foundation.keysindexes.Index;
+import orgomg.cwm.foundation.keysindexes.IndexedFeature;
+import orgomg.cwm.foundation.keysindexes.KeyRelationship;
+import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
+import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

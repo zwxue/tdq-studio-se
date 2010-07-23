@@ -8,13 +8,14 @@ package orgomg.cwm.management.warehouseoperation.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.management.warehouseoperation.*;
-
+import orgomg.cwm.management.warehouseoperation.ActivityExecution;
+import orgomg.cwm.management.warehouseoperation.ChangeRequest;
+import orgomg.cwm.management.warehouseoperation.Measurement;
+import orgomg.cwm.management.warehouseoperation.StepExecution;
+import orgomg.cwm.management.warehouseoperation.TransformationExecution;
+import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

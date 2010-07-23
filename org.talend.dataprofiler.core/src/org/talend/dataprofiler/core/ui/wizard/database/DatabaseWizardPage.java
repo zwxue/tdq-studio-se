@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.EXistXMLDBConnection;
 import org.talend.cwm.db.connection.IXMLDBConnection;
-import org.talend.cwm.db.connection.MdmConnection;
+import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -313,7 +313,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         // ~12379
         // MOD xqliu 2009-12-17 check for a mdm database
         if (mdmFlag) {
-            IXMLDBConnection mdmConnection = new MdmConnection(connectionParam.getJdbcUrl(), connectionParam.getParameters());
+            IXMLDBConnection mdmConnection = new MdmWebserviceConnection(connectionParam.getJdbcUrl(), connectionParam.getParameters());
             ReturnCode retcode = mdmConnection.checkDatabaseConnection();
             return retcode;
         }

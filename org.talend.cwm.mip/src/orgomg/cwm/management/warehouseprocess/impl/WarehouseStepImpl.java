@@ -8,17 +8,12 @@ package orgomg.cwm.management.warehouseprocess.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import orgomg.cwm.analysis.transformation.TransformationPackage;
 import orgomg.cwm.analysis.transformation.TransformationStep;
-
 import orgomg.cwm.management.warehouseprocess.WarehouseActivity;
 import orgomg.cwm.management.warehouseprocess.WarehouseStep;
 import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;

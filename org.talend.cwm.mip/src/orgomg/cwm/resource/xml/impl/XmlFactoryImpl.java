@@ -10,12 +10,24 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.resource.xml.*;
+import orgomg.cwm.resource.xml.Attribute;
+import orgomg.cwm.resource.xml.AttributeDefault;
+import orgomg.cwm.resource.xml.Content;
+import orgomg.cwm.resource.xml.ContentType;
+import orgomg.cwm.resource.xml.Document;
+import orgomg.cwm.resource.xml.Element;
+import orgomg.cwm.resource.xml.ElementContent;
+import orgomg.cwm.resource.xml.ElementOrderType;
+import orgomg.cwm.resource.xml.ElementType;
+import orgomg.cwm.resource.xml.ElementTypeReference;
+import orgomg.cwm.resource.xml.MixedContent;
+import orgomg.cwm.resource.xml.OccurrenceType;
+import orgomg.cwm.resource.xml.Schema;
+import orgomg.cwm.resource.xml.Text;
+import orgomg.cwm.resource.xml.XmlFactory;
+import orgomg.cwm.resource.xml.XmlPackage;
 
 /**
  * <!-- begin-user-doc -->

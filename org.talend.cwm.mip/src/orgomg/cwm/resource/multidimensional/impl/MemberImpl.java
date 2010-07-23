@@ -7,9 +7,7 @@
 package orgomg.cwm.resource.multidimensional.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.instance.impl.ObjectImpl;
-
 import orgomg.cwm.resource.multidimensional.Member;
 import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
 

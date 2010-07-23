@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.imsdatabase;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.FlagsType;
 import orgomg.cwmx.resource.imsdatabase.imstypes.PointerType;
 

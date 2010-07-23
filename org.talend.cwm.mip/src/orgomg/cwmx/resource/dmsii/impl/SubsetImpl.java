@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.dmsii.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
 import orgomg.cwmx.resource.dmsii.Subset;
 

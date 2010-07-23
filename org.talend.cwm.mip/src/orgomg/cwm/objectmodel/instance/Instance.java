@@ -7,7 +7,6 @@
 package orgomg.cwm.objectmodel.instance;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

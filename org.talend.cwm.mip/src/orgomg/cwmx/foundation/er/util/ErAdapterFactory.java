@@ -8,15 +8,11 @@ package orgomg.cwmx.foundation.er.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.foundation.keysindexes.Index;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.Feature;
@@ -24,11 +20,21 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
 import orgomg.cwm.objectmodel.core.Subsystem;
-
 import orgomg.cwm.objectmodel.relationships.Association;
 import orgomg.cwm.objectmodel.relationships.AssociationEnd;
-
-import orgomg.cwmx.foundation.er.*;
+import orgomg.cwmx.foundation.er.Attribute;
+import orgomg.cwmx.foundation.er.CandidateKey;
+import orgomg.cwmx.foundation.er.Domain;
+import orgomg.cwmx.foundation.er.Entity;
+import orgomg.cwmx.foundation.er.ErPackage;
+import orgomg.cwmx.foundation.er.ForeignKey;
+import orgomg.cwmx.foundation.er.Model;
+import orgomg.cwmx.foundation.er.ModelLibrary;
+import orgomg.cwmx.foundation.er.NonuniqueKey;
+import orgomg.cwmx.foundation.er.PrimaryKey;
+import orgomg.cwmx.foundation.er.Relationship;
+import orgomg.cwmx.foundation.er.RelationshipEnd;
+import orgomg.cwmx.foundation.er.SubjectArea;
 
 /**
  * <!-- begin-user-doc -->

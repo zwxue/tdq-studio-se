@@ -19,9 +19,9 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.Indicator;
@@ -342,7 +342,7 @@ public final class DependenciesHandler {
                 if (supplier != null && supplier.size() > 0) {
                     ModelElement modelElement = supplier.get(0);
                     if (modelElement != null) {
-                        if (modelElement instanceof TdDataProvider) {
+                        if (modelElement instanceof Connection) {
                             if (modelElement.equals(connection)) {
                                 realDependency.add(dependency);
                             }

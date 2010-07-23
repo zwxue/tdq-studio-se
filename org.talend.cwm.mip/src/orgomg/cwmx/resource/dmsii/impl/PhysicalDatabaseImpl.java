@@ -7,9 +7,7 @@
 package orgomg.cwmx.resource.dmsii.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
-
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
 import orgomg.cwmx.resource.dmsii.PhysicalDatabase;
 

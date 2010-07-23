@@ -7,16 +7,11 @@
 package orgomg.cwm.resource.relational.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.foundation.keysindexes.impl.UniqueKeyImpl;
-
 import orgomg.cwm.resource.relational.RelationalPackage;
 import orgomg.cwm.resource.relational.UniqueConstraint;
-
 import orgomg.cwm.resource.relational.enumerations.DeferrabilityType;
 
 /**

@@ -12,21 +12,18 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.sql.Connection;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -36,10 +33,11 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -142,10 +140,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
         if (log.isInfoEnabled()) {
             if (SoftwaredeploymentPackage.eINSTANCE.getDataProvider().isInstance(connection)) {
-                TypedReturnCode<TdProviderConnection> rc = DataProviderHelper
-                        .getTdProviderConnection((DataProvider) connection);
-                TdProviderConnection providerConnection = rc.getObject();
-                log.info("Connection to " + providerConnection.getConnectionString());
+                boolean isMDM = connection instanceof MDMConnection;
+                log.info("Connection to "
+                        + (isMDM ? ((MDMConnection) connection).getPathname() : ((DatabaseConnection) connection).getURL()));
             }
         }
         AnalysisResult results = analysis.getResults();
@@ -172,17 +169,17 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @param schema
      * @return
      */
-    protected TypedReturnCode<Connection> getConnection(Analysis analysis) {
+    protected TypedReturnCode<java.sql.Connection> getConnection(Analysis analysis) {
         // MODSCA 2008-03-25 scorreia schema is not used. removed (was used before to select the catalog of the db)
         // now it is done elsewhere
-        TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>();
+        TypedReturnCode<java.sql.Connection> rc = new TypedReturnCode<java.sql.Connection>();
 
         DataManager datamanager = analysis.getContext().getConnection();
         if (datamanager == null) {
             rc.setReturnCode(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName()), false); //$NON-NLS-1$
             return rc;
         }
-        TdDataProvider dataprovider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(datamanager);
+        Connection dataprovider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
         if (dataprovider == null) {
             rc.setReturnCode(Messages.getString("AnalysisExecutor.DataProviderNull", datamanager.getName(), //$NON-NLS-1$
                     analysis.getName()), false);
@@ -191,7 +188,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
         // else ok
 
-        TypedReturnCode<Connection> connection = JavaSqlFactory.createConnection(dataprovider);
+        TypedReturnCode<java.sql.Connection> connection = JavaSqlFactory.createConnection(dataprovider);
         if (!connection.isOk()) {
             rc.setReturnCode(connection.getMessage(), false);
             return rc;
@@ -227,7 +224,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return the catalog or schema quoted name
      */
     protected String getQuotedCatalogName(ModelElement analyzedElement) {
-        final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
+        final Catalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
         return parentCatalog == null ? null : quote(parentCatalog.getName());
     }
 
@@ -238,7 +235,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return
      */
     protected String getQuotedSchemaName(ColumnSet columnSetOwner) {
-        final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+        final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
         return (parentSchema == null) ? null : quote(parentSchema.getName());
     }
 

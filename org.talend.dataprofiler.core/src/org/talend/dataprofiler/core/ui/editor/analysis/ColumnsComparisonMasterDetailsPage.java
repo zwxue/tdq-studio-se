@@ -31,11 +31,11 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
@@ -53,7 +53,6 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -246,7 +245,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             analysedElements.add(anaColumnCompareViewer.getColumnListB().get(i));
         }
         if (analysedElements.size() > 0) {
-            TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider((Column) analysedElements.get(0));
+            Connection tdDataProvider = DataProviderHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
             analysis.getContext().setConnection(tdDataProvider);
         } else {
             analysis.getContext().setConnection(null);
@@ -298,8 +297,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             }
 
             for (int i = 0; i < anaColumnCompareViewer.getColumnListA().size(); i++) {
-                Column columnA = anaColumnCompareViewer.getColumnListA().get(i);
-                Column columnB = anaColumnCompareViewer.getColumnListB().get(i);
+                TdColumn columnA = anaColumnCompareViewer.getColumnListA().get(i);
+                TdColumn columnB = anaColumnCompareViewer.getColumnListB().get(i);
 
                 ColumnSet ownerA = ColumnHelper.getColumnSetOwner(columnA);
                 ColumnSet ownerB = ColumnHelper.getColumnSetOwner(columnB);
@@ -316,7 +315,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 }
             }
 
-            List<Column> allColumns = new ArrayList<Column>();
+            List<TdColumn> allColumns = new ArrayList<TdColumn>();
             allColumns.addAll(anaColumnCompareViewer.getColumnListA());
             allColumns.addAll(anaColumnCompareViewer.getColumnListB());
 

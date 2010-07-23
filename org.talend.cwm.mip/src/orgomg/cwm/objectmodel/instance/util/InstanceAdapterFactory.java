@@ -8,15 +8,11 @@ package orgomg.cwm.objectmodel.instance.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
-
 import orgomg.cwm.objectmodel.instance.DataValue;
 import orgomg.cwm.objectmodel.instance.Extent;
 import orgomg.cwm.objectmodel.instance.Instance;

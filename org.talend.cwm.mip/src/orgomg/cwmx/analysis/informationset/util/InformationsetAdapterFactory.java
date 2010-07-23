@@ -8,21 +8,22 @@ package orgomg.cwmx.analysis.informationset.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.analysis.olap.Cube;
 import orgomg.cwm.analysis.olap.CubeRegion;
 import orgomg.cwm.analysis.olap.Schema;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
-
-import orgomg.cwmx.analysis.informationset.*;
+import orgomg.cwmx.analysis.informationset.InfoSetAdministration;
+import orgomg.cwmx.analysis.informationset.InfoSetDate;
+import orgomg.cwmx.analysis.informationset.InformationSet;
+import orgomg.cwmx.analysis.informationset.InformationsetPackage;
+import orgomg.cwmx.analysis.informationset.Rule;
+import orgomg.cwmx.analysis.informationset.Segment;
+import orgomg.cwmx.analysis.informationset.SegmentRegion;
 
 /**
  * <!-- begin-user-doc -->

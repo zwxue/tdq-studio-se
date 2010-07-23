@@ -7,11 +7,8 @@
 package orgomg.cwm.resource.record.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.resource.record.FixedOffsetField;
 import orgomg.cwm.resource.record.RecordPackage;
 

@@ -19,13 +19,13 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -59,7 +59,7 @@ public class OverviewAnalysisAction extends Action implements ICheatSheetAction 
         packaFilterParameter.setTdDataProvider(DataProviderHelper.getTdDataProvider(packageObjs[0]));
         packaFilterParameter.setPackages(packageObjs);
         Wizard wizard;
-        TdCatalog catalogSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(packageObjs[0]);
+        Catalog catalogSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(packageObjs[0]);
         if (catalogSwitch != null) {
             wizard = WizardFactory.createAnalysisWizard(AnalysisType.CATALOG, packaFilterParameter);
         } else {

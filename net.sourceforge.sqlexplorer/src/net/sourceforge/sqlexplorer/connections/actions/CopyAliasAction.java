@@ -20,6 +20,7 @@ package net.sourceforge.sqlexplorer.connections.actions;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dialogs.CreateAliasDlg;
+
 import org.eclipse.swt.widgets.Display;
 
 /**

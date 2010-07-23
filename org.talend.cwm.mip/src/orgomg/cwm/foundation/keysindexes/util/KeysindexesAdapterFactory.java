@@ -8,13 +8,13 @@ package orgomg.cwm.foundation.keysindexes.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.foundation.keysindexes.*;
-
+import orgomg.cwm.foundation.keysindexes.Index;
+import orgomg.cwm.foundation.keysindexes.IndexedFeature;
+import orgomg.cwm.foundation.keysindexes.KeyRelationship;
+import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
+import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

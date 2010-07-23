@@ -13,7 +13,6 @@
 package org.talend.cwm.db.connection;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,7 +22,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.TableHelper;
@@ -31,12 +34,8 @@ import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -46,6 +45,8 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import org.talend.utils.time.TimeTracer;
 import orgomg.cwm.objectmodel.core.Classifier;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -70,7 +71,7 @@ public final class TalendCwmFactory {
      * @throws SQLException
      */
     static void initializeConnection(DBConnect connector, FolderProvider folderProvider) throws SQLException {
-        TdDataProvider dataProvider = createDataProvider(connector);
+        Connection dataProvider = createDataProvider(connector);
 
         // --- close connection now
         connector.closeConnection();
@@ -89,38 +90,38 @@ public final class TalendCwmFactory {
      * @return the data provider
      * @throws SQLException
      */
-    public static TdDataProvider createDataProvider(DBConnect connector) throws SQLException {
+    public static Connection createDataProvider(DBConnect connector) throws SQLException {
         // --- connect and check the connection
         checkConnection(connector);
 
         // --- get data provider
-        TdDataProvider dataProvider = getTdDataProvider(connector);
+        Connection dataProvider = getTdDataProvider(connector);
         // --- get the connection provider
-        TdProviderConnection providerConnection = connector.getProviderConnection();
-
+        // MOD mzhao feature 10814 , 2010-05-26
+        // TdProviderConnection providerConnection = connector.getDataProvider();
         // --- get software system
         if (connector.retrieveDeployedSystemInformations()) {
             TdSoftwareSystem softwareSystem = connector.getSoftwareSystem();
             if (softwareSystem != null) {
-                DataProviderHelper.setSoftwareSystem(dataProvider, softwareSystem);
+                ConnectionHelper.setSoftwareSystem(dataProvider, softwareSystem);
             }
         }
 
         // --- get database structure informations
-        Collection<TdCatalog> catalogs = getCatalogs(connector);
-        Collection<TdSchema> schemata = getSchemata(connector);
+        Collection<Catalog> catalogs = getCatalogs(connector);
+        Collection<Schema> schemata = getSchemata(connector);
 
         // --- link everything
-        DataProviderHelper.addProviderConnection(providerConnection, dataProvider);
+        // DataProviderHelper.addProviderConnection(providerConnection, dataProvider);
         boolean allAdded = false;
         // TODO scorreia probably add only when catalogs is empty.
         if (catalogs.isEmpty()) {
-            allAdded = DataProviderHelper.addSchemas(schemata, dataProvider);
+            allAdded = ConnectionHelper.addSchemas(schemata, dataProvider);
             if (log.isDebugEnabled()) {
                 log.debug("all " + schemata.size() + " schemata added: " + allAdded);
             }
         } else {
-            allAdded = DataProviderHelper.addCatalogs(catalogs, dataProvider);
+            allAdded = ConnectionHelper.addCatalogs(catalogs, dataProvider);
             if (log.isDebugEnabled()) {
                 log.debug("all " + catalogs.size() + " catalogs added: " + allAdded);
             }
@@ -144,11 +145,11 @@ public final class TalendCwmFactory {
      * @param parameter
      * @return
      */
-    public static TdDataProvider createEXistTdDataProvider(DBConnectionParameter parameter) {
+    public static DatabaseConnection createEXistTdDataProvider(DBConnectionParameter parameter) {
         IXMLDBConnection xmlDBConnection = new EXistXMLDBConnection(parameter.getDriverClassName(), parameter.getJdbcUrl());
         ReturnCode rt = xmlDBConnection.checkDatabaseConnection();
         if (rt.isOk()) {
-            TdDataProvider dataProvider = DataProviderHelper.createTdDataProvider(parameter.getName());
+            DatabaseConnection dataProvider = ConnectionHelper.createDatabaseConnection(parameter.getName());
             xmlDBConnection.setSofewareSystem(dataProvider, parameter);
             xmlDBConnection.setProviderConnection(dataProvider, parameter);
             DataProviderHelper.addXMLDocuments(xmlDBConnection.createConnection(), dataProvider);
@@ -163,14 +164,17 @@ public final class TalendCwmFactory {
      * @param parameter
      * @return
      */
-    public static TdDataProvider createMdmTdDataProvider(DBConnectionParameter parameter) {
-        IXMLDBConnection mdmConnection = new MdmConnection(parameter.getJdbcUrl(), parameter.getParameters());
+    public static MDMConnection createMdmTdDataProvider(DBConnectionParameter parameter) {
+        MdmWebserviceConnection mdmConnection = new MdmWebserviceConnection(parameter.getJdbcUrl(), parameter.getParameters());
         ReturnCode rt = mdmConnection.checkDatabaseConnection();
         if (rt.isOk()) {
-            TdDataProvider dataProvider = DataProviderHelper.createTdDataProvider(parameter.getName());
+            MDMConnection dataProvider = DataProviderHelper.createMDMConnection(parameter.getName());
             mdmConnection.setSofewareSystem(dataProvider, parameter);
             mdmConnection.setProviderConnection(dataProvider, parameter);
             DataProviderHelper.addXMLDocuments(mdmConnection.createConnection(), dataProvider);
+            dataProvider.setUsername(mdmConnection.getUserName());
+            dataProvider.setPassword(mdmConnection.getUserPass());
+
             return dataProvider;
         }
         return null;
@@ -185,7 +189,7 @@ public final class TalendCwmFactory {
      * @return the DataProvider for which the name is null. The data provider does not contain structure.
      * @throws SQLException
      */
-    public static TdDataProvider getTdDataProvider(DBConnect connector) throws SQLException {
+    public static Connection getTdDataProvider(DBConnect connector) throws SQLException {
         checkConnection(connector);
         boolean driverInfoRetrieved = connector.retrieveDriverInformations();
         if (!driverInfoRetrieved) {
@@ -204,7 +208,7 @@ public final class TalendCwmFactory {
      * @return the catalogs (never null but could be empty depending on the database type)
      * @throws SQLException
      */
-    public static Collection<TdCatalog> getCatalogs(DBConnect connector) throws SQLException {
+    public static Collection<Catalog> getCatalogs(DBConnect connector) throws SQLException {
         checkConnection(connector);
         boolean dbStructureRetrieved = connector.retrieveDatabaseStructure();
         if (!dbStructureRetrieved) {
@@ -222,7 +226,7 @@ public final class TalendCwmFactory {
      * @return the schemas (never null but could be empty depending on the database type)
      * @throws SQLException
      */
-    public static Collection<TdSchema> getSchemata(DBConnect connector) throws SQLException {
+    public static Collection<Schema> getSchemata(DBConnect connector) throws SQLException {
         checkConnection(connector);
         boolean dbStructureRetrieved = connector.retrieveDatabaseStructure();
         if (!dbStructureRetrieved) {
@@ -277,12 +281,12 @@ public final class TalendCwmFactory {
      * @param catalogs
      * @param schemata
      */
-    private static void printInformations(Collection<TdCatalog> catalogs, Collection<TdSchema> schemata) {
-        for (TdCatalog tdCatalog : catalogs) {
-            System.out.println("Catalog = " + tdCatalog); //$NON-NLS-1$
+    private static void printInformations(Collection<Catalog> catalogs, Collection<Schema> schemata) {
+        for (Catalog catalog : catalogs) {
+            System.out.println("Catalog = " + catalog); //$NON-NLS-1$
         }
-        for (TdSchema tdSchema : schemata) {
-            System.out.println("Schema = " + tdSchema + " in catalog " + tdSchema.getNamespace()); //$NON-NLS-1$ //$NON-NLS-2$
+        for (Schema schema : schemata) {
+            System.out.println("Schema = " + schema + " in catalog " + schema.getNamespace()); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -307,36 +311,36 @@ public final class TalendCwmFactory {
 
             // --- now create the lower structure (tables, columns)
             // recreate a connection from the TdProviderConnection
-            TdProviderConnection providerConnection = connector.getProviderConnection();
-            TypedReturnCode<Connection> rc = JavaSqlFactory.createConnection(providerConnection);
+            Connection providerConnection = connector.getDataProvider();
+            TypedReturnCode<java.sql.Connection> rc = JavaSqlFactory.createConnection(connector.getDataProvider());
             if (!rc.isOk()) {
                 log.error(rc.getMessage());
                 return;
             }
             boolean ok = false;
-            Collection<TdCatalog> catalogs = connector.getCatalogs();
-            Connection connection = rc.getObject();
-            for (TdCatalog tdCatalog : catalogs) {
-                List<TdSchema> schemas = CatalogHelper.getSchemas(tdCatalog);
-                for (TdSchema tdSchema : schemas) {
-                    List<TdTable> tables = SchemaHelper.getTables(tdSchema);
+            Collection<Catalog> catalogs = connector.getCatalogs();
+            java.sql.Connection connection = rc.getObject();
+            for (Catalog catalog : catalogs) {
+                List<Schema> schemas = CatalogHelper.getSchemas(catalog);
+                for (Schema schema : schemas) {
+                    List<TdTable> tables = SchemaHelper.getTables(schema);
                     if (tables.isEmpty()) {
                         // TODO try to load them from DB.
-                        List<TdTable> tablesWithAllColumns = DatabaseContentRetriever.getTablesWithColumns(tdCatalog.getName(),
-                                tdSchema.getName(), null, connection);
-                        ok = SchemaHelper.addTables(tablesWithAllColumns, tdSchema);
+                        List<TdTable> tablesWithAllColumns = DatabaseContentRetriever.getTablesWithColumns(catalog.getName(),
+                                schema.getName(), null, connection);
+                        ok = SchemaHelper.addTables(tablesWithAllColumns, schema);
                     }
                 }
                 // first try to get the columns
-                List<TdTable> tables = CatalogHelper.getTables(tdCatalog);
+                List<TdTable> tables = CatalogHelper.getTables(catalog);
                 if (tables.isEmpty()) {
                     // TODO try to load them from DB.
-                    List<TdTable> tablesWithAllColumns = DatabaseContentRetriever.getTablesWithColumns(tdCatalog.getName(), null,
+                    List<TdTable> tablesWithAllColumns = DatabaseContentRetriever.getTablesWithColumns(catalog.getName(), null,
                             null, connection);
-                    ok = CatalogHelper.addTables(tablesWithAllColumns, tdCatalog);
+                    ok = CatalogHelper.addTables(tablesWithAllColumns, catalog);
 
                     // --- get the resource of the catalog
-                    Resource resource = tdCatalog.eResource();
+                    Resource resource = catalog.eResource();
                     if (resource == null) {
                         log.error("Resource null");
                     }

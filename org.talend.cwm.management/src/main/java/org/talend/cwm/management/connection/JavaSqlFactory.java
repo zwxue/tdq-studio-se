@@ -12,18 +12,17 @@
 // ============================================================================
 package org.talend.cwm.management.connection;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -42,27 +41,6 @@ public final class JavaSqlFactory {
     }
 
     /**
-     * Method "createConnection".
-     * 
-     * @see JavaSqlFactory#createConnection(TdProviderConnection).
-     * @param dataProvider to get the provider connection and create the connection
-     * @return the created connection.
-     */
-    public static TypedReturnCode<Connection> createConnection(TdDataProvider dataProvider) {
-        assert dataProvider != null;
-        TypedReturnCode<TdProviderConnection> rc = DataProviderHelper.getTdProviderConnection(dataProvider);
-        if (!rc.isOk()) {
-            log.error(rc.getMessage());
-            TypedReturnCode<Connection> rcConn = new TypedReturnCode<Connection>();
-
-            rcConn.setReturnCode(rc.getMessage(), false);
-            return rcConn;
-        }
-
-        return JavaSqlFactory.createConnection(rc.getObject());
-    }
-
-    /**
      * Method "createConnection" returns the connection with {@link ReturnCode#getObject()} if {@link ReturnCode#isOk()}
      * is true. This is the behaviour when everything goes ok.
      * <p>
@@ -73,23 +51,23 @@ public final class JavaSqlFactory {
      * 
      * @param providerConnection the provider connection
      * @return a ReturnCode (never null)
+     * @deprecated
      */
-    public static TypedReturnCode<Connection> createConnection(TdProviderConnection providerConnection) {
-        TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>(false);
-        String url = providerConnection.getConnectionString();
+    public static TypedReturnCode<java.sql.Connection> createConnection(DatabaseConnection providerConnection) {
+        TypedReturnCode<java.sql.Connection> rc = new TypedReturnCode<java.sql.Connection>(false);
+        String url = providerConnection.getURL();
         if (url == null) {
             rc.setMessage(Messages.getString("JavaSqlFactory.DatabaseConnectionNull")); //$NON-NLS-1$
             rc.setOk(false);
         }
-        String driverClassName = providerConnection.getDriverClassName();
+        String driverClassName = providerConnection.getDriverClass();
         Collection<TaggedValue> taggedValues = providerConnection.getTaggedValue();
         Properties props = new Properties();
-        props.put(TaggedValueHelper.USER, DataProviderHelper.getUser(providerConnection));
-        props.put(TaggedValueHelper.PASSWORD, DataProviderHelper.getClearTextPassword(providerConnection));
-        // hcheng decrypt password here and update props object
+        props.put(TaggedValueHelper.USER, providerConnection.getUsername());
+        props.put(TaggedValueHelper.PASSWORD, providerConnection.getPassword());
         String pass = props.getProperty(TaggedValueHelper.PASSWORD);
         if (pass != null) {
-            String clearTextPassword = DataProviderHelper.getClearTextPassword(providerConnection);
+            String clearTextPassword = providerConnection.getPassword();
             if (clearTextPassword == null) {
                 rc.setMessage(Messages.getString("JavaSqlFactory.UnableDecryptPassword")); //$NON-NLS-1$
                 rc.setOk(false);
@@ -98,7 +76,7 @@ public final class JavaSqlFactory {
             }
         }
         try {
-            Connection connection = ConnectionUtils.createConnection(url, driverClassName, props);
+            java.sql.Connection connection = ConnectionUtils.createConnection(url, driverClassName, props);
             rc.setObject(connection);
             rc.setOk(true);
         } catch (SQLException e) {
@@ -113,4 +91,42 @@ public final class JavaSqlFactory {
         return rc;
     }
 
+    /**
+     * Method "createConnection" returns the connection with {@link ReturnCode#getObject()} if {@link ReturnCode#isOk()}
+     * is true. This is the behaviour when everything goes ok.
+     * <p>
+     * When something goes wrong, {@link ReturnCode#isOk()} is false and {@link ReturnCode#getMessage()} gives the error
+     * message.
+     * <p>
+     * The created connection must be closed by the caller. (use {@link ConnectionUtils#closeConnection(Connection)})
+     * 
+     * @param connection the connection (DatabaseConnection MDMConnection or others)
+     * @return a ReturnCode (never null)
+     */
+    public static TypedReturnCode<java.sql.Connection> createConnection(Connection connection) {
+        TypedReturnCode<java.sql.Connection> rc = new TypedReturnCode<java.sql.Connection>(false);
+        String url = ConnectionHelper.getURL(connection);
+        if (url == null) {
+            rc.setMessage(Messages.getString("JavaSqlFactory.DatabaseConnectionNull")); //$NON-NLS-1$
+            rc.setOk(false);
+        }
+        String driverClassName = ConnectionHelper.getDriverClass(connection);
+        Properties props = new Properties();
+        props.put(TaggedValueHelper.USER, ConnectionHelper.getUsername(connection));
+        props.put(TaggedValueHelper.PASSWORD, ConnectionHelper.getPassword(connection));
+        try {
+            java.sql.Connection sqlConnection = ConnectionUtils.createConnection(url, driverClassName, props);
+            rc.setObject(sqlConnection);
+            rc.setOk(true);
+        } catch (SQLException e) {
+            rc.setReturnCode(e.getMessage(), false);
+        } catch (InstantiationException e) {
+            rc.setReturnCode(e.getMessage(), false);
+        } catch (IllegalAccessException e) {
+            rc.setReturnCode(e.getMessage(), false);
+        } catch (ClassNotFoundException e) {
+            rc.setReturnCode(e.getMessage(), false);
+        }
+        return rc;
+    }
 }

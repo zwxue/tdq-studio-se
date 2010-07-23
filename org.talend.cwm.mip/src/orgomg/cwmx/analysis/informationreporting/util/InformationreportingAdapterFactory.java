@@ -8,17 +8,12 @@ package orgomg.cwmx.analysis.informationreporting.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.analysis.informationvisualization.RenderedObjectSet;
-
 import orgomg.cwm.analysis.transformation.Transformation;
 import orgomg.cwm.analysis.transformation.TransformationMap;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
@@ -26,8 +21,13 @@ import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
-import orgomg.cwmx.analysis.informationreporting.*;
+import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
+import orgomg.cwmx.analysis.informationreporting.Report;
+import orgomg.cwmx.analysis.informationreporting.ReportAttribute;
+import orgomg.cwmx.analysis.informationreporting.ReportExecution;
+import orgomg.cwmx.analysis.informationreporting.ReportField;
+import orgomg.cwmx.analysis.informationreporting.ReportGroup;
+import orgomg.cwmx.analysis.informationreporting.ReportPackage;
 
 /**
  * <!-- begin-user-doc -->

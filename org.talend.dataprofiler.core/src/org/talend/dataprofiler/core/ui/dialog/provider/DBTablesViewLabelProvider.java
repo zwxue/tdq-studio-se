@@ -21,10 +21,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
@@ -96,7 +96,7 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
         } else if (element instanceof IFile) {
             if (FactoriesUtil.isProvFile(((IFile) element).getFileExtension())) {
                 IFile file = (IFile) element;
-                TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(file);
+                TypedReturnCode<Connection> rc = PrvResourceFileHelper.getInstance().findProvider(file);
                 String decorateText = PluginConstant.EMPTY_STRING;
                 if (rc.isOk()) {
                     decorateText = rc.getObject().getName();

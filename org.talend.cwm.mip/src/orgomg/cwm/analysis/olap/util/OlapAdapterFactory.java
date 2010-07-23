@@ -8,16 +8,30 @@ package orgomg.cwm.analysis.olap.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.analysis.olap.*;
-
+import orgomg.cwm.analysis.olap.CodedLevel;
+import orgomg.cwm.analysis.olap.ContentMap;
+import orgomg.cwm.analysis.olap.Cube;
+import orgomg.cwm.analysis.olap.CubeDeployment;
+import orgomg.cwm.analysis.olap.CubeDimensionAssociation;
+import orgomg.cwm.analysis.olap.CubeRegion;
+import orgomg.cwm.analysis.olap.DeploymentGroup;
+import orgomg.cwm.analysis.olap.Dimension;
+import orgomg.cwm.analysis.olap.DimensionDeployment;
+import orgomg.cwm.analysis.olap.Hierarchy;
+import orgomg.cwm.analysis.olap.HierarchyLevelAssociation;
+import orgomg.cwm.analysis.olap.Level;
+import orgomg.cwm.analysis.olap.LevelBasedHierarchy;
+import orgomg.cwm.analysis.olap.Measure;
+import orgomg.cwm.analysis.olap.MemberSelection;
+import orgomg.cwm.analysis.olap.MemberSelectionGroup;
+import orgomg.cwm.analysis.olap.OlapPackage;
+import orgomg.cwm.analysis.olap.Schema;
+import orgomg.cwm.analysis.olap.StructureMap;
+import orgomg.cwm.analysis.olap.ValueBasedHierarchy;
 import orgomg.cwm.analysis.transformation.Transformation;
 import orgomg.cwm.analysis.transformation.TransformationMap;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;

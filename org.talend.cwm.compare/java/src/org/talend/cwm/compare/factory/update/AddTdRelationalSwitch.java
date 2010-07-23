@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.resource.relational.Column;
@@ -51,7 +52,7 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
         ForeignKey foreignKey = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createForeignKey();
         foreignKey.setName(fkName);
         if (columnSet instanceof Table) {
-            foreignKey = TableHelper.addForeignKey((Table) columnSet, foreignKey);
+            TableHelper.addForeignKey((TdTable) columnSet, foreignKey);
             tdColumn.getKeyRelationship().add(foreignKey);
         }
         return Boolean.TRUE;
@@ -78,7 +79,7 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
         PrimaryKey primaryKey = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createPrimaryKey();
         primaryKey.setName(pkName);
         if (columnSet instanceof Table) {
-            primaryKey = TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
+            TableHelper.addPrimaryKey((TdTable) columnSet, primaryKey);
             tdColumn.getUniqueKey().add(primaryKey);
         }
         return Boolean.TRUE;

@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -28,11 +28,11 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -58,7 +58,7 @@ public final class ModelElementFileFactory {
         ModelElement modelElement = null;
         String fileExtension = file.getFileExtension();
         if (FactoriesUtil.isProvFile(fileExtension)) {
-            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
+            TypedReturnCode<Connection> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
             modelElement = returnValue.getObject();
         } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
             modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
@@ -109,7 +109,7 @@ public final class ModelElementFileFactory {
      */
     public static ResourceFileMap getResourceFileMap(ModelElement element) {
         ResourceFileMap resourceMap = null;
-        if (element instanceof TdDataProvider) {
+        if (element instanceof Connection) {
             resourceMap = PrvResourceFileHelper.getInstance();
         } else if (element instanceof Analysis) {
             resourceMap = AnaResourceFileHelper.getInstance();
@@ -156,7 +156,7 @@ public final class ModelElementFileFactory {
 
         Collection<Pattern> allPatternes = PatternResourceFileHelper.getInstance().getAllPatternes();
 
-        List<TdDataProvider> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders();
+        List<Connection> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders();
 
         Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
 

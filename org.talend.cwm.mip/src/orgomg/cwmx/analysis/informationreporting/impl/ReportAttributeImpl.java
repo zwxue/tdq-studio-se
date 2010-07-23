@@ -7,9 +7,7 @@
 package orgomg.cwmx.analysis.informationreporting.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.impl.AttributeImpl;
-
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
 import orgomg.cwmx.analysis.informationreporting.ReportAttribute;
 

@@ -27,10 +27,10 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorLauncher;
 import org.talend.cwm.compare.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * 
@@ -125,8 +125,8 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                     editorTitle = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObject).getObject().getName();
                 } else if (selectedObject instanceof IFolderNode) {
                     editorTitle = ((ModelElement) ((IFolderNode) selectedObject).getParent()).getName();
-                } else if (selectedObject instanceof TdCatalog) {
-                    editorTitle = ((TdCatalog) selectedObject).getName();
+                } else if (selectedObject instanceof Catalog) {
+                    editorTitle = ((Catalog) selectedObject).getName();
                 }
 
                 compEditorInput.setTitle(editorTitle);

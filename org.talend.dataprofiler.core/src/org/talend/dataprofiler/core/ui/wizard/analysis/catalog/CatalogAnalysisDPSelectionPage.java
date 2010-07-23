@@ -18,15 +18,15 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.CatalogContentProvider;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC mzhao class global comment. Detailled comment
@@ -61,7 +61,7 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
             public void doubleClick(DoubleClickEvent event) {
                 // TODO Auto-generated method stub
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                if (object instanceof TdCatalog) {
+                if (object instanceof Catalog) {
                     advanceToNextPageOrFinish();
                 }
             }
@@ -73,9 +73,9 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 try {
                     Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                     PackagesAnalyisParameter catalogPanameter = (PackagesAnalyisParameter) getConnectionParams();
-                    if (object instanceof TdCatalog) {
-                        TdCatalog catalog = (TdCatalog) object;
-                        TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
+                    if (object instanceof Catalog) {
+                        Catalog catalog = (Catalog) object;
+                        Connection tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
                                 .doSwitch(catalog));
                         if (tdProvider != null && catalogPanameter != null) {
                             catalogPanameter.setTdDataProvider(tdProvider);

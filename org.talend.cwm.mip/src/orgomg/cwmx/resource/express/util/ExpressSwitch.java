@@ -10,9 +10,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.foundation.softwaredeployment.Component;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
@@ -20,11 +18,25 @@ import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.resource.multidimensional.DimensionedObject;
 import orgomg.cwm.resource.multidimensional.Schema;
-
-import orgomg.cwmx.resource.express.*;
+import orgomg.cwmx.resource.express.AggMap;
+import orgomg.cwmx.resource.express.AggMapComponent;
+import orgomg.cwmx.resource.express.AliasDimension;
+import orgomg.cwmx.resource.express.Composite;
+import orgomg.cwmx.resource.express.Conjoint;
+import orgomg.cwmx.resource.express.Database;
+import orgomg.cwmx.resource.express.Dimension;
+import orgomg.cwmx.resource.express.ExpressPackage;
+import orgomg.cwmx.resource.express.Formula;
+import orgomg.cwmx.resource.express.Model;
+import orgomg.cwmx.resource.express.PreComputeClause;
+import orgomg.cwmx.resource.express.Program;
+import orgomg.cwmx.resource.express.Relation;
+import orgomg.cwmx.resource.express.SimpleDimension;
+import orgomg.cwmx.resource.express.ValueSet;
+import orgomg.cwmx.resource.express.Variable;
+import orgomg.cwmx.resource.express.Worksheet;
 
 /**
  * <!-- begin-user-doc -->

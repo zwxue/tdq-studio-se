@@ -2,6 +2,11 @@ package net.sourceforge.sqlexplorer.sqleditor.actions;
 
 import java.sql.SQLException;
 
+import net.sourceforge.sqlexplorer.Messages;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
+import net.sourceforge.sqlexplorer.util.ImageUtil;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -10,11 +15,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
-
-import net.sourceforge.sqlexplorer.Messages;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-import net.sourceforge.sqlexplorer.util.ImageUtil;
 
 public class OptionsDropDownAction extends AbstractEditorAction implements IMenuCreator {
 	

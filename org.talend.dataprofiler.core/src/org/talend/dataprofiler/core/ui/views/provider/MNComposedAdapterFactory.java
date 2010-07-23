@@ -18,8 +18,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
-import org.talend.cwm.relational.provider.RelationalItemProviderAdapterFactory;
 import org.talend.dataquality.analysis.provider.AnalysisItemProviderAdapterFactory;
+import orgomg.cwm.resource.relational.provider.RelationalItemProviderAdapterFactory;
 
 /**
  * @author rli

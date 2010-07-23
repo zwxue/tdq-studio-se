@@ -7,9 +7,7 @@
 package orgomg.cwmx.foundation.er.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.relationships.impl.AssociationImpl;
-
 import orgomg.cwmx.foundation.er.ErPackage;
 import orgomg.cwmx.foundation.er.Relationship;
 

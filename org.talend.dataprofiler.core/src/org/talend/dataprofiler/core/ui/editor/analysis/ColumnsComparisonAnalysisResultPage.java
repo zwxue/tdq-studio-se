@@ -49,11 +49,12 @@ import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -72,7 +73,6 @@ import org.talend.dq.analysis.explore.RowMatchExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.utils.format.StringFormatUtil;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -355,7 +355,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
             public void handleEvent(Event event) {
 
-                TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
+                Connection provider = DataProviderHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
@@ -371,7 +371,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
             public void handleEvent(Event event) {
 
-                TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
+                Connection provider = DataProviderHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
@@ -393,7 +393,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                 //                String query = "SELECT * " + dbmsLanguage.from() + dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName()) //$NON-NLS-1$
                 //                        + "." + dbmsLanguage.quote(columnSet.getName()); //$NON-NLS-1$
                 // MOD 10913 zshen:unify the method that get sql query
-                TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
+                Connection provider = DataProviderHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
@@ -501,7 +501,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                                     Display.getDefault().asyncExec(new Runnable() {
 
                                         public void run() {
-                                            TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                            Connection tdDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analysis
                                                     .getContext().getConnection());
                                             String query = itemEntity.getQuery();
                                             String editorName = indicator.getAnalyzedElement().getName();
@@ -620,25 +620,25 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
      */
     static class ColumnPair {
 
-        private Column columnA;
+        private TdColumn columnA;
 
-        private Column columnB;
+        private TdColumn columnB;
 
-        public ColumnPair(Column columnA, Column columnB) {
+        public ColumnPair(TdColumn columnA, TdColumn columnB) {
             this.columnA = columnA;
             this.columnB = columnB;
 
         }
 
-        public Column getAOfPair() {
+        public TdColumn getAOfPair() {
             return columnA;
         }
 
-        public Column getBOfPair() {
+        public TdColumn getBOfPair() {
             return columnB;
         }
 
-        public static ColumnPair[] createColumnPairs(List<Column> columnListA, List<Column> columnListB) {
+        public static ColumnPair[] createColumnPairs(List<TdColumn> columnListA, List<TdColumn> columnListB) {
             if (columnListA.size() != columnListB.size()) {
                 return null;
             }

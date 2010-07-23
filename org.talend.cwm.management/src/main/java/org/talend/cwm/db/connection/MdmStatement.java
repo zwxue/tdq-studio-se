@@ -30,11 +30,11 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MdmStatement {
 
-    private MdmConnection connection;
+    private MdmWebserviceConnection connection;
 
     private String[] resultSet;
 
-    MdmStatement(MdmConnection connection) {
+    MdmStatement(MdmWebserviceConnection connection) {
         this.connection = connection;
     }
 

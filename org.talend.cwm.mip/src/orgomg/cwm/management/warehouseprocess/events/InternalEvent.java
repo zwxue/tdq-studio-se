@@ -7,9 +7,7 @@
 package orgomg.cwm.management.warehouseprocess.events;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.management.warehouseprocess.WarehouseProcess;
-
 import orgomg.cwm.objectmodel.core.BooleanExpression;
 
 /**

@@ -22,13 +22,13 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.dom4j.Element;
-import org.dom4j.tree.DefaultElement;
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.connections.SessionEstablishedListener;
-import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
+import org.dom4j.Element;
+import org.dom4j.tree.DefaultElement;
 
 /**
  * Represents a username and password combo used to connect to an alias; contains

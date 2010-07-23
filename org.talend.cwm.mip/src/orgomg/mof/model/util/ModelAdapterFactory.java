@@ -8,12 +8,11 @@ package orgomg.mof.model.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.mof.model.*;
+import orgomg.mof.model.Association;
+import orgomg.mof.model.ModelElement;
+import orgomg.mof.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->

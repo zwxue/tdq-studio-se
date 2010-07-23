@@ -16,13 +16,13 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * @author rli
@@ -38,12 +38,12 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
         tdDataProvider = null;
         if (analysedElements.size() > 0) {
-            tdDataProvider = (TdDataProvider) analysedElements.get(0);
+            tdDataProvider = (Connection) analysedElements.get(0);
         }
     }
 
-    protected List<TdCatalog> getCatalogs() {
-        List<TdCatalog> catalogs = DataProviderHelper.getTdCatalogs(tdDataProvider);
+    protected List<Catalog> getCatalogs() {
+        List<Catalog> catalogs = ConnectionHelper.getCatalogs(tdDataProvider);
         return catalogs;
     }
 

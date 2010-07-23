@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 public abstract class AbstractSQLFolderNode extends AbstractFolderNode {
 

@@ -21,12 +21,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControlFactory;
@@ -41,7 +43,7 @@ public class UrlEditDialog extends TrayDialog {
 
     private URLSetupControl urlSetupControl;
 
-    private TdDataProvider tdDataProvider;
+    private Connection tdDataProvider;
 
     private DBConnectionParameter connectionParam;
 
@@ -51,7 +53,7 @@ public class UrlEditDialog extends TrayDialog {
      * @param shell
      * @param tdDataProvider
      */
-    public UrlEditDialog(Shell shell, TdDataProvider tdDataProvider) {
+    public UrlEditDialog(Shell shell, Connection tdDataProvider) {
         super(shell);
         this.tdDataProvider = tdDataProvider;
         setShellStyle(getShellStyle() | SWT.MAX | SWT.RESIZE);
@@ -64,20 +66,25 @@ public class UrlEditDialog extends TrayDialog {
         data.widthHint = 600;
         comp.setLayoutData(data);
 
-        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+        Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
 
         SupportDBUrlType dbUrlType = null;
-        String type = DataProviderHelper.getDBType(connection);
+        String type = "";
+        if (connection instanceof DatabaseConnection) {
+            type = ((DatabaseConnection) connection).getDatabaseType();
+        } else if (connection instanceof MDMConnection) {
+            type = SupportDBUrlType.MDM.getDBName();
+        }
         if (null != type && PluginConstant.EMPTY_STRING.equals(type)) {
             // MOD mzhao bug 12313, 2010-04-02 There is no dbType in prv files before 4.0 release, here use driver
             // class
-            dbUrlType = SupportDBUrlStore.getInstance().getDBUrlTypeByDriverName(connection.getDriverClassName());
+            dbUrlType = SupportDBUrlStore.getInstance().getDBUrlTypeByDriverName(ConnectionHelper.getDriverClass(connection));
         } else {
             dbUrlType = SupportDBUrlStore.getInstance().getDBUrlType(type);
         }
         urlSetupControl = URLSetupControlFactory.createEditControl(dbUrlType, comp, connection,
                 createConnectionParam(tdDataProvider));
-        urlSetupControl.setConnectionURL(connection.getConnectionString());
+        urlSetupControl.setConnectionURL(ConnectionHelper.getURL(connection));
 
         data = new GridData(SWT.FILL, SWT.FILL, true, true);
         this.urlSetupControl.setLayoutData(data);
@@ -88,10 +95,10 @@ public class UrlEditDialog extends TrayDialog {
     private DBConnectionParameter createConnectionParam(DataProvider dataProvider) {
         connectionParam = new DBConnectionParameter();
 
-        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+        Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
         Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.USER, DataProviderHelper.getUser(connection));
-        properties.setProperty(TaggedValueHelper.PASSWORD, DataProviderHelper.getClearTextPassword(connection));
+        properties.setProperty(TaggedValueHelper.USER, ConnectionHelper.getUsername(connection));
+        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionHelper.getPassword(connection));
         connectionParam.setParameters(properties);
         connectionParam.setName(dataProvider.getName());
         connectionParam.setAuthor(MetadataHelper.getAuthor(dataProvider));
@@ -99,12 +106,12 @@ public class UrlEditDialog extends TrayDialog {
         connectionParam.setPurpose(MetadataHelper.getPurpose(dataProvider));
         connectionParam.setStatus(MetadataHelper.getDevStatus(dataProvider));
         connectionParam.setDriverPath("");
-        connectionParam.setDriverClassName(connection.getDriverClassName());
-        connectionParam.setJdbcUrl(connection.getConnectionString());
-        connectionParam.setHost(DataProviderHelper.getHost(connection));
-        connectionParam.setPort(DataProviderHelper.getPort(connection));
-        connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE, DataProviderHelper.getUniverse(connection));
-        connectionParam.setDbName(DataProviderHelper.getDBName(connection));
+        connectionParam.setDriverClassName(ConnectionHelper.getDriverClass(connection));
+        connectionParam.setJdbcUrl(ConnectionHelper.getURL(connection));
+        connectionParam.setHost(ConnectionHelper.getServerName(connection));
+        connectionParam.setPort(ConnectionHelper.getPort(connection));
+        connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse(connection));
+        connectionParam.setDbName(ConnectionHelper.getSID(connection));
 
         return connectionParam;
     }

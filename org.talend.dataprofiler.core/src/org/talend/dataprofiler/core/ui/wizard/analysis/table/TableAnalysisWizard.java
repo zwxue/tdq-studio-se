@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -67,11 +67,11 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         }
     }
 
-    public TdDataProvider getTdDataProvider() {
+    public Connection getTdDataProvider() {
         return getParameter() == null ? null : getParameter().getTdDataProvider();
     }
 
-    public void setTdDataProvider(TdDataProvider tdDataProvider) {
+    public void setTdDataProvider(Connection tdDataProvider) {
         if (getParameter() != null) {
             getParameter().setTdDataProvider(tdDataProvider);
         }
@@ -124,7 +124,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         TypedReturnCode<IFile> saveCWMFile = super.createAndSaveCWMFile(analysis);
 
         if (saveCWMFile.isOk() && connection != null) {
-            PrvResourceFileHelper.getInstance().save((TdDataProvider) connection);
+            PrvResourceFileHelper.getInstance().save((Connection) connection);
         }
 
         return saveCWMFile;
@@ -134,7 +134,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     public ModelElement initCWMResourceBuilder() {
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
         NamedColumnSet[] ncss = getNamedColumnSet();
-        TdDataProvider tdp = getTdDataProvider();
+        Connection tdp = getTdDataProvider();
 
         if (ncss != null && getAnalysisBuilder() != null) {
             List<Indicator> indicatorList = new ArrayList<Indicator>();

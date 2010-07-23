@@ -42,6 +42,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -51,11 +52,9 @@ import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
@@ -75,6 +74,7 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -644,7 +644,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     if (parentCatalogOrSchema == null) {
                         return null;
                     }
-                    TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+                    Connection provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
                     if (provider == null) {
                         return null;
                     }
@@ -779,7 +779,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (element instanceof EObject) {
                 // MOD xqliu 2010-02-02 bug 11198
                 if (element instanceof TdXMLDocument) {
-                    TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider((TdXMLDocument) element);
+                    Connection tdDataProvider = DataProviderHelper.getTdDataProvider((TdXMLDocument) element);
                     IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
                     return findCorrespondingFile;
                 } else if (element instanceof TdXMLElement) {
@@ -795,13 +795,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
 
                 Package packageValue = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObj);
-                TdCatalog parentCatalog = CatalogHelper.getParentCatalog(packageValue);
+                Catalog parentCatalog = CatalogHelper.getParentCatalog(packageValue);
                 if (parentCatalog != null) {
                     return parentCatalog;
                 }
 
                 if (packageValue != null) {
-                    TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
+                    Connection tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
                     IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
                     return findCorrespondingFile;
                 }

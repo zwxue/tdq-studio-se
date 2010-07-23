@@ -20,6 +20,7 @@ package net.sourceforge.sqlexplorer.preview;
 
 import java.io.StringReader;
 import java.util.List;
+
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.dataset.XmlDataType;
 

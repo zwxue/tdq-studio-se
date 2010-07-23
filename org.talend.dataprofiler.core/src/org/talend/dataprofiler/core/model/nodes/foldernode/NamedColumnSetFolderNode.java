@@ -16,17 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.NamedColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -48,8 +48,8 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         super(name);
     }
 
-    protected <T extends List<COLSET>> void loadChildrenLow(orgomg.cwm.objectmodel.core.Package pack, TdCatalog catalog,
-            TdSchema schema, final T columnSets) {
+    protected <T extends List<COLSET>> void loadChildrenLow(orgomg.cwm.objectmodel.core.Package pack, Catalog catalog,
+            Schema schema, final T columnSets) {
         assert pack != null;
         // MOD xqliu 2009-04-27 bug 6507
         if (FILTER_FLAG) {
@@ -76,7 +76,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         }
         // ~
 
-        TdDataProvider provider = DataProviderHelper.getTdDataProvider(pack);
+        Connection provider = DataProviderHelper.getTdDataProvider(pack);
         if (provider == null) {
             log.warn(pack.getName());
             return;
@@ -94,14 +94,14 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
      * @param schema
      * @return the Tables or Views in the given catalog or schema.
      */
-    protected abstract List<COLSET> getColumnSets(TdCatalog catalog, TdSchema schema);
+    protected abstract List<COLSET> getColumnSets(Catalog catalog, Schema schema);
 
     /**
      * @param catalog
      * @param schema
      * @return the Tables or Views in the given catalog or schema.
      */
-    protected abstract List<COLSET> getColumnSetsWithFilter(TdCatalog catalog, TdSchema schema);
+    protected abstract List<COLSET> getColumnSetsWithFilter(Catalog catalog, Schema schema);
 
     /**
      * Loads columnsets (table or view) from database.
@@ -113,8 +113,8 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
      * @param columnSets
      * @return
      */
-    protected abstract <T extends List<COLSET>> boolean loadColumnSets(TdCatalog catalog, TdSchema schema,
-            TdDataProvider provider, final T columnSets);
+    protected abstract <T extends List<COLSET>> boolean loadColumnSets(Catalog catalog, Schema schema, Connection provider,
+            final T columnSets);
 
     /**
      * DOC xqliu Comment method "filterColumnSets". ADD xqliu 2009-05-07 bug 7234

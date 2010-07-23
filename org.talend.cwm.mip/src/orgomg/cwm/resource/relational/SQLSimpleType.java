@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.relational;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.DataType;
 
 /**

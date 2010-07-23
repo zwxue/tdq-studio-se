@@ -26,9 +26,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -39,8 +37,9 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -89,8 +88,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         // (but is not need, hence we keep it commented)
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator().equals(indicator.eClass())) {
             RowMatchingIndicator rowMatchingIndicator = (RowMatchingIndicator) indicator;
-            EList<Column> columnSetA = rowMatchingIndicator.getColumnSetA();
-            EList<Column> columnSetB = rowMatchingIndicator.getColumnSetB();
+            EList<TdColumn> columnSetA = rowMatchingIndicator.getColumnSetA();
+            EList<TdColumn> columnSetB = rowMatchingIndicator.getColumnSetB();
             if (columnSetA.size() != columnSetB.size()) {
                 return traceError("Cannot compare two column sets with different size"); // break;
             }
@@ -116,8 +115,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param useNulls
      * @return
      */
-    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, EList<Column> columnSetA,
-            EList<Column> columnSetB, boolean useNulls) {
+    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, EList<TdColumn> columnSetA,
+            EList<TdColumn> columnSetB, boolean useNulls) {
         // MOD scorreia 2009-05-25 allow to compare elements from the same table
         // aliases of tables
         String aliasA = "A"; //$NON-NLS-1$
@@ -169,13 +168,13 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param columnSetB
      * @return
      */
-    private String createWhereClause(String tableNameB, EList<Column> columnSetB) {
+    private String createWhereClause(String tableNameB, EList<TdColumn> columnSetB) {
         final String isNull = dbms().isNull();
         final String and = dbms().and();
         return conditionOnAllColumns(tableNameB, columnSetB, isNull, and);
     }
 
-    private String createNotNullCondition(String tableNameB, EList<Column> columnSetB) {
+    private String createNotNullCondition(String tableNameB, EList<TdColumn> columnSetB) {
         final String isNotNull = dbms().isNotNull();
         final String or = dbms().or();
         return conditionOnAllColumns(tableNameB, columnSetB, isNotNull, or);
@@ -190,7 +189,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param and
      * @return
      */
-    private String conditionOnAllColumns(String tableName, EList<Column> columnSet, final String isNull, final String and) {
+    private String conditionOnAllColumns(String tableName, EList<TdColumn> columnSet, final String isNull, final String and) {
         int size = columnSet.size();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < size; i++) {
@@ -211,7 +210,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param columnSetB
      * @return
      */
-    private String createJoinClause(String tableNameA, EList<Column> columnSetA, String tableNameB, EList<Column> columnSetB,
+    private String createJoinClause(String tableNameA, EList<TdColumn> columnSetA, String tableNameB, EList<TdColumn> columnSetB,
             final boolean useNulls) {
         StringBuilder builder = new StringBuilder();
         int size = columnSetA.size();
@@ -251,9 +250,9 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param columnSetA
      * @return
      */
-    private String getTableName(EList<Column> columnSetA) {
+    private String getTableName(EList<TdColumn> columnSetA) {
         String tableName = null;
-        for (Column column : columnSetA) {
+        for (TdColumn column : columnSetA) {
             if (belongToSameSchemata((TdColumn) column)) {
                 ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
 
@@ -268,8 +267,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
                     if (catalogName == null && schemaName != null) {
                         // try to get catalog above schema
-                        final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-                        final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+                        final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+                        final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
                         catalogName = parentCatalog != null ? parentCatalog.getName() : null;
                     }
                     // MOD by zshen: change schemaName of sybase database to Table's owner.
@@ -411,8 +410,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             String catalogName = getQuotedCatalogName(columnSetOwner);
             if (catalogName == null && schemaName != null) {
                 // try to get catalog above schema
-                final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-                final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+                final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+                final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
                 catalogName = parentCatalog != null ? parentCatalog.getName() : null;
             }
             // MOD by zshen: change schemaName of sybase database to Table's owner.

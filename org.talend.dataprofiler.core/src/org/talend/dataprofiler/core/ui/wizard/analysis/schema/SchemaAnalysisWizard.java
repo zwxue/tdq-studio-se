@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.schema;
 
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.AnalysisFilterWizard;
 import org.talend.dataquality.analysis.Analysis;
@@ -58,7 +58,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
 
         if (getAnalysisBuilder() != null) {
             PackagesAnalyisParameter packageParameter = getParameter();
-            TdDataProvider tdProvider = packageParameter.getTdDataProvider();
+            Connection tdProvider = packageParameter.getTdDataProvider();
             getAnalysisBuilder().setAnalysisConnection(tdProvider);
             Indicator[] indicators = new Indicator[packageParameter.getPackages().length];
             int i = 0;

@@ -18,12 +18,11 @@
  */
 package net.sourceforge.sqlexplorer.dbproduct;
 
-import java.util.LinkedList;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 
 /**
  * The SessionTreeNode represents one active database session.

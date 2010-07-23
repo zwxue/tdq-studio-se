@@ -10,12 +10,35 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.analysis.datamining.*;
+import orgomg.cwm.analysis.datamining.ApplicationAttribute;
+import orgomg.cwm.analysis.datamining.ApplicationInputSpecification;
+import orgomg.cwm.analysis.datamining.AssociationRulesSettings;
+import orgomg.cwm.analysis.datamining.AttributeType;
+import orgomg.cwm.analysis.datamining.AttributeUsage;
+import orgomg.cwm.analysis.datamining.AttributeUsageRelation;
+import orgomg.cwm.analysis.datamining.CategoricalAttribute;
+import orgomg.cwm.analysis.datamining.Category;
+import orgomg.cwm.analysis.datamining.CategoryHierarchy;
+import orgomg.cwm.analysis.datamining.CategoryProperty;
+import orgomg.cwm.analysis.datamining.ClassificationSettings;
+import orgomg.cwm.analysis.datamining.ClusteringSettings;
+import orgomg.cwm.analysis.datamining.CostMatrix;
+import orgomg.cwm.analysis.datamining.DataminingFactory;
+import orgomg.cwm.analysis.datamining.DataminingPackage;
+import orgomg.cwm.analysis.datamining.MiningAttribute;
+import orgomg.cwm.analysis.datamining.MiningDataSpecification;
+import orgomg.cwm.analysis.datamining.MiningModel;
+import orgomg.cwm.analysis.datamining.MiningModelResult;
+import orgomg.cwm.analysis.datamining.MiningSettings;
+import orgomg.cwm.analysis.datamining.NumericAttribute;
+import orgomg.cwm.analysis.datamining.OrderType;
+import orgomg.cwm.analysis.datamining.OrdinalAttribute;
+import orgomg.cwm.analysis.datamining.RegressionSettings;
+import orgomg.cwm.analysis.datamining.StatisticsSettings;
+import orgomg.cwm.analysis.datamining.SupervisedMiningModel;
+import orgomg.cwm.analysis.datamining.SupervisedMiningSettings;
 
 /**
  * <!-- begin-user-doc -->

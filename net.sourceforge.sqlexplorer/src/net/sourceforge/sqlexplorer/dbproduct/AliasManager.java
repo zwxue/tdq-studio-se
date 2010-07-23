@@ -26,16 +26,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+import net.sourceforge.sqlexplorer.ApplicationFiles;
+import net.sourceforge.sqlexplorer.ExplorerException;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultElement;
-
-import net.sourceforge.sqlexplorer.ApplicationFiles;
-import net.sourceforge.sqlexplorer.ExplorerException;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 /**
  * Maintains the list of Alias objects

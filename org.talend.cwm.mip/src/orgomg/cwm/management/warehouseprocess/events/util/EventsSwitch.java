@@ -10,11 +10,20 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.management.warehouseprocess.events.*;
-
+import orgomg.cwm.management.warehouseprocess.events.CalendarDate;
+import orgomg.cwm.management.warehouseprocess.events.CascadeEvent;
+import orgomg.cwm.management.warehouseprocess.events.CustomCalendar;
+import orgomg.cwm.management.warehouseprocess.events.CustomCalendarEvent;
+import orgomg.cwm.management.warehouseprocess.events.EventsPackage;
+import orgomg.cwm.management.warehouseprocess.events.ExternalEvent;
+import orgomg.cwm.management.warehouseprocess.events.InternalEvent;
+import orgomg.cwm.management.warehouseprocess.events.IntervalEvent;
+import orgomg.cwm.management.warehouseprocess.events.PointInTimeEvent;
+import orgomg.cwm.management.warehouseprocess.events.RecurringPointInTimeEvent;
+import orgomg.cwm.management.warehouseprocess.events.RetryEvent;
+import orgomg.cwm.management.warehouseprocess.events.ScheduleEvent;
+import orgomg.cwm.management.warehouseprocess.events.WarehouseEvent;
 import orgomg.cwm.objectmodel.behavioral.Event;
-
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;

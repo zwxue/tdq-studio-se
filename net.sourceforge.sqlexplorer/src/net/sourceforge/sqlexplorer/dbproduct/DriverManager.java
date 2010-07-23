@@ -26,17 +26,18 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+
+import net.sourceforge.sqlexplorer.ApplicationFiles;
+import net.sourceforge.sqlexplorer.ExplorerException;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.util.URLUtil;
+
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultElement;
-
-import net.sourceforge.sqlexplorer.ApplicationFiles;
-import net.sourceforge.sqlexplorer.ExplorerException;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.util.URLUtil;
 
 /**
  * Provides access to the list of drivers, persisting their configuration in the

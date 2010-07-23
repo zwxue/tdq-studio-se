@@ -7,10 +7,8 @@
 package orgomg.cwm.objectmodel.behavioral.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
 import orgomg.cwm.objectmodel.behavioral.Interface;
-
 import orgomg.cwm.objectmodel.core.impl.ClassifierImpl;
 
 /**

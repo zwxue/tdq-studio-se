@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 
 /**
  * This class help store the needed save TdDataProvider object.
@@ -30,9 +30,9 @@ public final class NeedSaveDataProviderHelper {
     private NeedSaveDataProviderHelper() {
     }
 
-    private static Map<String, TdDataProvider> needSaveProviderMap = new HashMap<String, TdDataProvider>();
+    private static Map<String, Connection> needSaveProviderMap = new HashMap<String, Connection>();
 
-    public static void register(String path, TdDataProvider dataProvider) {
+    public static void register(String path, Connection dataProvider) {
         // MOD scorreia 2008-05-13 DqRepositoryViewService.createTechnicalName() creates a new technical name each time
         // it is called. It should not be called here. The following line is commented.
         // String createTechnicalName = DqRepositoryViewService.createTechnicalName(providerName);
@@ -56,7 +56,7 @@ public final class NeedSaveDataProviderHelper {
 
         Iterator<String> it = needSaveProviderMap.keySet().iterator();
         while (it.hasNext()) {
-            TdDataProvider provider = needSaveProviderMap.get(it.next());
+            Connection provider = needSaveProviderMap.get(it.next());
             DqRepositoryViewService.saveOpenDataProvider(provider, false);
         }
         isSaved = true;

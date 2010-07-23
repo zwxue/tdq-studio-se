@@ -7,7 +7,6 @@
 package orgomg.cwmx.analysis.informationset;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

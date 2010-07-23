@@ -22,12 +22,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -94,7 +94,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                     list.addAll(ColumnSetHelper.getColumns(columnSet));
                 } else {
                     Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-                    TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+                    Connection provider = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
 
                     try {
                         List<TdColumn> columns = DqRepositoryViewService.getColumns(provider, columnSet, null, true);

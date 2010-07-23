@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.relational.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.RelationalPackage;
 

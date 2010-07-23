@@ -14,7 +14,6 @@ package org.talend.cwm.db.connection;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +31,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -39,8 +41,6 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.XmlFactory;
@@ -57,14 +57,13 @@ import org.talend.mdm.webservice.XtentisServiceLocator;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.Component;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class MdmConnection implements IXMLDBConnection {
+public class MdmWebserviceConnection implements IXMLDBConnection {
 
-    protected static Logger log = Logger.getLogger(MdmConnection.class);
+    protected static Logger log = Logger.getLogger(MdmWebserviceConnection.class);
 
     private static final String XSD_SUFIX = ".xsd"; //$NON-NLS-1$
 
@@ -78,7 +77,7 @@ public class MdmConnection implements IXMLDBConnection {
 
     private Properties props = null;
 
-    public MdmConnection(String url, Properties props) {
+    public MdmWebserviceConnection(String url, Properties props) {
         this.url = url;
         this.props = props;
         if (this.props != null) {
@@ -183,13 +182,8 @@ public class MdmConnection implements IXMLDBConnection {
             xsdFolder.create(true, true, new NullProgressMonitor());
         }
         IFile file = xsdFolder.getFile(resName + XSD_SUFIX);
-        // zshen bug 14089: unfolder MDM node get exception.because of the encoding of stream
-        try {
-            file.create(new ByteArrayInputStream(resXSD.getBytes("utf-8")), true, new NullProgressMonitor());//$NON-NLS-1$
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        // ~14089
+        file.create(new ByteArrayInputStream(resXSD.getBytes()), true, new NullProgressMonitor());
+
         TdXMLDocument tdXmlDoc = XmlFactory.eINSTANCE.createTdXMLDocument();
         tdXmlDoc.setName(resName);
         // TODO Specify unique xsd file name.
@@ -197,13 +191,12 @@ public class MdmConnection implements IXMLDBConnection {
         xmlDocCollection.add(tdXmlDoc);
     }
 
-    public void setProviderConnection(TdDataProvider dataProvider, DBConnectionParameter parameter) {
+    public void setProviderConnection(Connection dataProvider, DBConnectionParameter parameter) {
         // Provider connection properties
-        TdProviderConnection prov = SoftwaredeploymentFactory.eINSTANCE.createTdProviderConnection();
+        MDMConnection prov = ConnectionFactory.eINSTANCE.createMDMConnection();
         prov.setName(SupportDBUrlType.MDM.getDBKey() + EcoreUtil.generateUUID());
         // connection
-        prov.setDriverClassName("");
-        prov.setConnectionString(url);
+        prov.setPathname(url);
         Properties propes = parameter.getParameters();
         // add properties as tagged value of the provider connection.
         Enumeration<?> propertyNames = propes.propertyNames();
@@ -211,16 +204,16 @@ public class MdmConnection implements IXMLDBConnection {
             String key = propertyNames.nextElement().toString();
             String property = propes.getProperty(key);
             if (TaggedValueHelper.PASSWORD.equals(key)) {
-                DataProviderHelper.encryptAndSetPassword(prov, property);
-            } else {
-                TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(key, property);
-                prov.getTaggedValue().add(taggedValue);
+                prov.setPassword(property);
+            } else if (TaggedValueHelper.USER.equals(key)) {
+                prov.setUsername(property);
             }
         }
-        DataProviderHelper.addProviderConnection(prov, dataProvider);
+        dataProvider = prov;
+        // DataProviderHelper.addProviderConnection(prov, dataProvider);
     }
 
-    public void setSofewareSystem(TdDataProvider dataProvider, DBConnectionParameter parameter) {
+    public void setSofewareSystem(Connection dataProvider, DBConnectionParameter parameter) {
         // Software system
         TdSoftwareSystem system = SoftwaredeploymentFactory.eINSTANCE.createTdSoftwareSystem();
         system.setName(parameter.getDbName());
@@ -275,4 +268,13 @@ public class MdmConnection implements IXMLDBConnection {
         // TODO 10238
         return DatabaseConstant.MDM_VERSION;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserPass() {
+        return userPass;
+    }
+
 }

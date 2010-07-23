@@ -4,7 +4,6 @@ Bundle-Name: Management Plug-in
 Bundle-SymbolicName: org.talend.cwm.management;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.talend.dataquality;visibility:=reexport,
- org.talend.cwm.ext;visibility:=reexport,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,

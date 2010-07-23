@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -43,7 +44,6 @@ import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.util.RelationalSwitch;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
@@ -83,13 +83,13 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     private AbstractDatabaseFolderNode dbFolderNode = null;
 
-    protected TdDataProvider oldDataProvider;
+    protected Connection oldDataProvider;
 
-    protected TdDataProvider tempReloadProvider;
+    protected Connection tempReloadProvider;
 
     protected Map<String, Object> options;
 
-    protected TdDataProvider copyedDataProvider;
+    protected Connection copyedDataProvider;
 
     protected IUIHandler guiHandler;
 
@@ -150,7 +150,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         };
     }
 
-    public TdDataProvider reloadCurrentLevelElement() throws ReloadCompareException {
+    public Connection reloadCurrentLevelElement() throws ReloadCompareException {
         if (!isValid()) {
             return null;
         }
@@ -198,7 +198,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
         IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
-        TypedReturnCode<TdDataProvider> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
+        TypedReturnCode<Connection> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
         copyedDataProvider = returnValue.getObject();
 
     }
@@ -212,7 +212,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         IFile tempConnectionFile = DQStructureComparer.getTempRefreshFile();
         // MOD mzhao ,Extract method getRefreshedDataProvider to class
         // DQStructureComparer for common use.
-        TypedReturnCode<TdDataProvider> returnProvider = DQStructureComparer.getRefreshedDataProvider(oldDataProvider);
+        TypedReturnCode<Connection> returnProvider = DQStructureComparer.getRefreshedDataProvider(oldDataProvider);
         if (!returnProvider.isOk()) {
             throw new ReloadCompareException(returnProvider.getMessage());
         }
@@ -254,7 +254,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
      * 
      * @return the data provider of the selected object
      */
-    protected abstract TdDataProvider findDataProvider();
+    protected abstract Connection findDataProvider();
 
     protected boolean isValid() {
         return true;
@@ -352,7 +352,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     protected void popRemoveElementConfirm() {
         if (!removeElementConfirm) {
-            final TdDataProvider provider = oldDataProvider;
+            final Connection provider = oldDataProvider;
             if (guiHandler != null) {
                 guiHandler.popRemoveElement(provider);
             }

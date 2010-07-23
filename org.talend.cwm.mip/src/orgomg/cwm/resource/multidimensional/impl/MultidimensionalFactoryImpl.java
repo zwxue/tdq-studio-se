@@ -9,12 +9,16 @@ package orgomg.cwm.resource.multidimensional.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.resource.multidimensional.*;
+import orgomg.cwm.resource.multidimensional.Dimension;
+import orgomg.cwm.resource.multidimensional.DimensionedObject;
+import orgomg.cwm.resource.multidimensional.Member;
+import orgomg.cwm.resource.multidimensional.MemberSet;
+import orgomg.cwm.resource.multidimensional.MemberValue;
+import orgomg.cwm.resource.multidimensional.MultidimensionalFactory;
+import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
+import orgomg.cwm.resource.multidimensional.Schema;
 
 /**
  * <!-- begin-user-doc -->

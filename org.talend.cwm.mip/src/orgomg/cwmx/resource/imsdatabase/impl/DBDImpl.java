@@ -10,20 +10,14 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.resource.record.impl.RecordFileImpl;
-
 import orgomg.cwmx.resource.imsdatabase.ACBLIB;
 import orgomg.cwmx.resource.imsdatabase.AccessMethod;
 import orgomg.cwmx.resource.imsdatabase.DBD;
@@ -33,7 +27,6 @@ import orgomg.cwmx.resource.imsdatabase.Exit;
 import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
 import orgomg.cwmx.resource.imsdatabase.PCB;
 import orgomg.cwmx.resource.imsdatabase.Segment;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.AccessMethodType;
 
 /**

@@ -19,8 +19,8 @@
 package net.sourceforge.sqlexplorer.parsers;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
 

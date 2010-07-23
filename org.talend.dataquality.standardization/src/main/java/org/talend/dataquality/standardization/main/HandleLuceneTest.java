@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.lucene.queryParser.ParseException;
-import org.talend.dataquality.standardization.constant.PluginConstant;
 
 /**
  * DOC klliu class global comment.
@@ -34,7 +33,7 @@ public class HandleLuceneTest {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         String filename = "./data/TalendGivenNames.TXT";
-        // String indexfolder = "C:\\Documents and Settings\\Administrator\\×ÀÃæ\\data\\TalendGivenNames_index";
+        // String indexfolder = "C:\\Documents and Settings\\Administrator\\ï¿½ï¿½ï¿½ï¿½\\data\\TalendGivenNames_index";
         String indexfolder = "./data/TalendGivenNames_index";
         // String[] firstnames = new String[] { "jeants", "rÃ©my", "jean-philippe",
         // "sebastiao", "r*my*" };

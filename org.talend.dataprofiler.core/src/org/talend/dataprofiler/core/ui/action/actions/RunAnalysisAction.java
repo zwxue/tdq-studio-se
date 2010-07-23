@@ -32,9 +32,9 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -161,7 +161,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         if (AnalysisType.CONNECTION.equals(analysisType)) {
             if (AnalysisHelper.getReloadDatabases(analysis)) {
                 IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(
-                        (TdDataProvider) analysis.getContext().getConnection());
+                        (Connection) analysis.getContext().getConnection());
                 if (file != null) {
                     try {
                         ComparisonLevelFactory.creatComparisonLevel(file).reloadCurrentLevelElement();

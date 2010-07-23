@@ -18,13 +18,13 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.TdXMLElement;
 import org.talend.dataprofiler.core.ImageLib;
@@ -55,7 +55,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         
     	if (element instanceof IFolderNode) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-        } else if (element instanceof TdDataProvider) {
+        } else if (element instanceof Connection) {
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         } else if (element instanceof TdColumn) {
             if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
@@ -136,8 +136,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         if (element instanceof RegularExpression) {
             RegularExpression regExp = (RegularExpression) element;
             return regExp.getExpression().getLanguage();
-        } else if (element instanceof TdDataProvider) {
-            return ((TdDataProvider) element).getName();
+        } else if (element instanceof Connection) {
+            return ((Connection) element).getName();
         }
 
         // MOD mzhao feature 10238

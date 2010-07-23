@@ -7,9 +7,7 @@
 package orgomg.cwmx.resource.essbase.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
-
 import orgomg.cwmx.resource.essbase.Application;
 import orgomg.cwmx.resource.essbase.EssbasePackage;
 

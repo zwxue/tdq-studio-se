@@ -8,16 +8,11 @@ package orgomg.cwmx.resource.essbase.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.analysis.olap.CubeRegion;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DeployedComponent;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
@@ -25,11 +20,32 @@ import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.resource.multidimensional.DimensionedObject;
 import orgomg.cwm.resource.multidimensional.Schema;
-
-import orgomg.cwmx.resource.essbase.*;
+import orgomg.cwmx.resource.essbase.Alias;
+import orgomg.cwmx.resource.essbase.Application;
+import orgomg.cwmx.resource.essbase.Comment;
+import orgomg.cwmx.resource.essbase.Consolidation;
+import orgomg.cwmx.resource.essbase.CurrencyConversion;
+import orgomg.cwmx.resource.essbase.DataStorage;
+import orgomg.cwmx.resource.essbase.Database;
+import orgomg.cwmx.resource.essbase.Dimension;
+import orgomg.cwmx.resource.essbase.EssbasePackage;
+import orgomg.cwmx.resource.essbase.Formula;
+import orgomg.cwmx.resource.essbase.Generation;
+import orgomg.cwmx.resource.essbase.ImmediateParent;
+import orgomg.cwmx.resource.essbase.Level;
+import orgomg.cwmx.resource.essbase.LinkedPartition;
+import orgomg.cwmx.resource.essbase.MemberName;
+import orgomg.cwmx.resource.essbase.OLAPServer;
+import orgomg.cwmx.resource.essbase.Outline;
+import orgomg.cwmx.resource.essbase.Partition;
+import orgomg.cwmx.resource.essbase.ReplicatedPartition;
+import orgomg.cwmx.resource.essbase.TimeBalance;
+import orgomg.cwmx.resource.essbase.TransparentPartition;
+import orgomg.cwmx.resource.essbase.TwoPassCalculation;
+import orgomg.cwmx.resource.essbase.UDA;
+import orgomg.cwmx.resource.essbase.VarianceReporting;
 
 /**
  * <!-- begin-user-doc -->

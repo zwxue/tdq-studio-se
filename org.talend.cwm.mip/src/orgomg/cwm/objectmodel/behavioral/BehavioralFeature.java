@@ -7,7 +7,6 @@
 package orgomg.cwm.objectmodel.behavioral;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.Feature;
 
 /**

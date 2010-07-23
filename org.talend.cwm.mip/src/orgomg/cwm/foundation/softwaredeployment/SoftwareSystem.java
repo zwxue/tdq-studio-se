@@ -7,9 +7,7 @@
 package orgomg.cwm.foundation.softwaredeployment;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.foundation.typemapping.TypeSystem;
-
 import orgomg.cwm.objectmodel.core.Subsystem;
 
 /**

@@ -8,13 +8,17 @@ package orgomg.cwm.foundation.businessinformation.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.foundation.businessinformation.*;
-
+import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
+import orgomg.cwm.foundation.businessinformation.Contact;
+import orgomg.cwm.foundation.businessinformation.Description;
+import orgomg.cwm.foundation.businessinformation.Document;
+import orgomg.cwm.foundation.businessinformation.Email;
+import orgomg.cwm.foundation.businessinformation.Location;
+import orgomg.cwm.foundation.businessinformation.ResourceLocator;
+import orgomg.cwm.foundation.businessinformation.ResponsibleParty;
+import orgomg.cwm.foundation.businessinformation.Telephone;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;

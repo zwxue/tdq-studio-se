@@ -30,10 +30,10 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sql.metadata.constants.MetaDataConstants;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -44,15 +44,15 @@ public class CatalogBuilder extends CwmBuilder {
 
     private static Logger log = Logger.getLogger(CatalogBuilder.class);
 
-    private final Map<String, TdCatalog> name2catalog = new HashMap<String, TdCatalog>();
+    private final Map<String, Catalog> name2catalog = new HashMap<String, Catalog>();
 
-    private final Set<TdSchema> schemata = new HashSet<TdSchema>();
+    private final Set<Schema> schemata = new HashSet<Schema>();
 
     private boolean catalogsInitialized = false;
 
     private boolean schemaInitialized = false;
 
-    private Map<String, TdCatalog> catalogsToUpdate = new HashMap<String, TdCatalog>();
+    private Map<String, Catalog> catalogsToUpdate = new HashMap<String, Catalog>();
 
     // ADD xqliu 2010-03-03 feature 11412
     protected DBConnectionParameter dbConnectionParameter;
@@ -94,8 +94,8 @@ public class CatalogBuilder extends CwmBuilder {
         this.dbConnectionParameter = dbParam;
     }
 
-    public boolean refreshCatalogs(final Collection<TdCatalog> catalogs) {
-        for (TdCatalog tdCatalog : catalogs) {
+    public boolean refreshCatalogs(final Collection<Catalog> catalogs) {
+        for (Catalog tdCatalog : catalogs) {
             if (tdCatalog == null) {
                 continue;
             }
@@ -165,7 +165,7 @@ public class CatalogBuilder extends CwmBuilder {
      * {@link CatalogBuilder#getSchemata()} has been called before, then the catalogs will contain schemata. if not,
      * then the catalogs are empty.
      */
-    public Collection<TdCatalog> getCatalogs() {
+    public Collection<Catalog> getCatalogs() {
         if (!catalogsInitialized) {
             initializeCatalog();
         }
@@ -177,14 +177,14 @@ public class CatalogBuilder extends CwmBuilder {
      * 
      * @return the schemata initialized with the metadata. Catalogs will be created.
      */
-    public Collection<TdSchema> getSchemata() {
+    public Collection<Schema> getSchemata() {
         if (!schemaInitialized) {
             initializeSchema();
         }
         return this.schemata;
     }
 
-    public TdCatalog getCatalog(String catalogName) {
+    public Catalog getCatalog(String catalogName) {
         if (!catalogsInitialized) {
             initializeCatalog();
         }
@@ -230,7 +230,7 @@ public class CatalogBuilder extends CwmBuilder {
                 }
                 // -- continue without creating any catalog
             } else { // got the current catalog name, create a Catalog
-                TdCatalog catalog = createOrUpdateCatalog(currentCatalogName);
+                Catalog catalog = createOrUpdateCatalog(currentCatalogName);
                 name2catalog.put(currentCatalogName, catalog);
             }
         } else {
@@ -255,7 +255,7 @@ public class CatalogBuilder extends CwmBuilder {
                         getConnectionInformations(connection));
                 // MOD xqliu 2010-03-03 feature 11412
                 if (retrieveCatalogSchema(dbName, catalogName)) {
-                    TdCatalog catalog = createOrUpdateCatalog(catalogName);
+                    Catalog catalog = createOrUpdateCatalog(catalogName);
                     name2catalog.put(catalogName, catalog);
                 }
                 // ~11412
@@ -299,7 +299,7 @@ public class CatalogBuilder extends CwmBuilder {
         }
 
         // MOD mzhao bug 8502 2009-10-29
-        Map<String, List<TdSchema>> catalog2schemas = null;
+        Map<String, List<Schema>> catalog2schemas = null;
         if (this.connection.getMetaData().getDriverName().equals(DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0)) {
             catalog2schemas = DatabaseContentRetriever.getMSSQLSchemas(this.connection);
         } else {
@@ -313,10 +313,10 @@ public class CatalogBuilder extends CwmBuilder {
         // store schemas in catalogs
         Set<String> catNames = catalog2schemas.keySet();
         for (String catName : catNames) {
-            List<TdSchema> schemas = catalog2schemas.get(catName);
+            List<Schema> schemas = catalog2schemas.get(catName);
             if (catName != null) { // a mapping between catalog and schema exist
                 if (schemas != null) {
-                    TdCatalog catalog = this.name2catalog.get(catName);
+                    Catalog catalog = this.name2catalog.get(catName);
                     // MOD mzhao bug 8502 2009-10-28, filter user for MSSQL 2005 and 2008.
                     if (catalog != null && schemas != null) {
                         if (!(schemas.size() == 1 && schemas.get(0) == null)) {
@@ -326,8 +326,8 @@ public class CatalogBuilder extends CwmBuilder {
                 }
             } else {
                 // ADD xqliu 2010-04-21 bug 12452
-                List<TdSchema> retrievedSchemas = new ArrayList<TdSchema>();
-                for (TdSchema schema : schemas) {
+                List<Schema> retrievedSchemas = new ArrayList<Schema>();
+                for (Schema schema : schemas) {
                 	// MOD xqliu 2010-05-07 bug 9840
                     if (retrieveCatalogSchema(dbName, schema.getName()) || odbcIngres) {
                         retrievedSchemas.add(schema);
@@ -341,7 +341,7 @@ public class CatalogBuilder extends CwmBuilder {
                 // MOD xqliu 2010-05-07 bug 9840
                 if ((ConnectionUtils.isPostgresql(this.connection) && catNames.size() == 1 && this.name2catalog.size() == 1)
                         || odbcIngres) {
-                    TdCatalog cat = this.name2catalog.values().iterator().next();
+                    Catalog cat = this.name2catalog.values().iterator().next();
                     // MOD xqliu 2010-04-21 bug 12452
                     // CatalogHelper.addSchemas(schemas, cat);
                     CatalogHelper.addSchemas(retrievedSchemas, cat);
@@ -363,18 +363,18 @@ public class CatalogBuilder extends CwmBuilder {
      * @param name the name of the catalog
      * @return the newly created catalog
      */
-    private TdCatalog createOrUpdateCatalog(String name) {
+    private Catalog createOrUpdateCatalog(String name) {
         if (name == null) {
             return null;
         }
-        TdCatalog cat = getOrCreateCatalog(name);
+        Catalog cat = getOrCreateCatalog(name);
 
         // --- TODO set attributes of catalog
         return cat;
     }
 
-    private TdCatalog getOrCreateCatalog(String name) {
-        TdCatalog cat = (!this.catalogsToUpdate.isEmpty()) ? this.catalogsToUpdate.get(name) : null;
+    private Catalog getOrCreateCatalog(String name) {
+        Catalog cat = (!this.catalogsToUpdate.isEmpty()) ? this.catalogsToUpdate.get(name) : null;
         if (cat != null) {
             return cat;
         }

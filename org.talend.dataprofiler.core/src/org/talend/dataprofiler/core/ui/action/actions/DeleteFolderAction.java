@@ -24,8 +24,8 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
+import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>

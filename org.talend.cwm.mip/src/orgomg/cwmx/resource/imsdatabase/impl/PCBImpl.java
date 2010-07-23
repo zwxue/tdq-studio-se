@@ -10,27 +10,20 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.resource.record.impl.RecordFileImpl;
-
 import orgomg.cwmx.resource.imsdatabase.DBD;
 import orgomg.cwmx.resource.imsdatabase.INDEX;
 import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
 import orgomg.cwmx.resource.imsdatabase.PCB;
 import orgomg.cwmx.resource.imsdatabase.PSB;
 import orgomg.cwmx.resource.imsdatabase.SenSegment;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.LTermType;
 import orgomg.cwmx.resource.imsdatabase.imstypes.PCBType;
 import orgomg.cwmx.resource.imsdatabase.imstypes.PositioningType;

@@ -8,16 +8,11 @@ package orgomg.cwmx.resource.imsdatabase.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import orgomg.cwm.resource.record.impl.FixedOffsetFieldImpl;
-
 import orgomg.cwmx.resource.imsdatabase.Field;
 import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
 import orgomg.cwmx.resource.imsdatabase.SenField;

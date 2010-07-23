@@ -12,16 +12,15 @@
 // ============================================================================
 package org.talend.cwm.management.api;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sugars.ReturnCode;
@@ -50,7 +49,7 @@ public final class ConnectionService {
     public static ReturnCode checkConnection(String url, String driverClassName, Properties props) {
         ReturnCode rc = new ReturnCode();
 
-        Connection connection = null;
+        java.sql.Connection connection = null;
         try {
             connection = ConnectionUtils.createConnection(url, driverClassName, props);
             rc = (ConnectionUtils.isValid(connection));
@@ -81,11 +80,11 @@ public final class ConnectionService {
      * with user/password). The name, description and purpose are also set in the Data provider.
      * @return the Data provider.
      */
-    public static TypedReturnCode<TdDataProvider> createConnection(DBConnectionParameter connectionParameters) {
+    public static TypedReturnCode<Connection> createConnection(DBConnectionParameter connectionParameters) {
         DBConnect connector = new DBConnect(connectionParameters);
-        TypedReturnCode<TdDataProvider> rc = new TypedReturnCode<TdDataProvider>();
+        TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>();
         try {
-            TdDataProvider dataProvider = TalendCwmFactory.createDataProvider(connector);
+            Connection dataProvider = TalendCwmFactory.createDataProvider(connector);
             String connectionName = connectionParameters.getName();
             dataProvider.setName(connectionName);
             MetadataHelper.setDescription(connectionParameters.getDescription(), dataProvider);

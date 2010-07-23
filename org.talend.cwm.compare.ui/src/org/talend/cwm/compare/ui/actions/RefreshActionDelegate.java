@@ -49,24 +49,22 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.talend.commons.emf.EMFUtil;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -83,11 +81,11 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
 
     protected IFile selectedFileObject;
 
-    protected TdCatalog selectedCatalog;
+    protected Catalog selectedCatalog;
 
-    protected TdSchema selectedSchema;
+    protected Schema selectedSchema;
 
-    protected TdDataProvider selectedDataProvider;
+    protected Connection selectedDataProvider;
 
     private static final boolean CAT_WITH_PRV = true;
 
@@ -98,9 +96,11 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
     public void run(IAction action) {
         // DQStructureComparer.copyCurrentResourceFile(m_SelectedFileObject);
 
-        if (selectedObject instanceof TdDataProvider) {
+        if (selectedObject instanceof Connection) {
             // TODO:
-        } else if (selectedObject instanceof TdSchema) {
+        } else if (selectedObject instanceof Catalog) {
+            // TODO:
+        } else if (selectedObject instanceof Schema) {
             // TODO:
         } else if (selectedObject instanceof TdTable) {
             // TODO:
@@ -120,7 +120,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         final Resource resource = resourceSet.createResource(uri);
         boolean ok;
 
-        Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(selectedDataProvider);
+        Collection<? extends ModelElement> schemata = ConnectionHelper.getSchema(selectedDataProvider);
         if (CAT_WITH_PRV) {
             ok = resource.getContents().addAll(schemata);
         } else {
@@ -137,15 +137,17 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         try {
 
             final EObject alreadySavedModel = ModelUtils.load(selectedFileObject.toString(), resourceSet);
-            TypedReturnCode<TdDataProvider> rc = null;
+            TypedReturnCode<Connection> rc = null;
 
-            EList<ProviderConnection> connections = ((TdDataProvider) alreadySavedModel).getResourceConnection();
-            ListIterator<ProviderConnection> li = connections.listIterator();
-            if (li.hasNext()) {
-                TdProviderConnection pc = (TdProviderConnection) li.next();
-                String dbUrl = pc.getConnectionString();
-                String driverClassName = pc.getDriverClassName();
-                EList<EObject> pcObjects = pc.eContents();
+            Connection connection = null;
+            if (alreadySavedModel instanceof Connection) {
+                connection = (Connection) alreadySavedModel;
+            }
+
+            if (connection != null) {
+                String dbUrl = ConnectionHelper.getURL(connection);
+                String driverClassName = ConnectionHelper.getDriverClass(connection);
+                EList<EObject> pcObjects = connection.eContents();
                 ListIterator<EObject> liEObject = pcObjects.listIterator();
 
                 Properties parameters = new Properties();
@@ -166,11 +168,11 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 System.out.println(driverClassName);
                 DBConnectionParameter dbcp = new DBConnectionParameter();
 
-                dbcp.setName(pc.getName());
-                dbcp.setAuthor(MetadataHelper.getAuthor(pc));
-                dbcp.setDescription(MetadataHelper.getDescription(pc));
-                dbcp.setPurpose(MetadataHelper.getPurpose(pc));
-                dbcp.setStatus(MetadataHelper.getDevStatus(pc));
+                dbcp.setName(connection.getName());
+                dbcp.setAuthor(MetadataHelper.getAuthor(connection));
+                dbcp.setDescription(MetadataHelper.getDescription(connection));
+                dbcp.setPurpose(MetadataHelper.getPurpose(connection));
+                dbcp.setStatus(MetadataHelper.getDevStatus(connection));
 
                 dbcp.setDriverClassName(driverClassName);
                 dbcp.setJdbcUrl(dbUrl);
@@ -243,7 +245,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         }
     }
 
-    private IFile loadDataProviderAndStructureInMemory(TdDataProvider dataProvider, FolderProvider folderProvider) {
+    private IFile loadDataProviderAndStructureInMemory(Connection dataProvider, FolderProvider folderProvider) {
 
         IPath folderPath = ((folderProvider != null) && folderProvider.getFolder() != null) ? folderProvider.getFolderResource()
                 .getFullPath() : null;
@@ -271,7 +273,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         boolean ok = resource.getContents().add(dataProvider);
 
         // save each catalog is its own file
-        Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
+        Collection<? extends ModelElement> catalogs = ConnectionHelper.getCatalogs(dataProvider);
         if (CAT_WITH_PRV) {
             ok = resource.getContents().addAll(catalogs);
         } else {
@@ -280,7 +282,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         }
 
         // save each schema is its own file
-        Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(dataProvider);
+        Collection<? extends ModelElement> schemata = ConnectionHelper.getSchema(dataProvider);
         if (CAT_WITH_PRV) {
             ok = resource.getContents().addAll(schemata);
         } else {
@@ -290,7 +292,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         }
         Iterator<? extends ModelElement> it = schemata.iterator();
         while (it.hasNext()) {
-            TdSchema tdschema = (TdSchema) it.next();
+            Schema tdschema = (Schema) it.next();
             Collection<? extends ModelElement> tables = SchemaHelper.getTables(tdschema);
             ok = resource.getContents().addAll(tables);
             Collection<? extends ModelElement> views = SchemaHelper.getViews(tdschema);
@@ -315,12 +317,12 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                         if (((IFile) o).getFileExtension().toLowerCase().equals("prv")) { //$NON-NLS-1$
                             selectedFileObject = (IFile) o;
                         }
-                    } else if (o instanceof TdSchema) {
-                        selectedSchema = (TdSchema) o;
-                    } else if (o instanceof TdCatalog) {
-                        selectedCatalog = (TdCatalog) o;
-                    } else if (o instanceof TdDataProvider) {
-                        selectedDataProvider = (TdDataProvider) o;
+                    } else if (o instanceof Schema) {
+                        selectedSchema = (Schema) o;
+                    } else if (o instanceof Catalog) {
+                        selectedCatalog = (Catalog) o;
+                    } else if (o instanceof Connection) {
+                        selectedDataProvider = (Connection) o;
                     }
                 }
             }

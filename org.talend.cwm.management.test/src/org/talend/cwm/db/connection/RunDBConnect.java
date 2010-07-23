@@ -16,19 +16,17 @@ import java.io.File;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.relational.RelationalPackage;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.time.TimeTracer;
-
 import orgomg.cwm.foundation.typemapping.TypeSystem;
 import orgomg.cwm.foundation.typemapping.TypemappingPackage;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -75,12 +73,12 @@ public final class RunDBConnect {
         }
 
         // TODO scorreia create a ProviderConnection for the given connection
-        TdProviderConnection providerConnection = connector.getProviderConnection();
+        // TdProviderConnection providerConnection = connector.getProviderConnection();
 
-        TdDataProvider dataProvider = connector.getDataProvider();
+        Connection dataProvider = connector.getDataProvider();
 
-        Collection<TdCatalog> catalogs = connector.getCatalogs();
-        Collection<TdSchema> schemata = connector.getSchemata();
+        Collection<Catalog> catalogs = connector.getCatalogs();
+        Collection<Schema> schemata = connector.getSchemata();
 
         // --- print some informations
         printInformations(catalogs, schemata);
@@ -89,12 +87,12 @@ public final class RunDBConnect {
         String relational = RelationalPackage.eNAME;
         String softwaredeployment = SoftwaredeploymentPackage.eNAME;
 
-        for (TdCatalog tdCatalog2 : catalogs) {
+        for (Catalog tdCatalog2 : catalogs) {
             String filename = createFilename(tdCatalog2.getName(), relational);
             connector.storeInResourceSet(tdCatalog2, filename);
         }
 
-        for (TdSchema tdSchema2 : schemata) {
+        for (Schema tdSchema2 : schemata) {
             String filename = createFilename(tdSchema2.getName(), relational);
             connector.storeInResourceSet(tdSchema2, filename);
         }
@@ -104,8 +102,8 @@ public final class RunDBConnect {
         filename = createFilename(typeSystem.getName(), TypemappingPackage.eNAME);
         connector.storeInResourceSet(typeSystem, filename);
 
-        filename = createFilename("provider", softwaredeployment);
-        connector.storeInResourceSet(providerConnection, filename);
+//        filename = createFilename("provider", softwaredeployment);
+//        connector.storeInResourceSet(providerConnection, filename);
 
         filename = createFilename("driver", softwaredeployment);
         connector.storeInResourceSet(dataProvider, filename);
@@ -127,11 +125,11 @@ public final class RunDBConnect {
      * @param catalogs
      * @param schemata
      */
-    private static void printInformations(Collection<TdCatalog> catalogs, Collection<TdSchema> schemata) {
-        for (TdCatalog tdCatalog : catalogs) {
+    private static void printInformations(Collection<Catalog> catalogs, Collection<Schema> schemata) {
+        for (Catalog tdCatalog : catalogs) {
             System.out.println("Catalog = " + tdCatalog);
         }
-        for (TdSchema tdSchema : schemata) {
+        for (Schema tdSchema : schemata) {
             System.out.println("Schema = " + tdSchema + " in catalog " + tdSchema.getNamespace());
         }
     }

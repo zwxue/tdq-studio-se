@@ -7,14 +7,10 @@
 package orgomg.cwm.management.warehouseprocess.events.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.management.warehouseprocess.datatype.DayOfWeek;
 import orgomg.cwm.management.warehouseprocess.datatype.RecurringType;
-
 import orgomg.cwm.management.warehouseprocess.events.EventsPackage;
 import orgomg.cwm.management.warehouseprocess.events.RecurringPointInTimeEvent;
 

@@ -17,20 +17,19 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.PackageHelper;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * 
@@ -42,7 +41,7 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
 
     private EList<ModelElement> analyzedElements;
 
-    public AnalyzedColumnsSynDialog(Shell parent, Analysis analysis, TdDataProvider dataprovider,
+    public AnalyzedColumnsSynDialog(Shell parent, Analysis analysis, Connection dataprovider,
             EList<ModelElement> analyzedElements) {
         super(parent, analysis, dataprovider);
         this.analyzedElements = analyzedElements;
@@ -68,7 +67,7 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
 
                 for (Package pk : newDataProvider.getDataPackage()) {
                     // MOD mzhao bug 8567. 2009-08-10 (Case of MS SQL Server)
-                    if (pk instanceof TdCatalog && anaPackage instanceof TdSchema) {
+                    if (pk instanceof Catalog && anaPackage instanceof Schema) {
                         Catalog catl = CatalogHelper.getParentCatalog(anaPackage);
                         if (null != catl && pk.getName().equalsIgnoreCase(catl.getName())) {
                             connPackage = pk;
@@ -89,8 +88,8 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
 
                 List<?> connColumnSetList = null;
                 // MOD mzhao bug 8567. 2009-08-10 (Case of MS SQL Server)
-                if (connPackage instanceof TdCatalog && anaPackage instanceof TdSchema) {
-                    for (TdSchema sche : CatalogHelper.getSchemas((TdCatalog) connPackage)) {
+                if (connPackage instanceof Catalog && anaPackage instanceof Schema) {
+                    for (Schema sche : CatalogHelper.getSchemas((Catalog) connPackage)) {
                         if (sche.getName().equalsIgnoreCase(anaPackage.getName())) {
                             // MOD mzhao bug 8567. 2010-03-29.
                             connPackage = sche;

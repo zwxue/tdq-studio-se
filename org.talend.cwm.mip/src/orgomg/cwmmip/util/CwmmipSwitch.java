@@ -10,11 +10,20 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
-
-import orgomg.cwmmip.*;
+import orgomg.cwmmip.BindingParameter;
+import orgomg.cwmmip.CwmmipPackage;
+import orgomg.cwmmip.Element;
+import orgomg.cwmmip.GraphSubset;
+import orgomg.cwmmip.InterchangePattern;
+import orgomg.cwmmip.ModeledGraphSubset;
+import orgomg.cwmmip.ModeledSemanticContext;
+import orgomg.cwmmip.PatternConstraint;
+import orgomg.cwmmip.Projection;
+import orgomg.cwmmip.Restriction;
+import orgomg.cwmmip.SemanticContext;
+import orgomg.cwmmip.UnitOfInterchange;
 
 /**
  * <!-- begin-user-doc -->

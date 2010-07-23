@@ -10,12 +10,33 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.resource.essbase.*;
+import orgomg.cwmx.resource.essbase.Alias;
+import orgomg.cwmx.resource.essbase.Application;
+import orgomg.cwmx.resource.essbase.Comment;
+import orgomg.cwmx.resource.essbase.Consolidation;
+import orgomg.cwmx.resource.essbase.CurrencyConversion;
+import orgomg.cwmx.resource.essbase.DataStorage;
+import orgomg.cwmx.resource.essbase.Database;
+import orgomg.cwmx.resource.essbase.Dimension;
+import orgomg.cwmx.resource.essbase.DimensionType;
+import orgomg.cwmx.resource.essbase.EssbaseFactory;
+import orgomg.cwmx.resource.essbase.EssbasePackage;
+import orgomg.cwmx.resource.essbase.Formula;
+import orgomg.cwmx.resource.essbase.Generation;
+import orgomg.cwmx.resource.essbase.ImmediateParent;
+import orgomg.cwmx.resource.essbase.Level;
+import orgomg.cwmx.resource.essbase.LinkedPartition;
+import orgomg.cwmx.resource.essbase.MemberName;
+import orgomg.cwmx.resource.essbase.OLAPServer;
+import orgomg.cwmx.resource.essbase.Outline;
+import orgomg.cwmx.resource.essbase.ReplicatedPartition;
+import orgomg.cwmx.resource.essbase.TimeBalance;
+import orgomg.cwmx.resource.essbase.TransparentPartition;
+import orgomg.cwmx.resource.essbase.TwoPassCalculation;
+import orgomg.cwmx.resource.essbase.UDA;
+import orgomg.cwmx.resource.essbase.VarianceReporting;
 
 /**
  * <!-- begin-user-doc -->

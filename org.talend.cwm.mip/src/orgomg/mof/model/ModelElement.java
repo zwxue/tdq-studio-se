@@ -7,9 +7,7 @@
 package orgomg.mof.model;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwmmip.ModeledGraphSubset;
 import orgomg.cwmmip.ModeledSemanticContext;
 

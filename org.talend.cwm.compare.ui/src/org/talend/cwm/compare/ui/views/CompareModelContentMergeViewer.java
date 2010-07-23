@@ -55,13 +55,13 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
 import org.talend.cwm.compare.ui.actions.SubelementCompareAction;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.helper.EObjectHelper;
@@ -397,7 +397,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         IFile resourceFile = null;
         // File
         if (selectedOjbect instanceof IFile) {
-            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance()
+            TypedReturnCode<Connection> returnValue = PrvResourceFileHelper.getInstance()
                     .findProvider((IFile) selectedOjbect);
             modelElement = returnValue.getObject();
         } else {

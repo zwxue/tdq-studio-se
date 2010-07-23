@@ -1,6 +1,7 @@
 package org.talend.dataprofiler.ecos.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.util.Iterator;
 import java.util.List;

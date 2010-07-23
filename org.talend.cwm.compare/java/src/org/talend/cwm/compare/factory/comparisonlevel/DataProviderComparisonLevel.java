@@ -21,18 +21,19 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -48,8 +49,8 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected TdDataProvider findDataProvider() {
-        TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
+    protected Connection findDataProvider() {
+        TypedReturnCode<Connection> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
         return returnVlaue.getObject();
     }
 
@@ -71,8 +72,8 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     protected Resource getLeftResource() throws ReloadCompareException {
         DQStructureComparer.clearSubNode(copyedDataProvider);
         List<Package> packages = new ArrayList<Package>();
-        packages.addAll(DataProviderHelper.getTdCatalogs(copyedDataProvider));
-        packages.addAll(DataProviderHelper.getTdSchema(copyedDataProvider));
+        packages.addAll(ConnectionHelper.getCatalogs(copyedDataProvider));
+        packages.addAll(ConnectionHelper.getSchema(copyedDataProvider));
         // URI uri =
         // URI.createPlatformResourceURI(copyedFile.getFullPath().toString(),
         // false);
@@ -101,8 +102,8 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected Resource getRightResource() throws ReloadCompareException {
         List<Package> packages = new ArrayList<Package>();
-        packages.addAll(DataProviderHelper.getTdCatalogs(tempReloadProvider));
-        packages.addAll(DataProviderHelper.getTdSchema(tempReloadProvider));
+        packages.addAll(ConnectionHelper.getCatalogs(tempReloadProvider));
+        packages.addAll(ConnectionHelper.getSchema(tempReloadProvider));
         // URI uri = tempReloadProvider.eResource().getURI();
         Resource reloadResource = null;
         reloadResource = tempReloadProvider.eResource();
@@ -126,12 +127,12 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected void handleAddElement(ModelElementChangeRightTarget addElement) {
         EObject rightElement = addElement.getRightElement();
-        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
+        Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
         if (catalog != null) {
             DataProviderHelper.addCatalog(catalog, oldDataProvider);
             this.tempReloadProvider.getDataPackage().remove(catalog);
         } else {
-            TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
+            Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
             if (schema != null) {
                 DataProviderHelper.addSchema(schema, oldDataProvider);
             }

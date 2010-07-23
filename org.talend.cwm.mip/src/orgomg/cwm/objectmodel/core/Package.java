@@ -7,7 +7,6 @@
 package orgomg.cwm.objectmodel.core;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**

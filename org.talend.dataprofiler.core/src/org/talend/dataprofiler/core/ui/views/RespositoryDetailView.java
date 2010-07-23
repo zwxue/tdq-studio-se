@@ -37,18 +37,16 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -70,8 +68,9 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.PrimaryKey;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author qzhang
@@ -181,17 +180,17 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             if (fe instanceof IFile) {
                 IFile fe2 = (IFile) fe;
                 is = createFileDetail(is, fe2);
-            } else if (fe instanceof TdCatalog) {
-                TdCatalog catalog = (TdCatalog) fe;
+            } else if (fe instanceof Catalog) {
+                Catalog catalog = (Catalog) fe;
                 createTdCatalogDetail(catalog);
                 is = false;
-            } else if (fe instanceof TdSchema) {
-                TdSchema schema = (TdSchema) fe;
+            } else if (fe instanceof Schema) {
+                Schema schema = (Schema) fe;
                 createTdSchemaDetail(schema);
                 is = false;
             } else if (fe instanceof TdTable) {
                 ModelElement element = (ModelElement) fe;
-                createTableDetail((Table) element);
+                createTableDetail((TdTable) element);
                 is = false;
             } else if (fe instanceof TdView) {
                 ModelElement element = (ModelElement) fe;
@@ -260,7 +259,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 DefaultMessagesImpl.getString("RespositoryDetailView.Expression"), regularExpression.getExpression().getBody()); //$NON-NLS-1$
     }
 
-    private void createTableDetail(Table table) {
+    private void createTableDetail(TdTable table) {
         createNameCommentDetail(table);
         List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
         newLabelAndText(
@@ -278,8 +277,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private boolean createFileDetail(boolean is, IFile fe2) {
         if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
-            TdDataProvider dataProvider = tdProvider.getObject();
+            TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
+            Connection dataProvider = tdProvider.getObject();
             createDataProviderDetail(dataProvider);
             is = false;
         } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
@@ -305,8 +304,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         EObject object = null;
 
         if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
-            TdDataProvider dataProvider = tdProvider.getObject();
+            TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
+            Connection dataProvider = tdProvider.getObject();
             object = dataProvider;
         } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
             object = PatternResourceFileHelper.getInstance().findPattern(fe2);
@@ -405,7 +404,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createNameCommentDetail(column);
         newLabelAndText(gContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.typex"), column.getSqlDataType().getName()); //$NON-NLS-1$
-        String purpose = column.getIsNullable().isNullable();
+        String purpose = "" + column.isNullable();
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.nullable"), purpose); //$NON-NLS-1$
         final Expression initialValue = column.getInitialValue();
         String defValueText = (initialValue != null) ? initialValue.getBody() : null;
@@ -424,23 +423,22 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.name"), element.getName()); //$NON-NLS-1$
     }
 
-    private void createTdSchemaDetail(TdSchema schema) {
+    private void createTdSchemaDetail(Schema schema) {
         createName(schema);
     }
 
-    private void createTdCatalogDetail(TdCatalog catalog) {
+    private void createTdCatalogDetail(Catalog catalog) {
         createName(catalog);
     }
 
-    private void createDataProviderDetail(TdDataProvider dataProvider) {
+    private void createDataProviderDetail(Connection dataProvider) {
         createName(dataProvider);
         createPurpose(dataProvider);
         createDescription(dataProvider);
         // MOD mzhao xmldb have no actual connection.
         // TODO Handle details view.
-        TypedReturnCode<TdProviderConnection> proConn = DataProviderHelper.getTdProviderConnection(dataProvider);
-        if (proConn != null) {
-            String connectionString = proConn.getObject().getConnectionString();
+        if (dataProvider != null) {
+            String connectionString = ConnectionHelper.getURL(dataProvider);
             newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
         }
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);

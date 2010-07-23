@@ -7,9 +7,7 @@
 package orgomg.cwmx.analysis.informationreporting;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
-
 import orgomg.cwm.foundation.datatypes.QueryExpression;
 
 /**

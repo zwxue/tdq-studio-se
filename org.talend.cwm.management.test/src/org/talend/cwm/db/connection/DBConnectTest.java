@@ -23,11 +23,11 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -57,7 +57,7 @@ public class DBConnectTest {
     public void testGetCatalogs() {
         DBConnect connect = initDBConnect();
 
-        Collection<TdCatalog> cats = connect.getCatalogs();
+        Collection<Catalog> cats = connect.getCatalogs();
         assertNotNull(cats);
         assertTrue(cats.isEmpty());
 
@@ -102,7 +102,7 @@ public class DBConnectTest {
 
         DBConnect connect = initDBConnect();
 
-        Collection<TdSchema> schemata = connect.getSchemata();
+        Collection<Schema> schemata = connect.getSchemata();
         assertNotNull(schemata);
         assertTrue(schemata.isEmpty());
 

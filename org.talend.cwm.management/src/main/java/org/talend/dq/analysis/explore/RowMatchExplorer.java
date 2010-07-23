@@ -18,11 +18,11 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.Table;
 
 /**
@@ -57,8 +57,8 @@ public class RowMatchExplorer extends DataExplorer {
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
             Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
             String tableB = tableb.getName();
-            EList<Column> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
-            EList<Column> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
+            EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
+            EList<TdColumn> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
 
             String clauseA = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea);
             String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);
@@ -114,8 +114,8 @@ public class RowMatchExplorer extends DataExplorer {
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
             Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
             String tableB = tableb.getName();
-            EList<Column> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
-            EList<Column> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
+            EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
+            EList<TdColumn> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
 
             String clauseA = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea);
             String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);

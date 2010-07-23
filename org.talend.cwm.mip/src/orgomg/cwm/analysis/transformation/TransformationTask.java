@@ -7,7 +7,6 @@
 package orgomg.cwm.analysis.transformation;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.foundation.softwaredeployment.Component;
 
 /**

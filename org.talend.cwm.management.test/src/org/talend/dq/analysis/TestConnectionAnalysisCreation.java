@@ -17,15 +17,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
@@ -45,7 +44,7 @@ import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -72,7 +71,7 @@ public class TestConnectionAnalysisCreation {
         Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized);
 
         // get the connection
-        TdDataProvider dataManager = getDataManager();
+        Connection dataManager = getDataManager();
         Assert.assertNotNull("No datamanager found!", dataManager);
         analysisBuilder.setAnalysisConnection(dataManager);
 
@@ -115,7 +114,7 @@ public class TestConnectionAnalysisCreation {
      * @param column
      * @return
      */
-    private static Domain getDataFilter(TdDataProvider dataManager) {
+    private static Domain getDataFilter(Connection dataManager) {
         Domain domain = DOMAIN.createDomain();
         RangeRestriction rangeRestriction = DOMAIN.createRangeRestriction();
         domain.getRanges().add(rangeRestriction);
@@ -130,7 +129,7 @@ public class TestConnectionAnalysisCreation {
      * 
      * @return
      */
-    private static BooleanExpressionNode getExpression(Column column) {
+    private static BooleanExpressionNode getExpression(TdColumn column) {
         CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
         expre.setOperands(column, "sunny");
         return expre.generateExpressions();
@@ -157,11 +156,11 @@ public class TestConnectionAnalysisCreation {
      * @return
      * @throws TalendException
      */
-    private static ModelElement getColumn(TdDataProvider dataManager) throws TalendException {
-        List<TdCatalog> tdCatalogs = CatalogHelper.getTdCatalogs(dataManager.getDataPackage());
+    private static ModelElement getColumn(Connection dataManager) throws TalendException {
+        List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(dataManager.getDataPackage());
         System.out.println("Catalogs: " + tdCatalogs);
         Assert.assertFalse(tdCatalogs.isEmpty());
-        TdCatalog catalog = tdCatalogs.get(0);
+        Catalog catalog = tdCatalogs.get(0);
         Assert.assertNotNull(catalog);
         System.out.println("analysed Catalog: " + catalog.getName());
         List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, catalog, null, true);
@@ -188,7 +187,7 @@ public class TestConnectionAnalysisCreation {
      * 
      * @return
      */
-    public static TdDataProvider getDataManager() {
+    public static Connection getDataManager() {
         TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties");
         String driverClassName = connectionParams.getProperty("driver");
         String dbUrl = connectionParams.getProperty("url");
@@ -201,7 +200,7 @@ public class TestConnectionAnalysisCreation {
 
         // create connection
 
-        TdDataProvider dataProvider = ConnectionService.createConnection(params).getObject();
+        Connection dataProvider = ConnectionService.createConnection(params).getObject();
 
         dataProvider.setName("My data provider");
         return dataProvider;

@@ -30,10 +30,10 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
@@ -51,7 +51,6 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -69,9 +68,9 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     private Section columnsComparisonSection = null;
 
-    List<Column> columnListA = null;
+    List<TdColumn> columnListA = null;
 
-    List<Column> columnListB = null;
+    List<TdColumn> columnListB = null;
 
     DataFilterComp dataFilterComp;
 
@@ -210,8 +209,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         getAnalysisHandler().clearAnalysis();
 
         List<ModelElement> analysedElements = new ArrayList<ModelElement>();
-        List<Column> columnListA = anaColumnCompareViewer.getColumnListA();
-        List<Column> columnListB = anaColumnCompareViewer.getColumnListB();
+        List<TdColumn> columnListA = anaColumnCompareViewer.getColumnListA();
+        List<TdColumn> columnListB = anaColumnCompareViewer.getColumnListB();
 
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(this.analysis);
@@ -230,7 +229,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         }
 
         if (columnListA.size() > 0) {
-            TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(columnListA.get(0));
+            Connection tdDataProvider = DataProviderHelper.getTdDataProvider(columnListA.get(0));
             analysis.getContext().setConnection(tdDataProvider);
         } else {
             analysis.getContext().setConnection(null);
@@ -261,24 +260,24 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         }
     }
 
-    private List<Column> getColumnLeftSet() {
+    private List<TdColumn> getColumnLeftSet() {
         return getColumnSet(ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A);
     }
 
-    private List<Column> getColumnRightSet() {
+    private List<TdColumn> getColumnRightSet() {
         return getColumnSet(ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B);
     }
 
-    private List<Column> getColumnSet(EReference reference) {
-        List<Column> columns = new ArrayList<Column>();
+    private List<TdColumn> getColumnSet(EReference reference) {
+        List<TdColumn> columns = new ArrayList<TdColumn>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            columns.add((Column) indicator.eGet(reference));
+            columns.add((TdColumn) indicator.eGet(reference));
         }
         return columns;
     }
 
-    private ReturnCode validator(List<Column> columnASet, List<Column> columnBSet) {
+    private ReturnCode validator(List<TdColumn> columnASet, List<TdColumn> columnBSet) {
 
         if (columnASet.size() == 0 || columnBSet.size() == 0) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.columnsBlankMessag"), false); //$NON-NLS-1$
@@ -289,8 +288,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         }
 
         for (int i = 0; i < columnASet.size(); i++) {
-            Column columnA = columnASet.get(i);
-            Column columnB = columnBSet.get(i);
+            TdColumn columnA = columnASet.get(i);
+            TdColumn columnB = columnBSet.get(i);
 
             ColumnSet ownerA = ColumnHelper.getColumnSetOwner(columnA);
             ColumnSet ownerB = ColumnHelper.getColumnSetOwner(columnB);

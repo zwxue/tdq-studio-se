@@ -19,13 +19,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
-import org.talend.cwm.compare.i18n.Messages;
-import org.talend.cwm.relational.TdCatalog;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -54,12 +53,12 @@ public class DQRepositoryListenerView extends ViewPart implements ISelectionList
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (selection instanceof IStructuredSelection) {
             Object first = ((IStructuredSelection) selection).getFirstElement();
-            if (first instanceof TdDataProvider) {
-                label.setText(((TdDataProvider) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
-            } else if (first instanceof TdCatalog) {
-                label.setText(((TdCatalog) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
-            } else if (first instanceof TdSchema) {
-                label.setText(((TdSchema) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
+            if (first instanceof Connection) {
+                label.setText(((Connection) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
+            } else if (first instanceof Catalog) {
+                label.setText(((Catalog) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
+            } else if (first instanceof Schema) {
+                label.setText(((Schema) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else if (first instanceof TdTable) {
                 label.setText(((TdTable) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else if (first instanceof TdView) {

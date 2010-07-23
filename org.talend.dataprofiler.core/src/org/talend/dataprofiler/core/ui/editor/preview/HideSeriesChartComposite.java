@@ -54,10 +54,10 @@ import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.ui.TextAnchor;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils;
@@ -68,7 +68,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dq.analysis.explore.MultiColumnSetValueExplorer;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -173,7 +172,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
                         valueAggregator.addSeriesToXYZDataset(xyzDataSet, seriesK);
                         String seriesLabel = valueAggregator.getLabels(seriesK).get(xyItemEntity.getItem());
-                        EList<Column> nominalList = indicator.getNominalColumns();
+                        EList<TdColumn> nominalList = indicator.getNominalColumns();
                         final String queryString = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis,
                                 nominalList, seriesK, seriesLabel);
 
@@ -186,7 +185,7 @@ public class HideSeriesChartComposite extends ChartComposite {
                                 Display.getDefault().asyncExec(new Runnable() {
 
                                     public void run() {
-                                        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                        Connection tdDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analysis
                                                 .getContext().getConnection());
                                         String query = queryString;
                                         String editorName = ColumnHelper.getColumnSetOwner(column).getName();
@@ -218,7 +217,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
             String seriesK = itemEntity.getRowKey().toString();
             String seriesLabel = itemEntity.getColumnKey().toString();
-            EList<Column> nominalList = indicator.getNominalColumns();
+            EList<TdColumn> nominalList = indicator.getNominalColumns();
             final String sql = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis, nominalList, seriesK,
                     seriesLabel);
             MenuItem item = new MenuItem(menu, SWT.PUSH);
@@ -230,7 +229,7 @@ public class HideSeriesChartComposite extends ChartComposite {
                     Display.getDefault().asyncExec(new Runnable() {
 
                         public void run() {
-                            TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis.getContext()
+                            Connection tdDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analysis.getContext()
                                     .getConnection());
                             String query = sql;
                             String editorName = ColumnHelper.getColumnSetOwner(column).getName();

@@ -68,7 +68,7 @@ public class EMFObjFilter extends AbstractViewerFilter {
         }
         if (element instanceof EObject) {
             EObject eObj = (EObject) element;
-            if (SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(eObj) != null || dependencySwitch.doSwitch(eObj) != null) {
+            if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(eObj) != null || dependencySwitch.doSwitch(eObj) != null) {
                 return false;
             }
         } else if (element instanceof IFile) {

@@ -7,7 +7,6 @@
 package orgomg.cwmmip.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwmmip.CwmmipPackage;
 import orgomg.cwmmip.Restriction;
 

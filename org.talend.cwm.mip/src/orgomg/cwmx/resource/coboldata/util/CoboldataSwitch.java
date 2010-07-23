@@ -10,9 +10,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.foundation.keysindexes.Index;
-
 import orgomg.cwm.objectmodel.core.Attribute;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.DataType;
@@ -21,11 +19,22 @@ import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
-
 import orgomg.cwm.resource.record.Field;
 import orgomg.cwm.resource.record.RecordFile;
-
-import orgomg.cwmx.resource.coboldata.*;
+import orgomg.cwmx.resource.coboldata.COBOLFD;
+import orgomg.cwmx.resource.coboldata.COBOLFDIndex;
+import orgomg.cwmx.resource.coboldata.COBOLField;
+import orgomg.cwmx.resource.coboldata.COBOLItem;
+import orgomg.cwmx.resource.coboldata.CoboldataPackage;
+import orgomg.cwmx.resource.coboldata.FileSection;
+import orgomg.cwmx.resource.coboldata.LinageInfo;
+import orgomg.cwmx.resource.coboldata.LinkageSection;
+import orgomg.cwmx.resource.coboldata.OccursKey;
+import orgomg.cwmx.resource.coboldata.Renames;
+import orgomg.cwmx.resource.coboldata.ReportWriterSection;
+import orgomg.cwmx.resource.coboldata.Section;
+import orgomg.cwmx.resource.coboldata.Usage;
+import orgomg.cwmx.resource.coboldata.WorkingStorageSection;
 
 /**
  * <!-- begin-user-doc -->

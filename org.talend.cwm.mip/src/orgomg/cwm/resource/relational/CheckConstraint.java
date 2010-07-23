@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.relational;
 
 import orgomg.cwm.objectmodel.core.Constraint;
-
 import orgomg.cwm.resource.relational.enumerations.DeferrabilityType;
 
 /**

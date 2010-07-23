@@ -7,7 +7,6 @@
 package orgomg.cwm.analysis.transformation.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.analysis.transformation.TransformationMap;
 import orgomg.cwm.analysis.transformation.TransformationPackage;
 

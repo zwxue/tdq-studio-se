@@ -7,9 +7,7 @@
 package orgomg.cwm.resource.xml.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.instance.impl.ExtentImpl;
-
 import orgomg.cwm.resource.xml.Document;
 import orgomg.cwm.resource.xml.XmlPackage;
 

@@ -18,10 +18,10 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -73,7 +73,7 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
         return null;
     }
 
-    protected TdDataProvider getTdDataProvidor() {
+    protected Connection getTdDataProvidor() {
         Object obj = getSelection().getFirstElement();
         if (obj instanceof Table) {
             return DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema((Table) obj));

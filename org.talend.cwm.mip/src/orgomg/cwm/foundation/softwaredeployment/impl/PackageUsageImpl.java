@@ -7,14 +7,10 @@
 package orgomg.cwm.foundation.softwaredeployment.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.foundation.softwaredeployment.PackageUsage;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
-
 import orgomg.cwm.objectmodel.core.impl.DependencyImpl;
 
 /**

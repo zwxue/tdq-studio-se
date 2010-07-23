@@ -3,14 +3,14 @@ package net.sourceforge.sqlexplorer.history;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.dom4j.Element;
-import org.dom4j.tree.DefaultElement;
-
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.TextUtil;
+
+import org.dom4j.Element;
+import org.dom4j.tree.DefaultElement;
 
 /**
  * SQLHistoryElement represents a single entry in the SQLHistoryView.

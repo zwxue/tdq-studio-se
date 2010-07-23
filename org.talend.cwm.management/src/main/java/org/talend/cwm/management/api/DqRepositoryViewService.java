@@ -15,7 +15,6 @@ package org.talend.cwm.management.api;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +33,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.builders.AbstractTableBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
@@ -43,18 +43,16 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.RelationalPackage;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXMLContent;
 import org.talend.cwm.xml.TdXMLDocument;
@@ -153,21 +151,21 @@ public final class DqRepositoryViewService {
      * @param containSubFolders if it contains all sub folders.
      * @return the list of all TdDataProviders in the folder (never null).
      */
-    public static List<TdDataProvider> listTdDataProviders(IFolder folder, boolean containSubFolders) {
-        ArrayList<TdDataProvider> providers = new ArrayList<TdDataProvider>();
+    public static List<Connection> listTdDataProviders(IFolder folder, boolean containSubFolders) {
+        ArrayList<Connection> providers = new ArrayList<Connection>();
         IResource[] members = null;
         try {
             members = folder.members();
         } catch (CoreException e) {
             log.error(e, e);
-            return new ArrayList<TdDataProvider>();
+            return new ArrayList<Connection>();
         }
         for (IResource res : members) {
             if ((res instanceof IFile) && (FactoriesUtil.PROV.equals(res.getFileExtension()))) {
 
-                TypedReturnCode<TdDataProvider> rc = readFromFile((IFile) res);
+                TypedReturnCode<Connection> rc = readFromFile((IFile) res);
                 if (rc.isOk()) {
-                    TdDataProvider dataProvider = rc.getObject();
+                    Connection dataProvider = rc.getObject();
                     providers.add(dataProvider);
                 } else {
                     log.warn(rc.getMessage());
@@ -191,7 +189,7 @@ public final class DqRepositoryViewService {
      * @param schemaPattern the schema to load (can be null, meaning all are loaded)
      * @return true if the catalog have been reload
      */
-    public static boolean refreshDataProvider(TdDataProvider dataProvider, String catalogPattern, String schemaPattern) {
+    public static boolean refreshDataProvider(Connection dataProvider, String catalogPattern, String schemaPattern) {
         // TODO scorreia implement me
         return false;
     }
@@ -243,7 +241,7 @@ public final class DqRepositoryViewService {
      * @return the list of tables. Theses tables are not added to the given catalog. It must be done by the caller.
      * @throws TalendException
      */
-    public static List<TdTable> getTables(TdDataProvider dataProvider, Catalog catalog, String tablePattern, boolean loadFromDB)
+    public static List<TdTable> getTables(Connection dataProvider, Catalog catalog, String tablePattern, boolean loadFromDB)
             throws TalendException {
         if (loadFromDB) {
             return loadTables(dataProvider, catalog, tablePattern);
@@ -252,17 +250,17 @@ public final class DqRepositoryViewService {
         }
     }
 
-    public static List<TdTable> getTables(TdDataProvider dataProvider, Schema schema, String tablePattern, boolean loadFromDB)
+    public static List<TdTable> getTables(Connection dataProvider, Schema schema, String tablePattern, boolean loadFromDB)
             throws TalendException {
         if (loadFromDB) {
-            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schema);
+            final Catalog parentCatalog = CatalogHelper.getParentCatalog(schema);
             return loadTables(dataProvider, parentCatalog, schema, tablePattern);
         } else {
             return SchemaHelper.getTables(schema);
         }
     }
 
-    public static List<TdView> getViews(TdDataProvider dataProvider, Catalog catalog, String viewPattern, boolean loadFromDB)
+    public static List<TdView> getViews(Connection dataProvider, Catalog catalog, String viewPattern, boolean loadFromDB)
             throws TalendException {
         if (loadFromDB) {
             return loadViews(dataProvider, catalog, viewPattern);
@@ -271,11 +269,11 @@ public final class DqRepositoryViewService {
         }
     }
 
-    public static List<TdView> getViews(TdDataProvider dataProvider, Schema schema, String viewPattern, boolean loadFromDB)
+    public static List<TdView> getViews(Connection dataProvider, Schema schema, String viewPattern, boolean loadFromDB)
             throws TalendException {
         if (loadFromDB) {
             // get catalog is exists
-            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schema);
+            final Catalog parentCatalog = CatalogHelper.getParentCatalog(schema);
             return loadViews(dataProvider, parentCatalog, schema, viewPattern);
         } else {
             return SchemaHelper.getViews(schema);
@@ -293,7 +291,7 @@ public final class DqRepositoryViewService {
      * @return
      * @throws TalendException
      */
-    public static List<TdColumn> getColumns(TdDataProvider dataProvider, ColumnSet columnSet, String columnPattern,
+    public static List<TdColumn> getColumns(Connection dataProvider, ColumnSet columnSet, String columnPattern,
             boolean loadFromDB) throws TalendException {
         if (loadFromDB) {
             return loadColumns(dataProvider, columnSet, columnPattern);
@@ -320,15 +318,15 @@ public final class DqRepositoryViewService {
      * @param addPackage decide whether need to add the Package(catalog/schema) element to dataprovider.
      * @return
      */
-    public static ReturnCode saveOpenDataProvider(TdDataProvider dataProvider, boolean addPackage) {
+    public static ReturnCode saveOpenDataProvider(Connection dataProvider, boolean addPackage) {
         assert dataProvider != null;
 
         Resource resource = dataProvider.eResource();
         if (addPackage) {
             // MOD zshen bug 10633: Reload Database List can't display new Schema in DQ Repository view(Oracle Database)
-            Collection<? extends ModelElement> catalogsorSchemas = DataProviderHelper.getTdCatalogs(dataProvider);
+            Collection<? extends ModelElement> catalogsorSchemas = ConnectionHelper.getCatalogs(dataProvider);
             if (catalogsorSchemas.size() == 0) {
-                catalogsorSchemas = DataProviderHelper.getTdSchema(dataProvider);
+                catalogsorSchemas = ConnectionHelper.getSchema(dataProvider);
             }
             resource.getContents().addAll(catalogsorSchemas);
         }
@@ -412,7 +410,7 @@ public final class DqRepositoryViewService {
      * @return the list of tables matching the given pattern
      * @throws TalendException
      */
-    private static List<TdTable> loadTables(TdDataProvider dataProvider, Catalog catalog, String tablePattern)
+    private static List<TdTable> loadTables(Connection dataProvider, Catalog catalog, String tablePattern)
             throws TalendException {
         List<TdTable> tables = new ArrayList<TdTable>();
         assert dataProvider != null;
@@ -426,7 +424,7 @@ public final class DqRepositoryViewService {
         return loadTables(dataProvider, catalog, null, tablePattern);
     }
 
-    private static List<TdTable> loadTables(TdDataProvider dataProvider, Catalog catalog, Schema schema, String tablePattern)
+    private static List<TdTable> loadTables(Connection dataProvider, Catalog catalog, Schema schema, String tablePattern)
             throws TalendException {
         List<TdTable> tables = new ArrayList<TdTable>();
         // PTODO scorreia check return code
@@ -434,7 +432,7 @@ public final class DqRepositoryViewService {
         return tables;
     }
 
-    private static List<TdView> loadViews(TdDataProvider dataProvider, Catalog catalog, Schema schema, String viewPattern)
+    private static List<TdView> loadViews(Connection dataProvider, Catalog catalog, Schema schema, String viewPattern)
             throws TalendException {
         assert schema != null : Messages.getString("DqRepositoryViewService.NoSchemaGiven"); //$NON-NLS-1$
         List<TdView> views = new ArrayList<TdView>();
@@ -452,7 +450,7 @@ public final class DqRepositoryViewService {
      * @return
      * @throws TalendException
      */
-    private static List<TdView> loadViews(TdDataProvider dataProvider, Catalog catalog, String viewPattern)
+    private static List<TdView> loadViews(Connection dataProvider, Catalog catalog, String viewPattern)
             throws TalendException {
         assert catalog != null : Messages.getString("DqRepositoryViewService.NoCatalogGiven"); //$NON-NLS-1$
         List<TdView> views = new ArrayList<TdView>();
@@ -461,20 +459,20 @@ public final class DqRepositoryViewService {
         return views;
     }
 
-    private static List<TdColumn> loadColumns(TdDataProvider dataProvider, ColumnSet table, String columnPattern)
+    private static List<TdColumn> loadColumns(Connection dataProvider, ColumnSet table, String columnPattern)
             throws TalendException {
         assert table != null;
         List<TdColumn> columns = new ArrayList<TdColumn>();
-        TypedReturnCode<Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
+        TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
         if (!rcConn.isOk()) {
             log.error(rcConn.getMessage()); // scorreia show error to the user
             throw new TalendException(rcConn.getMessage());
         }
-        Connection connection = rcConn.getObject();
+        java.sql.Connection connection = rcConn.getObject();
         ColumnBuilder colBuilder = new ColumnBuilder(connection);
 
         String catalogName = getName(CatalogHelper.getParentCatalog(table));
-        TdSchema schema = SchemaHelper.getParentSchema(table);
+        Schema schema = SchemaHelper.getParentSchema(table);
         if (catalogName == null && schema != null) {
             catalogName = getName(CatalogHelper.getParentCatalog(schema));
         }
@@ -533,16 +531,16 @@ public final class DqRepositoryViewService {
      * @return true if ok
      * @throws TalendException
      */
-    private static <T extends List<? extends NamedColumnSet>> boolean loadColumnSets(TdDataProvider dataProvider,
+    private static <T extends List<? extends NamedColumnSet>> boolean loadColumnSets(Connection dataProvider,
             Catalog catalog, Schema schema, String tablePattern, int classifierID, final T tables) throws TalendException {
         boolean ok = false;
-        TypedReturnCode<Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
+        TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
         if (!rcConn.isOk()) {
             log.error(rcConn.getMessage());
             throw new TalendException(rcConn.getMessage());
         }
 
-        Connection connection = rcConn.getObject();
+        java.sql.Connection connection = rcConn.getObject();
 
         String schemaName = (schema == null) ? null : schema.getName();
         String catalogName = (catalog == null) ? null : catalog.getName();
@@ -570,7 +568,7 @@ public final class DqRepositoryViewService {
      * @param classifierID
      * @return
      */
-    private static AbstractTableBuilder<? extends NamedColumnSet> getBuilder(Connection connection, int classifierID) {
+    private static AbstractTableBuilder<? extends NamedColumnSet> getBuilder(java.sql.Connection connection, int classifierID) {
         switch (classifierID) {
         case RelationalPackage.TD_TABLE:
             return new TableBuilder(connection);
@@ -587,11 +585,11 @@ public final class DqRepositoryViewService {
      * @param file the file to read
      * @return the Data provider if found.
      */
-    public static TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
-        TypedReturnCode<TdDataProvider> rc = new TypedReturnCode<TdDataProvider>();
+    public static TypedReturnCode<Connection> readFromFile(IFile file) {
+        TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>();
         Resource r = EMFSharedResources.getInstance().getResource(
                 URI.createPlatformResourceURI(file.getFullPath().toString(), false), true);
-        Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(r.getContents());
+        Collection<Connection> tdDataProviders = DataProviderHelper.getTdDataProviders(r.getContents());
         if (tdDataProviders.isEmpty()) {
             rc.setReturnCode(
                     Messages.getString("DqRepositoryViewService.NoDataProviderFound", file.getFullPath().toString()), false); //$NON-NLS-1$
@@ -600,7 +598,7 @@ public final class DqRepositoryViewService {
             rc.setReturnCode(Messages.getString("DqRepositoryViewService.FoundTooManyDataProvider", tdDataProviders.size(), //$NON-NLS-1$
                     file.getFullPath().toString()), false);
         }
-        TdDataProvider prov = tdDataProviders.iterator().next();
+        Connection prov = tdDataProviders.iterator().next();
         rc.setObject(prov);
         return rc;
     }
@@ -622,7 +620,7 @@ public final class DqRepositoryViewService {
             XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(document);
             elements = xmlScheBuilder.getRootElements(document);
             document.getOwnedElement().addAll(elements);
-            TdDataProvider dataManager = (TdDataProvider) document.getDataManager().get(0);
+            Connection dataManager = (Connection) document.getDataManager().get(0);
             NeedSaveDataProviderHelper.register(dataManager.eResource().getURI().path(), dataManager);
             NeedSaveDataProviderHelper.saveAllDataProvider();
         }
@@ -636,7 +634,7 @@ public final class DqRepositoryViewService {
         if (xmlContent == null) {
             XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
             elements = xmlScheBuilder.getChildren(element);
-            TdDataProvider dataManager = (TdDataProvider) element.getOwnedDocument().getDataManager().get(0);
+            Connection dataManager = (Connection) element.getOwnedDocument().getDataManager().get(0);
             NeedSaveDataProviderHelper.register(dataManager.eResource().getURI().path(), dataManager);
             NeedSaveDataProviderHelper.saveAllDataProvider();
         } else {

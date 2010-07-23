@@ -52,11 +52,11 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -87,7 +87,6 @@ import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * @author xzhao
@@ -305,9 +304,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * 
      */
     public void openColumnsSelectionDialog() {
-        List<Column> columnList = treeViewer.getColumnSetMultiValueList();
+        List<TdColumn> columnList = treeViewer.getColumnSetMultiValueList();
         if (columnList == null) {
-            columnList = new ArrayList<Column>();
+            columnList = new ArrayList<TdColumn>();
         }
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
                 this,
@@ -399,7 +398,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             }
         } else {
 
-            List<Column> numericOrDateList = new ArrayList<Column>();
+            List<TdColumn> numericOrDateList = new ArrayList<TdColumn>();
             if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
                 numericOrDateList = columnSetMultiIndicator.getNumericColumns();
             }
@@ -407,7 +406,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 numericOrDateList = columnSetMultiIndicator.getDateColumns();
             }
 
-            for (Column column : numericOrDateList) {
+            for (TdColumn column : numericOrDateList) {
                 final TdColumn tdColumn = (TdColumn) column;
 
                 ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
@@ -573,11 +572,11 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         correlationAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 
         // save analysis
-        List<Column> columnList = treeViewer.getColumnSetMultiValueList();
+        List<TdColumn> columnList = treeViewer.getColumnSetMultiValueList();
 
-        TdDataProvider tdProvider = null;
+        Connection tdProvider = null;
         if (columnList != null && columnList.size() != 0) {
-            tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
+            tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
             analysis.getContext().setConnection(tdProvider);
             columnSetMultiIndicator.getAnalyzedColumns().addAll(columnList);
             correlationAnalysisHandler.addIndicator(columnList, columnSetMultiIndicator);
@@ -691,7 +690,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     @Override
     protected ReturnCode canSave() {
         String message = null;
-        List<Column> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        List<TdColumn> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
 
         if (!columnSetMultiValueList.isEmpty()) {
             if (!ColumnHelper.isFromSameTable(columnSetMultiValueList)) {
@@ -699,7 +698,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
             } else {
 
-                List<Column> columns = treeViewer.getColumnSetMultiValueList();
+                List<TdColumn> columns = treeViewer.getColumnSetMultiValueList();
 
                 if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()
                         || ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
@@ -733,10 +732,10 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * @param className
      * @return
      */
-    private String verifyColumn(List<Column> columns, EClass className) {
-        List<Column> invalidCols = new ArrayList<Column>();
-        List<Column> nominalCols = new ArrayList<Column>();
-        List<Column> intervalCols = new ArrayList<Column>();
+    private String verifyColumn(List<TdColumn> columns, EClass className) {
+        List<TdColumn> invalidCols = new ArrayList<TdColumn>();
+        List<TdColumn> nominalCols = new ArrayList<TdColumn>();
+        List<TdColumn> intervalCols = new ArrayList<TdColumn>();
         String message = null;
 
         for (int i = 0; i < columns.size(); i++) {
@@ -776,7 +775,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     @Override
     protected ReturnCode canRun() {
-        List<Column> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        List<TdColumn> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl
                     .getString("ColumnCorrelationNominalAndIntervalMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$

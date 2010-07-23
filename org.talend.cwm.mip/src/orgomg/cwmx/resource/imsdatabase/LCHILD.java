@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.imsdatabase;
 
 import orgomg.cwm.objectmodel.core.ModelElement;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.ChildPointerType;
 import orgomg.cwmx.resource.imsdatabase.imstypes.LPointerType;
 import orgomg.cwmx.resource.imsdatabase.imstypes.ParentType;

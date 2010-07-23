@@ -54,12 +54,12 @@ import org.jfree.data.xy.XYZDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
 import org.talend.commons.utils.SpecialValueDisplay;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils.DateValueAggregate;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils.ValueAggregator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * @author scorreia
@@ -257,7 +257,7 @@ public final class TopChartFactory {
      * @param numericColumn the analyzed numeric column
      * @return the bubble chart
      */
-    public static JFreeChart createBubbleChart(final ColumnSetMultiValueIndicator indic, Column numericColumn) {
+    public static JFreeChart createBubbleChart(final ColumnSetMultiValueIndicator indic, TdColumn numericColumn) {
         final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(indic, numericColumn);
 
         DefaultXYZDataset dataset = new DefaultXYZDataset();
@@ -311,7 +311,7 @@ public final class TopChartFactory {
      * @return
      */
 
-    public static JFreeChart createGanttChart(final ColumnSetMultiValueIndicator indic, Column dateColumn) {
+    public static JFreeChart createGanttChart(final ColumnSetMultiValueIndicator indic, TdColumn dateColumn) {
         final Map<String, DateValueAggregate> createGannttDatasets = ChartDatasetUtils.createGanttDatasets(indic, dateColumn);
 
         TaskSeriesCollection ganttDataset = new TaskSeriesCollection();

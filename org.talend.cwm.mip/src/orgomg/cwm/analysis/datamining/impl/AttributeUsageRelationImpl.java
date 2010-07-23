@@ -8,20 +8,15 @@ package orgomg.cwm.analysis.datamining.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import orgomg.cwm.analysis.datamining.AttributeUsage;
 import orgomg.cwm.analysis.datamining.AttributeUsageRelation;
 import orgomg.cwm.analysis.datamining.DataminingPackage;
 import orgomg.cwm.analysis.datamining.MiningAttribute;
 import orgomg.cwm.analysis.datamining.MiningSettings;
-
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**

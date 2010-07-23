@@ -19,16 +19,17 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * 
@@ -36,13 +37,13 @@ import orgomg.cwm.objectmodel.core.Package;
  */
 public class CatalogComparisonLevel extends AbstractComparisonLevel {
 
-    public CatalogComparisonLevel(TdCatalog selObj) {
+    public CatalogComparisonLevel(Catalog selObj) {
         super(selObj);
     }
 
     @Override
-    protected TdDataProvider findDataProvider() {
-        TdDataProvider provider = DataProviderHelper.getTdDataProvider((Package) selectedObj);
+    protected Connection findDataProvider() {
+        Connection provider = ConnectionHelper.getTdDataProvider((Package) selectedObj);
         return provider;
     }
 
@@ -50,11 +51,11 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
     protected Resource getLeftResource() throws ReloadCompareException {
         Package selectedPackage = (Package) selectedObj;
         Package findMatchPackage = DQStructureComparer.findMatchedPackage(selectedPackage, copyedDataProvider);
-        List<TdSchema> schemas = new ArrayList<TdSchema>();
-        schemas.addAll(CatalogHelper.getSchemas((TdCatalog) findMatchPackage));
+        List<Schema> schemas = new ArrayList<Schema>();
+        schemas.addAll(CatalogHelper.getSchemas((Catalog) findMatchPackage));
         Resource leftResource = copyedDataProvider.eResource();
         leftResource.getContents().clear();
-        for (TdSchema schema : schemas) {
+        for (Schema schema : schemas) {
             DQStructureComparer.clearSubNode(schema);
             leftResource.getContents().add(schema);
         }
@@ -66,11 +67,11 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
     protected Resource getRightResource() throws ReloadCompareException {
         Package selectedPackage = (Package) selectedObj;
         Package toReloadObj = DQStructureComparer.findMatchedPackage(selectedPackage, tempReloadProvider);
-        List<TdSchema> schemas = reloadElementOfPackage(toReloadObj);
+        List<Schema> schemas = reloadElementOfPackage(toReloadObj);
         Resource rightResource = null;
         rightResource = tempReloadProvider.eResource();
         rightResource.getContents().clear();
-        for (TdSchema schema : schemas) {
+        for (Schema schema : schemas) {
             DQStructureComparer.clearSubNode(schema);
             rightResource.getContents().add(schema);
         }
@@ -78,9 +79,9 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
         return rightResource;
     }
 
-    private List<TdSchema> reloadElementOfPackage(Package toReloadObj) throws ReloadCompareException {
-        List<TdSchema> schemas = new ArrayList<TdSchema>();
-        TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(toReloadObj);
+    private List<Schema> reloadElementOfPackage(Package toReloadObj) throws ReloadCompareException {
+        List<Schema> schemas = new ArrayList<Schema>();
+        Catalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(toReloadObj);
         if (catalogObj != null) {
             schemas = CatalogHelper.getSchemas(catalogObj);
         }
@@ -98,7 +99,7 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected void handleAddElement(ModelElementChangeRightTarget addElement) {
         EObject rightElement = addElement.getRightElement();
-        TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
+        Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
         if (schema != null) {
             DataProviderHelper.addSchema(schema, oldDataProvider);
         }
@@ -106,7 +107,7 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
-        TdSchema removedSchema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removeElement.getLeftElement());
+        Schema removedSchema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removeElement.getLeftElement());
         if (removedSchema == null) {
             return;
         }

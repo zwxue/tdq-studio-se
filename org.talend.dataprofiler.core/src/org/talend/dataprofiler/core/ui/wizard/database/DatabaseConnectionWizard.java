@@ -20,10 +20,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -109,7 +110,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     }
 
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
-        TdDataProvider dataProvider = (TdDataProvider) cwmElement;
+        Connection dataProvider = (Connection) cwmElement;
 
         IFolder folder = connectionParam.getFolderProvider().getFolderResource();
         TypedReturnCode<IFile> save = ElementWriterFactory.getInstance().createDataProviderWriter().create(dataProvider, folder);
@@ -184,24 +185,24 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     public void fillMetadataToCWMResource(ModelElement cwmElement) {
         super.fillMetadataToCWMResource(cwmElement);
         if (cwmElement instanceof DataProvider) {
-
-            DataProvider dataProvider = (DataProvider) cwmElement;
-            TypedReturnCode<TdProviderConnection> rc = DataProviderHelper.getTdProviderConnection(dataProvider);
-            if (rc.getObject() != null) {
-                TdProviderConnection connection = rc.getObject();
-                DataProviderHelper.setHost(getParameter().getHost(), connection);
-                DataProviderHelper.setPort(getParameter().getPort(), connection);
-                DataProviderHelper.setDBType(getParameter().getSqlTypeName(), connection);
-                DataProviderHelper.setDBName(getParameter().getDbName(), connection);
+            Connection dataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(cwmElement);
+            if (dataProvider != null) {
+                ConnectionHelper.setServerName(dataProvider, getParameter().getHost());
+                ConnectionHelper.setPort(dataProvider, getParameter().getPort());
+                DatabaseConnection dbConnection = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
+                if (dbConnection != null) {
+                    dbConnection.setDatabaseType(getParameter().getSqlTypeName());
+                }
+                ConnectionHelper.setSID(dataProvider, getParameter().getDbName());
                 // ADD xqliu 2010-03-03 feature 11412
-                DataProviderHelper.setRetrieveAllMetadata(getParameter().isRetrieveAllMetadata(), connection);
+                ConnectionHelper.setRetrieveAllMetadata(getParameter().isRetrieveAllMetadata(), dataProvider);
             } else {
-                MessageUI.openError(rc.getMessage());
+                MessageUI.openError("Connection is null!");
             }
         }
     }
 
-    private void storeInfoToPerference(TdDataProvider dataProvider) {
+    private void storeInfoToPerference(Connection dataProvider) {
         if (connectionParam == null || driver == null || dataProvider == null) {
             return;
         }

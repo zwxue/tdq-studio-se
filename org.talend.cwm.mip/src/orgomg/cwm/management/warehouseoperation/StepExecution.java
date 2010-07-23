@@ -7,7 +7,6 @@
 package orgomg.cwm.management.warehouseoperation;
 
 import orgomg.cwm.analysis.transformation.TransformationStep;
-
 import orgomg.cwm.objectmodel.behavioral.CallAction;
 
 /**

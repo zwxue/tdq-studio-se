@@ -14,8 +14,8 @@ package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -63,8 +63,8 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
         AnalysisFilterParameter connectionParams = new AnalysisFilterParameter();
 
         file = (IFile) getSelection().getFirstElement();
-        TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
-        TdDataProvider dataProvider = tdProvider.getObject();
+        TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
+        Connection dataProvider = tdProvider.getObject();
         connectionParams.setTdDataProvider(dataProvider);
         connectionParams.setAnalysisTypeName(AnalysisType.CONNECTION.getLiteral());
 

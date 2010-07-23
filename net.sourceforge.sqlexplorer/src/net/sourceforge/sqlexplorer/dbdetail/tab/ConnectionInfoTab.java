@@ -22,8 +22,8 @@ import java.sql.DatabaseMetaData;
 
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
-import net.sourceforge.sqlexplorer.dbstructure.nodes.INode;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
+import net.sourceforge.sqlexplorer.dbstructure.nodes.INode;
 import net.sourceforge.squirrel_sql.fw.sql.SQLDatabaseMetaData;
 
 /**

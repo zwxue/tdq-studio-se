@@ -19,9 +19,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.writer.AElementPersistance;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -48,7 +48,7 @@ public class DataProviderWriter extends AElementPersistance {
      */
     @Override
     protected void addDependencies(ModelElement element) {
-        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem((TdDataProvider) element);
+        TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem((Connection) element);
         if (softwareSystem != null) {
             DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
         }
@@ -70,7 +70,7 @@ public class DataProviderWriter extends AElementPersistance {
         }
 
         // add each catalog to its own file
-        Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs((TdDataProvider) element);
+        Collection<? extends ModelElement> catalogs = ConnectionHelper.getCatalogs((Connection) element);
         resourceContents.addAll(catalogs);
 
         if (log.isDebugEnabled()) {
@@ -78,11 +78,11 @@ public class DataProviderWriter extends AElementPersistance {
         }
 
         // add each schema to its own file
-        Collection<? extends ModelElement> schemas = DataProviderHelper.getTdSchema((TdDataProvider) element);
+        Collection<? extends ModelElement> schemas = ConnectionHelper.getSchema((Connection) element);
         resourceContents.addAll(schemas);
 
         // add each schema to its own file
-        Collection<? extends ModelElement> xmlSchemas = DataProviderHelper.getTdXmlDocument((TdDataProvider) element);
+        Collection<? extends ModelElement> xmlSchemas = ConnectionHelper.getTdXmlDocument((Connection) element);
         resourceContents.addAll(xmlSchemas);
 
         if (log.isDebugEnabled()) {

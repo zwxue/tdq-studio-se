@@ -60,9 +60,9 @@ import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -601,7 +601,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public void saveAnalysis() throws DataprofilerCoreException {
         analysisHandler.clearAnalysis();
         TableIndicator[] tableIndicators = treeViewer.getTableIndicator();
-        TdDataProvider tdProvider = null;
+        Connection tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         if (tableIndicators != null && tableIndicators.length != 0) {

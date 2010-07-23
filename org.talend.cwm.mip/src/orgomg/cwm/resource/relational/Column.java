@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.relational;
 
 import orgomg.cwm.objectmodel.core.Attribute;
-
 import orgomg.cwm.resource.relational.enumerations.NullableType;
 
 /**

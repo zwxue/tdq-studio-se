@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.relational;
 
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
-
 import orgomg.cwm.resource.relational.enumerations.DeferrabilityType;
 import orgomg.cwm.resource.relational.enumerations.ReferentialRuleType;
 

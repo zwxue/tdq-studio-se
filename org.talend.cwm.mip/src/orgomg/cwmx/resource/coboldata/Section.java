@@ -7,9 +7,7 @@
 package orgomg.cwmx.resource.coboldata;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.Classifier;
-
 import orgomg.cwm.resource.record.RecordDef;
 
 /**

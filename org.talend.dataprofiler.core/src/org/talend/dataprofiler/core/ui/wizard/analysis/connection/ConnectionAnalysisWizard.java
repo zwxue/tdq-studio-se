@@ -14,11 +14,9 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.connection;
 
 import java.util.List;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
@@ -27,6 +25,8 @@ import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author zqin
@@ -67,19 +67,19 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
 
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
         if (getAnalysisBuilder() != null) {
-            TdDataProvider tdProvider = getParameter().getTdDataProvider();
+            Connection tdProvider = getParameter().getTdDataProvider();
             getAnalysisBuilder().setAnalysisConnection(tdProvider);
 
             ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
             // MOD xqliu 2009-1-21 feature 4715
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
             indicator.setAnalyzedElement(tdProvider);
-            List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdProvider);
+            List<Schema> tdSchemas = DataProviderHelper.getSchema(tdProvider);
             if (tdSchemas.size() != 0) {
                 addSchemaIndicator(tdSchemas, indicator);
             }
-            List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tdProvider);
-            for (TdCatalog tdCatalog : tdCatalogs) {
+            List<Catalog> tdCatalogs = DataProviderHelper.getCatalogs(tdProvider);
+            for (Catalog tdCatalog : tdCatalogs) {
                 CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
                 // MOD xqliu 2009-1-21 feature 4715
                 DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);

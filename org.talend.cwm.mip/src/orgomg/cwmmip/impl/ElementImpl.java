@@ -7,9 +7,7 @@
 package orgomg.cwmmip.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import orgomg.cwmmip.CwmmipPackage;
 import orgomg.cwmmip.Element;
 

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.sqlexplorer.preferences;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.IConstants;
+import net.sourceforge.sqlexplorer.Messages;
 
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;

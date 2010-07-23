@@ -10,12 +10,28 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.resource.coboldata.*;
+import orgomg.cwmx.resource.coboldata.AccessType;
+import orgomg.cwmx.resource.coboldata.BlockKind;
+import orgomg.cwmx.resource.coboldata.COBOLFD;
+import orgomg.cwmx.resource.coboldata.COBOLFDIndex;
+import orgomg.cwmx.resource.coboldata.COBOLField;
+import orgomg.cwmx.resource.coboldata.CoboldataFactory;
+import orgomg.cwmx.resource.coboldata.CoboldataPackage;
+import orgomg.cwmx.resource.coboldata.FileOrganization;
+import orgomg.cwmx.resource.coboldata.FileSection;
+import orgomg.cwmx.resource.coboldata.LabelKind;
+import orgomg.cwmx.resource.coboldata.LinageInfo;
+import orgomg.cwmx.resource.coboldata.LinageInfoType;
+import orgomg.cwmx.resource.coboldata.LinkageSection;
+import orgomg.cwmx.resource.coboldata.OccursKey;
+import orgomg.cwmx.resource.coboldata.Renames;
+import orgomg.cwmx.resource.coboldata.ReportWriterSection;
+import orgomg.cwmx.resource.coboldata.Section;
+import orgomg.cwmx.resource.coboldata.SignKindType;
+import orgomg.cwmx.resource.coboldata.Usage;
+import orgomg.cwmx.resource.coboldata.WorkingStorageSection;
 
 /**
  * <!-- begin-user-doc -->

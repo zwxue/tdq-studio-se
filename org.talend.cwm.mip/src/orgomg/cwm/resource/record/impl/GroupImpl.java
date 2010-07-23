@@ -7,9 +7,7 @@
 package orgomg.cwm.resource.record.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.impl.ClassifierImpl;
-
 import orgomg.cwm.resource.record.Group;
 import orgomg.cwm.resource.record.RecordPackage;
 

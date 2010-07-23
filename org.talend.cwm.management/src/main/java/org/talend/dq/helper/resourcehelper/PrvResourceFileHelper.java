@@ -26,10 +26,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.writer.EMFSharedResources;
@@ -48,7 +49,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
 
     protected static Logger log = Logger.getLogger(PrvResourceFileHelper.class);
 
-    private Map<IFile, TypedReturnCode<TdDataProvider>> providerMap = new HashMap<IFile, TypedReturnCode<TdDataProvider>>();
+    private Map<IFile, TypedReturnCode<Connection>> providerMap = new HashMap<IFile, TypedReturnCode<Connection>>();
 
     private static PrvResourceFileHelper instance;
 
@@ -69,9 +70,9 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      * @param file the file to read
      * @return the Data provider if found.
      */
-    public TypedReturnCode<TdDataProvider> findProvider(IFile file) {
+    public TypedReturnCode<Connection> findProvider(IFile file) {
         if (checkFile(file)) {
-            TypedReturnCode<TdDataProvider> rc = providerMap.get(file);
+            TypedReturnCode<Connection> rc = providerMap.get(file);
             if (rc == null) {
                 rc = readFromFile(file);
 
@@ -98,7 +99,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         Iterator<IFile> iterator = providerMap.keySet().iterator();
         while (iterator.hasNext()) {
             IFile next = iterator.next();
-            TypedReturnCode<TdDataProvider> typedReturnCode = providerMap.get(next);
+            TypedReturnCode<Connection> typedReturnCode = providerMap.get(next);
             // tried to compare ids instead of instances but it gives another
             // exception later...
             // if (ResourceHelper.areSame(provider,
@@ -116,10 +117,10 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      * @param file
      * @return
      */
-    private TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
-        TypedReturnCode<TdDataProvider> rc;
+    private TypedReturnCode<Connection> readFromFile(IFile file) {
+        TypedReturnCode<Connection> rc;
         this.remove(file);
-        rc = new TypedReturnCode<TdDataProvider>();
+        rc = new TypedReturnCode<Connection>();
         Resource resource = getFileResource(file);
 
         // MOD scorreia 2009-01-09 password decryption is handled elsewhere
@@ -128,7 +129,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         Iterator<IFile> fileIterator = providerMap.keySet().iterator();
         while (fileIterator.hasNext()) {
             IFile key = fileIterator.next();
-            TypedReturnCode<TdDataProvider> returnValue = providerMap.get(key);
+            TypedReturnCode<Connection> returnValue = providerMap.get(key);
             Resource resourceObj = returnValue.getObject().eResource();
             if (resourceObj == resource) {
                 registedResourceMap.remove(key);
@@ -147,8 +148,8 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      * @param rc
      * @param resource
      */
-    private void retireTdProvider(IFile file, TypedReturnCode<TdDataProvider> rc, Resource resource) {
-        Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(resource.getContents());
+    private void retireTdProvider(IFile file, TypedReturnCode<Connection> rc, Resource resource) {
+        Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(resource.getContents());
         if (tdDataProviders.isEmpty()) {
             rc.setReturnCode(Messages.getString(
                     "PrvResourceFileHelper.NoDataProviderFound", file.getLocation().toFile().getAbsolutePath()), false); //$NON-NLS-1$
@@ -157,7 +158,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
             rc.setReturnCode(Messages.getString("PrvResourceFileHelper.FoundTooManyDataProvider", tdDataProviders.size(), //$NON-NLS-1$
                     file.getLocation().toFile().getAbsolutePath()), false);
         }
-        TdDataProvider prov = tdDataProviders.iterator().next();
+        Connection prov = tdDataProviders.iterator().next();
         rc.setObject(prov);
         providerMap.put(file, rc);
     }
@@ -180,7 +181,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      */
     @Override
     protected void deleteRelated(IFile file) {
-        TdDataProvider dataProvider = findProvider(file).getObject();
+        Connection dataProvider = findProvider(file).getObject();
 
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
         EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(softwareSystem);
@@ -190,23 +191,23 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         CWMPlugin.getDefault().removeAliasInSQLExplorer(dataProvider);
     }
 
-    public ReturnCode save(TdDataProvider dataProvider) {
+    public ReturnCode save(Connection dataProvider) {
         DataProviderWriter writer = ElementWriterFactory.getInstance().createDataProviderWriter();
         // ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
         ReturnCode rc = writer.save(dataProvider);
         return rc;
     }
 
-    public List<TdDataProvider> getAllDataProviders(IFolder folder) {
+    public List<Connection> getAllDataProviders(IFolder folder) {
         List<IFile> allPRVFiles = new ArrayList<IFile>();
         searchAllDataProvider(folder, allPRVFiles);
 
-        List<TdDataProvider> allDataProviders = new ArrayList<TdDataProvider>();
+        List<Connection> allDataProviders = new ArrayList<Connection>();
         if (!allPRVFiles.isEmpty()) {
             for (IFile file : allPRVFiles) {
-                TypedReturnCode<TdDataProvider> rc = readFromFile(file);
+                TypedReturnCode<Connection> rc = readFromFile(file);
                 if (rc.isOk()) {
-                    TdDataProvider dataProvider = rc.getObject();
+                    Connection dataProvider = rc.getObject();
                     allDataProviders.add(dataProvider);
                 }
             }
@@ -215,7 +216,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         return allDataProviders;
     }
 
-    public List<TdDataProvider> getAllDataProviders() {
+    public List<Connection> getAllDataProviders() {
         return getAllDataProviders(ResourceManager.getMetadataFolder());
     }
 

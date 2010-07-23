@@ -8,13 +8,13 @@ package orgomg.cwm.analysis.informationvisualization.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.analysis.informationvisualization.*;
-
+import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
+import orgomg.cwm.analysis.informationvisualization.RenderedObject;
+import orgomg.cwm.analysis.informationvisualization.RenderedObjectSet;
+import orgomg.cwm.analysis.informationvisualization.Rendering;
+import orgomg.cwm.analysis.informationvisualization.XSLRendering;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.Feature;

@@ -18,17 +18,17 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author rli
@@ -53,11 +53,11 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
     @Override
     public void loadChildren() {
         // MODSCA 2008-03-14 load children also when no catalog is given, but a schema exists (e.g. for DB2 database)
-        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) getParent());
+        Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) getParent());
         if (catalog != null) {
             loadChildrenLow(catalog, catalog, null, new ArrayList<TdView>());
         } else {
-            TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch((EObject) getParent());
+            Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch((EObject) getParent());
             if (schema != null) {
                 loadChildrenLow(schema, null, schema, new ArrayList<TdView>());
             }
@@ -74,7 +74,7 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
      * org.talend.cwm.relational.TdSchema)
      */
     @Override
-    protected List<TdView> getColumnSets(TdCatalog catalog, TdSchema schema) {
+    protected List<TdView> getColumnSets(Catalog catalog, Schema schema) {
         if (catalog != null) {
             return CatalogHelper.getViews(catalog);
         }
@@ -92,7 +92,7 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
      * org.talend.cwm.relational.TdSchema, org.talend.cwm.softwaredeployment.TdDataProvider, java.util.List)
      */
     @Override
-    protected <T extends List<TdView>> boolean loadColumnSets(TdCatalog catalog, TdSchema schema, TdDataProvider provider,
+    protected <T extends List<TdView>> boolean loadColumnSets(Catalog catalog, Schema schema, Connection provider,
             final T columnSets) {
         try {
             boolean ok = false;
@@ -118,7 +118,7 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
     }
 
     @Override
-    protected List<TdView> getColumnSetsWithFilter(TdCatalog catalog, TdSchema schema) {
+    protected List<TdView> getColumnSetsWithFilter(Catalog catalog, Schema schema) {
         if (catalog != null) {
             String viewFilter = ColumnSetHelper.getViewFilter(catalog);
             return filterColumnSets(CatalogHelper.getViews(catalog), viewFilter);

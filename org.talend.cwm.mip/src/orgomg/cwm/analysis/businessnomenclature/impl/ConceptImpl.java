@@ -9,15 +9,11 @@ package orgomg.cwm.analysis.businessnomenclature.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
 import orgomg.cwm.analysis.businessnomenclature.Concept;
 import orgomg.cwm.analysis.businessnomenclature.Term;

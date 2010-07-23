@@ -26,26 +26,25 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -73,8 +72,8 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected TdDataProvider findDataProvider() {
-        TdDataProvider provider = DataProviderHelper.getTdDataProvider((Package) selectedObj);
+    protected Connection findDataProvider() {
+        Connection provider = ConnectionHelper.getTdDataProvider((Package) selectedObj);
         return provider;
     }
 
@@ -194,8 +193,8 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     private List<ColumnSet> reloadElementOfPackage(Package toReloadObj) throws ReloadCompareException {
         List<ColumnSet> columnSetList = new ArrayList<ColumnSet>();
         try {
-            TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(toReloadObj);
-            TdSchema schemaObj = SwitchHelpers.SCHEMA_SWITCH.doSwitch(toReloadObj);
+            Catalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(toReloadObj);
+            Schema schemaObj = SwitchHelpers.SCHEMA_SWITCH.doSwitch(toReloadObj);
             if (catalogObj != null) {
                 List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
                 CatalogHelper.addTables(tables, catalogObj);

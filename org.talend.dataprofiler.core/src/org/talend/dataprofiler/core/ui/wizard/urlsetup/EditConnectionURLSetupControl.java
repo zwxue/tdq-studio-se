@@ -36,10 +36,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
@@ -55,7 +55,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
 
     private AbstractWizardPage abstractWizardPage;
 
-    private TdProviderConnection connection;
+    private Connection connection;
 
     protected Text urlText;
 
@@ -70,7 +70,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
         // TODO Auto-generated constructor stub
     }
 
-    public EditConnectionURLSetupControl(Composite parent, SupportDBUrlType dbType, TdProviderConnection connection) {
+    public EditConnectionURLSetupControl(Composite parent, SupportDBUrlType dbType, Connection connection) {
         super(parent, dbType);
         this.connection = connection;
     }

@@ -15,7 +15,6 @@ Require-Bundle: org.eclipse.ui,
  org.talend.libraries.apache,
  org.talend.utils,
  org.eclipse.emf.edit.ui,
- org.talend.cwm.ext.edit,
  org.eclipse.ui.navigator.resources,
  org.eclipse.ui.forms,
  org.talend.dataquality,
@@ -38,7 +37,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.cwm.compare,
  org.talend.top.repository,
  org.talend.model,
- org.eclipse.emf.ecore.xmi
+ org.eclipse.emf.ecore.xmi,
+ org.talend.model.migration
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,

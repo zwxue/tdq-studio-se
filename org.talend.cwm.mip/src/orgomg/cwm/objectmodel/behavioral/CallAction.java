@@ -7,9 +7,7 @@
 package orgomg.cwm.objectmodel.behavioral;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.management.warehouseoperation.StepExecution;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

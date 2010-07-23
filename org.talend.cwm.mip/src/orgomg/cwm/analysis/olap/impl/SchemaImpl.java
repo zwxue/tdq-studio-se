@@ -9,21 +9,16 @@ package orgomg.cwm.analysis.olap.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.analysis.olap.Cube;
 import orgomg.cwm.analysis.olap.DeploymentGroup;
 import orgomg.cwm.analysis.olap.Dimension;
 import orgomg.cwm.analysis.olap.OlapPackage;
 import orgomg.cwm.analysis.olap.Schema;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
 
 /**

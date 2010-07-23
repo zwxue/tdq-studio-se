@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
@@ -58,11 +58,11 @@ public abstract class AnalyzedElementSynDialog extends SelectionStatusDialog imp
 
     protected List<SynTreeModel> modelInput = null;
 
-    protected TdDataProvider newDataProvider;
+    protected Connection newDataProvider;
 
     protected Map<ModelElement, ModelElement> synedEleMap;
 
-    public AnalyzedElementSynDialog(Shell parent, Analysis analysis, TdDataProvider newDataProvider) {
+    public AnalyzedElementSynDialog(Shell parent, Analysis analysis, Connection newDataProvider) {
         super(parent);
         setTitle(DefaultMessagesImpl.getString("AnalyzedElementSynDialog.SynWithNewConnection")); //$NON-NLS-1$
         initTableProvider();

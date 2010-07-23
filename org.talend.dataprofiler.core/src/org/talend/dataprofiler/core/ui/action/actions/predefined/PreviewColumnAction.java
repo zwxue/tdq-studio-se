@@ -16,10 +16,10 @@ import java.util.Arrays;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -53,9 +53,9 @@ public class PreviewColumnAction extends Action {
                 columns[i] = (TdColumn) me;
                 ++i;
             }
-            if (ColumnHelper.isFromSameTable(Arrays.asList((Column[]) columns))) {
+            if (ColumnHelper.isFromSameTable(Arrays.asList((TdColumn[]) columns))) {
                 TdColumn oneColumn = columns[0];
-                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(oneColumn);
+                Connection dataprovider = DataProviderHelper.getTdDataProvider(oneColumn);
                 ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(oneColumn);
                 String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
                 DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(dataprovider);

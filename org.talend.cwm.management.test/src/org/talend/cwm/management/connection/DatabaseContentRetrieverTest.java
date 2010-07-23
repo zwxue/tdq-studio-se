@@ -29,9 +29,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.ViewHelper;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -40,6 +38,8 @@ import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.ConnectionUtils;
 import orgomg.cwm.foundation.typemapping.TypeSystem;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -98,11 +98,11 @@ public class DatabaseContentRetrieverTest {
     public void testGetCatalogs() {
 
         try {
-            Collection<TdCatalog> catalogs = DatabaseContentRetriever.getCatalogs(CONNECTION);
+            Collection<Catalog> catalogs = DatabaseContentRetriever.getCatalogs(CONNECTION);
             assertNotNull(catalogs);
             // assertTrue("We should have a connection", ok);
             assertFalse("We should have a connection", catalogs.isEmpty());
-            for (TdCatalog tdCatalog : catalogs) {
+            for (Catalog tdCatalog : catalogs) {
                 assertNotNull(tdCatalog);
                 log.info("Catalog: " + tdCatalog.getName());
             }
@@ -119,7 +119,7 @@ public class DatabaseContentRetrieverTest {
     @Test
     public void testGetSchemas() {
         try {
-            Map<String, List<TdSchema>> schemas = DatabaseContentRetriever.getSchemas(CONNECTION);
+            Map<String, List<Schema>> schemas = DatabaseContentRetriever.getSchemas(CONNECTION);
             assertNotNull(schemas);
             Set<String> schemaNames = schemas.keySet();
             for (String name : schemaNames) {

@@ -9,12 +9,16 @@ package orgomg.cwm.foundation.datatypes.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.foundation.datatypes.*;
+import orgomg.cwm.foundation.datatypes.DatatypesFactory;
+import orgomg.cwm.foundation.datatypes.DatatypesPackage;
+import orgomg.cwm.foundation.datatypes.Enumeration;
+import orgomg.cwm.foundation.datatypes.EnumerationLiteral;
+import orgomg.cwm.foundation.datatypes.QueryExpression;
+import orgomg.cwm.foundation.datatypes.TypeAlias;
+import orgomg.cwm.foundation.datatypes.Union;
+import orgomg.cwm.foundation.datatypes.UnionMember;
 
 /**
  * <!-- begin-user-doc -->

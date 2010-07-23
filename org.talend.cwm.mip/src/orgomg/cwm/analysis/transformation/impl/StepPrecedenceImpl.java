@@ -7,10 +7,8 @@
 package orgomg.cwm.analysis.transformation.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.analysis.transformation.StepPrecedence;
 import orgomg.cwm.analysis.transformation.TransformationPackage;
-
 import orgomg.cwm.objectmodel.core.impl.DependencyImpl;
 
 /**

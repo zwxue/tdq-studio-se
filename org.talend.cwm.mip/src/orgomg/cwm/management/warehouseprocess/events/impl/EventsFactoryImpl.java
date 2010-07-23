@@ -9,12 +9,20 @@ package orgomg.cwm.management.warehouseprocess.events.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.management.warehouseprocess.events.*;
+import orgomg.cwm.management.warehouseprocess.events.CalendarDate;
+import orgomg.cwm.management.warehouseprocess.events.CascadeEvent;
+import orgomg.cwm.management.warehouseprocess.events.CustomCalendar;
+import orgomg.cwm.management.warehouseprocess.events.CustomCalendarEvent;
+import orgomg.cwm.management.warehouseprocess.events.EventsFactory;
+import orgomg.cwm.management.warehouseprocess.events.EventsPackage;
+import orgomg.cwm.management.warehouseprocess.events.ExternalEvent;
+import orgomg.cwm.management.warehouseprocess.events.InternalEvent;
+import orgomg.cwm.management.warehouseprocess.events.IntervalEvent;
+import orgomg.cwm.management.warehouseprocess.events.PointInTimeEvent;
+import orgomg.cwm.management.warehouseprocess.events.RecurringPointInTimeEvent;
+import orgomg.cwm.management.warehouseprocess.events.RetryEvent;
 
 /**
  * <!-- begin-user-doc -->

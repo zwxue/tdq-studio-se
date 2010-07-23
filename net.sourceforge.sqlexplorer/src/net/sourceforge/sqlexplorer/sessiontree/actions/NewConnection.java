@@ -3,6 +3,7 @@ package net.sourceforge.sqlexplorer.sessiontree.actions;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogAction;
 import net.sourceforge.sqlexplorer.util.TextUtil;
+
 import org.eclipse.jface.action.Action;
 
 /**

@@ -12,16 +12,16 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.RelationalPackage;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.RelationalPackage;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -38,7 +38,7 @@ public final class ColumnSetNameHelper {
      * @param tdDataProvider
      * @return
      */
-    public static String getColumnSetQualifiedName(TdDataProvider tdDataProvider, ColumnSet columnset) {
+    public static String getColumnSetQualifiedName(Connection tdDataProvider, ColumnSet columnset) {
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
         Package catalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnset);
         if (catalogOrSchema == null) {
@@ -47,9 +47,9 @@ public final class ColumnSetNameHelper {
         // else
         String catalogName = null;
         String schemaName = null;
-        if (catalogOrSchema != null && RelationalPackage.eINSTANCE.getTdSchema().equals(catalogOrSchema.eClass())) {
+        if (catalogOrSchema != null && RelationalPackage.eINSTANCE.getSchema().equals(catalogOrSchema.eClass())) {
             schemaName = catalogOrSchema.getName();
-            TdCatalog parentCatalog = CatalogHelper.getParentCatalog(catalogOrSchema);
+            Catalog parentCatalog = CatalogHelper.getParentCatalog(catalogOrSchema);
             if (parentCatalog != null) {
                 catalogName = parentCatalog.getName();
             }

@@ -7,8 +7,8 @@ import java.sql.Statement;
 
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

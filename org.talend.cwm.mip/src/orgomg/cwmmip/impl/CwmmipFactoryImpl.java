@@ -9,12 +9,20 @@ package orgomg.cwmmip.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmmip.*;
+import orgomg.cwmmip.BindingParameter;
+import orgomg.cwmmip.CwmmipFactory;
+import orgomg.cwmmip.CwmmipPackage;
+import orgomg.cwmmip.Element;
+import orgomg.cwmmip.GraphSubset;
+import orgomg.cwmmip.InterchangePattern;
+import orgomg.cwmmip.ModeledGraphSubset;
+import orgomg.cwmmip.ModeledSemanticContext;
+import orgomg.cwmmip.PatternConstraint;
+import orgomg.cwmmip.Restriction;
+import orgomg.cwmmip.SemanticContext;
+import orgomg.cwmmip.UnitOfInterchange;
 
 /**
  * <!-- begin-user-doc -->

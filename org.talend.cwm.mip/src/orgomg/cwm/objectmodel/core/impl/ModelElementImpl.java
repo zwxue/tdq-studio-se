@@ -10,40 +10,29 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
 import orgomg.cwm.analysis.businessnomenclature.VocabularyElement;
-
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
-
 import orgomg.cwm.analysis.transformation.DataObjectSet;
 import orgomg.cwm.analysis.transformation.TransformationPackage;
-
 import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
 import orgomg.cwm.foundation.businessinformation.Description;
 import orgomg.cwm.foundation.businessinformation.Document;
 import orgomg.cwm.foundation.businessinformation.ResponsibleParty;
-
 import orgomg.cwm.foundation.expressions.ElementNode;
 import orgomg.cwm.foundation.expressions.ExpressionsPackage;
-
 import orgomg.cwm.management.warehouseoperation.ChangeRequest;
 import orgomg.cwm.management.warehouseoperation.Measurement;
 import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
-
 import orgomg.cwm.objectmodel.core.Constraint;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -52,7 +41,6 @@ import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.Stereotype;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.objectmodel.core.VisibilityKind;
-
 import orgomg.cwmx.resource.dmsii.DASDLProperty;
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
 

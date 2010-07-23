@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.dmsii;
 
 import orgomg.cwm.objectmodel.core.BooleanExpression;
-
 import orgomg.cwm.resource.record.RecordDef;
 
 /**

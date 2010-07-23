@@ -28,7 +28,6 @@ import net.sourceforge.sqlexplorer.parsers.BasicQueryParser;
 import net.sourceforge.sqlexplorer.parsers.Query;
 import net.sourceforge.sqlexplorer.parsers.QueryParser;
 import net.sourceforge.sqlexplorer.plugin.editors.Message;
-import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.squirrel_sql.fw.sql.SQLDriverClassLoader;
 
 public class DefaultDatabaseProduct extends AbstractDatabaseProduct {

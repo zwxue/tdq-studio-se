@@ -7,7 +7,6 @@
 package orgomg.cwmx.resource.essbase;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.Namespace;
 
 /**

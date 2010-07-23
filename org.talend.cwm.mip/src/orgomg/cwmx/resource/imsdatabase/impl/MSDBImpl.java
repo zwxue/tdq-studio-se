@@ -7,14 +7,10 @@
 package orgomg.cwmx.resource.imsdatabase.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
 import orgomg.cwmx.resource.imsdatabase.MSDB;
-
 import orgomg.cwmx.resource.imsdatabase.imstypes.MSDBtype;
 
 /**

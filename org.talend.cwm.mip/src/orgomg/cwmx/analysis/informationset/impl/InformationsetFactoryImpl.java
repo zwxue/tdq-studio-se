@@ -9,12 +9,16 @@ package orgomg.cwmx.analysis.informationset.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwmx.analysis.informationset.*;
+import orgomg.cwmx.analysis.informationset.InfoSetAdministration;
+import orgomg.cwmx.analysis.informationset.InfoSetDate;
+import orgomg.cwmx.analysis.informationset.InformationSet;
+import orgomg.cwmx.analysis.informationset.InformationsetFactory;
+import orgomg.cwmx.analysis.informationset.InformationsetPackage;
+import orgomg.cwmx.analysis.informationset.Rule;
+import orgomg.cwmx.analysis.informationset.Segment;
+import orgomg.cwmx.analysis.informationset.SegmentRegion;
 
 /**
  * <!-- begin-user-doc -->

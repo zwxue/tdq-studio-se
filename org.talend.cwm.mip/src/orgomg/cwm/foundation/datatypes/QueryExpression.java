@@ -7,7 +7,6 @@
 package orgomg.cwm.foundation.datatypes;
 
 import orgomg.cwm.objectmodel.core.ProcedureExpression;
-
 import orgomg.cwmx.analysis.informationreporting.ReportGroup;
 
 /**

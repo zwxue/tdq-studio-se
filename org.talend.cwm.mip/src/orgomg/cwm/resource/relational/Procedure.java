@@ -7,7 +7,6 @@
 package orgomg.cwm.resource.relational;
 
 import orgomg.cwm.objectmodel.behavioral.Method;
-
 import orgomg.cwm.resource.relational.enumerations.ProcedureType;
 
 /**

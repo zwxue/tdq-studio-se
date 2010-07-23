@@ -10,9 +10,11 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
-import orgomg.cwm.management.warehouseprocess.*;
-
+import orgomg.cwm.management.warehouseprocess.ProcessPackage;
+import orgomg.cwm.management.warehouseprocess.WarehouseActivity;
+import orgomg.cwm.management.warehouseprocess.WarehouseProcess;
+import orgomg.cwm.management.warehouseprocess.WarehouseStep;
+import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;

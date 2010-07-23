@@ -90,7 +90,7 @@ public class ColumnBuilder extends CwmBuilder {
             int dataType = 0;
             try {
                 dataType = columns.getInt(GetColumn.DATA_TYPE.name());
-                column.setJavaType(dataType);
+                column.getSqlDataType().setJavaDataType(dataType);
             } catch (Exception e) {
                 log.warn(e, e);
             }
@@ -102,9 +102,9 @@ public class ColumnBuilder extends CwmBuilder {
                 // ,respective.so change them to "91" and "92" for adapt to Java2SqlType.
                 if (ConnectionUtils.isMssql(connection)) {
                     if (typeName.toLowerCase().equals("date")) {
-                        column.setJavaType(91);
+                        column.getSqlDataType().setJavaDataType(91);
                     } else if (typeName.toLowerCase().equals("time")) {
-                        column.setJavaType(92);
+                        column.getSqlDataType().setJavaDataType(92);
                     }
                 }
             } catch (Exception e1) {
@@ -149,7 +149,7 @@ public class ColumnBuilder extends CwmBuilder {
             TdExpression defExpression = BooleanExpressionHelper.createTdExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
 
             try {
-                column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
+                column.getSqlDataType().setNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
             } catch (Exception e1) {
                 log.warn(e1, e1);
             }

@@ -7,9 +7,7 @@
 package orgomg.cwm.resource.record.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.instance.impl.DataValueImpl;
-
 import orgomg.cwm.resource.record.FieldValue;
 import orgomg.cwm.resource.record.RecordPackage;
 

@@ -8,18 +8,13 @@ package orgomg.cwm.management.warehouseoperation.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.management.warehouseoperation.Measurement;
 import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
-
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**

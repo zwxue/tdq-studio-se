@@ -45,16 +45,15 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -497,13 +496,13 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             if (element instanceof EObject) {
                 EObject eObj = (EObject) element;
                 Package packageValue = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObj);
-                TdCatalog parentCatalog = CatalogHelper.getParentCatalog(packageValue);
+                Catalog parentCatalog = CatalogHelper.getParentCatalog(packageValue);
                 if (parentCatalog != null) {
                     return parentCatalog;
                 }
 
                 if (packageValue != null) {
-                    TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
+                    Connection tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
                     IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
                     return findCorrespondingFile;
                 }
@@ -537,7 +536,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                     List<NamedColumnSet> temp = PackageHelper.getNmaedColumnSets(pckg);
                     NamedColumnSet[] tables = temp.toArray(new NamedColumnSet[temp.size()]);
                     if (tables.length <= 0) {
-                        TdDataProvider provider = DataProviderHelper.getTdDataProvider(pckg);
+                        Connection provider = DataProviderHelper.getTdDataProvider(pckg);
                         if (provider == null) {
                             return null;
                         }

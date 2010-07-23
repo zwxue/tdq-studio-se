@@ -9,12 +9,20 @@ package orgomg.cwm.foundation.softwaredeployment.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import orgomg.cwm.foundation.softwaredeployment.*;
+import orgomg.cwm.foundation.softwaredeployment.Component;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.foundation.softwaredeployment.DeployedComponent;
+import orgomg.cwm.foundation.softwaredeployment.DeployedSoftwareSystem;
+import orgomg.cwm.foundation.softwaredeployment.Machine;
+import orgomg.cwm.foundation.softwaredeployment.PackageUsage;
+import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
+import orgomg.cwm.foundation.softwaredeployment.Site;
+import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
+import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory;
+import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 
 /**
  * <!-- begin-user-doc -->

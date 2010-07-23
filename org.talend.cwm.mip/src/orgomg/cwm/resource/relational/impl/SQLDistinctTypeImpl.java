@@ -8,19 +8,14 @@ package orgomg.cwm.resource.relational.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.foundation.datatypes.DatatypesPackage;
 import orgomg.cwm.foundation.datatypes.TypeAlias;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.DataType;
-
 import orgomg.cwm.resource.relational.RelationalPackage;
 import orgomg.cwm.resource.relational.SQLDistinctType;
 import orgomg.cwm.resource.relational.SQLSimpleType;

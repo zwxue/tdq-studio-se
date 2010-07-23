@@ -30,13 +30,14 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.cwm.xml.XmlFactory;
@@ -49,7 +50,6 @@ import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import orgomg.cwm.foundation.softwaredeployment.Component;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC mzhao class global comment. Detailled comment
@@ -158,7 +158,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         xmlDocCollection.add(tdXmlDoc);
     }
 
-    public void setSofewareSystem(TdDataProvider dataProvider, DBConnectionParameter parameter) {
+    public void setSofewareSystem(Connection dataProvider, DBConnectionParameter parameter) {
         // Softwaresystem
         TdSoftwareSystem system = SoftwaredeploymentFactory.eINSTANCE.createTdSoftwareSystem();
         system.setName(parameter.getDbName());
@@ -171,13 +171,13 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
 
     }
 
-    public void setProviderConnection(TdDataProvider dataProvider, DBConnectionParameter parameter) {
+    public void setProviderConnection(Connection dataProvider, DBConnectionParameter parameter) {
         // Provider connection properties
-        TdProviderConnection prov = SoftwaredeploymentFactory.eINSTANCE.createTdProviderConnection();
+        DatabaseConnection prov = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         prov.setName(driverClassName + EcoreUtil.generateUUID());
         // connection
-        prov.setDriverClassName(driverClassName);
-        prov.setConnectionString(connectionURI);
+        prov.setDriverClass(driverClassName);
+        prov.setURL(connectionURI);
         Properties props = parameter.getParameters();
         // ---add properties as tagged value of the provider connection.
         Enumeration<?> propertyNames = props.propertyNames();
@@ -186,13 +186,13 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
             // hcheng encode password here
             String property = props.getProperty(key);
             if (TaggedValueHelper.PASSWORD.equals(key)) {
-                DataProviderHelper.encryptAndSetPassword(prov, property);
-            } else {
-                TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(key, property);
-                prov.getTaggedValue().add(taggedValue);
+                prov.setPassword(property);
+            } else if (TaggedValueHelper.USER.equals(key)) {
+                prov.setUsername(property);
             }
         }
-        DataProviderHelper.addProviderConnection(prov, dataProvider);
+        dataProvider = prov;
+        // DataProviderHelper.addProviderConnection(prov, dataProvider);
     }
 
     private final static String XSD_SUFIX = ".xsd"; //$NON-NLS-1$

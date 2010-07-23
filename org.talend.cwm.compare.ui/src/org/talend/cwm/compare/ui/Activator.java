@@ -15,7 +15,6 @@ package org.talend.cwm.compare.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.talend.cwm.compare.i18n.Messages;
 
 /**
  * The activator class controls the plug-in life cycle

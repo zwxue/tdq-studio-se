@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
-import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -23,19 +22,18 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.DataProviderBuilder;
 import org.talend.cwm.builders.SoftwareSystemBuilder;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.typemapping.TypeSystem;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -58,18 +56,18 @@ public class DBConnect {
 
     private Driver driver;
 
-    private Connection connection;
+    private java.sql.Connection connection;
 
     private SoftwareSystemBuilder softwareSystemBuilder;
 
     private CatalogBuilder catalogBuilder;
 
-    private TdProviderConnection providerConnection;
-
     private DataProviderBuilder dataProvBuilder;
 
     // ADD xqliu 2010-03-03 feature 11412
     private DBConnectionParameter dbConnectionParameter;
+
+    private Connection databaseConnection = null;
 
     // TODO scorreia errorMessage;
 
@@ -104,6 +102,18 @@ public class DBConnect {
         this.driverClass = driverClassName;
         this.connectionProperties = props;
         this.emfUtil.setUsePlatformRelativePath(false); // use file paths for tests
+        try {
+            driver = ConnectionUtils.getClassDriver(driverClassName);
+            databaseConnection = DatabaseContentRetriever.getDataProvider(driver, databaseUrl, connectionProperties);
+        } catch (SQLException e) {
+            log.error(e, e);
+        } catch (InstantiationException e) {
+            log.error(e, e);
+        } catch (IllegalAccessException e) {
+            log.error(e, e);
+        } catch (ClassNotFoundException e) {
+            log.error(e, e);
+        }
     }
 
     /**
@@ -112,7 +122,7 @@ public class DBConnect {
      * 
      * @return the catalogs built from the connection, or an empty list.
      */
-    public Collection<TdCatalog> getCatalogs() {
+    public Collection<Catalog> getCatalogs() {
         if (catalogBuilder == null) {
             return Collections.emptyList();
         }
@@ -125,7 +135,7 @@ public class DBConnect {
      * 
      * @return the schemata built from the connection, or an empty list.
      */
-    public Collection<TdSchema> getSchemata() {
+    public Collection<Schema> getSchemata() {
         if (catalogBuilder == null) {
             return Collections.emptyList();
         }
@@ -156,15 +166,6 @@ public class DBConnect {
             return null;
         }
         return softwareSystemBuilder.getTypeSystem();
-    }
-
-    /**
-     * Method "getProviderConnection". This method can be called right after {@link this#connect()}.
-     * 
-     * @return the connection provider (containing connection parameters given in CTOR)
-     */
-    public TdProviderConnection getProviderConnection() {
-        return providerConnection;
     }
 
     /**
@@ -306,7 +307,7 @@ public class DBConnect {
     public boolean retrieveDriverInformations() throws SQLException {
         boolean ok = checkConnection("Cannot connect to database. "); // TODO scorreia verify if needed
         if (ok) {
-            dataProvBuilder = new DataProviderBuilder(connection, driver, databaseUrl, connectionProperties);
+            dataProvBuilder = new DataProviderBuilder(databaseConnection, connection, driver, databaseUrl);
         }
         return ok;
     }
@@ -356,25 +357,13 @@ public class DBConnect {
      */
     private boolean connectLow(String dbUrl, String driverClassName, Properties props) throws SQLException {
         boolean ok = true;
-        try {
-            driver = ConnectionUtils.getClassDriver(driverClassName);
-            // MOD xqliu 2009-02-03 bug 5261
-            connection = ConnectionUtils.createConnectionWithTimeout(driver, dbUrl, props);
-            // connection = DriverManager.getConnection(dbUrl, props);
-            if (connection != null) {
-                this.providerConnection = DatabaseContentRetriever.getProviderConnection(dbUrl, driverClassName, props,
-                        connection);
-            }
-        } catch (InstantiationException e) {
-            log.error(e, e);
-            ok = false;
-        } catch (IllegalAccessException e) {
-            log.error(e, e);
-            ok = false;
-        } catch (ClassNotFoundException e) {
-            log.error(e, e);
-            ok = false;
+        // connection = DriverManager.getConnection(dbUrl, props);
+        // MOD xqliu 2009-02-03 bug 5261
+        connection = ConnectionUtils.createConnectionWithTimeout(driver, dbUrl, props);
+        if (connection != null) {
+            DatabaseContentRetriever.fillConnectionInfo(databaseConnection, dbUrl, driverClassName, props, connection);
         }
+
         return ok;
     }
 
@@ -384,11 +373,8 @@ public class DBConnect {
      * 
      * @return the data provider or null.
      */
-    public TdDataProvider getDataProvider() {
-        if (dataProvBuilder == null) {
-            return null;
-        }
-        return this.dataProvBuilder.getDataProvider();
+    public Connection getDataProvider() {
+        return this.databaseConnection;
     }
 
     /**

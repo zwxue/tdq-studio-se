@@ -12,8 +12,8 @@
 // ============================================================================
 package org.talend.cwm.compare.factory;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 
 /**
  * The class use to display the current level comparison's result(EMF file model
@@ -22,7 +22,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
  */
 public interface IComparisonLevel {
 
-	public TdDataProvider reloadCurrentLevelElement()
+    public Connection reloadCurrentLevelElement()
 			throws ReloadCompareException;
 
 	public void popComparisonUI(IUIHandler uiHandler)

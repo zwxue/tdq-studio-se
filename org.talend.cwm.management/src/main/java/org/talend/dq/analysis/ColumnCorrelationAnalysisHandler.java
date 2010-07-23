@@ -33,7 +33,6 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * 
@@ -54,7 +53,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
      * @return
      */
 
-    public boolean addIndicator(List<Column> columns, Indicator indicator) {
+    public boolean addIndicator(List<TdColumn> columns, Indicator indicator) {
         for (ModelElement tdColumn : columns) {
             if (!analysis.getContext().getAnalysedElements().contains(tdColumn)) {
                 analysis.getContext().getAnalysedElements().add(tdColumn);
@@ -87,7 +86,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
         return true;
     }
 
-    private void initializeIndicator(Indicator indicator, List<Column> columns) {
+    private void initializeIndicator(Indicator indicator, List<TdColumn> columns) {
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }

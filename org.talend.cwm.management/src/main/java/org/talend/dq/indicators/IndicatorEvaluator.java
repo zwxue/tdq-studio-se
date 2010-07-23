@@ -41,7 +41,6 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
-import org.talend.dataquality.indicators.impl.SoundexFreqIndicatorImpl;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 

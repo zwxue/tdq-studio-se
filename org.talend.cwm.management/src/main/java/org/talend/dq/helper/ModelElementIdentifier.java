@@ -159,7 +159,7 @@ public final class ModelElementIdentifier {
      * @return
      */
     public static boolean isDataProvider(EObject element) {
-        return SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(element) != null;
+        return SwitchHelpers.CONNECTION_SWITCH.doSwitch(element) != null;
     }
 
     /**

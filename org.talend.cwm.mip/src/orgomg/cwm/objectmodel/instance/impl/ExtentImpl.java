@@ -7,9 +7,7 @@
 package orgomg.cwm.objectmodel.instance.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import orgomg.cwm.objectmodel.core.impl.PackageImpl;
-
 import orgomg.cwm.objectmodel.instance.Extent;
 import orgomg.cwm.objectmodel.instance.InstancePackage;
 

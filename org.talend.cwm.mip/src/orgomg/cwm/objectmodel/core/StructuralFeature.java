@@ -7,15 +7,11 @@
 package orgomg.cwm.objectmodel.core;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.foundation.datatypes.Union;
-
 import orgomg.cwm.foundation.keysindexes.IndexedFeature;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
-
 import orgomg.cwm.objectmodel.instance.Slot;
-
 import orgomg.cwmx.resource.dmsii.DataItem;
 import orgomg.cwmx.resource.dmsii.Remap;
 

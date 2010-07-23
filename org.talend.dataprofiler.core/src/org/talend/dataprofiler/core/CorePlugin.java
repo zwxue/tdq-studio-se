@@ -38,9 +38,9 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
@@ -156,7 +156,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param tdDataProvider
      * @param query
      */
-    public void runInDQViewer(TdDataProvider tdDataProvider, String query, String editorName) {
+    public void runInDQViewer(Connection tdDataProvider, String query, String editorName) {
         SQLEditor sqlEditor = openInSqlEditor(tdDataProvider, query, editorName);
         if (sqlEditor != null) {
             new ExecSQLAction(sqlEditor).run();
@@ -171,7 +171,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param editorName
      * @return the specified sql editor.
      */
-    public SQLEditor openInSqlEditor(TdDataProvider tdDataProvider, String query, String editorName) {
+    public SQLEditor openInSqlEditor(Connection tdDataProvider, String query, String editorName) {
         if (editorName == null) {
             editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
@@ -182,9 +182,9 @@ public class CorePlugin extends AbstractUIPlugin {
         Alias alias = aliasManager.getAlias(tdDataProvider.getName());
 
         if (alias == null) {
-            List<TdDataProvider> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(
+            List<Connection> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(
                     ResourceManager.getMetadataFolder());
-            for (TdDataProvider dataProvider : allDataProviders) {
+            for (Connection dataProvider : allDataProviders) {
                 if (dataProvider == tdDataProvider) {
                     CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
                     openInSqlEditor(tdDataProvider, query, editorName);
@@ -192,9 +192,9 @@ public class CorePlugin extends AbstractUIPlugin {
             }
         } else {
             try {
-                TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+                Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
                 if (connection != null) {
-                    String userName = DataProviderHelper.getUser(connection);
+                    String userName = ConnectionHelper.getUsername(connection);
                     SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
                     input.setUser(alias.getUser(userName));
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();

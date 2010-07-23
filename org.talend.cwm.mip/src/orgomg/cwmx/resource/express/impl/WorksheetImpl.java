@@ -8,14 +8,10 @@ package orgomg.cwmx.resource.express.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import orgomg.cwm.objectmodel.core.impl.ClassImpl;
-
 import orgomg.cwmx.resource.express.Dimension;
 import orgomg.cwmx.resource.express.ExpressPackage;
 import orgomg.cwmx.resource.express.Worksheet;

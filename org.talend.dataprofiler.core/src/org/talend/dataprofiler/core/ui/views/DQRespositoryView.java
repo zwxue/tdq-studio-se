@@ -61,10 +61,10 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -160,7 +160,7 @@ public class DQRespositoryView extends CommonNavigator {
         SQLExplorerPlugin.getDefault().initAllDrivers();
 
         // initialized connections in sql explorer.
-        List<TdDataProvider> providers = PrvResourceFileHelper.getInstance().getAllDataProviders();
+        List<Connection> providers = PrvResourceFileHelper.getInstance().getAllDataProviders();
         for (DataProvider provider : providers) {
             CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(provider);
         }

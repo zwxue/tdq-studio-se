@@ -77,7 +77,6 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * 
@@ -105,7 +104,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     private Button[] buttons;
 
-    private List<Column> columnSetMultiValueList;
+    private List<TdColumn> columnSetMultiValueList;
 
     // private final List<String> comboTextList = new ArrayList<String>();
 
@@ -119,7 +118,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         parentComp = parent;
         tree = createTree(parent);
         tree.setData(this);
-        columnSetMultiValueList = new ArrayList<Column>();
+        columnSetMultiValueList = new ArrayList<TdColumn>();
     }
 
     public AnalysisColumnNominalIntervalTreeViewer(Composite parent, ColumnCorrelationNominalAndIntervalMasterPage masterPage) {
@@ -221,7 +220,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             public void widgetSelected(SelectionEvent e) {
                 Tree currentTree = tree;
                 Object[] selectItem = currentTree.getSelection();
-                List<Column> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
+                List<TdColumn> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
                 for (int i = 0; i < selectItem.length; i++) {
                     Object removeElement = ((TreeItem) selectItem[i])
                             .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
@@ -262,7 +261,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     private void moveElement(AnalysisColumnNominalIntervalTreeViewer columnsElementViewer, boolean isDown) {
         Tree currentTree = columnsElementViewer.getTree();
         Object[] selectItem = currentTree.getSelection();
-        List<Column> columnList = columnsElementViewer.getColumnSetMultiValueList();
+        List<TdColumn> columnList = columnsElementViewer.getColumnSetMultiValueList();
         int index = 0;
         boolean moveFlag = false;
         List<Integer> indexArray = new ArrayList<Integer>();
@@ -272,7 +271,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 if ((index + 1) >= columnList.size()) {
                     return;
                 } else {
-                    Column moveElement = (Column) ((TreeItem) selectItem[i])
+                    TdColumn moveElement = (TdColumn) ((TreeItem) selectItem[i])
                             .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                     columnList.remove(moveElement);
                     columnList.add((index + 1), moveElement);
@@ -285,7 +284,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 if ((index - 1) < 0) {
                     return;
                 } else {
-                    Column moveElement = (Column) ((TreeItem) selectItem[i])
+                    TdColumn moveElement = (TdColumn) ((TreeItem) selectItem[i])
                             .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                     columnList.remove(moveElement);
                     columnList.add((index - 1), moveElement);
@@ -300,8 +299,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         }
     }
 
-    private List<Column> convertList(List<Column> columnList) {
-        List<Column> resultList = new ArrayList();
+    private List<TdColumn> convertList(List<TdColumn> columnList) {
+        List<TdColumn> resultList = new ArrayList();
         for (int i = columnList.size() - 1; i >= 0; i--) {
             resultList.add(columnList.get(i));
         }
@@ -464,7 +463,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 return;
             }
         }
-        List<Column> columnList = new ArrayList<Column>();
+        List<TdColumn> columnList = new ArrayList<TdColumn>();
         for (Object obj : objs) {
             columnList.add((TdColumn) obj);
         }
@@ -477,13 +476,13 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         tree.setData(this);
         // MOD mzhao bug 8282 2009-7-31 Clear column cache.
         columnSetMultiValueList.clear();
-        addItemElements((List<Column>) columns, 0);
+        addItemElements((List<TdColumn>) columns, 0);
         // addItemElements(columns);
         // MOD mzhao 2009-05-05 bug 6587.
         updateBindConnection(masterPage, tree);
     }
 
-    private void addItemElements(final List<Column> columns, int index) {
+    private void addItemElements(final List<TdColumn> columns, int index) {
         for (int i = 0; i < columns.size(); i++) {
             final TdColumn column = (TdColumn) columns.get(i);
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE, index);
@@ -571,7 +570,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         tree.forceFocus();
     }
 
-    public void addElements(final List<Column> columns, int index) {
+    public void addElements(final List<TdColumn> columns, int index) {
         this.addItemElements(columns, index);
         updateBindConnection(masterPage, tree);
     }
@@ -583,7 +582,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
      * @param deleteColumnIndiciators
      */
     private void deleteColumnItems(TdColumn deleteColumn) {
-        List<Column> remainColumns = columnSetMultiValueList;
+        List<TdColumn> remainColumns = columnSetMultiValueList;
         for (int j = 0; j < columnSetMultiValueList.size(); j++) {
             TdColumn column = (TdColumn) columnSetMultiValueList.get(j);
             if (deleteColumn.equals(column)) {
@@ -594,7 +593,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         // setElements(columnSetMultiValueList);
     }
 
-    public List<Column> getColumnSetMultiValueList() {
+    public List<TdColumn> getColumnSetMultiValueList() {
         return this.columnSetMultiValueList;
     }
 
@@ -750,7 +749,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     @Override
     public boolean canDrop(ModelElement modelElement) {
         List<TdColumn> existColumns = new ArrayList<TdColumn>();
-        for (Column columnFromMultiValueList : this.getColumnSetMultiValueList()) {
+        for (TdColumn columnFromMultiValueList : this.getColumnSetMultiValueList()) {
             existColumns.add((TdColumn) columnFromMultiValueList);
         }
 
@@ -762,7 +761,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     @Override
     public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
-        List<Column> columns = new ArrayList<Column>();
+        List<TdColumn> columns = new ArrayList<TdColumn>();
         for (ModelElement element : modelElements) {
             TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             if (column != null) {

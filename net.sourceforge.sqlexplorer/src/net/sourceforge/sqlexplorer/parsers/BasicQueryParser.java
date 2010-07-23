@@ -20,6 +20,7 @@ package net.sourceforge.sqlexplorer.parsers;
 
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.parsers.Tokenizer.Token;
 import net.sourceforge.sqlexplorer.parsers.scp.StructuredCommentException;
