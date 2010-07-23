@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,16 +22,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.model.properties.ItemState;
-import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -46,12 +38,8 @@ import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.dq.writer.EMFSharedResources;
-import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
-import org.talend.utils.sugars.ReturnCode;
 
 import orgomg.cwm.objectmodel.core.ModelElement;
 /**
@@ -72,7 +60,7 @@ public class DeleteObjectsAction extends Action {
         if(isDeleteForever){
         	setText(DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForever")); //$NON-NLS-1$
         }else{
-        	setText("Delete"); //$NON-NLS-1$
+        	setText(DefaultMessagesImpl.getString("DeleteObjectsAction.logicalDelete")); //$NON-NLS-1$
         }
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
         setActionDefinitionId("org.talend.dataprofiler.core.removeAnalysis"); //$NON-NLS-1$
@@ -159,7 +147,7 @@ public class DeleteObjectsAction extends Action {
     private void showDependenciesDialog(IFile file, List<ModelElement> dependencies) {
         ModelElement[] dependencyElements = dependencies.toArray(new ModelElement[dependencies.size()]);
         DeleteModelElementConfirmDialog.showDialog(null, file, dependencyElements,
-                "This item is depended by others! it can't be deleted!");
+        		DefaultMessagesImpl.getString("LogicalDeleteFileHandle.dependencyByOther"));
     }
 
     /**
@@ -168,18 +156,18 @@ public class DeleteObjectsAction extends Action {
      * @return
      */
     private boolean showConfirmDialog() {
-        return MessageDialog.openConfirm(null, "Confirm Resource Delete",
-                "Are you sure you want to delele this resource from file system?");
+        return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForeverTitle"),
+        		DefaultMessagesImpl.getString("DeleteObjectsAction.areYouDeleteForever"));
     }
     
     /**
-     * DOC qiong Comment method "showConfirmDialog".
+     * DOC qiongli Comment method "showConfirmDialog".
      * 
      * @return
      */
     private boolean showConfirmDialogLogicDel() {
-        return MessageDialog.openConfirm(null, "Confirm  Delete to RecycleBin",
-                "Are you sure you want to delele this resource to recycleBin?");
+        return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DeleteObjectsAction.logicalDeleteTitle"),
+        		DefaultMessagesImpl.getString("DeleteObjectsAction.areYouLogicalDelete"));
     }
  
     /**

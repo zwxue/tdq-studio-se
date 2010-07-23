@@ -40,6 +40,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -68,7 +69,7 @@ public class LogicalDeleteFileHandle {
 	 * @param fileName
 	 * @param replacement
 	 * @throws IOExceptio
-	 * replace a path String to "" in logicalDelete.txt
+	 * Replace a path String to "" in logicalDelete.txt
 	 */
 	public static void replaceInFile(String oldString, String newString) {
 
@@ -113,11 +114,11 @@ public class LogicalDeleteFileHandle {
 		}
 	}
 
-	/*e
+	/**
 	 * @param path
 	 * @param element
 	 * @throws Exceptio
-	 * save logical delete path to TXT filen
+	 * Save logical delete path to TXT file
 	 */
 	public static void saveElement(String type, String path) {
 		try {
@@ -139,10 +140,10 @@ public class LogicalDeleteFileHandle {
 	}
 
 	/**
-	 * 
 	 * @param filePath
 	 * @return
 	 * @throws Exception
+	 * Read all logical delete elements from the TXT file
 	 */
 	public static List<String[]> readFileByLine() {
 		List<String[]> list = new ArrayList<String[]>();
@@ -177,9 +178,9 @@ public class LogicalDeleteFileHandle {
 	}
 
 	/**
-	 * 
 	 * @param ifile
 	 * @throws IOException
+	 * Remove the path of file's parents(until to the top) in the TXT file.
 	 */
 
 	public static void removeAllParent(IFile ifile) throws IOException {
@@ -199,11 +200,11 @@ public class LogicalDeleteFileHandle {
 	public static List<Object> getChildFromTXT(String folderPath) {
 		List<Object> ls = new ArrayList<Object>();
 		try {
-			IPath iPath=null;
-			IFile file=null;
-			IFolder folder=null;
-			HashSet <String>set=new HashSet<String>();
-			DQRecycleBinNode rbn=null;
+			IPath iPath = null;
+			IFile file = null;
+			IFolder folder = null;
+			HashSet<String> set = new HashSet<String>();
+			DQRecycleBinNode rbn = null;
 			List <String[]>delElements = readFileByLine();
 			
 			for (String[] es : delElements){
@@ -244,22 +245,22 @@ public class LogicalDeleteFileHandle {
 	}
 	
 	/**
-	 * 
 	 * @param folderPath
 	 * @return
+	 * Judge the folder whether has children 
 	 */
 	public static boolean hasDelChildren(String folderPath){
-		boolean flag=false;
+		boolean flag = false;
 		try {
-			for (String[] es : delLs){
-				if(es.length<2||folderType.equals(es[0]+":")&&folderPath.equals(es[1]))
+			for (String[] es : delLs) {
+				if (es.length < 2 || folderType.equals(es[0] + ":")
+						&& folderPath.equals(es[1]))
 					continue;
 				if (es[1].startsWith(folderPath)) {
-					flag=true;
+					flag = true;
 					break;
 				}
 			}
-			
 		} catch (Exception exc) {
 			log.error(exc, exc);
 		}
@@ -267,7 +268,7 @@ public class LogicalDeleteFileHandle {
 	}
 	
 	/**
-	 * 
+	 * Judge whether the TXT file exit.if not,create it.
 	 * @throws IOException
 	 */
 	private static void createTxtFile() throws IOException{
@@ -278,11 +279,11 @@ public class LogicalDeleteFileHandle {
 		}
 	}
 	
-	/*e
+	/**
 	 * @param fullPath
 	 * @param folderPath
 	 * @param hashSe
-	 * make sure the same subFoleder only appear oncet
+	 * Make sure the same subFoleder only appear oncet
 	 */
 	private static void addToSet(String fullPath,String folderPath,HashSet<String> hashSet){
 		String subFolderName = fullPath.replace(folderPath, "");
@@ -294,10 +295,9 @@ public class LogicalDeleteFileHandle {
 	}
 	
     /**
-     * DOC qiongli Comment method "temporaryDelete".
-     * 
      * @param ifile
      * @throws Exception
+     * Logical delete file.set the property of isDelete to 'true'.save the file fullPath to the TXT file
      */
     public static ReturnCode deleteLogical(IFile ifile) throws Exception {
 		ReturnCode rc = new ReturnCode();
@@ -305,7 +305,7 @@ public class LogicalDeleteFileHandle {
 				.getDependencyClients(ifile);
 		if (!dependencyClients.isEmpty()) {
 			rc.setOk(false);
-			rc.setMessage("This item is depended by others! it can't be deleted!");
+			rc.setMessage(DefaultMessagesImpl.getString("LogicalDeleteFileHandle.dependencyByOther"));
 		} else {
 
 			IFile propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
@@ -328,13 +328,14 @@ public class LogicalDeleteFileHandle {
 			ProxyRepositoryManager.getInstance().save();
 			// finish
 			ifile.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
-			rc.setMessage("Logical delete file successfully!");
+			rc.setMessage(DefaultMessagesImpl.getString("LogicalDeleteFileHandle.logicalDelSuccess"));
 		}
 		return rc;
     }
 
 	/**
 	 * @return the delLs
+	 * Get the Logical delete elements
 	 */
 	public static List<String[]> getDelLs() {
 		if (delLs == null)
