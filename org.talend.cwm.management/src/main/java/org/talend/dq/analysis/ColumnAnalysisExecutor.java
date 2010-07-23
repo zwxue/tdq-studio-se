@@ -29,7 +29,9 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -219,7 +221,19 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         // add from clause
         sql.append(dbms().from());
-        sql.append(this.quote(fromPart.iterator().next().getName()));
+        // if(CatalogHelper.fromPart.iterator().next())
+        ModelElement element = fromPart.iterator().next();
+        Package parentRelation = TableHelper.getParentCatalogOrSchema(fromPart.iterator().next());
+        if (parentRelation instanceof TdSchema) {
+            sql.append(dbms().toQualifiedName(null, parentRelation.getName(), element.getName()));
+        } else if (parentRelation instanceof TdCatalog) {
+            sql.append(dbms().toQualifiedName(parentRelation.getName(), null, element.getName()));
+        }
+        // String catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(element);
+
+        // sql.append(this.quote(TableHelper.getParentCatalogOrSchema(fromPart.iterator().next()).getName()));
+        // sql.append(".");
+        // sql.append(this.quote(fromPart.iterator().next().getName()));
 
         // add where clause
         // --- get data filter
