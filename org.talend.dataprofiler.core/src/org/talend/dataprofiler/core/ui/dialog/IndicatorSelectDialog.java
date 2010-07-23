@@ -567,7 +567,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                 if (indicatorNode.hasChildren()) {
                     createChildrenNode(tree, treeItem, treeColumns, indicatorNode.getChildren());
                 }
-                treeItem.setExpanded(true);
+                treeItem.setExpanded(false);
             }
         }
 
