@@ -185,7 +185,7 @@ public class MdmConnection implements IXMLDBConnection {
         IFile file = xsdFolder.getFile(resName + XSD_SUFIX);
         // zshen bug 14089: unfolder MDM node get exception.because of the encoding of stream
         try {
-            file.create(new ByteArrayInputStream(resXSD.getBytes("utf-8")), true, new NullProgressMonitor());
+            file.create(new ByteArrayInputStream(resXSD.getBytes("utf-8")), true, new NullProgressMonitor());//$NON-NLS-1$
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
