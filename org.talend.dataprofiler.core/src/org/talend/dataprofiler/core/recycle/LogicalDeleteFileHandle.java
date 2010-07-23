@@ -40,6 +40,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -95,7 +96,7 @@ public class LogicalDeleteFileHandle {
 						}
 					}
 				}
-				if (!newLine.equals("")){
+				if (!newLine.equals(PluginConstant.EMPTY_STRING)){
 					buffer.append(newLine).append("\r\n"); //$NON-NLS-1$		
 				}	
 			}
@@ -132,7 +133,7 @@ public class LogicalDeleteFileHandle {
 			out.println(type + path);
 			fw.close();
 			out.close();
-			String[] es = { type.replaceAll(":", ""), path };
+			String[] es = { type.replaceAll(":", PluginConstant.EMPTY_STRING), path };
 			delLs.add(es);
 		} catch (Exception exc) {
 			log.error(exc, exc);
@@ -187,7 +188,7 @@ public class LogicalDeleteFileHandle {
 		IFolder parent = (IFolder) ifile.getParent();
 		while (!ResourceService.isReadOnlyFolder(parent)) {
 			replaceInFile(folderType
-					+ parent.getFullPath().toOSString(), "");
+					+ parent.getFullPath().toOSString(), PluginConstant.EMPTY_STRING);
 			parent = (IFolder) parent.getParent();
 		}
 	}

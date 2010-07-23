@@ -116,13 +116,8 @@ public class DeleteObjectsAction extends Action {
 					
 				}
 			} else {// Logical delete
-				runStatus = showConfirmDialogLogicDel();
-				if (!runStatus)
-					return;
 				for (IFile file : selectedFiles) {
 					if (FactoriesUtil.isEmfFile(file.getFileExtension())) {
-//						ModelElementFileFactory.getResourceFileMap(file)
-//								.deleteLogical(file);
 						LogicalDeleteFileHandle.deleteLogical(file);
 					}
 				}
@@ -158,16 +153,6 @@ public class DeleteObjectsAction extends Action {
     private boolean showConfirmDialog() {
         return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForeverTitle"),
         		DefaultMessagesImpl.getString("DeleteObjectsAction.areYouDeleteForever"));
-    }
-    
-    /**
-     * DOC qiongli Comment method "showConfirmDialog".
-     * 
-     * @return
-     */
-    private boolean showConfirmDialogLogicDel() {
-        return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DeleteObjectsAction.logicalDeleteTitle"),
-        		DefaultMessagesImpl.getString("DeleteObjectsAction.areYouLogicalDelete"));
     }
  
     /**
