@@ -33,8 +33,8 @@ public class DeleteResourceProvider extends CommonActionProvider {
 		DeleteObjectsAction action = null;
 		if (FactoriesUtil.isEmfFile(file.getFileExtension())){
 			action = new DeleteObjectsAction(false);
+			menu.add(action);
 		}
-		menu.add(action);
     }
 
 }
