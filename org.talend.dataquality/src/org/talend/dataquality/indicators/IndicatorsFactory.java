@@ -458,6 +458,114 @@ public interface IndicatorsFactory extends EFactory {
     DatePatternFreqIndicator createDatePatternFreqIndicator();
 
     /**
+     * Returns a new object of class '<em>Week Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Week Frequency Indicator</em>'.
+     * @generated
+     */
+    WeekFrequencyIndicator createWeekFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Month Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Month Frequency Indicator</em>'.
+     * @generated
+     */
+    MonthFrequencyIndicator createMonthFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Quarter Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Quarter Frequency Indicator</em>'.
+     * @generated
+     */
+    QuarterFrequencyIndicator createQuarterFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Year Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Year Frequency Indicator</em>'.
+     * @generated
+     */
+    YearFrequencyIndicator createYearFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Bin Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Bin Frequency Indicator</em>'.
+     * @generated
+     */
+    BinFrequencyIndicator createBinFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Date Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Date Low Frequency Indicator</em>'.
+     * @generated
+     */
+    DateLowFrequencyIndicator createDateLowFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Week Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Week Low Frequency Indicator</em>'.
+     * @generated
+     */
+    WeekLowFrequencyIndicator createWeekLowFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Month Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Month Low Frequency Indicator</em>'.
+     * @generated
+     */
+    MonthLowFrequencyIndicator createMonthLowFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Quarter Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Quarter Low Frequency Indicator</em>'.
+     * @generated
+     */
+    QuarterLowFrequencyIndicator createQuarterLowFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Year Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Year Low Frequency Indicator</em>'.
+     * @generated
+     */
+    YearLowFrequencyIndicator createYearLowFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Bin Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Bin Low Frequency Indicator</em>'.
+     * @generated
+     */
+    BinLowFrequencyIndicator createBinLowFrequencyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Date Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Date Frequency Indicator</em>'.
+     * @generated
+     */
+    DateFrequencyIndicator createDateFrequencyIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

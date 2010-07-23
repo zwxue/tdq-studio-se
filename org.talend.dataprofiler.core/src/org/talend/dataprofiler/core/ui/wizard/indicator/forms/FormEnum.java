@@ -207,6 +207,14 @@ public enum FormEnum {
 
             break;
 
+        case BinFrequencyIndicatorEnum:
+        case BinLowFrequencyIndicatorEnum:
+            if (Java2SqlType.isNumbericInSQL(sqlType)) {
+
+                forms = new FormEnum[] { FreqBinsDesignerForm };
+            }
+            break;
+
         default:
 
         }

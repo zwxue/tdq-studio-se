@@ -610,6 +610,126 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.DATE_FREQUENCY_INDICATOR: {
+                DateFrequencyIndicator dateFrequencyIndicator = (DateFrequencyIndicator)theEObject;
+                T result = caseDateFrequencyIndicator(dateFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(dateFrequencyIndicator);
+                if (result == null) result = caseIndicator(dateFrequencyIndicator);
+                if (result == null) result = caseModelElement(dateFrequencyIndicator);
+                if (result == null) result = caseElement(dateFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.WEEK_FREQUENCY_INDICATOR: {
+                WeekFrequencyIndicator weekFrequencyIndicator = (WeekFrequencyIndicator)theEObject;
+                T result = caseWeekFrequencyIndicator(weekFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(weekFrequencyIndicator);
+                if (result == null) result = caseIndicator(weekFrequencyIndicator);
+                if (result == null) result = caseModelElement(weekFrequencyIndicator);
+                if (result == null) result = caseElement(weekFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.MONTH_FREQUENCY_INDICATOR: {
+                MonthFrequencyIndicator monthFrequencyIndicator = (MonthFrequencyIndicator)theEObject;
+                T result = caseMonthFrequencyIndicator(monthFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(monthFrequencyIndicator);
+                if (result == null) result = caseIndicator(monthFrequencyIndicator);
+                if (result == null) result = caseModelElement(monthFrequencyIndicator);
+                if (result == null) result = caseElement(monthFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.QUARTER_FREQUENCY_INDICATOR: {
+                QuarterFrequencyIndicator quarterFrequencyIndicator = (QuarterFrequencyIndicator)theEObject;
+                T result = caseQuarterFrequencyIndicator(quarterFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(quarterFrequencyIndicator);
+                if (result == null) result = caseIndicator(quarterFrequencyIndicator);
+                if (result == null) result = caseModelElement(quarterFrequencyIndicator);
+                if (result == null) result = caseElement(quarterFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.YEAR_FREQUENCY_INDICATOR: {
+                YearFrequencyIndicator yearFrequencyIndicator = (YearFrequencyIndicator)theEObject;
+                T result = caseYearFrequencyIndicator(yearFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(yearFrequencyIndicator);
+                if (result == null) result = caseIndicator(yearFrequencyIndicator);
+                if (result == null) result = caseModelElement(yearFrequencyIndicator);
+                if (result == null) result = caseElement(yearFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.BIN_FREQUENCY_INDICATOR: {
+                BinFrequencyIndicator binFrequencyIndicator = (BinFrequencyIndicator)theEObject;
+                T result = caseBinFrequencyIndicator(binFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(binFrequencyIndicator);
+                if (result == null) result = caseIndicator(binFrequencyIndicator);
+                if (result == null) result = caseModelElement(binFrequencyIndicator);
+                if (result == null) result = caseElement(binFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.DATE_LOW_FREQUENCY_INDICATOR: {
+                DateLowFrequencyIndicator dateLowFrequencyIndicator = (DateLowFrequencyIndicator)theEObject;
+                T result = caseDateLowFrequencyIndicator(dateLowFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(dateLowFrequencyIndicator);
+                if (result == null) result = caseIndicator(dateLowFrequencyIndicator);
+                if (result == null) result = caseModelElement(dateLowFrequencyIndicator);
+                if (result == null) result = caseElement(dateLowFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.WEEK_LOW_FREQUENCY_INDICATOR: {
+                WeekLowFrequencyIndicator weekLowFrequencyIndicator = (WeekLowFrequencyIndicator)theEObject;
+                T result = caseWeekLowFrequencyIndicator(weekLowFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(weekLowFrequencyIndicator);
+                if (result == null) result = caseIndicator(weekLowFrequencyIndicator);
+                if (result == null) result = caseModelElement(weekLowFrequencyIndicator);
+                if (result == null) result = caseElement(weekLowFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.MONTH_LOW_FREQUENCY_INDICATOR: {
+                MonthLowFrequencyIndicator monthLowFrequencyIndicator = (MonthLowFrequencyIndicator)theEObject;
+                T result = caseMonthLowFrequencyIndicator(monthLowFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(monthLowFrequencyIndicator);
+                if (result == null) result = caseIndicator(monthLowFrequencyIndicator);
+                if (result == null) result = caseModelElement(monthLowFrequencyIndicator);
+                if (result == null) result = caseElement(monthLowFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.QUARTER_LOW_FREQUENCY_INDICATOR: {
+                QuarterLowFrequencyIndicator quarterLowFrequencyIndicator = (QuarterLowFrequencyIndicator)theEObject;
+                T result = caseQuarterLowFrequencyIndicator(quarterLowFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(quarterLowFrequencyIndicator);
+                if (result == null) result = caseIndicator(quarterLowFrequencyIndicator);
+                if (result == null) result = caseModelElement(quarterLowFrequencyIndicator);
+                if (result == null) result = caseElement(quarterLowFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.YEAR_LOW_FREQUENCY_INDICATOR: {
+                YearLowFrequencyIndicator yearLowFrequencyIndicator = (YearLowFrequencyIndicator)theEObject;
+                T result = caseYearLowFrequencyIndicator(yearLowFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(yearLowFrequencyIndicator);
+                if (result == null) result = caseIndicator(yearLowFrequencyIndicator);
+                if (result == null) result = caseModelElement(yearLowFrequencyIndicator);
+                if (result == null) result = caseElement(yearLowFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.BIN_LOW_FREQUENCY_INDICATOR: {
+                BinLowFrequencyIndicator binLowFrequencyIndicator = (BinLowFrequencyIndicator)theEObject;
+                T result = caseBinLowFrequencyIndicator(binLowFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(binLowFrequencyIndicator);
+                if (result == null) result = caseIndicator(binLowFrequencyIndicator);
+                if (result == null) result = caseModelElement(binLowFrequencyIndicator);
+                if (result == null) result = caseElement(binLowFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -1134,6 +1254,186 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseDatePatternFreqIndicator(DatePatternFreqIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Week Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Week Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseWeekFrequencyIndicator(WeekFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Month Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Month Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMonthFrequencyIndicator(MonthFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Quarter Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Quarter Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseQuarterFrequencyIndicator(QuarterFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Year Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Year Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseYearFrequencyIndicator(YearFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Bin Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Bin Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseBinFrequencyIndicator(BinFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Date Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Date Low Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseDateLowFrequencyIndicator(DateLowFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Week Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Week Low Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseWeekLowFrequencyIndicator(WeekLowFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Month Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Month Low Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMonthLowFrequencyIndicator(MonthLowFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Quarter Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Quarter Low Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseQuarterLowFrequencyIndicator(QuarterLowFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Year Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Year Low Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseYearLowFrequencyIndicator(YearLowFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Bin Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Bin Low Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseBinLowFrequencyIndicator(BinLowFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Date Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Date Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseDateFrequencyIndicator(DateFrequencyIndicator object) {
         return null;
     }
 

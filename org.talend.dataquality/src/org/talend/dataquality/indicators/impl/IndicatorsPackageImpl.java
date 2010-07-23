@@ -34,12 +34,16 @@ import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
+import org.talend.dataquality.indicators.BinFrequencyIndicator;
+import org.talend.dataquality.indicators.BinLowFrequencyIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.DateFrequencyIndicator;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.DateLowFrequencyIndicator;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
@@ -71,10 +75,14 @@ import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
+import org.talend.dataquality.indicators.MonthFrequencyIndicator;
+import org.talend.dataquality.indicators.MonthLowFrequencyIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.QuarterFrequencyIndicator;
+import org.talend.dataquality.indicators.QuarterLowFrequencyIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -87,6 +95,10 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dataquality.indicators.WeekFrequencyIndicator;
+import org.talend.dataquality.indicators.WeekLowFrequencyIndicator;
+import org.talend.dataquality.indicators.YearFrequencyIndicator;
+import org.talend.dataquality.indicators.YearLowFrequencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
@@ -458,6 +470,90 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass datePatternFreqIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass weekFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass monthFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass quarterFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass yearFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass binFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass dateLowFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass weekLowFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass monthLowFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass quarterLowFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass yearLowFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass binLowFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass dateFrequencyIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1645,6 +1741,114 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getWeekFrequencyIndicator() {
+        return weekFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getMonthFrequencyIndicator() {
+        return monthFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getQuarterFrequencyIndicator() {
+        return quarterFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getYearFrequencyIndicator() {
+        return yearFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getBinFrequencyIndicator() {
+        return binFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getDateLowFrequencyIndicator() {
+        return dateLowFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getWeekLowFrequencyIndicator() {
+        return weekLowFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getMonthLowFrequencyIndicator() {
+        return monthLowFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getQuarterLowFrequencyIndicator() {
+        return quarterLowFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getYearLowFrequencyIndicator() {
+        return yearLowFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getBinLowFrequencyIndicator() {
+        return binLowFrequencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getDateFrequencyIndicator() {
+        return dateFrequencyIndicatorEClass;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1910,6 +2114,30 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
 
         datePatternFreqIndicatorEClass = createEClass(DATE_PATTERN_FREQ_INDICATOR);
 
+        dateFrequencyIndicatorEClass = createEClass(DATE_FREQUENCY_INDICATOR);
+
+        weekFrequencyIndicatorEClass = createEClass(WEEK_FREQUENCY_INDICATOR);
+
+        monthFrequencyIndicatorEClass = createEClass(MONTH_FREQUENCY_INDICATOR);
+
+        quarterFrequencyIndicatorEClass = createEClass(QUARTER_FREQUENCY_INDICATOR);
+
+        yearFrequencyIndicatorEClass = createEClass(YEAR_FREQUENCY_INDICATOR);
+
+        binFrequencyIndicatorEClass = createEClass(BIN_FREQUENCY_INDICATOR);
+
+        dateLowFrequencyIndicatorEClass = createEClass(DATE_LOW_FREQUENCY_INDICATOR);
+
+        weekLowFrequencyIndicatorEClass = createEClass(WEEK_LOW_FREQUENCY_INDICATOR);
+
+        monthLowFrequencyIndicatorEClass = createEClass(MONTH_LOW_FREQUENCY_INDICATOR);
+
+        quarterLowFrequencyIndicatorEClass = createEClass(QUARTER_LOW_FREQUENCY_INDICATOR);
+
+        yearLowFrequencyIndicatorEClass = createEClass(YEAR_LOW_FREQUENCY_INDICATOR);
+
+        binLowFrequencyIndicatorEClass = createEClass(BIN_LOW_FREQUENCY_INDICATOR);
+
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
         dataminingTypeEEnum = createEEnum(DATAMINING_TYPE);
@@ -2012,6 +2240,18 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         soundexFreqIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         soundexLowFreqIndicatorEClass.getESuperTypes().add(this.getSoundexFreqIndicator());
         datePatternFreqIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        dateFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        weekFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        monthFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        quarterFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        yearFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        binFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        dateLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        weekLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        monthLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        quarterLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        yearLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        binLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2254,6 +2494,30 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEClass(soundexLowFreqIndicatorEClass, SoundexLowFreqIndicator.class, "SoundexLowFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(datePatternFreqIndicatorEClass, DatePatternFreqIndicator.class, "DatePatternFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(dateFrequencyIndicatorEClass, DateFrequencyIndicator.class, "DateFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(weekFrequencyIndicatorEClass, WeekFrequencyIndicator.class, "WeekFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(monthFrequencyIndicatorEClass, MonthFrequencyIndicator.class, "MonthFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(quarterFrequencyIndicatorEClass, QuarterFrequencyIndicator.class, "QuarterFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(yearFrequencyIndicatorEClass, YearFrequencyIndicator.class, "YearFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(binFrequencyIndicatorEClass, BinFrequencyIndicator.class, "BinFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(dateLowFrequencyIndicatorEClass, DateLowFrequencyIndicator.class, "DateLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(weekLowFrequencyIndicatorEClass, WeekLowFrequencyIndicator.class, "WeekLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(monthLowFrequencyIndicatorEClass, MonthLowFrequencyIndicator.class, "MonthLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(quarterLowFrequencyIndicatorEClass, QuarterLowFrequencyIndicator.class, "QuarterLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(yearLowFrequencyIndicatorEClass, YearLowFrequencyIndicator.class, "YearLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(binLowFrequencyIndicatorEClass, BinLowFrequencyIndicator.class, "BinLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

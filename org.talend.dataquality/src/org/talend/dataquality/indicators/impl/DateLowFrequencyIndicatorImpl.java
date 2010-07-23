@@ -6,37 +6,40 @@
 package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.ecore.EClass;
+import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.DateLowFrequencyIndicator;
+import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator;
-import org.talend.dataquality.indicators.TextParameters;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Max Length With Blank Null Indicator</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Date Low Frequency Indicator</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
-public class MaxLengthWithBlankNullIndicatorImpl extends LengthIndicatorImpl implements MaxLengthWithBlankNullIndicator {
+public class DateLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements DateLowFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected MaxLengthWithBlankNullIndicatorImpl() {
+    protected DateLowFrequencyIndicatorImpl() {
         super();
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.MAX_LENGTH_WITH_BLANK_NULL_INDICATOR;
+        return IndicatorsPackage.Literals.DATE_LOW_FREQUENCY_INDICATOR;
     }
 
     @Override
@@ -45,14 +48,13 @@ public class MaxLengthWithBlankNullIndicatorImpl extends LengthIndicatorImpl imp
         if (parameters == null) {
             parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         }
-        TextParameters textParameters = parameters.getTextParameter();
-        if (textParameters == null) {
-            textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
+        DateParameters dateParameters = parameters.getDateParameters();
+        if (dateParameters == null) {
+            dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
         }
-        textParameters.setUseNulls(true);
-        textParameters.setUseBlank(true);
-        parameters.setTextParameter(textParameters);
+        dateParameters.setDateAggregationType(DateGrain.DAY);
+        parameters.setDateParameters(dateParameters);
         return parameters;
     }
 
-} // MaxLengthWithBlankNullIndicatorImpl
+} // DateLowFrequencyIndicatorImpl

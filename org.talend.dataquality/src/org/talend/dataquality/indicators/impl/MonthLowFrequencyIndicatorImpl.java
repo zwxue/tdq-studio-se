@@ -6,37 +6,40 @@
 package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.ecore.EClass;
+import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
-import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.MonthLowFrequencyIndicator;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Max Length With Blank Indicator</b></em>'. <!--
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Month Low Frequency Indicator</b></em>'. <!--
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
-public class MaxLengthWithBlankIndicatorImpl extends LengthIndicatorImpl implements MaxLengthWithBlankIndicator {
+public class MonthLowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements MonthLowFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-    protected MaxLengthWithBlankIndicatorImpl() {
+    protected MonthLowFrequencyIndicatorImpl() {
         super();
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     protected EClass eStaticClass() {
-        return IndicatorsPackage.Literals.MAX_LENGTH_WITH_BLANK_INDICATOR;
+        return IndicatorsPackage.Literals.MONTH_LOW_FREQUENCY_INDICATOR;
     }
 
     @Override
@@ -45,14 +48,13 @@ public class MaxLengthWithBlankIndicatorImpl extends LengthIndicatorImpl impleme
         if (parameters == null) {
             parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
         }
-        TextParameters textParameters = parameters.getTextParameter();
-        if (textParameters == null) {
-            textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
+        DateParameters dateParameters = parameters.getDateParameters();
+        if (dateParameters == null) {
+            dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
         }
-        textParameters.setUseNulls(false);
-        textParameters.setUseBlank(true);
-        parameters.setTextParameter(textParameters);
+        dateParameters.setDateAggregationType(DateGrain.MONTH);
+        parameters.setDateParameters(dateParameters);
         return parameters;
     }
 
-} // MaxLengthWithBlankIndicatorImpl
+} // MonthLowFrequencyIndicatorImpl

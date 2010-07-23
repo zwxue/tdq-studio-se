@@ -156,9 +156,21 @@ public final class CompositeIndicator {
                 textList.add(one);
                 break;
             case FrequencyIndicatorEnum:
+            case DateFrequencyIndicatorEnum:
+            case WeekFrequencyIndicatorEnum:
+            case MonthFrequencyIndicatorEnum:
+            case QuarterFrequencyIndicatorEnum:
+            case YearFrequencyIndicatorEnum:
+            case BinFrequencyIndicatorEnum:
                 frequencyList.add(one);
                 break;
             case LowFrequencyIndicatorEnum:
+            case DateLowFrequencyIndicatorEnum:
+            case WeekLowFrequencyIndicatorEnum:
+            case MonthLowFrequencyIndicatorEnum:
+            case QuarterLowFrequencyIndicatorEnum:
+            case YearLowFrequencyIndicatorEnum:
+            case BinLowFrequencyIndicatorEnum:
                 lowFrequencyList.add(one);
                 break;
             // ~ MOD mzhao 2009-03-23 Feature 6307

@@ -156,6 +156,18 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR: return createSoundexFreqIndicator();
             case IndicatorsPackage.SOUNDEX_LOW_FREQ_INDICATOR: return createSoundexLowFreqIndicator();
             case IndicatorsPackage.DATE_PATTERN_FREQ_INDICATOR: return createDatePatternFreqIndicator();
+            case IndicatorsPackage.DATE_FREQUENCY_INDICATOR: return createDateFrequencyIndicator();
+            case IndicatorsPackage.WEEK_FREQUENCY_INDICATOR: return createWeekFrequencyIndicator();
+            case IndicatorsPackage.MONTH_FREQUENCY_INDICATOR: return createMonthFrequencyIndicator();
+            case IndicatorsPackage.QUARTER_FREQUENCY_INDICATOR: return createQuarterFrequencyIndicator();
+            case IndicatorsPackage.YEAR_FREQUENCY_INDICATOR: return createYearFrequencyIndicator();
+            case IndicatorsPackage.BIN_FREQUENCY_INDICATOR: return createBinFrequencyIndicator();
+            case IndicatorsPackage.DATE_LOW_FREQUENCY_INDICATOR: return createDateLowFrequencyIndicator();
+            case IndicatorsPackage.WEEK_LOW_FREQUENCY_INDICATOR: return createWeekLowFrequencyIndicator();
+            case IndicatorsPackage.MONTH_LOW_FREQUENCY_INDICATOR: return createMonthLowFrequencyIndicator();
+            case IndicatorsPackage.QUARTER_LOW_FREQUENCY_INDICATOR: return createQuarterLowFrequencyIndicator();
+            case IndicatorsPackage.YEAR_LOW_FREQUENCY_INDICATOR: return createYearLowFrequencyIndicator();
+            case IndicatorsPackage.BIN_LOW_FREQUENCY_INDICATOR: return createBinLowFrequencyIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -701,6 +713,126 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public DatePatternFreqIndicator createDatePatternFreqIndicator() {
         DatePatternFreqIndicatorImpl datePatternFreqIndicator = new DatePatternFreqIndicatorImpl();
         return datePatternFreqIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public WeekFrequencyIndicator createWeekFrequencyIndicator() {
+        WeekFrequencyIndicatorImpl weekFrequencyIndicator = new WeekFrequencyIndicatorImpl();
+        return weekFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MonthFrequencyIndicator createMonthFrequencyIndicator() {
+        MonthFrequencyIndicatorImpl monthFrequencyIndicator = new MonthFrequencyIndicatorImpl();
+        return monthFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public QuarterFrequencyIndicator createQuarterFrequencyIndicator() {
+        QuarterFrequencyIndicatorImpl quarterFrequencyIndicator = new QuarterFrequencyIndicatorImpl();
+        return quarterFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public YearFrequencyIndicator createYearFrequencyIndicator() {
+        YearFrequencyIndicatorImpl yearFrequencyIndicator = new YearFrequencyIndicatorImpl();
+        return yearFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public BinFrequencyIndicator createBinFrequencyIndicator() {
+        BinFrequencyIndicatorImpl binFrequencyIndicator = new BinFrequencyIndicatorImpl();
+        return binFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DateLowFrequencyIndicator createDateLowFrequencyIndicator() {
+        DateLowFrequencyIndicatorImpl dateLowFrequencyIndicator = new DateLowFrequencyIndicatorImpl();
+        return dateLowFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public WeekLowFrequencyIndicator createWeekLowFrequencyIndicator() {
+        WeekLowFrequencyIndicatorImpl weekLowFrequencyIndicator = new WeekLowFrequencyIndicatorImpl();
+        return weekLowFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MonthLowFrequencyIndicator createMonthLowFrequencyIndicator() {
+        MonthLowFrequencyIndicatorImpl monthLowFrequencyIndicator = new MonthLowFrequencyIndicatorImpl();
+        return monthLowFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public QuarterLowFrequencyIndicator createQuarterLowFrequencyIndicator() {
+        QuarterLowFrequencyIndicatorImpl quarterLowFrequencyIndicator = new QuarterLowFrequencyIndicatorImpl();
+        return quarterLowFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public YearLowFrequencyIndicator createYearLowFrequencyIndicator() {
+        YearLowFrequencyIndicatorImpl yearLowFrequencyIndicator = new YearLowFrequencyIndicatorImpl();
+        return yearLowFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public BinLowFrequencyIndicator createBinLowFrequencyIndicator() {
+        BinLowFrequencyIndicatorImpl binLowFrequencyIndicator = new BinLowFrequencyIndicatorImpl();
+        return binLowFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DateFrequencyIndicator createDateFrequencyIndicator() {
+        DateFrequencyIndicatorImpl dateFrequencyIndicator = new DateFrequencyIndicatorImpl();
+        return dateFrequencyIndicator;
     }
 
     /**

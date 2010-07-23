@@ -56,7 +56,13 @@ public final class IndicatorTreeModelBuilder {
 
         // build Nominal Statistic categoryNode
         IndicatorEnum[] advanceIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.ModeIndicatorEnum,
-                IndicatorEnum.FrequencyIndicatorEnum, IndicatorEnum.LowFrequencyIndicatorEnum };
+                IndicatorEnum.FrequencyIndicatorEnum, IndicatorEnum.DateFrequencyIndicatorEnum,
+                IndicatorEnum.WeekFrequencyIndicatorEnum, IndicatorEnum.MonthFrequencyIndicatorEnum,
+                IndicatorEnum.QuarterFrequencyIndicatorEnum, IndicatorEnum.YearFrequencyIndicatorEnum,
+                IndicatorEnum.BinFrequencyIndicatorEnum, IndicatorEnum.LowFrequencyIndicatorEnum,
+                IndicatorEnum.DateLowFrequencyIndicatorEnum, IndicatorEnum.WeekLowFrequencyIndicatorEnum,
+                IndicatorEnum.MonthLowFrequencyIndicatorEnum, IndicatorEnum.QuarterLowFrequencyIndicatorEnum,
+                IndicatorEnum.YearLowFrequencyIndicatorEnum, IndicatorEnum.BinLowFrequencyIndicatorEnum };
         IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode(Messages
                 .getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums); //$NON-NLS-1$
 

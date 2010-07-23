@@ -160,7 +160,19 @@ public final class IndicatorCommonUtil {
                     break;
 
                 case FrequencyIndicatorEnum:
+                case DateFrequencyIndicatorEnum:
+                case WeekFrequencyIndicatorEnum:
+                case MonthFrequencyIndicatorEnum:
+                case QuarterFrequencyIndicatorEnum:
+                case YearFrequencyIndicatorEnum:
+                case BinFrequencyIndicatorEnum:
                 case LowFrequencyIndicatorEnum:
+                case DateLowFrequencyIndicatorEnum:
+                case WeekLowFrequencyIndicatorEnum:
+                case MonthLowFrequencyIndicatorEnum:
+                case QuarterLowFrequencyIndicatorEnum:
+                case YearLowFrequencyIndicatorEnum:
+                case BinLowFrequencyIndicatorEnum:
                 case PatternFreqIndicatorEnum:
                 case PatternLowFreqIndicatorEnum:
                 case DatePatternFreqIndicatorEnum:

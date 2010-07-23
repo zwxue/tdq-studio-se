@@ -122,16 +122,80 @@ public enum IndicatorEnum {
                                             null),
 
     ModeIndicatorEnum(IndicatorsPackage.MODE_INDICATOR, IndicatorsPackage.Literals.MODE_INDICATOR, "mode", null), //$NON-NLS-1$
+
     FrequencyIndicatorEnum(
                            IndicatorsPackage.FREQUENCY_INDICATOR,
                            IndicatorsPackage.Literals.FREQUENCY_INDICATOR,
                            "frequency table", //$NON-NLS-1$
                            null),
+
+    DateFrequencyIndicatorEnum(
+                               IndicatorsPackage.DATE_FREQUENCY_INDICATOR,
+                               IndicatorsPackage.Literals.DATE_FREQUENCY_INDICATOR,
+                               "Date Frequency Table",
+                               null),
+    WeekFrequencyIndicatorEnum(
+                               IndicatorsPackage.WEEK_FREQUENCY_INDICATOR,
+                               IndicatorsPackage.Literals.WEEK_FREQUENCY_INDICATOR,
+                               "Week Frequency Table",
+                               null),
+    MonthFrequencyIndicatorEnum(
+                                IndicatorsPackage.MONTH_FREQUENCY_INDICATOR,
+                                IndicatorsPackage.Literals.MONTH_FREQUENCY_INDICATOR,
+                                "Month Frequency Table",
+                                null),
+    QuarterFrequencyIndicatorEnum(
+                                  IndicatorsPackage.QUARTER_FREQUENCY_INDICATOR,
+                                  IndicatorsPackage.Literals.QUARTER_FREQUENCY_INDICATOR,
+                                  "Quarter Frequency Table",
+                                  null),
+    YearFrequencyIndicatorEnum(
+                               IndicatorsPackage.YEAR_FREQUENCY_INDICATOR,
+                               IndicatorsPackage.Literals.YEAR_FREQUENCY_INDICATOR,
+                               "Year Frequency Table",
+                               null),
+    BinFrequencyIndicatorEnum(
+                              IndicatorsPackage.BIN_FREQUENCY_INDICATOR,
+                              IndicatorsPackage.Literals.BIN_FREQUENCY_INDICATOR,
+                              "Bin Frequency Table",
+                              null),
+
     LowFrequencyIndicatorEnum(
                               IndicatorsPackage.LOW_FREQUENCY_INDICATOR,
                               IndicatorsPackage.Literals.LOW_FREQUENCY_INDICATOR,
                               "low frequency table", //$NON-NLS-1$
                               null),
+
+    DateLowFrequencyIndicatorEnum(
+                                  IndicatorsPackage.DATE_LOW_FREQUENCY_INDICATOR,
+                                  IndicatorsPackage.Literals.DATE_LOW_FREQUENCY_INDICATOR,
+                                  "Date Low Frequency Table",
+                                  null),
+    WeekLowFrequencyIndicatorEnum(
+                                  IndicatorsPackage.WEEK_LOW_FREQUENCY_INDICATOR,
+                                  IndicatorsPackage.Literals.WEEK_LOW_FREQUENCY_INDICATOR,
+                                  "Week Low Frequency Table",
+                                  null),
+    MonthLowFrequencyIndicatorEnum(
+                                   IndicatorsPackage.MONTH_LOW_FREQUENCY_INDICATOR,
+                                   IndicatorsPackage.Literals.MONTH_LOW_FREQUENCY_INDICATOR,
+                                   "Month Low Frequency Table",
+                                   null),
+    QuarterLowFrequencyIndicatorEnum(
+                                     IndicatorsPackage.QUARTER_LOW_FREQUENCY_INDICATOR,
+                                     IndicatorsPackage.Literals.QUARTER_LOW_FREQUENCY_INDICATOR,
+                                     "Quarter Low Frequency Table",
+                                     null),
+    YearLowFrequencyIndicatorEnum(
+                                  IndicatorsPackage.YEAR_LOW_FREQUENCY_INDICATOR,
+                                  IndicatorsPackage.Literals.YEAR_LOW_FREQUENCY_INDICATOR,
+                                  "Year Low Frequency Table",
+                                  null),
+    BinLowFrequencyIndicatorEnum(
+                                 IndicatorsPackage.BIN_LOW_FREQUENCY_INDICATOR,
+                                 IndicatorsPackage.Literals.BIN_LOW_FREQUENCY_INDICATOR,
+                                 "Bin Low Frequency Table",
+                                 null),
 
     // MOD mzhao 2009-03-05 Soundex frequency indicator.
     SoundexIndicatorEnum(
@@ -377,8 +441,32 @@ public enum IndicatorEnum {
             returnEnum = SoundexLowIndicatorEnum;
         } else if (indicatorType == FrequencyIndicatorEnum.getIndicatorType()) {
             returnEnum = FrequencyIndicatorEnum;
+        } else if (indicatorType == DateFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = DateFrequencyIndicatorEnum;
+        } else if (indicatorType == WeekFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = WeekFrequencyIndicatorEnum;
+        } else if (indicatorType == MonthFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = MonthFrequencyIndicatorEnum;
+        } else if (indicatorType == QuarterFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = QuarterFrequencyIndicatorEnum;
+        } else if (indicatorType == YearFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = YearFrequencyIndicatorEnum;
+        } else if (indicatorType == BinFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = BinFrequencyIndicatorEnum;
         } else if (indicatorType == LowFrequencyIndicatorEnum.getIndicatorType()) {
             returnEnum = LowFrequencyIndicatorEnum;
+        } else if (indicatorType == DateLowFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = DateLowFrequencyIndicatorEnum;
+        } else if (indicatorType == WeekLowFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = WeekLowFrequencyIndicatorEnum;
+        } else if (indicatorType == MonthLowFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = MonthLowFrequencyIndicatorEnum;
+        } else if (indicatorType == QuarterLowFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = QuarterLowFrequencyIndicatorEnum;
+        } else if (indicatorType == YearLowFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = YearLowFrequencyIndicatorEnum;
+        } else if (indicatorType == BinLowFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = BinLowFrequencyIndicatorEnum;
         } else if (indicatorType == PatternFreqIndicatorEnum.getIndicatorType()) {
             returnEnum = PatternFreqIndicatorEnum;
         } else if (indicatorType == PatternLowFreqIndicatorEnum.getIndicatorType()) {

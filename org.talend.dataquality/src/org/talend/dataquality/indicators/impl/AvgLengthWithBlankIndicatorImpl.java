@@ -20,18 +20,18 @@ import org.talend.dataquality.indicators.TextParameters;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl#getSumLength <em>Sum Length</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl#getSumLength <em>Sum Length</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class AvgLengthWithBlankIndicatorImpl extends LengthIndicatorImpl implements AvgLengthWithBlankIndicator {
 
     /**
-     * The default value of the '{@link #getSumLength() <em>Sum Length</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getSumLength() <em>Sum Length</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getSumLength()
      * @generated
      * @ordered
@@ -39,9 +39,9 @@ public class AvgLengthWithBlankIndicatorImpl extends LengthIndicatorImpl impleme
     protected static final Double SUM_LENGTH_EDEFAULT = new Double(0.0);
 
     /**
-     * The cached value of the '{@link #getSumLength() <em>Sum Length</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getSumLength() <em>Sum Length</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getSumLength()
      * @generated
      * @ordered
@@ -50,7 +50,6 @@ public class AvgLengthWithBlankIndicatorImpl extends LengthIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected AvgLengthWithBlankIndicatorImpl() {
@@ -59,7 +58,6 @@ public class AvgLengthWithBlankIndicatorImpl extends LengthIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -69,7 +67,6 @@ public class AvgLengthWithBlankIndicatorImpl extends LengthIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public Double getSumLength() {
@@ -78,20 +75,17 @@ public class AvgLengthWithBlankIndicatorImpl extends LengthIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setSumLength(Double newSumLength) {
         Double oldSumLength = sumLength;
         sumLength = newSumLength;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH,
-                    oldSumLength, sumLength));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH, oldSumLength, sumLength));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public double getAverageLength() {
@@ -102,71 +96,65 @@ public class AvgLengthWithBlankIndicatorImpl extends LengthIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
-            return getSumLength();
+            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
+                return getSumLength();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
-            setSumLength((Double) newValue);
-            return;
+            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
+                setSumLength((Double)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
-            setSumLength(SUM_LENGTH_EDEFAULT);
-            return;
+            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
+                setSumLength(SUM_LENGTH_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
-            return SUM_LENGTH_EDEFAULT == null ? sumLength != null : !SUM_LENGTH_EDEFAULT.equals(sumLength);
+            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
+                return SUM_LENGTH_EDEFAULT == null ? sumLength != null : !SUM_LENGTH_EDEFAULT.equals(sumLength);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy())
-            return super.toString();
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (sumLength: ");

@@ -15206,6 +15206,4122 @@ public interface IndicatorsPackage extends EPackage {
     int DATE_PATTERN_FREQ_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl <em>Week Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWeekFrequencyIndicator()
+     * @generated
+     */
+    int WEEK_FREQUENCY_INDICATOR = 51;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MonthFrequencyIndicatorImpl <em>Month Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MonthFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMonthFrequencyIndicator()
+     * @generated
+     */
+    int MONTH_FREQUENCY_INDICATOR = 52;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.QuarterFrequencyIndicatorImpl <em>Quarter Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.QuarterFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getQuarterFrequencyIndicator()
+     * @generated
+     */
+    int QUARTER_FREQUENCY_INDICATOR = 53;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.YearFrequencyIndicatorImpl <em>Year Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.YearFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getYearFrequencyIndicator()
+     * @generated
+     */
+    int YEAR_FREQUENCY_INDICATOR = 54;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl <em>Bin Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getBinFrequencyIndicator()
+     * @generated
+     */
+    int BIN_FREQUENCY_INDICATOR = 55;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.DateLowFrequencyIndicatorImpl <em>Date Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.DateLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateLowFrequencyIndicator()
+     * @generated
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR = 56;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl <em>Week Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWeekLowFrequencyIndicator()
+     * @generated
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR = 57;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl <em>Month Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMonthLowFrequencyIndicator()
+     * @generated
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR = 58;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl <em>Quarter Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getQuarterLowFrequencyIndicator()
+     * @generated
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR = 59;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl <em>Year Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getYearLowFrequencyIndicator()
+     * @generated
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR = 60;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl <em>Bin Low Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getBinLowFrequencyIndicator()
+     * @generated
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR = 61;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl <em>Date Frequency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateFrequencyIndicator()
+     * @generated
+     */
+    int DATE_FREQUENCY_INDICATOR = 50;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Date Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Week Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Month Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Quarter Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Year Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Bin Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Date Low Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Week Low Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Month Low Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Quarter Low Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Year Low Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Bin Low Frequency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -15213,7 +19329,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getEnumStatistics()
      * @generated
      */
-    int ENUM_STATISTICS = 50;
+    int ENUM_STATISTICS = 62;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DataminingType <em>Datamining Type</em>}' enum.
@@ -15223,7 +19339,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDataminingType()
      * @generated
      */
-    int DATAMINING_TYPE = 51;
+    int DATAMINING_TYPE = 63;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DateGrain <em>Date Grain</em>}' enum.
@@ -15233,7 +19349,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateGrain()
      * @generated
      */
-    int DATE_GRAIN = 52;
+    int DATE_GRAIN = 64;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.MatchingAlgorithm <em>Matching Algorithm</em>}' enum.
@@ -15243,7 +19359,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingAlgorithm()
      * @generated
      */
-    int MATCHING_ALGORITHM = 53;
+    int MATCHING_ALGORITHM = 65;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.IndicatorValueType <em>Indicator Value Type</em>}' enum.
@@ -15253,7 +19369,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getIndicatorValueType()
      * @generated
      */
-    int INDICATOR_VALUE_TYPE = 54;
+    int INDICATOR_VALUE_TYPE = 66;
 
     /**
      * The meta object id for the '<em>Java Set</em>' data type.
@@ -15263,7 +19379,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaSet()
      * @generated
      */
-    int JAVA_SET = 55;
+    int JAVA_SET = 67;
 
     /**
      * The meta object id for the '<em>Java Hash Map</em>' data type.
@@ -15273,7 +19389,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaHashMap()
      * @generated
      */
-    int JAVA_HASH_MAP = 56;
+    int JAVA_HASH_MAP = 68;
 
     /**
      * The meta object id for the '<em>Java Tree Map</em>' data type.
@@ -15283,7 +19399,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaTreeMap()
      * @generated
      */
-    int JAVA_TREE_MAP = 57;
+    int JAVA_TREE_MAP = 69;
 
     /**
      * The meta object id for the '<em>Object Array</em>' data type.
@@ -15292,7 +19408,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getObjectArray()
      * @generated
      */
-    int OBJECT_ARRAY = 58;
+    int OBJECT_ARRAY = 70;
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
@@ -16554,6 +20670,126 @@ public interface IndicatorsPackage extends EPackage {
     EClass getDatePatternFreqIndicator();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.WeekFrequencyIndicator <em>Week Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Week Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.WeekFrequencyIndicator
+     * @generated
+     */
+    EClass getWeekFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.MonthFrequencyIndicator <em>Month Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Month Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.MonthFrequencyIndicator
+     * @generated
+     */
+    EClass getMonthFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.QuarterFrequencyIndicator <em>Quarter Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Quarter Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.QuarterFrequencyIndicator
+     * @generated
+     */
+    EClass getQuarterFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.YearFrequencyIndicator <em>Year Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Year Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.YearFrequencyIndicator
+     * @generated
+     */
+    EClass getYearFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.BinFrequencyIndicator <em>Bin Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Bin Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.BinFrequencyIndicator
+     * @generated
+     */
+    EClass getBinFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.DateLowFrequencyIndicator <em>Date Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Date Low Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.DateLowFrequencyIndicator
+     * @generated
+     */
+    EClass getDateLowFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.WeekLowFrequencyIndicator <em>Week Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Week Low Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.WeekLowFrequencyIndicator
+     * @generated
+     */
+    EClass getWeekLowFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.MonthLowFrequencyIndicator <em>Month Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Month Low Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.MonthLowFrequencyIndicator
+     * @generated
+     */
+    EClass getMonthLowFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.QuarterLowFrequencyIndicator <em>Quarter Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Quarter Low Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.QuarterLowFrequencyIndicator
+     * @generated
+     */
+    EClass getQuarterLowFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.YearLowFrequencyIndicator <em>Year Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Year Low Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.YearLowFrequencyIndicator
+     * @generated
+     */
+    EClass getYearLowFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.BinLowFrequencyIndicator <em>Bin Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Bin Low Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.BinLowFrequencyIndicator
+     * @generated
+     */
+    EClass getBinLowFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.DateFrequencyIndicator <em>Date Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Date Frequency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.DateFrequencyIndicator
+     * @generated
+     */
+    EClass getDateFrequencyIndicator();
+
+    /**
      * Returns the meta object for enum '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -17719,6 +21955,126 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass DATE_PATTERN_FREQ_INDICATOR = eINSTANCE.getDatePatternFreqIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl <em>Week Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWeekFrequencyIndicator()
+         * @generated
+         */
+        EClass WEEK_FREQUENCY_INDICATOR = eINSTANCE.getWeekFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MonthFrequencyIndicatorImpl <em>Month Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.MonthFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMonthFrequencyIndicator()
+         * @generated
+         */
+        EClass MONTH_FREQUENCY_INDICATOR = eINSTANCE.getMonthFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.QuarterFrequencyIndicatorImpl <em>Quarter Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.QuarterFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getQuarterFrequencyIndicator()
+         * @generated
+         */
+        EClass QUARTER_FREQUENCY_INDICATOR = eINSTANCE.getQuarterFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.YearFrequencyIndicatorImpl <em>Year Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.YearFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getYearFrequencyIndicator()
+         * @generated
+         */
+        EClass YEAR_FREQUENCY_INDICATOR = eINSTANCE.getYearFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl <em>Bin Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.BinFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getBinFrequencyIndicator()
+         * @generated
+         */
+        EClass BIN_FREQUENCY_INDICATOR = eINSTANCE.getBinFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.DateLowFrequencyIndicatorImpl <em>Date Low Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.DateLowFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateLowFrequencyIndicator()
+         * @generated
+         */
+        EClass DATE_LOW_FREQUENCY_INDICATOR = eINSTANCE.getDateLowFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl <em>Week Low Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.WeekLowFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWeekLowFrequencyIndicator()
+         * @generated
+         */
+        EClass WEEK_LOW_FREQUENCY_INDICATOR = eINSTANCE.getWeekLowFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl <em>Month Low Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.MonthLowFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMonthLowFrequencyIndicator()
+         * @generated
+         */
+        EClass MONTH_LOW_FREQUENCY_INDICATOR = eINSTANCE.getMonthLowFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl <em>Quarter Low Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.QuarterLowFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getQuarterLowFrequencyIndicator()
+         * @generated
+         */
+        EClass QUARTER_LOW_FREQUENCY_INDICATOR = eINSTANCE.getQuarterLowFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl <em>Year Low Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.YearLowFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getYearLowFrequencyIndicator()
+         * @generated
+         */
+        EClass YEAR_LOW_FREQUENCY_INDICATOR = eINSTANCE.getYearLowFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl <em>Bin Low Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.BinLowFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getBinLowFrequencyIndicator()
+         * @generated
+         */
+        EClass BIN_LOW_FREQUENCY_INDICATOR = eINSTANCE.getBinLowFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl <em>Date Frequency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.DateFrequencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateFrequencyIndicator()
+         * @generated
+         */
+        EClass DATE_FREQUENCY_INDICATOR = eINSTANCE.getDateFrequencyIndicator();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

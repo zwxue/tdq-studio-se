@@ -17,9 +17,13 @@ import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
+import org.talend.dataquality.indicators.BinFrequencyIndicator;
+import org.talend.dataquality.indicators.BinLowFrequencyIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
+import org.talend.dataquality.indicators.DateFrequencyIndicator;
+import org.talend.dataquality.indicators.DateLowFrequencyIndicator;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
@@ -43,10 +47,14 @@ import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
+import org.talend.dataquality.indicators.MonthFrequencyIndicator;
+import org.talend.dataquality.indicators.MonthLowFrequencyIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.QuarterFrequencyIndicator;
+import org.talend.dataquality.indicators.QuarterLowFrequencyIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -57,6 +65,10 @@ import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.WeekFrequencyIndicator;
+import org.talend.dataquality.indicators.WeekLowFrequencyIndicator;
+import org.talend.dataquality.indicators.YearFrequencyIndicator;
+import org.talend.dataquality.indicators.YearLowFrequencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
@@ -289,6 +301,36 @@ public class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
         return setIndicatorDefinition(object, "Low Frequency Table"); //$NON-NLS-1$
     }
 
+    @Override
+    public Boolean caseDateLowFrequencyIndicator(DateLowFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Date Low Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseWeekLowFrequencyIndicator(WeekLowFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Week Low Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseMonthLowFrequencyIndicator(MonthLowFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Month Low Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseQuarterLowFrequencyIndicator(QuarterLowFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Quarter Low Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseYearLowFrequencyIndicator(YearLowFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Year Low Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseBinLowFrequencyIndicator(BinLowFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Bin Low Frequency Table"); //$NON-NLS-1$
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -468,6 +510,36 @@ public class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     @Override
     public Boolean caseFrequencyIndicator(FrequencyIndicator object) {
         return setIndicatorDefinition(object, "Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseDateFrequencyIndicator(DateFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Date Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseWeekFrequencyIndicator(WeekFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Week Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseMonthFrequencyIndicator(MonthFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Month Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseQuarterFrequencyIndicator(QuarterFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Quarter Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseYearFrequencyIndicator(YearFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Year Frequency Table"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseBinFrequencyIndicator(BinFrequencyIndicator object) {
+        return setIndicatorDefinition(object, "Bin Frequency Table"); //$NON-NLS-1$
     }
 
     /*

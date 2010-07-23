@@ -312,6 +312,54 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
                 return createDatePatternFreqIndicatorAdapter();
             }
             @Override
+            public Adapter caseDateFrequencyIndicator(DateFrequencyIndicator object) {
+                return createDateFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseWeekFrequencyIndicator(WeekFrequencyIndicator object) {
+                return createWeekFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseMonthFrequencyIndicator(MonthFrequencyIndicator object) {
+                return createMonthFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseQuarterFrequencyIndicator(QuarterFrequencyIndicator object) {
+                return createQuarterFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseYearFrequencyIndicator(YearFrequencyIndicator object) {
+                return createYearFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseBinFrequencyIndicator(BinFrequencyIndicator object) {
+                return createBinFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseDateLowFrequencyIndicator(DateLowFrequencyIndicator object) {
+                return createDateLowFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseWeekLowFrequencyIndicator(WeekLowFrequencyIndicator object) {
+                return createWeekLowFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseMonthLowFrequencyIndicator(MonthLowFrequencyIndicator object) {
+                return createMonthLowFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseQuarterLowFrequencyIndicator(QuarterLowFrequencyIndicator object) {
+                return createQuarterLowFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseYearLowFrequencyIndicator(YearLowFrequencyIndicator object) {
+                return createYearLowFrequencyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseBinLowFrequencyIndicator(BinLowFrequencyIndicator object) {
+                return createBinLowFrequencyIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -1036,6 +1084,174 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createDatePatternFreqIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.WeekFrequencyIndicator <em>Week Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.WeekFrequencyIndicator
+     * @generated
+     */
+    public Adapter createWeekFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MonthFrequencyIndicator <em>Month Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.MonthFrequencyIndicator
+     * @generated
+     */
+    public Adapter createMonthFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.QuarterFrequencyIndicator <em>Quarter Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.QuarterFrequencyIndicator
+     * @generated
+     */
+    public Adapter createQuarterFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.YearFrequencyIndicator <em>Year Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.YearFrequencyIndicator
+     * @generated
+     */
+    public Adapter createYearFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.BinFrequencyIndicator <em>Bin Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.BinFrequencyIndicator
+     * @generated
+     */
+    public Adapter createBinFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.DateLowFrequencyIndicator <em>Date Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.DateLowFrequencyIndicator
+     * @generated
+     */
+    public Adapter createDateLowFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.WeekLowFrequencyIndicator <em>Week Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.WeekLowFrequencyIndicator
+     * @generated
+     */
+    public Adapter createWeekLowFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MonthLowFrequencyIndicator <em>Month Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.MonthLowFrequencyIndicator
+     * @generated
+     */
+    public Adapter createMonthLowFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.QuarterLowFrequencyIndicator <em>Quarter Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.QuarterLowFrequencyIndicator
+     * @generated
+     */
+    public Adapter createQuarterLowFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.YearLowFrequencyIndicator <em>Year Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.YearLowFrequencyIndicator
+     * @generated
+     */
+    public Adapter createYearLowFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.BinLowFrequencyIndicator <em>Bin Low Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.BinLowFrequencyIndicator
+     * @generated
+     */
+    public Adapter createBinLowFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.DateFrequencyIndicator <em>Date Frequency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.DateFrequencyIndicator
+     * @generated
+     */
+    public Adapter createDateFrequencyIndicatorAdapter() {
         return null;
     }
 

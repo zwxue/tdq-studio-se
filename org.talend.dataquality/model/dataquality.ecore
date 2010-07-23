@@ -698,6 +698,18 @@
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="SoundexLowFreqIndicator" eSuperTypes="#//indicators/SoundexFreqIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="DatePatternFreqIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DateFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="WeekFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MonthFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="QuarterFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="YearFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BinFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DateLowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="WeekLowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MonthLowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="QuarterLowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="YearLowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BinLowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eOperations name="addTableIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">

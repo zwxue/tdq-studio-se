@@ -166,6 +166,32 @@ public final class ModelElementIndicatorRule {
 
             break;
 
+        case DateFrequencyIndicatorEnum:
+        case WeekFrequencyIndicatorEnum:
+        case MonthFrequencyIndicatorEnum:
+        case QuarterFrequencyIndicatorEnum:
+        case YearFrequencyIndicatorEnum:
+        case DateLowFrequencyIndicatorEnum:
+        case WeekLowFrequencyIndicatorEnum:
+        case MonthLowFrequencyIndicatorEnum:
+        case QuarterLowFrequencyIndicatorEnum:
+        case YearLowFrequencyIndicatorEnum:
+
+            // ADD yyi 2010-07-23 13676
+            if (Java2SqlType.isDateInSQL(javaType)
+                    && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
+                return true;
+            }
+
+            break;
+        case BinFrequencyIndicatorEnum:
+        case BinLowFrequencyIndicatorEnum:
+            if (Java2SqlType.isNumbericInSQL(javaType)
+                    && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
+                return true;
+            }
+            break;
+
         default:
             return false;
         }
