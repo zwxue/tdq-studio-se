@@ -38,7 +38,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.top.repository,
  org.talend.model,
  org.eclipse.emf.ecore.xmi,
- org.talend.model.migration
+ org.talend.model.migration,
+ org.talend.model.edit
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
