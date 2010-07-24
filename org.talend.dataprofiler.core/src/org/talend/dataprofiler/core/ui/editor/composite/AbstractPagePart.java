@@ -85,8 +85,13 @@ public abstract class AbstractPagePart {
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ModelElementIndicator[] indicators, Tree tree) {
         if (indicators != null && indicators.length != 0) {
-            Connection tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(masterPage.getAnalysis().getContext()
-                    .getConnection());
+            // MOD mzhao 2010-07-24, avoid a NPE, feature 13221
+            DataManager connection = masterPage.getAnalysis().getContext()
+                    .getConnection();
+            Connection tdProvider = null;
+            if (connection != null) {
+                tdProvider = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+            }
             if (tdProvider == null) {
                 tdProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
             }
