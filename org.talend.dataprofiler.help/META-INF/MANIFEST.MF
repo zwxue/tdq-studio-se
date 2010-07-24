@@ -6,11 +6,11 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.help.HelpPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.help,
- org.eclipse.help.ui,
  org.eclipse.help.webapp,
+ org.eclipse.help.ui,
+ org.eclipse.help,
  org.eclipse.equinox.http.jetty,
- org.apache.log4j;bundle-version="1.2.13"
+ org.apache.log4j
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.help,
  org.talend.dataprofiler.help.actions
