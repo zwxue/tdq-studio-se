@@ -13,7 +13,6 @@
 package org.talend.dq;
 
 import net.sourceforge.sqlexplorer.EDriverName;
-import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
@@ -88,6 +87,9 @@ public class CWMPlugin extends Plugin {
                     String clearTextUser = ConnectionHelper.getUsername(connection);
                     String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
                     String password = ConnectionHelper.getPassword(connection);
+                    // MOD scorreia 2010-07-24 set empty string instead of null password so that database xml file is
+                    // serialized correctly.
+                    assert password != null;
 
                     String url = ConnectionHelper.getURL(connection);
 
@@ -109,14 +111,14 @@ public class CWMPlugin extends Plugin {
                         aliasManager.addAlias(alias);
                     }
                 }
-            } catch (ExplorerException e) {
+            } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
                 log.error(e, e);
             }
         }
 
         try {
             aliasManager.saveAliases();
-        } catch (ExplorerException e) {
+        } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
             log.error(e, e);
         }
         aliasManager.modelChanged();

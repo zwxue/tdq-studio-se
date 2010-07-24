@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
+import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -22,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.EMFUtil;
-import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.DataProviderBuilder;
 import org.talend.cwm.builders.SoftwareSystemBuilder;
@@ -56,7 +57,7 @@ public class DBConnect {
 
     private Driver driver;
 
-    private java.sql.Connection connection;
+    private Connection connection;
 
     private SoftwareSystemBuilder softwareSystemBuilder;
 
@@ -67,7 +68,7 @@ public class DBConnect {
     // ADD xqliu 2010-03-03 feature 11412
     private DBConnectionParameter dbConnectionParameter;
 
-    private Connection databaseConnection = null;
+    private DatabaseConnection databaseConnection = null;
 
     // TODO scorreia errorMessage;
 
@@ -373,7 +374,7 @@ public class DBConnect {
      * 
      * @return the data provider or null.
      */
-    public Connection getDataProvider() {
+    public DatabaseConnection getDataProvider() {
         return this.databaseConnection;
     }
 

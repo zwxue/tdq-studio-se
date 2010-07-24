@@ -12,10 +12,11 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
+import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 
-import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 
@@ -24,7 +25,7 @@ import org.talend.cwm.helper.ConnectionHelper;
  */
 public class DataProviderBuilder extends CwmBuilder {
 
-    private final Connection dataProvider;
+    private final DatabaseConnection dataProvider;
 
     /**
      * DataProviderBuilder constructor.
@@ -35,7 +36,7 @@ public class DataProviderBuilder extends CwmBuilder {
      * @param driverProperties the properties passed to the driver (could be null)
      * @throws SQLException
      */
-    public DataProviderBuilder(Connection databaseConn, java.sql.Connection conn, Driver driver, String databaseUrl)
+    public DataProviderBuilder(DatabaseConnection databaseConn, Connection conn, Driver driver, String databaseUrl)
             throws SQLException {
         super(conn);
         dataProvider = databaseConn;

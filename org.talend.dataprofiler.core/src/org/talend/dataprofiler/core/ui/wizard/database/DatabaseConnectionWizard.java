@@ -109,6 +109,8 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     }
 
+    // FIXME scorreia 2010-07-24 this method can only handle Connection cwmElement => change this method argument so
+    // that there cannot be any confusion. Use Java generics.
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
         Connection dataProvider = (Connection) cwmElement;
 

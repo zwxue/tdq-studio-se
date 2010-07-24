@@ -107,13 +107,15 @@ public class IndicatorEvaluator extends Evaluator<String> {
             for (int i = 0; i < columnlist.size(); i++) {
                 String col = columnlist.get(i);
                 List<Indicator> indicators = getIndicators(col);
-                int offset = col.lastIndexOf('.') + 1;
+                int offset = col.lastIndexOf('.') + 1; // FIXME scorreia this must not be done here!!! but outside the
+                                                       // resultset loop
                 col = col.substring(offset);
                 // ~
                 // --- get content of column
                 Object object = resultSet.getObject(col);
                 // MOD zshen, when the type of object is TIMESTAMP then need getTimestamp(col) to get correct value,or
                 // the value only is the name of type and can't be match with TIMESTAMP.
+                // FIXME this will slow down a lot the computation
                 if (object != null && !(object instanceof String) && object.toString().indexOf("TIMESTAMP") > -1) {
                     object = resultSet.getTimestamp(col);
                 }
@@ -257,7 +259,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
      */
     public List<String> sortColumnName(Set<String> columns, String sqlStatement) {
         List<String> columnNameList = new ArrayList<String>();
-        Map<Object, Object> offset = new HashMap<Object, Object>();
+        Map<Integer, String> offset = new HashMap<Integer, String>();
         for (String col : columns) {
             int offsetCol = col.lastIndexOf('.') + 1;
             String colName = col.substring(offsetCol);

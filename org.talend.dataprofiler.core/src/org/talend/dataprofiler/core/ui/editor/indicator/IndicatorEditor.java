@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.indicator;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -31,8 +30,6 @@ import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
  * DOC bZhou class global comment. Detailled comment
  */
 public class IndicatorEditor extends CommonFormEditor {
-
-    private static Logger log = Logger.getLogger(IndicatorEditor.class);
 
     private DefaultSaveAction saveAction;
 

@@ -57,8 +57,8 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     @Override
     public boolean prepare() {
         dateRetriever = new DatePatternRetriever();
-        Bundle bundle = Platform.getBundle(org.talend.dataquality.matching.Activator.PLUGIN_ID);
-        URL url = bundle.getResource("PatternsNameAndRegularExpressions.txt");
+        Bundle bundle = Platform.getBundle("org.talend.dataquality.matching"); //$NON-NLS-1$
+        URL url = bundle.getResource("PatternsNameAndRegularExpressions.txt"); //$NON-NLS-1$
         String filepath = null;
         try {
             filepath = FileLocator.toFileURL(url).getFile();

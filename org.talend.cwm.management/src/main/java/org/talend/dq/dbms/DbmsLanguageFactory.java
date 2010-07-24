@@ -141,13 +141,15 @@ public final class DbmsLanguageFactory {
      * @param dbType
      * @return
      */
-    public static DbmsLanguage createDbmsLanguage(SupportDBUrlType dbType) {
+    private static DbmsLanguage createDbmsLanguage(SupportDBUrlType dbType) {
 
         DbmsLanguage result = null;
 
         if (dbType == null) {
             return new DbmsLanguage();
         }
+        // FIXME scorreia replace this switch with a call to the method createDbmsLanguage(String dbmsSubtype, String
+        // databaseVersion)
         switch (dbType) {
         case DB2ZOSDEFAULTURL:
             result = new DB2DbmsLanguage();

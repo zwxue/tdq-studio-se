@@ -22,13 +22,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
@@ -38,6 +38,7 @@ import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
@@ -83,6 +84,14 @@ public final class DatabaseContentRetriever {
         return builder.getCatalogs();
     }
 
+    /**
+     * DOC scorreia Comment method "getQueryColumnSet".
+     * 
+     * @param metaData
+     * @return
+     * @throws SQLException
+     * @Deprecated not used. Please check the code before using it!!
+     */
     public static QueryColumnSet getQueryColumnSet(ResultSetMetaData metaData) throws SQLException {
         QueryColumnSet columnSet = ColumnSetHelper.createQueryColumnSet();
         int columnCount = metaData.getColumnCount();
@@ -470,8 +479,19 @@ public final class DatabaseContentRetriever {
                 // MOD scorreia 2009-01-09 skip password properties because it is not used and would result in a
                 // security hole
                 if (TaggedValueHelper.PASSWORD.equals(prop.name)) {
+                    // MOD scorreia 2010-07-24 store password in data provider
+                    String password = prop.value != null ? prop.value : "";
+                    ConnectionHelper.setPassword(provider, password);
+                    // ~
                     continue;
                 }
+
+                // MOD scorreia 2010-07-24 store username in data provider
+                if (TaggedValueHelper.USER.equals(prop.name)) {
+                    String user = prop.value != null ? prop.value : "";
+                    ConnectionHelper.setUsername(provider, user);
+                }
+                // ~
 
                 if (log.isDebugEnabled()) { // TODO use logger here
                     log.debug("Prop description = " + prop.description);
@@ -495,33 +515,32 @@ public final class DatabaseContentRetriever {
     }
 
     // MOD mzhao feature 10814, 2010-05-26
-    public static DatabaseConnection fillConnectionInfo(Connection prov, String dbUrl, String driverClassName, Properties props,
+    public static DatabaseConnection fillConnectionInfo(DatabaseConnection prov, String dbUrl, String driverClassName,
+            Properties props,
             java.sql.Connection connection) throws SQLException {
-//        prov.setName(driverClassName + EcoreUtil.generateUUID()); // TODO
-        // // scorreia change default name of provider connection
-//        prov.setDriverClass(driverClassName);
-//        prov.setURL(dbUrl);
-//        try {
-//            prov.setReadOnly(connection.isReadOnly());
-//        } catch (Exception e) {
-//            log.warn(e, e);
-//        }
-//
-//        Enumeration<?> propertyNames = props.propertyNames();
-//        while (propertyNames.hasMoreElements()) {
-//            String key = propertyNames.nextElement().toString();
-//            String property = props.getProperty(key);
-//            if (TaggedValueHelper.PASSWORD.equals(key)) {
-//                prov.setPassword(property);
-//            } else if (TaggedValueHelper.USER.equals(key)) {
-//                prov.setUsername(property);
-//            }
-        // }
-        //
-        // // TODO scorreia set name? or let it be set outside of this class?
-        //
-        // return prov;
-        return null;
+        prov.setDriverClass(driverClassName);
+        prov.setURL(dbUrl);
+        try {
+            prov.setReadOnly(connection.isReadOnly());
+        } catch (Exception e) {
+            log.warn(e, e);
+        }
+
+        Enumeration<?> propertyNames = props.propertyNames();
+        while (propertyNames.hasMoreElements()) {
+            String key = propertyNames.nextElement().toString();
+            String property = props.getProperty(key);
+            if (property == null) {
+                // MOD scorreia 2010-07-24 replace null by empty string so that it can be serialized in sqlexplorer
+                // property = "";
+            }
+            if (TaggedValueHelper.PASSWORD.equals(key)) {
+                prov.setPassword(property);
+            } else if (TaggedValueHelper.USER.equals(key)) {
+                prov.setUsername(property);
+            }
+        }
+        return prov;
     }
 
     public static TdSoftwareSystem getSoftwareSystem(java.sql.Connection connection) throws SQLException {
@@ -695,6 +714,7 @@ public final class DatabaseContentRetriever {
         return new ColumnBuilder(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
     }
 
+    // method not used!? TODO remove?
     /**
      * Method "getDataType".
      * 
@@ -724,6 +744,7 @@ public final class DatabaseContentRetriever {
         return ConnectionUtils.getConnectionMetadata(connection);
     }
 
+    // method not used!? TODO remove?
     public static TdSqlDataType createDataType(ResultSet columns) throws SQLException {
         TdSqlDataType sqlDataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
         try {

@@ -252,7 +252,7 @@ public class CatalogBuilder extends CwmBuilder {
                 }
                 // ~
                 assert catalogName != null : Messages.getString("CatalogBuilder.CatalogNameNull",//$NON-NLS-1$
-                        getConnectionInformations(connection));
+                        getConnectionInformations(connection)); // FIXME assertion string must not be externalized
                 // MOD xqliu 2010-03-03 feature 11412
                 if (retrieveCatalogSchema(dbName, catalogName)) {
                     Catalog catalog = createOrUpdateCatalog(catalogName);

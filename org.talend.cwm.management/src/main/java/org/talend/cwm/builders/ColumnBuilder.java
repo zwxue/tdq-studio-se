@@ -90,7 +90,8 @@ public class ColumnBuilder extends CwmBuilder {
             int dataType = 0;
             try {
                 dataType = columns.getInt(GetColumn.DATA_TYPE.name());
-                column.getSqlDataType().setJavaDataType(dataType);
+                // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously the sql
+                // data type it is null and results in a NPE
             } catch (Exception e) {
                 log.warn(e, e);
             }
@@ -102,9 +103,15 @@ public class ColumnBuilder extends CwmBuilder {
                 // ,respective.so change them to "91" and "92" for adapt to Java2SqlType.
                 if (ConnectionUtils.isMssql(connection)) {
                     if (typeName.toLowerCase().equals("date")) {
-                        column.getSqlDataType().setJavaDataType(91);
+                        dataType = 91;
+                        // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously
+                        // the sql
+                        // data type it is null and results in a NPE
                     } else if (typeName.toLowerCase().equals("time")) {
-                        column.getSqlDataType().setJavaDataType(92);
+                        dataType = 92;
+                        // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously
+                        // the sql
+                        // data type it is null and results in a NPE
                     }
                 }
             } catch (Exception e1) {
@@ -148,17 +155,19 @@ public class ColumnBuilder extends CwmBuilder {
             String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
             TdExpression defExpression = BooleanExpressionHelper.createTdExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
 
-            try {
-                column.getSqlDataType().setNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-            }
+
             // --- create and set type of column
             // TODO scorreia get type of column on demand, not on creation of column
             // TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);
             TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(dataType, typeName, decimalDigits, numPrecRadix);
             column.setSqlDataType(sqlDataType);
             // column.setType(sqlDataType); // it's only reference to previous sql data type
+
+            try {
+                column.getSqlDataType().setNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
 
             column.setInitialValue(defExpression);
             tableColumns.add(column);

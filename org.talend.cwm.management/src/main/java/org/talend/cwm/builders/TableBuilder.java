@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +46,9 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
 
     private Map<String, Set<ForeignKey>> column2foreign = new HashMap<String, Set<ForeignKey>>();
 
+    /**
+     * map [name of the PK -> PK].
+     */
     private Map<String, PrimaryKey> name2pk = new HashMap<String, PrimaryKey>();
 
     private Map<String, ForeignKey> name2fk = new HashMap<String, ForeignKey>();
@@ -81,14 +85,18 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
     }
 
     /**
-     * DOC scorreia Comment method "getPrimaryKeys".
+     * Method "getPrimaryKeys".
      * 
-     * @param catalogName
-     * @param schemaPattern
-     * @param table
+     * @param catalogName the catalog name (can be null)
+     * @param schemaPattern the schema name (can be null)
+     * @param tableName the name of a table
+     * @return the primary keys found given the parameters. According the CWM documentation, there is only one primary
+     * key per table (primary key may be composed by several columns).
      * @throws SQLException
      */
     public List<PrimaryKey> getPrimaryKeys(String catalogName, String schemaPattern, String tableName) throws SQLException {
+        assert catalogName != null || schemaPattern != null;
+
         List<PrimaryKey> pks = new ArrayList<PrimaryKey>();
         ResultSet primaryKeys = null;
         try {

@@ -40,9 +40,9 @@ public class DataProviderBuilder {
 
     public ReturnCode initializeDataProvider(DBConnectionParameter parameter) {
         ReturnCode returnCode = new ReturnCode();
-        String msg = "OK is OK! ";
+        String msg = "OK is OK! "; // FIXME scorreia 2010-07-24 what is this message?
         if (initialized) {
-            msg = "Pattern already initialized. ";
+            msg = "Pattern already initialized. "; // FIXME scorreia 2010-07-24 what is this message?
             log.warn(msg);
 
             returnCode.setOk(false);

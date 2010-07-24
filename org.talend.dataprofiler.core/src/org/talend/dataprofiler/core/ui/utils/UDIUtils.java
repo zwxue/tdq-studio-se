@@ -76,7 +76,6 @@ public final class UDIUtils {
         List<IndicatorUnit> addIndicatorUnits = new ArrayList<IndicatorUnit>();
 
         IndicatorDefinition udid = IndicatorResourceFileHelper.getInstance().findIndDefinition(pfile);
-        IndicatorCategory ic = UDIHelper.getUDICategory(udid);
 
         // can't add the same user defined indicator
         for (Indicator indicator : meIndicator.getIndicators()) {
