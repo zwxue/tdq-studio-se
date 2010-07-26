@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Nl Fragment
-Bundle-SymbolicName: org.talend.cwm.ext.edit.nl
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: org.talend.cwm.ext.edit
-Bundle-Vendor: .Talend SA.
