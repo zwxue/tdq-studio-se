@@ -24,6 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -69,7 +70,10 @@ public class ExportPatternsWizard extends Wizard {
         }
 
         if ("".equals(targetFile)) { //$NON-NLS-1$
-            MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("ExportPatternsWizard.Error"), DefaultMessagesImpl.getString("ExportPatternsWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog
+                    .openError(
+                            getShell(),
+                            DefaultMessagesImpl.getString("ExportPatternsWizard.Error"), DefaultMessagesImpl.getString("ExportPatternsWizard.SpecifyValidResource")); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         } else {
             File resource = new File(targetFile);
@@ -91,7 +95,6 @@ public class ExportPatternsWizard extends Wizard {
                     }
                 }
 
-                return true;
             } else {
 
                 boolean isContinue = true;
@@ -101,13 +104,16 @@ public class ExportPatternsWizard extends Wizard {
                             DefaultMessagesImpl.getString("ExportPatternsWizard.fileAlreadyExist")); //$NON-NLS-1$
                 }
 
-                if (isContinue) {
-                    ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
-                    return true;
+                if (!isContinue) {
+                    return false;
                 }
-
-                return false;
+                ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
             }
+
+            CorePlugin.getDefault().refreshDQView();
+            CorePlugin.getDefault().refreshWorkSpace();
+
+            return true;
         }
     }
 
