@@ -67,7 +67,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -484,8 +483,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     private class CaseInsensitiveComparator implements Comparator {
 
         public int compare(Object element1, Object element2) {
-            Column col1 = (Column) element1;
-            Column col2 = (Column) element2;
+            TdColumn col1 = (TdColumn) element1;
+            TdColumn col2 = (TdColumn) element2;
             String lower1 = col1.getName().toLowerCase();
             String lower2 = col2.getName().toLowerCase();
             return lower1.compareTo(lower2);
@@ -589,7 +588,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
         if (selection.length == 1) {
             try {
-                Column column = (Column) selection[0].getData();
+                TdColumn column = (TdColumn) selection[0].getData();
                 dqview.showSelectedElements(column);
             } catch (Exception e) {
                 log.error(e, e);
@@ -633,8 +632,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         }
 
         public String getText(Object element) {
-            if (element instanceof Column) {
-                return ((Column) element).getName();
+            if (element instanceof TdColumn) {
+                return ((TdColumn) element).getName();
             }
             return PluginConstant.EMPTY_STRING;
         }
