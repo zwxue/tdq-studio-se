@@ -82,7 +82,7 @@
                  </test>
               </and>
               <instanceof
-                    value="orgomg.cwm.resource.relational.Column">
+                    value="org.talend.cwm.relational.TdColumn">
               </instanceof></or>
         </enablement>
      </actionProvider>        

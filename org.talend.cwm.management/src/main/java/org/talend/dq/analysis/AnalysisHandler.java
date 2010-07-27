@@ -26,7 +26,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.RelationalPackage;
 import orgomg.cwm.resource.relational.Table;
@@ -186,7 +185,7 @@ public class AnalysisHandler {
         List<ColumnSet> existingTables = new ArrayList<ColumnSet>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            if (element instanceof Column) {
+            if (element instanceof TdColumn) {
                 ColumnSet columnSet = ColumnHelper.getColumnSetOwner((TdColumn) element);
                 if (!existingTables.contains(columnSet)) {
                     existingTables.add(columnSet);

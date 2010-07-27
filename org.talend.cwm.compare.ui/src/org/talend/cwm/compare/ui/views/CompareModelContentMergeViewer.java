@@ -62,6 +62,7 @@ import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
 import org.talend.cwm.compare.ui.actions.SubelementCompareAction;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.helper.EObjectHelper;
@@ -71,7 +72,6 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -133,7 +133,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                                     Messages.getString("CompareModelContentMergeViewer.CompareListOfColumns"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
                                     SubelementCompareAction.COLUMN_COMPARE);
                             manager.add(subEleCompColumnAction);
-                        } else if (selectedElement instanceof Column) {
+                        } else if (selectedElement instanceof TdColumn) {
                             addRenameMenuAction(manager, selectedElement);
                         }
 

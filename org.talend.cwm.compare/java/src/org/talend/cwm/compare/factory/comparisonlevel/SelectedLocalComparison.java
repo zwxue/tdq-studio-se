@@ -33,7 +33,6 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -170,7 +169,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
                     if (columnSet1 != null) {
                         adaptedDataProvider = DataProviderHelper.getDataProvider(columnSet1);
                     } else {
-                        TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((Column) element);
+                        TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((TdColumn) element);
                         if (column1 != null) {
                             adaptedDataProvider = DataProviderHelper.getTdDataProvider(column1);
                         }
@@ -205,7 +204,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
                         // meList.addAll(ColumnSetHelper
                         // .getColumns(findMatchedColumnSet));
                     } else {
-                        TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((Column) element);
+                        TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((TdColumn) element);
                         if (column1 != null) {
                             TdColumn findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
                             rootElement = findMathedColumn;

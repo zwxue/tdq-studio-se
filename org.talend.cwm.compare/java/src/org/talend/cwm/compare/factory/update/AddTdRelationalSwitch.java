@@ -19,7 +19,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
@@ -41,7 +40,7 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
     public Boolean caseForeignKey(ForeignKey object) {
         ColumnSet columnSet = null;
         TdColumn tdColumn = null;
-        if (leftElement instanceof Column) {
+        if (leftElement instanceof TdColumn) {
             tdColumn = (TdColumn) leftElement;
             columnSet = ColumnHelper.getColumnSetOwner(tdColumn);
         }
@@ -68,7 +67,7 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
     public Boolean casePrimaryKey(PrimaryKey object) {
         ColumnSet columnSet = null;
         TdColumn tdColumn = null;
-        if (leftElement instanceof Column) {
+        if (leftElement instanceof TdColumn) {
             tdColumn = (TdColumn) leftElement;
             columnSet = ColumnHelper.getColumnSetOwner(tdColumn);
         }
