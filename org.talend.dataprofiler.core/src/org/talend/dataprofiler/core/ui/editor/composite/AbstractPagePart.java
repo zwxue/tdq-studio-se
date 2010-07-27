@@ -40,7 +40,6 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
-import orgomg.cwm.resource.relational.Column;
 
 import common.Logger;
 
@@ -146,9 +145,9 @@ public abstract class AbstractPagePart {
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, List<TableViewer> tableViewerPosStack) {
         boolean isEmpty1 = tableViewerPosStack.get(0) == null || tableViewerPosStack.get(0).getInput() == null
-                || ((List<Column>) tableViewerPosStack.get(0).getInput()).size() == 0;
+                || ((List<TdColumn>) tableViewerPosStack.get(0).getInput()).size() == 0;
         boolean isEmpty2 = tableViewerPosStack.get(1) == null || tableViewerPosStack.get(1).getInput() == null
-                || ((List<Column>) tableViewerPosStack.get(1).getInput()).size() == 0;
+                || ((List<TdColumn>) tableViewerPosStack.get(1).getInput()).size() == 0;
         if (isEmpty1 && isEmpty2) {
             return;
         } else {

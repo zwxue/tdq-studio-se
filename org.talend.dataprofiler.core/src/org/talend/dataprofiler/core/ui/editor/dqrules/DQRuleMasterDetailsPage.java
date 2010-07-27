@@ -64,7 +64,6 @@ import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -640,8 +639,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             if (transfer.isSupportedType(event.currentDataType)) {
                 if (event.data instanceof TreeSelection) {
                     TreeSelection ts = (TreeSelection) event.data;
-                    if (ts.getFirstElement() instanceof Column) {
-                        Column column = (Column) ts.getFirstElement();
+                    if (ts.getFirstElement() instanceof TdColumn) {
+                        TdColumn column = (TdColumn) ts.getFirstElement();
                         setColumn(column);
 
                         DropTarget target = (DropTarget) event.widget;
@@ -654,7 +653,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             }
         }
 
-        public void setColumn(Column column) {
+        public void setColumn(TdColumn column) {
             switch (getIndex()) {
             case LEFT:
                 getJoinElement().setColA(column);

@@ -30,9 +30,9 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.views.AbstractSelectionReceiver;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * The class can install a drag&drop function for target table viewer.
@@ -190,7 +190,7 @@ public class ComparisonTableViewerDNDDecorate {
             }
         }
         for (Object obj : selectionList) {
-            if (!(obj instanceof Column)) {
+            if (!(obj instanceof TdColumn)) {
                 isValidation = false;
                 break;
             }

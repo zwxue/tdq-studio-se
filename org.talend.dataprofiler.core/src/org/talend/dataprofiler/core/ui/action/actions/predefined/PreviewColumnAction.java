@@ -27,7 +27,6 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.ColumnSetNameHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -46,7 +45,7 @@ public class PreviewColumnAction extends Action {
 	@Override
     public void run() {
         // TODO 10238
-        if (modelElements[0] instanceof Column) {
+        if (modelElements[0] instanceof TdColumn) {
             TdColumn[] columns = new TdColumn[modelElements.length];
             int i = 0;
             for (ModelElement me : modelElements) {

@@ -62,7 +62,6 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -641,10 +640,10 @@ public class ColumnViewerDND {
 
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
-            List<Column> selectedColumn = new ArrayList<Column>();
+            List<TdColumn> selectedColumn = new ArrayList<TdColumn>();
 
             if (it.hasNext()) {
-                Column column = (Column) it.next();
+                TdColumn column = (TdColumn) it.next();
                 selectedColumn.add(column);
                 viewer.dropModelElements(selectedColumn, index);
             }

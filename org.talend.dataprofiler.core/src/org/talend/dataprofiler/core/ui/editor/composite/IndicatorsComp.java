@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -48,7 +49,6 @@ import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC yyi class global comment. Detailled comment
@@ -65,7 +65,7 @@ public class IndicatorsComp extends AbstractPagePart {
 
     private Tree tree;
 
-    private List<Column> columnSetMultiValueList;
+    private List<TdColumn> columnSetMultiValueList;
 
     private AbstractAnalysisMetadataPage masterPage;
 
@@ -75,7 +75,7 @@ public class IndicatorsComp extends AbstractPagePart {
         parentComp = parent;
         tree = createTree(parent);
         tree.setData(this);
-        columnSetMultiValueList = new ArrayList<Column>();
+        columnSetMultiValueList = new ArrayList<TdColumn>();
     }
 
     public IndicatorsComp(Composite parent, AbstractAnalysisMetadataPage masterPage) {
@@ -226,7 +226,7 @@ public class IndicatorsComp extends AbstractPagePart {
         }
     }
 
-    public List<Column> getColumnSetMultiValueList() {
+    public List<TdColumn> getColumnSetMultiValueList() {
         return this.columnSetMultiValueList;
     }
 

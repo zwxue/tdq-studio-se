@@ -60,7 +60,6 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -157,7 +156,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                                     try {
                                         reloadByColumnSetFolderLevel(treeModelLs, anaEleSynDialog, newDataProvider);
 
-                                        if (analyzedElements.get(0) instanceof Column) {
+                                        if (analyzedElements.get(0) instanceof TdColumn) {
                                             // Reload column folder
                                             reloadByColumnFolderLevel(treeModelLs, anaEleSynDialog, newDataProvider);
                                         }

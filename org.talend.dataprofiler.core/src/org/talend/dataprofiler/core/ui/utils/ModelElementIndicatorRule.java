@@ -24,7 +24,6 @@ import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.XSDDataTypeConvertor;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -56,7 +55,7 @@ public final class ModelElementIndicatorRule {
     public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me, ExecutionLanguage language) {
 
         int javaType = 0;
-        if (me instanceof Column) {
+        if (me instanceof TdColumn) {
             javaType = ((TdColumn) me).getJavaType();
         } else if (me instanceof TdXMLElement) {
             javaType = XSDDataTypeConvertor.convertToJDBCType(((TdXMLElement) me).getJavaType());
