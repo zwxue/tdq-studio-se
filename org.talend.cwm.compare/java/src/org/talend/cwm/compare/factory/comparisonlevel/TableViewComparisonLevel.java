@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -50,7 +51,6 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
-import orgomg.cwm.resource.relational.Table;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -168,18 +168,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
         List<TdColumn> columnList = new ArrayList<TdColumn>();
         columnList.addAll(ColumnSetHelper.getColumns(findMatchedColumnSet));
-
-        // URI uri =
-        // URI.createPlatformResourceURI(copyedFile.getFullPath().toString(),
-        // false);
         Resource leftResource = copyedDataProvider.eResource();
-        // leftResource = EMFSharedResources.getInstance().getResource(uri,
-        // true);
-        // if (leftResource == null) {
-        // throw new
-        // ReloadCompareException("No factory has been found for URI: " + uri);
-        // }
-
         leftResource.getContents().clear();
         for (TdColumn column : columnList) {
             DQStructureComparer.clearSubNode(column);
@@ -201,7 +190,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         } catch (TalendException e1) {
             throw new ReloadCompareException(e1);
         }
-
         // MOD scorreia 2009-01-29 columns are stored in the table
         // ColumnSetHelper.addColumns(findMatchedColumnSet, columns);
 
@@ -227,17 +215,23 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         if (columnSetSwitch != null) {
             ColumnSet columnSet = (ColumnSet) selectedObj;
             ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
+            // MOD zshen 2010.06.10 for feature 12842.
             // Case of pk
             PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
             if (primaryKey != null) {
-                TableHelper.addPrimaryKey((Table) columnSet, primaryKey);
-                columnSetSwitch.getUniqueKey().add(primaryKey);
+                TableHelper.addPrimaryKey((TdTable) columnSet, primaryKey);
+                PrimaryKey newPrimaryKey = TableHelper.addPrimaryKey((TdTable) columnSet, primaryKey);
+                columnSetSwitch.getUniqueKey().remove(primaryKey);
+                columnSetSwitch.getUniqueKey().add(newPrimaryKey);
+
             }
-            // Case of fk
-            ForeignKey foreignKey = ColumnHelper.getForeignKey(columnSetSwitch);
-            if (foreignKey != null) {
-                TableHelper.addForeignKey((TdTable) columnSet, foreignKey);
-                columnSetSwitch.getKeyRelationship().add(foreignKey);
+            Set<ForeignKey> foreignKeySet = ColumnHelper.getForeignKey(columnSetSwitch);
+            for (ForeignKey foreignKey : foreignKeySet) {
+                if (foreignKey != null) {
+                    ForeignKey newForeignKey = TableHelper.addForeignKey((TdTable) columnSet, foreignKey);
+                    columnSetSwitch.getKeyRelationship().remove(foreignKey);
+                    columnSetSwitch.getKeyRelationship().add(newForeignKey);
+                }
             }
         }
     }
@@ -245,28 +239,12 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
         TdColumn removeColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(removeElement.getLeftElement());
+        ColumnSet columnSet = (ColumnSet) selectedObj;
         if (removeColumn == null) {
             return;
         }
         popRemoveElementConfirm();
-        ColumnSet columnSet = (ColumnSet) selectedObj;
-        // MOD zshen 2010.06.10 for feature 12842 have been deal in the method ColumnSetHelper.removeColumn.
-        // // Case of pk
-        // PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(removeColumn);
-        // if (primaryKey != null) {
-        // columnSet.getOwnedElement().remove(primaryKey);
-        // removeColumn.getUniqueKey().remove(primaryKey);
-        // }
-        //
-        // // Case of fk
-        // ForeignKey foreingKey = ColumnHelper.getForeignKey(removeColumn);
-        // if (foreingKey != null) {
-        // columnSet.getOwnedElement().remove(foreingKey);
-        // removeColumn.getKeyRelationship().remove(foreingKey);
-        // }
-        // Remove column
         ColumnSetHelper.removeColumn(removeColumn, columnSet);
 
     }
-
 }
