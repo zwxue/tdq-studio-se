@@ -1205,7 +1205,7 @@
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.MergeMetadataTask"
            id="org.talend.dataprofiler.core.migration.impl.MergeMetadataTask"
-           name="org.talend.dataprofiler.core.migration.impl.MergeMetadataTask"
+           name="Merge Metadata Task"
            version="4.1.0">
      </workspacetask>
   </extension>
