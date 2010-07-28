@@ -109,20 +109,15 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     }
 
-    // FIXME scorreia 2010-07-24 this method can only handle Connection cwmElement => change this method argument so
-    // that there cannot be any confusion. Use Java generics.
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
-        Connection dataProvider = (Connection) cwmElement;
-
         IFolder folder = connectionParam.getFolderProvider().getFolderResource();
-        TypedReturnCode<IFile> save = ElementWriterFactory.getInstance().createDataProviderWriter().create(dataProvider, folder);
+        TypedReturnCode<IFile> save = ElementWriterFactory.getInstance().createDataProviderWriter().create(cwmElement, folder);
         if (save.isOk()) {
             if (driver != null) {
-                storeInfoToPerference(dataProvider);
+                storeInfoToPerference(cwmElement);
             }
-            CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
+            CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(cwmElement);
         }
-
         return save;
     }
 
@@ -204,7 +199,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         }
     }
 
-    private void storeInfoToPerference(Connection dataProvider) {
+    private void storeInfoToPerference(ModelElement dataProvider) {
         if (connectionParam == null || driver == null || dataProvider == null) {
             return;
         }

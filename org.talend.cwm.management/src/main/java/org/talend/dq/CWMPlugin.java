@@ -27,6 +27,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -73,11 +74,11 @@ public class CWMPlugin extends Plugin {
      * 
      * @param dataproviders
      */
-    public void addConnetionAliasToSQLPlugin(DataProvider... dataproviders) {
+    public void addConnetionAliasToSQLPlugin(ModelElement... dataproviders) {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
-        for (DataProvider dataProvider : dataproviders) {
+        for (ModelElement dataProvider : dataproviders) {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
                 if (connection != null) {

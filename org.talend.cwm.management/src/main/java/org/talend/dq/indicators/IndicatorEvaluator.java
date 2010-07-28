@@ -70,6 +70,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
             ok.setReturnCode(Messages.getString("IndicatorEvaluator.DefineAnalyzedColumns"), false); //$NON-NLS-1$
             return ok;
         }
+        // ADD xqliu 2010-07-27 bug 13826
+        Map<String, String> columnlistMap = buildColumnListMap(columnlist);
+        // ~ 13826
         // create query statement
         // feature 0010630 zshen: Tables are not found when using Excel with ODBC connection
         Statement statement = null;
@@ -105,12 +108,16 @@ public class IndicatorEvaluator extends Evaluator<String> {
             // --- for each column
             // feature 0010630 zshen: dislodge the Qualifiers from name of the column
             for (int i = 0; i < columnlist.size(); i++) {
+
+                // MOD xqliu 2010-07-27 bug 13826
                 String col = columnlist.get(i);
                 List<Indicator> indicators = getIndicators(col);
-                int offset = col.lastIndexOf('.') + 1; // FIXME scorreia this must not be done here!!! but outside the
-                                                       // resultset loop
-                col = col.substring(offset);
-                // ~
+                col = columnlistMap.get(columnlist.get(i));
+                // FIXME scorreia this must not be done here!!! but outside the resultset loop
+                // int offset = col.lastIndexOf('.') + 1;
+                // col = col.substring(offset);
+                // ~ 13826
+
                 // --- get content of column
                 Object object = resultSet.getObject(col);
                 // MOD zshen, when the type of object is TIMESTAMP then need getTimestamp(col) to get correct value,or
@@ -183,6 +190,20 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // --- close
         connection.close();
         return ok;
+    }
+
+    /**
+     * DOC xqliu Comment method "buildColumnListMap". bug 13826
+     * 
+     * @param columnlist
+     * @return
+     */
+    private Map<String, String> buildColumnListMap(List<String> columnlist) {
+        Map<String, String> result = new HashMap<String, String>();
+        for (String col : columnlist) {
+            result.put(col, col.substring(col.lastIndexOf('.') + 1));
+        }
+        return result;
     }
 
     protected List<Object[]> initDataSet(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap, Object object) {
