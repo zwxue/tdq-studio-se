@@ -34,6 +34,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.AnalysisWriter;
@@ -87,6 +88,11 @@ public class SplitSysIndicatorTask extends AWorkspaceTask {
         if (ind == null || ind.getIndicatorDefinition() == null) {
             return;
         }
+        // ADD xqliu 2010-07-28 13676 don't update UserDefIndicator
+        if (ind instanceof UserDefIndicator) {
+            return;
+        }
+        // ~ 13676
         CwmResource indDefResource = (CwmResource) ind.getIndicatorDefinition().eResource();
         // Find updated indicator definition
         IndicatorDefinition updatedDefinition = DefinitionHandler.getInstance().getDefinitionById(
