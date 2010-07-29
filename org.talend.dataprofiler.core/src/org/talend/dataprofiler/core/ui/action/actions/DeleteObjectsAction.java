@@ -40,7 +40,6 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.top.repository.ProxyRepositoryManager;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC rli class global comment. Detailled comment
@@ -116,9 +115,10 @@ public class DeleteObjectsAction extends Action {
 					
 				}
 			} else {// Logical delete
-				for (IFile file : selectedFiles) {
+                runStatus = true;
+                for (IFile file : selectedFiles) {
 					if (FactoriesUtil.isEmfFile(file.getFileExtension())) {
-						LogicalDeleteFileHandle.deleteLogical(file);
+                        LogicalDeleteFileHandle.deleteLogical(file);
 					}
 				}
 			}
