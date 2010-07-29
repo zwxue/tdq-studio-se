@@ -14,6 +14,7 @@ package org.talend.cwm.db.connection;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -182,8 +183,14 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             xsdFolder.create(true, true, new NullProgressMonitor());
         }
         IFile file = xsdFolder.getFile(resName + XSD_SUFIX);
-        file.create(new ByteArrayInputStream(resXSD.getBytes()), true, new NullProgressMonitor());
-
+        // zshen bug 14089: unfolder MDM node get exception.because of the encoding of stream
+        try {
+            file.create(new ByteArrayInputStream(resXSD.getBytes("UTF-8")), true, new NullProgressMonitor());
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // ~14089
         TdXMLDocument tdXmlDoc = XmlFactory.eINSTANCE.createTdXMLDocument();
         tdXmlDoc.setName(resName);
         // TODO Specify unique xsd file name.
