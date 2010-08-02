@@ -104,7 +104,9 @@ public class ThresholdsValuesTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
-        return createDate(2010, 4, 6);
+        // MOD xqliu 2010-08-02 bug 14698, this task must be called after MergeMetadataTask done.
+        return createDate(2010, 6, 25);
+        // return createDate(2010, 4, 6);
     }
 
 }

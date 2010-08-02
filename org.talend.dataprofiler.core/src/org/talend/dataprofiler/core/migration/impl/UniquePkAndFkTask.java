@@ -172,8 +172,10 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
     }
 
     public Date getOrder() {
+        // MOD xqliu 2010-08-02 bug 14698, this task must be called after MergeMetadataTask done.
         // MOD xqliu 2010-07-26 bug 13826, this task must be called after MergeMetadataTask done.
-        return createDate(2010, 6, 23);
+        return createDate(2010, 6, 26);
+        // return createDate(2010, 6, 9);
     }
 
 }
