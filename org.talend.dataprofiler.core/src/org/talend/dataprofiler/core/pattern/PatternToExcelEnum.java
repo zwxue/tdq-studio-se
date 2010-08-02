@@ -36,7 +36,8 @@ public enum PatternToExcelEnum {
     Teradata(15, "Teradata_Regexp"), //$NON-NLS-1$
     JavaRegexp(16, "Java_Regexp"), //$NON-NLS-1$
     Category(17, "Category"), //$NON-NLS-1$
-    Access(18, "Access"); //$NON-NLS-1$
+    Access(18, "Access"), //$NON-NLS-1$
+    AS400(19, "Access"); //$NON-NLS-1$
 
     private String literal;
 

@@ -856,7 +856,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     protected ReturnCode canSave() {
         // ADD xqliu 2010-01-22 bug 11200
         ReturnCode checkMdmExecutionEngine = checkMdmExecutionEngine();
-        if (!checkMdmExecutionEngine.isOk()) {
+        if (!checkMdmExecutionEngine.isOk()) {// FIXME: Here(checkMdmExecutionEngine) will always return true, why do
+            // such judgment?
             return checkMdmExecutionEngine;
         }
         // ~
