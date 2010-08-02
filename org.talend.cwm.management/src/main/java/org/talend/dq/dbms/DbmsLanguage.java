@@ -74,6 +74,8 @@ public class DbmsLanguage {
 
     static final String DB2 = SupportDBUrlType.DB2DEFAULTURL.getLanguage();
 
+    static final String AS400 = SupportDBUrlType.AS400DEFAULTURL.getLanguage();
+
     static final String DB2ZOS = SupportDBUrlType.DB2ZOSDEFAULTURL.getLanguage();
 
     static final String SYBASE_ASE = SupportDBUrlType.SYBASEDEFAULTURL.getLanguage();

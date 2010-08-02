@@ -101,6 +101,9 @@ public final class DbmsLanguageFactory {
         if (isDB2(dbmsSubtype)) {
             return new DB2DbmsLanguage(dbmsSubtype, dbVersion);
         }
+        if (isAS400(dbmsSubtype)) {
+            return new AS400DbmsLanguage(dbmsSubtype, dbVersion);
+        }
         if (isMSSQL(dbmsSubtype)) {
             return new MSSqlDbmsLanguage(dbmsSubtype, dbVersion);
         }
@@ -154,7 +157,9 @@ public final class DbmsLanguageFactory {
         case DB2ZOSDEFAULTURL:
             result = new DB2DbmsLanguage();
             break;
-
+        case AS400DEFAULTURL:
+            result = new AS400DbmsLanguage();
+            break;
         case ORACLEWITHSERVICENAMEDEFAULTURL:
         case ORACLEWITHSIDDEFAULTURL:
             result = new OracleDbmsLanguage();
@@ -224,6 +229,9 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.DB2, dbms);
     }
 
+    private static boolean isAS400(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.AS400, dbms);
+    }
     private static boolean isSybaseASE(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.SYBASE_ASE, dbms);
     }
@@ -255,8 +263,15 @@ public final class DbmsLanguageFactory {
         if (lang1 == null || lang2 == null) {
             return false;
         }
+        // MOD mzhao 2010-08-02 bug 14464, for AS400
+        if (StringUtils.contains(lang1, DbmsLanguage.AS400) && StringUtils.contains(StringUtils.upperCase(lang2), lang1)) {
+            return true;
+        }
         // MOD 2008-08-04 scorreia: for DB2 database, dbName can be "DB2/NT" or "DB2/6000" or "DB2"...
         if (lang1.startsWith(DbmsLanguage.DB2)) {
+            if (StringUtils.contains(lang2, DbmsLanguage.AS400)) {
+                return false;
+            }
             return StringUtils.upperCase(lang1).startsWith(StringUtils.upperCase(lang2))
                     || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
         } else

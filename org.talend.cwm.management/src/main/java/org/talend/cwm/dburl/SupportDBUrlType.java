@@ -132,7 +132,7 @@ public enum SupportDBUrlType {
                     null,
                     "com.ibm.as400.access.AS400JDBCDriver", //$NON-NLS-1$
                     null,
-                    "AS400"), //$NON-NLS-1$
+                    "AS/400"), //$NON-NLS-1$
     XML_eXist("eXist", //$NON-NLS-1$
               "localhost", //$NON-NLS-1$
               "8080", //$NON-NLS-1$
