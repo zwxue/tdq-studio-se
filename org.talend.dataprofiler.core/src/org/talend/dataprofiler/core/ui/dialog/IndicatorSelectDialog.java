@@ -530,7 +530,8 @@ public class IndicatorSelectDialog extends TrayDialog {
                         if (null != indicatorNode.getIndicatorInstance()
                                 && !(indicatorNode.getIndicatorInstance() instanceof DatePatternFreqIndicator)
                                 && null != indicatorNode.getIndicatorInstance().getIndicatorDefinition()
-                                && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null) {
+                                && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null
+                                && !indicatorNode.hasChildren()) {
                             checkButton.setEnabled(false);
                         }
                         // ~
