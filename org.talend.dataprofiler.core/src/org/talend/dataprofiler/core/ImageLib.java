@@ -74,6 +74,8 @@ public final class ImageLib {
 
     public static final String TD_DATAPROVIDER = "TdDataProvider.gif"; //$NON-NLS-1$
 
+    public static final String MDM_CONNECTION = "mdm_metadata.png"; //$NON-NLS-1$
+
     public static final String EDITCONNECTION = "sample.gif"; //$NON-NLS-1$
 
     public static final String CREATE_SQL_ACTION = "new_sqlEditor.gif"; //$NON-NLS-1$

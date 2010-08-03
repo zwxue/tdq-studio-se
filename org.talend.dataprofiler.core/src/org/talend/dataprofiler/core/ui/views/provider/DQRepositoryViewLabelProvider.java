@@ -19,6 +19,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -56,6 +57,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
     	if (element instanceof IFolderNode) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else if (element instanceof Connection) {
+            // ADD xqliu 2010-08-03 bug 14203
+            if (element instanceof MDMConnection) {
+                return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+            }
+            // ~ 14203
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         } else if (element instanceof TdColumn) {
             if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
