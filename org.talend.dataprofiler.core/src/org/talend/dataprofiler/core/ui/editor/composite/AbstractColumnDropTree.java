@@ -12,11 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.composite;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.window.Window;
@@ -51,6 +51,7 @@ import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
@@ -81,7 +82,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     public abstract boolean canDrop(ModelElement modelElement);
 
-
     protected Tree tree;
 
     protected ModelElementIndicator[] modelElementIndicators;
@@ -89,7 +89,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     protected AbstractAnalysisMetadataPage absMasterPage = null;
 
     protected String viewKey = null;
-
 
     /**
      * DOC qzhang Comment method "createOneUnit".
@@ -202,8 +201,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             }
             if (judi != null) {
                 ((JavaUserDefIndicator) judi)
-                        .setExecuteEngine(absMasterPage.getAnalysis().getParameters()
-                        .getExecutionLanguage());
+                        .setExecuteEngine(absMasterPage.getAnalysis().getParameters().getExecutionLanguage());
             }
         }
     }
@@ -229,8 +227,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         item.dispose();
         this.setDirty(true);
     }
-
-
 
     /**
      * DOC rli Comment method "deleteIndicatorItems".
@@ -268,6 +264,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             EMFUtil.saveSingleResource(me.eResource());
         }
     }
+
     public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
 
         if (isDirty()) {
@@ -334,7 +331,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         return unit.getIndicatorName();
     }
-    
+
     /**
      * DOC qzhang Comment method "createIndicatorParameters".
      * 
@@ -343,6 +340,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
      */
     private void createIndicatorParameters(TreeItem indicatorItem, IndicatorUnit indicatorUnit) {
         TreeItem[] items = indicatorItem.getItems();
+
         if (indicatorItem != null && !indicatorItem.isDisposed()) {
             for (TreeItem treeItem : items) {
                 if (DATA_PARAM.equals(treeItem.getData(DATA_PARAM))) {
@@ -352,6 +350,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
         if (parameters == null) {
+            return;
+        }
+        if (hideParameters(indicatorUnit)) {
             return;
         }
         TreeItem iParamItem;
@@ -440,6 +441,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     }
 
     public abstract void addElements(final ModelElementIndicator[] elements);
+
     public void setInput(Object[] objs) {
         boolean isMdm = false;
         if (objs != null && objs.length != 0) {
@@ -470,6 +472,33 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList
                 .size()]);
         this.setElements(modelElementIndicators);
+    }
+
+    private boolean hideParameters(IndicatorUnit indicatorUnit) {
+        EClass indicatorEclass = indicatorUnit.getIndicator().eClass();
+        System.out.println(indicatorEclass.getName());
+        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getDateFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getWeekFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMonthFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getQuarterFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getYearFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getDateLowFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getWeekLowFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMonthLowFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getQuarterLowFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getYearLowFrequencyIndicator())) {
+            return true;
+        }
+        return false;
     }
 
 }

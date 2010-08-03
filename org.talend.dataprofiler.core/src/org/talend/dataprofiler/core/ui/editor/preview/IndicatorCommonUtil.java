@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
@@ -148,15 +151,15 @@ public final class IndicatorCommonUtil {
                     break;
 
                 case AverageLengthWithNullIndicatorEnum:
-                    tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
+                    tempObject = ((AvgLengthWithNullIndicator) indicator).getAverageLength();
                     break;
 
                 case AverageLengthWithBlankIndicatorEnum:
-                    tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
+                    tempObject = ((AvgLengthWithBlankIndicator) indicator).getAverageLength();
                     break;
 
                 case AverageLengthWithNullBlankIndicatorEnum:
-                    tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
+                    tempObject = ((AvgLengthWithBlankNullIndicator) indicator).getAverageLength();
                     break;
 
                 case FrequencyIndicatorEnum:

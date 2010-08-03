@@ -5,6 +5,9 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.math.BigInteger;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -86,12 +89,21 @@ public class AvgLengthWithBlankNullIndicatorImpl extends LengthIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
+     * 
+     * @generated NOT
      */
     public double getAverageLength() {
-        // TODO: implement this method
-        // Ensure that you remove @generated or mark it @generated NOT
-        throw new UnsupportedOperationException();
+        if (getCount() == null) {
+            return 0.0;
+        }
+        if (BigInteger.ZERO.equals(getCount())) {
+            return 0.0;
+        }
+        Double totalLength = getSumLength();
+        if (totalLength == null) {
+            return 0.0;
+        }
+        return totalLength.doubleValue() / getCount().doubleValue();
     }
 
     /**
@@ -161,6 +173,34 @@ public class AvgLengthWithBlankNullIndicatorImpl extends LengthIndicatorImpl imp
         result.append(sumLength);
         result.append(')');
         return result.toString();
+    }
+
+    @Override
+    public boolean storeSqlResults(List<Object[]> objects) {
+
+        if (!checkResults(objects, 2)) {
+            return false;
+        }
+
+        // http://www.talendforge.org/bugs/view.php?id=4783
+        // Oracle treats empty strings as null values
+        Object lCount = objects.get(0)[1];
+        if (lCount == null) {
+            this.setCount(null);
+        } else {
+            String c = String.valueOf(lCount);
+            this.setCount(Long.valueOf(c));
+        }
+
+        Object lSum = objects.get(0)[0];
+        if (lSum == null) {
+            this.setSumLength(null);
+        } else {
+            String s = String.valueOf(lSum);
+            this.setSumLength(Double.valueOf(s));
+        }
+
+        return true;
     }
 
     @Override

@@ -470,6 +470,8 @@ public class IndicatorSelectDialog extends TrayDialog {
 
     private void createChildrenNode(Tree tree, TreeItemContainer parentItem, TreeColumn[] treeColumns,
             IIndicatorNode[] branchNodes) {
+
+        boolean expanded = false;
         for (int i = 0; i < branchNodes.length; i++) {
             IIndicatorNode indicatorNode = branchNodes[i];
             if (!indicatorNode.getLabel().equals("")) {
@@ -512,6 +514,7 @@ public class IndicatorSelectDialog extends TrayDialog {
 
                         if (((ModelElementIndicator) treeColumns[j].getData()).contains(indicatorEnum)) {
                             checkButton.setSelection(true);
+                            expanded = true;
                         }
                         final ModelElementIndicator currentIndicator = (ModelElementIndicator) treeColumns[j].getData();
                         checkButton.setEnabled(ModelElementIndicatorRule.match(indicatorNode, currentIndicator, this.language));
@@ -567,10 +570,15 @@ public class IndicatorSelectDialog extends TrayDialog {
                 if (indicatorNode.hasChildren()) {
                     createChildrenNode(tree, treeItem, treeColumns, indicatorNode.getChildren());
                 }
-                treeItem.setExpanded(false);
+                if (expanded) {
+                    TreeItem item = treeItem.getParentItem();
+                    while (null != item) {
+                        item.setExpanded(true);
+                        item = item.getParentItem();
+                    }
+                }
             }
         }
-
     }
 
     private TreeColumn[] createTreeColumns(Tree tree) {
