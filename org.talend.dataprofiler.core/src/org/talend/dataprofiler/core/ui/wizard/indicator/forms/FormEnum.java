@@ -42,6 +42,7 @@ public enum FormEnum {
     TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"), //$NON-NLS-1$ //$NON-NLS-2$
     FreqTextLengthForm("Blank Options", "html/wizard/indicator/BlankOptions.html"), //$NON-NLS-1$ //$NON-NLS-2$
     NumbericNominalForm("Frequency Table Parameters", ""), //$NON-NLS-1$ //$NON-NLS-2$
+    JavaUDIParametersForm("Java UDI Parameters", ""), //$NON-NLS-1$ //$NON-NLS-2$
     ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html"), //$NON-NLS-1$ //$NON-NLS-2$
     JavaOptionsForm("Java Options", "html/wizard/indicator/JavaOptions.html"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -204,6 +205,10 @@ public enum FormEnum {
             if (UDIHelper.isFrequency((indicatorUnit.getIndicator()))) {
                 forms = new FormEnum[] { NumbericNominalForm };
             }
+
+            break;
+        case JavaUserDefinedIndicatorEnum:
+            forms = new FormEnum[] { JavaUDIParametersForm };
 
             break;
 

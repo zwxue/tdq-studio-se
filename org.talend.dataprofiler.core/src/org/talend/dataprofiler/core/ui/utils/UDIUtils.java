@@ -41,9 +41,15 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -94,6 +100,23 @@ public final class UDIUtils {
             ((JavaUserDefIndicator) judi).setExecuteEngine(analysis.getParameters().getExecutionLanguage());
             udi = judi;
         }
+
+        IndicatorParameters parameters = udi.getParameters();
+        if (parameters == null) {
+            parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+            udi.setParameters(parameters);
+        }
+        Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
+        if (indicatorValidDomain == null) {
+            indicatorValidDomain = DomainHelper.createDomain("JAVA_UDI_PARAMETERS");
+            parameters.setIndicatorValidDomain(indicatorValidDomain);
+        }
+        List<IndicatorDefinitionParameter> indicatorDefs = udid.getIndicatorDefinitionParameter();
+        for (IndicatorDefinitionParameter idp : indicatorDefs) {
+            JavaUDIIndicatorParameter judip = DomainHelper.createJavaUDIIndicatorParameter(idp.getKey(), idp.getValue());
+            indicatorValidDomain.getJavaUDIIndicatorParameter().add(judip);
+        }
+
         IndicatorEnum indicatorType = IndicatorEnum.findIndicatorEnum(udi.eClass());
 
         // MOD xqliu 2009-10-09 bug 9304

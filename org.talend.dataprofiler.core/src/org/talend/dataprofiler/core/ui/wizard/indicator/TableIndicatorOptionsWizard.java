@@ -36,6 +36,7 @@ public class TableIndicatorOptionsWizard extends Wizard {
     @Override
     public boolean performFinish() {
         if (indicatorPage.getValidFroms() != null) {
+
             for (AbstractIndicatorForm form : indicatorPage.getValidFroms()) {
                 boolean isOk = form.performFinish();
                 if (!isOk) {

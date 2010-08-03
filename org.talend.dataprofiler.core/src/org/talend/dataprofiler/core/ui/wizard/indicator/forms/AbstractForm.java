@@ -102,6 +102,7 @@ public abstract class AbstractForm extends Composite {
             statusLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
             statusLabel.setForeground(getDisplay().getSystemColor(SWT.COLOR_RED));
         }
+
         addFields();
         initialize();
         addUtilsButtonListeners();

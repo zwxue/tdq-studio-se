@@ -21,6 +21,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.DataThreshold
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.ExpectedValueForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.IndicatorThresholdsForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.JavaOptionsForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.JavaUDIParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.NumbericNominalForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextLengthForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextParametersForm;
@@ -109,6 +110,10 @@ public final class IndicatorFormFactory {
         case JavaOptionsForm:
 
             form = new JavaOptionsForm(parent, SWT.NONE, parameters);
+            break;
+        case JavaUDIParametersForm:
+
+            form = new JavaUDIParametersForm(parent, SWT.NONE, parameters);
             break;
 
         default:
