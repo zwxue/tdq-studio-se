@@ -55,4 +55,12 @@ public class MinLengthWithBlankNullIndicatorImpl extends MinLengthIndicatorImpl 
         return parameters;
     }
 
+    @Override
+    public boolean handle(Object data) {
+        boolean ok = super.handle(data);
+        if (data == null) {
+            length = new Long(0);
+        }
+        return ok;
+    }
 } // MinLengthWithBlankNullIndicatorImpl

@@ -55,4 +55,12 @@ public class MaxLengthWithBlankNullIndicatorImpl extends LengthIndicatorImpl imp
         return parameters;
     }
 
+    @Override
+    public boolean handle(Object data) {
+        boolean ok = super.handle(data);
+        if (data == null) {
+            length = new Long(0);
+        }
+        return ok;
+    }
 } // MaxLengthWithBlankNullIndicatorImpl

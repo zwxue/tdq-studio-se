@@ -219,4 +219,26 @@ public class AvgLengthWithBlankIndicatorImpl extends LengthIndicatorImpl impleme
         return parameters;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handle(java.lang.Object)
+     */
+    @Override
+    public boolean handle(Object data) {
+        boolean ok = super.handle(data);
+        if (data != null) {
+            String str = (String) data;
+            sumLength += str.length();
+        } else {
+            this.count--;
+        }
+        return ok;
+    }
+
+    @Override
+    public boolean reset() {
+        this.sumLength = SUM_LENGTH_EDEFAULT;
+        return super.reset();
+    }
 } // AvgLengthWithBlankIndicatorImpl

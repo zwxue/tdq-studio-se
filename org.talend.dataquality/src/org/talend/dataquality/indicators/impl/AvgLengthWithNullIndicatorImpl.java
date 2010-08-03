@@ -8,6 +8,7 @@ package org.talend.dataquality.indicators.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -50,6 +51,10 @@ public class AvgLengthWithNullIndicatorImpl extends LengthIndicatorImpl implemen
      * @ordered
      */
     protected Double sumLength = SUM_LENGTH_EDEFAULT;
+
+    protected static final Long BLANK_COUNT_EDEFAULT = new Long(0L);
+
+    protected Long blankCount = BLANK_COUNT_EDEFAULT;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -103,7 +108,7 @@ public class AvgLengthWithNullIndicatorImpl extends LengthIndicatorImpl implemen
         if (totalLength == null) {
             return 0.0;
         }
-        return totalLength.doubleValue() / getCount().doubleValue();
+        return totalLength.doubleValue() / (getCount().doubleValue() - blankCount.doubleValue());
     }
 
     /**
@@ -220,8 +225,21 @@ public class AvgLengthWithNullIndicatorImpl extends LengthIndicatorImpl implemen
     }
 
     @Override
+    public boolean handle(Object data) {
+        boolean ok = super.handle(data);
+        if (data != null && !StringUtils.isBlank(data.toString())) {
+            String str = (String) data;
+            sumLength += str.length();
+        } else {
+            blankCount++;
+        }
+        return ok;
+    }
+
+    @Override
     public boolean reset() {
         this.sumLength = SUM_LENGTH_EDEFAULT;
+        this.blankCount = BLANK_COUNT_EDEFAULT;
         return super.reset();
     }
 } // AvgLengthWithNullIndicatorImpl

@@ -8,6 +8,7 @@ package org.talend.dataquality.indicators.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -219,4 +220,19 @@ public class AvgLengthWithBlankNullIndicatorImpl extends LengthIndicatorImpl imp
         return parameters;
     }
 
+    @Override
+    public boolean handle(Object data) {
+        boolean ok = super.handle(data);
+        if (data != null && !StringUtils.isBlank(data.toString())) {
+            String str = (String) data;
+            sumLength += str.length();
+        }
+        return ok;
+    }
+
+    @Override
+    public boolean reset() {
+        this.sumLength = SUM_LENGTH_EDEFAULT;
+        return super.reset();
+    }
 } // AvgLengthWithBlankNullIndicatorImpl
