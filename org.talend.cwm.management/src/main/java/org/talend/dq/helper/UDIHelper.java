@@ -40,6 +40,7 @@ import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -316,6 +317,20 @@ public final class UDIHelper {
 			}
 		}
 		return false;
+    }
+
+    /**
+     * DOC klliu Comment method "isJavaUDI".
+     * 
+     * @param indicator
+     * @return
+     */
+    public static boolean isJavaUDI(Indicator indicator) {
+        // TODO Auto-generated method stub
+        IndicatorDefinition definition = indicator.getIndicatorDefinition();
+        boolean systemIndicator = definition != null && definition.eResource() != null
+                && definition.eResource().getURI().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
+        return systemIndicator;
     }
 
 }
