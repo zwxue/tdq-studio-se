@@ -292,6 +292,19 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             databaseNameText.setEnabled(compositeEnable);
 
             label = new Label(parent, SWT.NONE);
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.datafilter"));
+            dataFilterCombo = new Combo(parent, SWT.READ_ONLY);
+            dataFilterCombo.setEnabled(false);
+            dataFilterCombo.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    connectionParam.getParameters().setProperty(TaggedValueHelper.DATA_FILTER, ((Combo) e.getSource()).getText());
+                }
+
+            });
+
+            label = new Label(parent, SWT.NONE);
             label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.universe")); //$NON-NLS-1$
             final Text universeText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             universeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

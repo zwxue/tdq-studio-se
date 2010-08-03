@@ -20,6 +20,7 @@ import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -46,6 +47,7 @@ import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.connection.DatabaseConstant;
+import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -305,6 +307,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
     }
 
     private ReturnCode checkDBConnection() {
+        connectionParam.getParameters().setProperty(TaggedValueHelper.DATA_FILTER, "");
         // ADD xqliu 2010-04-01 bug 12379. MOD mzhao 2010-04-05, avoid replicated codes for same function.
         ReturnCode rt = databaseConnectionWizard.checkMetadata();
         if (!rt.isOk()) {
@@ -313,8 +316,10 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         // ~12379
         // MOD xqliu 2009-12-17 check for a mdm database
         if (mdmFlag) {
-            IXMLDBConnection mdmConnection = new MdmWebserviceConnection(connectionParam.getJdbcUrl(), connectionParam.getParameters());
+            IXMLDBConnection mdmConnection = new MdmWebserviceConnection(connectionParam.getJdbcUrl(), connectionParam
+                    .getParameters());
             ReturnCode retcode = mdmConnection.checkDatabaseConnection();
+            this.urlSetupControl.getDataFilterCombo().setEnabled(fillComboContent(mdmConnection).isOk());
             return retcode;
         }
         // MOD mzhao 2009-11-27 Check for an xml database (e.g eXist)
@@ -580,5 +585,24 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         username.setEnabled(enable);
         passwordText.setEnabled(enable);
         return enable;
+    }
+
+    private ReturnCode fillComboContent(IXMLDBConnection mdmConnection) {
+        ReturnCode rc = new ReturnCode(false);
+
+        Combo dataFilterCombo = this.urlSetupControl.getDataFilterCombo();
+        dataFilterCombo.removeAll();
+        try {
+            Iterator<TdXMLDocument> iter = mdmConnection.createConnection().iterator();
+
+            while (iter.hasNext()) {
+                dataFilterCombo.add(iter.next().getName());
+            }
+            if (dataFilterCombo.getItemCount() > 0) {
+                rc.setOk(true);
+            }
+        } catch (Exception exception) {
+        }
+        return rc;
     }
 }

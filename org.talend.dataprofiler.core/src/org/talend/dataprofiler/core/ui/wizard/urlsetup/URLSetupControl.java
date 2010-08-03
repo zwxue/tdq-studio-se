@@ -18,6 +18,7 @@ import java.beans.PropertyChangeSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.talend.cwm.dburl.SupportDBUrlStore;
@@ -39,6 +40,8 @@ public abstract class URLSetupControl extends Composite {
     private String connectionURL;
 
     protected SupportDBUrlType dbType;
+
+    protected Combo dataFilterCombo;
 
     /**
      * @param parent
@@ -130,4 +133,9 @@ public abstract class URLSetupControl extends Composite {
             firePropertyChange(PluginConstant.CONNECTION_URL_PROPERTY, original, connectionURL);
         }
     }
+
+    public Combo getDataFilterCombo() {
+        return dataFilterCombo;
+    }
+
 }

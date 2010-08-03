@@ -91,8 +91,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private Section infomatioinSection = null;
 
     private boolean isUrlChanged = false;
-    private boolean isPassWordChanged = false; 
-    private boolean isLoginChanged = false; 
+
+    private boolean isPassWordChanged = false;
+
+    private boolean isLoginChanged = false;
 
     public ConnectionInfoPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -210,7 +212,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
 
         };
-        
+
         // MOD klliu 2010-07-06 bug 14095
         loginText.addModifyListener(new ModifyListener() {
 
@@ -335,6 +337,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         }
         props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse(tdDataProvider2));
+        props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter(tdDataProvider2));
         ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(ConnectionHelper
                 .getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionService.checkConnection(this.urlText
                 .getText(), ConnectionHelper.getDriverClass(tdDataProvider2), props);
@@ -418,10 +421,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         ReturnCode rc = new ReturnCode();
         String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.impactAnalyses");
         String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");
-     // MOD klliu 2010-07-06 bug 14095: unnecessary wizard
+        // MOD klliu 2010-07-06 bug 14095: unnecessary wizard
         if (this.isUrlChanged || this.isLoginChanged || this.isPassWordChanged) {
-        rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
-                new ModelElement[] { tdDataProvider }, dialogTitle, dialogMessage));
+            rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
+                    new ModelElement[] { tdDataProvider }, dialogTitle, dialogMessage));
         }
 
         return rc;
