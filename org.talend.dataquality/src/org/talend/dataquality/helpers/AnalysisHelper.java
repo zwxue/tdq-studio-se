@@ -32,6 +32,8 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
@@ -324,6 +326,18 @@ public final class AnalysisHelper {
             // rets.addAll(((UserDefIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
             // }
             // }
+
+            // MOD yyi 2010-08-03 14292 Add dependency for children indicator in Column Set analysis
+            if (indicator instanceof AllMatchIndicator) {
+                EList<RegexpMatchingIndicator> list = ((AllMatchIndicator) indicator).getCompositeRegexMatchingIndicators();
+                for (RegexpMatchingIndicator pattern : list) {
+                    IndicatorParameters parameters = pattern.getParameters();
+                    if (null != parameters && null != parameters.getDataValidDomain()) {
+                        rets.addAll(parameters.getDataValidDomain().getPatterns());
+                    }
+                }
+            }
+            // ~
         }
         return rets;
     }
