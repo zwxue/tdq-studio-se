@@ -76,6 +76,8 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
 
     private String universe = "";
 
+    private String dataFilter;
+
     private Properties props = null;
 
     public MdmWebserviceConnection(String url, Properties props) {
@@ -93,6 +95,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         userName = props.getProperty(TaggedValueHelper.USER) == null ? "" : props.getProperty(TaggedValueHelper.USER);
         userPass = props.getProperty(TaggedValueHelper.PASSWORD) == null ? "" : props.getProperty(TaggedValueHelper.PASSWORD);
         universe = props.getProperty(TaggedValueHelper.UNIVERSE) == null ? "" : props.getProperty(TaggedValueHelper.UNIVERSE);
+        dataFilter = props.getProperty(TaggedValueHelper.DATA_FILTER);
     }
 
     public ReturnCode checkDatabaseConnection() {
@@ -146,7 +149,10 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
                     + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
             for (WSDataModelPK pk : pks) {
-                adaptToCWMDocument(xmlDocs, stub, pk.getPk(), techXSDFolderName);
+                String filterName = props.getProperty(TaggedValueHelper.DATA_FILTER);
+                if (filterName == null || filterName.equals("") || pk.getPk().equals(filterName)) {
+                    adaptToCWMDocument(xmlDocs, stub, pk.getPk(), techXSDFolderName);
+                }
             }
         } catch (Exception e) {
             log.error(e);
