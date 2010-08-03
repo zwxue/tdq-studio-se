@@ -116,6 +116,15 @@ public interface DomainFactory extends EFactory {
     DateValue createDateValue();
 
     /**
+     * Returns a new object of class '<em>Java UDI Indicator Parameter</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Java UDI Indicator Parameter</em>'.
+     * @generated
+     */
+    JavaUDIIndicatorParameter createJavaUDIIndicatorParameter();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

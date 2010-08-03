@@ -79,6 +79,7 @@ public class DomainFactoryImpl extends EFactoryImpl implements DomainFactory {
             case DomainPackage.INTEGER_VALUE: return createIntegerValue();
             case DomainPackage.REAL_NUMBER_VALUE: return createRealNumberValue();
             case DomainPackage.DATE_VALUE: return createDateValue();
+            case DomainPackage.JAVA_UDI_INDICATOR_PARAMETER: return createJavaUDIIndicatorParameter();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -182,6 +183,16 @@ public class DomainFactoryImpl extends EFactoryImpl implements DomainFactory {
     public DateValue createDateValue() {
         DateValueImpl dateValue = new DateValueImpl();
         return dateValue;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public JavaUDIIndicatorParameter createJavaUDIIndicatorParameter() {
+        JavaUDIIndicatorParameterImpl javaUDIIndicatorParameter = new JavaUDIIndicatorParameterImpl();
+        return javaUDIIndicatorParameter;
     }
 
     /**

@@ -22,6 +22,7 @@ import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.EnumerationRule;
 import org.talend.dataquality.domain.IntegerValue;
+import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
 import org.talend.dataquality.domain.LengthRestriction;
 import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.domain.NumericValue;
@@ -50,6 +51,7 @@ import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.impl.RulesPackageImpl;
 import orgomg.cwm.foundation.datatypes.DatatypesPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
+import orgomg.mof.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -127,6 +129,13 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
      * @generated
      */
     private EClass dateValueEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass javaUDIIndicatorParameterEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -273,6 +282,15 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
      */
     public EReference getDomain_Patterns() {
         return (EReference)domainEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getDomain_JavaUDIIndicatorParameter() {
+        return (EReference)domainEClass.getEStructuralFeatures().get(4);
     }
 
     /**
@@ -469,6 +487,33 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getJavaUDIIndicatorParameter() {
+        return javaUDIIndicatorParameterEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getJavaUDIIndicatorParameter_Key() {
+        return (EAttribute)javaUDIIndicatorParameterEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getJavaUDIIndicatorParameter_Value() {
+        return (EAttribute)javaUDIIndicatorParameterEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public DomainFactory getDomainFactory() {
         return (DomainFactory)getEFactoryInstance();
     }
@@ -497,6 +542,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         createEReference(domainEClass, DOMAIN__LENGTH_RESTRICTION);
         createEReference(domainEClass, DOMAIN__RANGES);
         createEReference(domainEClass, DOMAIN__PATTERNS);
+        createEReference(domainEClass, DOMAIN__JAVA_UDI_INDICATOR_PARAMETER);
 
         enumerationRuleEClass = createEClass(ENUMERATION_RULE);
         createEReference(enumerationRuleEClass, ENUMERATION_RULE__DOMAIN);
@@ -527,6 +573,10 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
 
         dateValueEClass = createEClass(DATE_VALUE);
         createEAttribute(dateValueEClass, DATE_VALUE__VALUE);
+
+        javaUDIIndicatorParameterEClass = createEClass(JAVA_UDI_INDICATOR_PARAMETER);
+        createEAttribute(javaUDIIndicatorParameterEClass, JAVA_UDI_INDICATOR_PARAMETER__KEY);
+        createEAttribute(javaUDIIndicatorParameterEClass, JAVA_UDI_INDICATOR_PARAMETER__VALUE);
     }
 
     /**
@@ -558,6 +608,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
         DatatypesPackage theDatatypesPackage = (DatatypesPackage)EPackage.Registry.INSTANCE.getEPackage(DatatypesPackage.eNS_URI);
         ExpressionsPackage theExpressionsPackage = (ExpressionsPackage)EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI);
+        ModelPackage theModelPackage = (ModelPackage)EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI);
 
         // Add subpackages
         getESubpackages().add(thePatternPackage);
@@ -575,6 +626,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         integerValueEClass.getESuperTypes().add(this.getNumericValue());
         realNumberValueEClass.getESuperTypes().add(this.getNumericValue());
         dateValueEClass.getESuperTypes().add(this.getNumericValue());
+        javaUDIIndicatorParameterEClass.getESuperTypes().add(theModelPackage.getModelElement());
 
         // Initialize classes and features; add operations and parameters
         initEClass(domainEClass, Domain.class, "Domain", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -582,6 +634,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
         initEReference(getDomain_LengthRestriction(), this.getLengthRestriction(), null, "lengthRestriction", null, 0, -1, Domain.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDomain_Ranges(), this.getRangeRestriction(), null, "ranges", null, 0, -1, Domain.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getDomain_Patterns(), thePatternPackage.getPattern(), null, "patterns", null, 0, -1, Domain.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDomain_JavaUDIIndicatorParameter(), this.getJavaUDIIndicatorParameter(), null, "javaUDIIndicatorParameter", null, 0, -1, Domain.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(enumerationRuleEClass, EnumerationRule.class, "EnumerationRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getEnumerationRule_Domain(), this.getDomain(), null, "domain", null, 0, -1, EnumerationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -612,6 +665,10 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
 
         initEClass(dateValueEClass, DateValue.class, "DateValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getDateValue_Value(), ecorePackage.getEDate(), "value", null, 0, 1, DateValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(javaUDIIndicatorParameterEClass, JavaUDIIndicatorParameter.class, "JavaUDIIndicatorParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getJavaUDIIndicatorParameter_Key(), ecorePackage.getEString(), "key", "", 0, 1, JavaUDIIndicatorParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getJavaUDIIndicatorParameter_Value(), ecorePackage.getEString(), "value", "", 0, 1, JavaUDIIndicatorParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Create resource
         createResource(eNS_URI);

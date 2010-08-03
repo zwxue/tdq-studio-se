@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
+import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
 import org.talend.dataquality.domain.LengthRestriction;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -36,6 +37,7 @@ import orgomg.cwm.objectmodel.core.impl.NamespaceImpl;
  *   <li>{@link org.talend.dataquality.domain.impl.DomainImpl#getLengthRestriction <em>Length Restriction</em>}</li>
  *   <li>{@link org.talend.dataquality.domain.impl.DomainImpl#getRanges <em>Ranges</em>}</li>
  *   <li>{@link org.talend.dataquality.domain.impl.DomainImpl#getPatterns <em>Patterns</em>}</li>
+ *   <li>{@link org.talend.dataquality.domain.impl.DomainImpl#getJavaUDIIndicatorParameter <em>Java UDI Indicator Parameter</em>}</li>
  * </ul>
  * </p>
  *
@@ -81,6 +83,16 @@ public class DomainImpl extends NamespaceImpl implements Domain {
      * @ordered
      */
     protected EList<Pattern> patterns;
+
+    /**
+     * The cached value of the '{@link #getJavaUDIIndicatorParameter() <em>Java UDI Indicator Parameter</em>}' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getJavaUDIIndicatorParameter()
+     * @generated
+     * @ordered
+     */
+    protected EList<JavaUDIIndicatorParameter> javaUDIIndicatorParameter;
 
     /**
      * <!-- begin-user-doc -->
@@ -180,6 +192,18 @@ public class DomainImpl extends NamespaceImpl implements Domain {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EList<JavaUDIIndicatorParameter> getJavaUDIIndicatorParameter() {
+        if (javaUDIIndicatorParameter == null) {
+            javaUDIIndicatorParameter = new EObjectContainmentEList<JavaUDIIndicatorParameter>(JavaUDIIndicatorParameter.class, this, DomainPackage.DOMAIN__JAVA_UDI_INDICATOR_PARAMETER);
+        }
+        return javaUDIIndicatorParameter;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -187,6 +211,8 @@ public class DomainImpl extends NamespaceImpl implements Domain {
                 return ((InternalEList<?>)getLengthRestriction()).basicRemove(otherEnd, msgs);
             case DomainPackage.DOMAIN__RANGES:
                 return ((InternalEList<?>)getRanges()).basicRemove(otherEnd, msgs);
+            case DomainPackage.DOMAIN__JAVA_UDI_INDICATOR_PARAMETER:
+                return ((InternalEList<?>)getJavaUDIIndicatorParameter()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -208,6 +234,8 @@ public class DomainImpl extends NamespaceImpl implements Domain {
                 return getRanges();
             case DomainPackage.DOMAIN__PATTERNS:
                 return getPatterns();
+            case DomainPackage.DOMAIN__JAVA_UDI_INDICATOR_PARAMETER:
+                return getJavaUDIIndicatorParameter();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -236,6 +264,10 @@ public class DomainImpl extends NamespaceImpl implements Domain {
                 getPatterns().clear();
                 getPatterns().addAll((Collection<? extends Pattern>)newValue);
                 return;
+            case DomainPackage.DOMAIN__JAVA_UDI_INDICATOR_PARAMETER:
+                getJavaUDIIndicatorParameter().clear();
+                getJavaUDIIndicatorParameter().addAll((Collection<? extends JavaUDIIndicatorParameter>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -260,6 +292,9 @@ public class DomainImpl extends NamespaceImpl implements Domain {
             case DomainPackage.DOMAIN__PATTERNS:
                 getPatterns().clear();
                 return;
+            case DomainPackage.DOMAIN__JAVA_UDI_INDICATOR_PARAMETER:
+                getJavaUDIIndicatorParameter().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -280,6 +315,8 @@ public class DomainImpl extends NamespaceImpl implements Domain {
                 return ranges != null && !ranges.isEmpty();
             case DomainPackage.DOMAIN__PATTERNS:
                 return patterns != null && !patterns.isEmpty();
+            case DomainPackage.DOMAIN__JAVA_UDI_INDICATOR_PARAMETER:
+                return javaUDIIndicatorParameter != null && !javaUDIIndicatorParameter.isEmpty();
         }
         return super.eIsSet(featureID);
     }

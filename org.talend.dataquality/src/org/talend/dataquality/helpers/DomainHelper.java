@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
+import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
 import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.RealNumberValue;
@@ -224,6 +225,21 @@ public final class DomainHelper {
         rangeRestriction.setLowerValue(createStringValue(null, min));
         rangeRestriction.setUpperValue(createStringValue(null, max));
         return rangeRestriction;
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "createJavaUDIIndicatorParameter".
+     * 
+     * @param key
+     * @param value
+     * @return
+     */
+    public static JavaUDIIndicatorParameter createJavaUDIIndicatorParameter(String key, String value) {
+        JavaUDIIndicatorParameter javaUDIIndicatorParameter = DOMAIN.createJavaUDIIndicatorParameter();
+        javaUDIIndicatorParameter.setKey(key);
+        javaUDIIndicatorParameter.setValue(value);
+        return javaUDIIndicatorParameter;
     }
 
     public static TextValue createStringValue(String meaning, String value) {

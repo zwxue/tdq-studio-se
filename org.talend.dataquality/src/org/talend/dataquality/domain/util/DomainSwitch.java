@@ -173,6 +173,13 @@ public class DomainSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case DomainPackage.JAVA_UDI_INDICATOR_PARAMETER: {
+                JavaUDIIndicatorParameter javaUDIIndicatorParameter = (JavaUDIIndicatorParameter)theEObject;
+                T result = caseJavaUDIIndicatorParameter(javaUDIIndicatorParameter);
+                if (result == null) result = caseModel_ModelElement(javaUDIIndicatorParameter);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -328,6 +335,21 @@ public class DomainSwitch<T> {
     }
 
     /**
+     * Returns the result of interpreting the object as an instance of '<em>Java UDI Indicator Parameter</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Java UDI Indicator Parameter</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseJavaUDIIndicatorParameter(JavaUDIIndicatorParameter object) {
+        return null;
+    }
+
+    /**
      * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
@@ -369,6 +391,21 @@ public class DomainSwitch<T> {
      * @generated
      */
     public T caseNamespace(Namespace object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Element</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseModel_ModelElement(orgomg.mof.model.ModelElement object) {
         return null;
     }
 

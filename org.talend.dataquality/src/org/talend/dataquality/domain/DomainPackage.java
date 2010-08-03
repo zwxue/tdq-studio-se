@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import orgomg.cwm.objectmodel.core.CorePackage;
+import orgomg.mof.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -287,13 +288,22 @@ public interface DomainPackage extends EPackage {
     int DOMAIN__PATTERNS = CorePackage.NAMESPACE_FEATURE_COUNT + 3;
 
     /**
+     * The feature id for the '<em><b>Java UDI Indicator Parameter</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOMAIN__JAVA_UDI_INDICATOR_PARAMETER = CorePackage.NAMESPACE_FEATURE_COUNT + 4;
+
+    /**
      * The number of structural features of the '<em>Domain</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOMAIN_FEATURE_COUNT = CorePackage.NAMESPACE_FEATURE_COUNT + 4;
+    int DOMAIN_FEATURE_COUNT = CorePackage.NAMESPACE_FEATURE_COUNT + 5;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.domain.impl.EnumerationRuleImpl <em>Enumeration Rule</em>}' class.
@@ -792,6 +802,71 @@ public interface DomainPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.domain.impl.JavaUDIIndicatorParameterImpl <em>Java UDI Indicator Parameter</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.domain.impl.JavaUDIIndicatorParameterImpl
+     * @see org.talend.dataquality.domain.impl.DomainPackageImpl#getJavaUDIIndicatorParameter()
+     * @generated
+     */
+    int JAVA_UDI_INDICATOR_PARAMETER = 10;
+
+    /**
+     * The feature id for the '<em><b>Modeled Graph Subset</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_UDI_INDICATOR_PARAMETER__MODELED_GRAPH_SUBSET = ModelPackage.MODEL_ELEMENT__MODELED_GRAPH_SUBSET;
+
+    /**
+     * The feature id for the '<em><b>Modeled Projection</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_UDI_INDICATOR_PARAMETER__MODELED_PROJECTION = ModelPackage.MODEL_ELEMENT__MODELED_PROJECTION;
+
+    /**
+     * The feature id for the '<em><b>Modeled Semantic Context</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_UDI_INDICATOR_PARAMETER__MODELED_SEMANTIC_CONTEXT = ModelPackage.MODEL_ELEMENT__MODELED_SEMANTIC_CONTEXT;
+
+    /**
+     * The feature id for the '<em><b>Key</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_UDI_INDICATOR_PARAMETER__KEY = ModelPackage.MODEL_ELEMENT_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_UDI_INDICATOR_PARAMETER__VALUE = ModelPackage.MODEL_ELEMENT_FEATURE_COUNT + 1;
+
+    /**
+     * The number of structural features of the '<em>Java UDI Indicator Parameter</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_UDI_INDICATOR_PARAMETER_FEATURE_COUNT = ModelPackage.MODEL_ELEMENT_FEATURE_COUNT + 2;
+
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.domain.Domain <em>Domain</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -844,6 +919,17 @@ public interface DomainPackage extends EPackage {
      * @generated
      */
     EReference getDomain_Patterns();
+
+    /**
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.domain.Domain#getJavaUDIIndicatorParameter <em>Java UDI Indicator Parameter</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Java UDI Indicator Parameter</em>'.
+     * @see org.talend.dataquality.domain.Domain#getJavaUDIIndicatorParameter()
+     * @see #getDomain()
+     * @generated
+     */
+    EReference getDomain_JavaUDIIndicatorParameter();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.domain.EnumerationRule <em>Enumeration Rule</em>}'.
@@ -1068,6 +1154,38 @@ public interface DomainPackage extends EPackage {
     EAttribute getDateValue_Value();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.domain.JavaUDIIndicatorParameter <em>Java UDI Indicator Parameter</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Java UDI Indicator Parameter</em>'.
+     * @see org.talend.dataquality.domain.JavaUDIIndicatorParameter
+     * @generated
+     */
+    EClass getJavaUDIIndicatorParameter();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.domain.JavaUDIIndicatorParameter#getKey <em>Key</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Key</em>'.
+     * @see org.talend.dataquality.domain.JavaUDIIndicatorParameter#getKey()
+     * @see #getJavaUDIIndicatorParameter()
+     * @generated
+     */
+    EAttribute getJavaUDIIndicatorParameter_Key();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.domain.JavaUDIIndicatorParameter#getValue <em>Value</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Value</em>'.
+     * @see org.talend.dataquality.domain.JavaUDIIndicatorParameter#getValue()
+     * @see #getJavaUDIIndicatorParameter()
+     * @generated
+     */
+    EAttribute getJavaUDIIndicatorParameter_Value();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1130,6 +1248,14 @@ public interface DomainPackage extends EPackage {
          * @generated
          */
         EReference DOMAIN__PATTERNS = eINSTANCE.getDomain_Patterns();
+
+        /**
+         * The meta object literal for the '<em><b>Java UDI Indicator Parameter</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference DOMAIN__JAVA_UDI_INDICATOR_PARAMETER = eINSTANCE.getDomain_JavaUDIIndicatorParameter();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.domain.impl.EnumerationRuleImpl <em>Enumeration Rule</em>}' class.
@@ -1316,6 +1442,32 @@ public interface DomainPackage extends EPackage {
          * @generated
          */
         EAttribute DATE_VALUE__VALUE = eINSTANCE.getDateValue_Value();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.domain.impl.JavaUDIIndicatorParameterImpl <em>Java UDI Indicator Parameter</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.domain.impl.JavaUDIIndicatorParameterImpl
+         * @see org.talend.dataquality.domain.impl.DomainPackageImpl#getJavaUDIIndicatorParameter()
+         * @generated
+         */
+        EClass JAVA_UDI_INDICATOR_PARAMETER = eINSTANCE.getJavaUDIIndicatorParameter();
+
+        /**
+         * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute JAVA_UDI_INDICATOR_PARAMETER__KEY = eINSTANCE.getJavaUDIIndicatorParameter_Key();
+
+        /**
+         * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute JAVA_UDI_INDICATOR_PARAMETER__VALUE = eINSTANCE.getJavaUDIIndicatorParameter_Value();
 
     }
 

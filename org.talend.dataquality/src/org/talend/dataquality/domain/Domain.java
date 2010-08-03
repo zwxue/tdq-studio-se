@@ -23,6 +23,7 @@ import orgomg.cwm.objectmodel.core.Namespace;
  *   <li>{@link org.talend.dataquality.domain.Domain#getLengthRestriction <em>Length Restriction</em>}</li>
  *   <li>{@link org.talend.dataquality.domain.Domain#getRanges <em>Ranges</em>}</li>
  *   <li>{@link org.talend.dataquality.domain.Domain#getPatterns <em>Patterns</em>}</li>
+ *   <li>{@link org.talend.dataquality.domain.Domain#getJavaUDIIndicatorParameter <em>Java UDI Indicator Parameter</em>}</li>
  * </ul>
  * </p>
  *
@@ -104,5 +105,21 @@ public interface Domain extends Namespace {
      * @generated
      */
     EList<Pattern> getPatterns();
+
+    /**
+     * Returns the value of the '<em><b>Java UDI Indicator Parameter</b></em>' containment reference list.
+     * The list contents are of type {@link org.talend.dataquality.domain.JavaUDIIndicatorParameter}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Java UDI Indicator Parameter</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Java UDI Indicator Parameter</em>' containment reference list.
+     * @see org.talend.dataquality.domain.DomainPackage#getDomain_JavaUDIIndicatorParameter()
+     * @model containment="true"
+     * @generated
+     */
+    EList<JavaUDIIndicatorParameter> getJavaUDIIndicatorParameter();
 
 } // Domain
