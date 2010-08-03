@@ -62,6 +62,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -469,6 +470,11 @@ public class ColumnViewerDND {
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
             if (firstElement instanceof IFile) {
                 IFile fe = (IFile) firstElement;
+                // MOD qiongli 2010-8-3 bug 14579:If it is systemIndicator,it is not to be darg.
+                if (fe.getProjectRelativePath().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getPath())) {
+                    event.detail = DND.DROP_NONE;
+                    return;
+                }
                 if (FactoriesUtil.DEFINITION.equals(fe.getFileExtension())) {
                     IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findIndDefinition(fe);
                     // MOD yyi 2009-09-16
