@@ -593,6 +593,7 @@
             ecoreFeature="ecore:EReference dataquality.ecore#//domain/Domain/ranges"/>
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
             ecoreFeature="ecore:EReference dataquality.ecore#//domain/Domain/patterns"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//domain/Domain/javaUDIIndicatorParameter"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//domain/EnumerationRule">
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
@@ -627,6 +628,10 @@
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//domain/DateValue">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//domain/DateValue/value"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//domain/JavaUDIIndicatorParameter">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//domain/JavaUDIIndicatorParameter/key"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//domain/JavaUDIIndicatorParameter/value"/>
       </genClasses>
       <nestedGenPackages prefix="Pattern" basePackage="org.talend.dataquality.domain"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//domain/pattern">
