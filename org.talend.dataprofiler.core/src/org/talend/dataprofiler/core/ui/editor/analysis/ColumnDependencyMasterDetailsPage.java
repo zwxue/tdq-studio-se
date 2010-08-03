@@ -31,6 +31,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -50,7 +51,8 @@ import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -208,7 +210,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     protected void saveAnalysis() throws DataprofilerCoreException {
         getAnalysisHandler().clearAnalysis();
 
-        List<ModelElement> analysedElements = new ArrayList<ModelElement>();
         List<TdColumn> columnListA = anaColumnCompareViewer.getColumnListA();
         List<TdColumn> columnListB = anaColumnCompareViewer.getColumnListB();
 
@@ -230,7 +231,12 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
         if (columnListA.size() > 0) {
             Connection tdDataProvider = DataProviderHelper.getTdDataProvider(columnListA.get(0));
+            // MOD qiongli bug 14437::Add dependency
             analysis.getContext().setConnection(tdDataProvider);
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
+            if (!rc.isOk()) {
+                log.info("fail to save dependency analysis:" + analysis.getFileName());
+            }
         } else {
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();

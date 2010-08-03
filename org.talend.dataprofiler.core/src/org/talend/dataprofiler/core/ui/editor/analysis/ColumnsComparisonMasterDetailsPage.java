@@ -32,6 +32,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -52,6 +53,8 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -247,6 +250,12 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         if (analysedElements.size() > 0) {
             Connection tdDataProvider = DataProviderHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
             analysis.getContext().setConnection(tdDataProvider);
+            // MOD qiongli bug 14437:Add dependency
+            analysis.getContext().setConnection(tdDataProvider);
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
+            if (!rc.isOk()) {
+                log.info("fail to save dependency analysis:" + analysis.getFileName());
+            }
         } else {
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
