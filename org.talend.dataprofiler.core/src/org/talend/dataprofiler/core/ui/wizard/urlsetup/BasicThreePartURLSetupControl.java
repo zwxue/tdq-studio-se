@@ -295,6 +295,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.datafilter"));
             dataFilterCombo = new Combo(parent, SWT.READ_ONLY);
             dataFilterCombo.setEnabled(false);
+            dataFilterCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             dataFilterCombo.addSelectionListener(new SelectionAdapter() {
 
                 @Override
