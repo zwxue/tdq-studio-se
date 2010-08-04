@@ -50,6 +50,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.api.ConnectionService;
@@ -145,8 +146,8 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             }
 
             if (connection != null) {
-                String dbUrl = ConnectionHelper.getURL(connection);
-                String driverClassName = ConnectionHelper.getDriverClass(connection);
+                String dbUrl = ConnectionUtils.getURL(connection);
+                String driverClassName = ConnectionUtils.getDriverClass(connection);
                 EList<EObject> pcObjects = connection.eContents();
                 ListIterator<EObject> liEObject = pcObjects.listIterator();
 

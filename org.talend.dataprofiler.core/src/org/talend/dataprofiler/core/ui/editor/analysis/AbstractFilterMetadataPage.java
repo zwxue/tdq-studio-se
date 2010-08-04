@@ -66,6 +66,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -453,7 +454,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         Composite rightComp = new Composite(sumSectionClient, SWT.NONE);
         rightComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(rightComp);
-        String connectionStr = ConnectionHelper.getURL(tdDataProvider);
+        String connectionStr = ConnectionUtils.getURL(tdDataProvider);
         Properties pameterProperties = SupportDBUrlStore.getInstance().getDBPameterProperties(connectionStr);
         String labelContent = pameterProperties.getProperty(org.talend.dq.PluginConstant.DBTYPE_PROPERTY);
         Label leftLabel = new Label(leftComp, SWT.NONE);
@@ -471,7 +472,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        labelContent = ConnectionHelper.getUsername(tdDataProvider);
+        labelContent = ConnectionUtils.getUsername(tdDataProvider);
         leftLabel
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());

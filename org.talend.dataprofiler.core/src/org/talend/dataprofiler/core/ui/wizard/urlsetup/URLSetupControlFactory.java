@@ -52,6 +52,15 @@ public class URLSetupControlFactory {
         }
     }
 
+    /**
+     * DOC xqliu Comment method "createEditControl".
+     * 
+     * @param dbType
+     * @param composite
+     * @param connection
+     * @param parameter
+     * @return
+     */
     public static URLSetupControl createEditControl(SupportDBUrlType dbType, Composite composite, Connection connection,
             DBConnectionParameter parameter) {
 

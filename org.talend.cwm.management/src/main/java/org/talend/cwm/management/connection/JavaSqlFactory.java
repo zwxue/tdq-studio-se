@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
@@ -105,15 +104,15 @@ public final class JavaSqlFactory {
      */
     public static TypedReturnCode<java.sql.Connection> createConnection(Connection connection) {
         TypedReturnCode<java.sql.Connection> rc = new TypedReturnCode<java.sql.Connection>(false);
-        String url = ConnectionHelper.getURL(connection);
+        String url = ConnectionUtils.getURL(connection);
         if (url == null) {
             rc.setMessage(Messages.getString("JavaSqlFactory.DatabaseConnectionNull")); //$NON-NLS-1$
             rc.setOk(false);
         }
-        String driverClassName = ConnectionHelper.getDriverClass(connection);
+        String driverClassName = ConnectionUtils.getDriverClass(connection);
         Properties props = new Properties();
-        props.put(TaggedValueHelper.USER, ConnectionHelper.getUsername(connection));
-        props.put(TaggedValueHelper.PASSWORD, ConnectionHelper.getPassword(connection));
+        props.put(TaggedValueHelper.USER, ConnectionUtils.getUsername(connection));
+        props.put(TaggedValueHelper.PASSWORD, ConnectionUtils.getPassword(connection));
         try {
             java.sql.Connection sqlConnection = ConnectionUtils.createConnection(url, driverClassName, props);
             rc.setObject(sqlConnection);

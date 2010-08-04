@@ -44,6 +44,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
@@ -600,14 +601,255 @@ public final class ConnectionUtils {
      * @return the database type string or null
      */
     public static String getDatabaseType(Connection connection) {
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(connection);
+        if (mdmConn != null) {
+            return SupportDBUrlType.MDM.getDBKey();
+        }
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn != null) {
             return dbConn.getDatabaseType();
         }
-        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(connection);
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "getUsername".
+     * 
+     * @param conn
+     * @return
+     */
+    public static String getUsername(Connection conn) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            return dbConn.getUsername();
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
-            return SupportDBUrlType.MDM.getDBName();
+            return mdmConn.getUsername();
         }
         return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "setUsername".
+     * 
+     * @param conn
+     * @param username
+     */
+    public static void setUsername(Connection conn, String username) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConn.setUsername(username);
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            mdmConn.setUsername(username);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getPassword".
+     * 
+     * @param conn
+     * @return
+     */
+    public static String getPassword(Connection conn) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            return dbConn.getPassword();
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            return mdmConn.getPassword();
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "setPassword".
+     * 
+     * @param conn
+     * @param password
+     */
+    public static void setPassword(Connection conn, String password) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConn.setPassword(ConnectionHelper.getEncryptPassword(password));
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            mdmConn.setPassword(ConnectionHelper.getEncryptPassword(password));
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getDriverClass".
+     * 
+     * @param conn
+     * @return
+     */
+    public static String getDriverClass(Connection conn) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            return dbConn.getDriverClass();
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            return "";
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "setDriverClass".
+     * 
+     * @param conn
+     * @param driverClass
+     */
+    public static void setDriverClass(Connection conn, String driverClass) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConn.setDriverClass(driverClass);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getURL".
+     * 
+     * @param conn
+     * @return
+     */
+    public static String getURL(Connection conn) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            return dbConn.getURL();
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            return mdmConn.getPathname();
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "setURL".
+     * 
+     * @param conn
+     * @param url
+     */
+    public static void setURL(Connection conn, String url) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConn.setURL(url);
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            mdmConn.setPathname(url);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getServerName".
+     * 
+     * @param conn
+     * @return
+     */
+    public static String getServerName(Connection conn) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            return dbConn.getServerName();
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            return mdmConn.getServer();
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "setServerName".
+     * 
+     * @param conn
+     * @param serverName
+     */
+    public static void setServerName(Connection conn, String serverName) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConn.setServerName(serverName);
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            mdmConn.setServer(serverName);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getPort".
+     * 
+     * @param conn
+     * @return
+     */
+    public static String getPort(Connection conn) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            return dbConn.getPort();
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            return mdmConn.getPort();
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "setPort".
+     * 
+     * @param conn
+     * @param port
+     */
+    public static void setPort(Connection conn, String port) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConn.setPort(port);
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            mdmConn.setPort(port);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getSID".
+     * 
+     * @param conn
+     * @return
+     */
+    public static String getSID(Connection conn) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            return dbConn.getSID();
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            return mdmConn.getContext();
+        }
+        return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "setSID".
+     * 
+     * @param conn
+     * @param sid
+     */
+    public static void setSID(Connection conn, String sid) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConn.setSID(sid);
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            mdmConn.setContext(sid);
+        }
     }
 }

@@ -39,7 +39,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -194,7 +194,7 @@ public class CorePlugin extends AbstractUIPlugin {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
                 if (connection != null) {
-                    String userName = ConnectionHelper.getUsername(connection);
+                    String userName = ConnectionUtils.getUsername(connection);
                     SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
                     input.setUser(alias.getUser(userName));
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();

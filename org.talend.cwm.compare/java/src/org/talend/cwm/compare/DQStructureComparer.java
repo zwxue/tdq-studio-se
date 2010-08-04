@@ -265,11 +265,11 @@ public final class DQStructureComparer {
         TypedReturnCode<Connection> returnProvider = new TypedReturnCode<Connection>();
         boolean mdm = ConnectionUtils.isMdmConnection(prevDataProvider);
         // ~11951
-        String urlString = ConnectionHelper.getURL(prevDataProvider);
-        String driverClassName = ConnectionHelper.getDriverClass(prevDataProvider);
+        String urlString = ConnectionUtils.getURL(prevDataProvider);
+        String driverClassName = ConnectionUtils.getDriverClass(prevDataProvider);
         Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.USER, ConnectionHelper.getUsername(prevDataProvider));
-        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionHelper.getPassword(prevDataProvider));
+        properties.setProperty(TaggedValueHelper.USER, ConnectionUtils.getUsername(prevDataProvider));
+        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionUtils.getPassword(prevDataProvider));
         DBConnectionParameter connectionParameters = new DBConnectionParameter();
 
         connectionParameters.setName(prevDataProvider.getName());
@@ -282,7 +282,7 @@ public final class DQStructureComparer {
         connectionParameters.setDriverClassName(driverClassName);
         connectionParameters.setParameters(properties);
         // ADD xqliu 2010-03-04 feature 11412
-        connectionParameters.setDbName(ConnectionHelper.getSID(prevDataProvider));
+        connectionParameters.setDbName(ConnectionUtils.getSID(prevDataProvider));
         connectionParameters.setRetrieveAllMetadata(ConnectionHelper.getRetrieveAllMetadata(prevDataProvider));
         // ~11412
         // MOD xqliu 2010-03-29 bug 11951

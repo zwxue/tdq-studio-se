@@ -38,8 +38,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
@@ -438,7 +438,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         // MOD mzhao xmldb have no actual connection.
         // TODO Handle details view.
         if (dataProvider != null) {
-            String connectionString = ConnectionHelper.getURL(dataProvider);
+            String connectionString = ConnectionUtils.getURL(dataProvider);
             newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
         }
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);

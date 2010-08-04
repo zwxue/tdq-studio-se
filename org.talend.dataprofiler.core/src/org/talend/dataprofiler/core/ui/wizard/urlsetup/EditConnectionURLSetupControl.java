@@ -70,6 +70,13 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
         // TODO Auto-generated constructor stub
     }
 
+    /**
+     * DOC xqliu EditConnectionURLSetupControl constructor comment.
+     * 
+     * @param parent
+     * @param dbType
+     * @param connection
+     */
     public EditConnectionURLSetupControl(Composite parent, SupportDBUrlType dbType, Connection connection) {
         super(parent, dbType);
         this.connection = connection;
@@ -309,7 +316,8 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.universe")); //$NON-NLS-1$
             final Text universeText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             universeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            universeText.setText(connectionParam.getParameters().getProperty(TaggedValueHelper.UNIVERSE));
+            universeText.setText(connectionParam.getParameters().getProperty(TaggedValueHelper.UNIVERSE) == null ? ""
+                    : connectionParam.getParameters().getProperty(TaggedValueHelper.UNIVERSE));
 
             label = new Label(parent, SWT.NONE);
             label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.url")); //$NON-NLS-1$

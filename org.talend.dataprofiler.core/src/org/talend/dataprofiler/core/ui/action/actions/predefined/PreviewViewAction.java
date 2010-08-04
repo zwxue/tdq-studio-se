@@ -26,6 +26,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -70,7 +71,7 @@ public class PreviewViewAction extends Action {
         SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
         Collection<Alias> aliases = default1.getAliasManager().getAliases();
         Connection tdDataProvider = ConnectionHelper.getDataProvider(view);
-        String url = ConnectionHelper.getURL(tdDataProvider);
+        String url = ConnectionUtils.getURL(tdDataProvider);
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
                 String qualifiedName = getTableQualifiedName(tdDataProvider);

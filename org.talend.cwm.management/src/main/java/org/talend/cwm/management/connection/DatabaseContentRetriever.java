@@ -38,7 +38,6 @@ import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
@@ -481,7 +480,7 @@ public final class DatabaseContentRetriever {
                 if (TaggedValueHelper.PASSWORD.equals(prop.name)) {
                     // MOD scorreia 2010-07-24 store password in data provider
                     String password = prop.value != null ? prop.value : "";
-                    ConnectionHelper.setPassword(provider, password);
+                    ConnectionUtils.setPassword(provider, password);
                     // ~
                     continue;
                 }
@@ -489,7 +488,7 @@ public final class DatabaseContentRetriever {
                 // MOD scorreia 2010-07-24 store username in data provider
                 if (TaggedValueHelper.USER.equals(prop.name)) {
                     String user = prop.value != null ? prop.value : "";
-                    ConnectionHelper.setUsername(provider, user);
+                    ConnectionUtils.setUsername(provider, user);
                 }
                 // ~
 

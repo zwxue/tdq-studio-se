@@ -167,11 +167,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         passwordText = new Text(sectionClient, SWT.BORDER | SWT.PASSWORD);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
-        String loginValue = ConnectionHelper.getUsername(tdDataProvider);
+        String loginValue = ConnectionUtils.getUsername(tdDataProvider);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
 
         // MOD scorreia 2009-01-09 handle encrypted password
-        String passwordValue = ConnectionHelper.getPassword(tdDataProvider);
+        String passwordValue = ConnectionUtils.getPassword(tdDataProvider);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
@@ -185,7 +185,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         GridDataFactory.fillDefaults().grab(true, true).applyTo(urlComp);
         urlText = new Text(urlComp, SWT.BORDER | SWT.READ_ONLY);
         GridDataFactory.fillDefaults().hint(100, -1).grab(true, true).applyTo(urlText);
-        String urlValue = ConnectionHelper.getURL(tdDataProvider);
+        String urlValue = ConnectionUtils.getURL(tdDataProvider);
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
         // urlText.setEnabled(false);
 
@@ -200,7 +200,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         });
 
-        if (ConnectionHelper.getDriverClass(tdDataProvider).startsWith("org.sqlite")) { //$NON-NLS-1$
+        if (ConnectionUtils.getDriverClass(tdDataProvider).startsWith("org.sqlite")) { //$NON-NLS-1$
             loginText.setEnabled(false);
             passwordText.setEnabled(false);
         }
@@ -314,9 +314,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      */
     private void updateConnection(DBConnectionParameter targetParam) {
         if (tdDataProvider != null) {
-            ConnectionHelper.setServerName(tdDataProvider, targetParam.getHost());
-            ConnectionHelper.setPort(tdDataProvider, targetParam.getPort());
-            ConnectionHelper.setSID(tdDataProvider, targetParam.getDbName());
+            ConnectionUtils.setServerName(tdDataProvider, targetParam.getHost());
+            ConnectionUtils.setPort(tdDataProvider, targetParam.getPort());
+            ConnectionUtils.setSID(tdDataProvider, targetParam.getDbName());
         }
     }
 
@@ -338,9 +338,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         }
         props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse(tdDataProvider2));
         props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter(tdDataProvider2));
-        ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(ConnectionHelper
+        ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(ConnectionUtils
                 .getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionService.checkConnection(this.urlText
-                .getText(), ConnectionHelper.getDriverClass(tdDataProvider2), props);
+                .getText(), ConnectionUtils.getDriverClass(tdDataProvider2), props);
         // ~
         return returnCode;
     }
@@ -467,12 +467,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     @Override
     protected void saveTextChange() {
         super.saveTextChange();
-        ConnectionHelper.setUsername(tdDataProvider, loginText.getText());
-        ConnectionHelper.setPassword(tdDataProvider, passwordText.getText());
-        ConnectionHelper.setURL(tdDataProvider, urlText.getText());
+        ConnectionUtils.setUsername(tdDataProvider, loginText.getText());
+        ConnectionUtils.setPassword(tdDataProvider, passwordText.getText());
+        ConnectionUtils.setURL(tdDataProvider, urlText.getText());
         // MOD zshen for bug 12327:to save driverClassName.
         if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {
-            ConnectionHelper.setDriverClass(tdDataProvider, tmpParam.getDriverClassName());
+            ConnectionUtils.setDriverClass(tdDataProvider, tmpParam.getDriverClassName());
         }
         // ~12327
     }

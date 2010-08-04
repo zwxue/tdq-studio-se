@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -55,7 +55,7 @@ public final class SqlExplorerBridge {
         // Open data explore perspective.
         new ChangePerspectiveAction(PluginConstant.SE_ID).run();
         Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
-        String url = ConnectionHelper.getURL(providerConnection);
+        String url = ConnectionUtils.getURL(providerConnection);
         User currentUser = null;
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {

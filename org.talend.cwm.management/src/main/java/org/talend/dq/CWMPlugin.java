@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
 import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -85,14 +85,14 @@ public class CWMPlugin extends Plugin {
 
                     Alias alias = new Alias(dataProvider.getName());
 
-                    String clearTextUser = ConnectionHelper.getUsername(connection);
+                    String clearTextUser = ConnectionUtils.getUsername(connection);
                     String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
-                    String password = ConnectionHelper.getPassword(connection);
+                    String password = ConnectionUtils.getPassword(connection);
                     // MOD scorreia 2010-07-24 set empty string instead of null password so that database xml file is
                     // serialized correctly.
                     assert password != null;
 
-                    String url = ConnectionHelper.getURL(connection);
+                    String url = ConnectionUtils.getURL(connection);
 
                     User previousUser = new User(user, password);
                     alias.setDefaultUser(previousUser);
@@ -102,7 +102,7 @@ public class CWMPlugin extends Plugin {
                     alias.setUrl(url);
 
                     ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
-                            EDriverName.getId(ConnectionHelper.getDriverClass(connection)));
+                            EDriverName.getId(ConnectionUtils.getDriverClass(connection)));
 
                     if (manDr != null) {
                         alias.setDriver(manDr);

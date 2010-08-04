@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.FolderProvider;
@@ -184,13 +185,13 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         if (cwmElement instanceof DataProvider) {
             Connection dataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(cwmElement);
             if (dataProvider != null) {
-                ConnectionHelper.setServerName(dataProvider, getParameter().getHost());
-                ConnectionHelper.setPort(dataProvider, getParameter().getPort());
+                ConnectionUtils.setServerName(dataProvider, getParameter().getHost());
+                ConnectionUtils.setPort(dataProvider, getParameter().getPort());
                 DatabaseConnection dbConnection = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
                 if (dbConnection != null) {
                     dbConnection.setDatabaseType(getParameter().getSqlTypeName());
                 }
-                ConnectionHelper.setSID(dataProvider, getParameter().getDbName());
+                ConnectionUtils.setSID(dataProvider, getParameter().getDbName());
                 // ADD xqliu 2010-03-03 feature 11412
                 ConnectionHelper.setRetrieveAllMetadata(getParameter().isRetrieveAllMetadata(), dataProvider);
             } else {
