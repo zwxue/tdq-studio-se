@@ -49,6 +49,7 @@ import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -215,6 +216,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(this.analysis);
+        Connection tdDataProvider = null;
 
         for (int i = 0; i < columnListA.size(); i++) {
             if (columnListB.size() > i) {
@@ -230,8 +232,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         }
 
         if (columnListA.size() > 0) {
-            Connection tdDataProvider = DataProviderHelper.getTdDataProvider(columnListA.get(0));
-            // MOD qiongli bug 14437::Add dependency
+            tdDataProvider = DataProviderHelper.getTdDataProvider(columnListA.get(0));
+            // MOD qiongli bug 14437:Add dependency
             analysis.getContext().setConnection(tdDataProvider);
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
             if (!rc.isOk()) {
@@ -246,6 +248,10 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         // ~ 14014
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
+            // MOD qiongli bug 14437: save dependency
+            if (tdDataProvider != null) {
+                PrvResourceFileHelper.getInstance().save(tdDataProvider);
+            }
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }
 

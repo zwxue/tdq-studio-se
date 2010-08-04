@@ -50,6 +50,7 @@ import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -241,6 +242,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 anaColumnCompareViewer.getColumnListB());
         anaColumnCompareViewer.setColumnABForMatchingIndicator(rowMatchingIndicatorB, anaColumnCompareViewer.getColumnListB(),
                 anaColumnCompareViewer.getColumnListA());
+        Connection tdDataProvider = null;
         for (int i = 0; i < anaColumnCompareViewer.getColumnListA().size(); i++) {
             analysedElements.add(anaColumnCompareViewer.getColumnListA().get(i));
         }
@@ -248,7 +250,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             analysedElements.add(anaColumnCompareViewer.getColumnListB().get(i));
         }
         if (analysedElements.size() > 0) {
-            Connection tdDataProvider = DataProviderHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
+            tdDataProvider = DataProviderHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
             analysis.getContext().setConnection(tdDataProvider);
             // MOD qiongli bug 14437:Add dependency
             analysis.getContext().setConnection(tdDataProvider);
@@ -276,6 +278,10 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         // ~ 14014
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
+            // MOD qiongli bug 14437:Add dependency
+            if (tdDataProvider != null) {
+                PrvResourceFileHelper.getInstance().save(tdDataProvider);
+            }
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }
 
