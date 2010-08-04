@@ -329,12 +329,19 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (null == tmpParam) {
             tdDataProvider2 = tdDataProvider;
         } else {
-            TypedReturnCode<Connection> typedRC = ConnectionService.createConnection(tmpParam);
-            if (!typedRC.isOk()) {
-                return typedRC;
+            // MOD xqliu 2010-08-04 bug 13406
+            if (ConnectionUtils.isMdmConnection(tdDataProvider)) {
+                tdDataProvider2 = tdDataProvider;
+                ConnectionUtils.setURL(tdDataProvider2, this.urlText.getText());
             } else {
-                tdDataProvider2 = ConnectionService.createConnection(tmpParam).getObject();
+                TypedReturnCode<Connection> typedRC = ConnectionService.createConnection(tmpParam);
+                if (!typedRC.isOk()) {
+                    return typedRC;
+                } else {
+                    tdDataProvider2 = typedRC.getObject();
+                }
             }
+            // ~ 13406
         }
         props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse(tdDataProvider2));
         props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter(tdDataProvider2));
