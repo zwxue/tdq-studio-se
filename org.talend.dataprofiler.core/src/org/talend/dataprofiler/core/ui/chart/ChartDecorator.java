@@ -66,6 +66,11 @@ public final class ChartDecorator {
                 int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
 
                 for (int i = 0; i < rowCount; i++) {
+                    // by zshen bug 14173 add the color in the colorList when chart neend more the color than 8.
+                    if (i >= colorList.size()) {
+                        colorList.add(generalRandomColor());
+                    }
+                    // ~14173
                     ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, colorList.get(i));
                 }
 
