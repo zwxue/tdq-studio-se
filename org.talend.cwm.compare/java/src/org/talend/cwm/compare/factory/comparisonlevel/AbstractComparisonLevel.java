@@ -43,13 +43,13 @@ import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.util.RelationalSwitch;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.util.CoreSwitch;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -69,7 +69,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     protected DiffSwitch<ReferenceChangeLeftTarget> addReferenceValueSwitch;
 
-    protected RelationalSwitch<Package> packageSwitch;
+    // MOD klliu bug 14689 2010-08-04
+    protected CoreSwitch<Package> packageSwitch;
 
     protected UpdateTdRelationalSwitch updateRelationalStructSwitch = new UpdateTdRelationalSwitch();
 
@@ -142,7 +143,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
         };
 
-        packageSwitch = new RelationalSwitch<Package>() {
+        packageSwitch = new CoreSwitch<Package>() {
 
             public Package casePackage(Package object) {
                 return object;
