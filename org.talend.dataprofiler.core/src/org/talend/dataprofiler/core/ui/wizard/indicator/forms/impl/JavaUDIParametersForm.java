@@ -52,7 +52,7 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
- * DOC Administrator class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment figure 13429 2010-08-03
  */
 public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
@@ -67,7 +67,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     private Table table;
 
     /**
-     * DOC Administrator JavaUDIParametersForm constructor comment.
+     * DOC klliu JavaUDIParametersForm constructor comment.
      * 
      * @param parent
      * @param style
@@ -229,7 +229,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     }
 
     /**
-     * DOC klliu class global comment. Detailled comment
+     * DOC klliu class global comment. Detailled comment figure 13429 2010-08-03
      */
     private class NewRowAction extends Action {
 
@@ -246,7 +246,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     }
 
     /**
-     * DOC klliu class global comment. Detailled comment
+     * DOC klliu class global comment. Detailled comment figure 13429 2010-08-03
      */
     private class DelRowAction extends Action {
 
@@ -265,6 +265,12 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
         }
     }
 
+    /**
+     * 
+     * DOC klliu Comment method "attachLabelProvider". figure 13429 2010-08-03
+     * 
+     * @param viewer
+     */
     private void attachLabelProvider(TableViewer viewer) {
         viewer.setLabelProvider(new ITableLabelProvider() {
 
@@ -298,6 +304,12 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
         });
     }
 
+    /**
+     * 
+     * DOC klliu Comment method "attachContentProvider".figure 13429 2010-08-03
+     * 
+     * @param viewer
+     */
     private void attachContentProvider(TableViewer viewer) {
         viewer.setContentProvider(new IStructuredContentProvider() {
 
@@ -313,6 +325,13 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
         });
     }
 
+    /**
+     * 
+     * DOC klliu Comment method "buildAndLayoutTable".figure 13429 2010-08-03
+     * 
+     * @param table
+     * @return
+     */
     private TableViewer buildAndLayoutTable(final Table table) {
         TableViewer tableViewer = new TableViewer(table);
 
@@ -329,6 +348,13 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
         return tableViewer;
     }
 
+    /**
+     * 
+     * DOC klliu Comment method "attachCellEditors".figure 13429 2010-08-03
+     * 
+     * @param viewer
+     * @param parent
+     */
     private void attachCellEditors(final TableViewer viewer, Composite parent) {
         viewer.setCellModifier(new ICellModifier() {
 
