@@ -27,7 +27,7 @@ import org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator;
  * @generated
  */
 public class MaxLengthWithBlankNullIndicatorItemProvider
-    extends LengthIndicatorItemProvider
+    extends MaxLengthIndicatorItemProvider
     implements
         IEditingDomainItemProvider,
         IStructuredItemContentProvider,

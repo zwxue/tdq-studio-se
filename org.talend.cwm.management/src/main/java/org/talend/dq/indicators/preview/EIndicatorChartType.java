@@ -49,7 +49,13 @@ public enum EIndicatorChartType {
     UDI_COUNT(Messages.getString("EIndicatorChartType.UserDefinedCount"), new SimpleStatisticsExplorer()), //$NON-NLS-1$
     UDI_FREQUENCY(Messages.getString("EIndicatorChartType.UserDefinedFrequency"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
     UDI_MATCHING(Messages.getString("EIndicatorChartType.UserDefinedMatching"), new PatternExplorer()), //$NON-NLS-1$
-    UDI_REALVALUE(Messages.getString("EIndicatorChartType.UserDefinedRealValue"), new SimpleStatisticsExplorer()); //$NON-NLS-1$
+    UDI_REALVALUE(Messages.getString("EIndicatorChartType.UserDefinedRealValue"), new SimpleStatisticsExplorer()), //$NON-NLS-1$
+
+    DATE_FREQUENCE_STATISTICS(
+                              Messages.getString("EIndicatorChartType.DateFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    DATE_LOW_FREQUENCE_STATISTICS(
+                                  Messages.getString("EIndicatorChartType.DateLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    SIMPLE_TEXT_STATISTICS(Messages.getString("EIndicatorChartType.SimpleTextStatistics"), new TextStatisticsExplorer()); //$NON-NLS-1$
 
     private String literal;
 

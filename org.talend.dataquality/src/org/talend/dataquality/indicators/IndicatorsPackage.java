@@ -6429,13 +6429,94 @@ public interface IndicatorsPackage extends EPackage {
     int TEXT_INDICATOR__MIN_LENGTH_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 2;
 
     /**
+     * The feature id for the '<em><b>Min Length With Blank Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 3;
+
+    /**
+     * The feature id for the '<em><b>Min Length With Null Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__MIN_LENGTH_WITH_NULL_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 4;
+
+    /**
+     * The feature id for the '<em><b>Min Length With Blank Null Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_NULL_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 5;
+
+    /**
+     * The feature id for the '<em><b>Max Length With Blank Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 6;
+
+    /**
+     * The feature id for the '<em><b>Max Length With Null Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__MAX_LENGTH_WITH_NULL_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 7;
+
+    /**
+     * The feature id for the '<em><b>Max Length With Blank Null Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_NULL_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 8;
+
+    /**
+     * The feature id for the '<em><b>Avg Length With Blank Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 9;
+
+    /**
+     * The feature id for the '<em><b>Avg Length With Null Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__AVG_LENGTH_WITH_NULL_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 10;
+
+    /**
+     * The feature id for the '<em><b>Avg Length With Blank Null Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_NULL_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 11;
+
+    /**
      * The number of structural features of the '<em>Text Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TEXT_INDICATOR_FEATURE_COUNT = COMPOSITE_INDICATOR_FEATURE_COUNT + 3;
+    int TEXT_INDICATOR_FEATURE_COUNT = COMPOSITE_INDICATOR_FEATURE_COUNT + 12;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.LengthIndicatorImpl <em>Length Indicator</em>}' class.
@@ -8296,7 +8377,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__NAME = MAX_LENGTH_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -8305,7 +8386,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__VISIBILITY = MAX_LENGTH_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -8314,7 +8395,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__CLIENT_DEPENDENCY = MAX_LENGTH_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -8323,7 +8404,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__SUPPLIER_DEPENDENCY = MAX_LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -8332,7 +8413,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__CONSTRAINT = MAX_LENGTH_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -8341,7 +8422,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__NAMESPACE = MAX_LENGTH_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -8350,7 +8431,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__IMPORTER = MAX_LENGTH_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -8359,7 +8440,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__STEREOTYPE = MAX_LENGTH_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -8368,7 +8449,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__TAGGED_VALUE = MAX_LENGTH_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -8377,7 +8458,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__DOCUMENT = MAX_LENGTH_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -8386,7 +8467,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__DESCRIPTION = MAX_LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -8395,7 +8476,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__RESPONSIBLE_PARTY = MAX_LENGTH_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -8404,7 +8485,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__ELEMENT_NODE = MAX_LENGTH_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -8413,7 +8494,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__SET = LENGTH_INDICATOR__SET;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__SET = MAX_LENGTH_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -8422,7 +8503,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__RENDERED_OBJECT = MAX_LENGTH_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -8431,7 +8512,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__VOCABULARY_ELEMENT = MAX_LENGTH_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -8440,7 +8521,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__MEASUREMENT = MAX_LENGTH_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -8449,7 +8530,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__CHANGE_REQUEST = MAX_LENGTH_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -8458,7 +8539,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__DASDL_PROPERTY = MAX_LENGTH_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -8467,7 +8548,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__COUNT = MAX_LENGTH_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -8476,7 +8557,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__NULL_COUNT = MAX_LENGTH_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -8485,7 +8566,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__PARAMETERS = MAX_LENGTH_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -8494,7 +8575,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__ANALYZED_ELEMENT = MAX_LENGTH_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -8503,7 +8584,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__DATAMINING_TYPE = MAX_LENGTH_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -8512,7 +8593,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__INDICATOR_DEFINITION = MAX_LENGTH_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -8521,7 +8602,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = MAX_LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -8530,7 +8611,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__COMPUTED = MAX_LENGTH_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -8539,7 +8620,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__JOIN_CONDITIONS = MAX_LENGTH_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -8548,7 +8629,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__MAX_NUMBER_ROWS = MAX_LENGTH_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -8557,7 +8638,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__VALID_ROW = MAX_LENGTH_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -8566,7 +8647,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = MAX_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -8575,7 +8656,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+    int MAX_LENGTH_WITH_NULL_INDICATOR__LENGTH = MAX_LENGTH_INDICATOR__LENGTH;
 
     /**
      * The number of structural features of the '<em>Max Length With Null Indicator</em>' class.
@@ -8584,7 +8665,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_NULL_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+    int MAX_LENGTH_WITH_NULL_INDICATOR_FEATURE_COUNT = MAX_LENGTH_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MaxLengthWithBlankIndicatorImpl <em>Max Length With Blank Indicator</em>}' class.
@@ -8603,7 +8684,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__NAME = MAX_LENGTH_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -8612,7 +8693,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__VISIBILITY = MAX_LENGTH_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -8621,7 +8702,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__CLIENT_DEPENDENCY = MAX_LENGTH_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -8630,7 +8711,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__SUPPLIER_DEPENDENCY = MAX_LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -8639,7 +8720,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__CONSTRAINT = MAX_LENGTH_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -8648,7 +8729,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__NAMESPACE = MAX_LENGTH_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -8657,7 +8738,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__IMPORTER = MAX_LENGTH_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -8666,7 +8747,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__STEREOTYPE = MAX_LENGTH_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -8675,7 +8756,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__TAGGED_VALUE = MAX_LENGTH_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -8684,7 +8765,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__DOCUMENT = MAX_LENGTH_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -8693,7 +8774,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__DESCRIPTION = MAX_LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -8702,7 +8783,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__RESPONSIBLE_PARTY = MAX_LENGTH_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -8711,7 +8792,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__ELEMENT_NODE = MAX_LENGTH_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -8720,7 +8801,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__SET = LENGTH_INDICATOR__SET;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__SET = MAX_LENGTH_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -8729,7 +8810,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__RENDERED_OBJECT = MAX_LENGTH_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -8738,7 +8819,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__VOCABULARY_ELEMENT = MAX_LENGTH_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -8747,7 +8828,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__MEASUREMENT = MAX_LENGTH_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -8756,7 +8837,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__CHANGE_REQUEST = MAX_LENGTH_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -8765,7 +8846,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__DASDL_PROPERTY = MAX_LENGTH_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -8774,7 +8855,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__COUNT = MAX_LENGTH_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -8783,7 +8864,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__NULL_COUNT = MAX_LENGTH_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -8792,7 +8873,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__PARAMETERS = MAX_LENGTH_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -8801,7 +8882,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__ANALYZED_ELEMENT = MAX_LENGTH_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -8810,7 +8891,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__DATAMINING_TYPE = MAX_LENGTH_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -8819,7 +8900,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__INDICATOR_DEFINITION = MAX_LENGTH_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -8828,7 +8909,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__INSTANTIATED_EXPRESSIONS = MAX_LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -8837,7 +8918,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__COMPUTED = MAX_LENGTH_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -8846,7 +8927,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__JOIN_CONDITIONS = MAX_LENGTH_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -8855,7 +8936,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__MAX_NUMBER_ROWS = MAX_LENGTH_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -8864,7 +8945,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__VALID_ROW = MAX_LENGTH_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -8873,7 +8954,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = MAX_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -8882,7 +8963,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__LENGTH = MAX_LENGTH_INDICATOR__LENGTH;
 
     /**
      * The number of structural features of the '<em>Max Length With Blank Indicator</em>' class.
@@ -8891,7 +8972,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+    int MAX_LENGTH_WITH_BLANK_INDICATOR_FEATURE_COUNT = MAX_LENGTH_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MaxLengthWithBlankNullIndicatorImpl <em>Max Length With Blank Null Indicator</em>}' class.
@@ -8910,7 +8991,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NAME = MAX_LENGTH_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -8919,7 +9000,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VISIBILITY = MAX_LENGTH_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -8928,7 +9009,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CLIENT_DEPENDENCY = MAX_LENGTH_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -8937,7 +9018,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__SUPPLIER_DEPENDENCY = MAX_LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -8946,7 +9027,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CONSTRAINT = MAX_LENGTH_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -8955,7 +9036,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NAMESPACE = MAX_LENGTH_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -8964,7 +9045,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__IMPORTER = MAX_LENGTH_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -8973,7 +9054,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__STEREOTYPE = MAX_LENGTH_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -8982,7 +9063,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__TAGGED_VALUE = MAX_LENGTH_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -8991,7 +9072,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DOCUMENT = MAX_LENGTH_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -9000,7 +9081,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DESCRIPTION = MAX_LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -9009,7 +9090,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__RESPONSIBLE_PARTY = MAX_LENGTH_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -9018,7 +9099,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__ELEMENT_NODE = MAX_LENGTH_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -9027,7 +9108,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__SET = LENGTH_INDICATOR__SET;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__SET = MAX_LENGTH_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -9036,7 +9117,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__RENDERED_OBJECT = MAX_LENGTH_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -9045,7 +9126,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VOCABULARY_ELEMENT = MAX_LENGTH_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -9054,7 +9135,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__MEASUREMENT = MAX_LENGTH_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -9063,7 +9144,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__CHANGE_REQUEST = MAX_LENGTH_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -9072,7 +9153,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DASDL_PROPERTY = MAX_LENGTH_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -9081,7 +9162,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__COUNT = MAX_LENGTH_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -9090,7 +9171,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__NULL_COUNT = MAX_LENGTH_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -9099,7 +9180,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__PARAMETERS = MAX_LENGTH_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -9108,7 +9189,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__ANALYZED_ELEMENT = MAX_LENGTH_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -9117,7 +9198,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__DATAMINING_TYPE = MAX_LENGTH_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -9126,7 +9207,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__INDICATOR_DEFINITION = MAX_LENGTH_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -9135,7 +9216,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = MAX_LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -9144,7 +9225,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__COMPUTED = MAX_LENGTH_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -9153,7 +9234,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__JOIN_CONDITIONS = MAX_LENGTH_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -9162,7 +9243,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__MAX_NUMBER_ROWS = MAX_LENGTH_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -9171,7 +9252,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__VALID_ROW = MAX_LENGTH_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -9180,7 +9261,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = MAX_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -9189,7 +9270,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__LENGTH = MAX_LENGTH_INDICATOR__LENGTH;
 
     /**
      * The number of structural features of the '<em>Max Length With Blank Null Indicator</em>' class.
@@ -9198,7 +9279,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR_FEATURE_COUNT = MAX_LENGTH_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.AverageLengthIndicatorImpl <em>Average Length Indicator</em>}' class.
@@ -9533,7 +9614,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__NAME = AVERAGE_LENGTH_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -9542,7 +9623,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__VISIBILITY = AVERAGE_LENGTH_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -9551,7 +9632,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__CLIENT_DEPENDENCY = AVERAGE_LENGTH_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -9560,7 +9641,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__SUPPLIER_DEPENDENCY = AVERAGE_LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -9569,7 +9650,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__CONSTRAINT = AVERAGE_LENGTH_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -9578,7 +9659,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__NAMESPACE = AVERAGE_LENGTH_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -9587,7 +9668,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__IMPORTER = AVERAGE_LENGTH_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -9596,7 +9677,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__STEREOTYPE = AVERAGE_LENGTH_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -9605,7 +9686,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__TAGGED_VALUE = AVERAGE_LENGTH_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -9614,7 +9695,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__DOCUMENT = AVERAGE_LENGTH_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -9623,7 +9704,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__DESCRIPTION = AVERAGE_LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -9632,7 +9713,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__RESPONSIBLE_PARTY = AVERAGE_LENGTH_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -9641,7 +9722,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__ELEMENT_NODE = AVERAGE_LENGTH_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -9650,7 +9731,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__SET = LENGTH_INDICATOR__SET;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__SET = AVERAGE_LENGTH_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -9659,7 +9740,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__RENDERED_OBJECT = AVERAGE_LENGTH_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -9668,7 +9749,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__VOCABULARY_ELEMENT = AVERAGE_LENGTH_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -9677,7 +9758,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__MEASUREMENT = AVERAGE_LENGTH_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -9686,7 +9767,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__CHANGE_REQUEST = AVERAGE_LENGTH_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -9695,7 +9776,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__DASDL_PROPERTY = AVERAGE_LENGTH_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -9704,7 +9785,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__COUNT = AVERAGE_LENGTH_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -9713,7 +9794,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__NULL_COUNT = AVERAGE_LENGTH_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -9722,7 +9803,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__PARAMETERS = AVERAGE_LENGTH_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -9731,7 +9812,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__ANALYZED_ELEMENT = AVERAGE_LENGTH_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -9740,7 +9821,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__DATAMINING_TYPE = AVERAGE_LENGTH_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -9749,7 +9830,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__INDICATOR_DEFINITION = AVERAGE_LENGTH_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -9758,7 +9839,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = AVERAGE_LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -9767,7 +9848,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__COMPUTED = AVERAGE_LENGTH_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -9776,7 +9857,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__JOIN_CONDITIONS = AVERAGE_LENGTH_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -9785,7 +9866,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__MAX_NUMBER_ROWS = AVERAGE_LENGTH_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -9794,7 +9875,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__VALID_ROW = AVERAGE_LENGTH_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -9803,7 +9884,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = AVERAGE_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -9812,7 +9893,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__LENGTH = AVERAGE_LENGTH_INDICATOR__LENGTH;
 
     /**
      * The feature id for the '<em><b>Sum Length</b></em>' attribute.
@@ -9821,7 +9902,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR__SUM_LENGTH = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+    int AVG_LENGTH_WITH_NULL_INDICATOR__SUM_LENGTH = AVERAGE_LENGTH_INDICATOR__SUM_LENGTH;
 
     /**
      * The number of structural features of the '<em>Avg Length With Null Indicator</em>' class.
@@ -9830,7 +9911,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_NULL_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 1;
+    int AVG_LENGTH_WITH_NULL_INDICATOR_FEATURE_COUNT = AVERAGE_LENGTH_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl <em>Avg Length With Blank Indicator</em>}' class.
@@ -9849,7 +9930,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__NAME = AVERAGE_LENGTH_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -9858,7 +9939,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__VISIBILITY = AVERAGE_LENGTH_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -9867,7 +9948,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__CLIENT_DEPENDENCY = AVERAGE_LENGTH_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -9876,7 +9957,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__SUPPLIER_DEPENDENCY = AVERAGE_LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -9885,7 +9966,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__CONSTRAINT = AVERAGE_LENGTH_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -9894,7 +9975,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__NAMESPACE = AVERAGE_LENGTH_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -9903,7 +9984,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__IMPORTER = AVERAGE_LENGTH_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -9912,7 +9993,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__STEREOTYPE = AVERAGE_LENGTH_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -9921,7 +10002,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__TAGGED_VALUE = AVERAGE_LENGTH_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -9930,7 +10011,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__DOCUMENT = AVERAGE_LENGTH_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -9939,7 +10020,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__DESCRIPTION = AVERAGE_LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -9948,7 +10029,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__RESPONSIBLE_PARTY = AVERAGE_LENGTH_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -9957,7 +10038,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__ELEMENT_NODE = AVERAGE_LENGTH_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -9966,7 +10047,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__SET = LENGTH_INDICATOR__SET;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__SET = AVERAGE_LENGTH_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -9975,7 +10056,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__RENDERED_OBJECT = AVERAGE_LENGTH_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -9984,7 +10065,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__VOCABULARY_ELEMENT = AVERAGE_LENGTH_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -9993,7 +10074,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__MEASUREMENT = AVERAGE_LENGTH_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -10002,7 +10083,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__CHANGE_REQUEST = AVERAGE_LENGTH_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -10011,7 +10092,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__DASDL_PROPERTY = AVERAGE_LENGTH_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -10020,7 +10101,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__COUNT = AVERAGE_LENGTH_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -10029,7 +10110,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__NULL_COUNT = AVERAGE_LENGTH_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -10038,7 +10119,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__PARAMETERS = AVERAGE_LENGTH_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -10047,7 +10128,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__ANALYZED_ELEMENT = AVERAGE_LENGTH_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -10056,7 +10137,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__DATAMINING_TYPE = AVERAGE_LENGTH_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -10065,7 +10146,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__INDICATOR_DEFINITION = AVERAGE_LENGTH_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -10074,7 +10155,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__INSTANTIATED_EXPRESSIONS = AVERAGE_LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -10083,7 +10164,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__COMPUTED = AVERAGE_LENGTH_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -10092,7 +10173,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__JOIN_CONDITIONS = AVERAGE_LENGTH_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -10101,7 +10182,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__MAX_NUMBER_ROWS = AVERAGE_LENGTH_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -10110,7 +10191,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__VALID_ROW = AVERAGE_LENGTH_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -10119,7 +10200,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = AVERAGE_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -10128,7 +10209,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__LENGTH = AVERAGE_LENGTH_INDICATOR__LENGTH;
 
     /**
      * The feature id for the '<em><b>Sum Length</b></em>' attribute.
@@ -10137,7 +10218,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH = AVERAGE_LENGTH_INDICATOR__SUM_LENGTH;
 
     /**
      * The number of structural features of the '<em>Avg Length With Blank Indicator</em>' class.
@@ -10146,7 +10227,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 1;
+    int AVG_LENGTH_WITH_BLANK_INDICATOR_FEATURE_COUNT = AVERAGE_LENGTH_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankNullIndicatorImpl <em>Avg Length With Blank Null Indicator</em>}' class.
@@ -10165,7 +10246,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NAME = LENGTH_INDICATOR__NAME;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NAME = AVERAGE_LENGTH_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -10174,7 +10255,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VISIBILITY = LENGTH_INDICATOR__VISIBILITY;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VISIBILITY = AVERAGE_LENGTH_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -10183,7 +10264,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CLIENT_DEPENDENCY = LENGTH_INDICATOR__CLIENT_DEPENDENCY;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CLIENT_DEPENDENCY = AVERAGE_LENGTH_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -10192,7 +10273,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUPPLIER_DEPENDENCY = LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUPPLIER_DEPENDENCY = AVERAGE_LENGTH_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -10201,7 +10282,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CONSTRAINT = LENGTH_INDICATOR__CONSTRAINT;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CONSTRAINT = AVERAGE_LENGTH_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -10210,7 +10291,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NAMESPACE = LENGTH_INDICATOR__NAMESPACE;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NAMESPACE = AVERAGE_LENGTH_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -10219,7 +10300,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__IMPORTER = LENGTH_INDICATOR__IMPORTER;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__IMPORTER = AVERAGE_LENGTH_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -10228,7 +10309,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__STEREOTYPE = LENGTH_INDICATOR__STEREOTYPE;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__STEREOTYPE = AVERAGE_LENGTH_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -10237,7 +10318,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__TAGGED_VALUE = LENGTH_INDICATOR__TAGGED_VALUE;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__TAGGED_VALUE = AVERAGE_LENGTH_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -10246,7 +10327,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DOCUMENT = LENGTH_INDICATOR__DOCUMENT;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DOCUMENT = AVERAGE_LENGTH_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -10255,7 +10336,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DESCRIPTION = LENGTH_INDICATOR__DESCRIPTION;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DESCRIPTION = AVERAGE_LENGTH_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -10264,7 +10345,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__RESPONSIBLE_PARTY = LENGTH_INDICATOR__RESPONSIBLE_PARTY;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__RESPONSIBLE_PARTY = AVERAGE_LENGTH_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -10273,7 +10354,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__ELEMENT_NODE = LENGTH_INDICATOR__ELEMENT_NODE;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__ELEMENT_NODE = AVERAGE_LENGTH_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -10282,7 +10363,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SET = LENGTH_INDICATOR__SET;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SET = AVERAGE_LENGTH_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -10291,7 +10372,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__RENDERED_OBJECT = LENGTH_INDICATOR__RENDERED_OBJECT;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__RENDERED_OBJECT = AVERAGE_LENGTH_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -10300,7 +10381,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VOCABULARY_ELEMENT = LENGTH_INDICATOR__VOCABULARY_ELEMENT;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VOCABULARY_ELEMENT = AVERAGE_LENGTH_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -10309,7 +10390,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__MEASUREMENT = LENGTH_INDICATOR__MEASUREMENT;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__MEASUREMENT = AVERAGE_LENGTH_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -10318,7 +10399,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CHANGE_REQUEST = LENGTH_INDICATOR__CHANGE_REQUEST;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__CHANGE_REQUEST = AVERAGE_LENGTH_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -10327,7 +10408,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DASDL_PROPERTY = LENGTH_INDICATOR__DASDL_PROPERTY;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DASDL_PROPERTY = AVERAGE_LENGTH_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -10336,7 +10417,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__COUNT = LENGTH_INDICATOR__COUNT;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__COUNT = AVERAGE_LENGTH_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -10345,7 +10426,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NULL_COUNT = LENGTH_INDICATOR__NULL_COUNT;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__NULL_COUNT = AVERAGE_LENGTH_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -10354,7 +10435,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__PARAMETERS = LENGTH_INDICATOR__PARAMETERS;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__PARAMETERS = AVERAGE_LENGTH_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -10363,7 +10444,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__ANALYZED_ELEMENT = LENGTH_INDICATOR__ANALYZED_ELEMENT;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__ANALYZED_ELEMENT = AVERAGE_LENGTH_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -10372,7 +10453,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DATAMINING_TYPE = LENGTH_INDICATOR__DATAMINING_TYPE;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__DATAMINING_TYPE = AVERAGE_LENGTH_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -10381,7 +10462,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__INDICATOR_DEFINITION = LENGTH_INDICATOR__INDICATOR_DEFINITION;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__INDICATOR_DEFINITION = AVERAGE_LENGTH_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -10390,7 +10471,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__INSTANTIATED_EXPRESSIONS = AVERAGE_LENGTH_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -10399,7 +10480,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__COMPUTED = LENGTH_INDICATOR__COMPUTED;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__COMPUTED = AVERAGE_LENGTH_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -10408,7 +10489,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__JOIN_CONDITIONS = LENGTH_INDICATOR__JOIN_CONDITIONS;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__JOIN_CONDITIONS = AVERAGE_LENGTH_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -10417,7 +10498,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__MAX_NUMBER_ROWS = LENGTH_INDICATOR__MAX_NUMBER_ROWS;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__MAX_NUMBER_ROWS = AVERAGE_LENGTH_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -10426,7 +10507,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VALID_ROW = LENGTH_INDICATOR__VALID_ROW;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__VALID_ROW = AVERAGE_LENGTH_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -10435,7 +10516,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = AVERAGE_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -10444,7 +10525,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__LENGTH = LENGTH_INDICATOR__LENGTH;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__LENGTH = AVERAGE_LENGTH_INDICATOR__LENGTH;
 
     /**
      * The feature id for the '<em><b>Sum Length</b></em>' attribute.
@@ -10453,7 +10534,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUM_LENGTH = LENGTH_INDICATOR_FEATURE_COUNT + 0;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUM_LENGTH = AVERAGE_LENGTH_INDICATOR__SUM_LENGTH;
 
     /**
      * The number of structural features of the '<em>Avg Length With Blank Null Indicator</em>' class.
@@ -10462,7 +10543,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR_FEATURE_COUNT = LENGTH_INDICATOR_FEATURE_COUNT + 1;
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR_FEATURE_COUNT = AVERAGE_LENGTH_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.TextParametersImpl <em>Text Parameters</em>}' class.
@@ -20127,6 +20208,105 @@ public interface IndicatorsPackage extends EPackage {
     EReference getTextIndicator_MinLengthIndicator();
 
     /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getMinLengthWithBlankIndicator <em>Min Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Min Length With Blank Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getMinLengthWithBlankIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_MinLengthWithBlankIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getMinLengthWithNullIndicator <em>Min Length With Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Min Length With Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getMinLengthWithNullIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_MinLengthWithNullIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getMinLengthWithBlankNullIndicator <em>Min Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Min Length With Blank Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getMinLengthWithBlankNullIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_MinLengthWithBlankNullIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getMaxLengthWithBlankIndicator <em>Max Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Max Length With Blank Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getMaxLengthWithBlankIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_MaxLengthWithBlankIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getMaxLengthWithNullIndicator <em>Max Length With Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Max Length With Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getMaxLengthWithNullIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_MaxLengthWithNullIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getMaxLengthWithBlankNullIndicator <em>Max Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Max Length With Blank Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getMaxLengthWithBlankNullIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_MaxLengthWithBlankNullIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getAvgLengthWithBlankIndicator <em>Avg Length With Blank Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Avg Length With Blank Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getAvgLengthWithBlankIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_AvgLengthWithBlankIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getAvgLengthWithNullIndicator <em>Avg Length With Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Avg Length With Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getAvgLengthWithNullIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_AvgLengthWithNullIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.TextIndicator#getAvgLengthWithBlankNullIndicator <em>Avg Length With Blank Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Avg Length With Blank Null Indicator</em>'.
+     * @see org.talend.dataquality.indicators.TextIndicator#getAvgLengthWithBlankNullIndicator()
+     * @see #getTextIndicator()
+     * @generated
+     */
+    EReference getTextIndicator_AvgLengthWithBlankNullIndicator();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.MinLengthIndicator <em>Min Length Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -20238,17 +20418,6 @@ public interface IndicatorsPackage extends EPackage {
     EClass getAvgLengthWithNullIndicator();
 
     /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.AvgLengthWithNullIndicator#getSumLength <em>Sum Length</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Sum Length</em>'.
-     * @see org.talend.dataquality.indicators.AvgLengthWithNullIndicator#getSumLength()
-     * @see #getAvgLengthWithNullIndicator()
-     * @generated
-     */
-    EAttribute getAvgLengthWithNullIndicator_SumLength();
-
-    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.AvgLengthWithBlankIndicator <em>Avg Length With Blank Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -20259,17 +20428,6 @@ public interface IndicatorsPackage extends EPackage {
     EClass getAvgLengthWithBlankIndicator();
 
     /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.AvgLengthWithBlankIndicator#getSumLength <em>Sum Length</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Sum Length</em>'.
-     * @see org.talend.dataquality.indicators.AvgLengthWithBlankIndicator#getSumLength()
-     * @see #getAvgLengthWithBlankIndicator()
-     * @generated
-     */
-    EAttribute getAvgLengthWithBlankIndicator_SumLength();
-
-    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator <em>Avg Length With Blank Null Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -20278,17 +20436,6 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      */
     EClass getAvgLengthWithBlankNullIndicator();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator#getSumLength <em>Sum Length</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Sum Length</em>'.
-     * @see org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator#getSumLength()
-     * @see #getAvgLengthWithBlankNullIndicator()
-     * @generated
-     */
-    EAttribute getAvgLengthWithBlankNullIndicator_SumLength();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.LengthIndicator <em>Length Indicator</em>}'.
@@ -21483,6 +21630,78 @@ public interface IndicatorsPackage extends EPackage {
         EReference TEXT_INDICATOR__MIN_LENGTH_INDICATOR = eINSTANCE.getTextIndicator_MinLengthIndicator();
 
         /**
+         * The meta object literal for the '<em><b>Min Length With Blank Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_INDICATOR = eINSTANCE.getTextIndicator_MinLengthWithBlankIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Min Length With Null Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__MIN_LENGTH_WITH_NULL_INDICATOR = eINSTANCE.getTextIndicator_MinLengthWithNullIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Min Length With Blank Null Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_NULL_INDICATOR = eINSTANCE.getTextIndicator_MinLengthWithBlankNullIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Max Length With Blank Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_INDICATOR = eINSTANCE.getTextIndicator_MaxLengthWithBlankIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Max Length With Null Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__MAX_LENGTH_WITH_NULL_INDICATOR = eINSTANCE.getTextIndicator_MaxLengthWithNullIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Max Length With Blank Null Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_NULL_INDICATOR = eINSTANCE.getTextIndicator_MaxLengthWithBlankNullIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Avg Length With Blank Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_INDICATOR = eINSTANCE.getTextIndicator_AvgLengthWithBlankIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Avg Length With Null Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__AVG_LENGTH_WITH_NULL_INDICATOR = eINSTANCE.getTextIndicator_AvgLengthWithNullIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Avg Length With Blank Null Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_NULL_INDICATOR = eINSTANCE.getTextIndicator_AvgLengthWithBlankNullIndicator();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MinLengthIndicatorImpl <em>Min Length Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -21591,14 +21810,6 @@ public interface IndicatorsPackage extends EPackage {
         EClass AVG_LENGTH_WITH_NULL_INDICATOR = eINSTANCE.getAvgLengthWithNullIndicator();
 
         /**
-         * The meta object literal for the '<em><b>Sum Length</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute AVG_LENGTH_WITH_NULL_INDICATOR__SUM_LENGTH = eINSTANCE.getAvgLengthWithNullIndicator_SumLength();
-
-        /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl <em>Avg Length With Blank Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -21609,14 +21820,6 @@ public interface IndicatorsPackage extends EPackage {
         EClass AVG_LENGTH_WITH_BLANK_INDICATOR = eINSTANCE.getAvgLengthWithBlankIndicator();
 
         /**
-         * The meta object literal for the '<em><b>Sum Length</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH = eINSTANCE.getAvgLengthWithBlankIndicator_SumLength();
-
-        /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.AvgLengthWithBlankNullIndicatorImpl <em>Avg Length With Blank Null Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -21625,14 +21828,6 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass AVG_LENGTH_WITH_BLANK_NULL_INDICATOR = eINSTANCE.getAvgLengthWithBlankNullIndicator();
-
-        /**
-         * The meta object literal for the '<em><b>Sum Length</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUM_LENGTH = eINSTANCE.getAvgLengthWithBlankNullIndicator_SumLength();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.LengthIndicatorImpl <em>Length Indicator</em>}' class.

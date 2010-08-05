@@ -20,12 +20,15 @@ import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ModeStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleTextStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.TextStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIMatchStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDISimpleStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.DateFrequencyStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.DateLowFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.DatePatternFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.LowFrequencyStatisticsState;
@@ -95,6 +98,13 @@ public final class ChartTypeStatesOperator {
             return new SoundexFrequencyTableState(units);
         case SOUNDEX_LOW_FREQUENCY_TABLE:
             return new SoundexLowFrequencyTableState(units);
+
+        case DATE_FREQUENCE_STATISTICS:
+            return new DateFrequencyStatisticsState(units);
+        case DATE_LOW_FREQUENCE_STATISTICS:
+            return new DateLowFrequencyStatisticsState(units);
+        case SIMPLE_TEXT_STATISTICS:
+            return new SimpleTextStatisticsState(units);
         default:
             return null;
         }

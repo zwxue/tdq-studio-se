@@ -18,14 +18,13 @@ import org.talend.dataquality.indicators.YearFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class YearFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements YearFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected YearFrequencyIndicatorImpl() {
@@ -34,7 +33,6 @@ public class YearFrequencyIndicatorImpl extends FrequencyIndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

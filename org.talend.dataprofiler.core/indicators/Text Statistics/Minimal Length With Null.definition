@@ -5,7 +5,7 @@
   <categories href="../../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="_a4KspI1qEd-xwI2imLgHRA" body="SELECT MIN(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   <sqlGenericExpression xmi:id="_a4KspY1qEd-xwI2imLgHRA" body="SELECT MIN(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
-  <sqlGenericExpression xmi:id="_a4Kspo1qEd-xwI2imLgHRA" body="SELECT MIN(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+  <sqlGenericExpression xmi:id="_a4Kspo1qEd-xwI2imLgHRA" body="SELECT MIN(LEN(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
   <sqlGenericExpression xmi:id="_a4Ksp41qEd-xwI2imLgHRA" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
   <sqlGenericExpression xmi:id="_a4KsqI1qEd-xwI2imLgHRA" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Ingres"/>
 </dataquality.indicators.definition:IndicatorDefinition>

@@ -5,7 +5,7 @@
   <categories href="../../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="__gPoJJSOEd-TE5ti6XNR2Q" body="SELECT SUM(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   <sqlGenericExpression xmi:id="__gPoJZSOEd-TE5ti6XNR2Q" body="SELECT SUM(LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
-  <sqlGenericExpression xmi:id="__gPoJpSOEd-TE5ti6XNR2Q" body="SELECT SUM(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+  <sqlGenericExpression xmi:id="__gPoJpSOEd-TE5ti6XNR2Q" body="SELECT SUM(LEN(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
   <sqlGenericExpression xmi:id="__gPoJ5SOEd-TE5ti6XNR2Q" body="SELECT SUM(LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
   <sqlGenericExpression xmi:id="__gPoKJSOEd-TE5ti6XNR2Q" body="SELECT SUM(LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Ingres"/>
 </dataquality.indicators.definition:IndicatorDefinition>

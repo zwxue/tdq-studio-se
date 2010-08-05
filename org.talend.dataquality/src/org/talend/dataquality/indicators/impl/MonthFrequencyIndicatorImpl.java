@@ -18,14 +18,13 @@ import org.talend.dataquality.indicators.MonthFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class MonthFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements MonthFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MonthFrequencyIndicatorImpl() {
@@ -34,7 +33,6 @@ public class MonthFrequencyIndicatorImpl extends FrequencyIndicatorImpl implemen
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

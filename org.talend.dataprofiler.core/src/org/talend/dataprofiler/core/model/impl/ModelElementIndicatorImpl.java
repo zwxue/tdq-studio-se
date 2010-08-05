@@ -23,6 +23,9 @@ import org.apache.log4j.Logger;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
@@ -38,10 +41,16 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.MaxLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinLengthIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankIndicator;
+import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
+import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
@@ -420,6 +429,28 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                         .getIndicator());
                 textIndicator.setAverageLengthIndicator((AverageLengthIndicator) getIndicatorUnit(
                         IndicatorEnum.AverageLengthIndicatorEnum).getIndicator());
+
+                // MOD yyi 2010-08-05
+                textIndicator.setAvgLengthWithBlankIndicator((AvgLengthWithBlankIndicator) getIndicatorUnit(
+                        IndicatorEnum.AverageLengthWithBlankIndicatorEnum).getIndicator());
+                textIndicator.setAvgLengthWithNullIndicator((AvgLengthWithNullIndicator) getIndicatorUnit(
+                        IndicatorEnum.AverageLengthWithNullIndicatorEnum).getIndicator());
+                textIndicator.setAvgLengthWithBlankNullIndicator((AvgLengthWithBlankNullIndicator) getIndicatorUnit(
+                        IndicatorEnum.AverageLengthWithNullBlankIndicatorEnum).getIndicator());
+                textIndicator.setMinLengthWithBlankIndicator((MinLengthWithBlankIndicator) getIndicatorUnit(
+                        IndicatorEnum.MinLengthWithBlankIndicatorEnum).getIndicator());
+                textIndicator.setMinLengthWithNullIndicator((MinLengthWithNullIndicator) getIndicatorUnit(
+                        IndicatorEnum.MinLengthWithNullIndicatorEnum).getIndicator());
+                textIndicator.setMinLengthWithBlankNullIndicator((MinLengthWithBlankNullIndicator) getIndicatorUnit(
+                        IndicatorEnum.MinLengthWithBlankNullIndicatorEnum).getIndicator());
+                textIndicator.setMaxLengthWithBlankIndicator((MaxLengthWithBlankIndicator) getIndicatorUnit(
+                        IndicatorEnum.MaxLengthWithBlankIndicatorEnum).getIndicator());
+                textIndicator.setMaxLengthWithNullIndicator((MaxLengthWithNullIndicator) getIndicatorUnit(
+                        IndicatorEnum.MaxLengthWithNullIndicatorEnum).getIndicator());
+                textIndicator.setMaxLengthWithBlankNullIndicator((MaxLengthWithBlankNullIndicator) getIndicatorUnit(
+                        IndicatorEnum.MaxLengthWithBlankNullIndicatorEnum).getIndicator());
+                // ~
+
                 indicatorUnit.setChildren(createCategoryIndicatorUnits(IndicatorEnum.TextIndicatorEnum.getChildren()));
                 indicatorUnitList.add(indicatorUnit);
                 break;

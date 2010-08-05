@@ -31,7 +31,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * @generated
  */
 public class AvgLengthWithBlankIndicatorItemProvider
-    extends LengthIndicatorItemProvider
+    extends AverageLengthIndicatorItemProvider
     implements
         IEditingDomainItemProvider,
         IStructuredItemContentProvider,
@@ -59,31 +59,8 @@ public class AvgLengthWithBlankIndicatorItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
-            addSumLengthPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
-    }
-
-    /**
-     * This adds a property descriptor for the Sum Length feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected void addSumLengthPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_AvgLengthWithBlankIndicator_sumLength_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_AvgLengthWithBlankIndicator_sumLength_feature", "_UI_AvgLengthWithBlankIndicator_type"),
-                 IndicatorsPackage.Literals.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH,
-                 true,
-                 false,
-                 false,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 null,
-                 null));
     }
 
     /**
@@ -121,12 +98,6 @@ public class AvgLengthWithBlankIndicatorItemProvider
     @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
-
-        switch (notification.getFeatureID(AvgLengthWithBlankIndicator.class)) {
-            case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH:
-                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
-                return;
-        }
         super.notifyChanged(notification);
     }
 

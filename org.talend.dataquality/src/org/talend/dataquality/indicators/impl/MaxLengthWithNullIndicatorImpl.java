@@ -20,7 +20,7 @@ import org.talend.dataquality.indicators.TextParameters;
  *
  * @generated
  */
-public class MaxLengthWithNullIndicatorImpl extends LengthIndicatorImpl implements MaxLengthWithNullIndicator {
+public class MaxLengthWithNullIndicatorImpl extends MaxLengthIndicatorImpl implements MaxLengthWithNullIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -55,8 +55,14 @@ public class MaxLengthWithNullIndicatorImpl extends LengthIndicatorImpl implemen
         return parameters;
     }
 
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = true;
         boolean ok = super.handle(data);
         if (data == null) {
             length = new Long(0);

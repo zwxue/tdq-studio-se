@@ -228,13 +228,19 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (textParameter != null) {
                 if (textParameter.isUseNulls()) {
                     colName = dbms().replaceNullsWithString(colName, "''");
+                } else {
+                    whereExpression.add(colName.concat(dbms().isNotNull()));
                 }
                 if (textParameter.isIgnoreCase()) {
                     colName = dbms().toUpperCase(colName);
                 }
                 if (!textParameter.isUseBlank()
                         && IndicatorsPackage.eINSTANCE.getLengthIndicator().isSuperTypeOf(indicatorEclass)) {
-                    whereExpression.add(dbms().isNotBlank(colName));
+
+                    String tdColName = getQuotedColumnName(tdColumn);
+                    tdColName = dbms().replaceNullsWithString(tdColName, "'NULL TALEND'");
+                    whereExpression.add(dbms().isNotBlank(tdColName));
+
                 } else if (textParameter.isUseBlank()
                         && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {
                     colName = dbms().trim(colName);

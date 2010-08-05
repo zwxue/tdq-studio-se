@@ -388,6 +388,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.MAX_LENGTH_WITH_NULL_INDICATOR: {
                 MaxLengthWithNullIndicator maxLengthWithNullIndicator = (MaxLengthWithNullIndicator)theEObject;
                 T result = caseMaxLengthWithNullIndicator(maxLengthWithNullIndicator);
+                if (result == null) result = caseMaxLengthIndicator(maxLengthWithNullIndicator);
                 if (result == null) result = caseLengthIndicator(maxLengthWithNullIndicator);
                 if (result == null) result = caseIndicator(maxLengthWithNullIndicator);
                 if (result == null) result = caseModelElement(maxLengthWithNullIndicator);
@@ -398,6 +399,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.MAX_LENGTH_WITH_BLANK_INDICATOR: {
                 MaxLengthWithBlankIndicator maxLengthWithBlankIndicator = (MaxLengthWithBlankIndicator)theEObject;
                 T result = caseMaxLengthWithBlankIndicator(maxLengthWithBlankIndicator);
+                if (result == null) result = caseMaxLengthIndicator(maxLengthWithBlankIndicator);
                 if (result == null) result = caseLengthIndicator(maxLengthWithBlankIndicator);
                 if (result == null) result = caseIndicator(maxLengthWithBlankIndicator);
                 if (result == null) result = caseModelElement(maxLengthWithBlankIndicator);
@@ -408,6 +410,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.MAX_LENGTH_WITH_BLANK_NULL_INDICATOR: {
                 MaxLengthWithBlankNullIndicator maxLengthWithBlankNullIndicator = (MaxLengthWithBlankNullIndicator)theEObject;
                 T result = caseMaxLengthWithBlankNullIndicator(maxLengthWithBlankNullIndicator);
+                if (result == null) result = caseMaxLengthIndicator(maxLengthWithBlankNullIndicator);
                 if (result == null) result = caseLengthIndicator(maxLengthWithBlankNullIndicator);
                 if (result == null) result = caseIndicator(maxLengthWithBlankNullIndicator);
                 if (result == null) result = caseModelElement(maxLengthWithBlankNullIndicator);
@@ -428,6 +431,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.AVG_LENGTH_WITH_NULL_INDICATOR: {
                 AvgLengthWithNullIndicator avgLengthWithNullIndicator = (AvgLengthWithNullIndicator)theEObject;
                 T result = caseAvgLengthWithNullIndicator(avgLengthWithNullIndicator);
+                if (result == null) result = caseAverageLengthIndicator(avgLengthWithNullIndicator);
                 if (result == null) result = caseLengthIndicator(avgLengthWithNullIndicator);
                 if (result == null) result = caseIndicator(avgLengthWithNullIndicator);
                 if (result == null) result = caseModelElement(avgLengthWithNullIndicator);
@@ -438,6 +442,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_INDICATOR: {
                 AvgLengthWithBlankIndicator avgLengthWithBlankIndicator = (AvgLengthWithBlankIndicator)theEObject;
                 T result = caseAvgLengthWithBlankIndicator(avgLengthWithBlankIndicator);
+                if (result == null) result = caseAverageLengthIndicator(avgLengthWithBlankIndicator);
                 if (result == null) result = caseLengthIndicator(avgLengthWithBlankIndicator);
                 if (result == null) result = caseIndicator(avgLengthWithBlankIndicator);
                 if (result == null) result = caseModelElement(avgLengthWithBlankIndicator);
@@ -448,6 +453,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.AVG_LENGTH_WITH_BLANK_NULL_INDICATOR: {
                 AvgLengthWithBlankNullIndicator avgLengthWithBlankNullIndicator = (AvgLengthWithBlankNullIndicator)theEObject;
                 T result = caseAvgLengthWithBlankNullIndicator(avgLengthWithBlankNullIndicator);
+                if (result == null) result = caseAverageLengthIndicator(avgLengthWithBlankNullIndicator);
                 if (result == null) result = caseLengthIndicator(avgLengthWithBlankNullIndicator);
                 if (result == null) result = caseIndicator(avgLengthWithBlankNullIndicator);
                 if (result == null) result = caseModelElement(avgLengthWithBlankNullIndicator);

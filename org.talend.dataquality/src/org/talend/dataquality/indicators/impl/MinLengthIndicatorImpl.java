@@ -36,10 +36,10 @@ public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLe
         return IndicatorsPackage.Literals.MIN_LENGTH_INDICATOR;
     }
 
-    /*
-     * (non-Javadoc) ADDED scorreia 2008-04-08 compute min length
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
-     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handle(java.lang.Object)
+     * @generated NOT
      */
     @Override
     public boolean handle(Object data) {
@@ -47,7 +47,7 @@ public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLe
         boolean ok = super.handle(data);
         if (data != null) {
             String str = (String) data;
-            if (length == LENGTH_EDEFAULT || length.intValue() > str.length()) {
+            if (str.length() > 0 && (length == LENGTH_EDEFAULT || length.intValue() > str.length())) {
                 length = Long.valueOf(str.length());
             }
         }

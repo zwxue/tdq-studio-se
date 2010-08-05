@@ -12,45 +12,12 @@ package org.talend.dataquality.indicators;
  * A representation of the model object '<em><b>Avg Length With Null Indicator</b></em>'.
  * <!-- end-user-doc -->
  *
- * <p>
- * The following features are supported:
- * <ul>
- *   <li>{@link org.talend.dataquality.indicators.AvgLengthWithNullIndicator#getSumLength <em>Sum Length</em>}</li>
- * </ul>
- * </p>
  *
  * @see org.talend.dataquality.indicators.IndicatorsPackage#getAvgLengthWithNullIndicator()
  * @model
  * @generated
  */
-public interface AvgLengthWithNullIndicator extends LengthIndicator {
-    /**
-     * Returns the value of the '<em><b>Sum Length</b></em>' attribute.
-     * The default value is <code>"0"</code>.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Sum Length</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Sum Length</em>' attribute.
-     * @see #setSumLength(Double)
-     * @see org.talend.dataquality.indicators.IndicatorsPackage#getAvgLengthWithNullIndicator_SumLength()
-     * @model default="0"
-     * @generated
-     */
-    Double getSumLength();
-
-    /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.AvgLengthWithNullIndicator#getSumLength <em>Sum Length</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Sum Length</em>' attribute.
-     * @see #getSumLength()
-     * @generated
-     */
-    void setSumLength(Double value);
-
+public interface AvgLengthWithNullIndicator extends AverageLengthIndicator {
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

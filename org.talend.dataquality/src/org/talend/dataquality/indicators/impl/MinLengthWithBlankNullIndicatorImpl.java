@@ -55,10 +55,21 @@ public class MinLengthWithBlankNullIndicatorImpl extends MinLengthIndicatorImpl 
         return parameters;
     }
 
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = true;
         boolean ok = super.handle(data);
-        if (data == null) {
+        if (data != null) {
+            String str = (String) data;
+            if (0 == str.length()) {
+                length = new Long(0);
+            }
+        } else {
             length = new Long(0);
         }
         return ok;

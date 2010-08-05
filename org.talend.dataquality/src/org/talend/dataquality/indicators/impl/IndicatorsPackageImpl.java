@@ -1227,6 +1227,87 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_MinLengthWithBlankIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_MinLengthWithNullIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_MinLengthWithBlankNullIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_MaxLengthWithBlankIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_MaxLengthWithNullIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_MaxLengthWithBlankNullIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(8);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_AvgLengthWithBlankIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(9);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_AvgLengthWithNullIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(10);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTextIndicator_AvgLengthWithBlankNullIndicator() {
+        return (EReference)textIndicatorEClass.getEStructuralFeatures().get(11);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1326,15 +1407,6 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getAvgLengthWithNullIndicator_SumLength() {
-        return (EAttribute)avgLengthWithNullIndicatorEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     public EClass getAvgLengthWithBlankIndicator() {
         return avgLengthWithBlankIndicatorEClass;
     }
@@ -1344,26 +1416,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getAvgLengthWithBlankIndicator_SumLength() {
-        return (EAttribute)avgLengthWithBlankIndicatorEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     public EClass getAvgLengthWithBlankNullIndicator() {
         return avgLengthWithBlankNullIndicatorEClass;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EAttribute getAvgLengthWithBlankNullIndicator_SumLength() {
-        return (EAttribute)avgLengthWithBlankNullIndicatorEClass.getEStructuralFeatures().get(0);
     }
 
     /**
@@ -1973,6 +2027,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEReference(textIndicatorEClass, TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR);
         createEReference(textIndicatorEClass, TEXT_INDICATOR__MAX_LENGTH_INDICATOR);
         createEReference(textIndicatorEClass, TEXT_INDICATOR__MIN_LENGTH_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__MIN_LENGTH_WITH_NULL_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_NULL_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__MAX_LENGTH_WITH_NULL_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_NULL_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__AVG_LENGTH_WITH_NULL_INDICATOR);
+        createEReference(textIndicatorEClass, TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_NULL_INDICATOR);
 
         minLengthIndicatorEClass = createEClass(MIN_LENGTH_INDICATOR);
 
@@ -1994,13 +2057,10 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(averageLengthIndicatorEClass, AVERAGE_LENGTH_INDICATOR__SUM_LENGTH);
 
         avgLengthWithNullIndicatorEClass = createEClass(AVG_LENGTH_WITH_NULL_INDICATOR);
-        createEAttribute(avgLengthWithNullIndicatorEClass, AVG_LENGTH_WITH_NULL_INDICATOR__SUM_LENGTH);
 
         avgLengthWithBlankIndicatorEClass = createEClass(AVG_LENGTH_WITH_BLANK_INDICATOR);
-        createEAttribute(avgLengthWithBlankIndicatorEClass, AVG_LENGTH_WITH_BLANK_INDICATOR__SUM_LENGTH);
 
         avgLengthWithBlankNullIndicatorEClass = createEClass(AVG_LENGTH_WITH_BLANK_NULL_INDICATOR);
-        createEAttribute(avgLengthWithBlankNullIndicatorEClass, AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__SUM_LENGTH);
 
         lengthIndicatorEClass = createEClass(LENGTH_INDICATOR);
         createEAttribute(lengthIndicatorEClass, LENGTH_INDICATOR__LENGTH);
@@ -2159,13 +2219,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         minLengthWithBlankIndicatorEClass.getESuperTypes().add(this.getMinLengthIndicator());
         minLengthWithBlankNullIndicatorEClass.getESuperTypes().add(this.getMinLengthIndicator());
         maxLengthIndicatorEClass.getESuperTypes().add(this.getLengthIndicator());
-        maxLengthWithNullIndicatorEClass.getESuperTypes().add(this.getLengthIndicator());
-        maxLengthWithBlankIndicatorEClass.getESuperTypes().add(this.getLengthIndicator());
-        maxLengthWithBlankNullIndicatorEClass.getESuperTypes().add(this.getLengthIndicator());
+        maxLengthWithNullIndicatorEClass.getESuperTypes().add(this.getMaxLengthIndicator());
+        maxLengthWithBlankIndicatorEClass.getESuperTypes().add(this.getMaxLengthIndicator());
+        maxLengthWithBlankNullIndicatorEClass.getESuperTypes().add(this.getMaxLengthIndicator());
         averageLengthIndicatorEClass.getESuperTypes().add(this.getLengthIndicator());
-        avgLengthWithNullIndicatorEClass.getESuperTypes().add(this.getLengthIndicator());
-        avgLengthWithBlankIndicatorEClass.getESuperTypes().add(this.getLengthIndicator());
-        avgLengthWithBlankNullIndicatorEClass.getESuperTypes().add(this.getLengthIndicator());
+        avgLengthWithNullIndicatorEClass.getESuperTypes().add(this.getAverageLengthIndicator());
+        avgLengthWithBlankIndicatorEClass.getESuperTypes().add(this.getAverageLengthIndicator());
+        avgLengthWithBlankNullIndicatorEClass.getESuperTypes().add(this.getAverageLengthIndicator());
         lengthIndicatorEClass.getESuperTypes().add(this.getIndicator());
         lowerQuartileIndicatorEClass.getESuperTypes().add(this.getMinValueIndicator());
         upperQuartileIndicatorEClass.getESuperTypes().add(this.getMaxValueIndicator());
@@ -2340,7 +2400,16 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEClass(textIndicatorEClass, TextIndicator.class, "TextIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getTextIndicator_AverageLengthIndicator(), this.getAverageLengthIndicator(), null, "averageLengthIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getTextIndicator_MaxLengthIndicator(), this.getMaxLengthIndicator(), null, "maxLengthIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getTextIndicator_MinLengthIndicator(), this.getMinLengthIndicator(), null, "MinLengthIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_MinLengthIndicator(), this.getMinLengthIndicator(), null, "minLengthIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_MinLengthWithBlankIndicator(), this.getMinLengthWithBlankIndicator(), null, "minLengthWithBlankIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_MinLengthWithNullIndicator(), this.getMinLengthWithNullIndicator(), null, "minLengthWithNullIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_MinLengthWithBlankNullIndicator(), this.getMinLengthWithBlankNullIndicator(), null, "minLengthWithBlankNullIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_MaxLengthWithBlankIndicator(), this.getMaxLengthWithBlankIndicator(), null, "maxLengthWithBlankIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_MaxLengthWithNullIndicator(), this.getMaxLengthWithNullIndicator(), null, "maxLengthWithNullIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_MaxLengthWithBlankNullIndicator(), this.getMaxLengthWithBlankNullIndicator(), null, "maxLengthWithBlankNullIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_AvgLengthWithBlankIndicator(), this.getAvgLengthWithBlankIndicator(), null, "avgLengthWithBlankIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_AvgLengthWithNullIndicator(), this.getAvgLengthWithNullIndicator(), null, "avgLengthWithNullIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTextIndicator_AvgLengthWithBlankNullIndicator(), this.getAvgLengthWithBlankNullIndicator(), null, "avgLengthWithBlankNullIndicator", null, 0, 1, TextIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(minLengthIndicatorEClass, MinLengthIndicator.class, "MinLengthIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2364,17 +2433,14 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         addEOperation(averageLengthIndicatorEClass, ecorePackage.getEDouble(), "getAverageLength", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(avgLengthWithNullIndicatorEClass, AvgLengthWithNullIndicator.class, "AvgLengthWithNullIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getAvgLengthWithNullIndicator_SumLength(), ecorePackage.getEDoubleObject(), "sumLength", "0", 0, 1, AvgLengthWithNullIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(avgLengthWithNullIndicatorEClass, ecorePackage.getEDouble(), "getAverageLength", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(avgLengthWithBlankIndicatorEClass, AvgLengthWithBlankIndicator.class, "AvgLengthWithBlankIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getAvgLengthWithBlankIndicator_SumLength(), ecorePackage.getEDoubleObject(), "sumLength", "0", 0, 1, AvgLengthWithBlankIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(avgLengthWithBlankIndicatorEClass, ecorePackage.getEDouble(), "getAverageLength", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(avgLengthWithBlankNullIndicatorEClass, AvgLengthWithBlankNullIndicator.class, "AvgLengthWithBlankNullIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getAvgLengthWithBlankNullIndicator_SumLength(), ecorePackage.getEDoubleObject(), "sumLength", "0", 0, 1, AvgLengthWithBlankNullIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(avgLengthWithBlankNullIndicatorEClass, ecorePackage.getEDouble(), "getAverageLength", 0, 1, IS_UNIQUE, IS_ORDERED);
 

@@ -18,14 +18,13 @@ import org.talend.dataquality.indicators.QuarterFrequencyIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class QuarterFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements QuarterFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected QuarterFrequencyIndicatorImpl() {
@@ -34,7 +33,6 @@ public class QuarterFrequencyIndicatorImpl extends FrequencyIndicatorImpl implem
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

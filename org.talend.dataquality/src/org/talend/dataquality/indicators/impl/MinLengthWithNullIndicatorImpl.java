@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.impl;
@@ -14,18 +13,18 @@ import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Min Length With Null Indicator</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Min Length With Null Indicator</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl implements MinLengthWithNullIndicator {
+
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MinLengthWithNullIndicatorImpl() {
@@ -33,8 +32,8 @@ public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -58,12 +57,18 @@ public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl imple
         return parameters;
     }
 
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
     @Override
     public boolean handle(Object data) {
+        mustStoreRow = true;
         boolean ok = super.handle(data);
         if (data == null) {
             length = new Long(0);
         }
         return ok;
     }
-} //MinLengthWithNullIndicatorImpl
+} // MinLengthWithNullIndicatorImpl

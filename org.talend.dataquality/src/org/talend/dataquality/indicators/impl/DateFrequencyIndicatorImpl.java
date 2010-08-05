@@ -18,14 +18,13 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class DateFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements DateFrequencyIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected DateFrequencyIndicatorImpl() {
@@ -34,7 +33,6 @@ public class DateFrequencyIndicatorImpl extends FrequencyIndicatorImpl implement
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

@@ -545,36 +545,48 @@
           eType="#//indicators/AverageLengthIndicator" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="maxLengthIndicator" eType="#//indicators/MaxLengthIndicator"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="MinLengthIndicator" eType="#//indicators/MinLengthIndicator"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minLengthIndicator" eType="#//indicators/MinLengthIndicator"
           containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minLengthWithBlankIndicator"
+          eType="#//indicators/MinLengthWithBlankIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minLengthWithNullIndicator"
+          eType="#//indicators/MinLengthWithNullIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minLengthWithBlankNullIndicator"
+          eType="#//indicators/MinLengthWithBlankNullIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="maxLengthWithBlankIndicator"
+          eType="#//indicators/MaxLengthWithBlankIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="maxLengthWithNullIndicator"
+          eType="#//indicators/MaxLengthWithNullIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="maxLengthWithBlankNullIndicator"
+          eType="#//indicators/MaxLengthWithBlankNullIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="avgLengthWithBlankIndicator"
+          eType="#//indicators/AvgLengthWithBlankIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="avgLengthWithNullIndicator"
+          eType="#//indicators/AvgLengthWithNullIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="avgLengthWithBlankNullIndicator"
+          eType="#//indicators/AvgLengthWithBlankNullIndicator" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="MinLengthIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MinLengthWithNullIndicator" eSuperTypes="#//indicators/MinLengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MinLengthWithBlankIndicator" eSuperTypes="#//indicators/MinLengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MinLengthWithBlankNullIndicator" eSuperTypes="#//indicators/MinLengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MaxLengthIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
-    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithNullIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
-    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithBlankIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
-    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithBlankNullIndicator" eSuperTypes="#//indicators/LengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithNullIndicator" eSuperTypes="#//indicators/MaxLengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithBlankIndicator" eSuperTypes="#//indicators/MaxLengthIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MaxLengthWithBlankNullIndicator" eSuperTypes="#//indicators/MaxLengthIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="AverageLengthIndicator" eSuperTypes="#//indicators/LengthIndicator">
       <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="sumLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
           defaultValueLiteral="0"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithNullIndicator" eSuperTypes="#//indicators/LengthIndicator">
+    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithNullIndicator" eSuperTypes="#//indicators/AverageLengthIndicator">
       <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sumLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
-          defaultValueLiteral="0"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithBlankIndicator" eSuperTypes="#//indicators/LengthIndicator">
+    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithBlankIndicator" eSuperTypes="#//indicators/AverageLengthIndicator">
       <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sumLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
-          defaultValueLiteral="0"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithBlankNullIndicator" eSuperTypes="#//indicators/LengthIndicator">
+    <eClassifiers xsi:type="ecore:EClass" name="AvgLengthWithBlankNullIndicator" eSuperTypes="#//indicators/AverageLengthIndicator">
       <eOperations name="getAverageLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sumLength" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
-          defaultValueLiteral="0"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="LengthIndicator" eSuperTypes="#//indicators/Indicator">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>

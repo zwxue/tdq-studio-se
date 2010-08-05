@@ -8,7 +8,7 @@ package org.talend.dataquality.analysis.provider;
 
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.talend.designer.business.model.business.provider.MetadataEditPlugin;
+import org.talend.core.model.metadata.builder.connection.provider.MetadataEditPlugin;
 import orgomg.cwm.objectmodel.core.provider.Cwm_mipEditPlugin;
 
 /**

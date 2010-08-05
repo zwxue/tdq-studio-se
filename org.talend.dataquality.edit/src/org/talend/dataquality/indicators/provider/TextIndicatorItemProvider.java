@@ -78,6 +78,15 @@ public class TextIndicatorItemProvider
             childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR);
             childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_INDICATOR);
             childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_NULL_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_NULL_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_NULL_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_NULL_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_NULL_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_NULL_INDICATOR);
         }
         return childrenFeatures;
     }
@@ -135,6 +144,15 @@ public class TextIndicatorItemProvider
             case IndicatorsPackage.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR:
             case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_INDICATOR:
             case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_WITH_NULL_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_NULL_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_WITH_NULL_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_NULL_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__AVG_LENGTH_WITH_NULL_INDICATOR:
+            case IndicatorsPackage.TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_NULL_INDICATOR:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -159,8 +177,38 @@ public class TextIndicatorItemProvider
 
         newChildDescriptors.add
             (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createAvgLengthWithNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createAvgLengthWithBlankIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createAvgLengthWithBlankNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
                 (IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_INDICATOR,
                  IndicatorsFactory.eINSTANCE.createMaxLengthIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMaxLengthWithNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMaxLengthWithBlankIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMaxLengthWithBlankNullIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
@@ -181,6 +229,84 @@ public class TextIndicatorItemProvider
             (createChildParameter
                 (IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_INDICATOR,
                  IndicatorsFactory.eINSTANCE.createMinLengthWithBlankNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMinLengthWithBlankIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_NULL_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMinLengthWithNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMinLengthWithBlankNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMaxLengthWithBlankIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_NULL_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMaxLengthWithNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createMaxLengthWithBlankNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createAvgLengthWithBlankIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_NULL_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createAvgLengthWithNullIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_NULL_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createAvgLengthWithBlankNullIndicator()));
+    }
+
+    /**
+     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+        Object childFeature = feature;
+        Object childObject = child;
+
+        boolean qualify =
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__AVERAGE_LENGTH_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_NULL_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__AVG_LENGTH_WITH_BLANK_NULL_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_NULL_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__MAX_LENGTH_WITH_BLANK_NULL_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_NULL_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_INDICATOR ||
+            childFeature == IndicatorsPackage.Literals.TEXT_INDICATOR__MIN_LENGTH_WITH_BLANK_NULL_INDICATOR;
+
+        if (qualify) {
+            return getString
+                ("_UI_CreateChild_text2",
+                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+        }
+        return super.getCreateChildText(owner, feature, child, selection);
     }
 
 }

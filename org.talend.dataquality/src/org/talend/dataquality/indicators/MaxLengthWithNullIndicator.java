@@ -17,5 +17,5 @@ package org.talend.dataquality.indicators;
  * @model
  * @generated
  */
-public interface MaxLengthWithNullIndicator extends LengthIndicator {
+public interface MaxLengthWithNullIndicator extends MaxLengthIndicator {
 } // MaxLengthWithNullIndicator
