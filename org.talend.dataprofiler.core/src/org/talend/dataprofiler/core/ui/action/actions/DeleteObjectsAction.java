@@ -23,10 +23,15 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.xml.TdXMLDocument;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -38,9 +43,14 @@ import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
+
 /**
  * DOC rli class global comment. Detailled comment
  */
@@ -49,21 +59,21 @@ public class DeleteObjectsAction extends Action {
     private static Logger log = Logger.getLogger(DeleteObjectsAction.class);
 
     private boolean runStatus;
-    
-	private boolean isDeleteForever = false;
+
+    private boolean isDeleteForever = false;
 
     /**
      * DOC rli DeleteObjectAction constructor comment.
      */
     public DeleteObjectsAction(boolean isDeleteForever) {
-        if(isDeleteForever){
-        	setText(DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForever")); //$NON-NLS-1$
-        }else{
-        	setText(DefaultMessagesImpl.getString("DeleteObjectsAction.logicalDelete")); //$NON-NLS-1$
+        if (isDeleteForever) {
+            setText(DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForever")); //$NON-NLS-1$
+        } else {
+            setText(DefaultMessagesImpl.getString("DeleteObjectsAction.logicalDelete")); //$NON-NLS-1$
         }
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
         setActionDefinitionId("org.talend.dataprofiler.core.removeAnalysis"); //$NON-NLS-1$
-		this.isDeleteForever = isDeleteForever;
+        this.isDeleteForever = isDeleteForever;
     }
 
     /*
@@ -74,15 +84,15 @@ public class DeleteObjectsAction extends Action {
     @Override
     public void run() {
 
-        //MOD qiongli feature 9486
-		IFile[] selectedFiles;
-		if (isDeleteForever) {
-			SelectedResources selectedResources = new SelectedResources();
-			selectedFiles = selectedResources
-					.getSelectedResourcesArrayForDelForever();
-		} else {
-			selectedFiles = getSelectedResourcesArray();
-		}//~
+        // MOD qiongli feature 9486
+        IFile[] selectedFiles;
+        if (isDeleteForever) {
+            SelectedResources selectedResources = new SelectedResources();
+            selectedFiles = selectedResources.getSelectedResourcesArrayForDelForever();
+        } else {
+            selectedFiles = getSelectedResourcesArray();
+        }
+        // ~ 9486
 
         for (IFile file : selectedFiles) {
 
@@ -94,43 +104,70 @@ public class DeleteObjectsAction extends Action {
             }
         }
 
-		// MOD qiongli feature 9486,show the dialog only once
-		try {
-			if (isDeleteForever) {
-				runStatus = showConfirmDialog();
-				if (!runStatus)
-					return;
-				for (IFile file : selectedFiles) {
-					String fileExt = file.getFileExtension();
-					if (FactoriesUtil.isEmfFile(fileExt)) {
-						ModelElementFileFactory.getResourceFileMap(file)
-								.delete(file);
-						LogicalDeleteFileHandle.replaceInFile(
-								LogicalDeleteFileHandle.fileType+ file.getFullPath().toOSString(), "");
-					} else {
-						if (file.exists()) {
-							file.delete(true, null);
-						}
-					}
-					
-				}
-			} else {// Logical delete
+        // MOD qiongli feature 9486,show the dialog only once
+        try {
+            if (isDeleteForever) {
+                runStatus = showConfirmDialog();
+                if (!runStatus)
+                    return;
+                for (IFile file : selectedFiles) {
+                    String fileExt = file.getFileExtension();
+                    if (FactoriesUtil.isEmfFile(fileExt)) {
+                        // ADD xqliu 2010-08-05 bug 14469
+                        deleteMdmXsdFileFolder(file);
+                        // ~ 14469
+                        ModelElementFileFactory.getResourceFileMap(file).delete(file);
+                        LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.fileType + file.getFullPath().toOSString(),
+                                "");
+                    } else {
+                        if (file.exists()) {
+                            file.delete(true, null);
+                        }
+                    }
+                }
+            } else {// Logical delete
                 runStatus = true;
                 for (IFile file : selectedFiles) {
-					if (FactoriesUtil.isEmfFile(file.getFileExtension())) {
+                    if (FactoriesUtil.isEmfFile(file.getFileExtension())) {
                         LogicalDeleteFileHandle.deleteLogical(file);
-					}
-				}
-			}
-		} catch (Exception e) {
-			log.error(e, e);
-		}
-		// ~
-		ProxyRepositoryManager.getInstance().save();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+        // ~
+        ProxyRepositoryManager.getInstance().save();
 
         CorePlugin.getDefault().refreshDQView();
-        
-		CorePlugin.getDefault().refreshWorkSpace();
+
+        CorePlugin.getDefault().refreshWorkSpace();
+    }
+
+    /**
+     * DOC xqliu Comment method "deleteMdmXsdFileFolder".
+     * 
+     * @param file
+     * @throws CoreException
+     */
+    private void deleteMdmXsdFileFolder(IFile file) throws CoreException {
+        if (FactoriesUtil.isProvFile(file.getFileExtension())) {
+            TypedReturnCode<Connection> trc = PrvResourceFileHelper.getInstance().findProvider(file);
+            MDMConnection mdmConnection = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(trc.getObject());
+            if (mdmConnection != null) {
+                EList<Package> packages = mdmConnection.getDataPackage();
+                if (packages != null && packages.size() > 0) {
+                    TdXMLDocument tdXmlDocument = SwitchHelpers.XMLDOCUMENT_SWITCH.doSwitch(packages.get(0));
+                    if (tdXmlDocument != null) {
+                        String xsdFilePath = tdXmlDocument.getXsdFilePath();
+                        int indexOf = xsdFilePath.indexOf("/", xsdFilePath.indexOf("/") + 1);
+                        IFolder folder = ResourceManager.getMDMConnectionFolder().getFolder(
+                                xsdFilePath.substring(0, indexOf));
+                        folder.delete(true, null);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -141,8 +178,8 @@ public class DeleteObjectsAction extends Action {
      */
     private void showDependenciesDialog(IFile file, List<ModelElement> dependencies) {
         ModelElement[] dependencyElements = dependencies.toArray(new ModelElement[dependencies.size()]);
-        DeleteModelElementConfirmDialog.showDialog(null, file, dependencyElements,
-        		DefaultMessagesImpl.getString("LogicalDeleteFileHandle.dependencyByOther"));
+        DeleteModelElementConfirmDialog.showDialog(null, file, dependencyElements, DefaultMessagesImpl
+                .getString("LogicalDeleteFileHandle.dependencyByOther"));
     }
 
     /**
@@ -152,9 +189,9 @@ public class DeleteObjectsAction extends Action {
      */
     private boolean showConfirmDialog() {
         return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForeverTitle"),
-        		DefaultMessagesImpl.getString("DeleteObjectsAction.areYouDeleteForever"));
+                DefaultMessagesImpl.getString("DeleteObjectsAction.areYouDeleteForever"));
     }
- 
+
     /**
      * DOC bZhou Comment method "getDependencies".
      * 

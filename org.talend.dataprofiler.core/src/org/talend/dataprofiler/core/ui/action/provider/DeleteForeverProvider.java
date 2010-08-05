@@ -28,35 +28,32 @@ import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
  */
 public class DeleteForeverProvider extends CommonActionProvider {
 
-	@Override
-	public void fillContextMenu(IMenuManager menu) {
-		Object obj = ((TreeSelection) this.getContext().getSelection())
-				.getFirstElement();
-		if (obj instanceof DQRecycleBinNode) {
-			DQRecycleBinNode rbn = (DQRecycleBinNode) obj;
-			if (rbn.getObject() instanceof IFolder) {
-				IFolder currentSelection = (IFolder) rbn.getObject();
-				DeleteFolderAction createSubFolderAction = new DeleteFolderAction(
-						currentSelection, true);
-				menu.add(createSubFolderAction);
-			} else {
-				DeleteObjectsAction deleteObjectsAction = new DeleteObjectsAction(
-						true);
-				menu.add(deleteObjectsAction);
-			}
-		} else {
-			if (!FactoriesUtil.isEmfFile(((IFile) obj).getFileExtension())) {
-				DeleteObjectsAction deleteObjectsAction = new DeleteObjectsAction(true);
-				menu.add(deleteObjectsAction);
-			}
-		}
-	}
+    @Override
+    public void fillContextMenu(IMenuManager menu) {
+        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+        if (obj instanceof DQRecycleBinNode) {
+            DQRecycleBinNode rbn = (DQRecycleBinNode) obj;
+            if (rbn.getObject() instanceof IFolder) {
+                IFolder currentSelection = (IFolder) rbn.getObject();
+                DeleteFolderAction createSubFolderAction = new DeleteFolderAction(currentSelection, true);
+                menu.add(createSubFolderAction);
+            } else {
+                DeleteObjectsAction deleteObjectsAction = new DeleteObjectsAction(true);
+                menu.add(deleteObjectsAction);
+            }
+        } else {
+            if (!FactoriesUtil.isEmfFile(((IFile) obj).getFileExtension())) {
+                DeleteObjectsAction deleteObjectsAction = new DeleteObjectsAction(true);
+                menu.add(deleteObjectsAction);
+            }
+        }
+    }
 
-	/**
+    /**
 	 * 
 	 */
-	public DeleteForeverProvider() {
-		
-	}
+    public DeleteForeverProvider() {
+
+    }
 
 }

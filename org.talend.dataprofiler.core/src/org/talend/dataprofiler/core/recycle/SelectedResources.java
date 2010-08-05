@@ -31,88 +31,84 @@ import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * @author qiongli
- * Get all selected elements which used to delete forever
+ * @author qiongli Get all selected elements which used to delete forever
  */
 public class SelectedResources {
 
-	/**
+    /**
 	 * 
 	 */
-	public SelectedResources() {
-	}
+    public SelectedResources() {
+    }
 
-	/**
-	 * Return an array of the currently selected resources.
-	 * 
-	 * @return the selected resources
-	 */
-	@SuppressWarnings("unchecked")
-	public IFile[] getSelectedResourcesArrayForDelForever() {
-		DQRespositoryView findView = CorePlugin.getDefault()
-				.getRepositoryView();
-		TreeSelection treeSelection = (TreeSelection) findView
-				.getCommonViewer().getSelection();
-		List<IFile> fileList = new ArrayList<IFile>();
-		Iterator iterator = treeSelection.iterator();
-		while (iterator.hasNext()) {
-			Object obj = iterator.next();
-			if (obj instanceof DQRecycleBinNode) {
-				DQRecycleBinNode rbn = (DQRecycleBinNode) obj;
-				Object o = rbn.getObject();
-				if (o instanceof IFile) {
-					Property property = PropertyHelper.getProperty((IFile) o);
-					if (property.getItem().getState().isDeleted())
-						fileList.add((IFile) o);
-				} else if (o instanceof IFolder) {
-					getAllSubFilesByRecycleBinNode((IFolder) o, fileList);
-				}
-			} else if (obj instanceof IFile) {
-				IFile file = (IFile) obj;
-				fileList.add(file);
-			} else if (obj instanceof IFolder) {
-				IFolder folder = (IFolder) obj;
-				getAllSubFiles(folder, fileList);
-			}else {
-				return new IFile[0];
-			}
-		}
-		return fileList.toArray(new IFile[fileList.size()]);
-	}
+    /**
+     * Return an array of the currently selected resources.
+     * 
+     * @return the selected resources
+     */
+    @SuppressWarnings("unchecked")
+    public IFile[] getSelectedResourcesArrayForDelForever() {
+        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
+        TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
+        List<IFile> fileList = new ArrayList<IFile>();
+        Iterator iterator = treeSelection.iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            if (obj instanceof DQRecycleBinNode) {
+                DQRecycleBinNode rbn = (DQRecycleBinNode) obj;
+                Object o = rbn.getObject();
+                if (o instanceof IFile) {
+                    Property property = PropertyHelper.getProperty((IFile) o);
+                    if (property.getItem().getState().isDeleted())
+                        fileList.add((IFile) o);
+                } else if (o instanceof IFolder) {
+                    getAllSubFilesByRecycleBinNode((IFolder) o, fileList);
+                }
+            } else if (obj instanceof IFile) {
+                IFile file = (IFile) obj;
+                fileList.add(file);
+            } else if (obj instanceof IFolder) {
+                IFolder folder = (IFolder) obj;
+                getAllSubFiles(folder, fileList);
+            } else {
+                return new IFile[0];
+            }
+        }
+        return fileList.toArray(new IFile[fileList.size()]);
+    }
 
-	/**
-	 * DOC qiongli Comment method "getAllSubFiles for ".
-	 * 
-	 * @param folder
-	 * @param fileList
-	 */
-	private void getAllSubFilesByRecycleBinNode(IFolder folder,
-			List<IFile> fileList) {
-		IResource[] members = null;
-		try {
-			members = folder.members();
-			for (Object o : members) {
-				if (o instanceof IFile) {
-					IFile file = (IFile) o;
-					ModelElement mElement = ModelElementFileFactory
-							.getModelElement(file);
-					if (mElement == null) {
-						continue;
-					}
-					Property property = PropertyHelper.getProperty(mElement);
-					if (property.getItem().getState().isDeleted())
-						fileList.add(file);
-				} else if (o instanceof IFolder) {
-					getAllSubFilesByRecycleBinNode((IFolder) o, fileList);
-				}
-			}
+    /**
+     * DOC qiongli Comment method "getAllSubFiles for ".
+     * 
+     * @param folder
+     * @param fileList
+     */
+    private void getAllSubFilesByRecycleBinNode(IFolder folder, List<IFile> fileList) {
+        IResource[] members = null;
+        try {
+            members = folder.members();
+            for (Object o : members) {
+                if (o instanceof IFile) {
+                    IFile file = (IFile) o;
+                    ModelElement mElement = ModelElementFileFactory.getModelElement(file);
+                    if (mElement == null) {
+                        continue;
+                    }
+                    Property property = PropertyHelper.getProperty(mElement);
+                    if (property.getItem().getState().isDeleted())
+                        fileList.add(file);
+                } else if (o instanceof IFolder) {
+                    getAllSubFilesByRecycleBinNode((IFolder) o, fileList);
+                }
+            }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	}
-	/**
+    }
+
+    /**
      * DOC qiongli Comment method "getAllSubFiles".
      * 
      * @param folder
@@ -123,7 +119,7 @@ public class SelectedResources {
         try {
             members = folder.members();
         } catch (CoreException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
         for (IResource res : members) {
             if (res.getType() == IResource.FILE) {
