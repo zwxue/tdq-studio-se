@@ -26,23 +26,23 @@ import org.talend.dataquality.analysis.provider.AnalysisItemProviderAdapterFacto
  * 
  */
 public class MNComposedAdapterFactory {
-	private static ComposedAdapterFactory mnCompAdapterFactory;
 
-	public static final ComposedAdapterFactory getAdapterFactory() {
-		if (mnCompAdapterFactory == null) {
-			mnCompAdapterFactory = new ComposedAdapterFactory(
-					createFactoryList());
-		}
-		return mnCompAdapterFactory;
-	}
+    private static ComposedAdapterFactory mnCompAdapterFactory;
 
-	public static final ArrayList<AdapterFactory> createFactoryList() {
-		ArrayList<AdapterFactory> factories = new ArrayList<AdapterFactory>();
-		factories.add(new ResourceItemProviderAdapterFactory());
-		factories.add(new RelationalItemProviderAdapterFactory());
+    public static final ComposedAdapterFactory getAdapterFactory() {
+        if (mnCompAdapterFactory == null) {
+            mnCompAdapterFactory = new ComposedAdapterFactory(createFactoryList());
+        }
+        return mnCompAdapterFactory;
+    }
+
+    public static final ArrayList<AdapterFactory> createFactoryList() {
+        ArrayList<AdapterFactory> factories = new ArrayList<AdapterFactory>();
+        factories.add(new ResourceItemProviderAdapterFactory());
+        factories.add(new RelationalItemProviderAdapterFactory());
         factories.add(new orgomg.cwm.resource.relational.provider.RelationalItemProviderAdapterFactory());
         factories.add(new AnalysisItemProviderAdapterFactory());
-		factories.add(new ReflectiveItemProviderAdapterFactory());
-		return factories;
-	}
+        factories.add(new ReflectiveItemProviderAdapterFactory());
+        return factories;
+    }
 }

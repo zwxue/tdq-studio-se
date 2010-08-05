@@ -170,20 +170,21 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         List<String> extensions = Arrays.asList(filterExtensions);
         try {
             IResource[] members = parent.members();
-            //MOD qiongli,feature 9486.except the logical delete resources
-            IFile propFile=null;
+            // MOD qiongli,feature 9486.except the logical delete resources
+            IFile propFile = null;
             for (IResource resource : members) {
                 if (resource instanceof IFile) {
-                    if (extensions.contains(((IFile) resource).getFileExtension())){
-                    	propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-                    			((IFile)resource).getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
-                    	if (propFile.exists()) {
-                    		Property property = PropertyHelper.getProperty(propFile);
-                            if(!property.getItem().getState().isDeleted())
-                    		   i++;
-                    	}
-                    	
-                    }    
+                    if (extensions.contains(((IFile) resource).getFileExtension())) {
+                        propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+                                ((IFile) resource).getFullPath().removeFileExtension().addFileExtension(
+                                        FactoriesUtil.PROPERTIES_EXTENSION));
+                        if (propFile.exists()) {
+                            Property property = PropertyHelper.getProperty(propFile);
+                            if (!property.getItem().getState().isDeleted())
+                                i++;
+                        }
+
+                    }
                     // MOD by zshen for bug 13755
                 } else if (resource instanceof IFolder) {
                     i += getFileCount((IFolder) resource, filterExtensions);

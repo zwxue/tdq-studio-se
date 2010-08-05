@@ -19,7 +19,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -53,16 +53,18 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
     }
 
     public Image getImage(Object element) {
-        
-    	if (element instanceof IFolderNode) {
+
+        if (element instanceof IFolderNode) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-        } else if (element instanceof Connection) {
-            // ADD xqliu 2010-08-03 bug 14203
-            if (element instanceof MDMConnection) {
-                return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+        } else if (element instanceof IFile) { // MOD xqliu 2010-08-05 bug 14203
+            IFile file = (IFile) element;
+            String fileExtension = file.getFileExtension();
+            if (FactoriesUtil.isProvFile(fileExtension)) {
+                if (ConnectionUtils.isMdmConnection(file)) {
+                    return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                }
+                return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
             }
-            // ~ 14203
-            return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         } else if (element instanceof TdColumn) {
             if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
                 // get the icon for primary key
@@ -82,35 +84,35 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.XML_DOC);
         } else if (element instanceof TdXMLElement) {
             return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
-        }  else if (element instanceof IRecycleBin) {
-			return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
-		}
-        //MOD qiongli
-        if(element instanceof DQRecycleBinNode){
-        	DQRecycleBinNode rbn=(DQRecycleBinNode)element;
-        	Object obj=rbn.getObject();
-        	if(obj instanceof IFile){
-        		IFile file=(IFile)obj;
-        		String type=file.getFileExtension();
-        		if (type.equals(FactoriesUtil.ANA)) {
+        } else if (element instanceof IRecycleBin) {
+            return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
+        }
+        // MOD qiongli
+        if (element instanceof DQRecycleBinNode) {
+            DQRecycleBinNode rbn = (DQRecycleBinNode) element;
+            Object obj = rbn.getObject();
+            if (obj instanceof IFile) {
+                IFile file = (IFile) obj;
+                String type = file.getFileExtension();
+                if (type.equals(FactoriesUtil.ANA)) {
                     return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
                 } else if (type.equals(FactoriesUtil.REP)) {
-                	return ImageLib.getImage(ImageLib.REPORT_OBJECT);
+                    return ImageLib.getImage(ImageLib.REPORT_OBJECT);
                 } else if (type.equals(FactoriesUtil.PATTERN)) {
-                	return ImageLib.getImage(ImageLib.PATTERN_REG);
+                    return ImageLib.getImage(ImageLib.PATTERN_REG);
                 } else if (type.equals(FactoriesUtil.DQRULE)) {
-                	return ImageLib.getImage(ImageLib.DQ_RULE);
+                    return ImageLib.getImage(ImageLib.DQ_RULE);
                 } else if (type.equals(FactoriesUtil.PROV)) {
-                	return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+                    return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (type.equals(FactoriesUtil.DEFINITION)) {
-                	return ImageLib.getImage(ImageLib.IND_DEFINITION);
+                    return ImageLib.getImage(ImageLib.IND_DEFINITION);
                 }
-        	}else if(obj instanceof IFolder){
-        		return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-        	}   	
+            } else if (obj instanceof IFolder) {
+                return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+            }
         }
-        //~
-        
+        // ~
+
         return super.getImage(element);
     }
 
@@ -133,9 +135,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ((IndicatorDefinition) element).getName();
         } else if (element instanceof IndicatorCategory) {
             return ((IndicatorCategory) element).getName();
-        }  else if (element instanceof IRecycleBin) {
-			return ((IRecycleBin) element).getName();
-		}
+        } else if (element instanceof IRecycleBin) {
+            return ((IRecycleBin) element).getName();
+        }
 
         // PTODO qzhang fixed bug 4176: Display expressions as children of the
         // patterns
@@ -159,21 +161,21 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         } else if ((element instanceof TdTable || element instanceof TdView) && tableOwner != null && !"".equals(tableOwner)) {
             return super.getText(element) + "(" + tableOwner + ")";
         }
-      //MOD qiongli
-        if(element instanceof DQRecycleBinNode){
-        	DQRecycleBinNode rbn=(DQRecycleBinNode)element;
-        	Object obj=rbn.getObject();
-        	if(obj instanceof IFile){
-        		IFile file=(IFile)obj;
-        		ModelElement mElement = ModelElementFileFactory.getModelElement(file);
+        // MOD qiongli
+        if (element instanceof DQRecycleBinNode) {
+            DQRecycleBinNode rbn = (DQRecycleBinNode) element;
+            Object obj = rbn.getObject();
+            if (obj instanceof IFile) {
+                IFile file = (IFile) obj;
+                ModelElement mElement = ModelElementFileFactory.getModelElement(file);
 
                 if (mElement != null) {
                     return DqRepositoryViewService.buildElementName(mElement);
                 }
-        	}else if(obj instanceof IFolder){
-        		return ((IFolder)obj).getName();
-        	}  
-        	
+            } else if (obj instanceof IFolder) {
+                return ((IFolder) obj).getName();
+            }
+
         }
         String text = super.getText(element);
         return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;
