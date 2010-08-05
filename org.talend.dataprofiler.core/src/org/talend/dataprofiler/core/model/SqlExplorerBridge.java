@@ -67,13 +67,12 @@ public final class SqlExplorerBridge {
             }
         }
 
-        
         // MOD qiongli bug 13093,2010-7-2,show the warning dialog when the table can't be found
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         if (currentUser == null) {
-        	MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
+            MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable") + tableName);
-        	return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
+            return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
                     "SqlExplorerBridge.NotFindCorrespondTable", tableName), //$NON-NLS-1$
                     false);
         }
@@ -84,13 +83,18 @@ public final class SqlExplorerBridge {
         Catalog doSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPackageElement);
         INode catalogOrSchemaNode = null;
         if (doSwitch != null) {
-            for (INode catalogNode : catalogs) {
-                if (parentPackageElement.getName().equalsIgnoreCase(catalogNode.getName())) {
-                    catalogOrSchemaNode = catalogNode;
-                    // TODO if the schema is the child of catalog
-                    break;
+            // MOD klliu bug 14662 2010-08-05
+            if (catalogs.size() != 0) {
+                for (INode catalogNode : catalogs) {
+                    if (parentPackageElement.getName().equalsIgnoreCase(catalogNode.getName())) {
+                        catalogOrSchemaNode = catalogNode;
+                        // TODO if the schema is the child of catalog
+                        break;
+                    }
                 }
-            }
+            } else
+                catalogOrSchemaNode = root;
+
         } else {
             for (INode schemaNode : schemas) {
                 if (parentPackageElement.getName().equalsIgnoreCase(schemaNode.getName())) {
@@ -120,7 +124,6 @@ public final class SqlExplorerBridge {
                 // MOD qiongli bug 13093,2010-7-2
                 SQLExplorerPlugin.getDefault().getConnectionsView().getTreeViewer().setSelection(
                         new StructuredSelection(currentUser));
-
 
                 return typedReturnCode;
             }
