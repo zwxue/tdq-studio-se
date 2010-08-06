@@ -110,8 +110,8 @@ public final class DbmsLanguageFactory {
         if (isPostgresql(dbmsSubtype)) {
             return new PostgresqlDbmsLanguage(dbmsSubtype, dbVersion);
         }
-        if (isSybaseASE(dbmsSubtype)) {
-            return new SybaseASEDbmsLanguage(dbmsSubtype, dbVersion);
+        if (isSybase(dbmsSubtype)) {
+            return new SybaseASEDbmsLanguage(dbVersion);
         }
         if (isSQLite(dbmsSubtype)) {
             return new SQLiteDbmsLanguage(dbmsSubtype, dbVersion);
@@ -232,8 +232,9 @@ public final class DbmsLanguageFactory {
     private static boolean isAS400(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.AS400, dbms);
     }
-    private static boolean isSybaseASE(String dbms) {
-        return compareDbmsLanguage(DbmsLanguage.SYBASE_ASE, dbms);
+
+    private static boolean isSybase(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.SYBASE, dbms);
     }
 
     private static boolean isSQLite(String dbms) {

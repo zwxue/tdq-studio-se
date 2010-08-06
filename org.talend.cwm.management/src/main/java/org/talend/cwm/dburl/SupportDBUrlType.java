@@ -104,7 +104,7 @@ public enum SupportDBUrlType {
                      null,
                      "com.sybase.jdbc3.jdbc.SybDriver", //$NON-NLS-1$
                      null,
-                     "Adaptive Server Enterprise"), //$NON-NLS-1$
+                     "Adaptive Server Enterprise | Sybase Adaptive Server IQ"), //$NON-NLS-1$
     INFORMIXDEFAULTURL("Informix", //$NON-NLS-1$
                        "localhost", //$NON-NLS-1$
                        "1533", //$NON-NLS-1$

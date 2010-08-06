@@ -78,7 +78,7 @@ public class DbmsLanguage {
 
     static final String DB2ZOS = SupportDBUrlType.DB2ZOSDEFAULTURL.getLanguage();
 
-    static final String SYBASE_ASE = SupportDBUrlType.SYBASEDEFAULTURL.getLanguage();
+    static final String SYBASE = SupportDBUrlType.SYBASEDEFAULTURL.getLanguage();
 
     static final String SQLITE3 = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
 
