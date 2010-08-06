@@ -30,7 +30,11 @@ public enum EIndicatorChartType {
     SIMPLE_STATISTICS(Messages.getString("EIndicatorChartType.SimpleStatistics"), new SimpleStatisticsExplorer()), //$NON-NLS-1$
     TEXT_STATISTICS(Messages.getString("EIndicatorChartType.TextStatistics"), new TextStatisticsExplorer()), //$NON-NLS-1$
     FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.FrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
-    LOW_FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.LowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    BIN_FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.BinFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    LOW_FREQUENCE_STATISTICS(
+                             Messages.getString("EIndicatorChartType.BinLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    BIN_LOW_FREQUENCE_STATISTICS(
+                                 Messages.getString("EIndicatorChartType.BinLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
     PATTERN_FREQUENCE_STATISTICS(
                                  Messages.getString("EIndicatorChartType.PatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
     PATTERN_LOW_FREQUENCE_STATISTICS(

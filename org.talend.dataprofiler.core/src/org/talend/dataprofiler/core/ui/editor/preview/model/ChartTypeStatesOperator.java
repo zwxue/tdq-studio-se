@@ -72,6 +72,11 @@ public final class ChartTypeStatesOperator {
 
         case LOW_FREQUENCE_STATISTICS:
             return new LowFrequencyStatisticsState(units);
+            // MOD klliu 2010-08-06 bug 14695
+        case BIN_FREQUENCE_STATISTICS:
+            return new FrequencyStatisticsState(units);
+        case BIN_LOW_FREQUENCE_STATISTICS:
+            return new LowFrequencyStatisticsState(units);
 
         case PATTERN_FREQUENCE_STATISTICS:
             return new PatternFrequencyStatisticsState(units);

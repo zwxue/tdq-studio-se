@@ -42,10 +42,13 @@ public final class CompositeIndicator {
 
     private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, soundexFrequencyList,
             soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, datePatternFrequencyList, summaryList,
-            patternList, sqlPatternList, modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList,
-            dateFrequencyList, dateLowFrequencyList, simpleTextList;
+            patternList, sqlPatternList, modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList,dateFrequencyList, dateLowFrequencyList, simpleTextList;
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
+
+    private List<IndicatorUnit> binFrequencyList;
+
+    private List<IndicatorUnit> binLowFrequencyList;
 
     private static CompositeIndicator instance;
 
@@ -68,6 +71,8 @@ public final class CompositeIndicator {
         textList = new ArrayList<IndicatorUnit>();
         frequencyList = new ArrayList<IndicatorUnit>();
         lowFrequencyList = new ArrayList<IndicatorUnit>();
+        binFrequencyList = new ArrayList<IndicatorUnit>();
+        binLowFrequencyList = new ArrayList<IndicatorUnit>();
         soundexFrequencyList = new ArrayList<IndicatorUnit>();
         soundexLowFrequencyList = new ArrayList<IndicatorUnit>();
         patternFrequencylist = new ArrayList<IndicatorUnit>();
@@ -87,10 +92,11 @@ public final class CompositeIndicator {
         udiFrequencyList = new ArrayList<IndicatorUnit>();
         udiMatchingList = new ArrayList<IndicatorUnit>();
         udiRealValueList = new ArrayList<IndicatorUnit>();
-
+    
         dateFrequencyList = new ArrayList<IndicatorUnit>();
         dateLowFrequencyList = new ArrayList<IndicatorUnit>();
         simpleTextList = new ArrayList<IndicatorUnit>();
+    
     }
 
     private void clear() {
@@ -98,6 +104,8 @@ public final class CompositeIndicator {
         textList.clear();
         frequencyList.clear();
         lowFrequencyList.clear();
+        binFrequencyList.clear();
+        binLowFrequencyList.clear();
         soundexFrequencyList.clear();
         soundexLowFrequencyList.clear();
         patternFrequencylist.clear();
@@ -117,8 +125,8 @@ public final class CompositeIndicator {
         udiFrequencyList.clear();
         udiMatchingList.clear();
         udiRealValueList.clear();
-
-        dateFrequencyList.clear();
+        
+         dateFrequencyList.clear();
         dateLowFrequencyList.clear();
         simpleTextList.clear();
     }
@@ -151,23 +159,20 @@ public final class CompositeIndicator {
                 simpleList.add(one);
                 break;
             case MinLengthIndicatorEnum:
-            case MaxLengthIndicatorEnum:
-            case AverageLengthIndicatorEnum:
-                textList.add(one);
-                break;
             case MinLengthWithNullIndicatorEnum:
             case MinLengthWithBlankIndicatorEnum:
             case MinLengthWithBlankNullIndicatorEnum:
+            case MaxLengthIndicatorEnum:
             case MaxLengthWithNullIndicatorEnum:
             case MaxLengthWithBlankIndicatorEnum:
             case MaxLengthWithBlankNullIndicatorEnum:
+            case AverageLengthIndicatorEnum:
             case AverageLengthWithNullIndicatorEnum:
             case AverageLengthWithBlankIndicatorEnum:
             case AverageLengthWithNullBlankIndicatorEnum:
-                simpleTextList.add(one);
+                textList.add(one);
                 break;
             case FrequencyIndicatorEnum:
-            case BinFrequencyIndicatorEnum:
                 frequencyList.add(one);
                 break;
             case DateFrequencyIndicatorEnum:
@@ -175,19 +180,19 @@ public final class CompositeIndicator {
             case MonthFrequencyIndicatorEnum:
             case QuarterFrequencyIndicatorEnum:
             case YearFrequencyIndicatorEnum:
-                dateFrequencyList.add(one);
+            case BinFrequencyIndicatorEnum:
+                binFrequencyList.add(one);
                 break;
             case LowFrequencyIndicatorEnum:
-            case BinLowFrequencyIndicatorEnum:
                 lowFrequencyList.add(one);
                 break;
-
             case DateLowFrequencyIndicatorEnum:
             case WeekLowFrequencyIndicatorEnum:
             case MonthLowFrequencyIndicatorEnum:
             case QuarterLowFrequencyIndicatorEnum:
             case YearLowFrequencyIndicatorEnum:
-                dateLowFrequencyList.add(one);
+            case BinLowFrequencyIndicatorEnum:
+                binLowFrequencyList.add(one);
                 break;
             // ~ MOD mzhao 2009-03-23 Feature 6307
             case SoundexIndicatorEnum:
@@ -250,6 +255,9 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.TEXT_STATISTICS, textList);
         separatedMap.put(EIndicatorChartType.FREQUENCE_STATISTICS, frequencyList);
         separatedMap.put(EIndicatorChartType.LOW_FREQUENCE_STATISTICS, lowFrequencyList);
+        // MOD klliu 2010-08-06 bug 14695
+        separatedMap.put(EIndicatorChartType.BIN_FREQUENCE_STATISTICS, binFrequencyList);
+        separatedMap.put(EIndicatorChartType.BIN_LOW_FREQUENCE_STATISTICS, binLowFrequencyList);
         separatedMap.put(EIndicatorChartType.SOUNDEX_FREQUENCY_TABLE, soundexFrequencyList);
         separatedMap.put(EIndicatorChartType.SOUNDEX_LOW_FREQUENCY_TABLE, soundexLowFrequencyList);
         separatedMap.put(EIndicatorChartType.PATTERN_FREQUENCE_STATISTICS, patternFrequencylist);
@@ -263,9 +271,7 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.UDI_FREQUENCY, udiFrequencyList);
         separatedMap.put(EIndicatorChartType.UDI_MATCHING, udiMatchingList);
         separatedMap.put(EIndicatorChartType.UDI_REALVALUE, udiRealValueList);
-        separatedMap.put(EIndicatorChartType.DATE_FREQUENCE_STATISTICS, dateFrequencyList);
-        separatedMap.put(EIndicatorChartType.DATE_LOW_FREQUENCE_STATISTICS, dateLowFrequencyList);
-        separatedMap.put(EIndicatorChartType.SIMPLE_TEXT_STATISTICS, simpleTextList);
+
         return separatedMap;
     }
 
