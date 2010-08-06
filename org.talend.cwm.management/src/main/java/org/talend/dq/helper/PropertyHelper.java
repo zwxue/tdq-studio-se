@@ -210,9 +210,7 @@ public final class PropertyHelper {
      * @return
      */
     public static IPath getItemTypedPath(Property property) {
-        ModelElement element = retrieveElement((TDQItem) property.getItem());
-
-        EResourceConstant rc = EResourceConstant.getTypedConstant(element);
+        EResourceConstant rc = EResourceConstant.getTypedConstant(property.getItem());
         return rc != null ? new Path(rc.getPath()) : null;
     }
 

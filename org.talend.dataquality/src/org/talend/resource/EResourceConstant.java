@@ -19,6 +19,16 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.TDQAnalysisItem;
+import org.talend.core.model.properties.TDQBusinessRuleItem;
+import org.talend.core.model.properties.TDQDBConnectionItem;
+import org.talend.core.model.properties.TDQIndicatorItem;
+import org.talend.core.model.properties.TDQJrxmlItem;
+import org.talend.core.model.properties.TDQMDMConnectionItem;
+import org.talend.core.model.properties.TDQPatternItem;
+import org.talend.core.model.properties.TDQReportItem;
+import org.talend.core.model.properties.util.PropertiesSwitch;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -171,6 +181,58 @@ public enum EResourceConstant {
         }
 
         return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getTypedConstant".
+     * 
+     * @param item
+     * @return
+     */
+    public static EResourceConstant getTypedConstant(Item item) {
+        return (EResourceConstant) new PropertiesSwitch() {
+
+            @Override
+            public Object caseTDQReportItem(TDQReportItem object) {
+                return REPORTS;
+            }
+
+            @Override
+            public Object caseTDQAnalysisItem(TDQAnalysisItem object) {
+                return ANALYSIS;
+            }
+
+            @Override
+            public Object caseTDQDBConnectionItem(TDQDBConnectionItem object) {
+                return DB_CONNECTIONS;
+            }
+
+            @Override
+            public Object caseTDQMDMConnectionItem(TDQMDMConnectionItem object) {
+                return MDM_CONNECTIONS;
+            }
+
+            @Override
+            public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
+                return RULES_SQL;
+            }
+
+            @Override
+            public Object caseTDQIndicatorItem(TDQIndicatorItem object) {
+                return INDICATORS;
+            }
+
+            @Override
+            public Object caseTDQJrxmlItem(TDQJrxmlItem object) {
+                return JRXML_TEMPLATE;
+            }
+
+            @Override
+            public Object caseTDQPatternItem(TDQPatternItem object) {
+                return PATTERN_SQL;
+            }
+
+        }.doSwitch(item);
     }
 
     /**

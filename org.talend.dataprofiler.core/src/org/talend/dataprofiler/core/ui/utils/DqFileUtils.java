@@ -13,11 +13,16 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Plugin;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -104,6 +109,46 @@ public final class DqFileUtils {
             }
         } else {
             result.add(parent);
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "searchAllFileInPlugin".
+     * 
+     * @param result
+     * @param plugin
+     * @param srcPath
+     * @param recurse
+     * @param suffix
+     * @throws IOException
+     */
+    public static void searchAllFileInPlugin(List<File> result, Plugin plugin, String srcPath, boolean recurse, String suffix)
+            throws IOException {
+
+        Enumeration<String> paths = plugin.getBundle().getEntryPaths(srcPath);
+
+        if (paths == null) {
+            return;
+        }
+
+        while (paths.hasMoreElements()) {
+            String nextElement = (String) paths.nextElement();
+            String currentPath = "/" + nextElement;
+            URL resourceURL = plugin.getBundle().getEntry(currentPath);
+
+            URL fileURL = FileLocator.toFileURL(resourceURL);
+            File file = new File(fileURL.getFile());
+
+            if (file.isDirectory() && recurse) {
+                if (!file.getName().startsWith(".")) { //$NON-NLS-1$
+                    searchAllFileInPlugin(result, plugin, currentPath, recurse, suffix);
+                }
+                continue;
+            }
+
+            if (suffix == null || file.getName().endsWith(suffix)) {
+                result.add(file);
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ public final class ResourceManager {
      * 
      * @return
      */
-    static IWorkspaceRoot getRoot() {
+    public static IWorkspaceRoot getRoot() {
         return ResourcesPlugin.getWorkspace().getRoot();
     }
 

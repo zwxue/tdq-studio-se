@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +29,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.jfree.util.Log;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -49,7 +53,7 @@ public class ItemRecord {
 
     private Property property;
 
-    private Map<File, ModelElement> dependencyMap;
+    private Map<File, ModelElement> dependencyMap = new HashMap<File, ModelElement>();
 
     private List<String> errors = new ArrayList<String>();
 
@@ -69,7 +73,7 @@ public class ItemRecord {
                 init();
             }
         } catch (Exception e) {
-            Log.error(e, e);
+            ExceptionHandler.process(e);
         }
     }
 
@@ -77,6 +81,7 @@ public class ItemRecord {
      * DOC bZhou Comment method "init".
      */
     private void init() {
+
         if (resourceSet == null) {
             resourceSet = new ResourceSetImpl();
         }
@@ -87,7 +92,7 @@ public class ItemRecord {
 
         allItemRecords.add(this);
 
-        if (element == null && file != null) {
+        if (element == null && file != null && !isJRXml()) {
             URI fileURI = URI.createFileURI(file.getAbsolutePath());
             Resource resource = resourceSet.getResource(fileURI, true);
             EList<EObject> contents = resource.getContents();
@@ -155,9 +160,17 @@ public class ItemRecord {
      * DOC bZhou Comment method "computeDependencies".
      */
     private void computeDependencies() {
-        if (dependencyMap == null) {
-            dependencyMap = new HashMap<File, ModelElement>();
 
+        if (isJRXml()) {
+            Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
+            for (TdReport report : allReports) {
+                for (AnalysisMap anaMap : report.getAnalysisMap()) {
+                    if (StringUtils.equals(file.getAbsolutePath(), anaMap.getJrxmlSource())) {
+                        dependencyMap.put(file, report);
+                    }
+                }
+            }
+        } else {
             List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
 
             ModelElementHelper.iterateClientDependencies(element, dependencyElements);
@@ -296,6 +309,19 @@ public class ItemRecord {
     }
 
     /**
+     * DOC bZhou Comment method "getElementName".
+     * 
+     * @return
+     */
+    public String getElementName() {
+        if (isJRXml()) {
+            return property.getLabel();
+        }
+
+        return getElement().getName();
+    }
+
+    /**
      * DOC bZhou Comment method "isValid".
      * 
      * @param file
@@ -350,6 +376,15 @@ public class ItemRecord {
                 || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0
                 || StringUtils.equals(file.getName(), ReponsitoryContextBridge.PROJECT_DEFAULT_NAME) || tdqProject)
                 && !file.getName().startsWith(".");
+    }
+
+    /**
+     * DOC bZhou Comment method "isJRXml".
+     * 
+     * @return
+     */
+    private boolean isJRXml() {
+        return file.getName().endsWith(FactoriesUtil.JRXML);
     }
 
     /**

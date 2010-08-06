@@ -304,4 +304,14 @@ public final class FactoriesUtil {
     public static boolean isEmfFile(String fileExt) {
         return getExtensions().contains(fileExt);
     }
+
+    /**
+     * DOC bZhou Comment method "isJrxmlFile".
+     * 
+     * @param fileExt
+     * @return
+     */
+    public static boolean isJrxmlFile(String fileExt) {
+        return StringUtils.equalsIgnoreCase(fileExt, JRXML);
+    }
 }

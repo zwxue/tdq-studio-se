@@ -71,7 +71,7 @@ public class ImportWizard extends Wizard {
                             break;
                         }
 
-                        monitor.subTask("Importing " + record.getElement().getName());
+                        monitor.subTask("Importing " + record.getElementName());
 
                         if (record.isValid()) {
                             log.info("Start importing " + record.getFile().getAbsolutePath());

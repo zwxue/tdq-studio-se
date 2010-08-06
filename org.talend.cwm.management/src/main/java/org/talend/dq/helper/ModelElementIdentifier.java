@@ -23,6 +23,8 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
@@ -86,6 +88,13 @@ public final class ModelElementIdentifier {
     public static final XmlSwitch<TdXMLDocument> XMLDOC = new XmlSwitch<TdXMLDocument>() {
 
         public TdXMLDocument caseTdXMLDocument(TdXMLDocument object) {
+            return object;
+        };
+    };
+
+    public static final IndicatorSqlSwitch<UserDefIndicator> UDI = new IndicatorSqlSwitch<UserDefIndicator>() {
+
+        public UserDefIndicator caseUserDefIndicator(UserDefIndicator object) {
             return object;
         };
     };
@@ -184,5 +193,17 @@ public final class ModelElementIdentifier {
      */
     public static boolean isSoftware(EObject element) {
         return SOFTWARE.doSwitch(element) != null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isUDID".
+     * 
+     * Decide it's a user defined indicator or not.
+     * 
+     * @param element
+     * @return
+     */
+    public static boolean isUDID(EObject element) {
+        return UDI.doSwitch(element) != null;
     }
 }

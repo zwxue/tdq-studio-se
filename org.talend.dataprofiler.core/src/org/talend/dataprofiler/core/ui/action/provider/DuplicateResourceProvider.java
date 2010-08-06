@@ -16,12 +16,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.dataprofiler.core.ui.action.actions.DuplicateCWMResourceAction;
+import org.talend.dataprofiler.core.ui.action.actions.DuplicateAction;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
-public class DuplicateCWMResourceProvider extends CommonActionProvider {
+public class DuplicateResourceProvider extends CommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
@@ -34,7 +34,7 @@ public class DuplicateCWMResourceProvider extends CommonActionProvider {
                 files[i] = file;
             }
 
-            DuplicateCWMResourceAction duplicate = new DuplicateCWMResourceAction(files);
+            DuplicateAction duplicate = new DuplicateAction(files);
             menu.add(duplicate);
         }
     }

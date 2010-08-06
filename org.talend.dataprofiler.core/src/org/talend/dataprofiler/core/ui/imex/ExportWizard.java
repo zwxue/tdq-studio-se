@@ -80,7 +80,7 @@ public class ExportWizard extends Wizard {
                             break;
                         }
 
-                        monitor.subTask("Exporting " + record.getElement().getName());
+                        monitor.subTask("Exporting " + record.getElementName());
 
                         if (record.isValid()) {
                             log.info("Start exporting " + record.getFile().getAbsolutePath());
