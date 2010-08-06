@@ -234,7 +234,13 @@ public final class DbmsLanguageFactory {
     }
 
     private static boolean isSybase(String dbms) {
-        return compareDbmsLanguage(DbmsLanguage.SYBASE, dbms);
+        String[] sybaseVertions = DbmsLanguage.SYBASE.split("\\|");
+        for (String sybaseVerion : sybaseVertions) {
+            if (compareDbmsLanguage(dbms, sybaseVerion.trim())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isSQLite(String dbms) {

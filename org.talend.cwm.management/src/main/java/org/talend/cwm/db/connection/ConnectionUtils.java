@@ -402,9 +402,12 @@ public final class ConnectionUtils {
      */
     public static boolean isSybase(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
-        if (connectionMetadata.getDriverName() != null && connectionMetadata.getDatabaseProductName() != null
-                && connectionMetadata.getDatabaseProductName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
-            return true;
+        if (connectionMetadata.getDriverName() != null && connectionMetadata.getDatabaseProductName() != null) {
+            for (String keyString : SupportDBUrlType.SYBASEDEFAULTURL.getLanguage().split("\\|")) {
+                if (keyString.trim().equals(connectionMetadata.getDatabaseProductName().trim())) {
+                    return true;
+                }
+            }
         }
         return false;
     }
