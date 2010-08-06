@@ -93,8 +93,10 @@ public class UrlEditDialog extends TrayDialog {
         connectionParam = new DBConnectionParameter();
 
         Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.USER, ConnectionUtils.getUsername(tdDataProvider));
-        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionUtils.getPassword(tdDataProvider));
+        // MOD xqliu 2010-08-06 bug 14593
+        properties.setProperty(TaggedValueHelper.USER, ConnectionUtils.getUsernameDefault(tdDataProvider));
+        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionUtils.getPasswordDefault(tdDataProvider));
+        // ~ 14593
         connectionParam.setParameters(properties);
         connectionParam.setName(dataProvider.getName());
         connectionParam.setAuthor(MetadataHelper.getAuthor(dataProvider));

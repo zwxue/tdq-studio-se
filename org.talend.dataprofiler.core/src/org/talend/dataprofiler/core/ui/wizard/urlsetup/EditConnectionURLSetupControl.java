@@ -261,19 +261,29 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
                 public void widgetSelected(SelectionEvent event) {
                     FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
                     String filename = dialog.open();
+                    // MOD xqliu 2010-08-06 bug 14593
+                    // if (filename != null) {
+                    // fileText.setText(filename);
+                    // } else {
+                    //     fileText.setText(""); //$NON-NLS-1$
+                    // }
+                    // String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                    // if (log.isInfoEnabled()) {
+                    // log.info("the formated url is :" + url);
+                    // }
+                    // setConnectionURL(url);
+                    // urlText.setText(getConnectionURL());
                     if (filename != null) {
                         fileText.setText(filename);
-                    } else {
-                        fileText.setText(""); //$NON-NLS-1$
+                        String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(),
+                                "", "", fileText.getText(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                        if (log.isInfoEnabled()) {
+                            log.info("the formated url is :" + url);
+                        }
+                        setConnectionURL(url);
+                        urlText.setText(getConnectionURL());
                     }
-                    String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-
-                    if (log.isInfoEnabled()) {
-                        log.info("the formated url is :" + url);
-                    }
-
-                    setConnectionURL(url);
-                    urlText.setText(getConnectionURL());
+                    // ~ 14593
                 }
             });
 

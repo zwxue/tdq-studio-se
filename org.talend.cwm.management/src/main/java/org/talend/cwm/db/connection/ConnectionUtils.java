@@ -73,6 +73,10 @@ public final class ConnectionUtils {
     // MOD mzhao 2009-06-05 Bug 7571
     private static final Map<String, Driver> DRIVER_CACHE = new HashMap<String, Driver>();
 
+    public static final String DEFAULT_USERNAME = "root";
+
+    public static final String DEFAULT_PASSWORD = "";
+
     public static boolean isTimeout() {
         return timeout;
     }
@@ -154,7 +158,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public synchronized static java.sql.Connection createConnectionWithTimeout(Driver driver, String url, Properties props)
+    public static synchronized java.sql.Connection createConnectionWithTimeout(Driver driver, String url, Properties props)
             throws SQLException {
         java.sql.Connection ret = null;
         if (isTimeout()) {
@@ -578,6 +582,20 @@ public final class ConnectionUtils {
     }
 
     /**
+     * DOC xqliu Comment method "isSqlite".
+     * 
+     * @param connection
+     * @return
+     */
+    public static boolean isSqlite(Connection connection) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            return SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbConn.getDatabaseType());
+        }
+        return false;
+    }
+
+    /**
      * DOC xqliu Comment method "printResultSetColumns".
      * 
      * @param rs
@@ -616,7 +634,7 @@ public final class ConnectionUtils {
      * DOC xqliu Comment method "getUsername".
      * 
      * @param conn
-     * @return
+     * @return username of the connection or null
      */
     public static String getUsername(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
@@ -628,6 +646,29 @@ public final class ConnectionUtils {
             return mdmConn.getUsername();
         }
         return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "getUsername".
+     * 
+     * @param conn
+     * @param defaultUsername
+     * @return username of the connection or given username
+     */
+    public static String getUsername(Connection conn, String defaultUsername) {
+        String result = getUsername(conn);
+        result = (result == null || "".equals(result.trim())) ? defaultUsername : result;
+        return result;
+    }
+
+    /**
+     * DOC xqliu Comment method "getUsernameDefault".
+     * 
+     * @param conn
+     * @return username of the connection or default username
+     */
+    public static String getUsernameDefault(Connection conn) {
+        return getUsername(conn, DEFAULT_USERNAME);
     }
 
     /**
@@ -651,7 +692,7 @@ public final class ConnectionUtils {
      * DOC xqliu Comment method "getPassword".
      * 
      * @param conn
-     * @return
+     * @return password of the connection or null
      */
     public static String getPassword(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
@@ -663,6 +704,29 @@ public final class ConnectionUtils {
             return mdmConn.getPassword();
         }
         return null;
+    }
+
+    /**
+     * DOC xqliu Comment method "getPassword".
+     * 
+     * @param conn
+     * @param defaultPassword
+     * @return password of the connection or given password
+     */
+    public static String getPassword(Connection conn, String defaultPassword) {
+        String result = getPassword(conn);
+        result = result == null ? defaultPassword : result;
+        return result;
+    }
+
+    /**
+     * DOC xqliu Comment method "getPasswordDefault".
+     * 
+     * @param conn
+     * @return password of the connection or default password
+     */
+    public static String getPasswordDefault(Connection conn) {
+        return getPassword(conn, DEFAULT_PASSWORD);
     }
 
     /**
@@ -686,7 +750,7 @@ public final class ConnectionUtils {
      * DOC xqliu Comment method "getDriverClass".
      * 
      * @param conn
-     * @return
+     * @return driver class name of the connection or null
      */
     public static String getDriverClass(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
@@ -717,7 +781,7 @@ public final class ConnectionUtils {
      * DOC xqliu Comment method "getURL".
      * 
      * @param conn
-     * @return
+     * @return url string of the connection or null
      */
     public static String getURL(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
@@ -752,7 +816,7 @@ public final class ConnectionUtils {
      * DOC xqliu Comment method "getServerName".
      * 
      * @param conn
-     * @return
+     * @return server name of the connection or null
      */
     public static String getServerName(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
@@ -787,7 +851,7 @@ public final class ConnectionUtils {
      * DOC xqliu Comment method "getPort".
      * 
      * @param conn
-     * @return
+     * @return port of the connection or null
      */
     public static String getPort(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
@@ -822,7 +886,7 @@ public final class ConnectionUtils {
      * DOC xqliu Comment method "getSID".
      * 
      * @param conn
-     * @return
+     * @return sid of the connection or null
      */
     public static String getSID(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);

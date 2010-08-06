@@ -111,8 +111,10 @@ public final class JavaSqlFactory {
         }
         String driverClassName = ConnectionUtils.getDriverClass(connection);
         Properties props = new Properties();
-        props.put(TaggedValueHelper.USER, ConnectionUtils.getUsername(connection));
-        props.put(TaggedValueHelper.PASSWORD, ConnectionUtils.getPassword(connection));
+        // MOD xqliu 2010-08-06 bug 14593
+        props.put(TaggedValueHelper.USER, ConnectionUtils.getUsernameDefault(connection));
+        props.put(TaggedValueHelper.PASSWORD, ConnectionUtils.getPasswordDefault(connection));
+        // ~ 14593
         try {
             java.sql.Connection sqlConnection = ConnectionUtils.createConnection(url, driverClassName, props);
             rc.setObject(sqlConnection);

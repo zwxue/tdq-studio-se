@@ -85,9 +85,13 @@ public class CWMPlugin extends Plugin {
 
                     Alias alias = new Alias(dataProvider.getName());
 
-                    String clearTextUser = ConnectionUtils.getUsername(connection);
-                    String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
-                    String password = ConnectionUtils.getPassword(connection);
+                    // MOD xqliu 2010-08-06 bug 14593
+                    // String clearTextUser = ConnectionUtils.getUsername(connection);
+                    // String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
+                    String user = ConnectionUtils.getUsernameDefault(connection);
+                    String password = ConnectionUtils.getPasswordDefault(connection);
+                    // ~ 14593
+
                     // MOD scorreia 2010-07-24 set empty string instead of null password so that database xml file is
                     // serialized correctly.
                     assert password != null;
