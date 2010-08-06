@@ -33,6 +33,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -66,8 +67,10 @@ public class LogicalDeleteFileHandle {
 
     private static List<String[]> delLs = null;
 
+    private static String slashStr = "\\";
+
     /**
-     * DOC Replace a path String to "" in logicalDelete.txt.
+     * Replace a path String to "" in logicalDelete.txt.
      * 
      * @param regex
      * @param fileName
@@ -118,9 +121,11 @@ public class LogicalDeleteFileHandle {
     }
 
     /**
+     * 
+     * Save logical delete path to TXT file.
+     * 
+     * @param type
      * @param path
-     * @param element
-     * @throws Exceptio Save logical delete path to TXT file
      */
     public static void saveElement(String type, String path) {
         try {
@@ -142,9 +147,10 @@ public class LogicalDeleteFileHandle {
     }
 
     /**
-     * @param filePath
+     * 
+     * Read all logical delete elements from the TXT file.
+     * 
      * @return
-     * @throws Exception Read all logical delete elements from the TXT file
      */
     public static List<String[]> readFileByLine() {
         List<String[]> list = new ArrayList<String[]>();
@@ -179,8 +185,11 @@ public class LogicalDeleteFileHandle {
     }
 
     /**
+     * 
+     * Remove the path of file's parents(until to the top) in the TXT file.
+     * 
      * @param ifile
-     * @throws IOException Remove the path of file's parents(until to the top) in the TXT file.
+     * @throws IOException
      */
 
     public static void removeAllParent(IFile ifile) throws IOException {
@@ -192,8 +201,11 @@ public class LogicalDeleteFileHandle {
     }
 
     /**
+     * 
+     * Get all Children from TXT by 'folderPath',contain file or subFoldern.
+     * 
      * @param folderPath
-     * @retur Get all Children from TXT by 'folderPath',contain file or subFoldern
+     * @return
      */
     public static List<Object> getChildFromTXT(String folderPath) {
         List<Object> ls = new ArrayList<Object>();
@@ -203,9 +215,8 @@ public class LogicalDeleteFileHandle {
             IFolder folder = null;
             HashSet<String> set = new HashSet<String>();
             DQRecycleBinNode rbn = null;
-            List<String[]> delElements = readFileByLine();
 
-            for (String[] es : delElements) {
+            for (String[] es : delLs) {
                 if (es.length < 2 || folderType.equals(es[0] + ":") && folderPath.equals(es[1]))
                     continue;
                 if (es[1].startsWith(folderPath)) {
@@ -216,12 +227,17 @@ public class LogicalDeleteFileHandle {
                             rbn = new DQRecycleBinNode();
                             rbn.setObject(file);
                             ls.add(rbn);
+                            IFolder rootFolder = (IFolder) file.getParent();
+                            // if its brother is empty folder,add its brother
+                            for (IResource res : rootFolder.members()) {
+                                if (res.getType() == IResource.FOLDER && ((IFolder) res).members().length == 0) {
+                                    set.add(folderPath + slashStr + ((IFolder) res).getName());
+                                }
+                            }
                         } else {
                             // add the subFoler
                             addToSet(es[1], folderPath, set);
                         }
-                    } else if (es[0].equals("Folder")) {
-                        addToSet(es[1], folderPath, set);
                     }
                 }
 
@@ -240,27 +256,6 @@ public class LogicalDeleteFileHandle {
     }
 
     /**
-     * @param folderPath
-     * @return Judge the folder whether has children
-     */
-    public static boolean hasDelChildren(String folderPath) {
-        boolean flag = false;
-        try {
-            for (String[] es : delLs) {
-                if (es.length < 2 || folderType.equals(es[0] + ":") && folderPath.equals(es[1]))
-                    continue;
-                if (es[1].startsWith(folderPath)) {
-                    flag = true;
-                    break;
-                }
-            }
-        } catch (Exception exc) {
-            log.error(exc, exc);
-        }
-        return flag;
-    }
-
-    /**
      * Judge whether the TXT file exit.if not,create it.
      * 
      * @throws IOException
@@ -274,23 +269,40 @@ public class LogicalDeleteFileHandle {
     }
 
     /**
+     * 
+     * Make sure the same subFoleder only appear once.
+     * 
      * @param fullPath
      * @param folderPath
-     * @param hashSe Make sure the same subFoleder only appear oncet
+     * @param hashSet
      */
-    private static void addToSet(String fullPath, String folderPath, HashSet<String> hashSet) {
-        String subFolderName = fullPath.replace(folderPath, "");
+    private static void addToSet(String fullPath, String folderPath, HashSet<String> hashSet) throws CoreException {
+        String subFolderName = fullPath.replace(folderPath, PluginConstant.EMPTY_STRING);
         String[] temp = StringUtils.split(subFolderName, '\\');
         if (temp != null && temp.length > 0) {
             subFolderName = temp[0];
-            hashSet.add(folderPath + "\\" + subFolderName);
+            hashSet.add(folderPath + slashStr + subFolderName);
+            // MOD qiongli 2010-8-6 bug 14697.if its brother is empty folder,add its brother
+            if (isStartWithDelFolder(folderPath)) {
+                IPath iPath = new Path(folderPath);
+                IFolder rootFolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(iPath);
+                for (IResource res : rootFolder.members()) {
+                    if (res.getType() == IResource.FOLDER && ((IFolder) res).members().length == 0) {
+                        hashSet.add(folderPath + slashStr + ((IFolder) res).getName());
+                    }
+                }
+            }
         }
+
     }
 
     /**
+     * 
+     * Logical delete file.set the property of isDelete to 'true'.save the file fullPath to the TXT.
+     * 
      * @param ifile
-     * @throws Exception Logical delete file.set the property of isDelete to 'true'.save the file fullPath to the TXT
-     * file
+     * @return
+     * @throws Exception
      */
     public static ReturnCode deleteLogical(IFile ifile) throws Exception {
         ReturnCode rc = new ReturnCode();
@@ -323,12 +335,31 @@ public class LogicalDeleteFileHandle {
     }
 
     /**
-     * @return the delLs Get the Logical delete elements
+     * 
+     * Get the Logical delete elements.
+     * 
+     * @return
      */
     public static List<String[]> getDelLs() {
         if (delLs == null)
             delLs = readFileByLine();
         return delLs;
+    }
+
+    /**
+     * 
+     * judge current folder path whethere start with deleted folder path which in delLs.
+     * 
+     * @param path
+     * @return
+     */
+    public static boolean isStartWithDelFolder(String path) {
+        for (String[] es : delLs) {
+            if (es[0].equals("Folder") && path.startsWith(es[1])) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

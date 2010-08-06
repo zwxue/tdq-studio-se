@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -70,24 +71,15 @@ public class DeleteFolderAction extends Action {
 		try {
 			// MOD qiongli feature 9486
 			if (isDeleteForever) {	
-				delsubFolderForever(folder);
-				if (folder.members().length==0){
-					LogicalDeleteFileHandle.replaceInFile(
-							LogicalDeleteFileHandle.folderType
-									+ folder.getFullPath().toOSString(), "");
-					folder.delete(true, null);
-				}
+                // MOD qiongli 2010-8-5,bug 14697.
+                delsubFolderForever(folder);
+                if (LogicalDeleteFileHandle.isStartWithDelFolder(folder.getFullPath().toOSString())) {
+                    LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType + folder.getFullPath().toOSString(),
+                            PluginConstant.EMPTY_STRING);
+                    folder.delete(true, null);
+                }
 			} else {
-				for (IResource member:folder.members()){
-					if (member instanceof IFolder) {
-						LogicalDeleteFileHandle.saveElement(
-								LogicalDeleteFileHandle.folderType,
-								((IFolder) member).getFullPath().toOSString());
-					}
-				}
-				LogicalDeleteFileHandle.saveElement(
-						LogicalDeleteFileHandle.folderType, folder
-								.getFullPath().toOSString());
+                LogicalDeleteFileHandle.saveElement(LogicalDeleteFileHandle.folderType, folder.getFullPath().toOSString());
 			}
 			CorePlugin.getDefault().refreshDQView();
 			// ~
@@ -116,21 +108,22 @@ public class DeleteFolderAction extends Action {
 
     }
     
-    private void delsubFolderForever(IFolder fo) throws CoreException{
-		IResource[] members = fo.members();
-		for (IResource member : members) {
-			if (member instanceof IFolder) {
-				IFolder subFolder = (IFolder) member;
-				if (subFolder.members().length == 0) {
-					LogicalDeleteFileHandle.replaceInFile(
-							LogicalDeleteFileHandle.folderType
-									+ ((IFolder) member).getFullPath().toOSString(), "");
-					subFolder.delete(true, null);
-				} else {
-					delsubFolderForever(subFolder);
-				}
-			}	
-    	}
+    private void delsubFolderForever(IFolder fo) throws CoreException {
+        IResource[] members = fo.members();
+        for (IResource member : members) {
+            if (member.getType() == IResource.FOLDER) {
+                IFolder subFolder = (IFolder) member;
+                // MOD qiongli 2010-8-5,bug 14697
+                if (LogicalDeleteFileHandle.isStartWithDelFolder(subFolder.getFullPath().toOSString())) {
+                    subFolder.delete(true, null);
+                    LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType
+                            + subFolder.getFullPath().toOSString(), PluginConstant.EMPTY_STRING);
+
+                } else {
+                    delsubFolderForever(subFolder);
+                }
+            }
+        }
     }
 
 }

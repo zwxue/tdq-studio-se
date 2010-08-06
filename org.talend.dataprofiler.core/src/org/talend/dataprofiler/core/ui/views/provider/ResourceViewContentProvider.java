@@ -245,8 +245,12 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
             Object obj = rbn.getObject();
             if (obj instanceof IFolder) {
-                String fPath = ((IFolder) obj).getFullPath().toOSString();
-                return LogicalDeleteFileHandle.hasDelChildren(fPath);
+                try {
+                    if (((IFolder) obj).members().length > 0)
+                        return true;
+                } catch (CoreException e) {
+                    log.error(e);
+                }
             }
             return false;
         }
@@ -371,9 +375,26 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         List<Object> ls = new ArrayList<Object>();
         Object obj = rbn.getObject();
         if (obj instanceof IFolder) {
-            String fPath = ((IFolder) obj).getFullPath().toOSString();
+            IFolder folder = (IFolder) obj;
+            String fPath = folder.getFullPath().toOSString();
             ls = LogicalDeleteFileHandle.getChildFromTXT(fPath);
-            rbn.setDeletedChildren(ls);
+            // MOD qiongli 2010-8-5,bug 14697.add all empty subfolders when has not deleted element in TXT
+            try {
+                if (ls.size() == 0) {
+                    DQRecycleBinNode rbnChild = null;
+                    for (IResource member : folder.members()) {
+                        if (member.getType() == IResource.FOLDER && ((IFolder) member).members().length == 0) {
+                            rbnChild = new DQRecycleBinNode();
+                            rbnChild.setObject((IFolder) member);
+                            ls.add(rbnChild);
+                        }
+                    }
+                }
+            } catch (CoreException e) {
+                log.error(e);
+            }
+            if (ls.size() != 0)
+                rbn.setDeletedChildren(ls);
         }
         return ls;
     }
