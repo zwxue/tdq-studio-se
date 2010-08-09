@@ -54,9 +54,9 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.cwm.xml.TdXMLContent;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlContent;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
@@ -613,7 +613,7 @@ public final class DqRepositoryViewService {
         return element.getName() + " " + MetadataHelper.getVersion(element);
     }
 
-    public static List<ModelElement> getXMLElements(TdXMLDocument document) {
+    public static List<ModelElement> getXMLElements(TdXmlSchema document) {
         List<ModelElement> elements = document.getOwnedElement();
         // Load from dababase
         if (elements == null || elements.size() == 0) {
@@ -627,9 +627,9 @@ public final class DqRepositoryViewService {
         return elements;
     }
 
-    public static List<TdXMLElement> getXMLElements(TdXMLElement element) {
-        TdXMLContent xmlContent = element.getXmlContent();
-        List<TdXMLElement> elements = null;
+    public static List<TdXmlElementType> getXMLElements(TdXmlElementType element) {
+        TdXmlContent xmlContent = element.getXmlContent();
+        List<TdXmlElementType> elements = null;
         // Load from dababase
         if (xmlContent == null) {
             XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
@@ -643,7 +643,7 @@ public final class DqRepositoryViewService {
         return elements;
     }
 
-    public static Boolean hasChildren(TdXMLElement element) {
+    public static Boolean hasChildren(TdXmlElementType element) {
         XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
         return xmlScheBuilder.isLeafNode(element).isOk();
     }

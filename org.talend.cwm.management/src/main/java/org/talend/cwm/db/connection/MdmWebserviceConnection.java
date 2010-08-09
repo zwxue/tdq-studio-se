@@ -43,7 +43,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.cwm.xml.XmlFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.mdm.webservice.WSDataClusterPK;
@@ -140,9 +140,9 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         return stub;
     }
 
-    public Collection<TdXMLDocument> createConnection() {
+    public Collection<TdXmlSchema> createConnection() {
         // initialize database driver
-        List<TdXMLDocument> xmlDocs = new ArrayList<TdXMLDocument>();
+        List<TdXmlSchema> xmlDocs = new ArrayList<TdXmlSchema>();
         try {
             XtentisBindingStub stub = getXtentisBindingStub();
             WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(""));
@@ -171,7 +171,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
      * @throws RemoteException
      * @throws CoreException
      */
-    private void adaptToCWMDocument(List<TdXMLDocument> xmlDocCollection, XtentisPort stub, String resName,
+    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort stub, String resName,
             String providerTechName) throws RemoteException, CoreException {
         String resXSD = stub.getDataModel(new WSGetDataModel(new WSDataModelPK(resName))).getXsdSchema();
         if (resXSD == null || "".equals(resXSD.trim())) {
@@ -197,7 +197,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             e.printStackTrace();
         }
         // ~14089
-        TdXMLDocument tdXmlDoc = XmlFactory.eINSTANCE.createTdXMLDocument();
+        TdXmlSchema tdXmlDoc = XmlFactory.eINSTANCE.createTdXmlSchema();
         tdXmlDoc.setName(resName);
         // TODO Specify unique xsd file name.
         tdXmlDoc.setXsdFilePath(XSD_SUFIX + File.separator + xsdFolder.getName() + File.separator + file.getName());
@@ -268,7 +268,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
      * @throws ServiceException
      * @throws RemoteException
      */
-    public String[] runQuery(TdXMLDocument xmlDocument, String xmlSql) throws ServiceException, RemoteException {
+    public String[] runQuery(TdXmlSchema xmlDocument, String xmlSql) throws ServiceException, RemoteException {
         WSDataClusterPK wsdcPK = null;
         if (xmlDocument != null) {
             wsdcPK = new WSDataClusterPK(xmlDocument.getName());

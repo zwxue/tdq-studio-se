@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.impl;
 
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 
 
@@ -21,13 +21,13 @@ import org.talend.dataprofiler.core.model.XmlElementIndicator;
  */
 public class XmlElementIndicatorImpl extends ModelElementIndicatorImpl implements XmlElementIndicator {
 
-    public XmlElementIndicatorImpl(TdXMLElement xmlElement) {
+    public XmlElementIndicatorImpl(TdXmlElementType xmlElement) {
         super();
         this.setModelElement(xmlElement);
     }
 
-    public TdXMLElement getXmlElement() {
-        return (TdXMLElement) this.getModelElement();
+    public TdXmlElementType getXmlElementType() {
+        return (TdXmlElementType) this.getModelElement();
     }
 
     public int getJavaType() {

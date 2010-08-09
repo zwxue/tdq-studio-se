@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model;
 
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 
 /**
  * DOC xqliu  class global comment. Detailled comment
@@ -22,5 +22,5 @@ public interface XmlElementIndicator extends ModelElementIndicator {
     /**
      * @return the xmlElement
      */
-    public TdXMLElement getXmlElement();
+    public TdXmlElementType getXmlElementType();
 }

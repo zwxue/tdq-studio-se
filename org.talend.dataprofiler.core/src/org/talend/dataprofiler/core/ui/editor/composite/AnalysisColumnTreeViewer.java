@@ -55,7 +55,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -591,7 +591,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         if (meIndicator instanceof ColumnIndicator) {
             typeName = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType().getName();
         } else if (meIndicator instanceof XmlElementIndicator) {
-            typeName = ((TdXMLElement) meIndicator.getModelElement()).getJavaType();
+            typeName = ((TdXmlElementType) meIndicator.getModelElement()).getJavaType();
         }
         return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
                 + PluginConstant.PARENTHESIS_RIGHT : "null";
@@ -812,8 +812,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         if (existModelElements.contains(modelElement)) {
             return false;
         }
-        if (modelElement instanceof TdXMLElement) {
-            return XmlElementHelper.isLeafNode((TdXMLElement) modelElement);
+        if (modelElement instanceof TdXmlElementType) {
+            return XmlElementHelper.isLeafNode((TdXmlElementType) modelElement);
         }
         return true;
     }

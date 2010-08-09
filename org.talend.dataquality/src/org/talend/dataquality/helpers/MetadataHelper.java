@@ -32,7 +32,7 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.resource.ResourceManager;
@@ -70,7 +70,7 @@ public final class MetadataHelper {
      * @param type
      * @param xmlElement
      */
-    public static void setDataminingType(DataminingType type, TdXMLElement xmlElement) {
+    public static void setDataminingType(DataminingType type, TdXmlElementType xmlElement) {
         xmlElement.setContentType(type.getLiteral());
     }
 
@@ -83,8 +83,8 @@ public final class MetadataHelper {
     public static void setDataminingType(DataminingType type, ModelElement modelElement) {
         if (modelElement instanceof TdColumn) {
             setDataminingType(type, (TdColumn) modelElement);
-        } else if (modelElement instanceof TdXMLElement) {
-            setDataminingType(type, (TdXMLElement) modelElement);
+        } else if (modelElement instanceof TdXmlElementType) {
+            setDataminingType(type, (TdXmlElementType) modelElement);
         }
     }
 
@@ -347,8 +347,8 @@ public final class MetadataHelper {
     public static DataminingType getDataminingType(ModelElement modelElement) {
         if (modelElement instanceof TdColumn) {
             return getDataminingType((TdColumn) modelElement);
-        } else if (modelElement instanceof TdXMLElement) {
-            DataminingType.get(((TdXMLElement) modelElement).getContentType());
+        } else if (modelElement instanceof TdXmlElementType) {
+            DataminingType.get(((TdXmlElementType) modelElement).getContentType());
         }
         return getDefaultDataminingType(0);
     }

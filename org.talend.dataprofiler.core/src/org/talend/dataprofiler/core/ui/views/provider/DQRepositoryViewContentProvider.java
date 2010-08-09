@@ -25,8 +25,8 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
@@ -81,12 +81,12 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
                 return FolderNodeHelper.getFolderNodes((EObject) parentElement);
             }
 
-        } else if (SwitchHelpers.XMLDOCUMENT_SWITCH.doSwitch((EObject) parentElement) != null) {
+        } else if (SwitchHelpers.XMLSCHEMA_SWITCH.doSwitch((EObject) parentElement) != null) {
             // MOD mzhao feature 10238 xml documents.
-            return DqRepositoryViewService.getXMLElements((TdXMLDocument) parentElement).toArray();
-        } else if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch((EObject) parentElement) != null) {
+            return DqRepositoryViewService.getXMLElements((TdXmlSchema) parentElement).toArray();
+        } else if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch((EObject) parentElement) != null) {
             // MOD mzhao xml elements
-            return DqRepositoryViewService.getXMLElements((TdXMLElement) parentElement).toArray();
+            return DqRepositoryViewService.getXMLElements((TdXmlElementType) parentElement).toArray();
 
         } else if (parentElement instanceof IndicatorCategory) {
             IndicatorCategory category = (IndicatorCategory) parentElement;
@@ -117,8 +117,8 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     public boolean hasChildren(Object element) {
         if (element instanceof EObject) {
             EObject eobject = (EObject) element;
-            if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(eobject) != null) {
-                return DqRepositoryViewService.hasChildren((TdXMLElement) element);
+            if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eobject) != null) {
+                return DqRepositoryViewService.hasChildren((TdXmlElementType) element);
             }
 
             return checkLeaf(eobject);

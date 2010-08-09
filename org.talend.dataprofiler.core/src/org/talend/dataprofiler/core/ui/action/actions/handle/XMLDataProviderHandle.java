@@ -17,7 +17,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -51,7 +51,7 @@ public class XMLDataProviderHandle extends EMFResourceHandle {
             if (mdmConnection != null) {
                 EList<Package> packages = mdmConnection.getDataPackage();
                 if (packages != null && packages.size() > 0) {
-                    TdXMLDocument tdXmlDocument = SwitchHelpers.XMLDOCUMENT_SWITCH.doSwitch(packages.get(0));
+                    TdXmlSchema tdXmlDocument = SwitchHelpers.XMLSCHEMA_SWITCH.doSwitch(packages.get(0));
                     if (tdXmlDocument != null) {
                         // MOD xqliu 2010-08-09 bug 14469
                         ResourceManager.getMDMConnectionFolder().getFile(tdXmlDocument.getXsdFilePath()).getParent().delete(true,

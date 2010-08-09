@@ -55,8 +55,8 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
@@ -164,10 +164,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 setOutput(event.getElement());
                 if (event.getElement() instanceof ColumnSet) {
                     handleColumnsChecked((ColumnSet) event.getElement(), event.getChecked());
-                } else if (event.getElement() instanceof TdXMLDocument) {
-                    handleXmlDocumentChecked((TdXMLDocument) event.getElement(), event.getChecked());
-                } else if (event.getElement() instanceof TdXMLElement) {
-                    handleXmlElementsChecked((TdXMLElement) event.getElement(), event.getChecked());
+                } else if (event.getElement() instanceof TdXmlSchema) {
+                    handleXmlDocumentChecked((TdXmlSchema) event.getElement(), event.getChecked());
+                } else if (event.getElement() instanceof TdXmlElementType) {
+                    handleXmlElementsChecked((TdXmlElementType) event.getElement(), event.getChecked());
                 }
             }
         });
@@ -177,8 +177,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             public void checkStateChanged(CheckStateChangedEvent event) {
                 if (event.getElement() instanceof TdColumn) {
                     handleColumnChecked((TdColumn) event.getElement(), event.getChecked());
-                } else if (event.getElement() instanceof TdXMLElement) {
-                    handleXmlElementChecked((TdXMLElement) event.getElement(), event.getChecked());
+                } else if (event.getElement() instanceof TdXmlElementType) {
+                    handleXmlElementChecked((TdXmlElementType) event.getElement(), event.getChecked());
                 }
             }
         });
@@ -192,8 +192,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      */
     private ModelElement[] getCheckedModelElements(ModelElement modelElement) {
         boolean isColumnSet = modelElement instanceof ColumnSet;
-        boolean isTdXMLDocument = modelElement instanceof TdXMLDocument;
-        boolean isTdXMLElement = modelElement instanceof TdXMLElement;
+        boolean isTdXmlSchema = modelElement instanceof TdXmlSchema;
+        boolean isTdXmlElementType = modelElement instanceof TdXmlElementType;
 
         ModelElementKey mek = new ModelElementKeyImpl(modelElement);
         ModelElementCheckedMap meCheckMap = modelElementCheckedMap.get(mek);
@@ -204,13 +204,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             ModelElement[] modelElements = null;
             if (isColumnSet) {
                 modelElements = EObjectHelper.getColumns((ColumnSet) modelElement);
-            } else if (isTdXMLDocument) {
-                List<TdXMLElement> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
-                        .getXMLElements((TdXMLDocument) modelElement));
+            } else if (isTdXmlSchema) {
+                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXmlSchema) modelElement));
                 modelElements = children.toArray(new ModelElement[children.size()]);
-            } else if (isTdXMLElement) {
-                List<TdXMLElement> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
-                        .getXMLElements((TdXMLElement) modelElement));
+            } else if (isTdXmlElementType) {
+                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXmlElementType) modelElement));
                 modelElements = children.toArray(new ModelElement[children.size()]);
             }
             meCheckMap.putAllChecked(modelElements, allCheckFlag);
@@ -219,13 +219,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         } else {
             if (isColumnSet) {
                 return meCheckMap.getCheckedModelElements(ColumnSetHelper.getColumns((ColumnSet) modelElement));
-            } else if (isTdXMLDocument) {
-                List<TdXMLElement> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
-                        .getXMLElements((TdXMLDocument) modelElement));
+            } else if (isTdXmlSchema) {
+                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXmlSchema) modelElement));
                 return meCheckMap.getCheckedModelElements(children);
-            } else if (isTdXMLElement) {
-                List<TdXMLElement> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
-                        .getXMLElements((TdXMLElement) modelElement));
+            } else if (isTdXmlElementType) {
+                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                        .getXMLElements((TdXmlElementType) modelElement));
                 return meCheckMap.getCheckedModelElements(children);
             }
             return null;
@@ -244,12 +244,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     /**
-     * handle Column(TdXMLElement) checked.
+     * handle Column(TdXmlElementType) checked.
      * 
      * @param xmlElement
      * @param checkedFlag
      */
-    private void handleXmlElementChecked(TdXMLElement xmlElement, Boolean checkedFlag) {
+    private void handleXmlElementChecked(TdXmlElementType xmlElement, Boolean checkedFlag) {
         ModelElement parentElement = XmlElementHelper.getParentElement(xmlElement);
         if (checkedFlag) {
             getTreeViewer().setChecked(parentElement, true);
@@ -275,21 +275,23 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     /**
-     * handle catalog/table(TdXMLDocument) checked.
+     * handle catalog/table(TdXmlSchema) checked.
      * 
      * @param xmlDocument
      * @param checkedFlag
      */
-    private void handleXmlDocumentChecked(TdXMLDocument xmlDocument, Boolean checkedFlag) {
+    private void handleXmlDocumentChecked(TdXmlSchema xmlDocument, Boolean checkedFlag) {
         ModelElementKey key = new ModelElementKeyImpl(xmlDocument);
         ModelElementCheckedMap columnCheckMap = modelElementCheckedMap.get(key);
         if (columnCheckMap != null) {
             columnCheckMap.clear();
-            List<TdXMLElement> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlDocument));
+            List<TdXmlElementType> xmlElements = XmlElementHelper
+                    .getLeafNode(DqRepositoryViewService.getXMLElements(xmlDocument));
             columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
         } else {
             columnCheckMap = new ModelElementCheckedMapImpl();
-            List<TdXMLElement> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlDocument));
+            List<TdXmlElementType> xmlElements = XmlElementHelper
+                    .getLeafNode(DqRepositoryViewService.getXMLElements(xmlDocument));
             columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
             modelElementCheckedMap.put(key, columnCheckMap);
         }
@@ -297,21 +299,21 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     /**
-     * handle table(TdXMLElement) checked.
+     * handle table(TdXmlElementType) checked.
      * 
      * @param xmlElement
      * @param checkedFlag
      */
-    private void handleXmlElementsChecked(TdXMLElement xmlElement, Boolean checkedFlag) {
+    private void handleXmlElementsChecked(TdXmlElementType xmlElement, Boolean checkedFlag) {
         ModelElementKey key = new ModelElementKeyImpl(xmlElement);
         ModelElementCheckedMap columnCheckMap = modelElementCheckedMap.get(key);
         if (columnCheckMap != null) {
             columnCheckMap.clear();
-            List<TdXMLElement> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlElement));
+            List<TdXmlElementType> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlElement));
             columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
         } else {
             columnCheckMap = new ModelElementCheckedMapImpl();
-            List<TdXMLElement> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlElement));
+            List<TdXmlElementType> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlElement));
             columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
             modelElementCheckedMap.put(key, columnCheckMap);
         }
@@ -340,10 +342,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 if (getTableViewer().getInput() != null) {
                     if (getTableViewer().getInput() instanceof ColumnSet) {
                         handleColumnsChecked((ColumnSet) getTableViewer().getInput(), true);
-                    } else if (getTableViewer().getInput() instanceof TdXMLDocument) {
-                        handleXmlDocumentChecked((TdXMLDocument) getTableViewer().getInput(), true);
-                    } else if (getTableViewer().getInput() instanceof TdXMLElement) {
-                        handleXmlElementsChecked((TdXMLElement) getTableViewer().getInput(), true);
+                    } else if (getTableViewer().getInput() instanceof TdXmlSchema) {
+                        handleXmlDocumentChecked((TdXmlSchema) getTableViewer().getInput(), true);
+                    } else if (getTableViewer().getInput() instanceof TdXmlElementType) {
+                        handleXmlElementsChecked((TdXmlElementType) getTableViewer().getInput(), true);
                     }
                 }
                 updateOKStatus();
@@ -359,10 +361,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 if (getTableViewer().getInput() != null) {
                     if (getTableViewer().getInput() instanceof ColumnSet) {
                         handleColumnsChecked((ColumnSet) getTableViewer().getInput(), false);
-                    } else if (getTableViewer().getInput() instanceof TdXMLDocument) {
-                        handleXmlDocumentChecked((TdXMLDocument) getTableViewer().getInput(), false);
-                    } else if (getTableViewer().getInput() instanceof TdXMLElement) {
-                        handleXmlElementsChecked((TdXMLElement) getTableViewer().getInput(), false);
+                    } else if (getTableViewer().getInput() instanceof TdXmlSchema) {
+                        handleXmlDocumentChecked((TdXmlSchema) getTableViewer().getInput(), false);
+                    } else if (getTableViewer().getInput() instanceof TdXmlElementType) {
+                        handleXmlElementsChecked((TdXmlElementType) getTableViewer().getInput(), false);
                     }
                 }
                 updateOKStatus();
@@ -373,8 +375,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     public void selectionChanged(SelectionChangedEvent event) {
         Object selectedObj = ((IStructuredSelection) event.getSelection()).getFirstElement();
-        if (selectedObj instanceof ColumnSet || selectedObj instanceof TdXMLDocument
-                || (selectedObj instanceof TdXMLElement && !XmlElementHelper.isLeafNode((TdXMLElement) selectedObj))) {
+        if (selectedObj instanceof ColumnSet || selectedObj instanceof TdXmlSchema
+                || (selectedObj instanceof TdXmlElementType && !XmlElementHelper.isLeafNode((TdXmlElementType) selectedObj))) {
             this.setOutput(selectedObj);
             ModelElement[] modelElements = getCheckedModelElements((ModelElement) selectedObj);
             if (modelElements != null) {
@@ -422,8 +424,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         private ModelElement getParentModelElement(ModelElement mElement) {
             if (mElement instanceof ColumnSet) {
                 return EObjectHelper.getParent((ColumnSet) mElement);
-            } else if (mElement instanceof TdXMLElement) {
-                return XmlElementHelper.getParentElement((TdXMLElement) mElement);
+            } else if (mElement instanceof TdXmlElementType) {
+                return XmlElementHelper.getParentElement((TdXmlElementType) mElement);
             }
             return null;
         }
@@ -508,12 +510,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
             if (modelElement instanceof ColumnSet) {
                 modelElementList = ColumnSetHelper.getColumns((ColumnSet) modelElement);
-            } else if ((modelElement instanceof TdXMLElement)) {
+            } else if ((modelElement instanceof TdXmlElementType)) {
                 modelElementList = XmlElementHelper.getLeafNode(DqRepositoryViewService
-                        .getXMLElements((TdXMLElement) modelElement));
-            } else if ((modelElement instanceof TdXMLDocument)) {
+                        .getXMLElements((TdXmlElementType) modelElement));
+            } else if ((modelElement instanceof TdXmlSchema)) {
                 modelElementList = XmlElementHelper.getLeafNode(DqRepositoryViewService
-                        .getXMLElements((TdXMLDocument) modelElement));
+                        .getXMLElements((TdXmlSchema) modelElement));
             }
 
             for (ModelElement mElement : modelElementList) {
@@ -559,7 +561,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
         List<ModelElement> meList = new ArrayList<ModelElement>();
         for (int i = 0; i < checkedNodes.length; i++) {
-            if (!(checkedNodes[i] instanceof ColumnSet || checkedNodes[i] instanceof TdXMLElement || checkedNodes[i] instanceof TdXMLDocument)) {
+            if (!(checkedNodes[i] instanceof ColumnSet || checkedNodes[i] instanceof TdXmlElementType || checkedNodes[i] instanceof TdXmlSchema)) {
                 continue;
             }
             ModelElementKey mek = new ModelElementKeyImpl((ModelElement) checkedNodes[i]);
@@ -569,12 +571,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             } else {
                 if (checkedNodes[i] instanceof ColumnSet) {
                     meList.addAll(ColumnSetHelper.getColumns((ColumnSet) checkedNodes[i]));
-                } else if ((checkedNodes[i] instanceof TdXMLElement)) {
+                } else if ((checkedNodes[i] instanceof TdXmlElementType)) {
                     meList.addAll(XmlElementHelper.getLeafNode(DqRepositoryViewService
-                            .getXMLElements((TdXMLElement) checkedNodes[i])));
-                } else if ((checkedNodes[i] instanceof TdXMLDocument)) {
+                            .getXMLElements((TdXmlElementType) checkedNodes[i])));
+                } else if ((checkedNodes[i] instanceof TdXmlSchema)) {
                     meList.addAll(XmlElementHelper.getLeafNode(DqRepositoryViewService
-                            .getXMLElements((TdXMLDocument) checkedNodes[i])));
+                            .getXMLElements((TdXmlSchema) checkedNodes[i])));
                 }
             }
         }
@@ -599,7 +601,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
          * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
          */
         public Image getImage(Object element) {
-            if (element instanceof TdXMLElement) {
+            if (element instanceof TdXmlElementType) {
                 return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
             }
             return ImageLib.getImage(ImageLib.TD_COLUMN);
@@ -615,8 +617,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 TdColumn columnObj = (TdColumn) element;
                 return columnObj.getName() + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
                         + columnObj.getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT;
-            } else if (element instanceof TdXMLElement) {
-                TdXMLElement xmlElement = (TdXMLElement) element;
+            } else if (element instanceof TdXmlElementType) {
+                TdXmlElementType xmlElement = (TdXmlElementType) element;
                 return xmlElement.getName() + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
                         + xmlElement.getJavaType() + PluginConstant.PARENTHESIS_RIGHT;
             }
@@ -631,8 +633,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     class ModelElementContentProvider implements IStructuredContentProvider {
 
         public Object[] getElements(Object inputElement) {
-            if (!(inputElement instanceof ColumnSet || inputElement instanceof TdXMLDocument || (inputElement instanceof TdXMLElement && !XmlElementHelper
-                    .isLeafNode((TdXMLElement) inputElement)))) {
+            if (!(inputElement instanceof ColumnSet || inputElement instanceof TdXmlSchema || (inputElement instanceof TdXmlElementType && !XmlElementHelper
+                    .isLeafNode((TdXmlElementType) inputElement)))) {
                 return new Object[0];
             }
             EObject eObj = (EObject) inputElement;
@@ -664,16 +666,16 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
                 return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             } else {
-                TdXMLDocument xmlDocument = SwitchHelpers.XMLDOCUMENT_SWITCH.doSwitch(eObj);
+                TdXmlSchema xmlDocument = SwitchHelpers.XMLSCHEMA_SWITCH.doSwitch(eObj);
                 if (xmlDocument != null) {
                     List<ModelElement> xmlElements = DqRepositoryViewService.getXMLElements(xmlDocument);
-                    List<TdXMLElement> leafNodes = XmlElementHelper.getLeafNode(xmlElements);
+                    List<TdXmlElementType> leafNodes = XmlElementHelper.getLeafNode(xmlElements);
                     return sort(leafNodes.toArray(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                 } else {
-                    TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(eObj);
+                    TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eObj);
                     if (xmlElement != null) {
-                        List<TdXMLElement> xmlElements = DqRepositoryViewService.getXMLElements(xmlElement);
-                        List<TdXMLElement> leafNodes = XmlElementHelper.getLeafNode(xmlElements);
+                        List<TdXmlElementType> xmlElements = DqRepositoryViewService.getXMLElements(xmlElement);
+                        List<TdXmlElementType> leafNodes = XmlElementHelper.getLeafNode(xmlElements);
                         return sort(leafNodes.toArray(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                     }
                 }
@@ -752,18 +754,18 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     }
                 }
                 return ComparatorsFactory.sort(children, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
-            } else if (parentElement instanceof TdXMLDocument || parentElement instanceof TdXMLElement) {
-                boolean isXmlDocument = parentElement instanceof TdXMLDocument;
+            } else if (parentElement instanceof TdXmlSchema || parentElement instanceof TdXmlElementType) {
+                boolean isXmlDocument = parentElement instanceof TdXmlSchema;
                 List<? extends ModelElement> modelElements = isXmlDocument ? DqRepositoryViewService
-                        .getXMLElements((TdXMLDocument) parentElement) : DqRepositoryViewService
-                        .getXMLElements((TdXMLElement) parentElement);
+                        .getXMLElements((TdXmlSchema) parentElement) : DqRepositoryViewService
+                        .getXMLElements((TdXmlElementType) parentElement);
                 Object[] children = XmlElementHelper.clearLeafNode(modelElements).toArray();
                 if (children != null && children.length > 0) {
-                    if (!(children[0] instanceof TdXMLElement)) {
+                    if (!(children[0] instanceof TdXmlElementType)) {
                         return children;
                     }
                     for (int i = 0; i < children.length; i++) {
-                        TdXMLElement xmlElement = (TdXMLElement) children[i];
+                        TdXmlElementType xmlElement = (TdXmlElementType) children[i];
                         ModelElementKey key = new ModelElementKeyImpl(xmlElement);
                         if (modelElementCheckedMap.containsKey(key)) {
                             currentCheckedModelElement.add(xmlElement);
@@ -778,12 +780,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         public Object getParent(Object element) {
             if (element instanceof EObject) {
                 // MOD xqliu 2010-02-02 bug 11198
-                if (element instanceof TdXMLDocument) {
-                    Connection tdDataProvider = DataProviderHelper.getTdDataProvider((TdXMLDocument) element);
+                if (element instanceof TdXmlSchema) {
+                    Connection tdDataProvider = DataProviderHelper.getTdDataProvider((TdXmlSchema) element);
                     IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
                     return findCorrespondingFile;
-                } else if (element instanceof TdXMLElement) {
-                    return XmlElementHelper.getParentElement((TdXMLElement) element);
+                } else if (element instanceof TdXmlElementType) {
+                    return XmlElementHelper.getParentElement((TdXmlElementType) element);
                 }
                 // ~
                 EObject eObj = (EObject) element;
@@ -823,8 +825,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         }
 
         /**
-         * If element if TdXMLElement, the super method hasChildren() return wrong result, so add use this method to get
-         * the right result. xqliu 2010-02-04
+         * If element if TdXmlElementType, the super method hasChildren() return wrong result, so add use this method to
+         * get the right result. xqliu 2010-02-04
          * 
          * @param element
          * @return
@@ -833,7 +835,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             boolean hasChildren = super.hasChildren(element);
             if (element instanceof EObject) {
                 EObject eobject = (EObject) element;
-                if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(eobject) != null) {
+                if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eobject) != null) {
                     hasChildren = !hasChildren;
                 }
             }

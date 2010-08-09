@@ -39,7 +39,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.cwm.xml.XmlFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.resource.ResourceManager;
@@ -100,10 +100,10 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
      * 
      * @see org.talend.cwm.db.connection.IXMLDBConnection#createConnection()
      */
-    public java.util.Collection<TdXMLDocument> createConnection() {
+    public java.util.Collection<TdXmlSchema> createConnection() {
         // initialize database driver
         Collection col = null;
-        List<TdXMLDocument> xmlDocs = null;
+        List<TdXmlSchema> xmlDocs = null;
         try {
             Class cl = Class.forName(driverClassName);
             Database database = (Database) cl.newInstance();
@@ -112,7 +112,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
             // get the collection
             col = DatabaseManager.getCollection(connectionURI);
             col.setProperty(OutputKeys.INDENT, "no");
-            xmlDocs = new ArrayList<TdXMLDocument>();
+            xmlDocs = new ArrayList<TdXmlSchema>();
             String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
                     + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
             for (int idx = 0; idx < col.getResourceCount(); idx++) {
@@ -131,7 +131,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         return xmlDocs;
     }
 
-    private void adaptToCWMDocument(List<TdXMLDocument> xmlDocCollection, Collection col, String resName, String providerTechName)
+    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, Collection col, String resName, String providerTechName)
             throws XMLDBException, CoreException {
         XMLResource resXSD = (XMLResource) col.getResource(StringUtils.removeEnd(resName, XML_SUFIX) + XSD_SUFIX);
         if (resXSD == null) {
@@ -151,7 +151,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         IFile file = xsdFolder.getFile(StringUtils.removeEnd(resName, XML_SUFIX) + XSD_SUFIX);
         file.create(new ByteArrayInputStream(resXSD.getContent().toString().getBytes()), true, new NullProgressMonitor());
 
-        TdXMLDocument tdXmlDoc = XmlFactory.eINSTANCE.createTdXMLDocument();
+        TdXmlSchema tdXmlDoc = XmlFactory.eINSTANCE.createTdXmlSchema();
         tdXmlDoc.setName(StringUtils.removeEnd(resName, XML_SUFIX));
         // TODO Specify unique xsd file name.
         tdXmlDoc.setXsdFilePath(XSD_SUFIX + File.separator + xsdFolder.getName() + File.separator + file.getName());

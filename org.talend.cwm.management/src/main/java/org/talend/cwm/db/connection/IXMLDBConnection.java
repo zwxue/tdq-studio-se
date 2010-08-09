@@ -15,7 +15,7 @@ package org.talend.cwm.db.connection;
 import java.util.Collection;
 
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -26,7 +26,7 @@ public interface IXMLDBConnection {
 
     public ReturnCode checkDatabaseConnection();
 
-    public Collection<TdXMLDocument> createConnection();
+    public Collection<TdXmlSchema> createConnection();
 
     public void setSofewareSystem(Connection dataProvider, DBConnectionParameter parameter);
 

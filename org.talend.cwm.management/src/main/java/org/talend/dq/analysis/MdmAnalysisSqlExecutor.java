@@ -30,8 +30,8 @@ import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.expressions.TdExpression;
@@ -105,7 +105,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         if (analyzedElement == null) {
             return traceError("Analyzed element is null for indicator " + indicator.getName());
         }
-        TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (xmlElement == null) {
             return traceError("Analyzed element is not a XmlElement for indicator " + indicator.getName());
         }
@@ -260,8 +260,8 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      */
     protected boolean executeQuery(Indicator indicator, MdmWebserviceConnection connection, String queryStmt) throws RemoteException,
             ServiceException {
-        TdXMLElement analyzedElement = (TdXMLElement) indicator.getAnalyzedElement();
-        TdXMLDocument xmlDocument = analyzedElement.getOwnedDocument();
+        TdXmlElementType analyzedElement = (TdXmlElementType) indicator.getAnalyzedElement();
+        TdXmlSchema xmlDocument = analyzedElement.getOwnedDocument();
         if (log.isInfoEnabled()) {
             log.info("Computing indicator: " + indicator.getName());
         }
@@ -287,7 +287,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @throws ServiceException
      * @throws RemoteException
      */
-    protected List<Object[]> executeQuery(TdXMLDocument xmlDocument, MdmWebserviceConnection connection, String queryStmt)
+    protected List<Object[]> executeQuery(TdXmlSchema xmlDocument, MdmWebserviceConnection connection, String queryStmt)
             throws RemoteException, ServiceException {
         // create query statement
         MdmStatement statement = connection.createStatement();

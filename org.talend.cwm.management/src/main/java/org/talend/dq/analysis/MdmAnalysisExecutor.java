@@ -31,8 +31,8 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -72,7 +72,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
             assert indicator != null;
-            TdXMLElement tdXmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(indicator.getAnalyzedElement());
+            TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(indicator.getAnalyzedElement());
             if (tdXmlElement == null) {
                 continue;
             }
@@ -108,7 +108,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
      * @param xmlElemet
      * @return
      */
-    protected boolean belongToSameDocument(final TdXMLElement xmlElemet) {
+    protected boolean belongToSameDocument(final TdXmlElementType xmlElemet) {
         return true;
     }
 
@@ -124,15 +124,15 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
                     analysis.getName());
             return null;
         }
-        Set<TdXMLDocument> fromPart = new HashSet<TdXMLDocument>();
+        Set<TdXmlSchema> fromPart = new HashSet<TdXmlSchema>();
         final Iterator<ModelElement> iterator = analysedElements.iterator();
         String parentAnalyzedElementName = null;
-        TdXMLDocument xmlDocument = null;
+        TdXmlSchema xmlDocument = null;
         String analyzedElementName = null;
         while (iterator.hasNext()) {
             ModelElement modelElement = iterator.next();
             // --- preconditions
-            TdXMLElement tdXmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(modelElement);
+            TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
             if (tdXmlElement == null) {
                 this.errorMessage = "given element can't be used.";
                 return null;
@@ -141,7 +141,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             if (parentElement == null) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName()); //$NON-NLS-1$
             }
-            TdXMLElement parentXmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(parentElement);
+            TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
             if (parentXmlElement == null) {
                 this.errorMessage = Messages.getString(
                         "ColumnAnalysisExecutor.NoContainerFound", parentElement.getName(), parentXmlElement); //$NON-NLS-1$
@@ -170,13 +170,13 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             return null;
         }
         if (analysis.getParameters().isStoreData()) {
-            TdXMLElement parentElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(XmlElementHelper
-                    .getParentElement(SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analysedElements.get(0))));
+            TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
+                    .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysedElements.get(0))));
             parentAnalyzedElementName = parentElement.getName();
-            List<TdXMLElement> columnList = DqRepositoryViewService.getXMLElements(parentElement);
-            Iterator<TdXMLElement> iter = columnList.iterator();
+            List<TdXmlElementType> columnList = DqRepositoryViewService.getXMLElements(parentElement);
+            Iterator<TdXmlElementType> iter = columnList.iterator();
             while (iter.hasNext()) {
-                TdXMLElement xmlElemenet = iter.next();
+                TdXmlElementType xmlElemenet = iter.next();
                 if (DqRepositoryViewService.hasChildren(xmlElemenet)) {
                     continue;
                 }
@@ -272,7 +272,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         analysisHandler.setAnalysis(analysis);
 
         for (ModelElement node : context.getAnalysedElements()) {
-            TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(node);
+            TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(node);
 
             // --- Check that each analyzed element has at least one indicator
             if (analysisHandler.getIndicators(xmlElement).size() == 0) {

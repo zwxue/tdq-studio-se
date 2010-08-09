@@ -1011,17 +1011,20 @@ public class TdReportItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 XmlFactory.eINSTANCE.createTdXMLElement()));
+ XmlFactory.eINSTANCE
+                .createTdXmlElementType()));
 
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 XmlFactory.eINSTANCE.createTdXMLContent()));
+ XmlFactory.eINSTANCE
+                .createTdXmlContent()));
 
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 XmlFactory.eINSTANCE.createTdXMLDocument()));
+ XmlFactory.eINSTANCE
+                .createTdXmlSchema()));
 
         newChildDescriptors.add
             (createChildParameter

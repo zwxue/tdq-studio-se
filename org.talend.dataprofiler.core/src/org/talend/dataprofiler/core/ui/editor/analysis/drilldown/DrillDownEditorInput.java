@@ -25,7 +25,7 @@ import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
@@ -242,10 +242,10 @@ public class DrillDownEditorInput implements IEditorInput {
                         .eContainer()));
 
                 offset = columnElementList.indexOf(analysisElement);
-            } else if (analysisElement instanceof TdXMLElement) {
-                TdXMLElement parentElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(XmlElementHelper
-                        .getParentElement(SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analysisElement)));
-                List<TdXMLElement> xmlElementList = DqRepositoryViewService.getXMLElements(parentElement);
+            } else if (analysisElement instanceof TdXmlElementType) {
+                TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
+                        .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
+                List<TdXmlElementType> xmlElementList = DqRepositoryViewService.getXMLElements(parentElement);
                 offset = xmlElementList.indexOf(analysisElement);
             }
             for (Object[] obj : dataList) {
@@ -275,10 +275,10 @@ public class DrillDownEditorInput implements IEditorInput {
                 columnElementList.add(column.getName());
             }
 
-        } else if (analysisElement instanceof TdXMLElement) {
-            TdXMLElement parentElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(XmlElementHelper
-                    .getParentElement(SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analysisElement)));
-            for (TdXMLElement xmlElement : DqRepositoryViewService.getXMLElements(parentElement)) {
+        } else if (analysisElement instanceof TdXmlElementType) {
+            TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
+                    .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
+            for (TdXmlElementType xmlElement : DqRepositoryViewService.getXMLElements(parentElement)) {
                 if (!DqRepositoryViewService.hasChildren(xmlElement)) {
                     columnElementList.add(xmlElement.getName());
                 }

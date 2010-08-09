@@ -13,7 +13,7 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -57,8 +57,8 @@ public final class ModelElementIndicatorRule {
         int javaType = 0;
         if (me instanceof TdColumn) {
             javaType = ((TdColumn) me).getJavaType();
-        } else if (me instanceof TdXMLElement) {
-            javaType = XSDDataTypeConvertor.convertToJDBCType(((TdXMLElement) me).getJavaType());
+        } else if (me instanceof TdXmlElementType) {
+            javaType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) me).getJavaType());
         }
         DataminingType dataminingType = MetadataHelper.getDataminingType(me);
         if (dataminingType == null) {

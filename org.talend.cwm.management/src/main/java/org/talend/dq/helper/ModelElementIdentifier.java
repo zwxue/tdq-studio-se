@@ -15,7 +15,7 @@ package org.talend.dq.helper;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch;
-import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.cwm.xml.util.XmlSwitch;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
@@ -85,9 +85,9 @@ public final class ModelElementIdentifier {
         };
     };
 
-    public static final XmlSwitch<TdXMLDocument> XMLDOC = new XmlSwitch<TdXMLDocument>() {
+    public static final XmlSwitch<TdXmlSchema> XMLDOC = new XmlSwitch<TdXmlSchema>() {
 
-        public TdXMLDocument caseTdXMLDocument(TdXMLDocument object) {
+        public TdXmlSchema caseTdXmlSchema(TdXmlSchema object) {
             return object;
         };
     };

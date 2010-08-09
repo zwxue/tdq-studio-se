@@ -20,7 +20,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -273,7 +273,7 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     public boolean isXml() {
         if (this.indicator != null) {
-            return this.indicator.getAnalyzedElement() instanceof TdXMLElement;
+            return this.indicator.getAnalyzedElement() instanceof TdXmlElementType;
         }
         return false;
     }

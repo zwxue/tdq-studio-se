@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.rpc.ServiceException;
 
-import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXmlSchema;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -47,7 +47,7 @@ public class MdmStatement {
      * @throws RemoteException
      * @throws ServiceException
      */
-    public boolean execute(TdXMLDocument xmlDocument, String xmlSql) throws RemoteException, ServiceException {
+    public boolean execute(TdXmlSchema xmlDocument, String xmlSql) throws RemoteException, ServiceException {
         resultSet = connection.runQuery(xmlDocument, xmlSql);
         return true;
     }

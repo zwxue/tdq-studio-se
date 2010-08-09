@@ -36,9 +36,9 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
-import org.talend.cwm.xml.TdXMLContent;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlContent;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.cwm.xml.XmlFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -52,13 +52,13 @@ public final class XMLSchemaBuilder {
 
     private EList<XSDElementDeclaration> globalXSDElemDeclarations = null;
 
-    private static Map<TdXMLDocument, XMLSchemaBuilder> schemaBuilderMap = new HashMap<TdXMLDocument, XMLSchemaBuilder>();
+    private static Map<TdXmlSchema, XMLSchemaBuilder> schemaBuilderMap = new HashMap<TdXmlSchema, XMLSchemaBuilder>();
 
     private XMLSchemaBuilder() {
 
     }
 
-    public static XMLSchemaBuilder getSchemaBuilder(TdXMLDocument document) {
+    public static XMLSchemaBuilder getSchemaBuilder(TdXmlSchema document) {
         XMLSchemaBuilder builder = schemaBuilderMap.get(document);
         if (builder == null) {
             builder = new XMLSchemaBuilder();
@@ -74,7 +74,7 @@ public final class XMLSchemaBuilder {
      * @param xsdSchema
      * @return
      */
-    public List<ModelElement> getRootElements(TdXMLDocument document) {
+    public List<ModelElement> getRootElements(TdXmlSchema document) {
         String uri = isMdm(document) ? ResourceManager.getMDMConnectionFolder().getFile(document.getXsdFilePath()).getFullPath()
                 .toString() : ResourceManager.getConnectionFolder().getFile(document.getXsdFilePath()).getFullPath().toString();
         Resource.Factory.Registry.INSTANCE.getProtocolToFactoryMap().put("*", new XSDResourceFactoryImpl());
@@ -120,9 +120,9 @@ public final class XMLSchemaBuilder {
         return tdXmlEleTypeList;
     }
 
-    private EList<ModelElement> adaptToCWMModel(Iterator<XSDElementDeclaration> rootItEleDecl, TdXMLDocument document) {
+    private EList<ModelElement> adaptToCWMModel(Iterator<XSDElementDeclaration> rootItEleDecl, TdXmlSchema document) {
         EList<ModelElement> tdXmlEleTypeList = new BasicEList<ModelElement>();
-        TdXMLElement xmlElement = null;
+        TdXmlElementType xmlElement = null;
         XSDElementDeclaration xsdElementDecleration = null;
         while (rootItEleDecl.hasNext()) {
             xsdElementDecleration = rootItEleDecl.next();
@@ -135,8 +135,8 @@ public final class XMLSchemaBuilder {
 
     }
 
-    private TdXMLElement getElementFromXsdDeclaration(XSDElementDeclaration xsdElementDecleration) {
-        TdXMLElement xmlElement = XmlFactory.eINSTANCE.createTdXMLElement();
+    private TdXmlElementType getElementFromXsdDeclaration(XSDElementDeclaration xsdElementDecleration) {
+        TdXmlElementType xmlElement = XmlFactory.eINSTANCE.createTdXmlElementType();
         xmlElement.setName(xsdElementDecleration.getName());
 
         if (xsdElementDecleration.getTypeDefinition() instanceof XSDSimpleTypeDefinition) {
@@ -189,9 +189,9 @@ public final class XMLSchemaBuilder {
         }
     }
 
-    public List<TdXMLElement> getChildren(TdXMLElement parent) {
+    public List<TdXmlElementType> getChildren(TdXmlElementType parent) {
         XSDElementDeclaration xsdElementDeclearation = (XSDElementDeclaration) parent.getXsdElementDeclaration();
-        TdXMLContent createTdXMLContent = XmlFactory.eINSTANCE.createTdXMLContent();
+        TdXmlContent createTdXMLContent = XmlFactory.eINSTANCE.createTdXmlContent();
         if (xsdElementDeclearation != null) {
             XSDTypeDefinition xsdTypeDef = xsdElementDeclearation.getTypeDefinition();
             if (xsdTypeDef instanceof XSDComplexTypeDefinition) {
@@ -203,7 +203,7 @@ public final class XMLSchemaBuilder {
                     for (XSDParticle paticle : paticleList) {
                         if (paticle.getContent() instanceof XSDElementDeclaration) {
                             XSDElementDeclaration xed = (XSDElementDeclaration) paticle.getContent();
-                            TdXMLElement xmlElem = getElementFromXsdDeclaration(xed);
+                            TdXmlElementType xmlElem = getElementFromXsdDeclaration(xed);
                             xmlElem.setOwnedDocument(parent.getOwnedDocument());
                             createTdXMLContent.getXmlElements().add(xmlElem);
 
@@ -216,7 +216,7 @@ public final class XMLSchemaBuilder {
         return parent.getXmlContent().getXmlElements();
     }
 
-    public ReturnCode isLeafNode(TdXMLElement element) {
+    public ReturnCode isLeafNode(TdXmlElementType element) {
         ReturnCode code = new ReturnCode();
         XSDElementDeclaration xsdElementDeclearation = (XSDElementDeclaration) element.getXsdElementDeclaration();
         if (xsdElementDeclearation != null) {
@@ -228,7 +228,7 @@ public final class XMLSchemaBuilder {
         return code;
     }
 
-    private boolean isMdm(TdXMLDocument document) {
+    private boolean isMdm(TdXmlSchema document) {
         EList<DataManager> dataManagers = document.getDataManager();
         if (dataManagers != null && dataManagers.size() > 0) {
             DataManager dataManager = dataManagers.get(0);

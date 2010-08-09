@@ -29,8 +29,8 @@ import org.talend.cwm.db.connection.XQueryExpressionUtil;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -49,7 +49,7 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
 
     private static Logger log = Logger.getLogger(MdmIndicatorEvaluator.class);
 
-    protected TdXMLDocument tdXmlDocument;
+    protected TdXmlSchema tdXmlDocument;
 
     /**
      * DOC zshen MdmIndicatorEvaluator constructor comment.
@@ -113,10 +113,10 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
         // ~
         // the column by user choice
         List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
-        TdXMLElement parentElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(XmlElementHelper
-                .getParentElement(SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analysisElementList.get(0))));
+        TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
+                .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElementList.get(0))));
         // all the column under the parentElement
-        List<TdXMLElement> columnList = DqRepositoryViewService.getXMLElements(parentElement);
+        List<TdXmlElementType> columnList = DqRepositoryViewService.getXMLElements(parentElement);
         List<Map<String, String>> resultSetList = new ArrayList<Map<String, String>>();
         if (analysis.getParameters().isStoreData()) {
             resultSetList = statement.tidyResultSet(columnList.toArray(new ModelElement[columnList.size()]), resultSet);
@@ -150,7 +150,7 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
                         recordIncrement = valueObjectList.size();
 
                         int offset = 0;
-                        for (TdXMLElement columnElement : columnList) {
+                        for (TdXmlElementType columnElement : columnList) {
                             Object newobject = rowMap.get(columnElement.getName());
                             if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                                 if (recordIncrement < valueObjectList.size()) {
@@ -204,11 +204,11 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
         return super.checkConnection();
     }
 
-    public TdXMLDocument getTdXmlDocument() {
+    public TdXmlSchema getTdXmlDocument() {
         return tdXmlDocument;
     }
 
-    public void setTdXmlDocument(TdXMLDocument tdXmlDocument) {
+    public void setTdXmlDocument(TdXmlSchema tdXmlDocument) {
         this.tdXmlDocument = tdXmlDocument;
     }
 

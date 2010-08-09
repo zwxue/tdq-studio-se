@@ -26,8 +26,8 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
@@ -80,9 +80,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.IND_DEFINITION);
         } else if (element instanceof TdView) {
             return ImageLib.getImage(ImageLib.VIEW);
-        } else if (element instanceof TdXMLDocument) {
+        } else if (element instanceof TdXmlSchema) {
             return ImageLib.getImage(ImageLib.XML_DOC);
-        } else if (element instanceof TdXMLElement) {
+        } else if (element instanceof TdXmlElementType) {
             return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
         } else if (element instanceof IRecycleBin) {
             return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
@@ -149,11 +149,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         }
 
         // MOD mzhao feature 10238
-        if (element instanceof TdXMLDocument) {
-            return ((TdXMLDocument) element).getName();
-        } else if (element instanceof TdXMLElement) {
-            String elemLabe = ((TdXMLElement) element).getName();
-            String elementType = ((TdXMLElement) element).getJavaType();
+        if (element instanceof TdXmlSchema) {
+            return ((TdXmlSchema) element).getName();
+        } else if (element instanceof TdXmlElementType) {
+            String elemLabe = ((TdXmlElementType) element).getName();
+            String elementType = ((TdXmlElementType) element).getJavaType();
             if (elementType != null && !StringUtils.isEmpty(elementType)) {
                 elemLabe += " (" + elementType + ")";
             }

@@ -42,7 +42,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -122,7 +122,7 @@ public class ColumnViewerDND {
                     receiver = new ColumnReceiver();
                 }
 
-                if (object instanceof TdXMLElement) {
+                if (object instanceof TdXmlElementType) {
                     receiver = new XmlElementReceiver();
                 }
 
@@ -416,8 +416,8 @@ public class ColumnViewerDND {
             event.detail = DND.DROP_NONE;
             Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
 
-            if (firstElement instanceof TdXMLElement) {
-                TdXMLElement xmlElement = (TdXMLElement) firstElement;
+            if (firstElement instanceof TdXmlElementType) {
+                TdXmlElementType xmlElement = (TdXmlElementType) firstElement;
 
                 Tree tree = (Tree) ((DropTarget) event.widget).getControl();
                 AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
@@ -438,10 +438,10 @@ public class ColumnViewerDND {
 
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
-            List<TdXMLElement> selectedXmlElement = new ArrayList<TdXMLElement>();
+            List<TdXmlElementType> selectedXmlElement = new ArrayList<TdXmlElementType>();
 
             while (it.hasNext()) {
-                TdXMLElement xmlElement = (TdXMLElement) it.next();
+                TdXmlElementType xmlElement = (TdXmlElementType) it.next();
                 selectedXmlElement.add(xmlElement);
             }
 

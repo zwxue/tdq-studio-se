@@ -47,7 +47,7 @@ import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.connection.DatabaseConstant;
-import org.talend.cwm.xml.TdXMLDocument;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -593,7 +593,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         Combo dataFilterCombo = this.urlSetupControl.getDataFilterCombo();
         dataFilterCombo.removeAll();
         try {
-            Iterator<TdXMLDocument> iter = mdmConnection.createConnection().iterator();
+            Iterator<TdXmlSchema> iter = mdmConnection.createConnection().iterator();
 
             while (iter.hasNext()) {
                 dataFilterCombo.add(iter.next().getName());

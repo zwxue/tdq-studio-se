@@ -56,7 +56,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -161,7 +161,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         ModelElementIndicator currentIndicator;
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-            TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(element);
+            TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(element);
             if (tdColumn == null && xmlElement == null) {
                 continue;
             }

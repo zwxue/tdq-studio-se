@@ -20,7 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -222,8 +222,8 @@ public class ChartDataEntity {
                 int tempType = sqltype;
                 if (temp instanceof TdColumn) {
                     sqltype = ((TdColumn) temp).getJavaType();
-                } else if (temp instanceof TdXMLElement) {
-                    tempType = XSDDataTypeConvertor.convertToJDBCType(((TdXMLElement) temp).getJavaType());
+                } else if (temp instanceof TdXmlElementType) {
+                    tempType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) temp).getJavaType());
                 }
                 sqltype = temp instanceof TdTable ? Types.INTEGER : tempType;
             }

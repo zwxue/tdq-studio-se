@@ -35,7 +35,7 @@ import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedColumnSetsSynDialog;
@@ -117,7 +117,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
             return new ReturnCode(Boolean.TRUE);
         }
 
-        if (analyzedElements.get(0) instanceof TdXMLElement) {
+        if (analyzedElements.get(0) instanceof TdXmlElementType) {
             MessageDialog.openInformation(shell, DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"),
                     "Can't change this connection!");
             return new ReturnCode(Boolean.FALSE);

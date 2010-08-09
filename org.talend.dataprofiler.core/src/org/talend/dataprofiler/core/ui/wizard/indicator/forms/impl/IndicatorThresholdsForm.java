@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -101,8 +101,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             if (SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(analyzedElement) != null) {
                 isRangeForDate = false;
                 isDatetime = false;
-            } else if (SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analyzedElement) != null) {
-                TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(analyzedElement);
+            } else if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analyzedElement) != null) {
+                TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analyzedElement);
                 int sqltype = XSDDataTypeConvertor.convertToJDBCType(xmlElement.getJavaType());
                 isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
                         && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);

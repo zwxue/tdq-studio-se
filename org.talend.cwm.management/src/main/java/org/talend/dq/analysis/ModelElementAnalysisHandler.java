@@ -21,7 +21,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -184,8 +184,8 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         DataminingType type = DataminingType.get(dataminingTypeLiteral);
         if (modelElement instanceof ModelElement) {
             MetadataHelper.setDataminingType(type, (ModelElement) modelElement);
-        } else if (modelElement instanceof TdXMLElement) {
-            MetadataHelper.setDataminingType(type, (TdXMLElement) modelElement);
+        } else if (modelElement instanceof TdXmlElementType) {
+            MetadataHelper.setDataminingType(type, (TdXmlElementType) modelElement);
         } else {
             return;
         }

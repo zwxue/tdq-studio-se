@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -44,7 +44,7 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
         Object element = event.getElement();
 
         boolean isTable = element instanceof TdTable;
-        boolean isXmlElement = element instanceof TdXMLElement;
+        boolean isXmlElement = element instanceof TdXmlElementType;
 
         if ((checked && (isTable || isXmlElement)) || !checked) {
             super.fireCheckStateChanged(event);

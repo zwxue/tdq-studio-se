@@ -15,7 +15,7 @@ package org.talend.dataprofiler.core.helper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
@@ -36,8 +36,8 @@ public final class ModelElementIndicatorHelper {
     public static final ModelElementIndicator createModelElementIndicator(ModelElement modelElement) {
         if (modelElement instanceof TdColumn) {
             return createColumnIndicator((TdColumn) modelElement);
-        } else if (modelElement instanceof TdXMLElement) {
-            return createXmlElementIndicator((TdXMLElement) modelElement);
+        } else if (modelElement instanceof TdXmlElementType) {
+            return createXmlElementIndicator((TdXmlElementType) modelElement);
         }
         return null;
     }
@@ -46,7 +46,7 @@ public final class ModelElementIndicatorHelper {
         return new ColumnIndicatorImpl(tdColumn);
     }
 
-    public static final XmlElementIndicator createXmlElementIndicator(TdXMLElement tdXMLElement) {
+    public static final XmlElementIndicator createXmlElementIndicator(TdXmlElementType tdXMLElement) {
         return new XmlElementIndicatorImpl(tdXMLElement);
     }
 

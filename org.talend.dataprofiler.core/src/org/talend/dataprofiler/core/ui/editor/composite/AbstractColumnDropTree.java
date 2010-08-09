@@ -34,7 +34,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -431,7 +431,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             if (tdColumn != null) {
                 meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(tdColumn);
             } else {
-                TdXMLElement xmlElement = SwitchHelpers.XMLELEMENT_SWITCH.doSwitch(modelElement);
+                TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
                 if (xmlElement != null) {
                     meIndicators[i] = ModelElementIndicatorHelper.createXmlElementIndicator(xmlElement);
                 }
@@ -445,7 +445,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     public void setInput(Object[] objs) {
         boolean isMdm = false;
         if (objs != null && objs.length != 0) {
-            isMdm = objs[0] instanceof TdXMLElement;
+            isMdm = objs[0] instanceof TdXmlElementType;
             if (!(objs[0] instanceof TdColumn || isMdm)) {
                 return;
             }
@@ -465,7 +465,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
         for (ModelElement modelElement : modelElementList) {
             ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper
-                    .createXmlElementIndicator((TdXMLElement) modelElement) : ModelElementIndicatorHelper
+                    .createXmlElementIndicator((TdXmlElementType) modelElement) : ModelElementIndicatorHelper
                     .createColumnIndicator((TdColumn) modelElement);
             modelElementIndicatorList.add(temp);
         }

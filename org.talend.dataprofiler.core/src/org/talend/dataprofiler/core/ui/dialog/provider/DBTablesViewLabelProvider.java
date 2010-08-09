@@ -25,8 +25,8 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.cwm.xml.TdXMLDocument;
-import org.talend.cwm.xml.TdXMLElement;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
@@ -76,9 +76,9 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else if (element instanceof IFile) {
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-        } else if (element instanceof TdXMLDocument) {
+        } else if (element instanceof TdXmlSchema) {
             return ImageLib.getImage(ImageLib.XML_DOC);
-        } else if (element instanceof TdXMLElement) {
+        } else if (element instanceof TdXmlElementType) {
             return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
         }
         return super.getImage(element);
@@ -105,11 +105,11 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
                 }
                 return decorateText;
             }
-        } else if (element instanceof TdXMLDocument) {
-            return ((TdXMLDocument) element).getName();
-        } else if (element instanceof TdXMLElement) {
-            String elemLabe = ((TdXMLElement) element).getName();
-            String elementType = ((TdXMLElement) element).getJavaType();
+        } else if (element instanceof TdXmlSchema) {
+            return ((TdXmlSchema) element).getName();
+        } else if (element instanceof TdXmlElementType) {
+            String elemLabe = ((TdXmlElementType) element).getName();
+            String elementType = ((TdXmlElementType) element).getJavaType();
             if (elementType != null && !StringUtils.isEmpty(elementType)) {
                 elemLabe += " (" + elementType + ")";
             }
