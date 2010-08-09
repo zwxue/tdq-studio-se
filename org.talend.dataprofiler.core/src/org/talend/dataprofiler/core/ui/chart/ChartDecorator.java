@@ -130,6 +130,7 @@ public final class ChartDecorator {
         CategoryPlot plot = chart.getCategoryPlot();
         CategoryItemRenderer render = plot.getRenderer();
         CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setCategoryMargin(0.01);
         ValueAxis valueAxis = plot.getRangeAxis();
 
         Font font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);
@@ -165,8 +166,9 @@ public final class ChartDecorator {
             int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
             domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));
             domainAxis.setUpperMargin(0.1);
-            domainAxis.setMaximumCategoryLabelLines(3);
-            ((BarRenderer) render).setItemMargin(-0.50 * rowCount);
+            // MOD klliu bug 14570: Label size too long in Text statistics graph 2010-08-09
+            domainAxis.setMaximumCategoryLabelLines(10);
+            ((BarRenderer) render).setItemMargin(-0.40 * rowCount);
         }
         // ~10998
     }
