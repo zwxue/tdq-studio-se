@@ -234,6 +234,13 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
                 }
             }
         }
+        // MOD handle default value for a column 13411
+        TdColumn parentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement.eContainer());
+        if (parentColumn != null) {
+            ColumnSet columnSet = (ColumnSet) selectedObj;
+            ColumnSetHelper.removeColumn(parentColumn, columnSet);
+            ColumnSetHelper.addColumn(parentColumn, columnSet);
+        }
     }
 
     @Override
