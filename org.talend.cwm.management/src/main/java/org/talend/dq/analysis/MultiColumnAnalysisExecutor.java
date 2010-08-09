@@ -381,10 +381,13 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         for (RegexpMatchingIndicator rmi : indicators) {
             if (null == rmi.getRegex()) {
                 patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
+            } // MOD klliu bug 14527 2010-08-09
+            else if (rmi.getRegex().equals(rmi.getName())) {
+                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
             }
         }
         if ("" != patternNames) {
-            this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicator", patternNames);
+            this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames);
             return false;
         }
         return true;
