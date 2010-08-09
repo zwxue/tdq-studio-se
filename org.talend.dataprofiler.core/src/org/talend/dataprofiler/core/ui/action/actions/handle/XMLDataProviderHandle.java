@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
@@ -54,10 +55,13 @@ public class XMLDataProviderHandle extends EMFResourceHandle {
                 if (packages != null && packages.size() > 0) {
                     TdXMLDocument tdXmlDocument = SwitchHelpers.XMLDOCUMENT_SWITCH.doSwitch(packages.get(0));
                     if (tdXmlDocument != null) {
-                        String xsdFilePath = tdXmlDocument.getXsdFilePath();
-                        int indexOf = xsdFilePath.indexOf("/", xsdFilePath.indexOf("/") + 1);
-                        IFolder folder = ResourceManager.getMDMConnectionFolder().getFolder(xsdFilePath.substring(0, indexOf));
-                        folder.delete(true, null);
+                        // MOD xqliu 2010-08-09 bug 14469
+                        IFile xsdFile = ResourceManager.getMDMConnectionFolder().getFile(tdXmlDocument.getXsdFilePath());
+                        IContainer parent = xsdFile.getParent();
+                        if (parent instanceof IFolder) {
+                            ((IFolder) parent).delete(true, null);
+                        }
+                        // ~ 14469
                     }
                 }
             }
