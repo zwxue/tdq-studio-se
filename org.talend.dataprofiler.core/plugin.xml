@@ -1168,6 +1168,12 @@
            name="Merge Metadata Task"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask"
+           id="org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask"
+           name="Refact Mdm Metadata Task"
+           version="4.1.0">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
