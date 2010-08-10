@@ -174,8 +174,9 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         if (item == null) {
             item = initItem(element, property);
         }
-        ((TDQItem) item).setFilename(fileName);
-
+        if (item instanceof TDQItem) {
+            ((TDQItem) item).setFilename(fileName);
+        }
         URI uri = element.eResource().getURI();
         serialize(property, uri);
 
