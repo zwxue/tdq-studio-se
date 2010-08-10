@@ -41,7 +41,10 @@ Require-Bundle: org.eclipse.ui,
  org.talend.model.migration,
  org.talend.model.edit
 Bundle-ActivationPolicy: lazy
-Export-Package: org.talend.dataprofiler.core,
+Export-Package: org.eclipse.nebula.jface.gridviewer,
+ org.eclipse.nebula.widgets.grid,
+ org.eclipse.nebula.widgets.grid.internal,
+ org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
  org.talend.dataprofiler.core.helper,
  org.talend.dataprofiler.core.i18n,
@@ -89,3 +92,6 @@ Export-Package: org.talend.dataprofiler.core,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.apache.log4j
 Bundle-Localization: plugin
+Bundle-ClassPath: .,
+ lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar,
+ lib/org.eclipse.nebula.widgets.grid_1.0.0.jar

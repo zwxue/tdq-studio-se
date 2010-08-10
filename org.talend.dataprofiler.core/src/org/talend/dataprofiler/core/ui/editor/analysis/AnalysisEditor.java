@@ -200,6 +200,15 @@ public class AnalysisEditor extends CommonFormEditor {
         return this.masterPage;
     }
 
+    /**
+     * Getter for resultPage.
+     * 
+     * @return the resultPage
+     */
+    public AbstractAnalysisResultPage getResultPage() {
+        return resultPage;
+    }
+
     public void performGlobalAction(String id) {
         if (id.equals(RunAnalysisAction.ID)) {
             runAction.run();

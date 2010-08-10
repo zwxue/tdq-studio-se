@@ -651,6 +651,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
         }
         if (message == null) {
+            resetResultPageData();
             return new ReturnCode(true);
         }
 
@@ -663,7 +664,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnSetMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
         }
-
+        resetResultPageData();
         return new ReturnCode(true);
 
     }
@@ -675,5 +676,15 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     public void updateIndicatorSection() {
         if (null != indicatorsViewer)
             indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
+    }
+
+    private void resetResultPageData() {
+        ColumnSetResultPage theResultPage = null;
+        if (this.currentEditor.getResultPage() instanceof ColumnSetResultPage) {
+            theResultPage = (ColumnSetResultPage) this.currentEditor.getResultPage();
+        }
+        if (theResultPage.getTableFilterResult() != null) {
+            theResultPage.setTableFilterResult(null);
+        }
     }
 }

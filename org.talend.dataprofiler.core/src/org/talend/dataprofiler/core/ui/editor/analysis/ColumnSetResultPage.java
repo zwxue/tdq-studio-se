@@ -16,6 +16,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -26,11 +29,15 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -53,6 +60,9 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
+import org.talend.dataprofiler.core.ui.wizard.patterns.SelectPatternsWizard;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
@@ -81,6 +91,10 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     private String executeData;
 
     private Section graphicsAndTableSection = null;
+
+    private TableViewer columnsElementViewer;
+
+    private List<Map<Integer, RegexpMatchingIndicator>> tableFilterResult;
 
     /**
      * @param editor
@@ -246,11 +260,46 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     private Section createTableSectionPart(Composite parentComp, String title, SimpleStatIndicator ssIndicator) {
         Section columnSetElementSection = this.createSection(form, parentComp, title, null);
         Composite sectionTableComp = toolkit.createComposite(columnSetElementSection);
+
         sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionTableComp.setLayout(new GridLayout());
+        // MOD zshen for feature 14000
+        Button filterDataBt = new Button(sectionTableComp, SWT.NONE);
+        filterDataBt.setText(DefaultMessagesImpl.getString("ColumnSetResultPage.filterData"));
+        filterDataBt.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+        filterDataBt.addMouseListener(new MouseListener() {
 
-        TableViewer columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
+            public void mouseDoubleClick(MouseEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            public void mouseDown(MouseEvent e) {
+                List<Indicator> indicatorsList = masterPage.analysis.getResults().getIndicators();
+                SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
+                wizard.setOldTableInputList(ColumnSetResultPage.this.tableFilterResult);
+                WizardDialog dialog = new WizardDialog(null, wizard);
+                dialog.setPageSize(300, 400);
+                wizard.setContainer(dialog);
+                wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));
+                if (WizardDialog.OK == dialog.open()) {
+                    ColumnSetResultPage.this.tableFilterResult = ((SelectPatternsWizard) wizard).getPatternSelectPage()
+                            .getTableInputList();
+
+                    columnsElementViewer.refresh();
+                }
+            }
+
+            public void mouseUp(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+
+        columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
+
         Table table = columnsElementViewer.getTable();
+        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         List<String> tableColumnNames = ssIndicator.getColumnHeaders();
         for (String tableColumnName : tableColumnNames) {
             final TableColumn columnHeader = new TableColumn(table, SWT.NONE);
@@ -358,8 +407,9 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         }
 
         public Color getForeground(Object element, int columnIndex) {
-            // TODO Auto-generated method stub
-            return null;
+            // MOD by zshen for feature 14000
+            return getMatchColor(element, columnIndex);
+            // ~14000
         }
     }
 
@@ -435,4 +485,37 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         }
         return result;
     }
+
+    private Color getMatchColor(Object element, int columnIndex) {
+        if (tableFilterResult != null) {
+            for (Map<Integer, RegexpMatchingIndicator> tableItem : this.tableFilterResult) {
+                RegexpMatchingIndicator regMatIndicator = tableItem.get(columnIndex);
+                if (regMatIndicator == null)
+                    continue;
+                String regex = regMatIndicator.getRegex();
+                Pattern p = java.util.regex.Pattern.compile(regex);
+                if (element instanceof Object[]) {
+                    Object theElement = ((Object[]) element)[columnIndex];
+                    if (theElement == null) {
+                        theElement = "null";
+                    }
+                    Matcher m = p.matcher(String.valueOf(theElement));
+                    if (!m.find()) {
+                        return new Color(null, 255, 0, 0);
+                    }
+
+                }
+            }
+        }
+        return new Color(null, 0, 0, 0);
+    }
+
+    public List<Map<Integer, RegexpMatchingIndicator>> getTableFilterResult() {
+        return tableFilterResult;
+    }
+
+    public void setTableFilterResult(List<Map<Integer, RegexpMatchingIndicator>> tableFilterResult) {
+        this.tableFilterResult = tableFilterResult;
+    }
+
 }
