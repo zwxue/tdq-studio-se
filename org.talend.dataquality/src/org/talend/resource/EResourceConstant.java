@@ -19,13 +19,13 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.TDQAnalysisItem;
 import org.talend.core.model.properties.TDQBusinessRuleItem;
-import org.talend.core.model.properties.TDQDBConnectionItem;
 import org.talend.core.model.properties.TDQIndicatorItem;
 import org.talend.core.model.properties.TDQJrxmlItem;
-import org.talend.core.model.properties.TDQMDMConnectionItem;
 import org.talend.core.model.properties.TDQPatternItem;
 import org.talend.core.model.properties.TDQReportItem;
 import org.talend.core.model.properties.util.PropertiesSwitch;
@@ -203,12 +203,12 @@ public enum EResourceConstant {
             }
 
             @Override
-            public Object caseTDQDBConnectionItem(TDQDBConnectionItem object) {
+            public Object caseConnectionItem(ConnectionItem object) {
                 return DB_CONNECTIONS;
             }
 
             @Override
-            public Object caseTDQMDMConnectionItem(TDQMDMConnectionItem object) {
+            public Object caseMDMConnectionItem(MDMConnectionItem object) {
                 return MDM_CONNECTIONS;
             }
 

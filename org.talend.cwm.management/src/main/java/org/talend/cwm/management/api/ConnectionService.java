@@ -54,12 +54,16 @@ public final class ConnectionService {
             connection = ConnectionUtils.createConnection(url, driverClassName, props);
             rc = (ConnectionUtils.isValid(connection));
         } catch (SQLException e) {
+            log.error(e, e);
             rc.setReturnCode(e.getMessage(), false);
         } catch (InstantiationException e) {
+            log.error(e, e);
             rc.setReturnCode(e.getMessage(), false);
         } catch (IllegalAccessException e) {
+            log.error(e, e);
             rc.setReturnCode(e.getMessage(), false);
         } catch (ClassNotFoundException e) {
+            log.error(e, e);
             rc.setReturnCode(Messages.getString("ConnectionService.DriverNotFound", e.getMessage()), false); //$NON-NLS-1$
         } finally {
             if (connection != null) {

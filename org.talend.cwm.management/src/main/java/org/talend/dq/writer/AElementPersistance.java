@@ -248,21 +248,21 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @see org.talend.dq.writer.IElementSerialize#initItem(orgomg.cwm.objectmodel.core.ModelElement,
      * org.talend.core.model.properties.Property, java.lang.String)
      */
-    public TDQItem initItem(ModelElement element, Property property) {
-        TDQItem item = null;
+    public Item initItem(ModelElement element, Property property) {
+        Item item = null;
         // MOD mzhao feature 13114, 2010-05-19 distinguish tdq items.
         if (ModelElementIdentifier.isAnalysis(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
         } else if (ModelElementIdentifier.isDQRule(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
         } else if (ModelElementIdentifier.isDataProvider(element)) {
-            item = PropertiesFactory.eINSTANCE.createTDQDBConnectionItem();
+            item = PropertiesFactory.eINSTANCE.createConnectionItem();
         } else if (ModelElementIdentifier.isID(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQIndicatorItem();
         } else if (ModelElementIdentifier.isPattern(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQPatternItem();
         } else if (ModelElementIdentifier.isXMLProvider(element)) {
-            item = PropertiesFactory.eINSTANCE.createTDQMDMConnectionItem();
+            item = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
         } else if (ModelElementIdentifier.isReport(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQReportItem();
         } else {
