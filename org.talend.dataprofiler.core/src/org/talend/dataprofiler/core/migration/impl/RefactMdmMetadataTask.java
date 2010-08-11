@@ -22,9 +22,9 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.resource.ResourceManager;
 
-
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC update prv and ana files because of the renameing of classes: TdXMLDocument --> TdXmlSchema , TdXMLElement -->
+ * TdXmlElementType.
  */
 public class RefactMdmMetadataTask extends AWorkspaceTask {
 
