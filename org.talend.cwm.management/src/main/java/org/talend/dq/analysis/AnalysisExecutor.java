@@ -135,10 +135,13 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         Object obj = IndicatorUtils.getIndicatorValue(indicator);
         if (dataThreshold != null || indicatorThreshold != null || indiPercentThreshold != null) {
             ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "", "");
-            if (obj instanceof PatternMatchingExt)
-                obj = (((PatternMatchingExt) obj).getMatchingValueCount());
-            if (obj != null && chartDataEntity.isOutOfRange(obj.toString())) {
-                return true;
+            if (obj != null) {
+                if (obj instanceof PatternMatchingExt) {
+                    obj = (((PatternMatchingExt) obj).getMatchingValueCount());
+                }
+                if (chartDataEntity.isOutOfRange(obj.toString())) {
+                    return true;
+                }
             }
         }
         List<Indicator> leaves = IndicatorHelper.getIndicatorLeaves(indicator);

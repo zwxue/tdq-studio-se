@@ -12,22 +12,16 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import java.util.List;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
-import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
-import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
@@ -46,23 +40,27 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
-import org.talend.dataquality.indicators.SoundexFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.indicators.ext.FrequencyExt;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
-
 /**
- * DOC Administrator  class global comment. Detailled comment
+ * DOC qiongli class global comment. Detailled comment
  */
 public class IndicatorUtils {
 
     private static Logger log = Logger.getLogger(IndicatorUtils.class);
 
+    /**
+     * 
+     * DOC qiongli: get indcator value for indicator which has threshold.
+     * 
+     * @param indicator
+     * @return
+     */
     public static Object getIndicatorValue(Indicator indicator) {
 
         Object object = null;
@@ -74,8 +72,6 @@ public class IndicatorUtils {
                 object = ((RangeIndicator) indicator).getRange();
 
             } else if (indicator.isComputed()) {
-
-                // log.warn("now getting the value of indicator [" + indicator.getName() + "]");
 
                 switch (type) {
                 case RowCountIndicatorEnum:
@@ -154,28 +150,6 @@ public class IndicatorUtils {
                     object = ((AvgLengthWithBlankNullIndicator) indicator).getAverageLength();
                     break;
 
-                // case FrequencyIndicatorEnum:
-                // case DateFrequencyIndicatorEnum:
-                // case WeekFrequencyIndicatorEnum:
-                // case MonthFrequencyIndicatorEnum:
-                // case QuarterFrequencyIndicatorEnum:
-                // case YearFrequencyIndicatorEnum:
-                // case BinFrequencyIndicatorEnum:
-                // case LowFrequencyIndicatorEnum:
-                // case DateLowFrequencyIndicatorEnum:
-                // case WeekLowFrequencyIndicatorEnum:
-                // case MonthLowFrequencyIndicatorEnum:
-                // case QuarterLowFrequencyIndicatorEnum:
-                // case YearLowFrequencyIndicatorEnum:
-                // case BinLowFrequencyIndicatorEnum:
-                // case PatternFreqIndicatorEnum:
-                // case PatternLowFreqIndicatorEnum:
-                // case DatePatternFreqIndicatorEnum:
-                // case SoundexIndicatorEnum:
-                // case SoundexLowIndicatorEnum:
-                // object = handleFrequency(indicator);
-                // break;
-
                 case MeanIndicatorEnum:
                     object = ((MeanIndicator) indicator).getMean();
                     break;
@@ -210,11 +184,6 @@ public class IndicatorUtils {
                     object = ((ModeIndicator) indicator).getMode();
                     break;
 
-                case UserDefinedIndicatorEnum:
-                case JavaUserDefinedIndicatorEnum:
-                    object = handleUDIValue(indicator);
-                    break;
-
                 default:
 
                 }
@@ -224,18 +193,16 @@ public class IndicatorUtils {
                 }
             }
         } catch (Exception e) {
-            // MOD xqliu 2010-04-06 bug 12161
             log.error(e, e);
             if (indicator != null) {
                 indicator.setComputed(false);
             }
-            // ~12161
         }
         return object;
     }
 
     /**
-     * DOC xqliu Comment method "handleMatchingValue".
+     * DOC qiongli Comment method "handleMatchingValue".
      * 
      * @param indicator
      * @return
@@ -252,86 +219,5 @@ public class IndicatorUtils {
         }
         tempObject = patternExt;
         return tempObject;
-    }
-
-    /**
-     * DOC xqliu Comment method "handleFrequency".
-     * 
-     * @param indicator
-     * @return
-     */
-    private static Object handleFrequency(Indicator indicator) {
-        FrequencyExt[] frequencyExt = null;
-        if (UDIHelper.isUDI(indicator)) {
-            UserDefIndicator udi = (UserDefIndicator) indicator;
-            Set<Object> valueSet = udi.getDistinctValues();
-            if (valueSet == null) {
-                return null;
-            }
-
-            frequencyExt = new FrequencyExt[valueSet.size()];
-
-            int i = 0;
-            for (Object o : valueSet) {
-                frequencyExt[i] = new FrequencyExt();
-                frequencyExt[i].setKey(o);
-                frequencyExt[i].setValue(udi.getCount(o));
-                frequencyExt[i].setFrequency(udi.getFrequency(o));
-                i++;
-            }
-        } else if (IndicatorEnum.DatePatternFreqIndicatorEnum.getIndicatorType().isInstance(indicator)) {
-            DatePatternFreqIndicator datePatternFrequency = (DatePatternFreqIndicator) indicator;
-            List<Object> modelMatchers = datePatternFrequency.getRealModelMatcherList();
-            frequencyExt = new FrequencyExt[modelMatchers.size()];
-            int i = 0;
-            for (Object patternMatcher : modelMatchers) {
-
-                frequencyExt[i] = new FrequencyExt();
-                frequencyExt[i].setKey(datePatternFrequency.getModel(patternMatcher));
-                frequencyExt[i].setValue(Long.valueOf(String.valueOf(datePatternFrequency.getScore(patternMatcher))));
-                frequencyExt[i].setFrequency(datePatternFrequency.getFrequency(patternMatcher));
-                i++;
-            }
-
-        } else {
-            FrequencyIndicator frequency = (FrequencyIndicator) indicator;
-            Set<Object> valueSet = frequency.getDistinctValues();
-            if (valueSet == null) {
-                return null;
-            }
-
-            frequencyExt = new FrequencyExt[valueSet.size()];
-
-            int i = 0;
-            for (Object o : valueSet) {
-                frequencyExt[i] = new FrequencyExt();
-                frequencyExt[i].setKey(o);
-                if (IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator().equals(frequency.eClass())
-                        || IndicatorsPackage.eINSTANCE.getSoundexLowFreqIndicator().equals(frequency.eClass())) {
-                    // MOD scorreia 2009-03-23 display distinct count when working with Soundex
-                    frequencyExt[i].setValue(((SoundexFreqIndicator) frequency).getDistinctCount(o));
-                } else {
-                    frequencyExt[i].setValue(frequency.getCount(o));
-                }
-                frequencyExt[i].setFrequency(frequency.getFrequency(o));
-                i++;
-            }
-        }
-
-        return frequencyExt;
-    }
-
-    private static Object handleUDIValue(Indicator indicator) {
-        Object object = null;
-        if (UDIHelper.isCount(indicator)) {
-            object = ((UserDefIndicator) indicator).getUserCount();
-        } else if (UDIHelper.isFrequency(indicator)) {
-            object = handleFrequency(indicator);
-        } else if (UDIHelper.isMatching(indicator)) {
-            object = handleMatchingValue(indicator);
-        } else if (UDIHelper.isRealValue(indicator)) {
-            object = ((UserDefIndicator) indicator).getRealValue();
-        }
-        return object;
     }
 }
