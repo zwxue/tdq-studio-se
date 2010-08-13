@@ -1174,6 +1174,12 @@
            name="Refact Mdm Metadata Task"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateSimpleStatisticsIndicatorsForSybaseIqTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateSimpleStatisticsIndicatorsForSybaseIqTask"
+           name="Update SimpleStatistics Indicators For Sybase IQ Task"
+           version="4.1.0">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
