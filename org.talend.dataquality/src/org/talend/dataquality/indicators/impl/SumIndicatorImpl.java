@@ -110,7 +110,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected SumIndicatorImpl() {
@@ -119,7 +118,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -129,7 +127,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public String getSumStr() {
@@ -138,7 +135,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setSumStr(String newSumStr) {
@@ -150,7 +146,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public int getDatatype() {
@@ -159,7 +154,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setDatatype(int newDatatype) {
@@ -172,7 +166,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -188,7 +181,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -206,7 +198,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -224,7 +215,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -240,7 +230,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -270,36 +259,8 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
             return false;
         }
         // assert data instanceof Integer : "Sum indicator wants integer data, got: " + data;
-        // this.getGenericSum(data).sumObject(data);
-        // MOD klliu bug 14588 2010-08-05
-        this.sumMethod(data);
+        this.getGenericSum(data).sumObject(data);
         return handled;
-    }
-
-    private static Integer sumInteger = new Integer(0);
-
-    private Double sumDouble = new Double(0.0);
-
-    private long sumDecimal;
-
-    /**
-     * 
-     * DOC klliu Comment method "sumMethod".
-     * 
-     * @param object
-     */
-    private void sumMethod(Object object) {
-        if (object instanceof Integer) {
-
-            sumInteger += (Integer) object;
-        } else if (object instanceof Double) {
-
-            this.sumDouble += (Double) object;
-        } else if (object instanceof BigDecimal) {
-            BigDecimal sumBigDecimal = new BigDecimal(sumDecimal);
-            BigDecimal in = (BigDecimal) object;
-            sumDecimal = sumBigDecimal.add(in).longValue();
-        }
     }
 
     /**
@@ -353,7 +314,12 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
                 @Override
                 void addNumber(BigDecimal number) {
-                    this.sum.add(number);
+                    try {
+                        sum = sum.add(number);
+                        System.out.println(sum.doubleValue());
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
                 }
 
             };
@@ -383,20 +349,14 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
     @Override
     public boolean finalizeComputation() {
         boolean ok = super.finalizeComputation();
-
-        // if (genericSum == null) {
-        // return false;
-        // }
-        // this.sumStr = genericSum.getAsString();
-        // MOD klliu bug 14588 2010-08-05
-        if (sumDecimal == 0) {
+        if (genericSum == null) {
             return false;
         }
-        this.sumStr = String.valueOf(sumDecimal);
+        this.sumStr = genericSum.getAsString();
         // get the correct type of result from the analyzed element
         int javaType = this.getColumnType();
         this.setDatatype(javaType);
-        this.sumDecimal = 0;
+
         return ok;
     }
 
@@ -437,5 +397,6 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
         this.computed = COMPUTED_EDEFAULT;
         return super.reset();
     }
+
 
 } // SumIndicatorImpl
