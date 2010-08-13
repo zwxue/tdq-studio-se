@@ -34,11 +34,14 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.manager.DQStructureMessage;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.ResourceManager;
@@ -83,6 +86,16 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                     if (!validStatus) {
                         image = ImageLib.createInvalidIcon(ImageLib.IND_DEFINITION);
                     }
+                }
+            } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
+                // ADD qiongli 2010-8-9,feature 14252
+                Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+                ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
+                analysisHandler.setAnalysis(analysis);
+                if (!analysisHandler.getResultMetadata().isLastRunOk()) {
+                    image = ImageLib.createErrorIcon(image);
+                } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
+                    image = ImageLib.createInvalidIcon(image);
                 }
             }
 

@@ -190,6 +190,8 @@ public final class ImageLib {
     
     public static final String RECYCLEBIN_FULL = "recyclebinfull.png";
 
+    public static final String ICON_ERROR_VAR = "error_ovr.gif";
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */
@@ -367,6 +369,28 @@ public final class ImageLib {
 
             return null;
         }
+    }
+    
+    /**
+     * DOC qiongli Comment method "createLockedIcon".
+     * 
+     * @param originalImgName
+     * @return
+     */
+    public static ImageDescriptor createErrorIcon(String originalImgName) {
+        return createErrorIcon(getImageDescriptor(originalImgName));
+    }
+
+    /**
+     * DOC bZhou Comment method "createLockedIcon".
+     * 
+     * @param originalImg
+     * @return
+     */
+    public static ImageDescriptor createErrorIcon(ImageDescriptor originalImg) {
+        ImageDescriptor lockImg = getImageDescriptor(ICON_ERROR_VAR);
+
+        return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
 }

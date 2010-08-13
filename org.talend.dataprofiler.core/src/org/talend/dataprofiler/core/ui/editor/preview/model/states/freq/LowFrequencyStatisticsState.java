@@ -16,10 +16,10 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
+import org.talend.dq.indicators.ext.FrequencyExt;
 
 /**
  * DOC Zqin class global comment. Detailled comment

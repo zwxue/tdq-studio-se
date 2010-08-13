@@ -28,6 +28,7 @@ import org.talend.dataquality.analysis.ExecutionInformations;
  *   <li>{@link org.talend.dataquality.analysis.impl.ExecutionInformationsImpl#getExecutionNumber <em>Execution Number</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.ExecutionInformationsImpl#isLastRunOk <em>Last Run Ok</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.ExecutionInformationsImpl#getLastExecutionNumberOk <em>Last Execution Number Ok</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.impl.ExecutionInformationsImpl#isOutThreshold <em>Out Threshold</em>}</li>
  * </ul>
  * </p>
  *
@@ -153,6 +154,26 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
      * @ordered
      */
     protected int lastExecutionNumberOk = LAST_EXECUTION_NUMBER_OK_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #isOutThreshold() <em>Out Threshold</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isOutThreshold()
+     * @generated
+     * @ordered
+     */
+    protected static final boolean OUT_THRESHOLD_EDEFAULT = false;
+
+    /**
+     * The cached value of the '{@link #isOutThreshold() <em>Out Threshold</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isOutThreshold()
+     * @generated
+     * @ordered
+     */
+    protected boolean outThreshold = OUT_THRESHOLD_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -304,6 +325,27 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
      * <!-- end-user-doc -->
      * @generated
      */
+    public boolean isOutThreshold() {
+        return outThreshold;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setOutThreshold(boolean newOutThreshold) {
+        boolean oldOutThreshold = outThreshold;
+        outThreshold = newOutThreshold;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.EXECUTION_INFORMATIONS__OUT_THRESHOLD, oldOutThreshold, outThreshold));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -319,6 +361,8 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
                 return isLastRunOk();
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
                 return getLastExecutionNumberOk();
+            case AnalysisPackage.EXECUTION_INFORMATIONS__OUT_THRESHOLD:
+                return isOutThreshold();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -348,6 +392,9 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
                 setLastExecutionNumberOk((Integer)newValue);
+                return;
+            case AnalysisPackage.EXECUTION_INFORMATIONS__OUT_THRESHOLD:
+                setOutThreshold((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -379,6 +426,9 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
                 setLastExecutionNumberOk(LAST_EXECUTION_NUMBER_OK_EDEFAULT);
                 return;
+            case AnalysisPackage.EXECUTION_INFORMATIONS__OUT_THRESHOLD:
+                setOutThreshold(OUT_THRESHOLD_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -403,6 +453,8 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
                 return lastRunOk != LAST_RUN_OK_EDEFAULT;
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
                 return lastExecutionNumberOk != LAST_EXECUTION_NUMBER_OK_EDEFAULT;
+            case AnalysisPackage.EXECUTION_INFORMATIONS__OUT_THRESHOLD:
+                return outThreshold != OUT_THRESHOLD_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -429,6 +481,8 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
         result.append(lastRunOk);
         result.append(", lastExecutionNumberOk: ");
         result.append(lastExecutionNumberOk);
+        result.append(", outThreshold: ");
+        result.append(outThreshold);
         result.append(')');
         return result.toString();
     }

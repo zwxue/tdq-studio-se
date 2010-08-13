@@ -225,6 +225,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         job.setUser(true);
         job.schedule();
+        try {
+            job.join();
+        } catch (Exception e) {
+            log.error(e, e);
+        }
 
         CorePlugin.getDefault().refreshDQView();
     }

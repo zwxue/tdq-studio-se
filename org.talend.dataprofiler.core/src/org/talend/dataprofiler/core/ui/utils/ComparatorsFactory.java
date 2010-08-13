@@ -22,8 +22,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.indicators.ext.FrequencyExt;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

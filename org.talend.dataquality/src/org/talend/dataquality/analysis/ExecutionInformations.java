@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.dataquality.analysis.ExecutionInformations#getExecutionNumber <em>Execution Number</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.ExecutionInformations#isLastRunOk <em>Last Run Ok</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.ExecutionInformations#getLastExecutionNumberOk <em>Last Execution Number Ok</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.ExecutionInformations#isOutThreshold <em>Out Threshold</em>}</li>
  * </ul>
  * </p>
  *
@@ -184,5 +185,31 @@ public interface ExecutionInformations extends EObject {
      * @generated
      */
     void setLastExecutionNumberOk(int value);
+
+    /**
+     * Returns the value of the '<em><b>Out Threshold</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Out Threshold</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Out Threshold</em>' attribute.
+     * @see #setOutThreshold(boolean)
+     * @see org.talend.dataquality.analysis.AnalysisPackage#getExecutionInformations_OutThreshold()
+     * @model
+     * @generated
+     */
+    boolean isOutThreshold();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.analysis.ExecutionInformations#isOutThreshold <em>Out Threshold</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Out Threshold</em>' attribute.
+     * @see #isOutThreshold()
+     * @generated
+     */
+    void setOutThreshold(boolean value);
 
 } // ExecutionInformations

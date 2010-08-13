@@ -72,7 +72,6 @@ Export-Package: org.eclipse.nebula.jface.gridviewer,
  org.talend.dataprofiler.core.ui.editor.connection,
  org.talend.dataprofiler.core.ui.editor.pattern,
  org.talend.dataprofiler.core.ui.editor.preview,
- org.talend.dataprofiler.core.ui.editor.preview.ext,
  org.talend.dataprofiler.core.ui.editor.preview.model,
  org.talend.dataprofiler.core.ui.filters,
  org.talend.dataprofiler.core.ui.perspective,
@@ -95,3 +94,4 @@ Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar,
  lib/org.eclipse.nebula.widgets.grid_1.0.0.jar
+Import-Package: org.talend.dataprofiler.core.ui.editor.preview.model

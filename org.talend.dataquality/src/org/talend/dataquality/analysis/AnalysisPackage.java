@@ -2093,13 +2093,22 @@ public interface AnalysisPackage extends EPackage {
     int EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK = 5;
 
     /**
+     * The feature id for the '<em><b>Out Threshold</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int EXECUTION_INFORMATIONS__OUT_THRESHOLD = 6;
+
+    /**
      * The number of structural features of the '<em>Execution Informations</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int EXECUTION_INFORMATIONS_FEATURE_COUNT = 6;
+    int EXECUTION_INFORMATIONS_FEATURE_COUNT = 7;
 
 
     /**
@@ -2540,6 +2549,17 @@ public interface AnalysisPackage extends EPackage {
     EAttribute getExecutionInformations_LastExecutionNumberOk();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.ExecutionInformations#isOutThreshold <em>Out Threshold</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Out Threshold</em>'.
+     * @see org.talend.dataquality.analysis.ExecutionInformations#isOutThreshold()
+     * @see #getExecutionInformations()
+     * @generated
+     */
+    EAttribute getExecutionInformations_OutThreshold();
+
+    /**
      * Returns the meta object for class '{@link java.util.Map.Entry <em>Indic To Rows Map</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2921,6 +2941,14 @@ public interface AnalysisPackage extends EPackage {
          * @generated
          */
         EAttribute EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK = eINSTANCE.getExecutionInformations_LastExecutionNumberOk();
+
+        /**
+         * The meta object literal for the '<em><b>Out Threshold</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute EXECUTION_INFORMATIONS__OUT_THRESHOLD = eINSTANCE.getExecutionInformations_OutThreshold();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.IndicToRowsMapImpl <em>Indic To Rows Map</em>}' class.

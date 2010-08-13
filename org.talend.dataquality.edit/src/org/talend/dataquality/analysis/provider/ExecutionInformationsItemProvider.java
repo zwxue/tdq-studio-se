@@ -68,6 +68,7 @@ public class ExecutionInformationsItemProvider
             addExecutionNumberPropertyDescriptor(object);
             addLastRunOkPropertyDescriptor(object);
             addLastExecutionNumberOkPropertyDescriptor(object);
+            addOutThresholdPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -205,6 +206,28 @@ public class ExecutionInformationsItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Out Threshold feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addOutThresholdPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ExecutionInformations_outThreshold_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_ExecutionInformations_outThreshold_feature", "_UI_ExecutionInformations_type"),
+                 AnalysisPackage.Literals.EXECUTION_INFORMATIONS__OUT_THRESHOLD,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns ExecutionInformations.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -248,6 +271,7 @@ public class ExecutionInformationsItemProvider
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_NUMBER:
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_RUN_OK:
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
+            case AnalysisPackage.EXECUTION_INFORMATIONS__OUT_THRESHOLD:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

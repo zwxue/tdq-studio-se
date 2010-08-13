@@ -34,10 +34,13 @@ import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.recycle.IRecycleBin;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -95,7 +98,16 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 IFile file = (IFile) obj;
                 String type = file.getFileExtension();
                 if (type.equals(FactoriesUtil.ANA)) {
-                    return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+                    Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+                    ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
+                    analysisHandler.setAnalysis(analysis);
+                    Image anaImage = ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+                    if (!analysisHandler.getResultMetadata().isLastRunOk()) {
+                        return ImageLib.createErrorIcon(ImageLib.ANALYSIS_OBJECT).createImage();
+                    } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
+                        return ImageLib.createInvalidIcon(ImageLib.ANALYSIS_OBJECT).createImage();
+                    }
+                    return anaImage;
                 } else if (type.equals(FactoriesUtil.REP)) {
                     return ImageLib.getImage(ImageLib.REPORT_OBJECT);
                 } else if (type.equals(FactoriesUtil.PATTERN)) {

@@ -492,6 +492,15 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getExecutionInformations_OutThreshold() {
+        return (EAttribute)executionInformationsEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getIndicToRowsMap() {
         return indicToRowsMapEClass;
     }
@@ -647,6 +656,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         createEAttribute(executionInformationsEClass, EXECUTION_INFORMATIONS__EXECUTION_NUMBER);
         createEAttribute(executionInformationsEClass, EXECUTION_INFORMATIONS__LAST_RUN_OK);
         createEAttribute(executionInformationsEClass, EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK);
+        createEAttribute(executionInformationsEClass, EXECUTION_INFORMATIONS__OUT_THRESHOLD);
 
         indicToRowsMapEClass = createEClass(INDIC_TO_ROWS_MAP);
         createEReference(indicToRowsMapEClass, INDIC_TO_ROWS_MAP__KEY);
@@ -743,6 +753,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         initEAttribute(getExecutionInformations_ExecutionNumber(), ecorePackage.getEInt(), "executionNumber", null, 0, 1, ExecutionInformations.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getExecutionInformations_LastRunOk(), ecorePackage.getEBoolean(), "lastRunOk", null, 0, 1, ExecutionInformations.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getExecutionInformations_LastExecutionNumberOk(), ecorePackage.getEInt(), "lastExecutionNumberOk", null, 0, 1, ExecutionInformations.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getExecutionInformations_OutThreshold(), ecorePackage.getEBoolean(), "outThreshold", null, 0, 1, ExecutionInformations.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(indicToRowsMapEClass, Map.Entry.class, "IndicToRowsMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
         initEReference(getIndicToRowsMap_Key(), theIndicatorsPackage.getIndicator(), null, "key", null, 1, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

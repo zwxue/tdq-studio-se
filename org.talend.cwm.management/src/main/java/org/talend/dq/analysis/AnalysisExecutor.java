@@ -13,9 +13,11 @@
 package org.talend.dq.analysis;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -28,8 +30,13 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.indicators.IndicatorUtils;
+import org.talend.dq.indicators.ext.PatternMatchingExt;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -100,7 +107,49 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // --- compute execution duration
         long endtime = System.currentTimeMillis();
         resultMetadata.setExecutionDuration((int) (endtime - startime));
+
+        // MOD qiongli 2010-8-10, feature 14252
+        EList<Indicator> indicatorLs = analysis.getResults().getIndicators();
+        resultMetadata.setOutThreshold(false);
+        for (Indicator indicator : indicatorLs) {
+            if (hasOutThreshold(indicator)) {
+                resultMetadata.setOutThreshold(true);
+                break;
+            }
+        }// ~
         return new ReturnCode(this.errorMessage, ok);
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "hasOutThreshold".
+     * 
+     * @param indicator
+     * @return
+     */
+    private boolean hasOutThreshold(Indicator indicator) {
+        IndicatorHelper.propagateDataThresholdsInChildren(indicator);
+        String[] dataThreshold = IndicatorHelper.getDataThreshold(indicator);
+        String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(indicator);
+        String[] indiPercentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
+        Object obj = IndicatorUtils.getIndicatorValue(indicator);
+        if (dataThreshold != null || indicatorThreshold != null || indiPercentThreshold != null) {
+            ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "", "");
+            if (obj instanceof PatternMatchingExt)
+                obj = (((PatternMatchingExt) obj).getMatchingValueCount());
+            if (obj != null && chartDataEntity.isOutOfRange(obj.toString())) {
+                return true;
+            }
+        }
+        List<Indicator> leaves = IndicatorHelper.getIndicatorLeaves(indicator);
+        if (leaves.size() > 0 && !((Indicator) leaves.get(0)).equals(indicator)) {
+            for (Indicator leaveIndicator : leaves) {
+                if (hasOutThreshold(leaveIndicator)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

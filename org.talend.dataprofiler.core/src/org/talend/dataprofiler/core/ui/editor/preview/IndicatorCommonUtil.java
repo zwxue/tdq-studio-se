@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
-import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
@@ -54,6 +52,8 @@ import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.indicators.ext.FrequencyExt;
+import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**

@@ -97,6 +97,7 @@
           <details key="documentation" value="Stores the number of the last execution which has run correctly."/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="outThreshold" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EEnum" name="AnalysisType">
       <eLiterals name="COLUMN" literal="Column Analysis"/>
