@@ -58,14 +58,11 @@ public class RefactMdmMetadataTask extends AWorkspaceTask {
     protected boolean doExecute() throws Exception {
         boolean result = true;
 
-        File fileMdmConnection = new File(ResourceManager.getMDMConnectionFolder().getRawLocationURI());
         File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
 
         try {
-            String[] mdmFileExtentionNames = { ".prv" };
             String[] anaFileExtentionNames = { ".ana" };
-            result = FilesUtils.migrateFolder(fileMdmConnection, mdmFileExtentionNames, this.getReplaceStringMapMdm(), log)
-                    && FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMapMdm(), log);
+            result = FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMapMdm(), log);
         } catch (Exception e) {
             result = false;
             log.error(e, e);
