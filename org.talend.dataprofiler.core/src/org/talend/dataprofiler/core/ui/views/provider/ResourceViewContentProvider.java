@@ -35,6 +35,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
@@ -239,7 +240,14 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             return true;
         }
         // MOD qiongli feature 9486
-        if (element instanceof RecycleBin) {
+        if(element instanceof IFolder){
+            List<Object> obsLs = Arrays.asList(super.getChildren(element));
+            if(obsLs.size()==1){
+                Object obj=(Object)obsLs.get(0);
+                if (obj instanceof IFolder && ((IFolder) obj).getName().equals(PluginConstant.SVN_SUFFIX))
+                        return false;
+            }
+        }else if (element instanceof RecycleBin) {
             return getRecycleBinChildren().size() > 0 ? true : false;
         } else if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;

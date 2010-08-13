@@ -101,6 +101,8 @@ public class DeleteObjectsAction extends Action {
                 if (isDeleteForever && !showConfirmDialog()) {
                     return;
                 }
+                // MOD qiongli bug 14090
+                CorePlugin.getDefault().closeEditorIfOpened(file);
 
                 runStatus = handle.delete(isDeleteForever);
             }

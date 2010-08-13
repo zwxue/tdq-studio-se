@@ -103,4 +103,6 @@ public final class PluginConstant {
 
     public static final String UNCATEGORIES = "uncategories";//$NON-NLS-1$
 
+    public static final String SVN_SUFFIX = ".svn"; //$NON-NLS-1$
+
 }

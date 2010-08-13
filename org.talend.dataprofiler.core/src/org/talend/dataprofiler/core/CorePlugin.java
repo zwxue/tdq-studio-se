@@ -28,6 +28,7 @@ import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -299,5 +300,31 @@ public class CorePlugin extends AbstractUIPlugin {
         Object obj = plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
         ProductVersion currentVersion = ProductVersion.fromString(obj.toString());
         return currentVersion;
+    }
+
+    /**
+     * DOC qiongli close editor by file.
+     * 
+     * @param fileRes
+     */
+    public void closeEditorIfOpened(IFile fileRes) {
+        IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorReference[] editorReferences = activePage.getEditorReferences();
+        IEditorInput editorInput = null;
+        for (IEditorReference reference : editorReferences) {
+            try {
+                editorInput = reference.getEditorInput();
+                if (editorInput instanceof FileEditorInput) {
+                    FileEditorInput fileInput = (FileEditorInput) editorInput;
+
+                    if (fileRes.getName().equals(fileInput.getFile().getName())) {
+                        activePage.closeEditor(reference.getEditor(false), false);
+                        break;
+                    }
+                }
+            } catch (PartInitException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
