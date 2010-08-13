@@ -314,12 +314,7 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
 
                 @Override
                 void addNumber(BigDecimal number) {
-                    try {
                         sum = sum.add(number);
-                        System.out.println(sum.doubleValue());
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
                 }
 
             };
