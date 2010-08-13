@@ -503,7 +503,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * DOC yyi 2010-04-29 12572 for MDM elements
+     * DOC yyi 2010-04-29 12572 for MDM elements.
      * 
      * @param element
      * @return

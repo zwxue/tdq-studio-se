@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
@@ -110,7 +109,8 @@ public final class PatternUtilities {
         return valid;
     }
 
-    public static IndicatorUnit createIndicatorUnit(IFile pfile, ModelElementIndicator modelElementIndicator, Analysis analysis) {
+    public static TypedReturnCode<IndicatorUnit> createIndicatorUnit(IFile pfile, ModelElementIndicator modelElementIndicator,
+            Analysis analysis) {
         return createIndicatorUnit(pfile, modelElementIndicator, analysis, null);
     }
 
@@ -123,14 +123,19 @@ public final class PatternUtilities {
      * @param indicatorDefinition
      * @return
      */
-    public static IndicatorUnit createIndicatorUnit(IFile pfile, ModelElementIndicator modelElementIndicator, Analysis analysis,
-            IndicatorDefinition indicatorDefinition) {
+    public static TypedReturnCode<IndicatorUnit> createIndicatorUnit(IFile pfile, ModelElementIndicator modelElementIndicator,
+            Analysis analysis, IndicatorDefinition indicatorDefinition) {
+
+        TypedReturnCode<IndicatorUnit> result = new TypedReturnCode<IndicatorUnit>();
+
         Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(pfile);
 
         for (Indicator indicator : modelElementIndicator.getIndicators()) {
             // MOD xqliu 2009-08-12 bug 7810
             if (UDIHelper.getMatchingIndicatorName(indicatorDefinition, pattern).equals(indicator.getName())) {
-                return null;
+                result.setOk(false);
+                result.setMessage("This pattern has been selected!");
+                return result;
             }
             // ~
         }
@@ -160,11 +165,12 @@ public final class PatternUtilities {
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && dbmsLanguage.getRegexp(pattern) == null) {
             // this is when we must tell the user that no regular expression
             // exists for the selected database
-            MessageDialogWithToggle.openInformation(null,
-                    DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
-                            .getString("PatternUtilities.noRegexForDB")); //$NON-NLS-1$
-
-            return null;
+            // MessageDialogWithToggle.openInformation(null,
+            //                    DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
+            //                            .getString("PatternUtilities.noRegexForDB")); //$NON-NLS-1$
+            result.setOk(false);
+            result.setMessage(DefaultMessagesImpl.getString("PatternUtilities.noRegexForDB")); //$NON-NLS-1$
+            return result;
         }
         // TODO Currently the previous condition checks only whether there exist
         // a regular expression for the analyzed
@@ -186,12 +192,17 @@ public final class PatternUtilities {
                 }
             }
 
-            if (!(dbmsLanguage.supportRegexp() || isDBDefinedUDF(dbmsLanguage))) {
-                MessageDialogWithToggle.openInformation(null,
-                        DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
-                                .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$
-                return null;
+            // MOD xqliu 2010-08-12 bug 14601
+            if (!(isSQLPattern || DefinitionHandler.getInstance().canRunRegularExpressionMatchingIndicator(dbmsLanguage))) {
+                // MessageDialogWithToggle.openInformation(null,
+                //                        DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
+                //                                .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$
+                result.setOk(false);
+                result.setMessage(DefaultMessagesImpl.getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$
+
+                return result;
             }
+            // ~ 14601
         }
 
         // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition
@@ -207,7 +218,10 @@ public final class PatternUtilities {
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
         IndicatorUnit addIndicatorUnit = modelElementIndicator.addSpecialIndicator(type, patternMatchingIndicator);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
-        return addIndicatorUnit;
+        result.setOk(true);
+        result.setMessage("OK");
+        result.setObject(addIndicatorUnit);
+        return result;
     }
 
     /**
@@ -217,6 +231,7 @@ public final class PatternUtilities {
      * 
      * @param dbmsLanguage
      * @return
+     * @deprecated
      */
     private static boolean isDBDefinedUDF(DbmsLanguage dbmsLanguage) {
         Preferences prefers = ResourcesPlugin.getPlugin().getPluginPreferences();

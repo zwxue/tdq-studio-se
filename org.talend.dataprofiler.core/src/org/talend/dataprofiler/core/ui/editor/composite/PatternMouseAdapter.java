@@ -29,9 +29,8 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
@@ -94,14 +93,15 @@ public class PatternMouseAdapter extends MouseAdapter {
             for (Object obj : dialog.getResult()) {
                 if (obj instanceof IFile) {
                     IFile file = (IFile) obj;
-                    IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, meIndicator, analysis);
-                    if (addIndicatorUnit != null) {
-                        columnDropTree.createOneUnit(treeItem, addIndicatorUnit);
+                    TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(file, meIndicator, analysis);
+                    if (trc.isOk()) {
+                        columnDropTree.createOneUnit(treeItem, trc.getObject());
                         columnDropTree.setDirty(true);
                     } else {
-                        Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                        MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
-                                + pattern.getName());
+                        // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                        //                        MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
+                        // + pattern.getName());
+                        MessageUI.openError(trc.getMessage());
                     }
                 }
             }

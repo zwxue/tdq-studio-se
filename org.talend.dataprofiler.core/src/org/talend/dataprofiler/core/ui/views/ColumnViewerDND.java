@@ -63,6 +63,7 @@ import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.EResourceConstant;
+import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -259,20 +260,19 @@ public class ColumnViewerDND {
                     al.add(iter.next());
                 }
                 for (IFile fe : al) {
-
                     // MOD yyi 2010-07-01 13993: Drag&drop patterns to column set analysis,get NPE.
                     viewer = (AbstractColumnDropTree) item.getParent().getData();
                     if (viewer instanceof AnalysisColumnTreeViewer) {
                         analysis = ((AnalysisColumnTreeViewer) viewer).getAnalysis();
-                        IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-                        if (addIndicatorUnit != null) {
-                            ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, addIndicatorUnit);
+                        TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
+                        if (trc.isOk()) {
+                            ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, trc.getObject());
                         }
                     } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
                         analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis();
-                        IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-                        if (addIndicatorUnit != null) {
-                            ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, addIndicatorUnit);
+                        TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
+                        if (trc.isOk()) {
+                            ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, trc.getObject());
                         }
                     }
                 }

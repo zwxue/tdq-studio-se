@@ -266,7 +266,7 @@ public final class DbmsLanguageFactory {
 
     // ~11005
 
-    static boolean compareDbmsLanguage(String lang1, String lang2) {
+    public static boolean compareDbmsLanguage(String lang1, String lang2) {
         if (lang1 == null || lang2 == null) {
             return false;
         }
