@@ -92,10 +92,12 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
                 ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
                 analysisHandler.setAnalysis(analysis);
-                if (!analysisHandler.getResultMetadata().isLastRunOk()) {
-                    image = ImageLib.createErrorIcon(image);
-                } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
-                    image = ImageLib.createInvalidIcon(image);
+                if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
+                    if (!analysisHandler.getResultMetadata().isLastRunOk()) {
+                        image = ImageLib.createErrorIcon(image);
+                    } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
+                        image = ImageLib.createInvalidIcon(image);
+                    }
                 }
             }
 

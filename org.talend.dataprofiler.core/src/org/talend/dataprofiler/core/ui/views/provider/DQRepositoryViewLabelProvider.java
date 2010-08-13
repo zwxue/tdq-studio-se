@@ -101,13 +101,14 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
                     ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
                     analysisHandler.setAnalysis(analysis);
-                    Image anaImage = ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
-                    if (!analysisHandler.getResultMetadata().isLastRunOk()) {
-                        return ImageLib.createErrorIcon(ImageLib.ANALYSIS_OBJECT).createImage();
-                    } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
-                        return ImageLib.createInvalidIcon(ImageLib.ANALYSIS_OBJECT).createImage();
+                    if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
+                        if (!analysisHandler.getResultMetadata().isLastRunOk()) {
+                            return ImageLib.createErrorIcon(ImageLib.ANALYSIS_OBJECT).createImage();
+                        } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
+                            return ImageLib.createInvalidIcon(ImageLib.ANALYSIS_OBJECT).createImage();
+                        }
                     }
-                    return anaImage;
+                    return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
                 } else if (type.equals(FactoriesUtil.REP)) {
                     return ImageLib.getImage(ImageLib.REPORT_OBJECT);
                 } else if (type.equals(FactoriesUtil.PATTERN)) {
