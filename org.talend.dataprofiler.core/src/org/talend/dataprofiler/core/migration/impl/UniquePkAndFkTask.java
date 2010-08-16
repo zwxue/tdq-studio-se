@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -46,6 +47,8 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class UniquePkAndFkTask extends AWorkspaceTask {
 
+    protected static Logger log = Logger.getLogger(UniquePkAndFkTask.class);
+
     public UniquePkAndFkTask() {
 
     }
@@ -60,7 +63,7 @@ public class UniquePkAndFkTask extends AWorkspaceTask {
             if (folder != null && folder.exists())
                 resource = folder.members();
         } catch (CoreException e1) {
-            e1.printStackTrace();
+            log.error(e1, e1);
         }
         if (resource != null && resource.length > 0) {
             for (IResource re : resource) {

@@ -27,13 +27,14 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.model.migration.TopMetadataMigrationFrom400to410usingGenericVM;
 import org.talend.resource.ResourceManager;
 
-
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class MergeMetadataTask extends AWorkspaceTask {
 
@@ -42,6 +43,8 @@ public class MergeMetadataTask extends AWorkspaceTask {
     private static final String MIGRATION_FILE_EXT = ".mig";
 
     private static final String MIGRATION_FOLDER_EXT = "_mig";
+
+    private static final String TDQ_METADATA = "TDQ_Metadata";
 
     /**
      * replace strings for update ana file from 400 to 410.
@@ -112,7 +115,9 @@ public class MergeMetadataTask extends AWorkspaceTask {
         this.replaceStringMapRules = replaceStringMapRules;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -246,8 +251,7 @@ public class MergeMetadataTask extends AWorkspaceTask {
                     boolean isDeleted = sample.delete();
                     log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete."));
                     boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); //$NON-NLS-1$
-                    log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT
-                            + (isrenamed ? " is renamed." : " failed to rename."));
+                    log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename."));
                 }
             }
         }
@@ -275,7 +279,9 @@ public class MergeMetadataTask extends AWorkspaceTask {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -291,8 +297,8 @@ public class MergeMetadataTask extends AWorkspaceTask {
     protected boolean doExecute() throws Exception {
         boolean result = true;
         boolean rename = true;
-
-        File rawFileMetadata = new File(ResourceManager.getMetadataFolder().getRawLocationURI());
+        File rawFileMetadata = new File(ReponsitoryContextBridge.getRootProject().getFolder(new Path(TDQ_METADATA))
+                .getRawLocationURI());
         File migFileMetadata = new File(rawFileMetadata.getParentFile(), rawFileMetadata.getName() + MIGRATION_FOLDER_EXT);
 
         File rawFileDataProfiling = new File(ResourceManager.getDataProfilingFolder().getRawLocationURI());

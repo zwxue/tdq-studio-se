@@ -165,6 +165,11 @@
                               forcePluginActivation="true"
                               property="org.eclipse.core.resources.extension"
                               value="ana">
+                        </test>
+                        <test
+                              forcePluginActivation="true"
+                              property="org.eclipse.core.resources.extension"
+                              value="item">
                         </test> 
                    </or>
                 </and>                 
@@ -252,9 +257,10 @@
       			id="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider"
 				class="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider">
 			<enablement>
-				<and>
-	            <instanceof value="org.eclipse.core.resources.IFile"/>         
-	        </and>
+    <and>
+       <instanceof
+             value="org.eclipse.core.resources.IFile">
+       </instanceof></and>
 			</enablement>
 		</actionProvider>      
       <actionProvider
@@ -272,8 +278,10 @@
             id="org.talend.dataprofiler.core.ui.action.provider.DeleteResourceProvider">
          <enablement>
             <and>
-	            <instanceof value="org.eclipse.core.resources.IFile"/>
-	        </and>
+               <instanceof
+                     value="org.eclipse.core.resources.IFile">
+               </instanceof>
+            </and>
          </enablement>
       </actionProvider>
       <actionProvider
@@ -312,7 +320,7 @@
          <enablement>
             <or>
 	            <instanceof value="orgomg.cwm.resource.relational.Catalog"/>           
-	            <instanceof value="orgomg.cwm.resource.relational.Schema"/>           
+	            <instanceof value="orgomg.cwm.resource.relational.Schema"/>
 	        </or>
          </enablement>
       </actionProvider>       
@@ -536,6 +544,11 @@
                         property="org.eclipse.core.resources.name"
                         value="*.prv">
                   </test>
+                  <test
+                        forcePluginActivation="true"
+                        property="org.eclipse.core.resources.name"
+                        value="*.item">
+                  </test>
                </or></and>
          </enablement>
       </actionProvider>
@@ -747,7 +760,7 @@
       </editor>
       <editor
             class="org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"
-            extensions="prv"
+            extensions="prv,item"
             icon="icons/TdDataProvider.gif"
             id="org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"
             name="%editor.name.ConnectionEditor">
@@ -1174,12 +1187,21 @@
            name="Refact Mdm Metadata Task"
            version="4.1.0">
      </workspacetask>
+
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask"
+           id="org.talend.dataprofiler.core.migeration.exchangeFileNameToReference"
+           name="Exchange attribute of properties file from FileName To Reference"
+           version="4.1.0">
+     </workspacetask>
+
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateSimpleStatisticsIndicatorsForSybaseIqTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateSimpleStatisticsIndicatorsForSybaseIqTask"
            name="Update SimpleStatistics Indicators For Sybase IQ Task"
            version="4.1.0">
      </workspacetask>
+
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

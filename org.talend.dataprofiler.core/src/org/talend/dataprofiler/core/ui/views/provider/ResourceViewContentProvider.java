@@ -33,6 +33,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -51,6 +54,8 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -113,6 +118,10 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         // ~
                         folders.add(folder);
                     }
+                    // MOD mzhao for metadata folder
+                    if (folder instanceof IFolder && ((IFolder) folder).getName().equals(EResourceConstant.METADATA.getPath())) {
+                        folders.add(folder);
+                    }
                 }
             } catch (CoreException e) {
                 log.error(e);
@@ -156,9 +165,12 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (ResourceManager.isIndicatorFolder(folder)) {
                 // MOD xqliu 2009-07-27 bug 7810
                 return getIndicatorsChildren(folder);
+            } else if (ResourceManager.isConnectionFolder(folder)) {
+                // MOD mzhao 2010-08-11 feature 14891: use same repository API with TOS to persistent metadata
+                return getMetadataConnectionChildren(folder);
             }
 
-            return getChildrenExceptRecBin(element);
+            return getChildrenExceptRecBin(element);// FIXME Why call this method by default, qiongli?
         } else if (element instanceof IEcosCategory) {
             return ((IEcosCategory) element).getComponent().toArray();
         } else if (element instanceof IndicatorCategory) {
@@ -174,6 +186,27 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         }
         // ~
         return super.getChildren(element);
+    }
+
+    private Object[] getMetadataConnectionChildren(IFolder folder) {
+        List<IFile> connFiles = new ArrayList<IFile>();
+        // List<ConnectionItem> connItem=null;
+        // if(ResourceManager.isMdmConnectionFolder(folder)){
+        // connItem=ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem();
+        // }else{
+        // connItem=ProxyRepositoryFactory.getInstance().
+        // }
+
+        try {
+            for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                if (connItem instanceof ConnectionItem) {
+                    connFiles.add(WorkspaceUtils.getModelElementResource(connItem.getConnection()));
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        return connFiles.toArray();
     }
 
     /**
@@ -240,14 +273,14 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             return true;
         }
         // MOD qiongli feature 9486
-        if(element instanceof IFolder){
+        if (element instanceof IFolder) {
             List<Object> obsLs = Arrays.asList(super.getChildren(element));
-            if(obsLs.size()==1){
-                Object obj=(Object)obsLs.get(0);
+            if (obsLs.size() == 1) {
+                Object obj = (Object) obsLs.get(0);
                 if (obj instanceof IFolder && ((IFolder) obj).getName().equals(PluginConstant.SVN_SUFFIX))
-                        return false;
+                    return false;
             }
-        }else if (element instanceof RecycleBin) {
+        } else if (element instanceof RecycleBin) {
             return getRecycleBinChildren().size() > 0 ? true : false;
         } else if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;

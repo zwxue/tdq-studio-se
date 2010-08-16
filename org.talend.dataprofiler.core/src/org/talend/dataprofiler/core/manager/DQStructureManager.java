@@ -38,6 +38,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -121,9 +122,12 @@ public final class DQStructureManager {
             IFolder jrxmlFolder = createNewFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
             IFolder systemIndicatorFoler = createNewFolder(indicatorFoler, EResourceConstant.SYSTEM_INDICATORS);
 
-            IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
-            IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
-            IFolder mdmConnectionFolder = createNewFolder(metadataFolder, EResourceConstant.MDM_CONNECTIONS);
+            // MOD mzhao 2010-08-12 14891: use same repository API with TOS to persistent metadata
+            if (ReponsitoryContextBridge.isDefautProject()) {
+                IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
+                IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
+                IFolder mdmConnectionFolder = createNewFolder(metadataFolder, EResourceConstant.MDM_CONNECTIONS);
+            }
 
             copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null);
             copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null);

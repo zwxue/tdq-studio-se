@@ -19,7 +19,8 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -59,15 +60,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
         if (element instanceof IFolderNode) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-        } else if (element instanceof IFile) { // MOD xqliu 2010-08-05 bug 14203
-            IFile file = (IFile) element;
-            String fileExtension = file.getFileExtension();
-            if (FactoriesUtil.isProvFile(fileExtension)) {
-                if (ConnectionUtils.isMdmConnection(file)) {
-                    return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-                }
-                return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-            }
         } else if (element instanceof TdColumn) {
             if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
                 // get the icon for primary key
@@ -89,7 +81,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
         } else if (element instanceof IRecycleBin) {
             return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
-        }
+        } else
         // MOD qiongli
         if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
@@ -123,6 +115,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             } else if (obj instanceof IFolder) {
                 return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             }
+        } else if (element instanceof DatabaseConnection) {
+            return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+        } else if (element instanceof MDMConnection) {
+            return ImageLib.getImage(ImageLib.MDM_CONNECTION);
         }
         // ~
 
@@ -173,8 +169,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return elemLabe;
         } else if ((element instanceof TdTable || element instanceof TdView) && tableOwner != null && !"".equals(tableOwner)) {
             return super.getText(element) + "(" + tableOwner + ")";
-        }
-        // MOD qiongli
+        } else
+        // MOD qiongli FIXME give more description here for the modification purpose.
         if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
             Object obj = rbn.getObject();
@@ -189,6 +185,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return ((IFolder) obj).getName();
             }
 
+        }
+        // MOD mzhao feature 2010-08-12 14891: use same repository API with TOS to persistent metadata
+        else if (element instanceof Connection) {
+            Connection conn = (Connection) element;
+            return conn.getName();
         }
         String text = super.getText(element);
         return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;

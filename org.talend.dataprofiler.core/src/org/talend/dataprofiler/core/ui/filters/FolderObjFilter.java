@@ -16,6 +16,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.jface.viewers.Viewer;
+import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -46,6 +48,16 @@ public class FolderObjFilter extends AbstractViewerFilter {
             IResource res = (IResource) element;
             if (IResource.FOLDER == res.getType()) {
                 IFolder folder = (IFolder) element;
+                // MOD mzhao 2010-08-12 14891: use same repository API with TOS to persistent metadata
+                if (((IFolder) folder).getProjectRelativePath().toString().startsWith(EResourceConstant.METADATA.getPath())) {
+                    if (((IFolder) folder).getName().equals(EResourceConstant.METADATA.getPath())) {
+                        return true;
+                    } else if (ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder)) {
+                        return true;
+                    }
+                    return false;
+                }
+
                 ResourceAttributes resourceAttributes = folder.getResourceAttributes();
                 if (resourceAttributes == null) {
                     return true;
