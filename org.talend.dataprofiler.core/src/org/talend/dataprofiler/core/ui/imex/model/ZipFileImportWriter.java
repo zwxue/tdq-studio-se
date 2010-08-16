@@ -14,7 +14,9 @@ package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.IOException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.utils.io.FilesUtils;
 
 /**
@@ -42,19 +44,12 @@ public class ZipFileImportWriter extends FileSystemImportWriter {
             e.printStackTrace();
         }
 
-        return super.computeInput(sourcePath);
+        return super.computeInput(sourcePath.append(sourcePath.lastSegment()));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter#finish(org.talend.dataprofiler.core.ui.imex
-     * .model.ItemRecord[])
-     */
     @Override
-    public void finish(ItemRecord[] records) throws IOException {
-        super.finish(records);
+    public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
+        super.finish(records, monitor);
 
         FilesUtils.removeFolder(sourcePath.toFile(), true);
     }

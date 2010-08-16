@@ -12,23 +12,29 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.io.File;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.core.model.properties.User;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.writer.EMFSharedResources;
@@ -108,7 +114,27 @@ public final class PropertyHelper {
         if (file.exists()) {
 
             if (StringUtils.equalsIgnoreCase(file.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)) {
-                URI propURI = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+                return getProperty(file.getLocation().toFile());
+            } else {
+                // try to get property from element file.
+                IFile propertyFile = getPropertyFile(file);
+                return getProperty(propertyFile);
+            }
+
+        }
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getProperty".
+     * 
+     * @param propertyFile
+     * @return
+     */
+    public static Property getProperty(File propertyFile) {
+        if (propertyFile.exists()) {
+            if (propertyFile.getName().endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                URI propURI = URI.createFileURI(propertyFile.getAbsolutePath());
                 Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
 
                 // in this case, we need to reload the content again.
@@ -122,13 +148,9 @@ public final class PropertyHelper {
                         return (Property) object;
                     }
                 }
-            } else {
-                // try to get property from element file.
-                IFile propertyFile = getPropertyFile(file);
-                return getProperty(propertyFile);
             }
-
         }
+
         return null;
     }
 
@@ -159,52 +181,11 @@ public final class PropertyHelper {
     }
 
     /**
-     * DOC bZhou Comment method "getElementPath".
-     * 
-     * @param property
-     * @return
-     */
-    public static IPath getElementPath(Property property) {
-        TDQItem item = (TDQItem) property.getItem();
-
-        IPath itemPath = getItemWorkspaceBasePath(property);
-        String path = item.getState().getPath();
-        if (path == null || StringUtils.isEmpty(path)) {
-            IPath propPath = new Path(property.eResource().getURI().toString());
-            IPath mathPath = new Path(itemPath.lastSegment());
-            int matchIndex = indexOfPath(propPath, mathPath);
-            IPath relativePath = propPath.uptoSegment(matchIndex + 1);
-            path = propPath.makeRelativeTo(relativePath).removeLastSegments(1).toString();
-        }
-        itemPath = itemPath.append(path);
-        itemPath = itemPath.append(item.getFilename());
-
-        return itemPath;
-    }
-
-    /**
-     * DOC bZhou Comment method "indexOfPath".
-     * 
-     * @param path
-     * @param indexPath
-     * @return
-     */
-    private static int indexOfPath(IPath path, IPath indexPath) {
-        Assert.isNotNull(path);
-        Assert.isNotNull(indexPath);
-
-        int count = 0;
-        for (int i = 0; i < path.segmentCount(); i++) {
-            if (path.segment(i).equals(indexPath.toString())) {
-                return count;
-            }
-            count++;
-        }
-        return count;
-    }
-
-    /**
      * DOC bZhou Comment method "getItemTypedPath".
+     * 
+     * This method is to get the typed path for a specified item. Each typed item has a firm static path.
+     * 
+     * e.g. Project/TypedPath/StatePath/xxxx.property
      * 
      * @param item
      * @return
@@ -215,14 +196,43 @@ public final class PropertyHelper {
     }
 
     /**
-     * DOC bZhou Comment method "getItemWorkspaceBasePath".
+     * DOC bZhou Comment method "getItemStatePath".
+     * 
+     * This method is to get the relative path to the typed path of a item.
+     * 
+     * e.g. Project/TypedPath/StatePath/xxxx.property
      * 
      * @param property
      * @return
      */
-    public static IPath getItemWorkspaceBasePath(Property property) {
-        IPath itemBasePath = getItemTypedPath(property);
-        return itemBasePath != null ? ResourceManager.getRootProject().getFolder(itemBasePath).getFullPath() : null;
+    public static IPath getItemStatePath(Property property) {
+        Item item = property.getItem();
+        URI propURI = property.eResource().getURI();
+        String statePathStr = item.getState().getPath();
+
+        if (StringUtils.isBlank(statePathStr) && propURI.isPlatformResource()) {
+            IPath propPath = new Path(propURI.toPlatformString(true)).removeLastSegments(1);
+            IPath typedPath = ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property));
+            return propPath.makeRelativeTo(typedPath);
+        }
+
+        return new Path(statePathStr);
+    }
+
+    /**
+     * DOC bZhou Comment method "getItemPath".
+     * 
+     * This method is to get the entire path of a item.
+     * 
+     * e.g. getItemPath() = Project/TypedPath/StatePath/xxxx.property.
+     * 
+     * @param property
+     * @return
+     */
+    public static IPath getItemPath(Property property) {
+        TDQItem item = (TDQItem) property.getItem();
+        return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property)).append(
+                getItemStatePath(property)).append(item.getFilename());
     }
 
     /**
@@ -243,5 +253,31 @@ public final class PropertyHelper {
         }
 
         return (ModelElement) elementResource.getContents().get(0);
+    }
+
+    /**
+     * DOC bZhou Comment method "extractProjectLabel".
+     * 
+     * This method is to extract the project technical label.
+     * 
+     * @param property
+     * @return
+     */
+    public static String extractProjectLabel(Property property) {
+        User author = property.getAuthor();
+        if (author != null && !author.eIsProxy()) {
+            InternalEObject iAuthor = (InternalEObject) property.getAuthor();
+            Resource projResource = iAuthor.eResource();
+            if (projResource != null) {
+                IPath projectPath = new Path(projResource.getURI().toFileString());
+                Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
+                if (projOBJ != null) {
+                    Project project = (Project) projOBJ;
+                    return project.getTechnicalLabel();
+                }
+            }
+        }
+
+        return ReponsitoryContextBridge.PROJECT_DEFAULT_NAME;
     }
 }

@@ -44,6 +44,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -235,7 +236,9 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
             URI elementURI = elementResource.getURI();
 
             IPath newPath = new Path(elementURI.toPlatformString(true));
-            IPath rootPath = PropertyHelper.getItemWorkspaceBasePath(property);
+            IPath itemTypedPath = PropertyHelper.getItemTypedPath(property);
+            IPath rootPath = ResourceManager.getRootProject().getFolder(itemTypedPath).getFullPath();
+
             if (rootPath != null) {
                 newPath = newPath.makeRelativeTo(rootPath);
                 newPath = newPath.removeLastSegments(1);

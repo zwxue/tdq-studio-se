@@ -15,7 +15,9 @@ package org.talend.dataprofiler.core.ui.imex.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -23,9 +25,11 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
@@ -33,7 +37,7 @@ import org.talend.resource.ResourceManager;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class FileSystemExportWriter implements IImexWriter {
+public class FileSystemExportWriter implements IExportWriter {
 
     private static Logger log = Logger.getLogger(FileSystemExportWriter.class);
 
@@ -55,25 +59,92 @@ public class FileSystemExportWriter implements IImexWriter {
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#mapping(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
      * )
      */
-    public void write(ItemRecord recored) throws IOException, CoreException {
+    public Map<IPath, IPath> mapping(ItemRecord record) {
+        Map<IPath, IPath> toExportMap = new HashMap<IPath, IPath>();
 
-        IPath itemDesPath = basePath.append(recored.getFullPath());
+        // item
+        IPath itemResPath = new Path(record.getFile().getAbsolutePath());
+        IPath itemDesPath = record.getFullPath();
+
+        // property
+        IPath propResPath = record.getPropertyPath();
+        if (itemDesPath == null) {
+            System.out.println("");
+        } else {
+
+        }
         IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-        // export item file
-        File resItemFile = recored.getFile();
-        File desItemFile = itemDesPath.toFile();
+        toExportMap.put(itemResPath, itemDesPath);
+        toExportMap.put(propResPath, propDesPath);
 
-        copyFile(resItemFile, desItemFile);
+        return toExportMap;
+    }
 
-        // export property file
-        File resPropFile = recored.getPropertyPath().toFile();
-        File desPropFile = propDesPath.toFile();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * [], org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public void write(ItemRecord[] records, IProgressMonitor monitor) {
+        if (monitor == null) {
+            monitor = new NullProgressMonitor();
+        }
 
-        copyFile(resPropFile, desPropFile);
+        try {
+            for (ItemRecord record : records) {
+
+                if (monitor.isCanceled()) {
+                    break;
+                }
+
+                Map<IPath, IPath> toImportMap = mapping(record);
+
+                monitor.subTask("Exporting " + record.getElementName());
+
+                if (record.isValid()) {
+                    log.info("Exporting " + record.getFile().getAbsolutePath());
+
+                    for (IPath resPath : toImportMap.keySet()) {
+                        IPath desPath = toImportMap.get(resPath);
+                        write(resPath, desPath);
+                    }
+                } else {
+                    for (String error : record.getErrors()) {
+                        log.error(error);
+                    }
+                }
+
+                monitor.worked(1);
+            }
+
+            finish(records);
+
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.eclipse.core.runtime.IPath,
+     * org.eclipse.core.runtime.IPath)
+     */
+    public void write(IPath resPath, IPath desPath) throws IOException, CoreException {
+        File resFile = resPath.toFile();
+        File desFile = this.basePath.append(desPath).toFile();
+
+        if (resFile.exists()) {
+            FilesUtils.copyFile(resFile, desFile);
+        } else {
+            log.warn("Export failed! " + resFile.getAbsolutePath() + " is not existed");
+        }
     }
 
     /*
@@ -83,46 +154,29 @@ public class FileSystemExportWriter implements IImexWriter {
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#finish(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
      * [])
      */
-    public void finish(ItemRecord[] records) throws IOException {
-        ItemRecord.clear();
+    public void finish(ItemRecord[] records) throws IOException, CoreException {
+        IFile projFile = ResourceManager.getRootProject().getFile("talend.project");
+        writeSysFile(projFile);
 
-        if (PluginChecker.isTDCPLoaded()) {
-            IFile projFile = ResourceManager.getRootProject().getFile("talend.project");
-            copyFileToDest(projFile);
-        }
-
-        IFile definitonFIle = DefinitionHandler.getTalendDefinitionFile();
-        copyFileToDest(definitonFIle);
+        IFile definitonFile = DefinitionHandler.getTalendDefinitionFile();
+        writeSysFile(definitonFile);
 
         IFile versionFile = WorkspaceVersionHelper.getVersionFile();
-        copyFileToDest(versionFile);
+        writeSysFile(versionFile);
+
+        ItemRecord.clear();
     }
 
     /**
-     * DOC bZhou Comment method "copyFileToDest".
+     * DOC bZhou Comment method "writeSysFile".
      * 
-     * @param source
+     * @param file
      * @throws IOException
+     * @throws CoreException
      */
-    private void copyFileToDest(IFile source) throws IOException {
-        IPath desPath = basePath.append(source.getFullPath());
-        if (source.exists()) {
-            copyFile(source.getLocation().toFile(), desPath.toFile());
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "copyFile".
-     * 
-     * @param source
-     * @param target
-     * @throws IOException
-     */
-    static void copyFile(File source, File target) throws IOException {
-        if (source.exists()) {
-            FilesUtils.copyFile(source, target);
-        } else {
-            log.warn("Export failed! " + source.getAbsolutePath() + " is not existed");
+    private void writeSysFile(IFile file) throws IOException, CoreException {
+        if (file.exists()) {
+            write(file.getLocation(), file.getFullPath());
         }
     }
 

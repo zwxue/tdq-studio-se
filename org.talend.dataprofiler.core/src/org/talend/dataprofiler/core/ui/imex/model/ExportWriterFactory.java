@@ -27,7 +27,7 @@ public final class ExportWriterFactory {
      * @param type
      * @return
      */
-    public static IImexWriter create(EImexType type) {
+    public static IExportWriter create(EImexType type) {
         switch (type) {
         case FILE:
             return new FileSystemExportWriter();

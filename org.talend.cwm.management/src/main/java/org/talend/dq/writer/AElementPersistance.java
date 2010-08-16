@@ -18,6 +18,8 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -36,6 +38,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -272,7 +275,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
-        itemState.setPath("");
         item.setState(itemState);
         item.setProperty(property);
         return item;
@@ -288,10 +290,17 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         ReturnCode rc = new ReturnCode();
 
         URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        propertiesURI.toPlatformString(true);
         Resource propertyResource = property.eResource();
         if (propertyResource == null) {
             propertyResource = util.createResource(propertiesURI);
         }
+
+        // set the state path when first create it.
+        IPath propPath = new Path(propertiesURI.toPlatformString(true)).removeLastSegments(1);
+        IPath typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
+        IPath itemPath = propPath.makeRelativeTo(typedPath);
+        property.getItem().getState().setPath(itemPath.toString());
 
         propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getItem());

@@ -27,7 +27,7 @@ public final class ImportWriterFactory {
      * @param type
      * @return
      */
-    public static IImexWriter create(EImexType type) {
+    public static IImportWriter create(EImexType type) {
         switch (type) {
         case FILE:
             return new FileSystemImportWriter();

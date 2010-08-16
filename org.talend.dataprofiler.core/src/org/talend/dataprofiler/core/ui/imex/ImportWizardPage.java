@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
-import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
+import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -68,7 +68,7 @@ public class ImportWizardPage extends WizardPage {
 
     private Text dirTxt, archTxt;
 
-    private IImexWriter writer;
+    private IImportWriter writer;
 
     private String basePath;
 
@@ -510,7 +510,7 @@ public class ImportWizardPage extends WizardPage {
      * 
      * @return the writer
      */
-    public IImexWriter getWriter() {
+    public IImportWriter getWriter() {
         return this.writer;
     }
 

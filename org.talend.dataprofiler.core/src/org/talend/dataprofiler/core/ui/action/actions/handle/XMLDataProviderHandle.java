@@ -33,7 +33,7 @@ public class XMLDataProviderHandle extends EMFResourceHandle {
      * 
      * @param file
      */
-    public XMLDataProviderHandle(IFile file) {
+    XMLDataProviderHandle(IFile file) {
         super(file);
     }
 

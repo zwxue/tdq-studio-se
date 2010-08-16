@@ -214,7 +214,7 @@ public enum EResourceConstant {
 
             @Override
             public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
-                return RULES_SQL;
+                return RULES;
             }
 
             @Override
@@ -229,7 +229,7 @@ public enum EResourceConstant {
 
             @Override
             public Object caseTDQPatternItem(TDQPatternItem object) {
-                return PATTERN_SQL;
+                return PATTERNS;
             }
 
         }.doSwitch(item);

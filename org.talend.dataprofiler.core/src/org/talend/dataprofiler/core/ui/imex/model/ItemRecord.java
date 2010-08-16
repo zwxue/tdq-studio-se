@@ -34,7 +34,6 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -69,11 +68,11 @@ public class ItemRecord {
         this.file = file;
 
         try {
-            if (file.isFile()) {
+            if (file != null && file.isFile()) {
                 init();
             }
         } catch (Exception e) {
-            ExceptionHandler.process(e);
+            // ExceptionHandler.process(e);
         }
     }
 
@@ -92,7 +91,7 @@ public class ItemRecord {
 
         allItemRecords.add(this);
 
-        if (element == null && file != null && !isJRXml()) {
+        if (element == null && !isJRXml()) {
             URI fileURI = URI.createFileURI(file.getAbsolutePath());
             Resource resource = resourceSet.getResource(fileURI, true);
             EList<EObject> contents = resource.getContents();
@@ -104,7 +103,7 @@ public class ItemRecord {
             }
         }
 
-        if (property == null && file != null) {
+        if (property == null) {
             property = (Property) EObjectHelper.retrieveEObject(getPropertyPath(), PropertiesPackage.eINSTANCE.getProperty());
         }
 
@@ -139,12 +138,9 @@ public class ItemRecord {
      * @return
      */
     public IPath getFullPath() {
-        if (file.isFile()) {
-            IPath path = new Path(file.getAbsolutePath());
-            path = path.makeRelativeTo(ResourcesPlugin.getWorkspace().getRoot().getLocation());
-            return path;
-        }
-        return null;
+        IPath path = new Path(file.getAbsolutePath());
+        path = path.makeRelativeTo(ResourcesPlugin.getWorkspace().getRoot().getLocation());
+        return path;
     }
 
     /**
@@ -177,12 +173,14 @@ public class ItemRecord {
 
             for (ModelElement dElement : dependencyElements) {
 
-                URI dURI = dElement.eResource().getURI();
-                Resource dResource = resourceSet.getResource(dURI, false);
+                if (!dElement.eIsProxy()) {
+                    URI dURI = dElement.eResource().getURI();
+                    Resource dResource = resourceSet.getResource(dURI, false);
 
-                if (dResource != null) {
-                    File depFile = new File(dResource.getURI().toFileString());
-                    dependencyMap.put(depFile, dElement);
+                    if (dResource != null) {
+                        File depFile = new File(dResource.getURI().toFileString());
+                        dependencyMap.put(depFile, dElement);
+                    }
                 }
             }
         }
@@ -318,7 +316,7 @@ public class ItemRecord {
             return property.getLabel();
         }
 
-        return getElement().getName();
+        return element != null ? getElement().getName() : "";
     }
 
     /**

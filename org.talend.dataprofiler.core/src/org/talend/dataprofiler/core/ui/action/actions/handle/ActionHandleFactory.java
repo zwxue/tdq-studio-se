@@ -28,6 +28,16 @@ public final class ActionHandleFactory {
     }
 
     /**
+     * DOC bZhou Comment method "createJrxmlHandle".
+     * 
+     * @param file
+     * @return
+     */
+    public static JrxmlHandle createJrxmlHandle(IFile file) {
+        return new JrxmlHandle(file);
+    }
+
+    /**
      * DOC bZhou Comment method "createHandle".
      * 
      * @param file

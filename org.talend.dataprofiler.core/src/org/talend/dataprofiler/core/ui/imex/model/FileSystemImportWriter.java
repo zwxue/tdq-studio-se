@@ -23,26 +23,24 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.swt.widgets.Display;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.core.model.properties.Project;
-import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
-import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.core.model.properties.User;
 import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
@@ -52,7 +50,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class FileSystemImportWriter implements IImexWriter {
+public class FileSystemImportWriter implements IImportWriter {
 
     private static Logger log = Logger.getLogger(FileSystemImportWriter.class);
 
@@ -99,27 +97,6 @@ public class FileSystemImportWriter implements IImexWriter {
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
     }
 
-    private void retrieveProjectName(ItemRecord anyRecord) {
-        Property property = anyRecord.getProperty();
-        if (property != null) {
-
-            InternalEObject author = (InternalEObject) property.getAuthor();
-            if (author != null && !author.eIsProxy()) {
-                Resource projResource = author.eResource();
-                if (projResource != null) {
-                    IPath projectPath = new Path(projResource.getURI().toFileString());
-                    Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
-                    if (projOBJ != null) {
-                        Project project = (Project) projOBJ;
-                        projectName = project.getTechnicalLabel();
-                    }
-                }
-            } else {
-                projectName = ReponsitoryContextBridge.PROJECT_DEFAULT_NAME;
-            }
-        }
-    }
-
     /**
      * DOC bZhou Comment method "checkExisted".
      * 
@@ -128,11 +105,20 @@ public class FileSystemImportWriter implements IImexWriter {
     private void checkExisted(ItemRecord record) {
         Property property = record.getProperty();
         if (property != null) {
-            IPath itemPath = PropertyHelper.getElementPath(property);
+            IPath itemPath = PropertyHelper.getItemPath(property);
             IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
+
+            try {
+                itemFile.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+            } catch (CoreException e) {
+                //
+            }
             ModelElement element = record.getElement();
-            if (element != null && itemFile.exists()) {
-                record.addError("\"" + element.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());
+
+            String aString = element != null ? element.getName() : property.getLabel();
+
+            if (itemFile.exists()) {
+                record.addError("\"" + aString + "\" is existed in workspace : " + itemFile.getFullPath().toString());
             }
         }
     }
@@ -156,34 +142,65 @@ public class FileSystemImportWriter implements IImexWriter {
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#mapping(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
      * )
      */
-    public void write(ItemRecord record) throws IOException, CoreException {
-        IPath itemPath = PropertyHelper.getElementPath(record.getProperty());
+    public Map<IPath, IPath> mapping(ItemRecord record) {
 
-        IPath itemDesPath = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath).getLocation();
-        IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        Map<IPath, IPath> toImportMap = new HashMap<IPath, IPath>();
 
-        Map<IPath, IPath> resMap = new HashMap<IPath, IPath>();
-        resMap.put(record.getFilePath(), itemDesPath);
-        resMap.put(record.getPropertyPath(), propDesPath);
+        if (record.isValid()) {
+            IPath itemPath = PropertyHelper.getItemPath(record.getProperty());
 
-        for (IPath resPath : resMap.keySet()) {
-            File resFile = resPath.toFile();
-            File desFile = resMap.get(resPath).toFile();
+            IPath itemDesPath = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath).getLocation();
+            IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-            if (desFile.exists()) {
-                log.warn(desFile.getAbsoluteFile() + " is overwrittern!");
-            }
+            toImportMap.put(record.getFilePath(), itemDesPath);
+            toImportMap.put(record.getPropertyPath(), propDesPath);
+        }
 
-            FilesUtils.copyFile(resFile, desFile);
+        return toImportMap;
+    }
 
-            String curProjectLabel = ResourceManager.getRootProjectName();
-            if (!StringUtils.equals(projectName, curProjectLabel)) {
-                String content = FileUtils.readFileToString(desFile, "utf-8");
-                content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");
-                FileUtils.writeStringToFile(desFile, content, "utf-8");
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.eclipse.core.runtime.IPath,
+     * org.eclipse.core.runtime.IPath)
+     */
+    public void write(IPath resPath, IPath desPath) throws IOException, CoreException {
+        File resFile = resPath.toFile();
+        File desFile = desPath.toFile();
+
+        if (desFile.exists()) {
+            log.warn(desFile.getAbsoluteFile() + " is overwrittern!");
+        }
+
+        FilesUtils.copyFile(resFile, desFile);
+
+        update(desFile);
+    }
+
+    /**
+     * DOC bZhou Comment method "update".
+     * 
+     * @param desFile
+     * @throws IOException
+     */
+    private void update(File desFile) throws IOException {
+        String curProjectLabel = ResourceManager.getRootProjectName();
+        if (!StringUtils.equals(projectName, curProjectLabel)) {
+            String content = FileUtils.readFileToString(desFile, "utf-8");
+            content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");
+            FileUtils.writeStringToFile(desFile, content, "utf-8");
+        }
+
+        if (desFile.getName().endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
+            Property property = PropertyHelper.getProperty(desFile);
+
+            User user = ReponsitoryContextBridge.getUser();
+            if (user != null) {
+                property.setAuthor(user);
             }
         }
     }
@@ -192,10 +209,49 @@ public class FileSystemImportWriter implements IImexWriter {
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#finish(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
-     * [])
+     * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
+     * [], org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void finish(ItemRecord[] records) throws IOException {
+    public void write(ItemRecord[] records, IProgressMonitor monitor) {
+        if (monitor == null) {
+            monitor = new NullProgressMonitor();
+        }
+
+        try {
+            for (ItemRecord record : records) {
+
+                if (monitor.isCanceled()) {
+                    break;
+                }
+
+                Map<IPath, IPath> toImportMap = mapping(record);
+
+                monitor.subTask("Importing " + record.getElementName());
+
+                if (record.isValid()) {
+                    log.info("Importing " + record.getFile().getAbsolutePath());
+
+                    for (IPath resPath : toImportMap.keySet()) {
+                        IPath desPath = toImportMap.get(resPath);
+                        write(resPath, desPath);
+                    }
+                } else {
+                    for (String error : record.getErrors()) {
+                        log.error(error);
+                    }
+                }
+
+                monitor.worked(1);
+            }
+
+            finish(records, monitor);
+
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+    }
+
+    public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
         ItemRecord.clear();
 
         IFile defFile = ResourceManager.getLibrariesFolder().getFile(DEFINITION_FILE_NAME);
@@ -209,21 +265,26 @@ public class FileSystemImportWriter implements IImexWriter {
             }
         }
 
+        migration(monitor);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#migration(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public void migration(IProgressMonitor monitor) {
+        if (monitor == null) {
+            monitor = new NullProgressMonitor();
+        }
+
         if (versionFile != null && versionFile.exists()) {
             ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
             final List<IMigrationTask> migrationTasks = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE,
                     version);
-            Display.getDefault().asyncExec(new Runnable() {
 
-                public void run() {
-                    MigrationTaskManager.doMigrationTask(migrationTasks);
-
-                    CorePlugin.getDefault().refreshWorkSpace();
-                    CorePlugin.getDefault().refreshDQView();
-                }
-            });
+            MigrationTaskManager.doMigrationTask(migrationTasks, monitor);
         }
-
     }
 
     /*
@@ -283,7 +344,7 @@ public class FileSystemImportWriter implements IImexWriter {
             List<ItemRecord> allItemRecords = ItemRecord.getAllItemRecords();
             if (!allItemRecords.isEmpty()) {
                 ItemRecord record = allItemRecords.get(0);
-                retrieveProjectName(record);
+                this.projectName = PropertyHelper.extractProjectLabel(record.getProperty());
             }
             return true;
         } catch (Exception e) {

@@ -29,7 +29,7 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
     /**
      * DOC bZhou DuplicateSimpleHandle constructor comment.
      */
-    public SimpleHandle(IFile file) {
+    SimpleHandle(IFile file) {
         this.file = file;
     }
 

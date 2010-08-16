@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
-import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
+import org.talend.dataprofiler.core.ui.imex.model.IExportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -63,7 +63,7 @@ public class ExportWizardPage extends WizardPage {
 
     private List<String> errors;
 
-    private IImexWriter writer;
+    private IExportWriter writer;
 
     public static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
@@ -503,7 +503,7 @@ public class ExportWizardPage extends WizardPage {
      * 
      * @return the writer
      */
-    public IImexWriter getWriter() {
+    public IExportWriter getWriter() {
         return this.writer;
     }
 

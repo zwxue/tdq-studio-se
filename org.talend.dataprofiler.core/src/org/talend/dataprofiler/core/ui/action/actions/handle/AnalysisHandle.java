@@ -27,7 +27,7 @@ public class AnalysisHandle extends EMFResourceHandle {
      * 
      * @param file
      */
-    public AnalysisHandle(IFile file) {
+    AnalysisHandle(IFile file) {
         super(file);
     }
 

@@ -236,26 +236,7 @@ public final class MigrationTaskManager {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     monitor.beginTask(DefaultMessagesImpl.getString("MigrationTaskManager.MigrationTaskJob"), tasks.size()); //$NON-NLS-1$
 
-                    for (IMigrationTask task : tasks) {
-
-                        if (monitor.isCanceled()) {
-                            break;
-                        }
-
-                        monitor.subTask(task.getName());
-
-                        if (task.valid()) {
-                            if (!task.execute()) {
-                                log.warn("Migration Task failed: " + task.getName());
-                            } else {
-                                log.info("Migration Task success: " + task.getName());
-                            }
-                        }
-
-                        monitor.worked(1);
-                    }
-
-                    monitor.done();
+                    doMigrationTask(tasks, monitor);
                 }
 
             };
@@ -268,5 +249,34 @@ public final class MigrationTaskManager {
                 log.error(e, e);
             }
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "doMigrationTask".
+     * 
+     * @param tasks
+     * @param monitor
+     */
+    public static void doMigrationTask(List<IMigrationTask> tasks, IProgressMonitor monitor) {
+        for (IMigrationTask task : tasks) {
+
+            if (monitor.isCanceled()) {
+                break;
+            }
+
+            monitor.subTask(task.getName());
+
+            if (task.valid()) {
+                if (!task.execute()) {
+                    log.warn("Migration Task failed: " + task.getName());
+                } else {
+                    log.info("Migration Task success: " + task.getName());
+                }
+            }
+
+            monitor.worked(1);
+        }
+
+        monitor.done();
     }
 }

@@ -29,7 +29,7 @@ public class ReportHandle extends EMFResourceHandle {
     /**
      * DOC bZhou DuplicateReportHandle constructor comment.
      */
-    public ReportHandle(IFile file) {
+    ReportHandle(IFile file) {
         super(file);
     }
 

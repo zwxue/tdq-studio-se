@@ -32,9 +32,11 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQJrxmlItem;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.string.StringUtilities;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -45,7 +47,7 @@ public class JrxmlHandle extends SimpleHandle {
     /**
      * DOC bZhou DuplicateJrxmlHandle constructor comment.
      */
-    public JrxmlHandle(IFile file) {
+    JrxmlHandle(IFile file) {
         super(file);
     }
 
@@ -58,7 +60,6 @@ public class JrxmlHandle extends SimpleHandle {
     public IFile duplicate() {
         IFile duplicateFile = super.duplicate();
 
-        // TODO create property for duplicated file
         createProperty(duplicateFile.getLocation().toFile());
 
         return duplicateFile;
@@ -108,16 +109,27 @@ public class JrxmlHandle extends SimpleHandle {
      * 
      * @param targetFile
      */
-    public static void createProperty(File targetFile) {
+    public void createProperty(File targetFile) {
+        URI uri = URI.createFileURI(targetFile.getAbsolutePath());
+        URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        Resource propertyResource = EMFSharedResources.getInstance().createResource(propertiesURI);
+
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setId(EcoreUtil.generateUUID());
-        property.setLabel(targetFile.getName());
+        property.setLabel(StringUtilities.tokenize(targetFile.getName(), ".").get(0));
         property.setCreationDate(new Date());
+        property.setVersion("0.1");
 
         TDQJrxmlItem item = PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
-        itemState.setPath(computePath(targetFile));
+
+        // set the state path when first create it.
+        IPath propPath = new Path(propertiesURI.toPlatformString(true)).removeLastSegments(1);
+        IPath typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
+        IPath itemPath = propPath.makeRelativeTo(typedPath);
+        itemState.setPath(itemPath.toString());
+
         item.setState(itemState);
 
         item.setFilename(targetFile.getName());
@@ -125,32 +137,10 @@ public class JrxmlHandle extends SimpleHandle {
         item.setProperty(property);
         property.setItem(item);
 
-        URI uri = URI.createFileURI(targetFile.getAbsolutePath());
-        URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        Resource propertyResource = EMFSharedResources.getInstance().createResource(propertiesURI);
-
         propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getItem());
         propertyResource.getContents().add(property.getItem().getState());
 
         EMFSharedResources.getInstance().saveResource(propertyResource);
-    }
-
-    /**
-     * DOC bZhou Comment method "computePath".
-     * 
-     * @param targetFile
-     * @return
-     */
-    public static String computePath(File targetFile) {
-        IPath targetPath = new Path(targetFile.getParentFile().getAbsolutePath());
-
-        IPath typedPath = ResourceManager.getJRXMLFolder().getLocation();
-        if (!targetPath.equals(typedPath)) {
-            IPath relativePath = targetPath.makeRelativeTo(typedPath);
-            return relativePath != null ? relativePath.toString() : "";
-        }
-
-        return "";
     }
 }

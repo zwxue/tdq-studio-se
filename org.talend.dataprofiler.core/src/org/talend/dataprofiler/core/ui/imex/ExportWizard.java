@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
+import org.talend.dataprofiler.core.ui.imex.model.IExportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
@@ -65,7 +65,7 @@ public class ExportWizard extends Wizard {
     @Override
     public boolean performFinish() {
 
-        final IImexWriter writer = exportPage.getWriter();
+        final IExportWriter writer = exportPage.getWriter();
         final ItemRecord[] records = exportPage.getElements();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {
@@ -73,35 +73,9 @@ public class ExportWizard extends Wizard {
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                 monitor.beginTask("Export Item", records.length);
 
-                try {
-                    for (ItemRecord record : records) {
-
-                        if (monitor.isCanceled()) {
-                            break;
-                        }
-
-                        monitor.subTask("Exporting " + record.getElementName());
-
-                        if (record.isValid()) {
-                            log.info("Start exporting " + record.getFile().getAbsolutePath());
-                            writer.write(record);
-                        } else {
-                            for (String error : record.getErrors()) {
-                                log.error(error);
-                            }
-                        }
-
-                        monitor.worked(1);
-                    }
-
-                    writer.finish(records);
-
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
+                writer.write(records, monitor);
 
                 monitor.done();
-
             }
         };
 

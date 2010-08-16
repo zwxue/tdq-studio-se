@@ -18,7 +18,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.talend.dataprofiler.core.ui.imex.model.IImexWriter;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
@@ -57,38 +58,16 @@ public class ImportWizard extends Wizard {
 
         final ItemRecord[] records = importPage.getElements();
 
-        final IImexWriter writer = importPage.getWriter();
+        final IImportWriter writer = importPage.getWriter();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                 monitor.beginTask("Import Item", records.length);
 
-                try {
-                    for (ItemRecord record : records) {
-
-                        if (monitor.isCanceled()) {
-                            break;
-                        }
-
-                        monitor.subTask("Importing " + record.getElementName());
-
-                        if (record.isValid()) {
-                            log.info("Start importing " + record.getFile().getAbsolutePath());
-                            writer.write(record);
-                        }
-
-                        monitor.worked(1);
-                    }
-
-                    writer.finish(records);
-
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
+                writer.write(records, monitor);
 
                 monitor.done();
-
             }
         };
 
@@ -97,6 +76,9 @@ public class ImportWizard extends Wizard {
         } catch (Exception e) {
             log.error(e, e);
         }
+
+        CorePlugin.getDefault().refreshWorkSpace();
+        CorePlugin.getDefault().refreshDQView();
 
         return true;
     }

@@ -12,14 +12,23 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.imex.model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.talend.utils.io.FilesUtils;
+import org.eclipse.core.runtime.Path;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -27,9 +36,11 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public class ZipFileExportWriter extends FileSystemExportWriter {
 
-    private static Logger log = Logger.getLogger(ZipFileExportWriter.class);
-
     private String fileExtension;
+
+    private ZipOutputStream outputStream;
+
+    private Map<File, String> tempMap = new HashMap<File, String>();
 
     /*
      * (non-Javadoc)
@@ -39,12 +50,57 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
      */
     @Override
     public void setBasePath(IPath path) {
-        if (path.getFileExtension() != null) {
-            this.fileExtension = path.getFileExtension();
-            super.setBasePath(path.removeFileExtension());
-        } else {
-            super.setBasePath(path);
+        this.fileExtension = path.getFileExtension();
+        super.setBasePath(path);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.imex.model.FileSystemExportWriter#write(org.eclipse.core.runtime.IPath,
+     * org.eclipse.core.runtime.IPath)
+     */
+    @Override
+    public void write(IPath resPath, IPath desPath) throws IOException, CoreException {
+
+        File file = getBasePath().toFile();
+
+        if (!file.exists()) {
+            file.createNewFile();
         }
+
+        String lastSegment = getBasePath().removeFileExtension().lastSegment();
+        IPath newDestPath = new Path(lastSegment).append(desPath);
+        tempMap.put(resPath.toFile(), newDestPath.toOSString());
+
+        // File file = getBasePath().toFile();
+        // if (!file.exists()) {
+        // // remove first '/'
+        // desPath = desPath.makeRelative();
+        //
+        // byte[] readBuffer = new byte[4096];
+        //
+        // if (outputStream == null) {
+        // outputStream = new ZipOutputStream(new FileOutputStream(file));
+        // }
+        //
+        // ZipEntry newEntry = new ZipEntry(desPath.toString());
+        //
+        // outputStream.putNextEntry(newEntry);
+        // InputStream contentStream = new FileInputStream(resPath.toFile());
+        // try {
+        // int n;
+        // while ((n = contentStream.read(readBuffer)) > 0) {
+        // outputStream.write(readBuffer, 0, n);
+        // }
+        // } finally {
+        // if (contentStream != null) {
+        // contentStream.close();
+        // }
+        // }
+        //
+        // outputStream.closeEntry();
+        // }
     }
 
     /*
@@ -55,19 +111,13 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
      * .model.ItemRecord[])
      */
     @Override
-    public void finish(ItemRecord[] records) throws IOException {
+    public void finish(ItemRecord[] records) throws IOException, CoreException {
         super.finish(records);
 
-        // zip files
-        IPath basePath = getBasePath();
-        IPath zipPath = basePath.addFileExtension(fileExtension);
+        addFilesToExistingZip(getBasePath().toFile(), tempMap);
 
-        try {
-            FilesUtils.zipFolderRecursion(basePath.toOSString(), zipPath.toOSString());
-
-            FilesUtils.removeFolder(basePath.toFile(), true);
-        } catch (Exception e) {
-            log.error(e, e);
+        if (outputStream != null) {
+            outputStream.close();
         }
     }
 
@@ -98,4 +148,71 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
 
         return errors;
     }
+
+    /**
+     * DOC bZhou Comment method "addFilesToExistingZip".
+     * 
+     * @param zipFile
+     * @param files
+     * @throws IOException
+     */
+    public static void addFilesToExistingZip(File zipFile, Map<File, String> fileMap) throws IOException {
+        // get a temp file
+        File tempFile = File.createTempFile(zipFile.getName(), null);
+        // delete it, otherwise you cannot rename your existing zip to it.
+        tempFile.delete();
+
+        boolean renameOk = zipFile.renameTo(tempFile);
+        if (!renameOk) {
+            throw new RuntimeException("could not rename the file " + zipFile.getAbsolutePath() + " to "
+                    + tempFile.getAbsolutePath());
+        }
+        byte[] buf = new byte[4096];
+
+        ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
+        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
+
+        ZipEntry entry = zin.getNextEntry();
+        while (entry != null) {
+            String name = entry.getName();
+
+            boolean notInFiles = true;
+            for (File f : fileMap.keySet()) {
+                if (f.getName().equals(new Path(name).lastSegment())) {
+                    notInFiles = false;
+                    break;
+                }
+            }
+            if (notInFiles) {
+                // Add ZIP entry to output stream.
+                out.putNextEntry(new ZipEntry(name));
+                // Transfer bytes from the ZIP file to the output file
+                int len;
+                while ((len = zin.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            }
+            entry = zin.getNextEntry();
+        }
+        // Close the streams
+        zin.close();
+        // Compress the files
+        for (File f : fileMap.keySet()) {
+            InputStream in = new FileInputStream(f);
+            // Add ZIP entry to output stream.
+            out.putNextEntry(new ZipEntry(fileMap.get(f)));
+            // Transfer bytes from the file to the ZIP file
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            // Complete the entry
+            out.closeEntry();
+            in.close();
+        }
+        // Complete the ZIP file
+        out.close();
+        tempFile.delete();
+    }
+
 }

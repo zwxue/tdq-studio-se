@@ -25,7 +25,7 @@ public class UDIHandle extends EMFResourceHandle {
     /**
      * DOC bZhou DuplicateUDIHandle constructor comment.
      */
-    public UDIHandle(IFile file) {
+    UDIHandle(IFile file) {
         super(file);
     }
 
