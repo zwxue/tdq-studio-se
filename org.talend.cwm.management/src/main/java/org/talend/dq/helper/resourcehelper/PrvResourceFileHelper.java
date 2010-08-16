@@ -247,6 +247,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      */
     @Override
     protected boolean checkFile(IFile file) {
-        return file != null && FactoriesUtil.PROV.equalsIgnoreCase(file.getFileExtension());
+        String fileExtension = file.getFileExtension();
+        return file != null && (FactoriesUtil.isProvFile(fileExtension) || FactoriesUtil.isItemFile(fileExtension));
     }
 }

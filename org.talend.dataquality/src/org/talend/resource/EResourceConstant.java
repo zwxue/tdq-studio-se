@@ -46,7 +46,7 @@ public enum EResourceConstant {
 
     DATA_PROFILING("TDQ_Data Profiling", "TDQ_Data Profiling", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     LIBRARIES("TDQ_Libraries", "TDQ_Libraries", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
-    METADATA("TDQ_Metadata", "TDQ_Metadata", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
+    METADATA("metadata", "metadata", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     ANALYSIS("Analyses", "TDQ_Data Profiling/Analyses", ResourceConstant.READONLY),
     REPORTS("Reports", "TDQ_Data Profiling/Reports", ResourceConstant.READONLY),
     EXCHANGE("Exchange", "TDQ_Libraries/Exchange", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
@@ -63,8 +63,10 @@ public enum EResourceConstant {
     PATTERN_REGEX("Regex", "TDQ_Libraries/Patterns/Regex", ResourceConstant.READONLY),
     PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY),
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY),
-    DB_CONNECTIONS("DB Connections", "TDQ_Metadata/DB Connections", ResourceConstant.READONLY),
-    MDM_CONNECTIONS("MDM Connections", "TDQ_Metadata/MDM Connections", ResourceConstant.READONLY),
+    DB_CONNECTIONS("connections", "metadata/connections", ResourceConstant.READONLY),
+    TDQ_DB_CONNECTIONS("connections", "TDQ_Metadata/DB Connections", ResourceConstant.READONLY),
+    MDM_CONNECTIONS("MDM Connections", "metadata/MDMconnections", ResourceConstant.READONLY),
+    TDQ_MDM_CONNECTIONS("MDM Connections", "TDQ_Metadata/MDM Connections", ResourceConstant.READONLY),
     REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY);
 
     private String name;

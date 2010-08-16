@@ -314,4 +314,8 @@ public final class FactoriesUtil {
     public static boolean isJrxmlFile(String fileExt) {
         return StringUtils.equalsIgnoreCase(fileExt, JRXML);
     }
+
+    public static boolean isItemFile(String fileExt) {
+        return StringUtils.equalsIgnoreCase(fileExt, ITEM_EXTENSION);
+    }
 }

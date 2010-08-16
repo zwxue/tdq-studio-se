@@ -26,6 +26,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
@@ -38,8 +43,8 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
-import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
@@ -164,7 +169,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * 
      * @param element
      */
-    public void savePerperties(ModelElement element) {
+    public Property savePerperties(ModelElement element) {
         Resource resource = element.eResource();
         String fileName = resource.getURI().lastSegment();
 
@@ -185,6 +190,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         String propertyPath = property.eResource().getURI().toPlatformString(true);
         MetadataHelper.setPropertyPath(propertyPath, element);
+        return property;
     }
 
     /*
@@ -199,17 +205,19 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
         addResourceContent(element);
 
-        savePerperties(element);
+        Property property = savePerperties(element);
 
-        rc.setOk(util.saveResource(element.eResource()));
-
-        if (rc.isOk()) {
-            rc.setMessage("save " + element.getName() + " is OK!");
-            ProxyRepositoryManager.getInstance().save();
+        if (!(element instanceof ConnectionItem)) {
+            rc.setOk(util.saveResource(element.eResource()));
         } else {
-            rc.setMessage(util.getLastErrorMessage());
+            try {
+                ProxyRepositoryFactory.getInstance().save(property.getItem(), Boolean.FALSE);
+            } catch (PersistenceException e) {
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getMessage());
+                log.error(e, e);
+            }
         }
-
         return rc;
     }
 
@@ -260,13 +268,16 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         } else if (ModelElementIdentifier.isDQRule(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
         } else if (ModelElementIdentifier.isDataProvider(element)) {
-            item = PropertiesFactory.eINSTANCE.createConnectionItem();
+            if (element instanceof DatabaseConnection) {
+                item = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+            } else if (element instanceof MDMConnection) {
+                item = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
+            }
+            ((ConnectionItem) item).setConnection((Connection) element);
         } else if (ModelElementIdentifier.isID(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQIndicatorItem();
         } else if (ModelElementIdentifier.isPattern(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQPatternItem();
-        } else if (ModelElementIdentifier.isXMLProvider(element)) {
-            item = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
         } else if (ModelElementIdentifier.isReport(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQReportItem();
         } else {
