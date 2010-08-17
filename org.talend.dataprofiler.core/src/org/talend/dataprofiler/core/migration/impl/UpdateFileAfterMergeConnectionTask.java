@@ -56,11 +56,15 @@ public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
         IFolder tDQDbFolder = ResourceManager.getRootProject().getFolder(new Path(ExchangeFileNameToReferenceTask.DB_CONNECTION));
         IFolder tDQMdmFolder = ResourceManager.getRootProject().getFolder(
                 new Path(ExchangeFileNameToReferenceTask.MDM_CONNECTION));
-        for (IResource theResource : tDQDbFolder.members()) {
-            theResource.move(dbFolder.getFullPath().append(theResource.getName()), true, null);
+        if (dbFolder.exists() && tDQDbFolder.exists()) {
+            for (IResource theResource : tDQDbFolder.members()) {
+                theResource.move(dbFolder.getFullPath().append(theResource.getName()), true, null);
+            }
         }
-        for (IResource theResource : tDQMdmFolder.members()) {
-            theResource.move(mdmFolder.getFullPath().append(theResource.getName()), true, null);
+        if (mdmFolder.exists() && tDQMdmFolder.exists()) {
+            for (IResource theResource : tDQMdmFolder.members()) {
+                theResource.move(mdmFolder.getFullPath().append(theResource.getName()), true, null);
+            }
         }
         // change the path which conation in analysis and dqrule.
         File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
