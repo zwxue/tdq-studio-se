@@ -190,12 +190,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     private Object[] getMetadataConnectionChildren(IFolder folder) {
         List<IFile> connFiles = new ArrayList<IFile>();
-        // List<ConnectionItem> connItem=null;
-        // if(ResourceManager.isMdmConnectionFolder(folder)){
-        // connItem=ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem();
-        // }else{
-        // connItem=ProxyRepositoryFactory.getInstance().
-        // }
 
         try {
             for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {

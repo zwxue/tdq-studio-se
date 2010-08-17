@@ -1201,6 +1201,12 @@
            name="Update SimpleStatistics Indicators For Sybase IQ Task"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask"
+           id="org.talend.dataprofiler.core.migeration.updateFileAfterMergeConnectionTask"
+           name="Update analysis and DQRule File After Merge Connection"
+           version="4.1.0">
+     </workspacetask>
      
 
   </extension>

@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.emf.FactoriesUtil;
@@ -43,9 +42,9 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
 
     protected static Logger log = Logger.getLogger(ExchangeFileNameToReferenceTask.class);
 
-    private static final String DB_CONNECTION = "TDQ_Metadata/DB Connections";
+    public static final String DB_CONNECTION = "TDQ_Metadata/DB Connections";
 
-    private static final String MDM_CONNECTION = "TDQ_Metadata/MDM Connections";
+    public static final String MDM_CONNECTION = "TDQ_Metadata/MDM Connections";
 
     public ExchangeFileNameToReferenceTask() {
         // TODO Auto-generated constructor stub
@@ -56,8 +55,6 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
         boolean returnFlag = true;
         IFolder tDQDbFolder = ResourceManager.getRootProject().getFolder(new Path(DB_CONNECTION));
         IFolder tDQMdmFolder = ResourceManager.getRootProject().getFolder(new Path(MDM_CONNECTION));
-        IFolder dbFolder = ResourceManager.getConnectionFolder();
-        IFolder mdmFolder = ResourceManager.getMDMConnectionFolder();
         List<IResource> resources = new ArrayList<IResource>();
         try {
             if (tDQDbFolder != null && tDQDbFolder.exists()) {
@@ -79,7 +76,7 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
                     Item item = property.getItem();
                     if (item instanceof TDQItem) {
 
-                        IFile theFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+                        IFile theFile = ResourceManager.getRoot().getFile(
                                 file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROV));
                         TypedReturnCode<Connection> returnCode = PrvResourceFileHelper.getInstance().findProvider(theFile);
                         if (returnCode.isOk()) {
@@ -95,12 +92,12 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
                 // tDQMdmFolder.move(mdmFolder.getFullPath(), true, null);
 
             }
-            for (IResource theResource : tDQDbFolder.members()) {
-                theResource.move(dbFolder.getFullPath().append(theResource.getName()), true, null);
-            }
-            for (IResource theResource : tDQMdmFolder.members()) {
-                theResource.move(mdmFolder.getFullPath().append(theResource.getName()), true, null);
-            }
+            // for (IResource theResource : tDQDbFolder.members()) {
+            // theResource.move(dbFolder.getFullPath().append(theResource.getName()), true, null);
+            // }
+            // for (IResource theResource : tDQMdmFolder.members()) {
+            // theResource.move(mdmFolder.getFullPath().append(theResource.getName()), true, null);
+            // }
 
         }
         return returnFlag;
