@@ -147,6 +147,8 @@ public class ReloadDatabaseAction extends Action {
                         .getFileName());
                 IFile file = root.getFile(path);
                 analysis = AnaResourceFileHelper.getInstance().readFromFile(file);
+                // MOD qiongli 2010-8-17,bug 14977
+                eResource = analysis.eResource();
                 Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
                 Iterator<EObject> it = referenceMaps.keySet().iterator();
                 ModelElement eobj = null;
