@@ -1207,6 +1207,12 @@
            name="Update analysis and DQRule File After Merge Connection"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdatePropertiesFileTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdatePropertiesFileTask"
+           name="Update Properties File Task"
+           version="4.1.0">
+     </workspacetask>
      
 
   </extension>

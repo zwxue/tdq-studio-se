@@ -174,9 +174,12 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         String fileName = resource.getURI().lastSegment();
 
         Property property = PropertyHelper.getProperty(element);
-        if (property == null) {
-            property = initProperty(element);
-        }
+        // MOD xqliu 2010-08-17 bug 13601
+        // if (property == null) {
+        // property = initProperty(element);
+        // }
+        property = initProperty(element, property);
+        // ~ 13601
 
         Item item = property.getItem();
         if (item == null) {
@@ -226,8 +229,12 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * 
      * @see org.talend.dq.writer.IElementSerialize#initProperty(orgomg.cwm.objectmodel.core.ModelElement)
      */
-    public Property initProperty(ModelElement element) {
-        Property property = PropertiesFactory.eINSTANCE.createProperty();
+    public Property initProperty(ModelElement element, Property property) {
+        boolean firstCreate = false;
+        if (property == null) {
+            property = PropertiesFactory.eINSTANCE.createProperty();
+            firstCreate = true;
+        }
 
         // String author = MetadataHelper.getAuthor(element); // MOD xqliu 2010-07-05 bug 14111
         String purpose = MetadataHelper.getPurpose(element);
@@ -247,7 +254,13 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         property.setDescription(description);
         property.setStatusCode(status);
         property.setVersion(version);
-        property.setCreationDate(new Date());
+        // MOD xqliu 2010-08-17 bug 13601
+        if (firstCreate) {
+            property.setCreationDate(new Date());
+        } else {
+            property.setModificationDate(new Date());
+        }
+        // ~ 13601
 
         computePropertyMaxInformationLevel(property);
 

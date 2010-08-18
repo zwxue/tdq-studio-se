@@ -27,9 +27,10 @@ public interface IElementSerialize {
      * DOC bZhou Comment method "initProperty".
      * 
      * @param element
+     * @param property
      * @return
      */
-    public Property initProperty(ModelElement element);
+    public Property initProperty(ModelElement element, Property property);
 
     /**
      * DOC bZhou Comment method "initItem".
