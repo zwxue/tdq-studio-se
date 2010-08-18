@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.indicators.ext.FrequencyExt;
@@ -204,9 +203,6 @@ public final class ComparatorsFactory {
     static class TextStatisticsComparator implements Comparator<IndicatorUnit> {
 
         public int compare(IndicatorUnit o1, IndicatorUnit o2) {
-
-            IndicatorCommonUtil.getIndicatorValue(o1);
-            IndicatorCommonUtil.getIndicatorValue(o2);
 
             if (o1.isExcuted() && o2.isExcuted()) {
                 double value1 = Double.parseDouble(String.valueOf(o1.getValue()));

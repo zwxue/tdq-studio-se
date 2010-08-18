@@ -33,7 +33,6 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.xy.XYDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
@@ -52,8 +51,6 @@ public abstract class AbstractChartTypeStatesTable implements IChartTypeStates {
             TableIndicatorUnit unit = it.next();
             if (!unit.isExcuted()) {
                 it.remove();
-            } else {
-                IndicatorCommonUtil.getIndicatorValue(unit);
             }
         }
         if (units != null) {

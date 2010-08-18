@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.editor.preview;
+package org.talend.dq.indicators;
 
 import java.util.List;
 import java.util.Set;
@@ -70,96 +70,95 @@ public final class IndicatorCommonUtil {
 
     }
 
-    public static void getIndicatorValue(IndicatorUnit indicatorUnit) {
+    public static Object getIndicatorValue(Indicator indicator) {
 
-        Object tempObject = null;
+        Object value = null;
 
-        IndicatorEnum type = indicatorUnit.getType();
-        Indicator indicator = indicatorUnit.getIndicator();
+        IndicatorEnum type = IndicatorEnum.findIndicatorEnum(indicator.eClass());
 
         try {
             if (type == IndicatorEnum.RangeIndicatorEnum || type == IndicatorEnum.IQRIndicatorEnum) {
-                indicatorUnit.setValue(((RangeIndicator) indicator).getRange());
+                value = ((RangeIndicator) indicator).getRange();
                 ((RangeIndicator) indicator).setComputed(true);
-            } else if (indicatorUnit.isExcuted()) {
+            } else if (indicator.isComputed()) {
 
                 // log.warn("now getting the value of indicator [" + indicator.getName() + "]");
 
                 switch (type) {
                 case RowCountIndicatorEnum:
-                    tempObject = ((RowCountIndicator) indicator).getCount();
+                    value = ((RowCountIndicator) indicator).getCount();
                     break;
 
                 case NullCountIndicatorEnum:
-                    tempObject = ((NullCountIndicator) indicator).getNullCount();
+                    value = ((NullCountIndicator) indicator).getNullCount();
                     break;
 
                 case DistinctCountIndicatorEnum:
-                    tempObject = ((DistinctCountIndicator) indicator).getDistinctValueCount();
+                    value = ((DistinctCountIndicator) indicator).getDistinctValueCount();
                     break;
 
                 case UniqueIndicatorEnum:
-                    tempObject = (((UniqueCountIndicator) indicator).getUniqueValueCount());
+                    value = (((UniqueCountIndicator) indicator).getUniqueValueCount());
                     break;
 
                 case DuplicateCountIndicatorEnum:
-                    tempObject = ((DuplicateCountIndicator) indicator).getDuplicateValueCount();
+                    value = ((DuplicateCountIndicator) indicator).getDuplicateValueCount();
                     break;
 
                 case BlankCountIndicatorEnum:
-                    tempObject = ((BlankCountIndicator) indicator).getBlankCount();
+                    value = ((BlankCountIndicator) indicator).getBlankCount();
                     break;
 
                 case DefValueCountIndicatorEnum:
-                    tempObject = ((DefValueCountIndicator) indicator).getDefaultValCount();
+                    value = ((DefValueCountIndicator) indicator).getDefaultValCount();
                     break;
 
                 case MinLengthIndicatorEnum:
-                    tempObject = ((MinLengthIndicator) indicator).getLength();
+                    value = ((MinLengthIndicator) indicator).getLength();
                     break;
 
                 case MinLengthWithNullIndicatorEnum:
-                    tempObject = ((MinLengthWithNullIndicator) indicator).getLength();
+                    value = ((MinLengthWithNullIndicator) indicator).getLength();
                     break;
 
                 case MinLengthWithBlankIndicatorEnum:
-                    tempObject = ((MinLengthWithBlankIndicator) indicator).getLength();
+                    value = ((MinLengthWithBlankIndicator) indicator).getLength();
                     break;
 
                 case MinLengthWithBlankNullIndicatorEnum:
-                    tempObject = ((MinLengthWithBlankNullIndicator) indicator).getLength();
+                    value = ((MinLengthWithBlankNullIndicator) indicator).getLength();
                     break;
 
                 case MaxLengthIndicatorEnum:
-                    tempObject = ((MaxLengthIndicator) indicator).getLength();
+                    value = ((MaxLengthIndicator) indicator).getLength();
                     break;
 
                 case MaxLengthWithNullIndicatorEnum:
-                    tempObject = ((MaxLengthWithNullIndicator) indicator).getLength();
+                    value = ((MaxLengthWithNullIndicator) indicator).getLength();
                     break;
 
                 case MaxLengthWithBlankIndicatorEnum:
-                    tempObject = ((MaxLengthWithBlankIndicator) indicator).getLength();
+                    value = ((MaxLengthWithBlankIndicator) indicator).getLength();
                     break;
 
                 case MaxLengthWithBlankNullIndicatorEnum:
-                    tempObject = ((MaxLengthWithBlankNullIndicator) indicator).getLength();
+                    value = ((MaxLengthWithBlankNullIndicator) indicator).getLength();
                     break;
 
                 case AverageLengthIndicatorEnum:
-                    tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
+                    value = ((AverageLengthIndicator) indicator).getAverageLength();
                     break;
 
                 case AverageLengthWithNullIndicatorEnum:
-                    tempObject = ((AvgLengthWithNullIndicator) indicator).getAverageLength();
+                    value = ((AvgLengthWithNullIndicator) indicator).getAverageLength();
                     break;
 
                 case AverageLengthWithBlankIndicatorEnum:
-                    tempObject = ((AvgLengthWithBlankIndicator) indicator).getAverageLength();
+                    value = ((AvgLengthWithBlankIndicator) indicator).getAverageLength();
                     break;
 
                 case AverageLengthWithNullBlankIndicatorEnum:
-                    tempObject = ((AvgLengthWithBlankNullIndicator) indicator).getAverageLength();
+                    value = ((AvgLengthWithBlankNullIndicator) indicator).getAverageLength();
                     break;
 
                 case FrequencyIndicatorEnum:
@@ -181,57 +180,61 @@ public final class IndicatorCommonUtil {
                 case DatePatternFreqIndicatorEnum:
                 case SoundexIndicatorEnum:
                 case SoundexLowIndicatorEnum:
-                    tempObject = handleFrequency(indicator);
+                    value = handleFrequency(indicator);
                     break;
 
                 case MeanIndicatorEnum:
-                    tempObject = ((MeanIndicator) indicator).getMean();
+                    value = ((MeanIndicator) indicator).getMean();
                     break;
 
                 case MedianIndicatorEnum:
-                    tempObject = ((MedianIndicator) indicator).getMedian();
+                    value = ((MedianIndicator) indicator).getMedian();
                     break;
 
                 case MinValueIndicatorEnum:
-                    tempObject = ((MinValueIndicator) indicator).getValue();
+                    value = ((MinValueIndicator) indicator).getValue();
                     break;
 
                 case MaxValueIndicatorEnum:
-                    tempObject = ((MaxValueIndicator) indicator).getValue();
+                    value = ((MaxValueIndicator) indicator).getValue();
                     break;
 
                 case LowerQuartileIndicatorEnum:
-                    tempObject = ((LowerQuartileIndicator) indicator).getValue();
+                    value = ((LowerQuartileIndicator) indicator).getValue();
                     break;
 
                 case UpperQuartileIndicatorEnum:
-                    tempObject = ((UpperQuartileIndicator) indicator).getValue();
+                    value = ((UpperQuartileIndicator) indicator).getValue();
                     break;
 
                 case RegexpMatchingIndicatorEnum:
                 case SqlPatternMatchingIndicatorEnum:
                 case AllMatchIndicatorEnum:
-                    tempObject = handleMatchingValue(indicator);
+                    value = handleMatchingValue(indicator);
                     break;
 
                 case ModeIndicatorEnum:
-                    tempObject = ((ModeIndicator) indicator).getMode();
+                    value = ((ModeIndicator) indicator).getMode();
                     break;
 
                 case UserDefinedIndicatorEnum:
                 case JavaUserDefinedIndicatorEnum:
-                    tempObject = handleUDIValue(indicator);
+                    value = handleUDIValue(indicator);
+                    break;
+
+                case WhereRuleIndicatorEnum:
+                    Long userCount = ((WhereRuleIndicator) indicator).getUserCount();
+                    value = userCount == null ? 0 : userCount;
                     break;
 
                 default:
 
                 }
 
-                if (tempObject == null || "null".equalsIgnoreCase(tempObject.toString())) { //$NON-NLS-1$
+                if (value == null || "null".equalsIgnoreCase(value.toString())) { //$NON-NLS-1$
                     indicator.setComputed(false);
                 }
 
-                indicatorUnit.setValue(tempObject);
             }
         } catch (Exception e) {
             // MOD xqliu 2010-04-06 bug 12161
@@ -240,6 +243,8 @@ public final class IndicatorCommonUtil {
             }
             // ~12161
         }
+
+        return value;
     }
 
     /**
@@ -349,21 +354,4 @@ public final class IndicatorCommonUtil {
         return object;
     }
 
-    public static void getIndicatorValue(TableIndicatorUnit indicatorUnit) {
-        Object tempObject = null;
-        IndicatorEnum type = indicatorUnit.getType();
-        Indicator indicator = indicatorUnit.getIndicator();
-        if (indicatorUnit.isExcuted()) {
-            switch (type) {
-            case RowCountIndicatorEnum:
-                tempObject = ((RowCountIndicator) indicator).getCount();
-                break;
-            case WhereRuleIndicatorEnum:
-                Long userCount = ((WhereRuleIndicator) indicator).getUserCount();
-                tempObject = userCount == null ? 0 : userCount;
-            default:
-            }
-            indicatorUnit.setValue(tempObject);
-        }
-    }
 }

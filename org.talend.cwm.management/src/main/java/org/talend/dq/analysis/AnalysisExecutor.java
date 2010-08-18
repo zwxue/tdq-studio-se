@@ -34,7 +34,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.indicators.IndicatorUtils;
+import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.utils.sugars.ReturnCode;
@@ -59,7 +59,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * use {@link #dbms()} to access this attribute.
      */
     private DbmsLanguage dbmsLanguage;
-    
+
     protected Analysis cachedAnalysis;
 
     /*
@@ -132,7 +132,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         String[] dataThreshold = IndicatorHelper.getDataThreshold(indicator);
         String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(indicator);
         String[] indiPercentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
-        Object obj = IndicatorUtils.getIndicatorValue(indicator);
+        Object obj = IndicatorCommonUtil.getIndicatorValue(indicator);
         if (dataThreshold != null || indicatorThreshold != null || indiPercentThreshold != null) {
             ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "", "");
             if (obj != null) {

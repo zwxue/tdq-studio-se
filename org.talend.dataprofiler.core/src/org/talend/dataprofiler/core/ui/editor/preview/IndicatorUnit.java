@@ -17,8 +17,8 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.utils.format.StringFormatUtil;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -87,16 +87,7 @@ public class IndicatorUnit {
      * @return the value
      */
     public Object getValue() {
-        return StringFormatUtil.format(this.value, StringFormatUtil.NUMBER);
-    }
-
-    /**
-     * Sets the value.
-     * 
-     * @param value the value to set
-     */
-    public void setValue(Object value) {
-        this.value = value;
+        return IndicatorCommonUtil.getIndicatorValue(indicator);
     }
 
     /**

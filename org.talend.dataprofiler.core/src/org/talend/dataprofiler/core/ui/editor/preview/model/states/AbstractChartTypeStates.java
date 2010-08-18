@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.xy.XYDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
@@ -68,7 +67,6 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
         List<IndicatorUnit> validUnitList = new ArrayList<IndicatorUnit>();
 
         for (IndicatorUnit unit : units) {
-            IndicatorCommonUtil.getIndicatorValue(unit);
 
             if (unit.isExcuted()) {
                 validUnitList.add(unit);
