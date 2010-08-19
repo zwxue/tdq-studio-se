@@ -796,6 +796,14 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     @Override
     public boolean canDrop(ModelElement modelElement) {
+        // MOD qiongli 2010-8-19,bug 14436:could not come from diffrent connection
+        Connection tdProvider = ModelElementHelper.getTdDataProvider(modelElement);
+        if (tdProvider == null) {
+            return false;
+        } else if (this.getAnalysis().getContext().getConnection() != null
+                && !tdProvider.equals(this.getAnalysis().getContext().getConnection())) {
+            return false;
+        }
         // MOD mzhao, 2010-07-23 bug 14014: If the editor is dirty, save it firstly before drag and drop an elements.
         if (masterPage.isDirty()) {
             masterPage.doSave(new NullProgressMonitor());

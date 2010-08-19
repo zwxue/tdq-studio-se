@@ -53,7 +53,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -693,26 +692,21 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         List<TdColumn> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
 
         if (!columnSetMultiValueList.isEmpty()) {
-            if (!ColumnHelper.isFromSameTable(columnSetMultiValueList)) {
-                message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
+            // MOD qiongli 2010-8-19.bug 14436.move some codes to the method of 'canDrop()', which judge to come
+            // from same table
+            List<TdColumn> columns = treeViewer.getColumnSetMultiValueList();
 
-            } else {
+            if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()
+                    || ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
+                message = verifyColumn(columns, columnSetMultiIndicator.eClass());
 
-                List<TdColumn> columns = treeViewer.getColumnSetMultiValueList();
+            } else if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
+                for (int i = 0; i < columns.size(); i++) {
+                    TdColumn tdColumn = (TdColumn) columns.get(i);
 
-                if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()
-                        || ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
-                    message = verifyColumn(columns, columnSetMultiIndicator.eClass());
-
-                } else if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
-                    for (int i = 0; i < columns.size(); i++) {
-                        TdColumn tdColumn = (TdColumn) columns.get(i);
-
-                        if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
-                            message = DefaultMessagesImpl
-                                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
-                            break;
-                        }
+                    if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
+                        message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
+                        break;
                     }
                 }
             }

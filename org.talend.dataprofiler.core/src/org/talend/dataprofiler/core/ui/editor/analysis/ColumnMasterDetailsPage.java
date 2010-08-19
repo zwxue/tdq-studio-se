@@ -868,11 +868,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
 
         if (!analyzedElement.isEmpty()) {
-            if (!ModelElementHelper.isFromSameConnection(analyzedElement)) {
-                return new ReturnCode(
-                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameElementMessage"), false); //$NON-NLS-1$
-            }
-
             if (!ModelElementHelper.isFromSameTable(analyzedElement) && !"".equals(dataFilterComp.getDataFilterString())) { //$NON-NLS-1$
                 return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotCreatAnalysis"), false); //$NON-NLS-1$
             }

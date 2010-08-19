@@ -54,6 +54,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -754,6 +755,11 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         }
 
         if (existColumns.contains(modelElement)) {
+            return false;
+        }
+        // MOD qiongli 2010-8-19,bug 14436:if come from diffrent table,can not drop
+        existColumns.add((TdColumn) modelElement);
+        if (!existColumns.isEmpty() && !ColumnHelper.isFromSameTable(existColumns)) {
             return false;
         }
         return true;
