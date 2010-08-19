@@ -480,7 +480,8 @@ public final class DefinitionHandler {
         IndicatorDefinition def = getDefinitionById(REGULAR_EXPRESSION_MATCHING_DEFINITION);
         EList<TdExpression> sqlGenericExpression = def.getSqlGenericExpression();
         for (TdExpression exp : sqlGenericExpression) {
-            if (DbmsLanguageFactory.compareDbmsLanguage(dbmsLanguage.getDbmsName(), exp.getLanguage())) {
+            if (DbmsLanguageFactory.isAllDatabaseType(exp.getLanguage())
+                    || DbmsLanguageFactory.compareDbmsLanguage(dbmsLanguage.getDbmsName(), exp.getLanguage())) {
                 return true;
             }
         }
