@@ -1213,6 +1213,12 @@
            name="Update Properties File Task"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateRegularExpressionMatchingMysqlExpressionTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateRegularExpressionMatchingMysqlExpressionTask"
+           name="Update Regular Expression Matching Mysql Expression Task"
+           version="4.0.3">
+     </workspacetask>
      
 
   </extension>
