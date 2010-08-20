@@ -363,7 +363,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 }
                 // need to generate different SQL where clause for each type.
                 int javaType = tdColumn.getJavaType();
-                if (!Java2SqlType.isNumbericInSQL(javaType)) {
+                if (!Java2SqlType.isNumbericInSQL(javaType) && !isFunction(defValue, table)) {
                     defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 whereExpression.add(colName + dbms().equal() + defValue);
@@ -384,6 +384,25 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         return false;
+    }
+
+    /**
+     * @param defValue
+     * @param table
+     * @return
+     */
+    private boolean isFunction(String defValue, String table) {
+        try {
+            String queryStmt = "select " + defValue + " from " + table;
+            TypedReturnCode<Connection> conn = getConnection(cachedAnalysis);
+            Connection conenction = conn.getObject();
+
+            Statement stat = conenction.createStatement();
+
+            return stat.execute(queryStmt);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private String addFunctionTypeConvert(String colName) {
