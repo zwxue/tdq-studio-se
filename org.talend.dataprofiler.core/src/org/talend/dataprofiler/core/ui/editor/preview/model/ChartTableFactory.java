@@ -50,6 +50,8 @@ import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
+import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -68,12 +70,12 @@ public final class ChartTableFactory {
 
     public static void addMenuAndTip(final TableViewer tbViewer, final IDataExplorer explorer, final Analysis analysis) {
 
-        ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
+        final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
         final boolean isJAVALanguage = ExecutionLanguage.JAVA == currentEngine;
-
-        final Table table = tbViewer.getTable();
         final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
         final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
+
+        final Table table = tbViewer.getTable();
 
         table.addMouseListener(new MouseAdapter() {
 
@@ -164,10 +166,6 @@ public final class ChartTableFactory {
 
                                             });
                                         }
-                                    } else {
-                                        MenuItem item = new MenuItem(menu, SWT.PUSH);
-                                        item.setText("No data");
-                                        item.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
                                     }
                                 }
                             } catch (NullPointerException nullexception) {
@@ -210,6 +208,9 @@ public final class ChartTableFactory {
                                 } else if (isPatternMatchingIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
                                     item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));
+                                } else if (isAllMatchIndicator(indicator)) {
+                                    item = new MenuItem(menu, SWT.PUSH);
+                                    item.setText("Generate an ETL job to handle rows");
                                 }
 
                                 if (item != null) {
@@ -253,6 +254,23 @@ public final class ChartTableFactory {
         String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
         IFolder folder = ResourceManager.getPatternRegexFolder();
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * DOC bZhou Comment method "isAllMatchIndicator".
+     * 
+     * @param indicator
+     * @return
+     */
+    public static boolean isAllMatchIndicator(Indicator indicator) {
+        ColumnsetSwitch<Indicator> iSwitch = new ColumnsetSwitch<Indicator>() {
+
+            @Override
+            public Indicator caseAllMatchIndicator(AllMatchIndicator object) {
+                return object;
+            }
+        };
+        return iSwitch.doSwitch(indicator) != null;
     }
 
     /**

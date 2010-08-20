@@ -76,172 +76,170 @@ public final class IndicatorCommonUtil {
 
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(indicator.eClass());
 
-        try {
-            if (type == IndicatorEnum.RangeIndicatorEnum || type == IndicatorEnum.IQRIndicatorEnum) {
-                value = ((RangeIndicator) indicator).getRange();
-                ((RangeIndicator) indicator).setComputed(true);
-            } else if (indicator.isComputed()) {
+        if (type != null) {
+            try {
+                if (type == IndicatorEnum.RangeIndicatorEnum || type == IndicatorEnum.IQRIndicatorEnum) {
+                    value = ((RangeIndicator) indicator).getRange();
+                    ((RangeIndicator) indicator).setComputed(true);
+                } else if (indicator.isComputed()) {
 
-                // log.warn("now getting the value of indicator [" + indicator.getName() + "]");
+                    // log.warn("now getting the value of indicator [" + indicator.getName() + "]");
 
-                switch (type) {
-                case RowCountIndicatorEnum:
-                    value = ((RowCountIndicator) indicator).getCount();
-                    break;
+                    switch (type) {
+                    case RowCountIndicatorEnum:
+                        value = ((RowCountIndicator) indicator).getCount();
+                        break;
 
-                case NullCountIndicatorEnum:
-                    value = ((NullCountIndicator) indicator).getNullCount();
-                    break;
+                    case NullCountIndicatorEnum:
+                        value = ((NullCountIndicator) indicator).getNullCount();
+                        break;
 
-                case DistinctCountIndicatorEnum:
-                    value = ((DistinctCountIndicator) indicator).getDistinctValueCount();
-                    break;
+                    case DistinctCountIndicatorEnum:
+                        value = ((DistinctCountIndicator) indicator).getDistinctValueCount();
+                        break;
 
-                case UniqueIndicatorEnum:
-                    value = (((UniqueCountIndicator) indicator).getUniqueValueCount());
-                    break;
+                    case UniqueIndicatorEnum:
+                        value = (((UniqueCountIndicator) indicator).getUniqueValueCount());
+                        break;
 
-                case DuplicateCountIndicatorEnum:
-                    value = ((DuplicateCountIndicator) indicator).getDuplicateValueCount();
-                    break;
+                    case DuplicateCountIndicatorEnum:
+                        value = ((DuplicateCountIndicator) indicator).getDuplicateValueCount();
+                        break;
 
-                case BlankCountIndicatorEnum:
-                    value = ((BlankCountIndicator) indicator).getBlankCount();
-                    break;
+                    case BlankCountIndicatorEnum:
+                        value = ((BlankCountIndicator) indicator).getBlankCount();
+                        break;
 
-                case DefValueCountIndicatorEnum:
-                    value = ((DefValueCountIndicator) indicator).getDefaultValCount();
-                    break;
+                    case DefValueCountIndicatorEnum:
+                        value = ((DefValueCountIndicator) indicator).getDefaultValCount();
+                        break;
 
-                case MinLengthIndicatorEnum:
-                    value = ((MinLengthIndicator) indicator).getLength();
-                    break;
+                    case MinLengthIndicatorEnum:
+                        value = ((MinLengthIndicator) indicator).getLength();
+                        break;
 
-                case MinLengthWithNullIndicatorEnum:
-                    value = ((MinLengthWithNullIndicator) indicator).getLength();
-                    break;
+                    case MinLengthWithNullIndicatorEnum:
+                        value = ((MinLengthWithNullIndicator) indicator).getLength();
+                        break;
 
-                case MinLengthWithBlankIndicatorEnum:
-                    value = ((MinLengthWithBlankIndicator) indicator).getLength();
-                    break;
+                    case MinLengthWithBlankIndicatorEnum:
+                        value = ((MinLengthWithBlankIndicator) indicator).getLength();
+                        break;
 
-                case MinLengthWithBlankNullIndicatorEnum:
-                    value = ((MinLengthWithBlankNullIndicator) indicator).getLength();
-                    break;
+                    case MinLengthWithBlankNullIndicatorEnum:
+                        value = ((MinLengthWithBlankNullIndicator) indicator).getLength();
+                        break;
 
-                case MaxLengthIndicatorEnum:
-                    value = ((MaxLengthIndicator) indicator).getLength();
-                    break;
+                    case MaxLengthIndicatorEnum:
+                        value = ((MaxLengthIndicator) indicator).getLength();
+                        break;
 
-                case MaxLengthWithNullIndicatorEnum:
-                    value = ((MaxLengthWithNullIndicator) indicator).getLength();
-                    break;
+                    case MaxLengthWithNullIndicatorEnum:
+                        value = ((MaxLengthWithNullIndicator) indicator).getLength();
+                        break;
 
-                case MaxLengthWithBlankIndicatorEnum:
-                    value = ((MaxLengthWithBlankIndicator) indicator).getLength();
-                    break;
+                    case MaxLengthWithBlankIndicatorEnum:
+                        value = ((MaxLengthWithBlankIndicator) indicator).getLength();
+                        break;
 
-                case MaxLengthWithBlankNullIndicatorEnum:
-                    value = ((MaxLengthWithBlankNullIndicator) indicator).getLength();
-                    break;
+                    case MaxLengthWithBlankNullIndicatorEnum:
+                        value = ((MaxLengthWithBlankNullIndicator) indicator).getLength();
+                        break;
 
-                case AverageLengthIndicatorEnum:
-                    value = ((AverageLengthIndicator) indicator).getAverageLength();
-                    break;
+                    case AverageLengthIndicatorEnum:
+                        value = ((AverageLengthIndicator) indicator).getAverageLength();
+                        break;
 
-                case AverageLengthWithNullIndicatorEnum:
-                    value = ((AvgLengthWithNullIndicator) indicator).getAverageLength();
-                    break;
+                    case AverageLengthWithNullIndicatorEnum:
+                        value = ((AvgLengthWithNullIndicator) indicator).getAverageLength();
+                        break;
 
-                case AverageLengthWithBlankIndicatorEnum:
-                    value = ((AvgLengthWithBlankIndicator) indicator).getAverageLength();
-                    break;
+                    case AverageLengthWithBlankIndicatorEnum:
+                        value = ((AvgLengthWithBlankIndicator) indicator).getAverageLength();
+                        break;
 
-                case AverageLengthWithNullBlankIndicatorEnum:
-                    value = ((AvgLengthWithBlankNullIndicator) indicator).getAverageLength();
-                    break;
+                    case AverageLengthWithNullBlankIndicatorEnum:
+                        value = ((AvgLengthWithBlankNullIndicator) indicator).getAverageLength();
+                        break;
 
-                case FrequencyIndicatorEnum:
-                case DateFrequencyIndicatorEnum:
-                case WeekFrequencyIndicatorEnum:
-                case MonthFrequencyIndicatorEnum:
-                case QuarterFrequencyIndicatorEnum:
-                case YearFrequencyIndicatorEnum:
-                case BinFrequencyIndicatorEnum:
-                case LowFrequencyIndicatorEnum:
-                case DateLowFrequencyIndicatorEnum:
-                case WeekLowFrequencyIndicatorEnum:
-                case MonthLowFrequencyIndicatorEnum:
-                case QuarterLowFrequencyIndicatorEnum:
-                case YearLowFrequencyIndicatorEnum:
-                case BinLowFrequencyIndicatorEnum:
-                case PatternFreqIndicatorEnum:
-                case PatternLowFreqIndicatorEnum:
-                case DatePatternFreqIndicatorEnum:
-                case SoundexIndicatorEnum:
-                case SoundexLowIndicatorEnum:
-                    value = handleFrequency(indicator);
-                    break;
+                    case FrequencyIndicatorEnum:
+                    case DateFrequencyIndicatorEnum:
+                    case WeekFrequencyIndicatorEnum:
+                    case MonthFrequencyIndicatorEnum:
+                    case QuarterFrequencyIndicatorEnum:
+                    case YearFrequencyIndicatorEnum:
+                    case BinFrequencyIndicatorEnum:
+                    case LowFrequencyIndicatorEnum:
+                    case DateLowFrequencyIndicatorEnum:
+                    case WeekLowFrequencyIndicatorEnum:
+                    case MonthLowFrequencyIndicatorEnum:
+                    case QuarterLowFrequencyIndicatorEnum:
+                    case YearLowFrequencyIndicatorEnum:
+                    case BinLowFrequencyIndicatorEnum:
+                    case PatternFreqIndicatorEnum:
+                    case PatternLowFreqIndicatorEnum:
+                    case DatePatternFreqIndicatorEnum:
+                    case SoundexIndicatorEnum:
+                    case SoundexLowIndicatorEnum:
+                        value = handleFrequency(indicator);
+                        break;
 
-                case MeanIndicatorEnum:
-                    value = ((MeanIndicator) indicator).getMean();
-                    break;
+                    case MeanIndicatorEnum:
+                        value = ((MeanIndicator) indicator).getMean();
+                        break;
 
-                case MedianIndicatorEnum:
-                    value = ((MedianIndicator) indicator).getMedian();
-                    break;
+                    case MedianIndicatorEnum:
+                        value = ((MedianIndicator) indicator).getMedian();
+                        break;
 
-                case MinValueIndicatorEnum:
-                    value = ((MinValueIndicator) indicator).getValue();
-                    break;
+                    case MinValueIndicatorEnum:
+                        value = ((MinValueIndicator) indicator).getValue();
+                        break;
 
-                case MaxValueIndicatorEnum:
-                    value = ((MaxValueIndicator) indicator).getValue();
-                    break;
+                    case MaxValueIndicatorEnum:
+                        value = ((MaxValueIndicator) indicator).getValue();
+                        break;
 
-                case LowerQuartileIndicatorEnum:
-                    value = ((LowerQuartileIndicator) indicator).getValue();
-                    break;
+                    case LowerQuartileIndicatorEnum:
+                        value = ((LowerQuartileIndicator) indicator).getValue();
+                        break;
 
-                case UpperQuartileIndicatorEnum:
-                    value = ((UpperQuartileIndicator) indicator).getValue();
-                    break;
+                    case UpperQuartileIndicatorEnum:
+                        value = ((UpperQuartileIndicator) indicator).getValue();
+                        break;
 
-                case RegexpMatchingIndicatorEnum:
-                case SqlPatternMatchingIndicatorEnum:
-                case AllMatchIndicatorEnum:
-                    value = handleMatchingValue(indicator);
-                    break;
+                    case RegexpMatchingIndicatorEnum:
+                    case SqlPatternMatchingIndicatorEnum:
+                    case AllMatchIndicatorEnum:
+                        value = handleMatchingValue(indicator);
+                        break;
 
-                case ModeIndicatorEnum:
-                    value = ((ModeIndicator) indicator).getMode();
-                    break;
+                    case ModeIndicatorEnum:
+                        value = ((ModeIndicator) indicator).getMode();
+                        break;
 
-                case UserDefinedIndicatorEnum:
-                case JavaUserDefinedIndicatorEnum:
-                    value = handleUDIValue(indicator);
-                    break;
+                    case UserDefinedIndicatorEnum:
+                    case JavaUserDefinedIndicatorEnum:
+                        value = handleUDIValue(indicator);
+                        break;
 
-                case WhereRuleIndicatorEnum:
-                    Long userCount = ((WhereRuleIndicator) indicator).getUserCount();
-                    value = userCount == null ? 0 : userCount;
-                    break;
+                    case WhereRuleIndicatorEnum:
+                        Long userCount = ((WhereRuleIndicator) indicator).getUserCount();
+                        value = userCount == null ? 0 : userCount;
+                        break;
 
-                default:
+                    default:
+
+                    }
+
+                    if (value == null || "null".equalsIgnoreCase(value.toString())) { //$NON-NLS-1$
+                        indicator.setComputed(false);
+                    }
 
                 }
-
-                if (value == null || "null".equalsIgnoreCase(value.toString())) { //$NON-NLS-1$
-                    indicator.setComputed(false);
-                }
-
+            } catch (Exception e) {
+                log.error("Get value failed: " + e.getMessage());
             }
-        } catch (Exception e) {
-            // MOD xqliu 2010-04-06 bug 12161
-            if (indicator != null) {
-                indicator.setComputed(false);
-            }
-            // ~12161
         }
 
         return value;
