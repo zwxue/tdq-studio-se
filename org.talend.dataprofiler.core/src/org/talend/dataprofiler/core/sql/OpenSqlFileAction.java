@@ -30,6 +30,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -63,6 +64,9 @@ public class OpenSqlFileAction extends Action {
      */
     @Override
     public void run() {
+        // ADD xqliu 2010-08-20 bug 13729
+        new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+        // ~ 13729
         IWorkbenchWindow aww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IWorkbenchPage ap = aww.getActivePage();
         IPath location = ResourcesPlugin.getWorkspace().getRoot().getLocation();
