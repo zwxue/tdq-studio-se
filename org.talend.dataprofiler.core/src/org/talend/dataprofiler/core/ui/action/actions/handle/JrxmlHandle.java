@@ -29,7 +29,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.properties.TDQJrxmlItem;
+import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.PropertyHelper;
@@ -120,7 +120,7 @@ public class JrxmlHandle extends SimpleHandle {
         property.setCreationDate(new Date());
         property.setVersion("0.1");
 
-        TDQJrxmlItem item = PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
+        TDQJrxmlItem item = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
 

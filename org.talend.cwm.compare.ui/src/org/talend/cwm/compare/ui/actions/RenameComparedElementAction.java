@@ -311,7 +311,7 @@ public class RenameComparedElementAction extends Action {
         }
         Connection tempReloadProvider = returnProvider.getObject();
         tempReloadProvider.setComponent(oldDataProvider.getComponent());
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(tempReloadProvider, tempConnectionFile);
+        ElementWriterFactory.getInstance().createDataProviderWriter().create(tempReloadProvider, tempConnectionFile);
         tempReloadProvider.setComponent(null);
         oldDataProvider.getComponent();
         return tempReloadProvider;

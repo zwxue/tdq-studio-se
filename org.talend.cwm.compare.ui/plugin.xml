@@ -33,10 +33,16 @@
                <instanceof
                      value="org.eclipse.core.resources.IFile">
                </instanceof>
-                <test
-                        property="org.eclipse.core.resources.name"
-                        value="*.prv">
-                </test>
+                <or>
+                   <test
+                         property="org.eclipse.core.resources.name"
+                         value="*.prv">
+                   </test>
+                   <test
+                         property="org.eclipse.core.resources.name"
+                         value="*.item">
+                   </test>
+                </or>
              </and>
            </or>
          </enablement>
@@ -53,10 +59,16 @@
                <instanceof
                      value="org.eclipse.core.resources.IFile">
                </instanceof>
-                <test
-                        property="org.eclipse.core.resources.name"
-                        value="*.prv">
-                </test>
+                <or>
+                   <test
+                         property="org.eclipse.core.resources.name"
+                         value="*.prv">
+                   </test>
+                   <test
+                         property="org.eclipse.core.resources.name"
+                         value="*.item">
+                   </test>
+                </or>
              </and>
            </or>
          </enablement>
@@ -76,10 +88,16 @@
                  <instanceof
                        value="org.eclipse.core.resources.IFile">
                  </instanceof>
-                 <test
-                       property="org.eclipse.core.resources.name"
-                       value="*.prv">
-                 </test>
+                 <or>
+                    <test
+                          property="org.eclipse.core.resources.name"
+                          value="*.prv">
+                    </test>
+                    <test
+                          property="org.eclipse.core.resources.name"
+                          value="*.item">
+                    </test>
+                 </or>
               </and>
               <instanceof
                     value="org.talend.cwm.relational.TdColumn">
