@@ -237,7 +237,7 @@ public class AnalysisBuilder {
         AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
         String filename = DqRepositoryViewService.createFilename(this.analysis.getName(), FactoriesUtil.ANA);
         IFile file = folder.getFile(filename);
-        ReturnCode saved = writer.save(analysis, file);
+        ReturnCode saved = writer.create(analysis, file);
         // Assert.assertTrue(saved.getMessage(), saved.isOk());
         if (saved.isOk()) {
             if (log.isDebugEnabled()) {

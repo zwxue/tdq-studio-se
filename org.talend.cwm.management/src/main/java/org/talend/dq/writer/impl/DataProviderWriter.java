@@ -97,7 +97,7 @@ public class DataProviderWriter extends AElementPersistance {
      */
     @Override
     protected String getFileExtension() {
-        return FactoriesUtil.PROV;
+        return FactoriesUtil.ITEM_EXTENSION;
     }
 
     /*

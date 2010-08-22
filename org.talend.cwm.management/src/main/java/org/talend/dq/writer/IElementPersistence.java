@@ -39,7 +39,7 @@ public interface IElementPersistence {
      * @param file
      * @return
      */
-    public ReturnCode save(ModelElement element, IFile file);
+    public ReturnCode create(ModelElement element, IFile file);
 
     /**
      * DOC bZhou Comment method "save".

@@ -35,16 +35,17 @@ import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
-import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.properties.PropertiesFactory;
+import org.talend.dataquality.properties.TDQItem;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
@@ -84,12 +85,12 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
                 file = folder.getFile(fname);
 
                 element.setName(oriName);
-                ReturnCode rc = save(element, file);
+                ReturnCode rc = create(element, file);
                 trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
 
                 // trc.setReturnCode("Can't create resource file, file is existed.", false);
             } else {
-                ReturnCode rc = save(element, file);
+                ReturnCode rc = create(element, file);
                 trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
             }
         }
@@ -103,13 +104,44 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @see org.talend.dq.writer.IElementPersistence#save(orgomg.cwm.objectmodel.core.ModelElement,
      * org.eclipse.core.resources.IFile)
      */
-    public ReturnCode save(ModelElement element, IFile file) {
+    public ReturnCode create(ModelElement element, IFile file) {
         ReturnCode rc = new ReturnCode();
 
         if (!check(file)) {
             rc.setReturnCode("Failed to save! the extent file name is wrong.", false);
-        } else {
+            // TODO filter element make that if element isn't a Connection don't use the API
+        } else if (element instanceof Connection) {
 
+            IPath filePath = file.getFullPath();
+
+            // if (!util.addEObjectToResourceSet(filePath, element)) {
+            // rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
+            // } else {
+            // if (element instanceof RenderedObject) {
+            // ((RenderedObject) element).setFileName(filePath);
+            // }
+            //
+            // String propPaht =
+            // file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION)
+            // .toString();
+            // MetadataHelper.setPropertyPath(propPaht, element);
+            //
+            // // rc = save(element);
+            // addDependencies(element);
+            //
+            // addResourceContent(element);
+            Property property = initProperty(element);
+            property.setLabel(file.getName().substring(0, file.getName().indexOf('_')));
+            Item item = initItem(element, property);
+            // DqRepositoryViewService.createLogicalFileName(element, getFileExtension());
+            try {
+                ProxyRepositoryFactory.getInstance().create(item, Path.EMPTY);// file.getFullPath().removeFirstSegments(3));
+            } catch (PersistenceException e) {
+                log.error(e, e);
+            }
+            //
+            // }
+        } else {
             String filePath = file.getFullPath().toString();
 
             if (!util.addEObjectToResourceSet(filePath, element)) {
@@ -169,6 +201,34 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * 
      * @param element
      */
+    public Item getItem(ModelElement element) {
+        Resource resource = element.eResource();
+        String fileName = resource.getURI().lastSegment();
+
+        Property property = PropertyHelper.getProperty(element);
+        if (property == null) {
+            property = initProperty(element);
+        }
+
+        Item item = property.getItem();
+        if (item == null) {
+            item = initItem(element, property);
+        }
+        if (item instanceof TDQItem) {
+            ((TDQItem) item).setFilename(fileName);
+        }
+        URI uri = element.eResource().getURI();
+        fillProperties(property, uri);
+        String propertyPath = property.eResource().getURI().toPlatformString(true);
+        MetadataHelper.setPropertyPath(propertyPath, element);
+        return item;
+    }
+
+    /**
+     * DOC bZhou Comment method "savePerperties". need to delete
+     * 
+     * @param element
+     */
     public Property savePerperties(ModelElement element) {
         Resource resource = element.eResource();
         String fileName = resource.getURI().lastSegment();
@@ -196,6 +256,38 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         return property;
     }
 
+    // TODO filter element make that if element isn't a Connection don't use the API
+    /*
+     * (non-Javadoc) need to delete
+     * 
+     * @see org.talend.dq.writer.IElementSerialize#serialize(org.talend.core.model.properties.Property,
+     * org.eclipse.emf.common.util.URI)
+     */
+    public ReturnCode serialize(Property property, URI uri) {
+        ReturnCode rc = new ReturnCode();
+
+        URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        propertiesURI.toPlatformString(true);
+        Resource propertyResource = property.eResource();
+        if (propertyResource == null) {
+            propertyResource = util.createResource(propertiesURI);
+        }
+
+        // set the state path when first create it.
+        IPath propPath = new Path(propertiesURI.toPlatformString(true)).removeLastSegments(1);
+        IPath typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
+        IPath itemPath = propPath.makeRelativeTo(typedPath);
+        property.getItem().getState().setPath(itemPath.toString());
+
+        propertyResource.getContents().add(property);
+        propertyResource.getContents().add(property.getItem());
+        propertyResource.getContents().add(property.getItem().getState());
+
+        rc.setOk(util.saveResource(propertyResource));
+
+        return rc;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -207,19 +299,26 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         addDependencies(element);
 
         addResourceContent(element);
-
-        Property property = savePerperties(element);
-
-        if (!(element instanceof ConnectionItem)) {
-            rc.setOk(util.saveResource(element.eResource()));
-        } else {
+        // TODO filter element make that if element isn't a Connection don't use the API
+        if (element instanceof Connection) {
+            Item item = getItem(element);
             try {
-                ProxyRepositoryFactory.getInstance().save(property.getItem(), Boolean.FALSE);
+                ProxyRepositoryFactory.getInstance().save(item);
             } catch (PersistenceException e) {
-                rc.setOk(Boolean.FALSE);
-                rc.setMessage(e.getMessage());
                 log.error(e, e);
             }
+        } else {
+            savePerperties(element);
+
+            rc.setOk(util.saveResource(element.eResource()));
+
+            if (rc.isOk()) {
+                rc.setMessage("save " + element.getName() + " is OK!");
+                ProxyRepositoryManager.getInstance().save();
+            } else {
+                rc.setMessage(util.getLastErrorMessage());
+            }
+
         }
         return rc;
     }
@@ -229,10 +328,57 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * 
      * @see org.talend.dq.writer.IElementSerialize#initProperty(orgomg.cwm.objectmodel.core.ModelElement)
      */
+    public Property initProperty(ModelElement element) {
+        // Property property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        Property property = PropertyHelper.getProperty(element);
+        boolean firstCreate = false;
+        if (property == null) {
+            property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+            firstCreate = true;
+        }
+
+        // String author = MetadataHelper.getAuthor(element); // MOD xqliu 2010-07-05 bug 14111
+        String purpose = MetadataHelper.getPurpose(element);
+        String description = MetadataHelper.getDescription(element);
+        String version = MetadataHelper.getVersion(element);
+        String status = MetadataHelper.getDevStatus(element);
+
+        User user = ReponsitoryContextBridge.getUser();
+        if (user != null) {
+            // user.setLogin(author); // MOD xqliu 2010-07-05 bug 14111
+            property.setAuthor(user);
+        }
+
+        property.setId(EcoreUtil.generateUUID());
+        property.setLabel(element.getName());
+        property.setPurpose(purpose);
+        property.setDescription(description);
+        property.setStatusCode(status);
+        property.setVersion(version);
+        // property.setCreationDate(new Date());
+        // MOD xqliu 2010-08-17 bug 13601
+        if (firstCreate) {
+            property.setCreationDate(new Date());
+        } else {
+            property.setModificationDate(new Date());
+        }
+        // ~ 13601
+
+        computePropertyMaxInformationLevel(property);
+
+        return property;
+    }
+
+    // TODO filter element make that if element isn't a Connection don't use the API
+    /*
+     * (non-Javadoc) need to delete
+     * 
+     * @see org.talend.dq.writer.IElementSerialize#initProperty(orgomg.cwm.objectmodel.core.ModelElement)
+     */
     public Property initProperty(ModelElement element, Property property) {
         boolean firstCreate = false;
         if (property == null) {
-            property = PropertiesFactory.eINSTANCE.createProperty();
+            property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
             firstCreate = true;
         }
 
@@ -282,13 +428,13 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             item = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
         } else if (ModelElementIdentifier.isDataProvider(element)) {
             if (element instanceof DatabaseConnection) {
-                item = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+                item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
             } else if (element instanceof MDMConnection) {
-                item = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
+                item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createMDMConnectionItem();
             }
             ((ConnectionItem) item).setConnection((Connection) element);
         } else if (ModelElementIdentifier.isID(element)) {
-            item = PropertiesFactory.eINSTANCE.createTDQIndicatorItem();
+            item = PropertiesFactory.eINSTANCE.createTDQIndicatorDefinitionItem();
         } else if (ModelElementIdentifier.isPattern(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQPatternItem();
         } else if (ModelElementIdentifier.isReport(element)) {
@@ -297,7 +443,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             item = PropertiesFactory.eINSTANCE.createTDQItem();
         }
 
-        ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+        ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
         item.setState(itemState);
         item.setProperty(property);
@@ -310,7 +456,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @see org.talend.dq.writer.IElementSerialize#serialize(org.talend.core.model.properties.Property,
      * org.eclipse.emf.common.util.URI)
      */
-    public ReturnCode serialize(Property property, URI uri) {
+    public ReturnCode fillProperties(Property property, URI uri) {
         ReturnCode rc = new ReturnCode();
 
         URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
@@ -329,9 +475,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getItem());
         propertyResource.getContents().add(property.getItem().getState());
-
-        rc.setOk(util.saveResource(propertyResource));
-
         return rc;
     }
 
