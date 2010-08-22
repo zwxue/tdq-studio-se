@@ -17,14 +17,13 @@ import org.talend.dataquality.indicators.TextParameters;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl implements MinLengthWithNullIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MinLengthWithNullIndicatorImpl() {
@@ -33,7 +32,6 @@ public class MinLengthWithNullIndicatorImpl extends MinLengthIndicatorImpl imple
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

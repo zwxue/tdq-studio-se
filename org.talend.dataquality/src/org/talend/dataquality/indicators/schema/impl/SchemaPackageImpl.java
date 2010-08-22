@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.category.CategoryPackage;
@@ -41,6 +42,7 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl;
+import org.talend.dataquality.properties.impl.PropertiesPackageImpl;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 import org.talend.dataquality.rules.RulesPackage;
@@ -141,7 +143,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         isInited = true;
 
         // Initialize simple dependencies
-        ConnectionPackage.eINSTANCE.eClass();
+        PropertiesPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
         AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
@@ -156,6 +158,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
         SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
         RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
+        PropertiesPackageImpl thePropertiesPackage_1 = (PropertiesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.properties.PropertiesPackage.eNS_URI) instanceof PropertiesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.properties.PropertiesPackage.eNS_URI) : org.talend.dataquality.properties.PropertiesPackage.eINSTANCE);
 
         // Create package meta-data objects
         theSchemaPackage.createPackageContents();
@@ -171,6 +174,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         thePatternPackage.createPackageContents();
         theSQLPackage.createPackageContents();
         theRulesPackage.createPackageContents();
+        thePropertiesPackage_1.createPackageContents();
 
         // Initialize created meta-data
         theSchemaPackage.initializePackageContents();
@@ -186,6 +190,7 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         thePatternPackage.initializePackageContents();
         theSQLPackage.initializePackageContents();
         theRulesPackage.initializePackageContents();
+        thePropertiesPackage_1.initializePackageContents();
 
         // Mark meta-data to indicate it can't be changed
         theSchemaPackage.freeze();

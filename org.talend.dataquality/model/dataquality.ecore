@@ -1171,4 +1171,26 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnAliasB" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
   </eSubpackages>
+  <eSubpackages name="properties" nsURI="http://dataquality.properties" nsPrefix="dataquality.properties">
+    <eClassifiers xsi:type="ecore:EClass" name="TDQItem" eSuperTypes="../../org.talend.model/model/properties.ecore#//Item">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TDQAnalysisItem" eSuperTypes="#//properties/TDQItem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="analysis" eType="#//analysis/Analysis"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TDQReportItem" eSuperTypes="#//properties/TDQItem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="report" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwmx/analysis/informationreporting/Report"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TDQIndicatorDefinitionItem" eSuperTypes="#//properties/TDQItem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="indicatorDefinition"
+          eType="#//indicators/definition/IndicatorDefinition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TDQBusinessRuleItem" eSuperTypes="#//properties/TDQItem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dqrule" eType="#//rules/DQRule"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TDQPatternItem" eSuperTypes="#//properties/TDQItem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pattern" eType="#//domain/pattern/Pattern"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TDQJrxmlItem" eSuperTypes="#//properties/TDQItem"/>
+  </eSubpackages>
 </ecore:EPackage>

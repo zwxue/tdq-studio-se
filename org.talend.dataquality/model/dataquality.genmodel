@@ -4,7 +4,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText=""
     modelDirectory="/org.talend.dataquality/src" modelPluginID="org.talend.dataquality"
     modelName="Dataquality" importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0"
-    copyrightFields="false" usedGenPackages="../../org.talend.cwm.mip/model/cwm_mip.genmodel#//orgomg ../../org.talend.model/model/metadata.genmodel#//connection">
+    copyrightFields="false" usedGenPackages="../../org.talend.cwm.mip/model/cwm_mip.genmodel#//orgomg ../../org.talend.model/model/metadata.genmodel#//connection ../../org.talend.model/model/properties.genmodel#//properties">
   <foreignModel>dataquality.ecore</foreignModel>
   <genPackages prefix="Dataquality" basePackage="org.talend" disposableProviderFactory="true"
       ecorePackage="dataquality.ecore#/">

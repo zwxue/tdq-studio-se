@@ -54,22 +54,4 @@ public class MinLengthWithBlankIndicatorImpl extends MinLengthIndicatorImpl impl
         parameters.setTextParameter(textParameters);
         return parameters;
     }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    @Override
-    public boolean handle(Object data) {
-        mustStoreRow = true;
-        boolean ok = super.handle(data);
-        if (data != null) {
-            String str = (String) data;
-            if (0 == str.length()) {
-                length = new Long(0);
-            }
-        }
-        return ok;
-    }
 } // MinLengthWithBlankIndicatorImpl

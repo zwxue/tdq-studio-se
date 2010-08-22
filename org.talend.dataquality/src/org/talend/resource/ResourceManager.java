@@ -198,7 +198,7 @@ public final class ResourceManager {
      * @return
      */
     public static IFolder getTDQConnectionFolder() {
-        return getOneFolder(EResourceConstant.TDQ_DB_CONNECTIONS);
+        return getOneFolder(EResourceConstant.DB_CONNECTIONS);
     }
 
     /**
@@ -394,7 +394,7 @@ public final class ResourceManager {
      * @return
      */
     public static boolean isTDQConnectionFolder(IResource resource) {
-        return isOneFolder(resource, EResourceConstant.TDQ_DB_CONNECTIONS);
+        return isOneFolder(resource, EResourceConstant.DB_CONNECTIONS);
     }
 
     /**
