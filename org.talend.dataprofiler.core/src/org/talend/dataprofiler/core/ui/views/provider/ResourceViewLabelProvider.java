@@ -157,7 +157,6 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             }
 
             ModelElement mElement = ModelElementFileFactory.getModelElement(file);
-
             if (mElement != null) {
                 return DqRepositoryViewService.buildElementName(mElement);
             }

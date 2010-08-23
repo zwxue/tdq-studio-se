@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.model.migration.TopMetadataMigrationFrom400to410usingGenericVM;
 import org.talend.resource.ResourceManager;
@@ -319,7 +320,7 @@ public class MergeMetadataTask extends AWorkspaceTask {
             if (result) {
                 // migrate the folder "TDQ_Metadata" for ".prv" files and
                 // "TDQ_Libraries" for ".softwaresystem.softwaredeployment" files
-                String[] metadataFileExtentionNames = { ".prv", ".softwaresystem.softwaredeployment" };
+                String[] metadataFileExtentionNames = { FactoriesUtil.ITEM_EXTENSION, ".softwaresystem.softwaredeployment" };
                 File[] migrateFolderList = { migFileMetadata, migFileLibraries };
                 TopMetadataMigrationFrom400to410usingGenericVM metadata400to410 = new TopMetadataMigrationFrom400to410usingGenericVM();
                 for (File migrateFile : migrateFolderList) {
@@ -327,8 +328,8 @@ public class MergeMetadataTask extends AWorkspaceTask {
                 }
                 // migrate the folder "TDQ_Data Profiling" for ".ana" files and
                 // "TDQ_Libraries" for ".rules" file
-                String[] anaFileExtentionNames = { ".ana" };
-                String[] rulesFileExtentionNames = { ".rules" };
+                String[] anaFileExtentionNames = { FactoriesUtil.ANA };
+                String[] rulesFileExtentionNames = { FactoriesUtil.DQRULE };
                 result = migrateFolder(result, migFileDataProfiling, anaFileExtentionNames, this.getReplaceStringMapAna())
                         && migrateFolder(result, migFileLibraries, rulesFileExtentionNames, this.getReplaceStringMapRules());
             }
