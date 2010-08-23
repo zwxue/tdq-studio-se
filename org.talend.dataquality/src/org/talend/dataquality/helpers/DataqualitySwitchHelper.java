@@ -23,6 +23,8 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.domain.util.DomainSwitch;
+import org.talend.dataquality.expressions.TdExpression;
+import org.talend.dataquality.expressions.util.ExpressionsSwitch;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -101,6 +103,13 @@ public final class DataqualitySwitchHelper {
 
     };
 
+    public static final ExpressionsSwitch<TdExpression> TDEXPRESSION_SWITCH = new ExpressionsSwitch<TdExpression>() {
+
+        public TdExpression caseTdExpression(TdExpression object) {
+            return object;
+        }
+
+    };
     public static final PatternSwitch<Pattern> PATTERN_SWITCH = new PatternSwitch<Pattern>() {
 
         /*

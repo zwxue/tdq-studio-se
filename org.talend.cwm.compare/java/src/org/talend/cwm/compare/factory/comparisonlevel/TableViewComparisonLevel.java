@@ -44,6 +44,8 @@ import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dataquality.expressions.TdExpression;
+import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
@@ -233,26 +235,37 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
                     columnSetSwitch.getKeyRelationship().add(newForeignKey);
                 }
             }
+
+            return;
         }
         // MOD handle default value for a column 13411
-        TdColumn parentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement.eContainer());
-        if (parentColumn != null) {
-            ColumnSet columnSet = (ColumnSet) selectedObj;
-            TdColumn leftParentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(addElement.getLeftParent());
-            ColumnSetHelper.removeColumn(leftParentColumn, columnSet);
-            ColumnSetHelper.addColumn(parentColumn, columnSet);
+        // MOD mzhao 13411, handle default value changes (TdExpression)
+        TdExpression addedExpression = DataqualitySwitchHelper.TDEXPRESSION_SWITCH.doSwitch(rightElement);
+        if (addedExpression != null) {
+            TdColumn parentColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(addElement.getLeftParent());
+            if (parentColumn != null) {
+                parentColumn.setInitialValue(addedExpression);
+            }
         }
     }
 
     @Override
     protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
+        // MOD mzhao 13411, handle column changes 2010-08-23
         TdColumn removeColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(removeElement.getLeftElement());
-        ColumnSet columnSet = (ColumnSet) selectedObj;
-        if (removeColumn == null) {
+        if (removeColumn != null) {
+            ColumnSet columnSet = (ColumnSet) selectedObj;
+            popRemoveElementConfirm();
+            ColumnSetHelper.removeColumn(removeColumn, columnSet);
             return;
         }
-        popRemoveElementConfirm();
-        ColumnSetHelper.removeColumn(removeColumn, columnSet);
-
+        // MOD mzhao 13411, handle default value changes (TdExpression)
+        TdExpression removedExpression = DataqualitySwitchHelper.TDEXPRESSION_SWITCH.doSwitch(removeElement.getLeftElement());
+        if (removedExpression != null) {
+            TdColumn expressionOwner = SwitchHelpers.COLUMN_SWITCH.doSwitch(removedExpression.eContainer());
+            if (expressionOwner != null) {
+                expressionOwner.setInitialValue(null);
+            }
+        }
     }
 }
