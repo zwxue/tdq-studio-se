@@ -33,6 +33,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -57,7 +58,8 @@ public final class ModelElementFileFactory {
     public static ModelElement getModelElement(IFile file) {
         ModelElement modelElement = null;
         String fileExtension = file.getFileExtension();
-        if (FactoriesUtil.isProvFile(fileExtension)) {
+        if (FactoriesUtil.isProvFile(fileExtension) || ResourceManager.getConnectionFolder().contains(file.getParent())
+                || ResourceManager.getMDMConnectionFolder().contains(file.getParent())) {
             TypedReturnCode<Connection> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
             modelElement = returnValue.getObject();
         } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {

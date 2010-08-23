@@ -36,11 +36,11 @@ import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.properties.PropertiesFactory;
-import org.talend.dataquality.properties.TDQItem;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.ProxyRepositoryFactory;
@@ -329,8 +329,16 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @see org.talend.dq.writer.IElementSerialize#initProperty(orgomg.cwm.objectmodel.core.ModelElement)
      */
     public Property initProperty(ModelElement element) {
-        Property property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
-
+        // Property property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        Property property = null;
+        if (element.eResource() != null) {
+            property = PropertyHelper.getProperty(element);
+        }
+        boolean firstCreate = false;
+        if (property == null) {
+            property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+            firstCreate = true;
+        }
         // String author = MetadataHelper.getAuthor(element); // MOD xqliu 2010-07-05 bug 14111
         String purpose = MetadataHelper.getPurpose(element);
         String description = MetadataHelper.getDescription(element);
@@ -349,8 +357,14 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         property.setDescription(description);
         property.setStatusCode(status);
         property.setVersion(version);
-        property.setCreationDate(new Date());
-
+        // property.setCreationDate(new Date());
+        // MOD xqliu 2010-08-17 bug 13601
+        if (firstCreate) {
+            property.setCreationDate(new Date());
+        } else {
+            property.setModificationDate(new Date());
+        }
+        // ~ 13601
         computePropertyMaxInformationLevel(property);
 
         return property;
@@ -427,7 +441,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         } else if (ModelElementIdentifier.isReport(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQReportItem();
         } else {
-            item = PropertiesFactory.eINSTANCE.createTDQItem();
+            item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createTDQItem();
         }
 
         ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
