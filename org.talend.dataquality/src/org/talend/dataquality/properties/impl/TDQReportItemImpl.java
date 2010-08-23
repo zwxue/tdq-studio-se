@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.talend.core.model.properties.impl.TDQItemImpl;
 import org.talend.dataquality.properties.PropertiesPackage;
 import org.talend.dataquality.properties.TDQReportItem;
 

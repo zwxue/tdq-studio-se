@@ -6,6 +6,7 @@
  */
 package org.talend.dataquality.properties;
 
+import org.talend.core.model.properties.TDQItem;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**

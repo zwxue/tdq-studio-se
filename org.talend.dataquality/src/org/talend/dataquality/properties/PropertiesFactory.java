@@ -26,15 +26,6 @@ public interface PropertiesFactory extends EFactory {
     PropertiesFactory eINSTANCE = org.talend.dataquality.properties.impl.PropertiesFactoryImpl.init();
 
     /**
-     * Returns a new object of class '<em>TDQ Item</em>'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return a new object of class '<em>TDQ Item</em>'.
-     * @generated
-     */
-    TDQItem createTDQItem();
-
-    /**
      * Returns a new object of class '<em>TDQ Analysis Item</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

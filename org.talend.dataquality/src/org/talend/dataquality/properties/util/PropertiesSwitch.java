@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 
 import org.talend.core.model.properties.Item;
 
+import org.talend.core.model.properties.TDQItem;
 import org.talend.dataquality.properties.*;
 
 /**
@@ -89,13 +90,6 @@ public class PropertiesSwitch<T> {
      */
     protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-            case PropertiesPackage.TDQ_ITEM: {
-                TDQItem tdqItem = (TDQItem)theEObject;
-                T result = caseTDQItem(tdqItem);
-                if (result == null) result = caseItem(tdqItem);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
             case PropertiesPackage.TDQ_ANALYSIS_ITEM: {
                 TDQAnalysisItem tdqAnalysisItem = (TDQAnalysisItem)theEObject;
                 T result = caseTDQAnalysisItem(tdqAnalysisItem);

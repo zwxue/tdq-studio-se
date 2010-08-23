@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 
 import org.talend.core.model.properties.Item;
 
+import org.talend.core.model.properties.TDQItem;
 import org.talend.dataquality.properties.*;
 
 /**
@@ -74,10 +75,6 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
     protected PropertiesSwitch<Adapter> modelSwitch =
         new PropertiesSwitch<Adapter>() {
             @Override
-            public Adapter caseTDQItem(TDQItem object) {
-                return createTDQItemAdapter();
-            }
-            @Override
             public Adapter caseTDQAnalysisItem(TDQAnalysisItem object) {
                 return createTDQAnalysisItemAdapter();
             }
@@ -106,6 +103,10 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
                 return createItemAdapter();
             }
             @Override
+            public Adapter caseTDQItem(TDQItem object) {
+                return createTDQItemAdapter();
+            }
+            @Override
             public Adapter defaultCase(EObject object) {
                 return createEObjectAdapter();
             }
@@ -126,13 +127,13 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
 
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TDQItem <em>TDQ Item</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.core.model.properties.TDQItem <em>TDQ Item</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.properties.TDQItem
+     * @see org.talend.core.model.properties.TDQItem
      * @generated
      */
     public Adapter createTDQItemAdapter() {

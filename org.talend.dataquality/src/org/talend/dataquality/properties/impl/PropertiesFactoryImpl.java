@@ -60,7 +60,6 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
     @Override
     public EObject create(EClass eClass) {
         switch (eClass.getClassifierID()) {
-            case PropertiesPackage.TDQ_ITEM: return createTDQItem();
             case PropertiesPackage.TDQ_ANALYSIS_ITEM: return createTDQAnalysisItem();
             case PropertiesPackage.TDQ_REPORT_ITEM: return createTDQReportItem();
             case PropertiesPackage.TDQ_INDICATOR_DEFINITION_ITEM: return createTDQIndicatorDefinitionItem();
@@ -70,16 +69,6 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public TDQItem createTDQItem() {
-        TDQItemImpl tdqItem = new TDQItemImpl();
-        return tdqItem;
     }
 
     /**
