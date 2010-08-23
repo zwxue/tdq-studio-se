@@ -101,6 +101,13 @@ public class FirstNameStandardize {
         searcher.search(q, collector);
     }
 
+    public TopDocs getFuzzySearch(String input) throws Exception {
+        Query q = new FuzzyQuery(new Term("name", input), 0.5f, 0);
+        TopDocs matches = searcher.search(q, 10);
+
+        return matches;
+    }
+
     /**
      * Method "replaceName".
      * 
@@ -117,8 +124,7 @@ public class FirstNameStandardize {
     // FIXME this variable is only for tests
     public static final boolean SORT_WITH_COUNT = true;
 
-    public ScoreDoc[] standardize(String inputName, Map<String, String> information2value, boolean fuzzySearch)
-            throws IOException, ParseException {
+    public ScoreDoc[] standardize(String inputName, Map<String, String> information2value, boolean fuzzySearch) throws Exception {
         if (inputName == null || inputName.length() == 0) {
             return new ScoreDoc[0];
         }
@@ -147,6 +153,22 @@ public class FirstNameStandardize {
             query.add(new FuzzyQuery(ternGender), BooleanClause.Occur.MUST);
         }
         TopDocs matches = searcher.search(query, 10);
+
+        if (fuzzySearch) {
+            Query name = new FuzzyQuery(termName);
+            Query country = null;
+            Query gender = null;
+            if (countryText != null && !countryText.equals("")) {
+                country = new FuzzyQuery(termCountry);
+                name = name.combine(new Query[] { name, country });
+                if (genderText != null && !genderText.equals("")) {
+                    gender = new FuzzyQuery(ternGender);
+                    name = name.combine(new Query[] { name, country, gender });
+                }
+            }
+
+            matches = searcher.search(name, 10);
+        }
         return matches.scoreDocs;
     }
 
@@ -162,8 +184,7 @@ public class FirstNameStandardize {
         }
     }
 
-    public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender) throws IOException,
-            ParseException {
+    public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender) throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
         indexFields.put("country", inputCountry);
         indexFields.put("gender", inputGender);
@@ -171,17 +192,20 @@ public class FirstNameStandardize {
         return results.length == 0 ? inputName : searcher.doc(results[0].doc).get("name");
     }
 
-    public String replaceNameWithCountryInfo(String inputName, String inputCountry) throws IOException, ParseException {
+    public String replaceNameWithCountryInfo(String inputName, String inputCountry) throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
         indexFields.put("country", inputCountry);
         ScoreDoc[] results = standardize(inputName, indexFields, false);
         return results.length == 0 ? inputName : searcher.doc(results[0].doc).get("name");
     }
 
-    public String replaceNameWithGenderInfo(String inputName, String inputGender) throws IOException, ParseException {
+    public String replaceNameWithGenderInfo(String inputName, String inputGender) throws IOException, ParseException, Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
         indexFields.put("gender", inputGender);
-        ScoreDoc[] results = standardize(inputName, indexFields, false);
+        ScoreDoc[] results;
+
+        results = standardize(inputName, indexFields, false);
+
         return results.length == 0 ? inputName : searcher.doc(results[0].doc).get("name");
     }
 }
