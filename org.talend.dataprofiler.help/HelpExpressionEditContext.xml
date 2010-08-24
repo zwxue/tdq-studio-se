@@ -3,7 +3,7 @@
 <contexts>
     <context id="helpExpressionEditContext" >
        <description>expression templates</description>
-        <topic label="Expression Templates" href="html/wizard/expression_edit/editExpression.html"/>
+        <topic label="Expression Templates" href="$nl$/html/wizard/expression_edit/editExpression.html"/>
     </context>
    
 </contexts>

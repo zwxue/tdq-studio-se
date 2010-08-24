@@ -3,7 +3,7 @@
 <contexts>
     <context id="helpUDIndicatorContext" >
         <description>In this page,user defined indicator.</description>
-        <topic label="New Indicator" href="html/wizard/user_define_indicator/newUDIndicator.html"/>
+        <topic label="New Indicator" href="$nl$/html/wizard/user_define_indicator/newUDIndicator.html"/>
     </context>
    
 </contexts>

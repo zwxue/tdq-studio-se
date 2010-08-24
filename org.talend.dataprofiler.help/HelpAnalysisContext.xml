@@ -2,14 +2,14 @@
 <?NLS TYPE="org.eclipse.help.contexts"?>
 <contexts>
    <context id="helpAnalysisContext">
-      <topic label="Connection Analysis" href="html/wizard/analysis/connectionAnalysis.html"/>
-      <topic label="Catalog Analysis" href="html/wizard/analysis/catalogAnalysis.html"/>
-      <topic label="Schema Analysis" href="html/wizard/analysis/schemaAnalysis.html"/>
-      <topic label="Table Analysis" href="html/wizard/analysis/tableAnalysis.html"/>
-      <topic label="Column Analysis" href="html/wizard/analysis/columnAnalysis.html"/>
-      <topic label="Redundancy Analysis" href="html/wizard/analysis/redundancyAnalysis.html"/>
-      <topic label="Column Correlation Analysis" href="html/wizard/analysis/columnCorrelationAnalysis.html"/>
-      <topic href="html/wizard/analysis/columnDependencyAnalysis.html" label="Column Functional Dependency"/>
-      <topic label="Column Set Analysis" href="html/wizard/analysis/columnSetAnalysis.html"/>
+      <topic label="Connection Analysis" href="$nl$/html/wizard/analysis/connectionAnalysis.html"/>
+      <topic label="Catalog Analysis" href="$nl$/html/wizard/analysis/catalogAnalysis.html"/>
+      <topic label="Schema Analysis" href="$nl$/html/wizard/analysis/schemaAnalysis.html"/>
+      <topic label="Table Analysis" href="$nl$/html/wizard/analysis/tableAnalysis.html"/>
+      <topic label="Column Analysis" href="$nl$/html/wizard/analysis/columnAnalysis.html"/>
+      <topic label="Redundancy Analysis" href="$nl$/html/wizard/analysis/redundancyAnalysis.html"/>
+      <topic label="Column Correlation Analysis" href="$nl$/html/wizard/analysis/columnCorrelationAnalysis.html"/>
+      <topic href="$nl$/html/wizard/analysis/columnDependencyAnalysis.html" label="Column Functional Dependency"/>
+      <topic label="Column Set Analysis" href="$nl$/html/wizard/analysis/columnSetAnalysis.html"/>
    </context>
 </contexts>
