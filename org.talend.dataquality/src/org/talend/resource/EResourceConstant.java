@@ -64,7 +64,7 @@ public enum EResourceConstant {
     PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY),
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY),
     DB_CONNECTIONS("connections", "metadata/connections", ResourceConstant.READONLY),
-    MDM_CONNECTIONS("MDM Connections", "metadata/MDMconnections", ResourceConstant.READONLY),
+    MDM_CONNECTIONS("MDMconnections", "metadata/MDMconnections", ResourceConstant.READONLY),
     TDQ_MDM_CONNECTIONS("MDM Connections", "TDQ_Metadata/MDM Connections", ResourceConstant.READONLY),
     REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY);
 
@@ -198,12 +198,12 @@ public enum EResourceConstant {
         } else {
             return (EResourceConstant) new org.talend.core.model.properties.util.PropertiesSwitch() {
 
-                            @Override
+                @Override
                 public Object caseDatabaseConnectionItem(DatabaseConnectionItem object) {
                     return DB_CONNECTIONS;
                 }
 
-                            @Override
+                @Override
                 public Object caseMDMConnectionItem(MDMConnectionItem object) {
                     return MDM_CONNECTIONS;
                 }

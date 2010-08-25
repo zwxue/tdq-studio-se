@@ -194,7 +194,16 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     public ReturnCode save(Connection dataProvider) {
         DataProviderWriter writer = ElementWriterFactory.getInstance().createDataProviderWriter();
         // ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
+
         ReturnCode rc = writer.save(dataProvider);
+
+        return rc;
+    }
+
+    public ReturnCode create(Connection dataProvider, IFolder thefloder) {
+        DataProviderWriter writer = ElementWriterFactory.getInstance().createDataProviderWriter();
+        // ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
+        ReturnCode rc = writer.create(dataProvider, thefloder);
         return rc;
     }
 
