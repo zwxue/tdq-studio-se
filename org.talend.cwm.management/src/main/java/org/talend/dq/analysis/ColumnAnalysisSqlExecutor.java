@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -262,7 +262,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
         // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (dbms().getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+        boolean isSybase = false;
+        if (Arrays.asList(ConnectionUtils.getSybaseDBProductsName()).contains(dbms().getDbmsName())) {
+            isSybase = true;
+        }
+        if (isSybase) {
             schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
         }
         // ~11934

@@ -77,6 +77,8 @@ public final class ConnectionUtils {
 
     public static final String DEFAULT_PASSWORD = "";
 
+    private static List<String> sybaseDBProductsNames;
+
     public static boolean isTimeout() {
         return timeout;
     }
@@ -403,13 +405,33 @@ public final class ConnectionUtils {
     public static boolean isSybase(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null && connectionMetadata.getDatabaseProductName() != null) {
-            for (String keyString : SupportDBUrlType.SYBASEDEFAULTURL.getLanguage().split("\\|")) {
-                if (keyString.trim().equals(connectionMetadata.getDatabaseProductName().trim())) {
+            for (String keyString : getSybaseDBProductsName()) {
+                if (keyString.equals(connectionMetadata.getDatabaseProductName().trim())) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * yyi 2010-08-25 for 14851, Sybase DB has several names with different productions and versions. For example the
+     * Sybase IQ with version 12.6 is called 'Sybase' getting by JDBC but the version 15+ it is changed to 'Sybase IQ'.
+     * it is user by org.talend.cwm.db.connection.ConnectionUtils.isSybase
+     * 
+     * @return All Sybase DB products name
+     * ,"Adaptive Server Enterprise","Sybase Adaptive Server IQ","Sybase IQ","Sybase"
+     */
+    public static String[] getSybaseDBProductsName() {
+        if (null == sybaseDBProductsNames) {
+            sybaseDBProductsNames = new ArrayList<String>();
+            for (String name : SupportDBUrlType.SYBASEDEFAULTURL.getLanguage().split("\\|")) {
+                sybaseDBProductsNames.add(name.trim());
+            }
+            sybaseDBProductsNames.add("Sybase");
+            sybaseDBProductsNames.add("Sybase IQ");
+        }
+        return sybaseDBProductsNames.toArray(new String[sybaseDBProductsNames.size()]);
     }
 
     /**
