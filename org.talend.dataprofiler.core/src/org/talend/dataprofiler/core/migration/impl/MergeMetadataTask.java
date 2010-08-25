@@ -320,7 +320,7 @@ public class MergeMetadataTask extends AWorkspaceTask {
             if (result) {
                 // migrate the folder "TDQ_Metadata" for ".prv" files and
                 // "TDQ_Libraries" for ".softwaresystem.softwaredeployment" files
-                String[] metadataFileExtentionNames = { FactoriesUtil.ITEM_EXTENSION, ".softwaresystem.softwaredeployment" };
+                String[] metadataFileExtentionNames = { FactoriesUtil.PROV, ".softwaresystem.softwaredeployment" };
                 File[] migrateFolderList = { migFileMetadata, migFileLibraries };
                 TopMetadataMigrationFrom400to410usingGenericVM metadata400to410 = new TopMetadataMigrationFrom400to410usingGenericVM();
                 for (File migrateFile : migrateFolderList) {
@@ -338,6 +338,7 @@ public class MergeMetadataTask extends AWorkspaceTask {
             log.error(e, e);
         } finally {
             try {
+                System.gc();
                 result = migFileMetadata.renameTo(rawFileMetadata) && migFileDataProfiling.renameTo(rawFileDataProfiling)
                         && migFileLibraries.renameTo(rawFileLibraries);
             } catch (Exception e) {
