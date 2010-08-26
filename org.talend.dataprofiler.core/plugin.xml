@@ -1219,6 +1219,12 @@
            name="Update Regular Expression Matching Mysql Expression Task"
            version="4.0.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateSoundexIndicatorsForIngresTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateSoundexIndicatorsForIngresTask"
+           name="Update Soundex Indicators For Ingres"
+           version="4.1.0">
+     </workspacetask>
      
 
   </extension>
