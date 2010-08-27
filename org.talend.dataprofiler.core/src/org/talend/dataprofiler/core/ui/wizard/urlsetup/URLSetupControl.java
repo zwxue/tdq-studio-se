@@ -18,13 +18,13 @@ import java.beans.PropertyChangeSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.composite.MultipleSelectionCombo;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
 /**
@@ -41,7 +41,7 @@ public abstract class URLSetupControl extends Composite {
 
     protected SupportDBUrlType dbType;
 
-    protected Combo dataFilterCombo;
+    protected MultipleSelectionCombo dataFilterCombo;
 
     /**
      * @param parent
@@ -134,7 +134,7 @@ public abstract class URLSetupControl extends Composite {
         }
     }
 
-    public Combo getDataFilterCombo() {
+    public MultipleSelectionCombo getDataFilterCombo() {
         return dataFilterCombo;
     }
 

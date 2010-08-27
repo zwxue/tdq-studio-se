@@ -47,10 +47,10 @@ import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.connection.DatabaseConstant;
-import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.composite.MultipleSelectionCombo;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
@@ -590,13 +590,13 @@ public class DatabaseWizardPage extends AbstractWizardPage {
     private ReturnCode fillComboContent(IXMLDBConnection mdmConnection) {
         ReturnCode rc = new ReturnCode(false);
 
-        Combo dataFilterCombo = this.urlSetupControl.getDataFilterCombo();
+        MultipleSelectionCombo dataFilterCombo = this.urlSetupControl.getDataFilterCombo();
         dataFilterCombo.removeAll();
         try {
-            Iterator<TdXmlSchema> iter = mdmConnection.createConnection().iterator();
+            Iterator<String> iter = mdmConnection.getConnectionContent().iterator();
 
             while (iter.hasNext()) {
-                dataFilterCombo.add(iter.next().getName());
+                dataFilterCombo.add(iter.next());
             }
             if (dataFilterCombo.getItemCount() > 0) {
                 rc.setOk(true);

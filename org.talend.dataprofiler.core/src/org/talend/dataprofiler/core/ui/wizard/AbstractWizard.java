@@ -20,6 +20,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
@@ -53,7 +54,11 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     IFile file = csResult.getObject();
 
                     if (getResourceFileMap() != null) {
-                        getResourceFileMap().register(file, cwnElement.eResource());
+                        // cwnElement.eResource() will be unload after execute the code which on CreateConnectionAction
+                        // line:79
+                        PrvResourceFileHelper.getInstance().remove(file);
+                        TypedReturnCode<Connection> returnObject = PrvResourceFileHelper.getInstance().findProvider(file);
+                        getResourceFileMap().register(file, returnObject.getObject().eResource());// cwnElement.eResource());
                     }
 
                     CorePlugin.getDefault().openEditor(file, getEditorName());

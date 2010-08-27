@@ -43,6 +43,7 @@ import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.composite.MultipleSelectionCombo;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.database.DatabaseWizardPage;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
@@ -293,14 +294,14 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             label = new Label(parent, SWT.NONE);
             label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.datafilter"));
-            dataFilterCombo = new Combo(parent, SWT.READ_ONLY);
+            dataFilterCombo = new MultipleSelectionCombo(parent, SWT.READ_ONLY);
             dataFilterCombo.setEnabled(false);
             dataFilterCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            dataFilterCombo.addSelectionListener(new SelectionAdapter() {
+            dataFilterCombo.addModifyListener(new ModifyListener() {
 
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    connectionParam.getParameters().setProperty(TaggedValueHelper.DATA_FILTER, ((Combo) e.getSource()).getText());
+                public void modifyText(ModifyEvent e) {
+                    connectionParam.getParameters().setProperty(TaggedValueHelper.DATA_FILTER, ((Text) e.getSource()).getText());
+
                 }
 
             });
