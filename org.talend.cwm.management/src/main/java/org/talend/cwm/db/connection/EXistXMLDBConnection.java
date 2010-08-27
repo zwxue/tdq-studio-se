@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -59,6 +60,8 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
     private static Logger log = Logger.getLogger(EXistXMLDBConnection.class);
 
     private static EXistXMLDBConnection instance = null;
+
+    List<TdXmlSchema> xmlDocs = null;
 
     private String driverClassName = null;
 
@@ -127,7 +130,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
             log.error(e);
             return null;
         }
-
+        this.xmlDocs = xmlDocs;
         return xmlDocs;
     }
 
@@ -198,4 +201,18 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
     private final static String XSD_SUFIX = ".xsd"; //$NON-NLS-1$
 
     private final static String XML_SUFIX = ".xml"; //$NON-NLS-1$
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.IXMLDBConnection#getConnectionContent()
+     */
+    public java.util.Collection<String> getConnectionContent() {
+        List<String> returnList = new ArrayList<String>();
+        Iterator<TdXmlSchema> iter = xmlDocs.iterator();
+        while (iter.hasNext()) {
+            returnList.add(iter.next().getName());
+        }
+        return returnList;
+    }
 }

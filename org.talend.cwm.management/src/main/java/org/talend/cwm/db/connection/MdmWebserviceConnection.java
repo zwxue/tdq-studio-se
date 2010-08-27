@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -150,9 +151,26 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
                     + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
             for (WSDataModelPK pk : pks) {
                 String filterName = props.getProperty(TaggedValueHelper.DATA_FILTER);
-                if (filterName == null || filterName.equals("") || pk.getPk().equals(filterName)) {
+                if (filterName == null || filterName.equals("") || Arrays.asList(filterName.split(",")).contains((pk.getPk()))) {
                     adaptToCWMDocument(xmlDocs, stub, pk.getPk(), techXSDFolderName);
                 }
+            }
+        } catch (Exception e) {
+            log.error(e);
+            return null;
+        }
+        return xmlDocs;
+    }
+
+    public Collection<String> getConnectionContent() {
+        // initialize database driver
+        List<String> xmlDocs = new ArrayList<String>();
+        try {
+            XtentisBindingStub stub = getXtentisBindingStub();
+            WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(""));
+
+            for (WSDataModelPK pk : pks) {
+                xmlDocs.add(pk.getPk());
             }
         } catch (Exception e) {
             log.error(e);
@@ -171,8 +189,8 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
      * @throws RemoteException
      * @throws CoreException
      */
-    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort stub, String resName,
-            String providerTechName) throws RemoteException, CoreException {
+    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort stub, String resName, String providerTechName)
+            throws RemoteException, CoreException {
         String resXSD = stub.getDataModel(new WSGetDataModel(new WSDataModelPK(resName))).getXsdSchema();
         if (resXSD == null || "".equals(resXSD.trim())) {
             log.error("XSD not exist for \"" + resName + "\"");

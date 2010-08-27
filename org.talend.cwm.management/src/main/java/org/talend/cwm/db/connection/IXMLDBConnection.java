@@ -31,4 +31,6 @@ public interface IXMLDBConnection {
     public void setSofewareSystem(Connection dataProvider, DBConnectionParameter parameter);
 
     public void setProviderConnection(Connection dataProvider, DBConnectionParameter parameter);
+
+    public Collection<String> getConnectionContent();
 }
