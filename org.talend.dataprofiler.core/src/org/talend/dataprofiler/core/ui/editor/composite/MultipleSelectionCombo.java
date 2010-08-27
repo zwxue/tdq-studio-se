@@ -106,8 +106,9 @@ public class MultipleSelectionCombo extends Composite {
 
     private void initFloatShell() {
         Point p = textContent.getParent().toDisplay(textContent.getLocation());
-        Point size = textContent.getSize();
-        Rectangle shellRect = new Rectangle(p.x, p.y + size.y, size.x, 0);
+        Point textsize = textContent.getSize();
+        Point arrowSize = arrowButton.getSize();
+        Rectangle shellRect = new Rectangle(p.x, p.y + textsize.y, textsize.x + arrowSize.x, 0);
         floatShell = new Shell(MultipleSelectionCombo.this.getShell(), SWT.NO_TRIM);
 
         GridLayout gl = new GridLayout();
