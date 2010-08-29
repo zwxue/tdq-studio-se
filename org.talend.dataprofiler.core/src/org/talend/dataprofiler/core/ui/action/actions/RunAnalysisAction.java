@@ -45,7 +45,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -160,11 +159,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         if (AnalysisType.CONNECTION.equals(analysisType)) {
             if (AnalysisHelper.getReloadDatabases(analysis)) {
-                IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(
-                        (Connection) analysis.getContext().getConnection());
-                if (file != null) {
+                Connection conntion = (Connection) analysis.getContext().getConnection();
+                if (conntion != null) {
                     try {
-                        ComparisonLevelFactory.creatComparisonLevel(file).reloadCurrentLevelElement();
+                        ComparisonLevelFactory.creatComparisonLevel(conntion).reloadCurrentLevelElement();
                     } catch (ReloadCompareException e) {
                         log.error(e, e);
                     }

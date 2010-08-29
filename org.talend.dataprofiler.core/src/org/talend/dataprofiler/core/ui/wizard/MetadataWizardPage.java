@@ -41,11 +41,11 @@ import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -371,7 +371,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
                 modelElements.addAll(PatternResourceFileHelper.getInstance().getAllPatternes(folderResource));
                 break;
             case DBCONNECTON:
-                modelElements.addAll(PrvResourceFileHelper.getInstance().getAllDataProviders(folderResource));
+                modelElements.addAll(DQConnectionReposViewObjDelegator.getInstance().getAllElements());
                 break;
             case DQRULE:
                 modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules(folderResource));

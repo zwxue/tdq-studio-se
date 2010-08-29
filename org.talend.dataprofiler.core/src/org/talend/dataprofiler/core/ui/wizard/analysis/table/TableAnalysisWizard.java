@@ -28,8 +28,8 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -113,7 +113,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
      * .core.ModelElement)
      */
     @Override
-    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
         DataManager connection = analysis.getContext().getConnection();
         if (connection != null) {
@@ -121,10 +121,10 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         }
 
         // MOD by hcheng for 7173:Broken dependency between analyses and connection
-        TypedReturnCode<IFile> saveCWMFile = super.createAndSaveCWMFile(analysis);
+        TypedReturnCode<Object> saveCWMFile = super.createAndSaveCWMFile(analysis);
 
         if (saveCWMFile.isOk() && connection != null) {
-            PrvResourceFileHelper.getInstance().save((Connection) connection);
+            DQConnectionReposViewObjDelegator.getInstance().saveElement((Connection) connection);
         }
 
         return saveCWMFile;

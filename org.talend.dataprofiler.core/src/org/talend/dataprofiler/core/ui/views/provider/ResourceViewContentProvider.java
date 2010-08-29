@@ -33,11 +33,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -53,9 +49,9 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -168,7 +164,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 return getIndicatorsChildren(folder);
             } else if (ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder)) {
                 // MOD mzhao 2010-08-11 feature 14891: use same repository API with TOS to persistent metadata
-                return getMetadataConnectionChildren(folder);
+                return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.FALSE).toArray();
             }
 
             return getChildrenExceptRecBin(element);// FIXME Why call this method by default, qiongli?
@@ -189,29 +185,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         return super.getChildren(element);
     }
 
-    private Object[] getMetadataConnectionChildren(IFolder folder) {
-        List<IFile> connFiles = new ArrayList<IFile>();
-        List<ConnectionItem> connList = new ArrayList<ConnectionItem>();
-        try {
-            if (ResourceManager.isConnectionFolder(folder)) {
-                connList = ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem();
-            } else if (ResourceManager.isMdmConnectionFolder(folder)) {
-                for (IRepositoryViewObject repObject : ProxyRepositoryFactory.getInstance().getMetadataMDM().getMembers()) {
-                    connList.add((ConnectionItem) repObject.getProperty().getItem());
-                }
-
-            }
-            for (ConnectionItem connItem : connList) {
-                if (connItem instanceof ConnectionItem) {
-                    connFiles.add(WorkspaceUtils.getModelElementResource(connItem.getConnection()));
-                }
-            }
-
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-        return connFiles.toArray();
-    }
 
     /**
      * DOC xqliu Comment method "getIndicatorsChildren".

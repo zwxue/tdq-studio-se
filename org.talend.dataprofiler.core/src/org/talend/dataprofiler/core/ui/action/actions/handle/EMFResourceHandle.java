@@ -66,8 +66,10 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
                 AElementPersistance elementWriter = ElementWriterFactory.getInstance().create(modelElement);
 
                 if (elementWriter != null) {
-                    TypedReturnCode<IFile> trc = elementWriter.create(newObject, folder);
-                    return trc.getObject();
+                    TypedReturnCode<Object> trc = elementWriter.create(newObject, folder);
+                    if (trc.getObject() instanceof IFile) {
+                        return (IFile) trc.getObject();
+                    }
                 }
             }
         }

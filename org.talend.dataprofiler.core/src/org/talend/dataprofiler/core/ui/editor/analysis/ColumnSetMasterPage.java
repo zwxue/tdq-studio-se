@@ -77,8 +77,8 @@ import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -564,7 +564,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
-                PrvResourceFileHelper.getInstance().save(tdProvider);
+                DQConnectionReposViewObjDelegator.getInstance().saveElement(tdProvider);
             }
 
             if (log.isDebugEnabled()) {

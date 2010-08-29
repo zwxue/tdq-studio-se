@@ -19,8 +19,10 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -115,8 +117,13 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             } else if (obj instanceof IFolder) {
                 return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             }
-        } else if (element instanceof DatabaseConnection) {
-            return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+        } else if (element instanceof IRepositoryViewObject) {
+            IRepositoryViewObject conn = (IRepositoryViewObject) element;
+            // Currently we only care about connection Item.
+            Item connItem = conn.getProperty().getItem();
+            if (connItem instanceof ConnectionItem) {
+                return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+            }
         } else if (element instanceof MDMConnection) {
             return ImageLib.getImage(ImageLib.MDM_CONNECTION);
         }
@@ -124,7 +131,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
         return super.getImage(element);
     }
-
     public String getText(Object element) {
         String tableOwner = null;
         if (element instanceof ModelElement) {
@@ -185,11 +191,14 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return ((IFolder) obj).getName();
             }
 
-        }
-        // MOD mzhao feature 2010-08-12 14891: use same repository API with TOS to persistent metadata
-        else if (element instanceof Connection) {
-            Connection conn = (Connection) element;
-            return conn.getName();
+        } else if (element instanceof IRepositoryViewObject) {
+            // MOD mzhao feature 2010-08-12 14891: use same repository API with TOS to persistent metadata
+            IRepositoryViewObject conn = (IRepositoryViewObject) element;
+            // Currently we only care about connection Item.
+            Item connItem = conn.getProperty().getItem();
+            if (connItem instanceof ConnectionItem) {
+                return ((ConnectionItem) connItem).getConnection().getName();
+            }
         }
         String text = super.getText(element);
         return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;

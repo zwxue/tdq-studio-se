@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -69,7 +68,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         addPage(mPage2);
     }
 
-    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         IndicatorDefinition indicatorDefinition = (IndicatorDefinition) cwmElement;
         // MOD mzhao feature 11128.
         if (!getParameter().getLanguage().equals(PatternLanguageType.JAVA.getName())) {

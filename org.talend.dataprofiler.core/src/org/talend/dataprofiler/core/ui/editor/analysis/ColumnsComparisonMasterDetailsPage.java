@@ -49,8 +49,8 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -280,7 +280,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         if (save.isOk()) {
             // MOD qiongli bug 14437:Add dependency
             if (tdDataProvider != null) {
-                PrvResourceFileHelper.getInstance().save(tdDataProvider);
+                DQConnectionReposViewObjDelegator.getInstance().saveElement(tdDataProvider);
             }
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }

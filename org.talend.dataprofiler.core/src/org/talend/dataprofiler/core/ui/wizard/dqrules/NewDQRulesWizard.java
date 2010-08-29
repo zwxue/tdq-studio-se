@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.dqrules;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -68,7 +67,7 @@ public class NewDQRulesWizard extends AbstractWizard {
         addPage(mPage2);
     }
 
-    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         WhereRule whereRule = (WhereRule) cwmElement;
 
         TaggedValueHelper.setValidStatus(true, whereRule);
@@ -83,7 +82,6 @@ public class NewDQRulesWizard extends AbstractWizard {
         }
 
         IFolder folder = parameter.getFolderProvider().getFolderResource();
-
         return ElementWriterFactory.getInstance().createdRuleWriter().create(whereRule, folder);
     }
 

@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -35,7 +34,7 @@ import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
@@ -110,16 +109,24 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     }
 
-    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         IFolder folder = connectionParam.getFolderProvider().getFolderResource();
-        TypedReturnCode<IFile> save = ElementWriterFactory.getInstance().createDataProviderWriter().create(cwmElement, folder);
+        TypedReturnCode<Object> save = ElementWriterFactory.getInstance().createDataProviderWriter().create(cwmElement, folder);
         if (save.isOk()) {
             if (driver != null) {
                 storeInfoToPerference(cwmElement);
             }
             CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(cwmElement);
         }
-        return save;
+        String cwmElementURI = cwmElement.eResource().getURI().toString();
+        DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.TRUE);
+        TypedReturnCode<Object> reposViewObjRC = new TypedReturnCode<Object>();
+        for (Connection conn : DQConnectionReposViewObjDelegator.getInstance().getAllElements()) {
+            if (conn.eResource().getURI().toString().equals(cwmElementURI)) {
+                reposViewObjRC.setObject(DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(conn));
+            }
+        }
+        return reposViewObjRC;
     }
 
     public ModelElement initCWMResourceBuilder() {
@@ -170,7 +177,8 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     @Override
     protected ResourceFileMap getResourceFileMap() {
-        return PrvResourceFileHelper.getInstance();
+        // return PrvResourceFileHelper.getInstance();
+        return null;
     }
 
     /*

@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,8 +87,8 @@ import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -159,8 +160,10 @@ public class DQRespositoryView extends CommonNavigator {
         // initialized drivers in sql explorer.
         SQLExplorerPlugin.getDefault().initAllDrivers();
 
+        // Loading repository view objects (metadata ...)
+        DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.TRUE);
         // initialized connections in sql explorer.
-        List<Connection> providers = PrvResourceFileHelper.getInstance().getAllDataProviders();
+        Collection<Connection> providers = DQConnectionReposViewObjDelegator.getInstance().getAllElements();
         for (DataProvider provider : providers) {
             CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(provider);
         }

@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
-import java.util.List;
+import java.util.Collection;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
@@ -47,8 +47,7 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.CWMPlugin;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.resource.ResourceManager;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -183,8 +182,7 @@ public class CorePlugin extends AbstractUIPlugin {
         Alias alias = aliasManager.getAlias(tdDataProvider.getName());
 
         if (alias == null) {
-            List<Connection> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(
-                    ResourceManager.getMetadataFolder());
+            Collection<Connection> allDataProviders = DQConnectionReposViewObjDelegator.getInstance().getAllElements();
             for (Connection dataProvider : allDataProviders) {
                 if (dataProvider == tdDataProvider) {
                     CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
@@ -230,6 +228,22 @@ public class CorePlugin extends AbstractUIPlugin {
         }
     }
 
+    /**
+     * 
+     * DOC mzhao open editor with editor input.
+     * 
+     * @param editorInput
+     * @param editorId
+     * @return
+     */
+    public IEditorPart openEditor(IEditorInput editorInput, String editorId) {
+        try {
+            return this.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editorInput, editorId);
+        } catch (PartInitException e) {
+            ExceptionHandler.process(e);
+            return null;
+        }
+    }
     /**
      * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
      * get the viewPart and focus it. if the viewPart closed, it will be opened.

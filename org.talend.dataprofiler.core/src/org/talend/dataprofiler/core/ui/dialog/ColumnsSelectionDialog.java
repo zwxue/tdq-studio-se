@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -68,8 +67,8 @@ import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -646,12 +645,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     if (parentCatalogOrSchema == null) {
                         return null;
                     }
-                    Connection provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
-                    if (provider == null) {
+                    Connection conn = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+                    if (conn == null) {
                         return null;
                     }
                     try {
-                        List<TdColumn> columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
+                        List<TdColumn> columnList = DqRepositoryViewService.getColumns(conn, columnSet, null, true);
                         columns = columnList.toArray(new TdColumn[columnList.size()]);
                         // store tables in catalog
                         // MOD scorreia 2009-01-29 columns are stored in the
@@ -662,7 +661,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         MessageBoxExceptionHandler.process(e);
                     }
 
-                    PrvResourceFileHelper.getInstance().save(provider);
+                    DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
                 }
                 return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             } else {
@@ -781,9 +780,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (element instanceof EObject) {
                 // MOD xqliu 2010-02-02 bug 11198
                 if (element instanceof TdXmlSchema) {
-                    Connection tdDataProvider = DataProviderHelper.getTdDataProvider((TdXmlSchema) element);
-                    IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
-                    return findCorrespondingFile;
+                    Connection conn = DataProviderHelper.getTdDataProvider((TdXmlSchema) element);
+                    return DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(conn);
                 } else if (element instanceof TdXmlElementType) {
                     return XmlElementHelper.getParentElement((TdXmlElementType) element);
                 }
@@ -804,8 +802,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
                 if (packageValue != null) {
                     Connection tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
-                    IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
-                    return findCorrespondingFile;
+                    return DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(tdDataProvider);
                 }
             } else if (element instanceof IFolderNode) {
                 return ((IFolderNode) element).getParent();

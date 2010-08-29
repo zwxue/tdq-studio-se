@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
@@ -56,7 +55,7 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
         return null;
     }
 
-    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
         IFolder folder = parameter.getFolderProvider().getFolderResource();
 

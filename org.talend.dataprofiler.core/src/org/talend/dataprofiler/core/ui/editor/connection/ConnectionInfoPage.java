@@ -20,7 +20,6 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -38,13 +37,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -65,7 +65,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -78,7 +78,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     private static Logger log = Logger.getLogger(ConnectionInfoPage.class);
 
-    private Connection tdDataProvider;
+    private Connection connection;
 
     private DBConnectionParameter tmpParam;
 
@@ -102,9 +102,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
-        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-        tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(input.getFile()).getObject();
-        return tdDataProvider;
+        IEditorInput editorInput = editor.getEditorInput();
+        if (editorInput instanceof ConnectionItemEditorInput) {
+            ConnectionItemEditorInput input = (ConnectionItemEditorInput) editorInput;
+            connection = input.getConnectionItem().getConnection();
+        }
+        return connection;
     }
 
     @Override
@@ -167,11 +170,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         passwordText = new Text(sectionClient, SWT.BORDER | SWT.PASSWORD);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
-        String loginValue = ConnectionUtils.getUsername(tdDataProvider);
+        String loginValue = ConnectionUtils.getUsername(connection);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
 
         // MOD scorreia 2009-01-09 handle encrypted password
-        String passwordValue = ConnectionUtils.getPassword(tdDataProvider);
+        String passwordValue = ConnectionUtils.getPassword(connection);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
@@ -185,7 +188,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         GridDataFactory.fillDefaults().grab(true, true).applyTo(urlComp);
         urlText = new Text(urlComp, SWT.BORDER | SWT.READ_ONLY);
         GridDataFactory.fillDefaults().hint(100, -1).grab(true, true).applyTo(urlText);
-        String urlValue = ConnectionUtils.getURL(tdDataProvider);
+        String urlValue = ConnectionUtils.getURL(connection);
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
         // urlText.setEnabled(false);
 
@@ -200,7 +203,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         });
 
-        if (ConnectionUtils.getDriverClass(tdDataProvider).startsWith("org.sqlite")) { //$NON-NLS-1$
+        if (ConnectionUtils.getDriverClass(connection).startsWith("org.sqlite")) { //$NON-NLS-1$
             loginText.setEnabled(false);
             passwordText.setEnabled(false);
         }
@@ -248,7 +251,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      * MOD yyi 9082 2010-02-25
      */
     protected void changeConnectionInformations() {
-        UrlEditDialog urlDlg = new UrlEditDialog(null, tdDataProvider);
+        UrlEditDialog urlDlg = new UrlEditDialog(null, connection);
 
         if (urlDlg.open() == Window.OK) {
             tmpParam = urlDlg.getResult();
@@ -283,7 +286,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 String name = jdbcUrl.substring(0, 12);
                 ManagedDriver driver = new DataProviderBuilder().buildDriverForSQLExploer(name, connectionParam
                         .getDriverClassName(), connectionParam.getJdbcUrl(), jars);
-                if (connectionParam == null || driver == null || tdDataProvider == null) {
+                if (connectionParam == null || driver == null || connection == null) {
                     return;
                 }
 
@@ -293,12 +296,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                     driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{" //$NON-NLS-1$ //$NON-NLS-2$
                             + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
                             + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
-                            + tdDataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
+                            + connection.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
                     driverPara.append("{" //$NON-NLS-1$
                             + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
                             + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
-                            + tdDataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
+                            + connection.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString()); //$NON-NLS-1$
 
@@ -313,10 +316,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      * @param dbConnectionParameter
      */
     private void updateConnection(DBConnectionParameter targetParam) {
-        if (tdDataProvider != null) {
-            ConnectionUtils.setServerName(tdDataProvider, targetParam.getHost());
-            ConnectionUtils.setPort(tdDataProvider, targetParam.getPort());
-            ConnectionUtils.setSID(tdDataProvider, targetParam.getDbName());
+        if (connection != null) {
+            ConnectionUtils.setServerName(connection, targetParam.getHost());
+            ConnectionUtils.setPort(connection, targetParam.getPort());
+            ConnectionUtils.setSID(connection, targetParam.getDbName());
         }
     }
 
@@ -327,11 +330,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         // MOD xqliu 2009-12-17 bug 10238
         Connection tdDataProvider2;
         if (null == tmpParam) {
-            tdDataProvider2 = tdDataProvider;
+            tdDataProvider2 = connection;
         } else {
             // MOD xqliu 2010-08-04 bug 13406
-            if (ConnectionUtils.isMdmConnection(tdDataProvider)) {
-                tdDataProvider2 = tdDataProvider;
+            if (ConnectionUtils.isMdmConnection(connection)) {
+                tdDataProvider2 = connection;
                 ConnectionUtils.setURL(tdDataProvider2, this.urlText.getText());
             } else {
                 TypedReturnCode<Connection> typedRC = ConnectionService.createConnection(tmpParam);
@@ -391,7 +394,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");
             String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");
             if (Window.CANCEL == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
-                    new ModelElement[] { tdDataProvider }, dialogTitle, dialogMessage)) {
+                    new ModelElement[] { connection }, dialogTitle, dialogMessage)) {
                 return;
             }
         } else {
@@ -431,18 +434,19 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         // MOD klliu 2010-07-06 bug 14095: unnecessary wizard
         if (this.isUrlChanged || this.isLoginChanged || this.isPassWordChanged) {
             rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
-                    new ModelElement[] { tdDataProvider }, dialogTitle, dialogMessage));
+                    new ModelElement[] { connection }, dialogTitle, dialogMessage));
         }
 
         return rc;
     }
 
     private void reloadDataProvider() {
-        final IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
+        final IRepositoryViewObject reposViewObj = DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(
+                connection);
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(file);
+                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reposViewObj);
                 Display.getDefault().asyncExec(new Runnable() {
 
                     public void run() {
@@ -474,27 +478,27 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     @Override
     protected void saveTextChange() {
         super.saveTextChange();
-        ConnectionUtils.setUsername(tdDataProvider, loginText.getText());
-        ConnectionUtils.setPassword(tdDataProvider, passwordText.getText());
-        ConnectionUtils.setURL(tdDataProvider, urlText.getText());
+        ConnectionUtils.setUsername(connection, loginText.getText());
+        ConnectionUtils.setPassword(connection, passwordText.getText());
+        ConnectionUtils.setURL(connection, urlText.getText());
         // MOD zshen for bug 12327:to save driverClassName.
         if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {
-            ConnectionUtils.setDriverClass(tdDataProvider, tmpParam.getDriverClassName());
+            ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());
         }
         // ~12327
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
-        ReturnCode returnCode = PrvResourceFileHelper.getInstance().save(tdDataProvider);
+        ReturnCode returnCode = DQConnectionReposViewObjDelegator.getInstance().saveElement(connection);
         if (returnCode.isOk()) {
             if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + tdDataProvider.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
+                log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         } else {
             throw new DataprofilerCoreException(
                     DefaultMessagesImpl
                             .getString(
-                                    "ConnectionInfoPage.ProblemSavingFile", tdDataProvider.eResource().getURI().toFileString(), returnCode.getMessage())); //$NON-NLS-1$
+                                    "ConnectionInfoPage.ProblemSavingFile", connection.eResource().getURI().toFileString(), returnCode.getMessage())); //$NON-NLS-1$
         }
     }
 

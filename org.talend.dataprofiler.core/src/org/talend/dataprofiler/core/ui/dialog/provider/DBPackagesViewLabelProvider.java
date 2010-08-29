@@ -19,14 +19,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -67,19 +65,29 @@ public class DBPackagesViewLabelProvider extends AdapterFactoryLabelProvider {
             return ((IContainer) element).getName();
         } else if (element instanceof IFolderNode) {
             return ((IFolderNode) element).getName();
-        } else if (element instanceof IFile) {
-            if (FactoriesUtil.isProvFile(((IFile) element).getFileExtension())) {
-                IFile file = (IFile) element;
-                TypedReturnCode<Connection> rc = PrvResourceFileHelper.getInstance().findProvider(file);
-                String decorateText = PluginConstant.EMPTY_STRING;
-                if (rc.isOk()) {
-                    decorateText = rc.getObject().getName();
-                } else {
-                    log.warn(rc.getMessage());
-                }
-                return decorateText;
+        } else if (element instanceof IRepositoryViewObject) {
+            IRepositoryViewObject reposViewObj = (IRepositoryViewObject) element;
+            ConnectionItem item = (ConnectionItem) reposViewObj.getProperty().getItem();
+            String decorateText = PluginConstant.EMPTY_STRING;
+            if (item.getConnection() != null) {
+                decorateText = item.getConnection().getName();
             }
+            return decorateText;
         }
+
+        // else if (element instanceof IFile) {
+        // if (FactoriesUtil.isProvFile(((IFile) element).getFileExtension())) {
+        // IFile file = (IFile) element;
+        // TypedReturnCode<Connection> rc = PrvResourceFileHelper.getInstance().findProvider(file);
+        // String decorateText = PluginConstant.EMPTY_STRING;
+        // if (rc.isOk()) {
+        // decorateText = rc.getObject().getName();
+        // } else {
+        // log.warn(rc.getMessage());
+        // }
+        // return decorateText;
+        // }
+        // }
 
         return super.getText(element);
     }

@@ -84,7 +84,7 @@ public class DeleteObjectsAction extends Action {
         for (IFile file : selectedFiles) {
 
             IDeletionHandle handle = ActionHandleFactory.createDeletionHandle(file);
-
+            // ProxyRepositoryFactory.getInstance().
             List<ModelElement> dependencies = handle.getDependencies();
 
             if (dependencies != null && !dependencies.isEmpty()) {

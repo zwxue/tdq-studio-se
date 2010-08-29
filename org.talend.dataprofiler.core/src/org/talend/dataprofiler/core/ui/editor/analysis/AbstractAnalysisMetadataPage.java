@@ -12,11 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -37,9 +36,8 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -166,18 +164,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     // MOD mzhao 2009-05-05, bug 6587.
     protected void reloadDataproviderAndFillConnCombo() {
-        IFolder connFolder = ResourceManager.getConnectionFolder();
-        IFolder mdmFolder = ResourceManager.getMDMConnectionFolder();
-        List<Connection> dataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(connFolder);
-        List<Connection> mdmProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(mdmFolder);
-        dataProviders.addAll(mdmProviders);
+        Collection<Connection> connections = DQConnectionReposViewObjDelegator.getInstance().getAllElements();
 
         int index = 0;
         connCombo.removeAll();
-        for (Connection prov : dataProviders) {
+        for (Connection prov : connections) {
             connCombo.add(prov.getName(), index);
-            String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
-            connCombo.setData(prvFileName, index);
+            // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
+            connCombo.setData(prov.getName(), index);
             connCombo.setData(index + "", prov); //$NON-NLS-1$
             index++;
         }

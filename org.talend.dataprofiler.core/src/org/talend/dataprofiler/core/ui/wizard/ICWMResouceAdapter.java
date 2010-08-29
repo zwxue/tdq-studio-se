@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard;
 
-import org.eclipse.core.resources.IFile;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -56,5 +55,5 @@ public interface ICWMResouceAdapter {
      * 
      * @return
      */
-    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement);
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement);
 }

@@ -15,13 +15,13 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import orgomg.cwm.resource.relational.Catalog;
 
 /**
@@ -49,13 +49,24 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
             } catch (CoreException e) {
                 log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
             }
-        } else if (parentElement instanceof IFile) {
-            IFile prvFile = (IFile) parentElement;
-            if (FactoriesUtil.isProvFile(prvFile.getFileExtension())) {
-                parentElement = PrvResourceFileHelper.getInstance().getFileResource((IFile) parentElement);
-                return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+        } else if (parentElement instanceof IRepositoryViewObject) {
+            IRepositoryViewObject repoistoryViewObj = (IRepositoryViewObject) parentElement;
+            Item item = repoistoryViewObj.getProperty().getItem();
+            if (item instanceof ConnectionItem) {
+                ((ConnectionItem) item).getConnection().getDataPackage();
+                return ComparatorsFactory.sort(((ConnectionItem) item).getConnection().getDataPackage().toArray(),
+                        ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             }
         }
+
+        // else if (parentElement instanceof IFile) {
+        // IFile prvFile = (IFile) parentElement;
+        // if (FactoriesUtil.isProvFile(prvFile.getFileExtension())) {
+        // parentElement = PrvResourceFileHelper.getInstance().getFileResource((IFile) parentElement);
+        // return ComparatorsFactory.sort(super.getChildren(parentElement),
+        // ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+        // }
+        // }
         return super.getChildren(parentElement);
     }
 

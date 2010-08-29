@@ -17,7 +17,6 @@ import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -37,7 +36,6 @@ import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.ChangeConnectionAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
@@ -169,11 +167,9 @@ public abstract class AbstractPagePart {
     }
 
     private void setConnectionState(final AbstractAnalysisMetadataPage masterPage, final DataManager dataManager) {
-        final IFile prvFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(dataManager);
-        if (prvFile != null && prvFile.exists()) {
-            String prvFileName = prvFile.getName();
+        if (dataManager != null) {
 
-            Object value = masterPage.getConnCombo().getData(prvFileName);
+            Object value = masterPage.getConnCombo().getData(dataManager.getName());
             Integer index = 0;
             if (value != null && value instanceof Integer) {
                 index = (Integer) value;

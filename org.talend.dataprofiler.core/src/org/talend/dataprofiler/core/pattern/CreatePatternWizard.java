@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -104,7 +103,7 @@ public class CreatePatternWizard extends AbstractWizard {
         addPage(mPage2);
     }
 
-    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         Pattern pattern = (Pattern) cwmElement;
         IFolder folderResource = parameter.getFolderProvider().getFolderResource();
 

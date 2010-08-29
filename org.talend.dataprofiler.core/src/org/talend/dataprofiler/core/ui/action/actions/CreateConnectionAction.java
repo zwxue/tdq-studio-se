@@ -27,7 +27,6 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.resource.ResourceManager;
-import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -75,8 +74,8 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         wizard.setContainer(dialog);
-        if (WizardDialog.OK == dialog.open())
-            ProxyRepositoryManager.getInstance().save();
+        dialog.open();
+//            ProxyRepositoryManager.getInstance().save();
     }
 
     /*

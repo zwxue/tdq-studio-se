@@ -80,8 +80,8 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.TableAnalysisHandler;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -626,7 +626,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
-                PrvResourceFileHelper.getInstance().save(tdProvider);
+                DQConnectionReposViewObjDelegator.getInstance().saveElement(tdProvider);
             }
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + urlString + " successful"); //$NON-NLS-1$ //$NON-NLS-2$

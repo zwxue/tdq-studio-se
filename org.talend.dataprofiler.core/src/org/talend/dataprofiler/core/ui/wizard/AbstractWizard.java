@@ -20,17 +20,19 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
-import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
+import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.ReturnCode;
@@ -49,19 +51,17 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
             ModelElement cwnElement = initCWMResourceBuilder();
             if (cwnElement != null) {
                 fillMetadataToCWMResource(cwnElement);
-                TypedReturnCode<IFile> csResult = createAndSaveCWMFile(cwnElement);
+                TypedReturnCode<Object> csResult = createAndSaveCWMFile(cwnElement);
                 if (csResult.isOk()) {
-                    IFile file = csResult.getObject();
-
-                    if (getResourceFileMap() != null) {
-                        // cwnElement.eResource() will be unload after execute the code which on CreateConnectionAction
-                        // line:79
-                        PrvResourceFileHelper.getInstance().remove(file);
-                        TypedReturnCode<Connection> returnObject = PrvResourceFileHelper.getInstance().findProvider(file);
-                        getResourceFileMap().register(file, returnObject.getObject().eResource());// cwnElement.eResource());
+                    Object savedObj = csResult.getObject();
+                    if (savedObj instanceof IRepositoryViewObject) {
+                        ConnectionItemEditorInput connItemEditorInput = new ConnectionItemEditorInput(
+                                (IRepositoryViewObject) savedObj);
+                        CorePlugin.getDefault().openEditor(connItemEditorInput, ConnectionEditor.class.getName());
+                    } else if (savedObj instanceof IFile) {
+                        IFile file = (IFile) csResult.getObject();
+                        CorePlugin.getDefault().openEditor(file, getEditorName());
                     }
-
-                    CorePlugin.getDefault().openEditor(file, getEditorName());
                     CorePlugin.getDefault().refreshWorkSpace();
                     CorePlugin.getDefault().refreshDQView();
 
@@ -95,7 +95,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                 modelElements.addAll(PatternResourceFileHelper.getInstance().getAllPatternes(folderResource));
                 break;
             case DBCONNECTON:
-                modelElements.addAll(PrvResourceFileHelper.getInstance().getAllDataProviders(folderResource));
+                modelElements.addAll(DQConnectionReposViewObjDelegator.getInstance().getAllElements());
                 break;
             case DQRULE:
                 modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules(folderResource));

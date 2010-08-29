@@ -38,6 +38,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -62,9 +65,7 @@ import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -144,6 +145,13 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         // ~
     }
 
+    private void createTechnicalDetail(IRepositoryViewObject reposViewObj) {
+        Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
+        if (connection != null) {
+            createTechnicalDetail(connection);
+        }
+    }
+
     private void createTechnicalDetail(IFile fe) {
         EObject object = getEObject(fe);
 
@@ -180,6 +188,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             if (fe instanceof IFile) {
                 IFile fe2 = (IFile) fe;
                 is = createFileDetail(is, fe2);
+            } else if (fe instanceof IRepositoryViewObject) {
+                is = createFileDetail(is, (IRepositoryViewObject) fe);
             } else if (fe instanceof Catalog) {
                 Catalog catalog = (Catalog) fe;
                 createTdCatalogDetail(catalog);
@@ -216,6 +226,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                     createTechnicalDetail((EObject) fe);
                 } else if (fe instanceof IFile) {
                     createTechnicalDetail((IFile) fe);
+                } else if (fe instanceof IRepositoryViewObject) {
+                    createTechnicalDetail((IRepositoryViewObject) fe);
                 } else {
                     createExtDefault();
                 }
@@ -276,12 +288,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private boolean createFileDetail(boolean is, IFile fe2) {
-        if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-            TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
-            Connection dataProvider = tdProvider.getObject();
-            createDataProviderDetail(dataProvider);
-            is = false;
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+        if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
             Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe2);
             createPatternDetail(pattern);
             is = false;
@@ -300,14 +307,19 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         return is;
     }
 
+    private boolean createFileDetail(boolean is, IRepositoryViewObject reposViewObj) {
+        Item item = reposViewObj.getProperty().getItem();
+        if (item instanceof ConnectionItem) {
+            Connection conn = ((ConnectionItem) item).getConnection();
+            createDataProviderDetail(conn);
+            is = false;
+        }
+        return is;
+    }
     private EObject getEObject(IFile fe2) {
         EObject object = null;
 
-        if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-            TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
-            Connection dataProvider = tdProvider.getObject();
-            object = dataProvider;
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+        if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
             object = PatternResourceFileHelper.getInstance().findPattern(fe2);
         } else if (fe2.getFileExtension().equals(FactoriesUtil.ANA)) {
             object = AnaResourceFileHelper.getInstance().findAnalysis(fe2);

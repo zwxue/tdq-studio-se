@@ -15,12 +15,16 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -36,7 +40,6 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -46,6 +49,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvider {
 
+    private static Logger log = Logger.getLogger(DQRepositoryViewContentProvider.class);
     /**
      * @param adapterFactory
      */
@@ -62,7 +66,15 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
                 AnaElementFolderNode folderNode = new AnaElementFolderNode(analysedElements);
                 return new Object[] { folderNode };
             }
-            parentElement = PrvResourceFileHelper.getInstance().getFileResource(file);
+            // parentElement = PrvResourceFileHelper.getInstance().getFileResource(file);
+        } else if (parentElement instanceof IRepositoryViewObject) {
+            // MOD mzhao feature 2010-08-12 14891: use same repository API with TOS to persistent metadata
+            IRepositoryViewObject conn = (IRepositoryViewObject) parentElement;
+            // Currently we only care about connection Item.
+            Item connItem = conn.getProperty().getItem();
+            if (connItem instanceof ConnectionItem) {
+                return ((ConnectionItem) connItem).getConnection().getDataPackage().toArray();
+            }
         } else if (parentElement instanceof IFolderNode) {
             IFolderNode folerNode = (IFolderNode) parentElement;
             folerNode.loadChildren();

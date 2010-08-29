@@ -12,11 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
-import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedActionProvider;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.RunConnAnalysisAction;
@@ -29,7 +28,7 @@ import org.talend.dataprofiler.core.ui.action.actions.predefined.RunConnAnalysis
  */
 public class RunConnAnalysis extends AbstractPredefinedActionProvider {
 
-    IFile file;
+    IRepositoryViewObject reposViewObj;
 
     /**
      * DOC qzhang RunConnAnalysis constructor comment.
@@ -47,11 +46,8 @@ public class RunConnAnalysis extends AbstractPredefinedActionProvider {
         if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
             StructuredSelection selection = (StructuredSelection) site.getStructuredViewer().getSelection();
             Object fe = selection.getFirstElement();
-            if (fe instanceof IFile) {
-                IFile fe2 = (IFile) fe;
-                if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-                    file = fe2;
-                }
+            if (fe instanceof IRepositoryViewObject) {
+                reposViewObj = (IRepositoryViewObject) fe;
             }
         }
         super.init(site);
@@ -64,6 +60,6 @@ public class RunConnAnalysis extends AbstractPredefinedActionProvider {
      */
     @Override
     protected AbstractPredefinedAnalysisAction getAction() {
-        return new RunConnAnalysisAction(file);
+        return new RunConnAnalysisAction(reposViewObj);
     }
 }

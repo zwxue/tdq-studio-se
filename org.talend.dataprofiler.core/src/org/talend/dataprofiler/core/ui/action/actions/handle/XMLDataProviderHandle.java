@@ -12,42 +12,36 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.xml.TdXmlSchema;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class XMLDataProviderHandle extends EMFResourceHandle {
+public class XMLDataProviderHandle {
 
+    IRepositoryViewObject repositoryViewObj = null;
     /**
      * DOC bZhou XMLDataProviderHandle constructor comment.
      * 
      * @param file
      */
-    XMLDataProviderHandle(IFile file) {
-        super(file);
+    XMLDataProviderHandle(IRepositoryViewObject reposObj) {
+        repositoryViewObj = reposObj;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.EMFResourceHandle#delete(boolean)
-     */
-    @Override
     public boolean delete(boolean isPhysical) throws Exception {
 
         if (isPhysical) {
-            TypedReturnCode<Connection> trc = PrvResourceFileHelper.getInstance().findProvider(file);
-            MDMConnection mdmConnection = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(trc.getObject());
+            Connection connection = ((ConnectionItem) repositoryViewObj.getProperty().getItem()).getConnection();
+            MDMConnection mdmConnection = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(connection);
             if (mdmConnection != null) {
                 EList<Package> packages = mdmConnection.getDataPackage();
                 if (packages != null && packages.size() > 0) {
@@ -61,8 +55,7 @@ public class XMLDataProviderHandle extends EMFResourceHandle {
                 }
             }
         }
-
-        return super.delete(isPhysical);
+        return true;
     }
 
 }

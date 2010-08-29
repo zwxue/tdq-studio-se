@@ -19,13 +19,13 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ConnectionsContentProvider;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * 
@@ -74,20 +74,18 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 // get the dataprovider from the seleted connection
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 AnalysisFilterParameter connPanameter = (AnalysisFilterParameter) getConnectionParams();
-                if (object instanceof IFile) {
-                    IFile file = (IFile) object;
+                if (object instanceof IRepositoryViewObject) {
+                    IRepositoryViewObject reposViewObj = (IRepositoryViewObject) object;
                     // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview
                     // analysis.
-                    if (ConnectionUtils.isMdmConnection(file)) {
+                    if (ConnectionUtils.isMdmConnection(reposViewObj)) {
                         setPageComplete(false);
                         return;
                     }
 
-                    TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
-
-                    if (tdProvider != null && connPanameter != null) {
-
-                        connPanameter.setTdDataProvider(tdProvider.getObject());
+                    Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
+                    if (connection != null && connPanameter != null) {
+                        connPanameter.setTdDataProvider(connection);
                     }
 
                     setPageComplete(true);

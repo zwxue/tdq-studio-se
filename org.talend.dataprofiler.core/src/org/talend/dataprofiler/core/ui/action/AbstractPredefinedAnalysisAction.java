@@ -39,7 +39,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.helper.NeedSaveDataProviderHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -94,21 +94,21 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                     list.addAll(ColumnSetHelper.getColumns(columnSet));
                 } else {
                     Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-                    Connection provider = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
+                    Connection conn = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
 
                     try {
-                        List<TdColumn> columns = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
+                        List<TdColumn> columns = DqRepositoryViewService.getColumns(conn, columnSet, null, true);
                         // MOD scorreia 2009-01-29 columns are stored in the table
                         // ColumnSetHelper.addColumns(columnSet, columns);
                         list.addAll(columns);
-                        NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
+                        DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
                     } catch (TalendException e) {
                         MessageBoxExceptionHandler.process(e);
                     }
                 }
             }
 
-            NeedSaveDataProviderHelper.saveAllDataProvider();
+            DQConnectionReposViewObjDelegator.getInstance().saveAllElements();
 
             return list.toArray(new TdColumn[list.size()]);
         }

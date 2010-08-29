@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -65,7 +64,7 @@ import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -502,9 +501,10 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
 
                 if (packageValue != null) {
-                    Connection tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
-                    IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
-                    return findCorrespondingFile;
+                    Connection conn = DataProviderHelper.getTdDataProvider(packageValue);
+                    // IFile findCorrespondingFile =
+                    // PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
+                    return DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(conn);
                 }
             } else if (element instanceof IFolderNode) {
                 return ((IFolderNode) element).getParent();
@@ -557,7 +557,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                             MessageBoxExceptionHandler.process(e);
                         }
 
-                        PrvResourceFileHelper.getInstance().save(provider);
+                        DQConnectionReposViewObjDelegator.getInstance().saveElement(provider);
                     }
                     return sort(tables, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                 }

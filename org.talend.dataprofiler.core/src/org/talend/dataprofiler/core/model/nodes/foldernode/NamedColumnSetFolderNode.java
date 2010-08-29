@@ -22,7 +22,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
-import org.talend.dq.helper.NeedSaveDataProviderHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -76,17 +76,17 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         }
         // ~
 
-        Connection provider = DataProviderHelper.getTdDataProvider(pack);
-        if (provider == null) {
+        Connection conn = DataProviderHelper.getTdDataProvider(pack);
+        if (conn == null) {
             log.warn(pack.getName());
             return;
         }
         // load from database
-        loadColumnSets(catalog, schema, provider, columnSets);
+        loadColumnSets(catalog, schema, conn, columnSets);
         // store views in catalog or schema
         pack.getOwnedElement().addAll(columnSets);
         this.setChildren(columnSets.toArray());
-        NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
+        DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
     }
 
     /**

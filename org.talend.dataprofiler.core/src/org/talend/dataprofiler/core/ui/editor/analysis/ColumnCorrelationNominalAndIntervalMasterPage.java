@@ -79,8 +79,8 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.utils.sql.Java2SqlType;
@@ -611,7 +611,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
-                PrvResourceFileHelper.getInstance().save(tdProvider);
+                DQConnectionReposViewObjDelegator.getInstance().saveElement(tdProvider);
             }
             // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true
             // );

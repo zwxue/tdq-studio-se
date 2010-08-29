@@ -29,7 +29,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
-import org.talend.dq.helper.NeedSaveDataProviderHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -90,12 +90,12 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             if (parentCatalogOrSchema == null) {
                 return;
             }
-            Connection provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
-            if (provider == null) {
+            Connection conn = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+            if (conn == null) {
                 return;
             }
             try {
-                columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
+                columnList = DqRepositoryViewService.getColumns(conn, columnSet, null, true);
                 if (columnList.size() > COLUMN_MAX) {
                     this.setChildren(null);
                     MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", COLUMN_MAX)); //$NON-NLS-1$
@@ -108,7 +108,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             // MOD scorreia 2009-01-29 columns are stored in the table
             // ColumnSetHelper.addColumns(columnSet, columnList);
             this.setChildren(columnList.toArray());
-            NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
+            DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
         }
         super.loadChildren();
         // ~

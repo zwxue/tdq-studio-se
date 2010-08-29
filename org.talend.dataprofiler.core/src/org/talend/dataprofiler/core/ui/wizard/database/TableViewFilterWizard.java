@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.database;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -21,7 +20,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -105,7 +104,7 @@ public class TableViewFilterWizard extends AbstractWizard {
         }
 
         if (needSave) {
-            return PrvResourceFileHelper.getInstance().save(tdDataProvider).isOk();
+            return DQConnectionReposViewObjDelegator.getInstance().saveElement(tdDataProvider).isOk();
         }
         return true;
     }
@@ -132,7 +131,7 @@ public class TableViewFilterWizard extends AbstractWizard {
         addPage(tableViewFilterWizardPage);
     }
 
-    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         return null;
     }
 

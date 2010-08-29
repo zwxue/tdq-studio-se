@@ -13,11 +13,14 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
+import org.talend.dataprofiler.core.ui.action.actions.DeleteRepositoryObjectAction;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -29,12 +32,18 @@ public class DeleteResourceProvider extends CommonActionProvider {
      */
     public void fillContextMenu(IMenuManager menu) {
     	Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
-		IFile file = (IFile) obj;
-		DeleteObjectsAction action = null;
-		if (FactoriesUtil.isEmfFile(file.getFileExtension())){
-			action = new DeleteObjectsAction(false);
-			menu.add(action);
-		}
+        Action action = null;
+        // MOD mzhao, handle delete action for metadata.
+        if (obj instanceof IRepositoryViewObject) {
+            action = new DeleteRepositoryObjectAction(Boolean.TRUE, (IRepositoryViewObject) obj);
+            menu.add(action);
+        } else if (obj instanceof IFile) {
+            IFile file = (IFile) obj;
+            if (FactoriesUtil.isEmfFile(file.getFileExtension())) {
+                action = new DeleteObjectsAction(false);
+                menu.add(action);
+            }
+        }
     }
 
 }

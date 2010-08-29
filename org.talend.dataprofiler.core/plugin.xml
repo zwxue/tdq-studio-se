@@ -166,16 +166,17 @@
                               property="org.eclipse.core.resources.extension"
                               value="ana">
                         </test>
-                        <test
-                              forcePluginActivation="true"
-                              property="org.eclipse.core.resources.extension"
-                              value="item">
-                        </test> 
                    </or>
                 </and>                 
                  <instanceof value="org.talend.dq.nodes.foldernode.IFolderNode"/>
                  <instanceof
                        value="org.eclipse.emf.ecore.EObject">
+                 </instanceof>
+                 <instanceof
+                       value="org.talend.dataprofiler.core.recycle.IRecycleBin">
+                 </instanceof>
+                 <instanceof
+                       value="org.talend.core.model.repository.IRepositoryViewObject">
                  </instanceof>
              </or>
            </triggerPoints> 
@@ -197,6 +198,9 @@
                 </instanceof>
                 <instanceof
                       value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
+                </instanceof>
+                <instanceof
+                      value="org.talend.core.model.repository.IRepositoryViewObject">
                 </instanceof> 
               </or> 
            </possibleChildren>   
@@ -257,10 +261,9 @@
       			id="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider"
 				class="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider">
 			<enablement>
-    <and>
-       <instanceof
-             value="org.eclipse.core.resources.IFile">
-       </instanceof></and>
+    <instanceof
+          value="org.eclipse.core.resources.IFile">
+    </instanceof>
 			</enablement>
 		</actionProvider>      
       <actionProvider
@@ -277,11 +280,14 @@
             class="org.talend.dataprofiler.core.ui.action.provider.DeleteResourceProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.DeleteResourceProvider">
          <enablement>
-            <and>
+            <or>
                <instanceof
                      value="org.eclipse.core.resources.IFile">
                </instanceof>
-            </and>
+               <instanceof
+                     value="org.talend.core.model.repository.IRepositoryViewObject">
+               </instanceof>
+            </or>
          </enablement>
       </actionProvider>
       <actionProvider
@@ -683,6 +689,15 @@
                    </instanceof>
                 </and>
              </or>
+          </enablement>
+       </actionProvider>
+       <actionProvider
+             class="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider"
+             id="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider">
+          <enablement>
+             <instanceof
+                   value="org.talend.core.model.repository.IRepositoryViewObject">
+             </instanceof>
           </enablement>
        </actionProvider>
   </extension>

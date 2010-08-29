@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -22,8 +23,6 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -33,14 +32,14 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
 
-    private IFile file;
+    private IRepositoryViewObject reposViewObj;
 
     /**
      * DOC qzhang RunConnAnalysisAction constructor comment.
      */
-    public RunConnAnalysisAction(IFile file) {
+    public RunConnAnalysisAction(IRepositoryViewObject respViewObj) {
         super(DefaultMessagesImpl.getString("RunConnAnalysisAction.createConnAnalysis"), ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS)); //$NON-NLS-1$
-        this.file = file;
+        this.reposViewObj = respViewObj;
     }
 
     /*
@@ -62,10 +61,10 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
     protected WizardDialog getPredefinedDialog() {
         AnalysisFilterParameter connectionParams = new AnalysisFilterParameter();
 
-        file = (IFile) getSelection().getFirstElement();
-        TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
-        Connection dataProvider = tdProvider.getObject();
-        connectionParams.setTdDataProvider(dataProvider);
+        reposViewObj = (IRepositoryViewObject) getSelection().getFirstElement();
+        // TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(reposViewObj);
+        Connection conn = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
+        connectionParams.setTdDataProvider(conn);
         connectionParams.setAnalysisTypeName(AnalysisType.CONNECTION.getLiteral());
 
         return getStandardAnalysisWizardDialog(AnalysisType.CONNECTION, connectionParams);
@@ -79,7 +78,7 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected boolean isAllowed() {
         // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview analysis.
-        return !ConnectionUtils.isMdmConnection((IFile) getSelection().getFirstElement());
+        return !ConnectionUtils.isMdmConnection(getSelection().getFirstElement());
     }
 
     /*
