@@ -14,6 +14,7 @@ package org.talend.dq.writer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.core.model.properties.Item;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -30,7 +31,7 @@ public interface IElementPersistence {
      * @param folder
      * @return
      */
-    public TypedReturnCode<IFile> create(ModelElement element, IFolder folder);
+    public TypedReturnCode<Object> create(ModelElement element, IFolder folder);
 
     /**
      * DOC bZhou Comment method "save".
@@ -46,9 +47,19 @@ public interface IElementPersistence {
      * 
      * @param element
      * @return
+     * @deprecated Use save(Item).
      */
     public ReturnCode save(ModelElement element);
 
+    /**
+     * 
+     * DOC mzhao Save the item using repository API. This method is going to persistent only existing object other newly
+     * created ones.
+     * 
+     * @param item
+     * @return
+     */
+    public ReturnCode save(Item item);
     /**
      * DOC bZhou Comment method "check".
      * 

@@ -13,7 +13,9 @@
 package org.talend.dq.writer.impl;
 
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Item;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -58,6 +60,11 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
     @Override
     protected String getFileExtension() {
         return FactoriesUtil.DEFINITION;
+    }
+
+    public ReturnCode save(Item item) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

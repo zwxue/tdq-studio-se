@@ -19,11 +19,16 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -109,5 +114,22 @@ public class DataProviderWriter extends AElementPersistance {
     public boolean check(IFile file) {
         String fileExtension = file.getFileExtension();
         return fileExtension.equals(getFileExtension()) || fileExtension.equals("comp");
+    }
+
+    public ReturnCode save(Item item) {
+        ReturnCode rc = new ReturnCode();
+        try {
+            ConnectionItem connItem = (ConnectionItem) item;
+            Connection conn = connItem.getConnection();
+            addDependencies(conn);
+            addResourceContent(conn);
+            connItem.setConnection(conn);
+            ProxyRepositoryFactory.getInstance().save(connItem);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
     }
 }

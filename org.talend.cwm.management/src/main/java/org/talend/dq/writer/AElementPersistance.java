@@ -45,7 +45,6 @@ import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
-import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
@@ -66,8 +65,8 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
      * @see org.talend.dq.writer.IElementPersistence#create(orgomg.cwm.objectmodel.core.ModelElement,
      * org.eclipse.core.resources.IFolder)
      */
-    public TypedReturnCode<IFile> create(ModelElement element, IFolder folder) {
-        TypedReturnCode<IFile> trc = new TypedReturnCode<IFile>();
+    public TypedReturnCode<Object> create(ModelElement element, IFolder folder) {
+        TypedReturnCode<Object> trc = new TypedReturnCode<Object>();
 
         if (getFileExtension() == null) {
             trc.setMessage("File extension is null.");
@@ -299,13 +298,15 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         addDependencies(element);
 
         addResourceContent(element);
-        // TODO filter element make that if element isn't a Connection don't use the API
+        // TODO filter element make sure that if element isn't a Connection don't use the API
         if (element instanceof Connection) {
             Item item = getItem(element);
             try {
                 ProxyRepositoryFactory.getInstance().save(item);
             } catch (PersistenceException e) {
                 log.error(e, e);
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getMessage());
             }
         } else {
             savePerperties(element);
@@ -314,7 +315,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
             if (rc.isOk()) {
                 rc.setMessage("save " + element.getName() + " is OK!");
-                ProxyRepositoryManager.getInstance().save();
+                // ProxyRepositoryManager.getInstance().save();
             } else {
                 rc.setMessage(util.getLastErrorMessage());
             }
@@ -322,6 +323,8 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         }
         return rc;
     }
+
+
 
     /*
      * (non-Javadoc)

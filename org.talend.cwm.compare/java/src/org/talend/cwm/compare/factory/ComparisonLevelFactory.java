@@ -14,6 +14,7 @@ package org.talend.cwm.compare.factory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogSchemaComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.DataProviderComparisonLevel;
@@ -54,6 +55,8 @@ public final class ComparisonLevelFactory {
 
         } else if (selectedObject instanceof IFile) {
             comparisonLevel = new DataProviderComparisonLevel(selectedObject);
+        } else if (selectedObject instanceof Connection) {
+
         } else if (selectedObject instanceof Catalog) {
         	// MOD mzhao 2009-08-12 If compare the schemas of one catalog for MS
 			// SQL Server.

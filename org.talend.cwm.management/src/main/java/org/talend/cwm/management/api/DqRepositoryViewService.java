@@ -34,6 +34,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.builders.AbstractTableBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
@@ -61,8 +63,9 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.helper.NeedSaveDataProviderHelper;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -150,6 +153,7 @@ public final class DqRepositoryViewService {
      * @param folder the path to the folder containing TdDataProviders
      * @param containSubFolders if it contains all sub folders.
      * @return the list of all TdDataProviders in the folder (never null).
+     * @deprecated Use repository API
      */
     public static List<Connection> listTdDataProviders(IFolder folder, boolean containSubFolders) {
         ArrayList<Connection> providers = new ArrayList<Connection>();
@@ -318,31 +322,21 @@ public final class DqRepositoryViewService {
      * @param addPackage decide whether need to add the Package(catalog/schema) element to dataprovider.
      * @return
      */
-    public static ReturnCode saveOpenDataProvider(Connection dataProvider, boolean addPackage) {
-        assert dataProvider != null;
-
-        Resource resource = dataProvider.eResource();
+    public static ReturnCode saveOpenDataProvider(IRepositoryViewObject reposViewObj, boolean addPackage) {
+        ConnectionItem connItem = (ConnectionItem) reposViewObj.getProperty().getItem();
+        Connection conn = connItem.getConnection();
+        assert conn != null;
         if (addPackage) {
             // MOD zshen bug 10633: Reload Database List can't display new Schema in DQ Repository view(Oracle Database)
-            Collection<? extends ModelElement> catalogsorSchemas = ConnectionHelper.getCatalogs(dataProvider);
+            Collection<? extends Package> catalogsorSchemas = ConnectionHelper.getCatalogs(conn);
             if (catalogsorSchemas.size() == 0) {
-                catalogsorSchemas = ConnectionHelper.getSchema(dataProvider);
+                catalogsorSchemas = ConnectionHelper.getSchema(conn);
             }
-            resource.getContents().addAll(catalogsorSchemas);
+            conn.getDataPackage().addAll(catalogsorSchemas);
         }
 
         ReturnCode rc = new ReturnCode();
-        if (resource == null) {
-            rc.setReturnCode(Messages.getString("DqRepositoryViewService.DataProviderSaveFirst",//$NON-NLS-1$
-                    dataProvider.getName()), false);
-        } else {
-            // add by hcheng
-            // MOD scorreia 2009-01-09 password decryption is handled elsewhere
-            // PasswordHelper.encryptResource(resource);
-            rc.setOk(EMFUtil.saveResource(resource));
-            // MOD scorreia 2009-01-09 password decryption is handled elsewhere
-            // PasswordHelper.decryptResource(resource);
-        }
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(connItem);
         return rc;
     }
 
@@ -584,6 +578,7 @@ public final class DqRepositoryViewService {
      * 
      * @param file the file to read
      * @return the Data provider if found.
+     * @deprecated use repository API
      */
     public static TypedReturnCode<Connection> readFromFile(IFile file) {
         TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>();
@@ -620,9 +615,8 @@ public final class DqRepositoryViewService {
             XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(document);
             elements = xmlScheBuilder.getRootElements(document);
             document.getOwnedElement().addAll(elements);
-            Connection dataManager = (Connection) document.getDataManager().get(0);
-            NeedSaveDataProviderHelper.register(dataManager.eResource().getURI().path(), dataManager);
-            NeedSaveDataProviderHelper.saveAllDataProvider();
+            Connection conn = (Connection) document.getDataManager().get(0);
+            DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
         }
         return elements;
     }
@@ -634,9 +628,9 @@ public final class DqRepositoryViewService {
         if (xmlContent == null) {
             XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
             elements = xmlScheBuilder.getChildren(element);
-            Connection dataManager = (Connection) element.getOwnedDocument().getDataManager().get(0);
-            NeedSaveDataProviderHelper.register(dataManager.eResource().getURI().path(), dataManager);
-            NeedSaveDataProviderHelper.saveAllDataProvider();
+            Connection conn = (Connection) element.getOwnedDocument().getDataManager().get(0);
+            DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
+
         } else {
             elements = xmlContent.getXmlElements();
         }
@@ -647,4 +641,5 @@ public final class DqRepositoryViewService {
         XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
         return xmlScheBuilder.isLeafNode(element).isOk();
     }
+
 }

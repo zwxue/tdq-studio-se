@@ -16,11 +16,13 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -74,5 +76,10 @@ public class ReportWriter extends AElementPersistance {
     @Override
     protected String getFileExtension() {
         return FactoriesUtil.REP;
+    }
+
+    public ReturnCode save(Item item) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

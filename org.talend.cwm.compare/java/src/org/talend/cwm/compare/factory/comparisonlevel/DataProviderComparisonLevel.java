@@ -27,7 +27,7 @@ import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -56,7 +56,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected void saveReloadResult() {
-        DqRepositoryViewService.saveOpenDataProvider(oldDataProvider, true);
+        DQConnectionReposViewObjDelegator.getInstance().saveElement(oldDataProvider);
     }
 
     /*

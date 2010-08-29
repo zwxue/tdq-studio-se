@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
@@ -28,6 +29,7 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -116,5 +118,10 @@ public class AnalysisWriter extends AElementPersistance {
     @Override
     protected String getFileExtension() {
         return FactoriesUtil.ANA;
+    }
+
+    public ReturnCode save(Item item) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

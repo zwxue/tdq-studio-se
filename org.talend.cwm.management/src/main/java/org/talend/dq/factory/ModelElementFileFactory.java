@@ -26,15 +26,13 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -58,11 +56,7 @@ public final class ModelElementFileFactory {
     public static ModelElement getModelElement(IFile file) {
         ModelElement modelElement = null;
         String fileExtension = file.getFileExtension();
-        if (FactoriesUtil.isProvFile(fileExtension) || ResourceManager.getConnectionFolder().contains(file.getParent())
-                || ResourceManager.getMDMConnectionFolder().contains(file.getParent())) {
-            TypedReturnCode<Connection> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
-            modelElement = returnValue.getObject();
-        } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
+        if (FactoriesUtil.isAnalysisFile(fileExtension)) {
             modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
         } else if (FactoriesUtil.isReportFile(fileExtension)) {
             modelElement = RepResourceFileHelper.getInstance().findReport(file);
@@ -87,9 +81,7 @@ public final class ModelElementFileFactory {
         ResourceFileMap modelElement = null;
 
         String fileExtension = file.getFileExtension();
-        if (FactoriesUtil.isProvFile(fileExtension)) {
-            modelElement = PrvResourceFileHelper.getInstance();
-        } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
+        if (FactoriesUtil.isAnalysisFile(fileExtension)) {
             modelElement = AnaResourceFileHelper.getInstance();
         } else if (FactoriesUtil.isReportFile(fileExtension)) {
             modelElement = RepResourceFileHelper.getInstance();
@@ -111,9 +103,7 @@ public final class ModelElementFileFactory {
      */
     public static ResourceFileMap getResourceFileMap(ModelElement element) {
         ResourceFileMap resourceMap = null;
-        if (element instanceof Connection) {
-            resourceMap = PrvResourceFileHelper.getInstance();
-        } else if (element instanceof Analysis) {
+        if (element instanceof Analysis) {
             resourceMap = AnaResourceFileHelper.getInstance();
         } else if (element instanceof Report) {
             resourceMap = RepResourceFileHelper.getInstance();
@@ -158,7 +148,7 @@ public final class ModelElementFileFactory {
 
         Collection<Pattern> allPatternes = PatternResourceFileHelper.getInstance().getAllPatternes();
 
-        List<Connection> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders();
+        Collection<Connection> allDataProviders = DQConnectionReposViewObjDelegator.getInstance().getAllElements();
 
         Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
 

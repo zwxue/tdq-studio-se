@@ -37,12 +37,13 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.MDMConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -50,9 +51,7 @@ import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 
@@ -456,8 +455,9 @@ public final class ConnectionUtils {
                 return isMdmConnection((ProviderConnection) object);
             } else if (object instanceof DataProvider) {
                 return isMdmConnection((DataProvider) object);
-            } else if (object instanceof IFile) {
-                return isMdmConnection((IFile) object);
+            } else if (object instanceof IRepositoryViewObject) {
+                Item item = ((IRepositoryViewObject) object).getProperty().getItem();
+                return item instanceof MDMConnectionItem;
             }
         }
         return false;
@@ -469,17 +469,9 @@ public final class ConnectionUtils {
      * @param file
      * @return
      */
-    public static boolean isMdmConnection(IFile file) {
-        if (FactoriesUtil.PROV.equals(file.getFileExtension())) {
-            PrvResourceFileHelper prvHelper = PrvResourceFileHelper.getInstance();
-            TypedReturnCode<Connection> findProvider = prvHelper.findProvider(file);
-            if (findProvider != null && findProvider.getObject() != null) {
-                if (ConnectionUtils.isMdmConnection(findProvider.getObject())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public static boolean isMdmConnection(IRepositoryViewObject reposViewObj) {
+        Item item = reposViewObj.getProperty().getItem();
+        return item instanceof MDMConnectionItem;
     }
 
     /**
