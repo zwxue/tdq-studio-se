@@ -34,14 +34,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
 
     private static Logger log = Logger.getLogger(ADQRepositoryViewObjectDelegator.class);
-    protected Map<T, IRepositoryViewObject> needSavedElements = new HashMap<T, IRepositoryViewObject>();
 
+    protected Map<T, IRepositoryViewObject> needSavedElements = new HashMap<T, IRepositoryViewObject>();
 
     protected void register(T modelElement, IRepositoryViewObject reposViewObj) {
         log.info(modelElement.toString());
         needSavedElements.put(modelElement, reposViewObj);
     }
-
 
     public Collection<T> getAllElements() {
         return needSavedElements.keySet();
@@ -109,8 +108,11 @@ public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
      * @param reload, true to reload.
      * @return
      */
-    public List<IRepositoryViewObject> fetchRepositoryViewObjects(boolean reload) {
+    public List<IRepositoryViewObject> fetchRepositoryViewObjects(boolean reload, int... types) {
         if (!reload) {
+            if (types.length > 0) {
+                return filterArrays(types[0]);
+            }
             IRepositoryViewObject[] reposViewObjs = new IRepositoryViewObject[needSavedElements.values().size()];
             return Arrays.asList(needSavedElements.values().toArray(reposViewObjs));
         }
@@ -119,4 +121,6 @@ public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
     }
 
     protected abstract List<IRepositoryViewObject> fetchRepositoryViewObjectsLower();
+
+    protected abstract List<IRepositoryViewObject> filterArrays(int type);
 }

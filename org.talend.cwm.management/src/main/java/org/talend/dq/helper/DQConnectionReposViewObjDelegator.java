@@ -33,6 +33,7 @@ public final class DQConnectionReposViewObjDelegator extends ADQRepositoryViewOb
     private static Logger log = Logger.getLogger(DQConnectionReposViewObjDelegator.class);
 
     private static DQConnectionReposViewObjDelegator instance = null;
+
     private DQConnectionReposViewObjDelegator() {
     }
 
@@ -47,8 +48,10 @@ public final class DQConnectionReposViewObjDelegator extends ADQRepositoryViewOb
         List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
         try {
             // ProxyRepositoryFactory.getInstance().initialize();
-            connList = ProxyRepositoryFactory.getInstance().getMetadataConnection(
-                    ProjectManager.getInstance().getCurrentProject(), true).getMembers();
+            connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
+                    ProjectManager.getInstance().getCurrentProject(), true).getMembers());
+            connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),
+                    true).getMembers());
             clear();
             for (IRepositoryViewObject reposViewObj : connList) {
                 // Register the Repository view objects by connection to be able to grab the Repository view object
@@ -60,6 +63,17 @@ public final class DQConnectionReposViewObjDelegator extends ADQRepositoryViewOb
 
         } catch (PersistenceException e) {
             log.error(e, e);
+        }
+        return connList;
+    }
+
+    @Override
+    protected List<IRepositoryViewObject> filterArrays(int type) {
+        List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
+        for (Connection conn : this.needSavedElements.keySet()) {
+            if (conn.eClass().getClassifierID() == type) {
+                connList.add(this.needSavedElements.get(conn));
+            }
         }
         return connList;
     }
