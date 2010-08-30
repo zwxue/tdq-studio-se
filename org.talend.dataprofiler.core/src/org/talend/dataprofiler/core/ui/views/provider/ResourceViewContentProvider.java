@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -162,9 +163,14 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (ResourceManager.isIndicatorFolder(folder)) {
                 // MOD xqliu 2009-07-27 bug 7810
                 return getIndicatorsChildren(folder);
-            } else if (ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder)) {
+            } else if (ResourceManager.isConnectionFolder(folder)) {
                 // MOD mzhao 2010-08-11 feature 14891: use same repository API with TOS to persistent metadata
-                return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.FALSE).toArray();
+                return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.FALSE,
+                        ConnectionPackage.DATABASE_CONNECTION).toArray();
+            } else if (ResourceManager.isMdmConnectionFolder(folder)) {
+                // MOD zshen 2010-08-30 feature 14891: use same repository API with TOS to persistent metadata
+                return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.FALSE,
+                        ConnectionPackage.MDM_CONNECTION).toArray();
             }
 
             return getChildrenExceptRecBin(element);// FIXME Why call this method by default, qiongli?
@@ -184,7 +190,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         // ~
         return super.getChildren(element);
     }
-
 
     /**
      * DOC xqliu Comment method "getIndicatorsChildren".
