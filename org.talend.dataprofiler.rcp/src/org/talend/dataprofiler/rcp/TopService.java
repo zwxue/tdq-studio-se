@@ -435,4 +435,13 @@ public class TopService implements ICoreService {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ICoreService#synchronizeMapptingXML()
+     */
+    public void synchronizeMapptingXML() {
+        // I do not know what the method is supposed to be doing to I do nothing.
+    }
+
 }
