@@ -101,6 +101,10 @@
             class="org.talend.commons.emf.CwmResourceFactory"
             type="rules">
       </parser>
+      <parser
+            class="org.talend.commons.emf.CwmResourceFactory"
+            type="item">
+      </parser>
    </extension>
 
 </plugin>
