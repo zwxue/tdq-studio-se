@@ -105,4 +105,6 @@ public final class PluginConstant {
 
     public static final String SVN_SUFFIX = ".svn"; //$NON-NLS-1$
 
+    public static final String CHEAT_SHEET_GETSTART_ID = "org.talend.dataprofiler.core.talenddataprofiler";
+
 }

@@ -18,13 +18,18 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.rcp.register.RegisterManagement;
 import org.talend.dataprofiler.rcp.register.RegisterWizard;
 import org.talend.dataprofiler.rcp.register.RegisterWizardDialog;
@@ -97,6 +102,14 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
                             projectLanguage, osName, osVersion, javaVersion, totalMemory, memRAM, nbProc);
                 } else {
                     RegisterManagement.decrementTry();
+                }
+                // MOD qiongli 2010-8-31,bug 15191.
+                IWorkbench workbench = PlatformUI.getWorkbench();
+                IWorkbenchPage page = workbench.getActiveWorkbenchWindow().getActivePage();
+                IViewPart findView = page.findView(PluginConstant.CHEAT_SHEET_VIEW);
+                if (findView == null) {
+                    OpenCheatSheetAction openCheatSheetAction = new OpenCheatSheetAction(PluginConstant.CHEAT_SHEET_GETSTART_ID);
+                    openCheatSheetAction.run();
                 }
             }
         } catch (Exception e) {
