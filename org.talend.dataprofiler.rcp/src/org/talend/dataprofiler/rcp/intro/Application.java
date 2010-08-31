@@ -92,8 +92,15 @@ public class Application implements IApplication {
                 user.setLogin("talend@talend.com");
                 user.setPassword("talend@talend.com".getBytes());
                 String projectName = ResourceManager.getRootProjectName();
-                project = proxyRepository.createProject(projectName, ResourcesPlugin.getWorkspace().newProjectDescription(
-                        projectName).getComment(), ECodeLanguage.JAVA, user);
+
+                // TODO mzhao: check that the following code is valid.
+                // I used the projectInfor because the interface changed. scorreia
+                Project projectInfor = new Project(projectName);
+                projectInfor.setDescription(ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment());
+                projectInfor.setLanguage(ECodeLanguage.JAVA);
+                projectInfor.setAuthor(user);
+
+                project = proxyRepository.createProject(projectInfor);
             }
             initRepositoryContext(project);
             // CommonsPlugin.setHeadless(true);// arrest load tos component.
