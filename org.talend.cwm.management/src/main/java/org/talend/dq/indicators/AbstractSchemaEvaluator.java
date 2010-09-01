@@ -28,7 +28,6 @@ import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.DatabaseConstant;
@@ -129,7 +128,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             long rowCount = getRowCounts(quCatalog, quSchema, quTable);
             schemaIndic.setTableRowCount(schemaIndic.getTableRowCount() + rowCount);
             // MOD by zshen: change schemaName of sybase database to Table's owner.
-            if (dbmsLanguage.getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+            if (ConnectionUtils.isSybaseeDBProducts(dbmsLanguage.getDbmsName())) {
                 schema = ColumnSetHelper.getTableOwner(t);
             }
             // ~11934
@@ -149,7 +148,10 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             // TODO create tableindicator only if it's in top N or in bottom N (use an option?)
             createTableIndicator(t, schemaIndic, rowCount, pkCount, idxCount);
         } else { // is a view TODO probably need to handle system tables separately
-            long rowCount = getRowCounts(quCatalog, quSchema, quTable);
+            if (ConnectionUtils.isSybaseeDBProducts(dbmsLanguage.getDbmsName())) {
+                schema = ColumnSetHelper.getTableOwner(t);
+            }
+            long rowCount = getRowCounts(quCatalog, schema, quTable);
             schemaIndic.setViewRowCount(schemaIndic.getViewRowCount() + rowCount);
             createViewIndicator(t, schemaIndic, rowCount);
         }

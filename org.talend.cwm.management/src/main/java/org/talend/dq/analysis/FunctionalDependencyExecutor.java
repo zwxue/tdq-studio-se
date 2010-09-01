@@ -21,7 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -208,7 +207,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
                 catalogName = pack.getName();
             }
             // MOD by zshen: change schemaName of sybase database to Table's owner.
-            if (dbms().getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+            if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
                 schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
             }
             // ~11934

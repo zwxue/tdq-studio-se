@@ -13,7 +13,7 @@
 package org.talend.dq.helper;
 
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -59,7 +59,7 @@ public final class ColumnSetNameHelper {
         }
 
         // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (dbmsLanguage.getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+        if (ConnectionUtils.isSybaseeDBProducts(dbmsLanguage.getDbmsName())) {
             schemaName = ColumnSetHelper.getTableOwner(columnset);
         }
         // ~11934

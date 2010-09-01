@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -499,6 +500,9 @@ public class DbmsLanguage {
     }
 
     protected String extract(DateGrain dateGrain, String colName) {
+        if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
+            return "DATEPART(" + dateGrain + "," + colName + ") ";
+        }
         // ANSI SQL, MySQL, Oracle
         return " EXTRACT(" + dateGrain + from() + colName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
@@ -1157,7 +1161,7 @@ public class DbmsLanguage {
                 // we need to exchange the table names otherwise we could get "tableA join tableA" which would cause
                 // an SQL exception.
                 // MOD by zshen: change schemaName of sybase database to Table's owner.
-                if (getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+                if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
                     schemaName = ColumnSetHelper.getTableOwner(colA);
                 }
                 // ~11934
@@ -1168,7 +1172,7 @@ public class DbmsLanguage {
                         hasTableAliasA, operator);
             } else {
                 // MOD by zshen: change schemaName of sybase database to Table's owner.
-                if (getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+                if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
                     schemaName = ColumnSetHelper.getTableOwner(colA);
                 }
                 // ~11934

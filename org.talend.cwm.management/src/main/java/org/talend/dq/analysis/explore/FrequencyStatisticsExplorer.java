@@ -24,6 +24,7 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.dbms.DB2DbmsLanguage;
+import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -237,6 +238,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         Object value = null;
         if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof DB2DbmsLanguage) {
             value = entity.getKey();
+        } else if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof SybaseASEDbmsLanguage) {
+            value = entity.getKey();
         } else {
             value = "'" + entity.getKey() + "'";
         }
@@ -244,5 +247,4 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : columnName + dbmsLanguage.equal() + value; //$NON-NLS-1$ //$NON-NLS-2$
         return clause;
     }
-
 }

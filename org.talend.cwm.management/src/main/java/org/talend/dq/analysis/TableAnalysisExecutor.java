@@ -20,7 +20,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
@@ -126,7 +126,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
                 catalogName = parentCatalog != null ? parentCatalog.getName() : null;
             }
             // MOD by zshen: change schemaName of sybase database to Table's owner.
-            if (dbms().getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+            if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
                 schemaName = ColumnSetHelper.getTableOwner(set);
             }
             // ~11934

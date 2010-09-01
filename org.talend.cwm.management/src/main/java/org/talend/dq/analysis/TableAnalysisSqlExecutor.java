@@ -29,7 +29,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -180,7 +179,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
         // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (dbms().getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+        if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
             schemaName = ColumnSetHelper.getTableOwner(set);
         }
         // ~11934
@@ -457,7 +456,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
         // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (dbms().getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+        if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
             schemaName = ColumnSetHelper.getTableOwner(set);
         }
         // ~11934

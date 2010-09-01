@@ -24,6 +24,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -413,6 +414,10 @@ public final class ConnectionUtils {
         return false;
     }
 
+    public static boolean isSybaseeDBProducts(String productName) {
+        return Arrays.asList(ConnectionUtils.getSybaseDBProductsName()).contains(productName);
+    }
+
     /**
      * yyi 2010-08-25 for 14851, Sybase DB has several names with different productions and versions. For example the
      * Sybase IQ with version 12.6 is called 'Sybase' getting by JDBC but the version 15+ it is changed to 'Sybase IQ'.
@@ -429,6 +434,7 @@ public final class ConnectionUtils {
             }
             sybaseDBProductsNames.add("Sybase");
             sybaseDBProductsNames.add("Sybase IQ");
+            sybaseDBProductsNames.add("Adaptive Server Enterprise | Sybase Adaptive Server IQ");
         }
         return sybaseDBProductsNames.toArray(new String[sybaseDBProductsNames.size()]);
     }

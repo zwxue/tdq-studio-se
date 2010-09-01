@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -34,7 +35,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
-import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -227,7 +227,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             sql.append(dbms().toQualifiedName(null, parentRelation.getName(), element.getName()));
         } else if (parentRelation instanceof Catalog) {
             String ownerUser = null;
-            if (dbms() instanceof SybaseASEDbmsLanguage) {
+            if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
                 ownerUser = ColumnSetHelper.getTableOwner((ModelElement) element);
             }
             sql.append(dbms().toQualifiedName(parentRelation.getName(), ownerUser, element.getName()));

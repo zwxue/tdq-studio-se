@@ -13,7 +13,7 @@
 package org.talend.dq.analysis.explore;
 
 import org.apache.log4j.Logger;
-import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -206,7 +206,7 @@ public abstract class DataExplorer implements IDataExplorer {
         String schemaName = parentSchema == null ? null : parentSchema.getName();
         String catalogName = parentCatalog == null ? null : parentCatalog.getName();
         // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (dbmsLanguage.getDbmsName().equals(SupportDBUrlType.SYBASEDEFAULTURL.getLanguage())) {
+        if (ConnectionUtils.isSybaseeDBProducts(dbmsLanguage.getDbmsName())) {
             schemaName = ColumnSetHelper.getTableOwner(set);
         }
         // ~11934

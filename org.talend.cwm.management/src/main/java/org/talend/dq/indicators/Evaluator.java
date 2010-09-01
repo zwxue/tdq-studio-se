@@ -49,7 +49,8 @@ public abstract class Evaluator<T> {
 
     protected Set<Indicator> allIndicators = new HashSet<Indicator>();
 
-	private String javaPatternMessage;
+    private String javaPatternMessage;
+
     /**
      * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators. if needed, this
      * method must be called on the Child indicators of the given indicator.
@@ -97,7 +98,7 @@ public abstract class Evaluator<T> {
         }
         try {
             if (!prepareIndicators()) {
-                rc.setReturnCode(Messages.getString("Evaluator.Problem")+javaPatternMessage, false); //$NON-NLS-1$
+                rc.setReturnCode(Messages.getString("Evaluator.Problem") + javaPatternMessage, false); //$NON-NLS-1$
                 return rc;
             }
             rc = executeSqlQuery(sqlStatement);
@@ -131,7 +132,7 @@ public abstract class Evaluator<T> {
         boolean ok = true;
         for (Indicator indic : allIndicators) {
             if (!indic.prepare()) {
-            	javaPatternMessage=((RegexpMatchingIndicatorImpl) indic).getJavaPatternMessage();
+                javaPatternMessage = ((RegexpMatchingIndicatorImpl) indic).getJavaPatternMessage();
                 ok = false;
             }
         }
@@ -193,9 +194,14 @@ public abstract class Evaluator<T> {
     protected ReturnCode closeConnection() {
 
         if (connection != null) {
-            return ConnectionUtils.closeConnection(connection);
+            try {
+                return connection.isClosed() ? new ReturnCode(true) : ConnectionUtils.closeConnection(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return new ReturnCode(Messages.getString("Evaluator.closeNullConnection"), false); //$NON-NLS-1$
+        return new ReturnCode(Messages.getString("Evaluator.closeNullConnection"), false); //$NON-NLS-1$  
+
     }
 
     protected ReturnCode checkConnection() {
