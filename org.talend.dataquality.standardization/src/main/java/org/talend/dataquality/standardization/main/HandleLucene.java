@@ -35,6 +35,9 @@ public interface HandleLucene {
 	 public Map<String, String[]> getSearchResult(String folderName,
 	            String inputName, Map<String,String> information2value,boolean fuzzyQuery) throws IOException,
 	            ParseException ;
+
+    public String getReplaceSearchResult(String folderName, String inputName, Map<String, String> information2value,
+            boolean fuzzyQuery) throws IOException, ParseException;
 	/**
 	 * Input filename to be indexed once for all and indexfolder to store the
 	 * files of indexing.

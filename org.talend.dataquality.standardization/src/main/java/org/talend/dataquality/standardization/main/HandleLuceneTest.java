@@ -38,23 +38,24 @@ public class HandleLuceneTest {
         // String[] firstnames = new String[] { "jeants", "rémy", "jean-philippe",
         // "sebastiao", "r*my*" };
         HandleLucene hl = new HandleLuceneImpl();
-     //   System.out.print(hl.createIndex(filename, indexfolder));
+        // System.out.print(hl.createIndex(filename, indexfolder));
 
         try {
             // Map<String, String[]> hits = hl.getSearchResult(indexfolder,
             // PluginConstant.FIRST_NAME_STANDARDIZE_NAME, firstnames);
             Map<String, String> information2value = new HashMap<String, String>();
-           // information2value.put("country", "mosikou");
-            information2value.put("gender", "0");
-            Map<String, String[]> hits = hl.getSearchResult(indexfolder, "Edou", information2value, false);
-         //  for (String firstName : firstnames) {
-            String[] soreDocs = hits.get("Edou");
-            if (soreDocs!=null) {
-                for (String doc : soreDocs) {
-                    System.out.println(doc);
-                }
-            }
-
+            // information2value.put("country", "mosikou");
+            // information2value.put("gender", "0");
+            // Map<String, String[]> hits = hl.getSearchResult(indexfolder, "Philip", information2value, true);
+            // // for (String firstName : firstnames) {
+            // String[] soreDocs = hits.get("Phili");
+            // if (soreDocs != null) {
+            // for (String doc : soreDocs) {
+            // System.out.println(doc);
+            // }
+            // }
+            String res = hl.getReplaceSearchResult(indexfolder, "Philipp", information2value, true);
+            System.out.println(res);
             // }
 
         } catch (IOException e) {

@@ -116,9 +116,16 @@ public class FirstNameStandardize {
      * @throws ParseException
      * @throws IOException
      */
-    public String replaceName(String searchType, String input) throws ParseException, IOException {
-        ScoreDoc[] results = standardize(searchType, input);
-        return results.length == 0 ? input : searcher.doc(results[0].doc).get("name");
+    public String replaceName(String inputName, boolean fuzzyQuery) throws ParseException, IOException {
+        Map<String, String> indexFields = new HashMap<String, String>();
+        ScoreDoc[] results = null;
+        try {
+            results = standardize(inputName, indexFields, fuzzyQuery);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
     }
 
     // FIXME this variable is only for tests
@@ -145,12 +152,12 @@ public class FirstNameStandardize {
         Term ternGender = new Term(PluginConstant.FIRST_NAME_STANDARDIZE_GENDER, genderText);
         // many field to query for reposity
         BooleanQuery query = new BooleanQuery();
-        query.add(new FuzzyQuery(termName), BooleanClause.Occur.MUST);
+        query.add(new TermQuery(termName), BooleanClause.Occur.MUST);
         if (countryText != null && !countryText.equals("")) {
-            query.add(new FuzzyQuery(termCountry), BooleanClause.Occur.MUST);
+            query.add(new TermQuery(termCountry), BooleanClause.Occur.MUST);
         }
         if (genderText != null && !genderText.equals("")) {
-            query.add(new FuzzyQuery(ternGender), BooleanClause.Occur.MUST);
+            query.add(new TermQuery(ternGender), BooleanClause.Occur.MUST);
         }
         TopDocs matches = searcher.search(query, 10);
 
@@ -184,28 +191,30 @@ public class FirstNameStandardize {
         }
     }
 
-    public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender) throws Exception {
+    public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender, boolean fuzzyQuery)
+            throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
         indexFields.put("country", inputCountry);
         indexFields.put("gender", inputGender);
-        ScoreDoc[] results = standardize(inputName, indexFields, false);
-        return results.length == 0 ? inputName : searcher.doc(results[0].doc).get("name");
+        ScoreDoc[] results = standardize(inputName, indexFields, fuzzyQuery);
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
     }
 
-    public String replaceNameWithCountryInfo(String inputName, String inputCountry) throws Exception {
+    public String replaceNameWithCountryInfo(String inputName, String inputCountry, boolean fuzzyQuery) throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
         indexFields.put("country", inputCountry);
-        ScoreDoc[] results = standardize(inputName, indexFields, false);
-        return results.length == 0 ? inputName : searcher.doc(results[0].doc).get("name");
+        ScoreDoc[] results = standardize(inputName, indexFields, fuzzyQuery);
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
     }
 
-    public String replaceNameWithGenderInfo(String inputName, String inputGender) throws IOException, ParseException, Exception {
+    public String replaceNameWithGenderInfo(String inputName, String inputGender, boolean fuzzyQuery) throws IOException,
+            ParseException, Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
         indexFields.put("gender", inputGender);
         ScoreDoc[] results;
 
-        results = standardize(inputName, indexFields, false);
+        results = standardize(inputName, indexFields, fuzzyQuery);
 
-        return results.length == 0 ? inputName : searcher.doc(results[0].doc).get("name");
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
     }
 }
