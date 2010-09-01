@@ -240,4 +240,67 @@ public class HandleLuceneImpl implements HandleLucene {
         return is;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.standardization.main.HandleLucene#replaceName(java.lang.String, java.lang.String,
+     * boolean)
+     */
+    public String replaceName(String folderName, String inputName, boolean fuzzyQuery) throws ParseException, IOException {
+        String result = null;
+        IndexSearcher searcher = getIndexSearcher(folderName);
+        Analyzer searchAnalyzer = getAnalyzer();
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        result = stdname.replaceName(inputName, fuzzyQuery);
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.standardization.main.HandleLucene#replaceNameWithCountryGenderInfo(java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.String, boolean)
+     */
+    public String replaceNameWithCountryGenderInfo(String folderName, String inputName, String inputCountry, String inputGender,
+            boolean fuzzyQuery) throws Exception {
+        String result = null;
+        IndexSearcher searcher = getIndexSearcher(folderName);
+        Analyzer searchAnalyzer = getAnalyzer();
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        result = stdname.replaceNameWithCountryGenderInfo(inputName, inputCountry, inputGender, fuzzyQuery);
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.standardization.main.HandleLucene#replaceNameWithCountryInfo(java.lang.String,
+     * java.lang.String, java.lang.String, boolean)
+     */
+    public String replaceNameWithCountryInfo(String folderName, String inputName, String inputCountry, boolean fuzzyQuery)
+            throws Exception {
+        String result = null;
+        IndexSearcher searcher = getIndexSearcher(folderName);
+        Analyzer searchAnalyzer = getAnalyzer();
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        result = stdname.replaceNameWithCountryInfo(inputName, inputCountry, fuzzyQuery);
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.standardization.main.HandleLucene#replaceNameWithGenderInfo(java.lang.String,
+     * java.lang.String, java.lang.String, boolean)
+     */
+    public String replaceNameWithGenderInfo(String folderName, String inputName, String inputGender, boolean fuzzyQuery)
+            throws IOException, ParseException, Exception {
+        String result = null;
+        IndexSearcher searcher = getIndexSearcher(folderName);
+        Analyzer searchAnalyzer = getAnalyzer();
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        result = stdname.replaceNameWithGenderInfo(inputName, inputGender, fuzzyQuery);
+        return result;
+    }
+
 }

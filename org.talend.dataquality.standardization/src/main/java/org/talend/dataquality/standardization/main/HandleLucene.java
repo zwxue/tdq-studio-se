@@ -36,8 +36,76 @@ public interface HandleLucene {
 	            String inputName, Map<String,String> information2value,boolean fuzzyQuery) throws IOException,
 	            ParseException ;
 
+    /**
+     * 
+     * DOC klliu Comment method "getReplaceSearchResult".
+     * 
+     * @param folderName
+     * @param inputName
+     * @param information2value
+     * @param fuzzyQuery
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     public String getReplaceSearchResult(String folderName, String inputName, Map<String, String> information2value,
             boolean fuzzyQuery) throws IOException, ParseException;
+
+    /**
+     * 
+     * DOC klliu Comment method "replaceName".
+     * 
+     * @param inputName
+     * @param fuzzyQuery
+     * @return
+     * @throws ParseException
+     * @throws IOException
+     */
+    public String replaceName(String folderName, String inputName, boolean fuzzyQuery) throws ParseException, IOException;
+
+    /**
+     * 
+     * DOC klliu Comment method "replaceNameWithCountryGenderInfo".
+     * 
+     * @param inputName
+     * @param inputCountry
+     * @param inputGender
+     * @param fuzzyQuery
+     * @return
+     * @throws Exception
+     */
+    public String replaceNameWithCountryGenderInfo(String folderName, String inputName, String inputCountry, String inputGender,
+            boolean fuzzyQuery)
+            throws Exception;
+
+    /**
+     * 
+     * DOC klliu Comment method "replaceNameWithCountryInfo".
+     * 
+     * @param inputName
+     * @param inputCountry
+     * @param fuzzyQuery
+     * @return
+     * @throws Exception
+     */
+    public String replaceNameWithCountryInfo(String folderName, String inputName, String inputCountry, boolean fuzzyQuery)
+            throws Exception;
+
+    /**
+     * 
+     * DOC klliu Comment method "replaceNameWithGenderInfo".
+     * 
+     * @param inputName
+     * @param inputGender
+     * @param fuzzyQuery
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     * @throws Exception
+     */
+    public String replaceNameWithGenderInfo(String folderName, String inputName, String inputGender, boolean fuzzyQuery)
+            throws IOException,
+            ParseException, Exception;
 	/**
 	 * Input filename to be indexed once for all and indexfolder to store the
 	 * files of indexing.

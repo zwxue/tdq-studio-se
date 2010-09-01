@@ -54,7 +54,7 @@ public class HandleLuceneTest {
             // System.out.println(doc);
             // }
             // }
-            String res = hl.getReplaceSearchResult(indexfolder, "Philipp", information2value, true);
+            String res = hl.replaceName(indexfolder, "Philipp", true);
             System.out.println(res);
             // }
 
