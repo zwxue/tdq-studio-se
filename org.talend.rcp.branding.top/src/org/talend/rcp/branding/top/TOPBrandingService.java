@@ -19,11 +19,12 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
+import org.talend.dataprofiler.core.service.IBrandingService;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class TOPBrandingService extends AbstractTalendBrandingService {
+public class TOPBrandingService implements IBrandingService {
 
     public String getFullProductName() {
         return "Talend Open Profiler"; //$NON-NLS-1$
