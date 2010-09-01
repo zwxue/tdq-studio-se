@@ -39,6 +39,7 @@ import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.repository.utils.ProjectHelper;
 import org.talend.repository.utils.XmiResourceManager;
 import org.talend.resource.ResourceManager;
 
@@ -92,13 +93,8 @@ public class Application implements IApplication {
                 user.setLogin("talend@talend.com");
                 user.setPassword("talend@talend.com".getBytes());
                 String projectName = ResourceManager.getRootProjectName();
-
-                // TODO mzhao: check that the following code is valid.
-                // I used the projectInfor because the interface changed. scorreia
-                Project projectInfor = new Project(projectName);
-                projectInfor.setDescription(ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment());
-                projectInfor.setLanguage(ECodeLanguage.JAVA);
-                projectInfor.setAuthor(user);
+                String projectDesc = ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment();
+                Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA, user);
 
                 project = proxyRepository.createProject(projectInfor);
             }
