@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.rcp;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -362,7 +363,7 @@ public class TopService implements ICoreService {
      */
     public List<String> readWorkspaceTasksDone() {
         // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<String>();
     }
 
     /*
