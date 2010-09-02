@@ -679,22 +679,6 @@
           </enablement>
        </actionProvider>
        <actionProvider
-             class="org.talend.dataprofiler.core.ui.action.provider.DeleteForeverProvider"
-             id="org.talend.dataprofiler.core.ui.action.provider.DeleteForeverProvider">
-          <enablement>
-             <or>
-                <instanceof
-                      value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
-                </instanceof>
-                <and>
-                   <instanceof
-                         value="org.eclipse.core.resources.IFile">
-                   </instanceof>
-                </and>
-             </or>
-          </enablement>
-       </actionProvider>
-       <actionProvider
              class="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider"
              id="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider">
           <enablement>

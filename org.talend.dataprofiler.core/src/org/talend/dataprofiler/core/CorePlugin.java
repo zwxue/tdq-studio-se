@@ -40,6 +40,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -244,6 +245,7 @@ public class CorePlugin extends AbstractUIPlugin {
             return null;
         }
     }
+
     /**
      * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
      * get the viewPart and focus it. if the viewPart closed, it will be opened.
@@ -321,7 +323,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * 
      * @param fileRes
      */
-    public void closeEditorIfOpened(IFile fileRes) {
+    public void closeEditorIfOpened(Property property) {
         IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
         IEditorReference[] editorReferences = activePage.getEditorReferences();
         IEditorInput editorInput = null;
@@ -331,7 +333,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 if (editorInput instanceof FileEditorInput) {
                     FileEditorInput fileInput = (FileEditorInput) editorInput;
 
-                    if (fileRes.getName().equals(fileInput.getFile().getName())) {
+                    if (property.getLabel().equals(fileInput.getFile().getName())) {
                         activePage.closeEditor(reference.getEditor(false), false);
                         break;
                     }

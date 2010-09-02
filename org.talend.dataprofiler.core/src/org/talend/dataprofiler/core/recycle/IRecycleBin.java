@@ -14,9 +14,11 @@ package org.talend.dataprofiler.core.recycle;
 
 /**
  * @author qiongli
- *
+ * 
  */
 public interface IRecycleBin {
 
-	public String getName();
+    public String getName();
+
+    public DQRecycleBinNode[] getChildren();
 }

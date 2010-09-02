@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -29,8 +29,8 @@ public class ReportHandle extends EMFResourceHandle {
     /**
      * DOC bZhou DuplicateReportHandle constructor comment.
      */
-    ReportHandle(IFile file) {
-        super(file);
+    ReportHandle(Property propety) {
+        super(propety);
     }
 
     /*

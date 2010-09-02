@@ -47,6 +47,15 @@ public class JrxmlHandle extends SimpleHandle {
     /**
      * DOC bZhou DuplicateJrxmlHandle constructor comment.
      */
+    JrxmlHandle(Property property) {
+        super(property);
+    }
+
+    /**
+     * DOC bZhou JrxmlHandle constructor comment.
+     * 
+     * @param file
+     */
     JrxmlHandle(IFile file) {
         super(file);
     }
@@ -68,20 +77,18 @@ public class JrxmlHandle extends SimpleHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.SimpleHandle#delete(boolean)
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.SimpleHandle#delete()
      */
     @Override
-    public boolean delete(boolean isPhysical) throws Exception {
-        if (isPhysical) {
-            IPath filePath = file.getFullPath();
-            filePath = filePath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-            IFile propFile = ResourceManager.getRoot().getFile(filePath);
-            if (propFile.exists()) {
-                propFile.delete(true, null);
-            }
+    public boolean delete() throws Exception {
+        IPath filePath = file.getFullPath();
+        filePath = filePath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        IFile propFile = ResourceManager.getRoot().getFile(filePath);
+        if (propFile.exists()) {
+            propFile.delete(true, null);
         }
 
-        return super.delete(isPhysical);
+        return super.delete();
     }
 
     /*

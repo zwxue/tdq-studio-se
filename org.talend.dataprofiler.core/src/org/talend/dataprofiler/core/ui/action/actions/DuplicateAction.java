@@ -22,11 +22,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ISetSelectionTarget;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
+import org.talend.dq.helper.PropertyHelper;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -60,7 +62,8 @@ public class DuplicateAction extends Action {
     @Override
     public void run() {
         for (IFile file : files) {
-            IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(file);
+            Property property = PropertyHelper.getProperty(file);
+            IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(property);
 
             if (handle != null) {
                 handle.duplicate();

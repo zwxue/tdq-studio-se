@@ -26,14 +26,17 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.recycle.SelectedResources;
+import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.top.repository.ProxyRepositoryManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -46,20 +49,14 @@ public class DeleteObjectsAction extends Action {
 
     private boolean runStatus;
 
-    private boolean isDeleteForever = false;
-
     /**
      * DOC rli DeleteObjectAction constructor comment.
      */
-    public DeleteObjectsAction(boolean isDeleteForever) {
-        if (isDeleteForever) {
-            setText(DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForever")); //$NON-NLS-1$
-        } else {
-            setText(DefaultMessagesImpl.getString("DeleteObjectsAction.logicalDelete")); //$NON-NLS-1$
-        }
+    public DeleteObjectsAction() {
+        setText("Delete");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
         setActionDefinitionId("org.talend.dataprofiler.core.removeAnalysis"); //$NON-NLS-1$
-        this.isDeleteForever = isDeleteForever;
+
     }
 
     /*
@@ -70,41 +67,37 @@ public class DeleteObjectsAction extends Action {
     @Override
     public void run() {
 
-        // MOD qiongli feature 9486
-        IFile[] selectedFiles;
-        if (isDeleteForever) {
-            SelectedResources selectedResources = new SelectedResources();
+        List<Property> propList = getSelectedProperties();
 
-            selectedFiles = selectedResources.getSelectedResourcesArrayForDelForever();
-        } else {
-            selectedFiles = getSelectedResourcesArray();
-        }
-        // ~ 9486
+        List<IDeletionHandle> handleList = new ArrayList<IDeletionHandle>();
 
-        for (IFile file : selectedFiles) {
+        for (Property property : propList) {
 
-            IDeletionHandle handle = ActionHandleFactory.createDeletionHandle(file);
-            // ProxyRepositoryFactory.getInstance().
+            IDeletionHandle handle = ActionHandleFactory.createDeletionHandle(property);
+
             List<ModelElement> dependencies = handle.getDependencies();
-
             if (dependencies != null && !dependencies.isEmpty()) {
-                showDependenciesDialog(file, dependencies);
+                // showDependenciesDialog(file, dependencies);
+
+                MessageDialog.openWarning(null, "Dependency", "This element is dependented by others, can't be deleted!");
                 return;
+            } else {
+                handleList.add(handle);
             }
         }
 
         try {
 
-            for (IFile file : selectedFiles) {
-                IDeletionHandle handle = ActionHandleFactory.createDeletionHandle(file);
+            for (IDeletionHandle handle : handleList) {
 
-                if (isDeleteForever && !showConfirmDialog()) {
+                if (!showConfirmDialog()) {
                     return;
                 }
-                // MOD qiongli bug 14090
-                CorePlugin.getDefault().closeEditorIfOpened(file);
 
-                runStatus = handle.delete(isDeleteForever);
+                // MOD qiongli bug 14090
+                CorePlugin.getDefault().closeEditorIfOpened(handle.getProperty());
+
+                runStatus = handle.delete();
             }
 
         } catch (Exception e) {
@@ -116,6 +109,38 @@ public class DeleteObjectsAction extends Action {
         CorePlugin.getDefault().refreshDQView();
 
         CorePlugin.getDefault().refreshWorkSpace();
+    }
+
+    /**
+     * DOC bZhou Comment method "getSelectedProperties".
+     * 
+     * @return
+     */
+    private List<Property> getSelectedProperties() {
+        List<Property> propList = new ArrayList<Property>();
+
+        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
+        TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
+
+        Iterator iterator = treeSelection.iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+
+            Property property = null;
+
+            if (obj instanceof IFile) {
+                property = PropertyHelper.getProperty((IFile) obj);
+            } else if (obj instanceof IRepositoryViewObject) {
+                property = ((IRepositoryViewObject) obj).getProperty();
+            } else if (obj instanceof DQRecycleBinNode) {
+                DQRecycleBinNode node = (DQRecycleBinNode) obj;
+                node.getObject();
+            }
+
+            propList.add(property);
+        }
+
+        return propList;
     }
 
     /**

@@ -43,14 +43,12 @@ import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author qiongli handle logical delete and restore
@@ -306,31 +304,26 @@ public class LogicalDeleteFileHandle {
      */
     public static ReturnCode deleteLogical(IFile ifile) throws Exception {
         ReturnCode rc = new ReturnCode();
-        List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(ifile);
-        if (!dependencyClients.isEmpty()) {
-            rc.setOk(false);
-            rc.setMessage(DefaultMessagesImpl.getString("LogicalDeleteFileHandle.dependencyByOther"));
-        } else {
 
-            IFile propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-                    ifile.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
-            if (propFile.exists()) {
-                Property property = PropertyHelper.getProperty(propFile);
-                ItemState itemState = property.getItem().getState();
-                if (!itemState.isDeleted()) {
-                    itemState.setDeleted(true);
-                    Resource propertyResource = property.eResource();
-                    rc.setOk(EMFSharedResources.getInstance().saveResource(propertyResource));
-                    saveElement(LogicalDeleteFileHandle.fileType, ifile.getFullPath().toOSString());
-                }
+        IFile propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+                ifile.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
+        if (propFile.exists()) {
+            Property property = PropertyHelper.getProperty(propFile);
+            ItemState itemState = property.getItem().getState();
+            if (!itemState.isDeleted()) {
+                itemState.setDeleted(true);
+                Resource propertyResource = property.eResource();
+                rc.setOk(EMFSharedResources.getInstance().saveResource(propertyResource));
+                saveElement(LogicalDeleteFileHandle.fileType, ifile.getFullPath().toOSString());
             }
-
-            // svn commit
-            ProxyRepositoryManager.getInstance().save();
-            // finish
-            ifile.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
-            rc.setMessage(DefaultMessagesImpl.getString("LogicalDeleteFileHandle.logicalDelSuccess"));
         }
+
+        // svn commit
+        ProxyRepositoryManager.getInstance().save();
+        // finish
+        ifile.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+        rc.setMessage(DefaultMessagesImpl.getString("LogicalDeleteFileHandle.logicalDelSuccess"));
+
         return rc;
     }
 

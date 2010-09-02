@@ -13,7 +13,8 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
-import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Property;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -35,29 +36,43 @@ public final class ActionHandleFactory {
     }
 
     /**
-     * DOC bZhou Comment method "createHandle".
+     * DOC bZhou Comment method "createDuplicateHandle".
      * 
-     * @param file
+     * @param property
      * @return
      */
-    public static IDuplicateHandle createDuplicateHandle(IFile file) {
+    public static IDuplicateHandle createDuplicateHandle(Property property) {
         IDuplicateHandle handle = null;
 
-        String fileExtension = file.getFileExtension();
-        if (FactoriesUtil.isEmfFile(fileExtension)) {
-            if (FactoriesUtil.isAnalysisFile(fileExtension)) {
-                handle = new AnalysisHandle(file);
-            } else if (FactoriesUtil.isReportFile(fileExtension)) {
-                handle = new ReportHandle(file);
-            } else if (FactoriesUtil.isUDIFile(fileExtension)) {
-                handle = new UDIHandle(file);
-            } else {
-                handle = new EMFResourceHandle(file);
-            }
-        } else if (FactoriesUtil.isJrxmlFile(fileExtension)) {
-            handle = new JrxmlHandle(file);
-        } else {
-            handle = new SimpleHandle(file);
+        EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
+
+        switch (typedConstant) {
+        case DB_CONNECTIONS:
+            handle = new ConnectionHandle(property);
+            break;
+        case MDM_CONNECTIONS:
+            handle = new XMLDataProviderHandle(property);
+            break;
+        case JRXML_TEMPLATE:
+            handle = new JrxmlHandle(property);
+            break;
+        case ANALYSIS:
+            handle = new AnalysisHandle(property);
+            break;
+        case REPORTS:
+            handle = new ReportHandle(property);
+            break;
+        case PATTERNS:
+        case RULES:
+            handle = new EMFResourceHandle(property);
+            break;
+        case INDICATORS:
+            handle = new UDIHandle(property);
+            break;
+
+        default:
+            handle = new SimpleHandle(property);
+            break;
         }
 
         return handle;
@@ -66,32 +81,40 @@ public final class ActionHandleFactory {
     /**
      * DOC bZhou Comment method "createDeletionHandle".
      * 
-     * @param file
+     * @param property
      * @return
      */
-    public static IDeletionHandle createDeletionHandle(IFile file) {
+    public static IDeletionHandle createDeletionHandle(Property property) {
         IDeletionHandle handle = null;
 
-        String fileExtension = file.getFileExtension();
-        if (FactoriesUtil.isEmfFile(fileExtension)) {
-            handle = new EMFResourceHandle(file);
-            // if (FactoriesUtil.isProvFile(fileExtension)) {
-            // if (ResourceManager.getMetadataFolder().getFullPath().isPrefixOf((file.getFullPath()))) {
-            // ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
-            // EResourceConstant typedConstant = EResourceConstant.getTypedConstant(modelElement);
-            // if (typedConstant == EResourceConstant.MDM_CONNECTIONS) {
-            // // handle = new XMLDataProviderHandle(modelElement);
-            // }
-            // }
-        } else
+        EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
 
-        if (FactoriesUtil.isJrxmlFile(fileExtension)) {
-            handle = new JrxmlHandle(file);
+        if (typedConstant == null) {
+            handle = new SimpleHandle(property);
         } else {
-            handle = new SimpleHandle(file);
+            switch (typedConstant) {
+            case DB_CONNECTIONS:
+                handle = new ConnectionHandle(property);
+                break;
+            case MDM_CONNECTIONS:
+                handle = new XMLDataProviderHandle(property);
+                break;
+            case JRXML_TEMPLATE:
+                handle = new JrxmlHandle(property);
+                break;
+            case ANALYSIS:
+            case REPORTS:
+            case PATTERNS:
+            case RULES:
+            case INDICATORS:
+                handle = new EMFResourceHandle(property);
+                break;
+
+            default:
+                break;
+            }
         }
 
         return handle;
     }
-
 }

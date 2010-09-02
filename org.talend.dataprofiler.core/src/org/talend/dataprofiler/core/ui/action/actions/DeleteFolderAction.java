@@ -39,21 +39,21 @@ public class DeleteFolderAction extends Action {
     protected static Logger log = Logger.getLogger(DeleteFolderAction.class);
 
     private IFolder folder;
-    
-	private boolean isDeleteForever = false;
+
+    private boolean isDeleteForever = false;
 
     /**
      * DOC qzhang DeleteFolderAction constructor comment.
      */
-    public DeleteFolderAction(IFolder obj,boolean isDeleteForever) {
+    public DeleteFolderAction(IFolder obj, boolean isDeleteForever) {
         this.folder = obj;
         this.isDeleteForever = isDeleteForever;
-        if(isDeleteForever){
-        	setText(DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForever")); //$NON-NLS-1$
-        }else{
-        	setText(DefaultMessagesImpl.getString("DeleteFolderAction.deleteFolder")); //$NON-NLS-1$
+        if (isDeleteForever) {
+            setText(DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForever")); //$NON-NLS-1$
+        } else {
+            setText(DefaultMessagesImpl.getString("DeleteFolderAction.deleteFolder")); //$NON-NLS-1$
         }
-        setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));		
+        setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
     }
 
     /*
@@ -67,10 +67,10 @@ public class DeleteFolderAction extends Action {
         boolean isFilesDeleted = deleteFolderAndFiles();
         if (!isFilesDeleted) {
             return;
-		}
-		try {
-			// MOD qiongli feature 9486
-			if (isDeleteForever) {	
+        }
+        try {
+            // MOD qiongli feature 9486
+            if (isDeleteForever) {
                 // MOD qiongli 2010-8-5,bug 14697.
                 delsubFolderForever(folder);
                 if (LogicalDeleteFileHandle.isStartWithDelFolder(folder.getFullPath().toOSString())) {
@@ -78,23 +78,23 @@ public class DeleteFolderAction extends Action {
                             PluginConstant.EMPTY_STRING);
                     folder.delete(true, null);
                 }
-			} else {
+            } else {
                 LogicalDeleteFileHandle.saveElement(LogicalDeleteFileHandle.folderType, folder.getFullPath().toOSString());
-			}
-			CorePlugin.getDefault().refreshDQView();
-			// ~
-			ProxyRepositoryManager.getInstance().save();
-			parent.refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e) {
-			log.error(e, e);
-		}
+            }
+            CorePlugin.getDefault().refreshDQView();
+            // ~
+            ProxyRepositoryManager.getInstance().save();
+            parent.refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
     }
 
     private boolean deleteFolderAndFiles() {
 
         try {
             if (folder.members().length != 0) {
-                DeleteObjectsAction action = new DeleteObjectsAction(isDeleteForever);
+                DeleteObjectsAction action = new DeleteObjectsAction();
                 action.run();
                 return action.getRunStatus();
             }
@@ -107,7 +107,7 @@ public class DeleteFolderAction extends Action {
                 DefaultMessagesImpl.getString("DeleteFolderAction.areYouDeleteFolder")); //$NON-NLS-1$
 
     }
-    
+
     private void delsubFolderForever(IFolder fo) throws CoreException {
         IResource[] members = fo.members();
         for (IResource member : members) {

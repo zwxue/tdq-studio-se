@@ -17,7 +17,7 @@ import org.eclipse.core.resources.IFile;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public interface IDuplicateHandle {
+public interface IDuplicateHandle extends IActionHandle {
 
     /**
      * DOC bZhou Comment method "duplicate".

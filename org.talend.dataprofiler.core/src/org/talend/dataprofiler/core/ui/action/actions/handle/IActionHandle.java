@@ -12,39 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import java.util.List;
-
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.core.model.properties.Property;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public interface IDeletionHandle extends IActionHandle {
+public interface IActionHandle {
 
     /**
-     * DOC bZhou Comment method "delete".
-     * 
-     * This function is to delete an item in tdq reponsitory.
-     * 
-     * @param isPhysical
-     * @return
-     * @throws Exception
-     */
-    public boolean delete() throws Exception;
-
-    /**
-     * DOC bZhou Comment method "getDependencies".
-     * 
-     * This function is to get dependencies of a file.
+     * DOC bZhou Comment method "getProperty". Getter for property.
      * 
      * @return
      */
-    public List<ModelElement> getDependencies();
-
-    /**
-     * DOC bZhou Comment method "isPhysicalDelete".
-     * 
-     * @return
-     */
-    public boolean isPhysicalDelete();
+    public Property getProperty();
 }

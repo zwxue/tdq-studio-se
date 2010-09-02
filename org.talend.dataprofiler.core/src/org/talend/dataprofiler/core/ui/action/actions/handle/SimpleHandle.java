@@ -17,6 +17,10 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.TDQItem;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -24,10 +28,24 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
 
+    protected Property property;
+
     protected IFile file;
 
     /**
      * DOC bZhou DuplicateSimpleHandle constructor comment.
+     */
+    SimpleHandle(Property property) {
+        this.property = property;
+
+        TDQItem item = (TDQItem) property.getItem();
+        file = ResourceManager.getRoot().getFile(new Path(item.getFilename()));
+    }
+
+    /**
+     * DOC bZhou SimpleHandle constructor comment.
+     * 
+     * @param file
      */
     SimpleHandle(IFile file) {
         this.file = file;
@@ -54,12 +72,13 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete(boolean)
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
      */
-    public boolean delete(boolean isPhysical) throws Exception {
-        if (isPhysical && file.exists()) {
+    public boolean delete() throws Exception {
+        if (file.exists() && isPhysicalDelete()) {
             file.delete(true, null);
         }
+
         return true;
     }
 
@@ -90,5 +109,23 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
             idx++;
         }
         return newFile;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IActionHandle#getProperty()
+     */
+    public Property getProperty() {
+        return this.property;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
+     */
+    public boolean isPhysicalDelete() {
+        return true;
     }
 }

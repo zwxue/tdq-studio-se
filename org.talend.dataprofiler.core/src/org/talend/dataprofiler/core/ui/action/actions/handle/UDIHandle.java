@@ -12,8 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.core.model.properties.Property;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -25,8 +25,8 @@ public class UDIHandle extends EMFResourceHandle {
     /**
      * DOC bZhou DuplicateUDIHandle constructor comment.
      */
-    UDIHandle(IFile file) {
-        super(file);
+    UDIHandle(Property propety) {
+        super(propety);
     }
 
     /*

@@ -22,13 +22,16 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -41,11 +44,16 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
 
     protected IFile file;
 
+    protected Property property;
+
     /**
      * DOC bZhou DuplicateEMFResourceAction constructor comment.
      */
-    EMFResourceHandle(IFile file) {
-        this.file = file;
+    EMFResourceHandle(Property propety) {
+        this.property = propety;
+
+        IPath itemPath = PropertyHelper.getItemPath(propety);
+        this.file = ResourceManager.getRoot().getFile(itemPath);
         this.modelElement = ModelElementFileFactory.getModelElement(file);
     }
 
@@ -80,15 +88,15 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete(boolean)
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
      */
-    public boolean delete(boolean isPhysical) throws Exception {
-        if (isPhysical) {
+    public boolean delete() throws Exception {
+        if (isPhysicalDelete()) {
             ModelElementFileFactory.getResourceFileMap(file).delete(file);
-            LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.fileType + file.getFullPath().toOSString(), "");
         } else {
             LogicalDeleteFileHandle.deleteLogical(file);
         }
+
         return true;
     }
 
@@ -134,4 +142,21 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
         return newObject;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IActionHandle#getProperty()
+     */
+    public Property getProperty() {
+        return this.property;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
+     */
+    public boolean isPhysicalDelete() {
+        return property.getItem().getState().isDeleted();
+    }
 }

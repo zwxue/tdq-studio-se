@@ -12,11 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.resource.ResourceManager;
@@ -25,22 +26,35 @@ import orgomg.cwm.objectmodel.core.Package;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class XMLDataProviderHandle {
+public class XMLDataProviderHandle extends RepositoryViewObjectHandle {
 
-    IRepositoryViewObject repositoryViewObj = null;
     /**
      * DOC bZhou XMLDataProviderHandle constructor comment.
      * 
      * @param file
      */
-    XMLDataProviderHandle(IRepositoryViewObject reposObj) {
-        repositoryViewObj = reposObj;
+    XMLDataProviderHandle(Property property) {
+        super(property);
     }
 
-    public boolean delete(boolean isPhysical) throws Exception {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
+     */
+    public IFile duplicate() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-        if (isPhysical) {
-            Connection connection = ((ConnectionItem) repositoryViewObj.getProperty().getItem()).getConnection();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
+     */
+    public boolean delete() throws Exception {
+        if (isPhysicalDelete()) {
+            Connection connection = ((ConnectionItem) getProperty().getItem()).getConnection();
             MDMConnection mdmConnection = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(connection);
             if (mdmConnection != null) {
                 EList<Package> packages = mdmConnection.getDataPackage();
@@ -55,7 +69,8 @@ public class XMLDataProviderHandle {
                 }
             }
         }
-        return true;
+
+        return super.delete();
     }
 
 }

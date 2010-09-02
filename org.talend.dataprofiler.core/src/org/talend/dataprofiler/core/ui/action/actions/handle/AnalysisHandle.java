@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import org.eclipse.core.resources.IFile;
+import org.talend.core.model.properties.Property;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -25,10 +25,10 @@ public class AnalysisHandle extends EMFResourceHandle {
     /**
      * DOC bZhou DuplicateAnalysisHandle constructor comment.
      * 
-     * @param file
+     * @param propety
      */
-    AnalysisHandle(IFile file) {
-        super(file);
+    AnalysisHandle(Property propety) {
+        super(propety);
     }
 
     /*

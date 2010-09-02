@@ -50,6 +50,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvider {
 
     private static Logger log = Logger.getLogger(DQRepositoryViewContentProvider.class);
+
     /**
      * @param adapterFactory
      */
@@ -86,20 +87,26 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             } else {
                 return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.FILE_RESOURCE_COMPARATOR_ID);
             }
-        } else if (SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement) != null) {
-            if (CatalogHelper.getSchemas(SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement)).size() > 0) {
-                return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+        } else if (parentElement instanceof EObject) {
+            EObject eParent = (EObject) parentElement;
+
+            if (SwitchHelpers.CATALOG_SWITCH.doSwitch(eParent) != null) {
+                if (CatalogHelper.getSchemas(SwitchHelpers.CATALOG_SWITCH.doSwitch(eParent)).size() > 0) {
+                    return ComparatorsFactory.sort(super.getChildren(eParent), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+                } else {
+                    return FolderNodeHelper.getFolderNodes(eParent);
+                }
+
+            } else if (SwitchHelpers.XMLSCHEMA_SWITCH.doSwitch(eParent) != null) {
+                // MOD mzhao feature 10238 xml documents.
+                return DqRepositoryViewService.getXMLElements((TdXmlSchema) eParent).toArray();
+            } else if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eParent) != null) {
+                // MOD mzhao xml elements
+                return DqRepositoryViewService.getXMLElements((TdXmlElementType) eParent).toArray();
+
             } else {
-                return FolderNodeHelper.getFolderNodes((EObject) parentElement);
+                return FolderNodeHelper.getFolderNodes(eParent);
             }
-
-        } else if (SwitchHelpers.XMLSCHEMA_SWITCH.doSwitch((EObject) parentElement) != null) {
-            // MOD mzhao feature 10238 xml documents.
-            return DqRepositoryViewService.getXMLElements((TdXmlSchema) parentElement).toArray();
-        } else if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch((EObject) parentElement) != null) {
-            // MOD mzhao xml elements
-            return DqRepositoryViewService.getXMLElements((TdXmlElementType) parentElement).toArray();
-
         } else if (parentElement instanceof IndicatorCategory) {
             IndicatorCategory category = (IndicatorCategory) parentElement;
             Map<IndicatorCategory, List<IndicatorDefinition>> categoriesIDMaps = CategoryHandler.getCategoriesIDMaps();
@@ -108,8 +115,6 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
                 return list.toArray();
             }
 
-        } else {
-            return FolderNodeHelper.getFolderNodes((EObject) parentElement);
         }
         return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
     }

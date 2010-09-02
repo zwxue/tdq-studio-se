@@ -16,7 +16,6 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,8 +28,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
@@ -55,7 +52,6 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -67,8 +63,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     private List<IContainer> needSortContainers;
 
     private boolean timeoutFlag = true;
-
-    private List<Object> recyBinElements = new ArrayList<Object>();
 
     private RecycleBin recycleBin = new RecycleBin();
 
@@ -179,7 +173,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         } else if (element instanceof IndicatorCategory) {
             return getIndicatorsChildren((IndicatorCategory) element);
         } else if (element instanceof RecycleBin) {// MOD qiongli feature 9486
-            return recyBinElements.toArray();
+            RecycleBin bin = (RecycleBin) element;
+            return bin.getChildren();
         } else if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
             return getRecBinNodes(rbn).toArray();
@@ -262,15 +257,12 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 if (obj instanceof IFolder && ((IFolder) obj).getName().equals(PluginConstant.SVN_SUFFIX))
                     return false;
             }
-        } else if (element instanceof RecycleBin) {
-            return getRecycleBinChildren().size() > 0 ? true : false;
         } else if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
             Object obj = rbn.getObject();
             if (obj instanceof IFolder) {
                 try {
-                    if (((IFolder) obj).members().length > 0)
-                        return true;
+                    return ((IFolder) obj).members().length > 0;
                 } catch (CoreException e) {
                     log.error(e);
                 }
@@ -320,71 +312,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * @return get the logical deleted elements
-     */
-    private List<Object> getRecycleBinChildren() {
-        List<String[]> delElements = LogicalDeleteFileHandle.getDelLs();
-        List<Object> ls = new ArrayList<Object>();
-        HashSet<String> set = new HashSet<String>();
-        String fType = null;
-        String pathStr = null;
-        for (String[] es : delElements) {
-            if (es.length < 2)
-                continue;
-            fType = es[0];
-            pathStr = es[1];
-            IPath iPath = new Path(pathStr);
-            if (fType.equals("File")) {
-                IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
-                if (file.exists()) {
-                    IFolder parent = (IFolder) file.getParent();
-                    if (ResourceService.isReadOnlyFolder(parent)) {
-                        DQRecycleBinNode rbn = new DQRecycleBinNode();
-                        rbn.setObject(file);
-                        set.add(file.getFullPath().toOSString());
-                        ls.add(rbn);
-                    } else {
-                        addParent(ls, parent, file, set);
-                    }
-                }
-            } else if (fType.equals("Folder")) {
-                IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(iPath);
-                if (folder.exists()) {
-                    IFolder parent = (IFolder) folder.getParent();
-                    addParent(ls, parent, folder, set);
-                }
-            }
-        }
-        recyBinElements.clear();
-        recyBinElements.addAll(ls);
-        return recyBinElements;
-    }
-
-    /**
-     * @param fList
-     * @param parent
-     * @param child
-     * @param hSet make parent folder add to 'fList'
-     */
-    private void addParent(List<Object> fList, IFolder parent, Object child, HashSet<String> hSet) {
-        IFolder currentFolder = parent;
-        DQRecycleBinNode rbn = null;
-        if (!ResourceService.isReadOnlyFolder(currentFolder)) {
-            parent = (IFolder) parent.getParent();
-            addParent(fList, parent, currentFolder, hSet);
-        } else {
-            String childPath = ((IResource) child).getFullPath().toOSString();
-            if (!hSet.contains(childPath)) {// make sure the same path added once
-                rbn = new DQRecycleBinNode();
-                rbn.setObject(child);
-                hSet.add(((IResource) child).getFullPath().toOSString());
-                fList.add(rbn);
-            }
-            return;
         }
     }
 
