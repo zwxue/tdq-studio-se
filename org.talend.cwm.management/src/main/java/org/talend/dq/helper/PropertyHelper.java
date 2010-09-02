@@ -253,6 +253,18 @@ public final class PropertyHelper {
     }
 
     /**
+     * DOC bZhou Comment method "getItemFile".
+     * 
+     * @param property
+     * @return
+     */
+    public static IFile getItemFile(Property property) {
+        IPath itemPath = getItemPath(property);
+
+        return ResourceManager.getRoot().getFile(itemPath);
+    }
+
+    /**
      * DOC bZhou Comment method "retrieveElement".
      * 
      * @param item

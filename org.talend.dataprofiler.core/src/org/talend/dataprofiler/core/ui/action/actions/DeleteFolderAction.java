@@ -48,11 +48,8 @@ public class DeleteFolderAction extends Action {
     public DeleteFolderAction(IFolder obj, boolean isDeleteForever) {
         this.folder = obj;
         this.isDeleteForever = isDeleteForever;
-        if (isDeleteForever) {
-            setText(DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForever")); //$NON-NLS-1$
-        } else {
-            setText(DefaultMessagesImpl.getString("DeleteFolderAction.deleteFolder")); //$NON-NLS-1$
-        }
+
+        setText(DefaultMessagesImpl.getString("DeleteFolderAction.deleteFolder")); //$NON-NLS-1$
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
     }
 
@@ -63,28 +60,14 @@ public class DeleteFolderAction extends Action {
      */
     @Override
     public void run() {
-        IFolder parent = (IFolder) folder.getParent();
         boolean isFilesDeleted = deleteFolderAndFiles();
         if (!isFilesDeleted) {
             return;
         }
         try {
-            // MOD qiongli feature 9486
-            if (isDeleteForever) {
-                // MOD qiongli 2010-8-5,bug 14697.
-                delsubFolderForever(folder);
-                if (LogicalDeleteFileHandle.isStartWithDelFolder(folder.getFullPath().toOSString())) {
-                    LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType + folder.getFullPath().toOSString(),
-                            PluginConstant.EMPTY_STRING);
-                    folder.delete(true, null);
-                }
-            } else {
-                LogicalDeleteFileHandle.saveElement(LogicalDeleteFileHandle.folderType, folder.getFullPath().toOSString());
-            }
+            folder.delete(true, null);
             CorePlugin.getDefault().refreshDQView();
-            // ~
             ProxyRepositoryManager.getInstance().save();
-            parent.refreshLocal(IResource.DEPTH_INFINITE, null);
         } catch (CoreException e) {
             log.error(e, e);
         }

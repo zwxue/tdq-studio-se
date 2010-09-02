@@ -45,18 +45,17 @@ public class DeleteUserFolderProvider extends CommonActionProvider {
      */
     public void fillContextMenu(IMenuManager menu) {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
-        //MOD qiongli feature 9486
+        // MOD qiongli feature 9486
         if (obj instanceof IFolder) {
             currentSelection = (IFolder) obj;
             if (!ResourceService.isReadOnlyFolder(currentSelection)) {
-            	 DeleteFolderAction createSubFolderAction =null;
-            	 IFolder parent=(IFolder)currentSelection.getParent();
-				if (parent.equals(ResourceManager
-						.getSourceFileFolder())||(parent).equals(ResourceManager.getJRXMLFolder())){
-            		createSubFolderAction = new DeleteFolderAction(currentSelection,true);
-				}else{
-            		createSubFolderAction = new DeleteFolderAction(currentSelection,false);
-				}
+                DeleteFolderAction createSubFolderAction = null;
+                IFolder parent = (IFolder) currentSelection.getParent();
+                if (parent.equals(ResourceManager.getSourceFileFolder()) || (parent).equals(ResourceManager.getJRXMLFolder())) {
+                    createSubFolderAction = new DeleteFolderAction(currentSelection, true);
+                } else {
+                    createSubFolderAction = new DeleteFolderAction(currentSelection, false);
+                }
                 menu.add(createSubFolderAction);
             }
         }

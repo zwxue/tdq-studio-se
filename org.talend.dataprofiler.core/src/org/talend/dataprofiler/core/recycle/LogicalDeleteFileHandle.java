@@ -138,6 +138,9 @@ public class LogicalDeleteFileHandle {
             fw.close();
             out.close();
             String[] es = { type.replaceAll(":", PluginConstant.EMPTY_STRING), path };
+            if (delLs == null) {
+                delLs = getDelLs();
+            }
             delLs.add(es);
         } catch (Exception exc) {
             log.error(exc, exc);

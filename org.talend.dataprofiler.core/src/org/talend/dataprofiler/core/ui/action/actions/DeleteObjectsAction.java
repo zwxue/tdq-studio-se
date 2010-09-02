@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -77,9 +78,8 @@ public class DeleteObjectsAction extends Action {
 
             List<ModelElement> dependencies = handle.getDependencies();
             if (dependencies != null && !dependencies.isEmpty()) {
-                // showDependenciesDialog(file, dependencies);
-
-                MessageDialog.openWarning(null, "Dependency", "This element is dependented by others, can't be deleted!");
+                IFile itemFile = PropertyHelper.getItemFile(property);
+                showDependenciesDialog(itemFile, dependencies);
                 return;
             } else {
                 handleList.add(handle);
@@ -130,6 +130,9 @@ public class DeleteObjectsAction extends Action {
 
             if (obj instanceof IFile) {
                 property = PropertyHelper.getProperty((IFile) obj);
+            } else if (obj instanceof IFolder) {
+                IFolder folder = (IFolder) obj;
+                propList.addAll(getAllSubFileProperties(folder));
             } else if (obj instanceof IRepositoryViewObject) {
                 property = ((IRepositoryViewObject) obj).getProperty();
             } else if (obj instanceof DQRecycleBinNode) {
@@ -137,7 +140,29 @@ public class DeleteObjectsAction extends Action {
                 node.getObject();
             }
 
-            propList.add(property);
+            if (property != null) {
+                propList.add(property);
+            }
+
+        }
+
+        return propList;
+    }
+
+    /**
+     * DOC bZhou Comment method "getAllSubFileProperties".
+     * 
+     * @param folder
+     * @return
+     */
+    private Collection<? extends Property> getAllSubFileProperties(IFolder folder) {
+        List<Property> propList = new ArrayList<Property>();
+
+        List<IFile> fileList = new ArrayList<IFile>();
+        getAllSubFiles(folder, fileList);
+
+        for (IFile file : fileList) {
+            propList.add(PropertyHelper.getProperty(file));
         }
 
         return propList;
