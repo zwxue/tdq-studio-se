@@ -96,8 +96,7 @@ public class Application implements IApplication {
                 user.setPassword("talend@talend.com".getBytes());
                 String projectName = ResourceManager.getRootProjectName();
                 String projectDesc = ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment();
-                Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA.getCaseName(),
-                        user);
+                Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA.getName(), user);
 
                 // MOD zshen create project by proxyRepository
                 checkFileName(projectInfor.getLabel(), RepositoryConstants.PROJECT_PATTERN);
