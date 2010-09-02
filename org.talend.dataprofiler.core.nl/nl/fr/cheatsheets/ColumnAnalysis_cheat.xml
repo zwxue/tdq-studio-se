@@ -16,7 +16,7 @@
       <description>
           Dans l'éditeur, cliquez sur <b> Colonnes analysées</b> (ou cliquez sur le lien ci-dessous). Cliquez ensuite sur <b>Sélectionner les colonnes à analyser</b> pour ouvrir une boîte de dialogue dans laquelle vous pouvez parcourir votre répertoire et sélectionner les colonnes à analyser. Sinon, vous pouvez déposer les colonnes à partir de la vue <b>Référentiel DQ</b> dans la zone <b>Colonnes analysées</b> de l'éditeur.
 		 
-Sous <b>Type de data mining</b>, définissez le type de la colonne correspondante. 		 
+Sous <b>Type de data mining,</b>, définissez le type de la colonne correspondante. 		 
 		 
 Note : Le type <b>Nominal</b> signifie que la colonne contient des valeurs textuelles (ni ordre ni fonction mathématique applicable). Le type <b>Intervalle</b> signifie que les fonctions mathématiques (comme la moyenne) peuvent être utilisées.
       </description>
@@ -39,7 +39,7 @@ Note : Le type <b>Nominal</b> signifie que la colonne contient des valeurs textu
    </item>
    <item title="Paramétrer les options des indicateurs." dialog="true" skip="true">
       <description>
-         Cliquez sur l'icône <b>Options</b> à côté de chaque indicateur dont vous souhaitez définir les valeurs (ou cliquez sur le lien ci-dessous). Par défaut, des options raisonnables sont sélectionnées.
+         Cliquez sur l'icône <b>Options</b> à côté de chaque indicateur dont vous souhaitez définir les valeurs (ou cliquez sur le lien ci-dessous). Des options par défaut sont sélectionnées.
       </description>
    </item>
    <item

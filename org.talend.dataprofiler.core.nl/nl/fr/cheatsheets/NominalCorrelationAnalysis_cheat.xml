@@ -25,13 +25,13 @@
          skip="true"
          title="Sélectionner le bon type de data mining">
       <description>
-         A côté de chaque colonne se trouve une case Type de data mining correspondante. Sélectionnez dans la liste le type de data mining approprié.
+         A côté de chaque colonne se trouve une case <b>Type de data mining correspondante</b>. Sélectionnez dans la liste le type de data mining approprié.
       </description>
    </item>
    <item
          title="Analyser">
       <description>
-         Pour exécuter l'analyse, cliquez sur l'icône <b>Exécuter</b> située en haut à gauche de l'éditeur (ou cliquez sur le lien ci-dessous). Sinon, cliquez-droit sur l'analyse sous le dossier <b>Analyses</b> folder dans la vue <b>Référentiel DQ</b> et sélectionnez l'icône Exécuter dans le menu contextuel.
+         Pour exécuter l'analyse, cliquez sur l'icône <b>Exécuter</b> située en haut à gauche de l'éditeur (ou cliquez sur le lien ci-dessous). Sinon, cliquez-droit sur l'analyse sous le dossier <b>Analyses</b> folder dans la vue <b>Référentiel DQ</b> et sélectionnez l'icône <b>Exécuter</b> dans le menu contextuel.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>

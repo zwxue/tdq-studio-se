@@ -7,7 +7,7 @@
    </intro>
    <item title="Créer une connexion à une base de données" dialog="true" skip="false">
       <description>
-         Pour ouvrir l'assistant <b>Connexions aux bases de données</b>, développez le noeud <b>Métadonnées</b>. Ensuite, cliquez-droit sur <b>Connexions aux bases de données</b> puis sélectionnez <b>Nouvelle connexion</b>(<b>ou cliquez sur le lien ci-dessous</b>).
+         Pour ouvrir l'assistant <b>Connexions aux bases de données</b>, développez le noeud <b>Métadonnées</b>. Ensuite, cliquez-droit sur <b>Connexions aux bases de données</b> puis sélectionnez <b>Nouvelle connexion</b> (<b>ou cliquez sur le lien ci-dessous</b>).
 
 L'assistant vous demande de renseigner les métadonnées de connexion et les informations d'authentification, puis crée une connexion à votre SGBD (Système de gestion de Base de Données). A la suite de quoi, le contenu de la base de données est ajouté à la vue <b>Référentiel DQ</b>.
       </description>

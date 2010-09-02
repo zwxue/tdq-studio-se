@@ -2,7 +2,7 @@
 <cheatsheet title="Créer une nouvelle analyse de connexion">
    <intro>
       <description>
-         Ce type d'analyse vous donne une vue d'ensemble du contenu d'une base de données. Il calcule le nombre de tables et le nombre de lignes par table pour chaque catalogue ou schéma et compte également le nombre d'index et de clés primaires.
+         Ce type d'analyse vous donne une vue d'ensemble du contenu d'une base de données. Il calcule le nombre de tables et le nombre de lignes par table pour chaque catalogue ou schéma et compte également le nombre de clé d'index et de clés primaires.
       </description>
    </intro>
    <item title="Définir les métadonnées de l'analyse." dialog="true" skip="false">

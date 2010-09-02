@@ -16,7 +16,7 @@
    <item
          title="Sélectionnez les colonnes à analyser">
       <description>
-         Dans l'éditeur, cliquez sur <b>Colonnes analysées</b> (ou cliquez sur le lien ci-dessous). Cliquez ensuite sur <b>Sélectionner les colonnes à analyser</b> pour ouvrir une boîte de dialogue dans laquelle vous pouvez parcourir votre répertoire et sélectionnez les colonnes de type nominal et intervalle à analyser. Sinon, vous pouvez déposez les colonnes de la vue <b>Référentiel DQ</b> dans la zone <b>Colonnes analysées</b> de l'éditeur.		 		
+         Dans l'éditeur, cliquez sur <b>Colonnes analysées</b> (ou cliquez sur le lien ci-dessous). Cliquez ensuite sur <b>Sélectionner les colonnes à analyser</b> pour ouvrir une boîte de dialogue dans laquelle vous pouvez parcourir votre répertoire et sélectionner les colonnes de type nominal et intervalle à analyser. Sinon, vous pouvez déposer les colonnes de la vue <b>Référentiel DQ</b> dans la zone <b>Colonnes analysées</b> de l'éditeur.		 		
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
       </action>
