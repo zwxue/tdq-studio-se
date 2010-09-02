@@ -18,6 +18,10 @@ import java.util.List;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -42,7 +46,16 @@ public class OverViewAnalysisActionProvider extends CommonActionProvider {
         int schemaNumber = 0;
         List<Package> packageList = new ArrayList<Package>();
         for (Object obj : list) {
-            if (obj instanceof Catalog) {
+            // MOD by zshen for 14891: use same repository API with TOS to persistent metadata
+            if (obj instanceof IRepositoryViewObject) {
+                Item item = ((IRepositoryViewObject) obj).getProperty().getItem();
+                if (item instanceof ConnectionItem) {
+                    Connection connection = ((ConnectionItem) item).getConnection();
+                    packageList.addAll(connection.getDataPackage());
+                } else {
+                    continue;
+                }
+            } else if (obj instanceof Catalog) {
                 packageList.add((Catalog) obj);
                 catlogNumber++;
             } else {
@@ -58,5 +71,4 @@ public class OverViewAnalysisActionProvider extends CommonActionProvider {
 
         menu.add(overviewAnalysisAction);
     }
-
 }

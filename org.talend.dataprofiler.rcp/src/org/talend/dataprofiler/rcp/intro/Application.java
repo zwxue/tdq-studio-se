@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.rcp.intro;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -39,6 +40,7 @@ import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.utils.ProjectHelper;
 import org.talend.repository.utils.XmiResourceManager;
 import org.talend.resource.ResourceManager;
@@ -94,9 +96,14 @@ public class Application implements IApplication {
                 user.setPassword("talend@talend.com".getBytes());
                 String projectName = ResourceManager.getRootProjectName();
                 String projectDesc = ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment();
-                Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA, user);
+                Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA.getCaseName(),
+                        user);
 
-                project = proxyRepository.createProject(projectInfor);
+                // MOD zshen create project by proxyRepository
+                checkFileName(projectInfor.getLabel(), RepositoryConstants.PROJECT_PATTERN);
+                project = proxyRepository.getRepositoryFactoryFromProvider().createProject(projectInfor);
+
+                // project = proxyRepository.createProject(projectInfor);
             }
             initRepositoryContext(project);
             // CommonsPlugin.setHeadless(true);// arrest load tos component.
@@ -157,5 +164,21 @@ public class Application implements IApplication {
                 }
             }
         });
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "checkFileName".
+     * 
+     * @param fileName
+     * @param pattern
+     * 
+     * copy the method from ProxyRepositoryFactory to avoid tos migeration.
+     */
+    private void checkFileName(String fileName, String pattern) {
+        if (!Pattern.matches(pattern, fileName)) {
+            throw new IllegalArgumentException(Messages.getString(
+                    "ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", new String[] { fileName, pattern })); //$NON-NLS-1$
+        }
     }
 }

@@ -327,6 +327,9 @@
             <or>
 	            <instanceof value="orgomg.cwm.resource.relational.Catalog"/>           
 	            <instanceof value="orgomg.cwm.resource.relational.Schema"/>
+             <instanceof
+                   value="org.talend.core.model.repository.IRepositoryViewObject">
+             </instanceof>
 	        </or>
          </enablement>
       </actionProvider>       

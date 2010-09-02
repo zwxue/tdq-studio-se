@@ -73,16 +73,17 @@ public final class ActionHandleFactory {
         IDeletionHandle handle = null;
 
         String fileExtension = file.getFileExtension();
-        // if (FactoriesUtil.isEmfFile(fileExtension)) {
-        // handle = new EMFResourceHandle(file);
-        // if (FactoriesUtil.isProvFile(fileExtension)) {
-        // ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
-        // EResourceConstant typedConstant = EResourceConstant.getTypedConstant(modelElement);
-        // if (typedConstant == EResourceConstant.MDM_CONNECTIONS) {
-        // handle = new XMLDataProviderHandle(file);
-        // }
-        // }
-        // } else
+        if (FactoriesUtil.isEmfFile(fileExtension)) {
+            handle = new EMFResourceHandle(file);
+            // if (FactoriesUtil.isProvFile(fileExtension)) {
+            // if (ResourceManager.getMetadataFolder().getFullPath().isPrefixOf((file.getFullPath()))) {
+            // ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
+            // EResourceConstant typedConstant = EResourceConstant.getTypedConstant(modelElement);
+            // if (typedConstant == EResourceConstant.MDM_CONNECTIONS) {
+            // // handle = new XMLDataProviderHandle(modelElement);
+            // }
+            // }
+        } else
 
         if (FactoriesUtil.isJrxmlFile(fileExtension)) {
             handle = new JrxmlHandle(file);
@@ -92,4 +93,5 @@ public final class ActionHandleFactory {
 
         return handle;
     }
+
 }

@@ -31,7 +31,7 @@ public class DeleteResourceProvider extends CommonActionProvider {
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
-    	Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         Action action = null;
         // MOD mzhao, handle delete action for metadata.
         if (obj instanceof IRepositoryViewObject) {

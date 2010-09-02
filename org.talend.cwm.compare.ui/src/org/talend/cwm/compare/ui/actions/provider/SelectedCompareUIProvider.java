@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.SelectedComparisonAction;
+import org.talend.cwm.db.connection.ConnectionUtils;
 
 /**
  * 
@@ -24,31 +25,33 @@ import org.talend.cwm.compare.ui.actions.SelectedComparisonAction;
  */
 public class SelectedCompareUIProvider extends CommonActionProvider {
 
-	private static final String COMPARISON_MENUTEXT = Messages
-			.getString("SelectedCompareUIProvider.Comparison"); //$NON-NLS-1$
-	private SelectedComparisonAction selectionCompareAction = null;
+    private static final String COMPARISON_MENUTEXT = Messages.getString("SelectedCompareUIProvider.Comparison"); //$NON-NLS-1$
 
-	public SelectedCompareUIProvider() {
-		selectionCompareAction = new SelectedComparisonAction(
-				COMPARISON_MENUTEXT);
+    private SelectedComparisonAction selectionCompareAction = null;
 
-	}
+    public SelectedCompareUIProvider() {
+        selectionCompareAction = new SelectedComparisonAction(COMPARISON_MENUTEXT);
 
-	@Override
-	public void fillContextMenu(IMenuManager menu) {
-		TreeSelection treeSelection = (TreeSelection) getContext()
-				.getSelection();
-		if (treeSelection == null) {
-			return;
-		}
-		Object[] selectedObj = treeSelection.toArray();
-		if (selectedObj.length < 2) {
-			return;
-		}
-		selectionCompareAction.refreshSelectedObj(selectedObj[0],
-				selectedObj[1]);
-		menu.add(selectionCompareAction);
+    }
 
-	}
+    @Override
+    public void fillContextMenu(IMenuManager menu) {
+        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+        // remove the "Database Compare" menu when the object is a mdm connection
+        if (ConnectionUtils.isMdmConnection(obj)) {
+            return;
+        }
+        TreeSelection treeSelection = (TreeSelection) getContext().getSelection();
+        if (treeSelection == null) {
+            return;
+        }
+        Object[] selectedObj = treeSelection.toArray();
+        if (selectedObj.length < 2) {
+            return;
+        }
+        selectionCompareAction.refreshSelectedObj(selectedObj[0], selectedObj[1]);
+        menu.add(selectionCompareAction);
+
+    }
 
 }

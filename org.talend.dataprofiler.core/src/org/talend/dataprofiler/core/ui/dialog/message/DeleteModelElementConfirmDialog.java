@@ -202,11 +202,11 @@ public class DeleteModelElementConfirmDialog {
      * @param dialogMessage
      * @return
      */
-    public static int showDialog(Shell parentShell, IFile file, ModelElement[] dependencyElements, String dialogMessage) {
+    public static int showDialog(Shell parentShell, Object obj, ModelElement[] dependencyElements, String dialogMessage) {
         for (ModelElement element : dependencyElements) {
             ImpactNode node = new ImpactNode(element);
             if (!impactNodes.contains(node)) {
-                node.addRequireModelElement(file);
+                node.addRequireModelElement(obj);
                 impactNodes.add(node);
             }
         }

@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.factory.ModelElementFileFactory;
@@ -70,11 +71,40 @@ public class SelectedResources {
             } else if (obj instanceof IFolder) {
                 IFolder folder = (IFolder) obj;
                 getAllSubFiles(folder, fileList);
+                // } else if (obj instanceof IRepositoryViewObject) {
+                // Item theItem = ((IRepositoryViewObject) obj).getProperty().getItem();
+                // fileList.add(ResourceManager.getRoot().getFile(
+                // new Path(((ConnectionItem) theItem).getConnection().eResource().getURI().toPlatformString(false))));
+                // // PrvResourceFileHelper.getInstance().get
+
             } else {
                 return new IFile[0];
             }
         }
         return fileList.toArray(new IFile[fileList.size()]);
+    }
+
+    /**
+     * Return an array of the currently selected object.
+     * 
+     * @return the selected object
+     */
+    @SuppressWarnings("unchecked")
+    public IRepositoryViewObject[] getSelectedObjectArrayForDelForever() {
+        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
+        TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
+        List<IRepositoryViewObject> objectList = new ArrayList<IRepositoryViewObject>();
+        Iterator iterator = treeSelection.iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            if (obj instanceof IRepositoryViewObject) {
+                // Item theItem = ((IRepositoryViewObject) obj).getProperty().getItem();
+                // fileList.add((IFile) ((ConnectionItem) theItem).getConnection().eResource());
+                objectList.add((IRepositoryViewObject) obj);
+                // PrvResourceFileHelper.getInstance().get
+            }
+        }
+        return objectList.toArray(new IRepositoryViewObject[objectList.size()]);
     }
 
     /**

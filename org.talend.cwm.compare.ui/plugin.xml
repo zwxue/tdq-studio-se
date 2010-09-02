@@ -44,6 +44,9 @@
                    </test>
                 </or>
              </and>
+            <instanceof
+                  value="org.talend.core.model.repository.IRepositoryViewObject">
+            </instanceof>
            </or>
          </enablement>
       </actionProvider>        
@@ -70,6 +73,9 @@
                    </test>
                 </or>
              </and>
+            <instanceof
+                  value="org.talend.core.model.repository.IRepositoryViewObject">
+            </instanceof>
            </or>
          </enablement>
       </actionProvider>
@@ -101,6 +107,9 @@
               </and>
               <instanceof
                     value="org.talend.cwm.relational.TdColumn">
+              </instanceof>
+              <instanceof
+                    value="org.talend.core.model.repository.IRepositoryViewObject">
               </instanceof></or>
         </enablement>
      </actionProvider>        
