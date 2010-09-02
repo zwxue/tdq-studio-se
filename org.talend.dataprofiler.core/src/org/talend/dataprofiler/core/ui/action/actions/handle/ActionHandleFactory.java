@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.resource.EResourceConstant;
 
@@ -87,31 +88,37 @@ public final class ActionHandleFactory {
     public static IDeletionHandle createDeletionHandle(Property property) {
         IDeletionHandle handle = null;
 
-        EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
+        Item item = property.getItem();
+        if (item != null) {
+            EResourceConstant typedConstant = EResourceConstant.getTypedConstant(item);
 
-        if (typedConstant == null) {
-            handle = new SimpleHandle(property);
-        } else {
-            switch (typedConstant) {
-            case DB_CONNECTIONS:
-                handle = new ConnectionHandle(property);
-                break;
-            case MDM_CONNECTIONS:
-                handle = new XMLDataProviderHandle(property);
-                break;
-            case JRXML_TEMPLATE:
-                handle = new JrxmlHandle(property);
-                break;
-            case ANALYSIS:
-            case REPORTS:
-            case PATTERNS:
-            case RULES:
-            case INDICATORS:
-                handle = new EMFResourceHandle(property);
-                break;
+            if (typedConstant == null) {
+                handle = new SimpleHandle(property);
+            } else {
+                switch (typedConstant) {
+                case DB_CONNECTIONS:
+                    handle = new ConnectionHandle(property);
+                    break;
+                case MDM_CONNECTIONS:
+                    handle = new XMLDataProviderHandle(property);
+                    break;
+                case JRXML_TEMPLATE:
+                    handle = new JrxmlHandle(property);
+                    break;
+                case ANALYSIS:
+                case REPORTS:
+                case PATTERNS:
+                case RULES:
+                case INDICATORS:
+                    handle = new EMFResourceHandle(property);
+                    break;
+                case FOLDER:
+                    handle = new FolderHandle(property);
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+                }
             }
         }
 

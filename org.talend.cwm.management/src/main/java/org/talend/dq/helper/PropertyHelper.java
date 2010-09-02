@@ -30,7 +30,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -180,6 +183,27 @@ public final class PropertyHelper {
     public static Property getProperty(ModelElement element) {
         IFile propertyFile = PropertyHelper.getPropertyFile(element);
         return propertyFile != null ? getProperty(propertyFile) : null;
+    }
+
+    /**
+     * DOC bZhou Comment method "createFolderItemProperty".
+     * 
+     * @return
+     */
+    public static Property createFolderItemProperty() {
+        Property property = PropertiesFactory.eINSTANCE.createProperty();
+
+        FolderItem item = PropertiesFactory.eINSTANCE.createFolderItem();
+        item.setType(FolderType.FOLDER_LITERAL);
+
+        ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+        item.setState(itemState);
+
+        property.setId(EcoreUtil.generateUUID());
+        property.setItem(item);
+        item.setProperty(property);
+
+        return property;
     }
 
     /**

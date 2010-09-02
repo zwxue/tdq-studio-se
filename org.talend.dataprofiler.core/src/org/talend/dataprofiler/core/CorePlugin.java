@@ -24,6 +24,8 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -333,9 +335,13 @@ public class CorePlugin extends AbstractUIPlugin {
                 if (editorInput instanceof FileEditorInput) {
                     FileEditorInput fileInput = (FileEditorInput) editorInput;
 
-                    if (property.getLabel().equals(fileInput.getFile().getName())) {
-                        activePage.closeEditor(reference.getEditor(false), false);
-                        break;
+                    if (property.eResource() != null) {
+                        IPath propPath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension();
+                        IPath filePath = new Path(fileInput.getFile().getName()).removeFileExtension();
+                        if (filePath.equals(propPath)) {
+                            activePage.closeEditor(reference.getEditor(false), false);
+                            break;
+                        }
                     }
                 }
             } catch (PartInitException e) {

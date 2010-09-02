@@ -12,9 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -25,7 +29,17 @@ public class DeleteResourceProvider extends CommonActionProvider {
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
-        menu.add(new DeleteObjectsAction());
+        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+
+        if (obj instanceof IResource) {
+            IResource resource = (IResource) obj;
+            if (!ResourceService.isReadOnlyFolder(resource)) {
+                menu.add(new DeleteObjectsAction());
+            }
+        } else if (obj instanceof DQRecycleBinNode) {
+            menu.add(new DeleteObjectsAction());
+        }
+
     }
 
 }

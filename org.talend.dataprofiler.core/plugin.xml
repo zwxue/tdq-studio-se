@@ -287,6 +287,12 @@
                <instanceof
                      value="org.talend.core.model.repository.IRepositoryViewObject">
                </instanceof>
+               <instanceof
+                     value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.core.resources.IFolder">
+               </instanceof>
             </or>
          </enablement>
       </actionProvider>
@@ -422,15 +428,6 @@
                            value="Patterns">
                      </test>
                   </not>
-               </adapt>
-         </enablement>
-      </actionProvider>
-      <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.DeleteUserFolderProvider"
-            id="org.talend.dataprofiler.core.ui.action.provider.DeleteUserFolderProvider">
-         <enablement>
-               <adapt
-                     type="org.eclipse.core.resources.IFolder">
                </adapt>
          </enablement>
       </actionProvider>

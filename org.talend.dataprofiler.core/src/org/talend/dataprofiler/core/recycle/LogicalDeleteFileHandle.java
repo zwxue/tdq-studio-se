@@ -119,6 +119,24 @@ public class LogicalDeleteFileHandle {
     }
 
     /**
+     * DOC bZhou Comment method "deleteElement".
+     * 
+     * @param resource
+     */
+    public static void deleteElement(IResource resource) {
+
+        String prefix;
+
+        if (resource.getType() == IResource.FOLDER) {
+            prefix = folderType;
+        } else {
+            prefix = fileType;
+        }
+
+        replaceInFile(prefix + resource.getFullPath().toOSString(), "");
+    }
+
+    /**
      * 
      * Save logical delete path to TXT file.
      * 
@@ -317,8 +335,8 @@ public class LogicalDeleteFileHandle {
                 itemState.setDeleted(true);
                 Resource propertyResource = property.eResource();
                 rc.setOk(EMFSharedResources.getInstance().saveResource(propertyResource));
-                saveElement(LogicalDeleteFileHandle.fileType, ifile.getFullPath().toOSString());
             }
+            saveElement(LogicalDeleteFileHandle.fileType, ifile.getFullPath().toOSString());
         }
 
         // svn commit

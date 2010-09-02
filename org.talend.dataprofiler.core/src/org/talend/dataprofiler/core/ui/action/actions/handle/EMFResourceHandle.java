@@ -92,6 +92,7 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
      */
     public boolean delete() throws Exception {
         if (isPhysicalDelete()) {
+            LogicalDeleteFileHandle.deleteElement(file);
             ModelElementFileFactory.getResourceFileMap(file).delete(file);
         } else {
             LogicalDeleteFileHandle.deleteLogical(file);

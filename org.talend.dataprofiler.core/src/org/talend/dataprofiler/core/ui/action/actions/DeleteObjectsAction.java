@@ -14,8 +14,10 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -23,6 +25,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -38,6 +42,8 @@ import org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -68,31 +74,34 @@ public class DeleteObjectsAction extends Action {
     @Override
     public void run() {
 
-        List<Property> propList = getSelectedProperties();
-
-        List<IDeletionHandle> handleList = new ArrayList<IDeletionHandle>();
-
-        for (Property property : propList) {
-
-            IDeletionHandle handle = ActionHandleFactory.createDeletionHandle(property);
-
-            List<ModelElement> dependencies = handle.getDependencies();
-            if (dependencies != null && !dependencies.isEmpty()) {
-                IFile itemFile = PropertyHelper.getItemFile(property);
-                showDependenciesDialog(itemFile, dependencies);
-                return;
-            } else {
-                handleList.add(handle);
-            }
-        }
-
         try {
 
-            for (IDeletionHandle handle : handleList) {
+            Set<Property> propList = getSelectedProperties();
 
-                if (!showConfirmDialog()) {
+            if (propList == null) {
+                return;
+            }
+
+            List<IDeletionHandle> handleList = new ArrayList<IDeletionHandle>();
+            for (Property property : propList) {
+
+                IDeletionHandle handle = ActionHandleFactory.createDeletionHandle(property);
+
+                List<ModelElement> dependencies = handle.getDependencies();
+                if (dependencies != null && !dependencies.isEmpty()) {
+                    IFile itemFile = PropertyHelper.getItemFile(property);
+                    showDependenciesDialog(itemFile, dependencies);
                     return;
+                } else {
+                    handleList.add(handle);
                 }
+            }
+
+            if (!showConfirmDialog()) {
+                return;
+            }
+
+            for (IDeletionHandle handle : handleList) {
 
                 // MOD qiongli bug 14090
                 CorePlugin.getDefault().closeEditorIfOpened(handle.getProperty());
@@ -116,8 +125,8 @@ public class DeleteObjectsAction extends Action {
      * 
      * @return
      */
-    private List<Property> getSelectedProperties() {
-        List<Property> propList = new ArrayList<Property>();
+    private Set<Property> getSelectedProperties() throws Exception {
+        Set<Property> propList = new HashSet<Property>();
 
         DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
         TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
@@ -126,27 +135,90 @@ public class DeleteObjectsAction extends Action {
         while (iterator.hasNext()) {
             Object obj = iterator.next();
 
-            Property property = null;
-
-            if (obj instanceof IFile) {
-                property = PropertyHelper.getProperty((IFile) obj);
-            } else if (obj instanceof IFolder) {
+            if (obj instanceof IFolder) {
                 IFolder folder = (IFolder) obj;
-                propList.addAll(getAllSubFileProperties(folder));
-            } else if (obj instanceof IRepositoryViewObject) {
-                property = ((IRepositoryViewObject) obj).getProperty();
-            } else if (obj instanceof DQRecycleBinNode) {
-                DQRecycleBinNode node = (DQRecycleBinNode) obj;
-                node.getObject();
+                if (ResourceService.isReadOnlyFolder(folder)) {
+                    return null;
+                }
             }
 
-            if (property != null) {
-                propList.add(property);
-            }
+            iteratedProperties(obj, propList);
 
         }
 
         return propList;
+    }
+
+    /**
+     * DOC bZhou Comment method "iteratedProperties".
+     * 
+     * @param obj
+     * @param propList
+     * @throws Exception
+     */
+    private void iteratedProperties(Object obj, Set<Property> propList) throws Exception {
+        if (obj instanceof IFile) {
+            Property property = PropertyHelper.getProperty((IFile) obj);
+            if (!property.getItem().getState().isDeleted()) {
+                propList.add(property);
+            }
+        } else if (obj instanceof IFolder) {
+            IFolder folder = (IFolder) obj;
+            if (!existChildFolder(propList, folder)) {
+                Property property = PropertyHelper.createFolderItemProperty();
+                property.getItem().getState().setPath(folder.getFullPath().toOSString());
+                propList.add(property);
+            }
+
+            for (IResource rersource : folder.members()) {
+                iteratedProperties(rersource, propList);
+            }
+
+        } else if (obj instanceof IRepositoryViewObject) {
+            propList.add(((IRepositoryViewObject) obj).getProperty());
+        } else if (obj instanceof DQRecycleBinNode) {
+            DQRecycleBinNode node = (DQRecycleBinNode) obj;
+            String pathStr = node.getObject().toString();
+            IPath path = new Path(pathStr).removeFirstSegments(1);
+
+            if (path.getFileExtension() == null) {
+                List<Object> children = node.getDeletedChildren();
+                if (children != null) {
+                    for (Object child : children) {
+                        iteratedProperties(child, propList);
+                    }
+                }
+
+                Property property = PropertyHelper.createFolderItemProperty();
+                property.getItem().getState().setPath(path.toOSString());
+
+                propList.add(property);
+            } else {
+                path = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+                IFile propFile = ResourceManager.getRoot().getFile(path);
+                if (propFile.exists()) {
+                    propList.add(PropertyHelper.getProperty(propFile));
+                }
+            }
+
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "existChildFolder".
+     * 
+     * @param propList
+     * @param folder
+     * @return
+     */
+    private boolean existChildFolder(Set<Property> propList, IFolder folder) {
+        for (Property property : propList) {
+            IPath path = new Path(property.getItem().getState().getPath());
+            if (folder.getFullPath().isPrefixOf(path)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

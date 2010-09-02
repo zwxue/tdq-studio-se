@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -44,6 +45,7 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  */
 public enum EResourceConstant {
 
+    FOLDER("", ""),
     DATA_PROFILING("TDQ_Data Profiling", "TDQ_Data Profiling", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     LIBRARIES("TDQ_Libraries", "TDQ_Libraries", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     METADATA("metadata", "metadata", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
@@ -116,7 +118,9 @@ public enum EResourceConstant {
         List<IPath> allPathes = new ArrayList<IPath>();
 
         for (EResourceConstant constant : values()) {
-            allPathes.add(new Path(constant.getPath()));
+            if (constant != FOLDER) {
+                allPathes.add(new Path(constant.getPath()));
+            }
         }
 
         return allPathes.toArray(new Path[allPathes.size()]);
@@ -206,6 +210,11 @@ public enum EResourceConstant {
                 @Override
                 public Object caseMDMConnectionItem(MDMConnectionItem object) {
                     return MDM_CONNECTIONS;
+                }
+
+                @Override
+                public Object caseFolderItem(FolderItem object) {
+                    return FOLDER;
                 }
 
             }.doSwitch(item);

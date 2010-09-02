@@ -29,6 +29,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.reports.util.ReportsSwitch;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.ReportWriter;
 import org.talend.resource.ResourceManager;
@@ -166,7 +167,7 @@ public final class RepResourceFileHelper extends ResourceFileMap {
      */
     @Override
     protected void deleteRelated(IFile file) {
-        // TODO Auto-generated method stub
+        EObjectHelper.getDependencyClients(file);
 
     }
 
