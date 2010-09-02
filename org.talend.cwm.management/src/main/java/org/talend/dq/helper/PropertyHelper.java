@@ -32,6 +32,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
+import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
@@ -120,7 +121,21 @@ public final class PropertyHelper {
             } else {
                 // try to get property from element file.
                 IFile propertyFile = getPropertyFile(file);
-                return getProperty(propertyFile);
+                if (propertyFile == null) {
+                    Property property = PropertiesFactory.eINSTANCE.createProperty();
+                    property.setLabel(file.getName());
+                    property.setId(EcoreUtil.generateUUID());
+
+                    TDQItem item = PropertiesFactory.eINSTANCE.createTDQItem();
+                    item.setFilename(file.getFullPath().toString());
+                    item.setProperty(property);
+
+                    property.setItem(item);
+
+                    return property;
+                } else {
+                    return getProperty(propertyFile);
+                }
             }
 
         }
