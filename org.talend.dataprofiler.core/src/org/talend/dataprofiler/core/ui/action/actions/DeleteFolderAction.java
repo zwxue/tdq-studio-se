@@ -65,7 +65,17 @@ public class DeleteFolderAction extends Action {
             return;
         }
         try {
-            folder.delete(true, null);
+            if (isDeleteForever) {
+                // MOD qiongli 2010-8-5,bug 14697.
+                delsubFolderForever(folder);
+                if (LogicalDeleteFileHandle.isStartWithDelFolder(folder.getFullPath().toOSString())) {
+                    LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType + folder.getFullPath().toOSString(),
+                            PluginConstant.EMPTY_STRING);
+                    folder.delete(true, null);
+                }
+            } else {
+                LogicalDeleteFileHandle.saveElement(LogicalDeleteFileHandle.folderType, folder.getFullPath().toOSString());
+            }
             CorePlugin.getDefault().refreshDQView();
             ProxyRepositoryManager.getInstance().save();
         } catch (CoreException e) {
