@@ -29,12 +29,14 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
+import org.talend.core.model.properties.util.PropertiesSwitch;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.writer.EMFSharedResources;
@@ -111,7 +113,7 @@ public final class PropertyHelper {
      * @return Null if can't find.
      */
     public static Property getProperty(IFile file) {
-        if (file.exists()) {
+        if (file != null && file.exists()) {
 
             if (StringUtils.equalsIgnoreCase(file.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)) {
                 return getProperty(file.getLocation().toFile());
@@ -253,6 +255,27 @@ public final class PropertyHelper {
         }
 
         return (ModelElement) elementResource.getContents().get(0);
+    }
+
+    /**
+     * DOC zshen Comment method "retrieveElement".
+     * 
+     * @param item
+     * @return
+     */
+    public static ModelElement retrieveElement(Item item) {
+        if (item == null) {
+            return null;
+        }
+        PropertiesSwitch propertiesSwitch = new PropertiesSwitch() {
+
+            @Override
+            public Object caseConnectionItem(ConnectionItem object) {
+                return object.getConnection();
+            }
+
+        };
+        return (ModelElement) propertiesSwitch.doSwitch(item);
     }
 
     /**

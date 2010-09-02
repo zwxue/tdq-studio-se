@@ -140,7 +140,6 @@ public final class EMFUtil {
         return res.getContents().add(eObject);
     }
 
-
     /**
      * Saves each resource of the resource set.
      * 
@@ -248,7 +247,6 @@ public final class EMFUtil {
             options.put(XMIResource.OPTION_ENCODING, ENCODING);
 
             resource.save(options);
-
 
             if (log.isDebugEnabled()) {
                 log.debug("Resource saved in:" + resource.getURI());

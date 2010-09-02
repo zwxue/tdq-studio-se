@@ -170,6 +170,8 @@ public final class FactoriesUtil {
         extensions.add(DefinitionPackage.eNAME);
 
         // --- add specific extensions
+        // MOD zshen use same repository API with TOS to persistent metadata
+        extensions.add(ITEM_EXTENSION);
         extensions.add(PROV);
         extensions.add(ANA);
         extensions.add(CAT);

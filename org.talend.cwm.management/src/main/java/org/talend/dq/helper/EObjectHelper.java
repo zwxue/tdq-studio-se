@@ -26,6 +26,9 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -111,6 +114,17 @@ public final class EObjectHelper {
         return resourceFileMap != null ? resourceFileMap.getModelElement(file) : null;
     }
 
+    private static ModelElement getModelElement(IRepositoryViewObject repositoryObject) {
+        ModelElement modelElement = null;
+        Item theItem = repositoryObject.getProperty().getItem();
+        if (theItem instanceof ConnectionItem) {
+            modelElement = ((ConnectionItem) theItem).getConnection();
+        }
+        return modelElement;
+        // ResourceFileMap resourceFileMap = ModelElementFileFactory.getResourceFileMap(file);
+        // return resourceFileMap != null ? resourceFileMap.getModelElement(file) : null;
+    }
+
     public static List<ModelElement> getDependencySuppliers(IFile file) {
         ModelElement findElement = getModelElement(file);
         EList<Dependency> clientDependencys = findElement.getClientDependency();
@@ -138,6 +152,37 @@ public final class EObjectHelper {
         }
         return supplierList;
     }
+
+    public static List<ModelElement> getDependencyClients(IRepositoryViewObject repositoryObject) {
+        ModelElement findElement = getModelElement(repositoryObject);
+        if (findElement == null) {
+            return new ArrayList<ModelElement>();
+        }
+        EList<Dependency> clientDependencys = findElement.getSupplierDependency();
+        // locate resource of each Dependency object
+        List<ModelElement> supplierList = new ArrayList<ModelElement>();
+        for (Dependency dependency : clientDependencys) {
+            EList<ModelElement> client = dependency.getClient();
+            if (client != null) {
+                supplierList.addAll(client);
+            }
+        }
+        return supplierList;
+    }
+
+    // public static List<ModelElement> getDependencyClients(IRepositoryViewObject repositoryObject) {
+    // ModelElement findElement = getModelElement(repositoryObject);
+    // EList<Dependency> clientDependencys = findElement.getSupplierDependency();
+    // // locate resource of each Dependency object
+    // List<ModelElement> supplierList = new ArrayList<ModelElement>();
+    // for (Dependency dependency : clientDependencys) {
+    // EList<ModelElement> client = dependency.getClient();
+    // if (client != null) {
+    // supplierList.addAll(client);
+    // }
+    // }
+    // return supplierList;
+    // }
 
     public static void addDependenciesForFile(IFile file, List<ModelElement> modelElements) {
         ModelElement findElement = getModelElement(file);
