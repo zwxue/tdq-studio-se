@@ -79,6 +79,22 @@ public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
 
     /**
      * 
+     * DOC mzhao Get repository view object by item name.
+     * 
+     * @param element
+     * @return
+     */
+    public IRepositoryViewObject getReposViewObjByItemPath(String itemPath) {
+        for (T ele : getAllElements()) {
+            if (ele.eResource().getURI().toFileString().equals(itemPath)) {
+                return getRepositoryViewObject(ele);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 
      * DOC mzhao Save specific connection.
      * 
      * @param connection
