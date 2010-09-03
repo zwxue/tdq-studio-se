@@ -75,7 +75,8 @@ public final class ModelElementFileFactory {
             modelElement = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
         } else if (FactoriesUtil.isItemFile(fileExtension)) {
             IPath filePath = file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-            if (!filePath.toFile().exists()) {
+            if (!file.getParent().getFile(filePath.removeFirstSegments(filePath.segmentCount() - 1)).getLocation().toFile()
+                    .exists()) {
                 return modelElement;
             } else {
                 Property itemProperty = PropertyHelper.getProperty(ResourceManager.getRoot().getFile(filePath));

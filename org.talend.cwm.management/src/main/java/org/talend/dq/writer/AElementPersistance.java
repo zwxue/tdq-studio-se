@@ -324,8 +324,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         return rc;
     }
 
-
-
     /*
      * (non-Javadoc)
      * 

@@ -145,6 +145,7 @@ public final class PropertyHelper {
                 } else {
                     return getProperty(propertyFile);
                 }
+
             }
 
         }

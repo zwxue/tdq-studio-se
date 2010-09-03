@@ -62,6 +62,7 @@ import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 public final class IndicatorHelper {
 
     private static Logger log = Logger.getLogger(IndicatorHelper.class);
+
     /**
      * The available threshold types.
      */
@@ -270,7 +271,7 @@ public final class IndicatorHelper {
         if (indicator instanceof CompositeIndicator) {
             CompositeIndicator compositeIndicator = (CompositeIndicator) indicator;
             try {
-                for (Indicator ind : compositeIndicator.getChildIndicators()) {
+                for (Indicator ind : compositeIndicator.getAllChildIndicators()) {
                     leafIndicators.addAll(getIndicatorLeaves(ind));
                 }
             } catch (Exception e) {
