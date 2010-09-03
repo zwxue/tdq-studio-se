@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
 import org.talend.resource.ResourceService;
 
@@ -36,10 +35,9 @@ public class DeleteResourceProvider extends CommonActionProvider {
             if (!ResourceService.isReadOnlyFolder(resource)) {
                 menu.add(new DeleteObjectsAction());
             }
-        } else if (obj instanceof DQRecycleBinNode) {
+        } else {
             menu.add(new DeleteObjectsAction());
         }
-
     }
 
 }

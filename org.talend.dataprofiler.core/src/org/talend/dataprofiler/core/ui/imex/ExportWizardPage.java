@@ -280,7 +280,7 @@ public class ExportWizardPage extends WizardPage {
                 if (!repositoryTree.getChecked(ItemRecord.findRecord(depFile))) {
                     ModelElement element = dependencyMap.get(depFile);
                     String fileName = element != null ? element.getName() : depFile.getName();
-                    errors.add("\"" + record.getElement().getName() + "\" miss dependency : " + fileName);
+                    errors.add("\"" + record.getName() + "\" miss dependency : " + fileName);
                 }
             }
         }

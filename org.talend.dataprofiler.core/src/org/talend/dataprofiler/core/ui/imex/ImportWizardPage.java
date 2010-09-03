@@ -303,7 +303,7 @@ public class ImportWizardPage extends WizardPage {
 
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
-                    dErrors.add("\"" + record.getElement().getName() + "\" miss dependency :" + element.getName());
+                    dErrors.add("\"" + record.getName() + "\" miss dependency :" + element.getName());
                 }
             }
         }

@@ -66,6 +66,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private String projectName;
 
+    private List<IMigrationTask> migrationTasks;
+
     /*
      * (non-Javadoc)
      * 
@@ -89,11 +91,6 @@ public class FileSystemImportWriter implements IImportWriter {
             }
         }
 
-        if (basePath != null) {
-            versionFile = DqFileUtils.getFile(basePath.toFile(), VERSION_FILE_NAME);
-            definitionFile = DqFileUtils.getFile(basePath.toFile(), DEFINITION_FILE_NAME);
-        }
-
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
     }
 
@@ -113,9 +110,8 @@ public class FileSystemImportWriter implements IImportWriter {
             } catch (CoreException e) {
                 //
             }
-            ModelElement element = record.getElement();
 
-            String aString = element != null ? element.getName() : property.getLabel();
+            String aString = record.getName();
 
             if (itemFile.exists()) {
                 record.addError("\"" + aString + "\" is existed in workspace : " + itemFile.getFullPath().toString());
@@ -132,8 +128,7 @@ public class FileSystemImportWriter implements IImportWriter {
         for (ModelElement melement : record.getDependencyMap().values()) {
             if (melement.eIsProxy()) {
                 InternalEObject inObject = (InternalEObject) melement;
-                record.addError("\"" + record.getElement().getName() + "\" missing dependented file : "
-                        + inObject.eProxyURI().toFileString());
+                record.addError("\"" + record.getName() + "\" missing dependented file : " + inObject.eProxyURI().toFileString());
             }
         }
     }
@@ -226,7 +221,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
                 Map<IPath, IPath> toImportMap = mapping(record);
 
-                monitor.subTask("Importing " + record.getElementName());
+                monitor.subTask("Importing " + record.getName());
 
                 if (record.isValid()) {
                     log.info("Importing " + record.getFile().getAbsolutePath());
@@ -278,13 +273,7 @@ public class FileSystemImportWriter implements IImportWriter {
             monitor = new NullProgressMonitor();
         }
 
-        if (versionFile != null && versionFile.exists()) {
-            ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
-            final List<IMigrationTask> migrationTasks = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE,
-                    version);
-
-            MigrationTaskManager.doMigrationTask(migrationTasks, monitor);
-        }
+        MigrationTaskManager.doMigrationTask(migrationTasks, monitor);
     }
 
     /*
@@ -294,6 +283,33 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     public ItemRecord computeInput(IPath path) {
         setBasePath(path);
+
+        if (path != null) {
+            versionFile = DqFileUtils.getFile(path.toFile(), VERSION_FILE_NAME);
+            definitionFile = DqFileUtils.getFile(path.toFile(), DEFINITION_FILE_NAME);
+        }
+
+        if (versionFile != null && versionFile.exists()) {
+            ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
+            migrationTasks = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE, version);
+            // Iterator<IMigrationTask> it = migrationTasks.iterator();
+            // while (it.hasNext()) {
+            // IMigrationTask task = it.next();
+            // if ("org.talend.dataprofiler.core.migration.impl.MergeMetadataTask".equals(task.getId())) {
+            // MergeMetadataTask mergeTask = (MergeMetadataTask) task;
+            //
+            // IPath pPath = path.append("TOP_DEFAULT_PRJ");
+            // mergeTask.addMergeFolder(pPath.append(EResourceConstant.DATA_PROFILING.getPath()).toFile());
+            // mergeTask.addMergeFolder(pPath.append(EResourceConstant.METADATA.getPath()).toFile());
+            // mergeTask.addMergeFolder(pPath.append(EResourceConstant.LIBRARIES.getPath()).toFile());
+            // break;
+            // }
+            // }
+
+        }
+
+        // MigrationTaskManager.doMigrationTask(migrationTasks, new NullProgressMonitor());
+
         return new ItemRecord(path.toFile());
     }
 

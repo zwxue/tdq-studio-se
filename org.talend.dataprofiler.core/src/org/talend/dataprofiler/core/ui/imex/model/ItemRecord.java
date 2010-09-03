@@ -29,6 +29,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.jfree.util.Log;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -91,20 +93,25 @@ public class ItemRecord {
 
         allItemRecords.add(this);
 
-        if (element == null && !isJRXml()) {
-            URI fileURI = URI.createFileURI(file.getAbsolutePath());
-            Resource resource = resourceSet.getResource(fileURI, true);
-            EList<EObject> contents = resource.getContents();
-            if (contents != null && !contents.isEmpty()) {
-                EObject object = contents.get(0);
-                if (object instanceof ModelElement) {
-                    element = (ModelElement) object;
-                }
-            }
-        }
-
         if (property == null) {
             property = (Property) EObjectHelper.retrieveEObject(getPropertyPath(), PropertiesPackage.eINSTANCE.getProperty());
+        }
+
+        if (element == null && !isJRXml()) {
+            try {
+                URI fileURI = URI.createFileURI(file.getAbsolutePath());
+                Resource resource = resourceSet.getResource(fileURI, true);
+                EList<EObject> contents = resource.getContents();
+                if (contents != null && !contents.isEmpty()) {
+                    EObject object = contents.get(0);
+                    if (object instanceof ModelElement) {
+                        element = (ModelElement) object;
+                    }
+                }
+            } catch (Exception e) {
+                Log.warn("Can't get the element: " + getName());
+            }
+
         }
 
         computeDependencies();
@@ -166,12 +173,14 @@ public class ItemRecord {
                     }
                 }
             }
-        } else {
+        } else if (element != null) {
             List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
 
             ModelElementHelper.iterateClientDependencies(element, dependencyElements);
 
             for (ModelElement dElement : dependencyElements) {
+
+                EcoreUtil.resolveAll(dElement);
 
                 if (!dElement.eIsProxy()) {
                     URI dURI = dElement.eResource().getURI();
@@ -260,15 +269,6 @@ public class ItemRecord {
     }
 
     /**
-     * Getter for element.
-     * 
-     * @return the element
-     */
-    public ModelElement getElement() {
-        return this.element;
-    }
-
-    /**
      * Getter for parent.
      * 
      * @return the parent
@@ -307,16 +307,18 @@ public class ItemRecord {
     }
 
     /**
-     * DOC bZhou Comment method "getElementName".
+     * DOC bZhou Comment method "getName".
      * 
      * @return
      */
-    public String getElementName() {
-        if (isJRXml()) {
+    public String getName() {
+        if (element != null) {
+            return element.getName();
+        } else if (property != null) {
             return property.getLabel();
+        } else {
+            return file.getName();
         }
-
-        return element != null ? getElement().getName() : "";
     }
 
     /**

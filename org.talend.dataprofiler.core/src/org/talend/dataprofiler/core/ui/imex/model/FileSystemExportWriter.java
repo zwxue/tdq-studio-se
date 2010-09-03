@@ -71,11 +71,6 @@ public class FileSystemExportWriter implements IExportWriter {
 
         // property
         IPath propResPath = record.getPropertyPath();
-        if (itemDesPath == null) {
-            System.out.println("");
-        } else {
-
-        }
         IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
         toExportMap.put(itemResPath, itemDesPath);
@@ -105,7 +100,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
                 Map<IPath, IPath> toImportMap = mapping(record);
 
-                monitor.subTask("Exporting " + record.getElementName());
+                monitor.subTask("Exporting " + record.getName());
 
                 if (record.isValid()) {
                     log.info("Exporting " + record.getFile().getAbsolutePath());

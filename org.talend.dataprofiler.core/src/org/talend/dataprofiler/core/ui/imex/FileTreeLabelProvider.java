@@ -15,19 +15,12 @@ package org.talend.dataprofiler.core.ui.imex;
 import java.io.File;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.resource.EResourceConstant;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -86,7 +79,7 @@ public class FileTreeLabelProvider extends LabelProvider {
                     image = ImageLib.getImage(ImageLib.PATTERN_REG);
                 } else if (fileName.endsWith(FactoriesUtil.DQRULE)) {
                     image = ImageLib.getImage(ImageLib.DQ_RULE);
-                } else if (fileName.endsWith(FactoriesUtil.PROV)) {
+                } else if (fileName.endsWith(FactoriesUtil.ITEM_EXTENSION)) {
                     image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (fileName.endsWith(FactoriesUtil.DEFINITION)) {
                     image = ImageLib.getImage(ImageLib.IND_DEFINITION);
@@ -121,23 +114,7 @@ public class FileTreeLabelProvider extends LabelProvider {
     public String getText(Object element) {
         if (element instanceof ItemRecord) {
             ItemRecord recored = (ItemRecord) element;
-            File file = recored.getFile();
-            String fileExtension = new Path(file.getName()).getFileExtension();
-            if (file.isFile() && FactoriesUtil.isEmfFile(fileExtension)) {
-                EMFUtil emfUtil = new EMFUtil();
-                URI uri = URI.createFileURI(file.getAbsolutePath());
-                Resource resource = emfUtil.getResourceSet().getResource(uri, true);
-                EList<EObject> contents = resource.getContents();
-                if (contents != null && !contents.isEmpty()) {
-                    EObject eObject = contents.get(0);
-                    if (eObject instanceof ModelElement) {
-                        return ((ModelElement) eObject).getName();
-                    }
-                }
-            }
-
-            return file.getName();
-
+            return recored.getName();
         }
 
         return super.getText(element);
