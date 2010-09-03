@@ -20,8 +20,10 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.ext.FrequencyExt;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -52,6 +54,8 @@ public final class ComparatorsFactory {
     public static final int SOUNDEX_FREQUENCY_COMPARATOR_ID = 6;
 
     public static final int SOUNDEX_LOW_FREQUENCY_COMPARATOR_ID = 7;
+
+    public static final int IREPOSITORYVIEWOBJECT_COMPARATOR_ID = 8;
 
     /**
      * DOC zqin Comment method "sort".
@@ -105,6 +109,8 @@ public final class ComparatorsFactory {
             return new FrequencyIndicatorComparator();
         case SOUNDEX_LOW_FREQUENCY_COMPARATOR_ID:
             return new LowFrequencyIndicatorComparator();
+        case IREPOSITORYVIEWOBJECT_COMPARATOR_ID:
+            return new IRepositoryViewObjectComparator();
         default:
             return new ModelElementComparator();
         }
@@ -244,6 +250,24 @@ public final class ComparatorsFactory {
                 return 1;
             }
             return -1;
+        }
+
+    }
+
+    /**
+     * DOC zshen ComparatorsFactory class global comment. Detailled comment
+     */
+    static class IRepositoryViewObjectComparator implements Comparator<IRepositoryViewObject> {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+         */
+        public int compare(IRepositoryViewObject o1, IRepositoryViewObject o2) {
+
+            return PropertyHelper.retrieveElement(o1.getProperty().getItem()).getName().compareTo(
+                    PropertyHelper.retrieveElement(o2.getProperty().getItem()).getName());
         }
 
     }

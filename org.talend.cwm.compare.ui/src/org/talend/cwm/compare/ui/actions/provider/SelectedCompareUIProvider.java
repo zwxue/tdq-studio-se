@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.cwm.compare.ui.actions.provider;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
@@ -36,10 +38,13 @@ public class SelectedCompareUIProvider extends CommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
-        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+        Iterator iter = ((TreeSelection) this.getContext().getSelection()).iterator();
         // remove the "Database Compare" menu when the object is a mdm connection
-        if (ConnectionUtils.isMdmConnection(obj)) {
-            return;
+        while (iter.hasNext()) {
+            Object obj = iter.next();
+            if (ConnectionUtils.isMdmConnection(obj)) {
+                return;
+            }
         }
         TreeSelection treeSelection = (TreeSelection) getContext().getSelection();
         if (treeSelection == null) {

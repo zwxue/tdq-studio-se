@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorLauncher;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -127,6 +129,9 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                     editorTitle = ((ModelElement) ((IFolderNode) selectedObject).getParent()).getName();
                 } else if (selectedObject instanceof Catalog) {
                     editorTitle = ((Catalog) selectedObject).getName();
+                } else if (selectedObject instanceof IRepositoryViewObject) {
+                    editorTitle = ((ConnectionItem) ((IRepositoryViewObject) selectedObject).getProperty().getItem())
+                            .getConnection().getName();
                 }
 
                 compEditorInput.setTitle(editorTitle);

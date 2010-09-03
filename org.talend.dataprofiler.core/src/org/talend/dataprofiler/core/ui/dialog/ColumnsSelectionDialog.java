@@ -42,6 +42,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -729,10 +730,16 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     log.error("Can't get the children of container:" + container.getLocation());
                 }
 
-                if (ResourceManager.getConnectionFolder().equals(container)
-                        || ResourceManager.getMDMConnectionFolder().equals(container)) {
-                    ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
+                if (ResourceManager.getConnectionFolder().equals(container)) {
+                    return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false,
+                            ConnectionPackage.DATABASE_CONNECTION).toArray();
+                } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
+                    return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false,
+                            ConnectionPackage.MDM_CONNECTION).toArray();
                 }
+
+                // ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
+
                 return members;
             } else if (parentElement instanceof NamedColumnSet) {
                 return null;

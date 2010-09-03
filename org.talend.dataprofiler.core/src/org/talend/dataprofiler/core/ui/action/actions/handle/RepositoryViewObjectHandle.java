@@ -20,6 +20,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -87,8 +88,8 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#getDependencies()
      */
     public List<ModelElement> getDependencies() {
-        // TODO Auto-generated method stub
-        return null;
+        return EObjectHelper.getDependencyClients(repositoryObject);
+
     }
 
     /*

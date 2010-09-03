@@ -17,9 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -30,6 +34,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -93,6 +98,10 @@ public class SelectedLocalComparison implements IComparisonLevel {
     protected void createTempConnectionFile() throws ReloadCompareException {
         // First resource.
         IFile selectedFile1 = PrvResourceFileHelper.getInstance().findCorrespondingFile(firstSelectedDataProvider);
+        if (selectedFile1 == null) {
+            selectedFile1 = ResourceManager.getRoot().getFile(
+                    new Path(firstSelectedDataProvider.eResource().getURI().toPlatformString(false)));
+        }
         IFile firstConnectionFile = DQStructureComparer.getFirstComparisonLocalFile();
         IFile copyedFile1 = DQStructureComparer.copyedToDestinationFile(selectedFile1, firstConnectionFile);
         TypedReturnCode<Connection> returnProvider = DqRepositoryViewService.readFromFile(copyedFile1);
@@ -103,6 +112,10 @@ public class SelectedLocalComparison implements IComparisonLevel {
 
         // Second resource.
         IFile selectedFile2 = PrvResourceFileHelper.getInstance().findCorrespondingFile(secondSelectedDataProvider);
+        if (selectedFile2 == null) {
+            selectedFile2 = ResourceManager.getRoot().getFile(
+                    new Path(secondSelectedDataProvider.eResource().getURI().toPlatformString(false)));
+        }
         IFile secondConnectionFile = DQStructureComparer.getSecondComparisonLocalFile();
         IFile copyedFile2 = DQStructureComparer.copyedToDestinationFile(selectedFile2, secondConnectionFile);
         TypedReturnCode<Connection> returnProvider2 = DqRepositoryViewService.readFromFile(copyedFile2);
@@ -158,6 +171,11 @@ public class SelectedLocalComparison implements IComparisonLevel {
                 // IFile
                 TypedReturnCode<Connection> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) element);
                 adaptedDataProvider = returnVlaue.getObject();
+            } else if (element instanceof IRepositoryViewObject) {
+                Item item = ((IRepositoryViewObject) element).getProperty().getItem();
+                if (item instanceof ConnectionItem) {
+                    adaptedDataProvider = ((ConnectionItem) item).getConnection();
+                }
             } else {
 
                 Package package1 = SwitchHelpers.PACKAGE_SWITCH.doSwitch((ModelElement) element);
@@ -186,6 +204,8 @@ public class SelectedLocalComparison implements IComparisonLevel {
             // List<ModelElement> meList = new ArrayList<ModelElement>();
 
             if (element instanceof IFile) {
+                rootElement = tdProvider.eResource();
+            } else if (element instanceof IRepositoryViewObject) {
                 rootElement = tdProvider.eResource();
             } else {
                 Package package1 = SwitchHelpers.PACKAGE_SWITCH.doSwitch((ModelElement) element);

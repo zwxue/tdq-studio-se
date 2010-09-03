@@ -17,11 +17,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Catalog;
 
 /**
@@ -45,7 +48,12 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof IContainer) {
             try {
-                return ((IContainer) parentElement).members();
+                Object[] members = ((IContainer) parentElement).members();
+                if (parentElement.equals(ResourceManager.getConnectionFolder())) {
+                    members = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false,
+                            ConnectionPackage.DATABASE_CONNECTION).toArray();
+                }
+                return members;
             } catch (CoreException e) {
                 log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
             }

@@ -78,6 +78,8 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.XML_DOC);
         } else if (element instanceof TdXmlElementType) {
             return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
+        } else if (element instanceof IRepositoryViewObject) {
+            return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         }
         return super.getImage(element);
     }

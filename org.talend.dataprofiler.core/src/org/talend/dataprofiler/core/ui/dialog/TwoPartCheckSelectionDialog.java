@@ -52,12 +52,17 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
+import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.PropertyHelper;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * A class to select elements out of a tree structure.
@@ -395,9 +400,30 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof IFile) {
                     IFile file = (IFile) element;
+                    ModelElement modelElemet = null;
                     Integer selectIndex = metadataFormPage.getConnCombo().getSelectionIndex();
                     Integer connectionIndex = null;
-                    Object value = metadataFormPage.getConnCombo().getData(file.getName());
+                    // MOD get property and then get Connection
+                    // ModelElementFileFactory.getModelElement(repositoryObject)
+                    if (FactoriesUtil.ITEM_EXTENSION.equalsIgnoreCase(file.getFileExtension())) {
+                        modelElemet = ModelElementFileFactory.getModelElement(file);
+                    }
+
+                    Object value = metadataFormPage.getConnCombo().getData(modelElemet != null ? modelElemet.getName() : "");
+                    if (value != null && value instanceof Integer) {
+                        connectionIndex = (Integer) value;
+                    }
+                    if (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue()) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (element instanceof IRepositoryViewObject) {
+                    Integer selectIndex = metadataFormPage.getConnCombo().getSelectionIndex();
+                    Integer connectionIndex = null;
+                    ModelElement modelelement = PropertyHelper.retrieveElement(((IRepositoryViewObject) element).getProperty()
+                            .getItem());
+                    Object value = metadataFormPage.getConnCombo().getData(modelelement == null ? "" : modelelement.getName());
                     if (value != null && value instanceof Integer) {
                         connectionIndex = (Integer) value;
                     }
