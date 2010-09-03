@@ -277,9 +277,17 @@ public final class PropertyHelper {
      * @return
      */
     public static IPath getItemPath(Property property) {
-        TDQItem item = (TDQItem) property.getItem();
-        return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property)).append(
-                getItemStatePath(property)).append(item.getFilename());
+        Item item = property.getItem();
+        if (item instanceof TDQItem) {
+            TDQItem tdqItem = (TDQItem) item;
+            return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property)).append(
+                    getItemStatePath(property)).append(tdqItem.getFilename());
+        } else {
+            IPath itemFilePath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension().addFileExtension(
+                    FactoriesUtil.ITEM_EXTENSION);
+            return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property)).append(
+                    getItemStatePath(property)).append(itemFilePath);
+        }
     }
 
     /**
