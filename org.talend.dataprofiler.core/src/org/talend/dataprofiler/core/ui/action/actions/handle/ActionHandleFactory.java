@@ -47,33 +47,36 @@ public final class ActionHandleFactory {
 
         EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
 
-        switch (typedConstant) {
-        case DB_CONNECTIONS:
-            handle = new ConnectionHandle(property);
-            break;
-        case MDM_CONNECTIONS:
-            handle = new XMLDataProviderHandle(property);
-            break;
-        case JRXML_TEMPLATE:
-            handle = new JrxmlHandle(property);
-            break;
-        case ANALYSIS:
-            handle = new AnalysisHandle(property);
-            break;
-        case REPORTS:
-            handle = new ReportHandle(property);
-            break;
-        case PATTERNS:
-        case RULES:
-            handle = new EMFResourceHandle(property);
-            break;
-        case INDICATORS:
-            handle = new UDIHandle(property);
-            break;
-
-        default:
+        if (typedConstant == null) {
             handle = new SimpleHandle(property);
-            break;
+        } else {
+            switch (typedConstant) {
+            case DB_CONNECTIONS:
+                handle = new ConnectionHandle(property);
+                break;
+            case MDM_CONNECTIONS:
+                handle = new XMLDataProviderHandle(property);
+                break;
+            case JRXML_TEMPLATE:
+                handle = new JrxmlHandle(property);
+                break;
+            case ANALYSIS:
+                handle = new AnalysisHandle(property);
+                break;
+            case REPORTS:
+                handle = new ReportHandle(property);
+                break;
+            case PATTERNS:
+            case RULES:
+                handle = new EMFResourceHandle(property);
+                break;
+            case INDICATORS:
+                handle = new UDIHandle(property);
+                break;
+
+            default:
+                break;
+            }
         }
 
         return handle;
@@ -89,6 +92,7 @@ public final class ActionHandleFactory {
         IDeletionHandle handle = null;
 
         Item item = property.getItem();
+
         if (item != null) {
             EResourceConstant typedConstant = EResourceConstant.getTypedConstant(item);
 

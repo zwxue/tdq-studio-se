@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
@@ -29,6 +30,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
+import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
@@ -42,13 +44,19 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class JrxmlHandle extends SimpleHandle {
+public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
+
+    protected Property property;
+
+    protected IFile file;
 
     /**
      * DOC bZhou DuplicateJrxmlHandle constructor comment.
      */
     JrxmlHandle(Property property) {
-        super(property);
+        this.property = property;
+        IPath itemPath = PropertyHelper.getItemPath(property);
+        this.file = ResourceManager.getRoot().getFile(itemPath);
     }
 
     /**
@@ -57,46 +65,60 @@ public class JrxmlHandle extends SimpleHandle {
      * @param file
      */
     JrxmlHandle(IFile file) {
-        super(file);
+        this.file = file;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.duplicate.DuplicateSimpleHandle#duplicate()
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
      */
-    @Override
     public IFile duplicate() {
-        IFile duplicateFile = super.duplicate();
+        IFile newFile = SimpleHandle.getNewFile(file);
+        try {
+            file.copy(newFile.getFullPath(), true, null);
 
-        createProperty(duplicateFile.getLocation().toFile());
-
-        return duplicateFile;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.SimpleHandle#delete()
-     */
-    @Override
-    public boolean delete() throws Exception {
-        IPath filePath = file.getFullPath();
-        filePath = filePath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        IFile propFile = ResourceManager.getRoot().getFile(filePath);
-        if (propFile.exists()) {
-            propFile.delete(true, null);
+            // create property
+        } catch (CoreException e) {
+            e.printStackTrace();
         }
 
-        return super.delete();
+        createProperty(newFile.getLocation().toFile());
+
+        return newFile;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.SimpleHandle#getDependencies()
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
      */
-    @Override
+    public boolean delete() throws Exception {
+        if (isPhysicalDelete()) {
+            LogicalDeleteFileHandle.deleteElement(file);
+
+            IPath filePath = file.getFullPath();
+            filePath = filePath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+            IFile propFile = ResourceManager.getRoot().getFile(filePath);
+            if (propFile.exists()) {
+                propFile.delete(true, null);
+            }
+
+            if (file.exists() && isPhysicalDelete()) {
+                file.delete(true, null);
+            }
+        } else {
+            LogicalDeleteFileHandle.deleteLogical(file);
+        }
+
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#getDependencies()
+     */
     public List<ModelElement> getDependencies() {
         List<ModelElement> elementList = new ArrayList<ModelElement>();
 
@@ -128,26 +150,44 @@ public class JrxmlHandle extends SimpleHandle {
         property.setVersion("0.1");
 
         TDQJrxmlItem item = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
-        ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
-        itemState.setDeleted(false);
-
-        // set the state path when first create it.
-        IPath propPath = new Path(propertiesURI.toPlatformString(true)).removeLastSegments(1);
-        IPath typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
-        IPath itemPath = propPath.makeRelativeTo(typedPath);
-        itemState.setPath(itemPath.toString());
-
-        item.setState(itemState);
-
         item.setFilename(targetFile.getName());
 
         item.setProperty(property);
         property.setItem(item);
+
+        ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+        itemState.setDeleted(false);
+
+        // set the state path when first create it.
+        IPath propPath = new Path(targetFile.getAbsolutePath()).removeLastSegments(1);
+        IPath typedPath = ResourceManager.getRootProject().getFolder(PropertyHelper.getItemTypedPath(property)).getLocation();
+        IPath itemPath = propPath.makeRelativeTo(typedPath);
+        itemState.setPath(itemPath.toString());
+
+        item.setState(itemState);
 
         propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getItem());
         propertyResource.getContents().add(property.getItem().getState());
 
         EMFSharedResources.getInstance().saveResource(propertyResource);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IActionHandle#getProperty()
+     */
+    public Property getProperty() {
+        return this.property;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
+     */
+    public boolean isPhysicalDelete() {
+        return property.getItem().getState().isDeleted();
     }
 }

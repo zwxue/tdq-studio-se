@@ -82,22 +82,13 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#getDependencies()
-     */
-    public List<ModelElement> getDependencies() {
-        return null;
-    }
-
     /**
      * DOC bZhou Comment method "getNewFile".
      * 
      * @param file
      * @return
      */
-    private IFile getNewFile(IFile file) {
+    public static IFile getNewFile(IFile file) {
         IFile newFile = null;
         int idx = 1;
         while (true) {
@@ -109,6 +100,15 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
             idx++;
         }
         return newFile;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#getDependencies()
+     */
+    public List<ModelElement> getDependencies() {
+        return null;
     }
 
     /*

@@ -49,10 +49,10 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
     /**
      * DOC bZhou DuplicateEMFResourceAction constructor comment.
      */
-    EMFResourceHandle(Property propety) {
-        this.property = propety;
+    EMFResourceHandle(Property property) {
+        this.property = property;
 
-        IPath itemPath = PropertyHelper.getItemPath(propety);
+        IPath itemPath = PropertyHelper.getItemPath(property);
         this.file = ResourceManager.getRoot().getFile(itemPath);
         this.modelElement = ModelElementFileFactory.getModelElement(file);
     }

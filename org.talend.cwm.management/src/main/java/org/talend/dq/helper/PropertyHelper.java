@@ -42,7 +42,6 @@ import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.util.PropertiesSwitch;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -64,12 +63,15 @@ public final class PropertyHelper {
      * @return null if can't find.
      */
     public static IFile getPropertyFile(IFile elementFile) {
-        ModelElement modelElement = ModelElementFileFactory.getModelElement(elementFile);
-        if (modelElement != null) {
-            return getPropertyFile(modelElement);
+        if (!FactoriesUtil.PROPERTIES_EXTENSION.equals(elementFile.getFileExtension())) {
+            IPath path = elementFile.getFullPath();
+
+            path = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+            return ResourceManager.getRoot().getFile(path);
         }
 
-        return null;
+        return elementFile;
     }
 
     /**
@@ -124,7 +126,7 @@ public final class PropertyHelper {
             } else {
                 // try to get property from element file.
                 IFile propertyFile = getPropertyFile(file);
-                if (propertyFile == null) {
+                if (!propertyFile.exists()) {
                     Property property = PropertiesFactory.eINSTANCE.createProperty();
                     property.setLabel(file.getName());
                     property.setId(EcoreUtil.generateUUID());
@@ -132,6 +134,10 @@ public final class PropertyHelper {
                     TDQItem item = PropertiesFactory.eINSTANCE.createTDQItem();
                     item.setFilename(file.getFullPath().toString());
                     item.setProperty(property);
+
+                    ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+                    itemState.setDeleted(false);
+                    item.setState(itemState);
 
                     property.setItem(item);
 

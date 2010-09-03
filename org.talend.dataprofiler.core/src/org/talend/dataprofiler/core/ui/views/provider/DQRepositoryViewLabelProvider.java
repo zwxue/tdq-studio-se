@@ -137,6 +137,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
         return super.getImage(element);
     }
+
     public String getText(Object element) {
         String tableOwner = null;
         if (element instanceof ModelElement) {
@@ -194,9 +195,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     if (connItem instanceof ConnectionItem) {
                         return ((ConnectionItem) connItem).getConnection().getName();
                     }
-                }
-                if (mElement != null) {
+                } else if (mElement != null) {
                     return DqRepositoryViewService.buildElementName(mElement);
+                } else {
+                    return file.getName();
                 }
             } else if (obj instanceof IFolder) {
                 return ((IFolder) obj).getName();
