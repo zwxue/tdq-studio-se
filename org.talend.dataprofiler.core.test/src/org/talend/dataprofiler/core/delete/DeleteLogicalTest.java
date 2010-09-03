@@ -22,10 +22,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -44,8 +46,9 @@ public class DeleteLogicalTest {
             if (re instanceof IFile) {
                 IFile file = (IFile) re;
                 if (file.exists() && FactoriesUtil.isEmfFile(file.getFileExtension())) {
-                    handle = ActionHandleFactory.createDeletionHandle(file);
-                    boolean runStatus = handle.delete(false);
+                    Property property = PropertyHelper.getProperty(file);
+                    handle = ActionHandleFactory.createDeletionHandle(property);
+                    boolean runStatus = handle.delete();
                     if (runStatus) {
                         System.out.println("Logical delete " + file.getName() + " successful!");
                     }
@@ -57,13 +60,14 @@ public class DeleteLogicalTest {
                 boolean hasDelFailing = false;
                 for (IFile file : filsLs) {
                     if (file.exists() && FactoriesUtil.isEmfFile(file.getFileExtension())) {
-                        handle = ActionHandleFactory.createDeletionHandle(file);
+                        Property property = PropertyHelper.getProperty(file);
+                        handle = ActionHandleFactory.createDeletionHandle(property);
                         List<ModelElement> dependencies = handle.getDependencies();
                         if (dependencies != null && !dependencies.isEmpty()) {
                             hasDelFailing = true;
                             break;
                         }
-                        if (handle.delete(false)) {
+                        if (handle.delete()) {
                             System.out.println("Logical delete " + file.getName() + " successful!");
                         } else {
                             hasDelFailing = true;
