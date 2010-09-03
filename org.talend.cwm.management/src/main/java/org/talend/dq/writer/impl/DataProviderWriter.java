@@ -23,6 +23,7 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
@@ -125,6 +126,18 @@ public class DataProviderWriter extends AElementPersistance {
             addResourceContent(conn);
             connItem.setConnection(conn);
             ProxyRepositoryFactory.getInstance().save(connItem);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
+    }
+    
+    public ReturnCode save(Property property) {
+        ReturnCode rc = new ReturnCode();
+        try {
+            ProxyRepositoryFactory.getInstance().save(property);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);

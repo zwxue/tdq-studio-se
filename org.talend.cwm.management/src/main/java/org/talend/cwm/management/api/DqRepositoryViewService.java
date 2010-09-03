@@ -35,6 +35,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.builders.AbstractTableBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
@@ -337,6 +338,11 @@ public final class DqRepositoryViewService {
 
         ReturnCode rc = new ReturnCode();
         ElementWriterFactory.getInstance().createDataProviderWriter().save(connItem);
+        return rc;
+    }
+
+    public static ReturnCode saveProperty(Property property) {
+        ReturnCode rc = ElementWriterFactory.getInstance().createDataProviderWriter().save(property);
         return rc;
     }
 

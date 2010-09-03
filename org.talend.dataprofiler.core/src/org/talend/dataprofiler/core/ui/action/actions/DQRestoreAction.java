@@ -23,7 +23,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -32,8 +35,10 @@ import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
@@ -62,10 +67,20 @@ public class DQRestoreAction extends Action {
             File f = new Path(fileString).toFile();
             for (IFile file : selectedFiles) {
                 Property property = PropertyHelper.getProperty(file);
-                property.getItem().getState().setDeleted(false);
-                Resource propertyResource = property.eResource();
-                if (!EMFSharedResources.getInstance().saveResource(propertyResource))
-                    return;
+                if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                    IRepositoryViewObject repViewObj = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(
+                            property);
+                    Property propertyTMP = repViewObj.getProperty();
+                    propertyTMP.getItem().getState().setDeleted(false);
+                    ProxyRepositoryFactory.getInstance().save(propertyTMP);
+                    if (!DqRepositoryViewService.saveProperty(propertyTMP).isOk())
+                        return;
+                } else {
+                    property.getItem().getState().setDeleted(false);
+                    Resource propertyResource = property.eResource();
+                    if (!EMFSharedResources.getInstance().saveResource(propertyResource))
+                        return;
+                }
 
                 if (f.exists()) {
                     LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.fileType + file.getFullPath().toOSString(),

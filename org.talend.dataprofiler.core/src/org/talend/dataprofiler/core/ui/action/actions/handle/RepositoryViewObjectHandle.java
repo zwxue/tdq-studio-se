@@ -16,8 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
@@ -42,8 +40,7 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      */
     RepositoryViewObjectHandle(Property property) {
         this.property = property;
-        Connection connection = ((ConnectionItem) property.getItem()).getConnection();
-        repositoryObject = DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(connection);
+        repositoryObject = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(property);
     }
 
     /*

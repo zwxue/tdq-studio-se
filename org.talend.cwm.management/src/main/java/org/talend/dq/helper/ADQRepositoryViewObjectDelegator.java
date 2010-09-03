@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.utils.sugars.ReturnCode;
@@ -79,15 +80,17 @@ public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
 
     /**
      * 
-     * DOC mzhao Get repository view object by item name.
+     * DOC qiongli Get repository view object by property.
      * 
      * @param element
      * @return
      */
-    public IRepositoryViewObject getReposViewObjByItemPath(String itemPath) {
-        for (T ele : getAllElements()) {
-            if (ele.eResource().getURI().toFileString().equals(itemPath)) {
-                return getRepositoryViewObject(ele);
+    public IRepositoryViewObject getReposViewObjByProperty(Property property) {
+        Iterator<T> it = needSavedElements.keySet().iterator();
+        while (it.hasNext()) {
+            IRepositoryViewObject reposViewObj = needSavedElements.get(it.next());
+            if (property.getId().equals(reposViewObj.getId())) {
+                return reposViewObj;
             }
         }
         return null;
