@@ -163,12 +163,16 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 // MOD mzhao 2010-08-11 feature 14891: use same repository API with TOS to persistent metadata
                 // MOD qiongli 2010-9-3 bug 14891
                 List<IRepositoryViewObject> conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
+                        Boolean.TRUE);
+                conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
                         Boolean.FALSE, ConnectionPackage.DATABASE_CONNECTION);
                 return getConnectionChildren(conList).toArray();
             } else if (ResourceManager.isMdmConnectionFolder(folder)) {
                 // MOD zshen 2010-08-30 feature 14891: use same repository API with TOS to persistent metadata
                 // MOD qiongli 2010-9-3 bug 14891
                 List<IRepositoryViewObject> conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
+                        Boolean.TRUE);
+                conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
                         Boolean.FALSE, ConnectionPackage.MDM_CONNECTION);
                 return getConnectionChildren(conList).toArray();
             }
