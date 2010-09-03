@@ -43,6 +43,7 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -113,6 +114,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (type.equals(FactoriesUtil.DEFINITION)) {
                     return ImageLib.getImage(ImageLib.IND_DEFINITION);
+                } else if (type.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                    Item connItem = (PropertyHelper.getProperty(file)).getItem();
+                    if (connItem instanceof ConnectionItem) {
+                        return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+                    }
                 }
             } else if (obj instanceof IFolder) {
                 return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
@@ -183,7 +189,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
                 ModelElement mElement = ModelElementFileFactory.getModelElement(file);
-
+                if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                    Item connItem = (PropertyHelper.getProperty(file)).getItem();
+                    if (connItem instanceof ConnectionItem) {
+                        return ((ConnectionItem) connItem).getConnection().getName();
+                    }
+                }
                 if (mElement != null) {
                     return DqRepositoryViewService.buildElementName(mElement);
                 }

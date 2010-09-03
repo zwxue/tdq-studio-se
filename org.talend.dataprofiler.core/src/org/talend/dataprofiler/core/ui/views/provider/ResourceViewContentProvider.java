@@ -31,7 +31,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -159,12 +161,16 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 return getIndicatorsChildren(folder);
             } else if (ResourceManager.isConnectionFolder(folder)) {
                 // MOD mzhao 2010-08-11 feature 14891: use same repository API with TOS to persistent metadata
-                return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.FALSE,
-                        ConnectionPackage.DATABASE_CONNECTION).toArray();
+                // MOD qiongli 2010-9-3 bug 14891
+                List<IRepositoryViewObject> conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
+                        Boolean.FALSE, ConnectionPackage.DATABASE_CONNECTION);
+                return getConnectionChildren(conList).toArray();
             } else if (ResourceManager.isMdmConnectionFolder(folder)) {
                 // MOD zshen 2010-08-30 feature 14891: use same repository API with TOS to persistent metadata
-                return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.FALSE,
-                        ConnectionPackage.MDM_CONNECTION).toArray();
+                // MOD qiongli 2010-9-3 bug 14891
+                List<IRepositoryViewObject> conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
+                        Boolean.FALSE, ConnectionPackage.MDM_CONNECTION);
+                return getConnectionChildren(conList).toArray();
             }
 
             return getChildrenExceptRecBin(element);// FIXME Why call this method by default, qiongli?
@@ -351,5 +357,23 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     public RecycleBin getRecycleBin() {
         return recycleBin;
+    }
+
+    /**
+     * 
+     * DOC QiongLi Comment method "getConnectionChildren".
+     * @param ls
+     * @return
+     */
+    private List<IRepositoryViewObject> getConnectionChildren(List<IRepositoryViewObject> ls) {
+        Iterator<IRepositoryViewObject> iterator = ls.iterator();
+        while (iterator.hasNext()) {
+            IRepositoryViewObject conn = iterator.next();
+            Item connItem = conn.getProperty().getItem();
+            if (connItem.getState().isDeleted()) {
+                iterator.remove();
+            }
+        }
+        return ls;
     }
 }
