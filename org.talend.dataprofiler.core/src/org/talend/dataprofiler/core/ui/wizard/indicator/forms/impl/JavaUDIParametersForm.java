@@ -35,6 +35,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
@@ -43,6 +44,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
@@ -172,7 +174,53 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
         });
         viewer.setInput(content);
         // viewer.addSelectionChangedListener(new listener)
+        createDefinitionParametersButton(group, viewer);
+    }
 
+    private void createDefinitionParametersButton(Composite comp, final TableViewer parView) {
+        // TODO Auto-generated method stub
+        Composite composite = new Composite(comp, SWT.NONE);
+        GridData gd = new GridData();
+        gd.horizontalSpan = 2;
+        gd.horizontalAlignment = SWT.CENTER;
+        composite.setLayout(new GridLayout(2, false));
+        composite.setLayoutData(gd);
+        final Button addButton = new Button(composite, SWT.NONE);
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
+        GridData labelGd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+        labelGd.horizontalAlignment = SWT.RIGHT;
+        labelGd.widthHint = 65;
+        addButton.setLayoutData(labelGd);
+        addButton.addListener(SWT.MouseDown, new Listener() {
+
+            public void handleEvent(Event event) {
+                // TODO Auto-generated method stub
+                JavaUDIIndicatorParameter newItem = DomainHelper.createJavaUDIIndicatorParameter("key", "value");
+                content.add(newItem);
+                viewer.refresh();
+                checkFieldsValue();
+            }
+        });
+        final Button romveButton = new Button(composite, SWT.NONE);
+        romveButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        romveButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.del")); //$NON-NLS-1$
+        GridData reGd = new GridData();
+        reGd.horizontalAlignment = SWT.LEFT;
+        reGd.widthHint = 65;
+        romveButton.setLayoutData(reGd);
+        romveButton.addListener(SWT.MouseDown, new Listener() {
+
+            public void handleEvent(Event event) {
+                IStructuredSelection selection = (IStructuredSelection) parView.getSelection();
+                Object o = selection.getFirstElement();
+                if (o instanceof JavaUDIIndicatorParameter) {
+                    content.remove(o);
+                    viewer.refresh(content);
+                    checkFieldsValue();
+                }
+            }
+        });
     }
 
     /*
