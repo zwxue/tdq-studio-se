@@ -86,10 +86,15 @@ public final class ReportHelper {
         // Analysis: column comparison
         BASIC_COLUMNS_COMPARISON(BASIC, PROPS.getProperty("BASIC_COLUMNS_COMPARISON")), //$NON-NLS-1$
         EVOLUTION_COLUMNS_COMPARISON(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_COMPARISON")), //$NON-NLS-1$
-
+        // ORACLE
+        BASIC_COLUMNS_COMPARISON_ORALCE(BASIC, PROPS.getProperty("BASIC_COLUMNS_COMPARISON_ORACLE")), //$NON-NLS-1$
+        EVOLUTION_COLUMNS_COMPARISON_ORACLE(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_COMPARISON_ORACLE")), //$NON-NLS-1$
         // Analysis: column correation
         BASIC_COLUMNS_CORRELATION(BASIC, PROPS.getProperty("BASIC_COLUMNS_CORRELATION")), //$NON-NLS-1$
         EVOLUTION_COLUMNS_CORRELATION(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_CORRELATION")), //$NON-NLS-1$
+        // oracle
+        BASIC_COLUMNS_CORRELATION_ORACLE(BASIC, PROPS.getProperty("BASIC_COLUMNS_CORRELATION_ORACLE")), //$NON-NLS-1$
+        EVOLUTION_COLUMNS_CORRELATION_ORACLE(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_CORRELATION_ORACLE")), //$NON-NLS-1$
 
         // Analysis: Functional Dependency analysis.
         BASIC_TABLE_FUNCTIONAL_DEPENDENCY(BASIC, PROPS.getProperty("BASIC_TABLE_FUNCTIONAL_DEPENDENCY")), //$NON-NLS-1$
@@ -218,11 +223,110 @@ public final class ReportHelper {
             return null;
         }
 
+        public static ReportType getReportType(AnalysisType anaType, String text, String dbType) {
+            if (USER_MADE.getLabel().equals(text)) {
+                return USER_MADE;
+            }
+            // Multi column
+            if (anaType.getName().equals(AnalysisType.MULTIPLE_COLUMN.getName())) {
+                if (BASIC_MUTICOLUMN.getLabel().equals(text)) {
+                    return BASIC_MUTICOLUMN;
+                } else if (EVOLUTION_MUTICOLUMN.getLabel().equals(text)) {
+                    return EVOLUTION_MUTICOLUMN;
+                }
+            } else if (anaType.getName().equals(AnalysisType.CONNECTION.getName())) {
+                if (BASIC_CONNECTION.getLabel().equals(text)) {
+                    return BASIC_CONNECTION;
+                } else if (EVOLUTION_CONNECTION.getLabel().equals(text)) {
+                    return EVOLUTION_CONNECTION;
+                }
+            } else if (anaType.getName().equals(AnalysisType.SCHEMA.getName())) {
+                if (BASIC_SCHEMA.getLabel().equals(text)) {
+                    return BASIC_SCHEMA;
+                } else if (EVOLUTION_SCHEMA.getLabel().equals(text)) {
+                    return EVOLUTION_SCHEMA;
+                }
+            } else if (anaType.getName().equals(AnalysisType.CATALOG.getName())) {
+                if (BASIC_CATALOG.getLabel().equals(text)) {
+                    return BASIC_CATALOG;
+                } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
+                    return EVOLUTION_CATALOG;
+                }
+            } else if (anaType.getName().equals(AnalysisType.TABLE.getName())) {
+                if (BASIC_TABLE.getLabel().equals(text)) {
+                    return BASIC_TABLE;
+                } else if (EVOLUTION_TABLE.getLabel().equals(text)) {
+                    return EVOLUTION_TABLE;
+                }
+            } else if (anaType.getName().equals(AnalysisType.COLUMNS_COMPARISON.getName())) {
+                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+                    if (BASIC_COLUMNS_COMPARISON_ORALCE.getLabel().equals(text)) {
+                        return BASIC_COLUMNS_COMPARISON_ORALCE;
+                    } else if (EVOLUTION_COLUMNS_COMPARISON_ORACLE.getLabel().equals(text)) {
+                        return EVOLUTION_COLUMNS_COMPARISON_ORACLE;
+                    }
+                } else if (!StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+                    if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
+                        return BASIC_COLUMNS_COMPARISON;
+                    } else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
+                        return EVOLUTION_COLUMNS_COMPARISON;
+                    }
+                }
+            } else if (anaType.getName().equals(AnalysisType.COLUMN_CORRELATION.getName())) {
+                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+                    if (BASIC_COLUMNS_CORRELATION_ORACLE.getLabel().equals(text)) {
+                        return BASIC_COLUMNS_CORRELATION_ORACLE;
+                    } else if (EVOLUTION_COLUMNS_CORRELATION_ORACLE.getLabel().equals(text)) {
+                        return EVOLUTION_COLUMNS_CORRELATION_ORACLE;
+                    }
+                } else if (!StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+                    if (BASIC_COLUMNS_CORRELATION.getLabel().equals(text)) {
+                        return BASIC_COLUMNS_CORRELATION;
+                    } else if (EVOLUTION_COLUMNS_CORRELATION.getLabel().equals(text)) {
+                        return EVOLUTION_COLUMNS_CORRELATION;
+                    }
+                }
+
+            } else if (anaType.getName().equals(AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY.getName())) {
+                if (BASIC_TABLE_FUNCTIONAL_DEPENDENCY.getLabel().equals(text)) {
+                    return BASIC_TABLE_FUNCTIONAL_DEPENDENCY;
+                } else if (EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY.getLabel().equals(text)) {
+                    return EVOLUTION_TABLE_FUNCTIONAL_DEPENDENCY;
+                }
+            } else if (anaType.getName().equals(AnalysisType.COLUMN_SET.getName())) {
+                // MOD mzhao 10706, column set analysis
+                if (BASIC_COLUMN_SET.getLabel().equals(text)) {
+                    return BASIC_COLUMN_SET;
+                } else if (EVOLUTION_COLUMN_SET.getLabel().equals(text)) {
+                    return EVOLUTION_COLUMN_SET;
+                }
+            }
+
+            return null;
+        }
+
         public static ReportType getReportType(Analysis ana, String text) {
             AnalysisType at = AnalysisHelper.getAnalysisType(ana);
             return getReportType(at, text);
         }
 
+        public static ReportType getReportTypeWithDB(Analysis ana, String text, String dbType) {
+            AnalysisType at = AnalysisHelper.getAnalysisType(ana);
+            return getReportType(at, text, dbType);
+        }
+
+        /**
+         * DOC Administrator Comment method "getReportType".
+         * 
+         * @param analysis
+         * @param reportType
+         * @param db
+         * @return
+         */
+        public static ReportType getReportType(Analysis analysis, String reportType, String db) {
+            // TODO Auto-generated method stub
+            return null;
+        }
     }
 
     private ReportHelper() {
