@@ -192,6 +192,8 @@ public final class ImageLib {
 
     public static final String ICON_ERROR_VAR = "error_ovr.gif";
 
+    public static final String ICON_ADD_VAR = "add_ovr.gif";
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */
@@ -391,6 +393,28 @@ public final class ImageLib {
         ImageDescriptor lockImg = getImageDescriptor(ICON_ERROR_VAR);
 
         return originalImg != null ? createIcon(originalImg, lockImg) : null;
+    }
+
+    /*
+     * DOC qiongli Comment method "createAddedIcon".
+     * 
+     * @param originalImgName
+     * 
+     * @return
+     */
+    public static ImageDescriptor createAddedIcon(String originalImgName) {
+        return createAddedIcon(getImageDescriptor(originalImgName));
+    }
+
+    /**
+     * DOC qiongli Comment method "createAddedIcon".
+     * 
+     * @param originalImg
+     * @return
+     */
+    public static ImageDescriptor createAddedIcon(ImageDescriptor originalImg) {
+        ImageDescriptor addImg = getImageDescriptor(ICON_ADD_VAR);
+        return originalImg != null ? new DecorationOverlayIcon(originalImg.createImage(), addImg, IDecoration.TOP_RIGHT) : null;
     }
 
 }

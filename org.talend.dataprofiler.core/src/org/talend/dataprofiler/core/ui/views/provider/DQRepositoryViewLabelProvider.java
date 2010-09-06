@@ -22,6 +22,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -116,7 +117,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.IND_DEFINITION);
                 } else if (type.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                     Item connItem = (PropertyHelper.getProperty(file)).getItem();
-                    if (connItem instanceof ConnectionItem) {
+                    if (connItem instanceof MDMConnectionItem) {
+                        return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                    } else if (connItem instanceof ConnectionItem) {
                         return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                     }
                 }
@@ -127,7 +130,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             IRepositoryViewObject conn = (IRepositoryViewObject) element;
             // Currently we only care about connection Item.
             Item connItem = conn.getProperty().getItem();
-            if (connItem instanceof ConnectionItem) {
+            if (connItem instanceof MDMConnectionItem) {
+                return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+            } else if (connItem instanceof ConnectionItem) {
                 return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
             }
         } else if (element instanceof MDMConnection) {

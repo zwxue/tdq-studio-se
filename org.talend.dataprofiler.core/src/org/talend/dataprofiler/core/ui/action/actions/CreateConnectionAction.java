@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -46,12 +47,18 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
 
     public CreateConnectionAction() {
         super(DefaultMessagesImpl.getString("CreateConnectionAction.newConnection")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
+        // setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
     }
 
     public CreateConnectionAction(IFolder folder) {
         this();
         this.folder = folder;
+        // MOD qiongli bug 14203
+        if (ResourceService.isSubFolder(ResourceManager.getMDMConnectionFolder(), folder)) {
+            setImageDescriptor(ImageLib.createAddedIcon(ImageLib.MDM_CONNECTION));
+        } else {
+            setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
+        }
     }
 
     /*
