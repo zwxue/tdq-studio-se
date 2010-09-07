@@ -64,13 +64,13 @@ public final class FirstnamesLucene {
 
         FirstNameStandardize stdname = new FirstNameStandardize(searcher, analyzer, hitsPerPage);
 
-        for (String querystr : firstnames) {
-            ScoreDoc[] hits = stdname.standardize("name",querystr);
-            System.out.println("--> Matching \"" + querystr + "\"");
-            // 4. display results
-            displayResults(searcher, hits);
-            System.out.println("--\n");
-        }
+        // for (String querystr : firstnames) {
+        // ScoreDoc[] hits = stdname.standardize("name",querystr);
+        // System.out.println("--> Matching \"" + querystr + "\"");
+        // // 4. display results
+        // displayResults(searcher, hits);
+        // System.out.println("--\n");
+        // }
         // searcher can only be closed when there
         // is no need to access the documents any more.
         searcher.close();

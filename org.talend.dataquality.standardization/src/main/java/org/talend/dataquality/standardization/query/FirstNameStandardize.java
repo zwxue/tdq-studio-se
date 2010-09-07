@@ -21,8 +21,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -62,29 +60,20 @@ public class FirstNameStandardize {
         this.hitsPerPage = hitsPerPage;
     }
 
-    public ScoreDoc[] standardize(String searchType, String input) throws ParseException, IOException {
+    public ScoreDoc[] standardize(String input, boolean fuzzyQuery) throws ParseException, IOException {
 
         if (input == null || input.length() == 0) {
             return new ScoreDoc[0];
         }
-        Query q = new QueryParser(Version.LUCENE_30, searchType, analyzer).parse(input); // TODO do not harcode field
-        // name
-        Query qalias = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_ALIAS, analyzer).parse(input); // TODO
+        Query q = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_NAME, analyzer).parse(input);
 
-        q = q.combine(new Query[] { q, qalias });
-
-        // TODO do we need to create the doc collector every time?
         TopDocsCollector<?> collector = createTopDocsCollector();
-
         searcher.search(q, collector);
 
-        // TODO find how to do a fuzzy search
-        // A fuzzy search should be done if the normal search gives no result.
-        int hits = collector.topDocs().scoreDocs.length;
-        if (hits == 0) {
+        if (fuzzyQuery) {
             try {
-                getFuzzySearch(input, collector);
-                return collector.topDocs().scoreDocs;
+
+                return getFuzzySearch(input).scoreDocs;
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -104,29 +93,10 @@ public class FirstNameStandardize {
     public TopDocs getFuzzySearch(String input) throws Exception {
         Query q = new FuzzyQuery(new Term("name", input), 0.5f, 0);
         TopDocs matches = searcher.search(q, 10);
-
         return matches;
     }
 
-    /**
-     * Method "replaceName".
-     * 
-     * @param input a first name
-     * @return the standardized first name
-     * @throws ParseException
-     * @throws IOException
-     */
-    public String replaceName(String inputName, boolean fuzzyQuery) throws ParseException, IOException {
-        Map<String, String> indexFields = new HashMap<String, String>();
-        ScoreDoc[] results = null;
-        try {
-            results = standardize(inputName, indexFields, fuzzyQuery);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
-    }
+
 
     // FIXME this variable is only for tests
     public static final boolean SORT_WITH_COUNT = true;
@@ -151,15 +121,25 @@ public class FirstNameStandardize {
         Term termCountry = new Term(PluginConstant.FIRST_NAME_STANDARDIZE_COUNTRY, countryText);
         Term ternGender = new Term(PluginConstant.FIRST_NAME_STANDARDIZE_GENDER, genderText);
         // many field to query for reposity
-        BooleanQuery query = new BooleanQuery();
-        query.add(new TermQuery(termName), BooleanClause.Occur.MUST);
+        Query nameQuery = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_NAME, analyzer)
+                .parse(inputName);
+        Query countryQuery = null;
+        Query genderQuery = null;
+        //      
+        // BooleanQuery query = new BooleanQuery();
+        // query.add(new TermQuery(termName), BooleanClause.Occur.MUST);
         if (countryText != null && !countryText.equals("")) {
-            query.add(new TermQuery(termCountry), BooleanClause.Occur.MUST);
+            countryQuery = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_COUNTRY, analyzer)
+                    .parse(countryText);
+            nameQuery = nameQuery.combine(new Query[] { nameQuery, countryQuery });
+            if (genderText != null && !genderText.equals("")) {
+                genderQuery = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_GENDER, analyzer)
+                        .parse(genderText);
+                nameQuery = nameQuery.combine(new Query[] { nameQuery, countryQuery, genderQuery });
+            }
         }
-        if (genderText != null && !genderText.equals("")) {
-            query.add(new TermQuery(ternGender), BooleanClause.Occur.MUST);
-        }
-        TopDocs matches = searcher.search(query, 10);
+
+        TopDocs matches = searcher.search(nameQuery, 10);
 
         if (fuzzySearch) {
             Query name = new FuzzyQuery(termName);
@@ -191,6 +171,25 @@ public class FirstNameStandardize {
         }
     }
 
+    /**
+     * Method "replaceName".
+     * 
+     * @param input a first name
+     * @return the standardized first name
+     * @throws ParseException
+     * @throws IOException
+     */
+    public String replaceName(String inputName, boolean fuzzyQuery) throws ParseException, IOException {
+
+        ScoreDoc[] results = null;
+        try {
+            results = standardize(inputName, fuzzyQuery);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
+    }
     public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender, boolean fuzzyQuery)
             throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();

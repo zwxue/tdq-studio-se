@@ -35,29 +35,29 @@ public class HandleLuceneTest {
         String filename = "./data/TalendGivenNames.TXT";
         // String indexfolder = "C:\\Documents and Settings\\Administrator\\����\\data\\TalendGivenNames_index";
         String indexfolder = "./data/TalendGivenNames_index";
-        // String[] firstnames = new String[] { "jeants", "rémy", "jean-philippe",
-        // "sebastiao", "r*my*" };
         HandleLucene hl = new HandleLuceneImpl();
         // System.out.print(hl.createIndex(filename, indexfolder));
 
         try {
-            // Map<String, String[]> hits = hl.getSearchResult(indexfolder,
-            // PluginConstant.FIRST_NAME_STANDARDIZE_NAME, firstnames);
             Map<String, String> information2value = new HashMap<String, String>();
-            // information2value.put("country", "mosikou");
-            // information2value.put("gender", "0");
-            // Map<String, String[]> hits = hl.getSearchResult(indexfolder, "Philip", information2value, true);
-            // // for (String firstName : firstnames) {
-            // String[] soreDocs = hits.get("Phili");
-            // if (soreDocs != null) {
-            // for (String doc : soreDocs) {
-            // System.out.println(doc);
-            // }
-            // }
-            String res = hl.replaceName(indexfolder, "Philipp", true);
-            System.out.println(res);
-            // }
 
+            String res = hl.replaceName(indexfolder, "Philippe", false);
+            System.out.println("replaceName:" + res);
+            try {
+                String res1 = hl.replaceNameWithCountryInfo(indexfolder, "Philippe", "china", false);
+                System.out.println("replaceNameWithCountryInfo:" + res1);
+
+                String res2 = hl.replaceNameWithGenderInfo(indexfolder, "Philippe", "0", false);
+
+                System.out.println("replaceNameWithGenderInfo:" + res2);
+                String res3 = hl.replaceNameWithCountryGenderInfo(indexfolder, "Philippe", "china", "1", false);
+                System.out.println("replaceNameWithCountryGenderInfo:" + res3);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            // }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

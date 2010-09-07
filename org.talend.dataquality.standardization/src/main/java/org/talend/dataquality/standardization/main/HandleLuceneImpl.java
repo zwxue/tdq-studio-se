@@ -169,48 +169,7 @@ public class HandleLuceneImpl implements HandleLucene {
 
     }
 
-    /**
-     * 
-     * DOC Override getSearchResult
-     */
-    public Map<String, String[]> getSearchResult(String folderName, String searchType, String[] searchWords) throws IOException,
-            ParseException {
-        // TODO Auto-generated method stub
-        IndexSearcher firtNameIs = getIndexSearcher(folderName);
 
-        Analyzer searchAnalyzer = getAnalyzer();
-
-        FirstNameStandardize stdname = new FirstNameStandardize(firtNameIs, searchAnalyzer, hitsPerPage);
-        for (int searchCount = 0; searchCount < searchWords.length; searchCount++) {
-            ScoreDoc[] docs = stdname.standardize(searchType, searchWords[searchCount]);
-            treatSearchResult(firtNameIs, searchType, docs, searchWords[searchCount]);
-        }
-        firtNameIs.close();
-
-        return getHits();
-    }
-
-    private void treatSearchResult(IndexSearcher firtNameIs, String searchType, ScoreDoc[] docs, String searchWords) {
-        soreDoc = new ArrayList<String>();
-        for (int i = 0; i < docs.length; ++i) {
-            int docId = docs[i].doc;
-            Document d = null;
-            try {
-                d = firtNameIs.doc(docId);
-                String name = d.get(searchType);
-                soreDoc.add(name);
-            } catch (CorruptIndexException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        String[] resultArray = new String[soreDoc.size()];
-        hits.put(searchWords, soreDoc.toArray(resultArray));
-
-    }
 
     private Map<String, String[]> getHits() {
         return hits;
