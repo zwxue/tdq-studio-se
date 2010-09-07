@@ -74,6 +74,16 @@ public class ColumnBuilder extends CwmBuilder {
             // get the default value
             // MOD mzhao 2009-04-09,Bug 6840: fetch LONG or LONG RAW column first , as these kind of columns are read as
             // stream,if not read by select order, there will be "Stream has already been closed" error.
+            // Don't move the below block ,if you move it that emerge up bug klliu 2010-09-07
+            Object defaultvalue = null;
+            try {
+                defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
+            } catch (Exception e1) {
+                log.warn(e1, e1);
+            }
+            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
+            TdExpression defExpression = BooleanExpressionHelper.createTdExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
+
             // MOD xqliu 2009-10-29 bug 9838
             // MOD xqliu 2009-12-08 bug 9822, if use odbc connect to sqlserver the resultset is forward only!!!
             String colName = null;
@@ -145,16 +155,6 @@ public class ColumnBuilder extends CwmBuilder {
             } catch (Exception e) {
                 log.warn(e, e);
             }
-
-            Object defaultvalue = null;
-            try {
-                defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-            }
-            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
-            TdExpression defExpression = BooleanExpressionHelper.createTdExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
-
 
             // --- create and set type of column
             // TODO scorreia get type of column on demand, not on creation of column
