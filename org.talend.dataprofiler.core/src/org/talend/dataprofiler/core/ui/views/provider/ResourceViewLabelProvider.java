@@ -65,40 +65,46 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         if (element instanceof IFile) {
             IFile file = (IFile) element;
             String fileExtension = file.getFileExtension();
-            if (FactoriesUtil.isPatternFile(fileExtension)) {
-                image = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
+            // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
+            try {
+                if (FactoriesUtil.isPatternFile(fileExtension)) {
+                    image = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
 
-                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                if (pattern != null) {
-                    if (!TaggedValueHelper.getValidStatus(pattern)) {
-                        image = ImageLib.createInvalidIcon(ImageLib.PATTERN_REG);
+                    Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                    if (pattern != null) {
+                        if (!TaggedValueHelper.getValidStatus(pattern)) {
+                            image = ImageLib.createInvalidIcon(ImageLib.PATTERN_REG);
+                        }
+                    }
+                } else if (FactoriesUtil.isReportFile(fileExtension)) {
+                    image = ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
+                } else if (FactoriesUtil.isUDIFile(fileExtension)) {
+                    image = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
+
+                    IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
+                    if (udi != null) {
+                        boolean validStatus = TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi);
+
+                        if (!validStatus) {
+                            image = ImageLib.createInvalidIcon(ImageLib.IND_DEFINITION);
+                        }
+                    }
+                } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
+                    // ADD qiongli 2010-8-9,feature 14252
+                    Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+                    ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
+                    analysisHandler.setAnalysis(analysis);
+                    if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
+                        if (!analysisHandler.getResultMetadata().isLastRunOk()) {
+                            image = ImageLib.createErrorIcon(image);
+                        } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
+                            image = ImageLib.createInvalidIcon(image);
+                        }
                     }
                 }
-            } else if (FactoriesUtil.isReportFile(fileExtension)) {
-                image = ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
-            } else if (FactoriesUtil.isUDIFile(fileExtension)) {
-                image = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
-
-                IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
-                if (udi != null) {
-                    boolean validStatus = TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi);
-
-                    if (!validStatus) {
-                        image = ImageLib.createInvalidIcon(ImageLib.IND_DEFINITION);
-                    }
-                }
-            } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
-                // ADD qiongli 2010-8-9,feature 14252
-                Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
-                ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
-                analysisHandler.setAnalysis(analysis);
-                if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
-                    if (!analysisHandler.getResultMetadata().isLastRunOk()) {
-                        image = ImageLib.createErrorIcon(image);
-                    } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
-                        image = ImageLib.createInvalidIcon(image);
-                    }
-                }
+            } catch (Exception exc) {
+                log.error(exc, exc);
+                image = ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION);
             }
 
             if (FactoriesUtil.isEmfFile(fileExtension)) {
@@ -156,7 +162,13 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 log.debug("Loading file " + file.getLocation());
             }
 
-            ModelElement mElement = ModelElementFileFactory.getModelElement(file);
+            // MOD qiongli ,bug 14698,add 'try...catch'
+            ModelElement mElement = null;
+            try {
+                mElement = ModelElementFileFactory.getModelElement(file);
+            } catch (Exception exc) {
+                log.error(exc, exc);
+            }
             if (mElement != null) {
                 return DqRepositoryViewService.buildElementName(mElement);
             }

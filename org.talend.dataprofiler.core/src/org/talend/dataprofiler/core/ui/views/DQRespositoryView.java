@@ -124,7 +124,12 @@ public class DQRespositoryView extends CommonNavigator {
         }
 
         if (manager.isNeedMigration()) {
-            MigrationTaskManager.doMigrationTask(MigrationTaskManager.findWorksapceTasks());
+            // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
+            try {
+                MigrationTaskManager.doMigrationTask(MigrationTaskManager.findWorksapceTasks());
+            } catch (Exception e) {
+                log.error(e, e);
+            }
         }
     }
 
@@ -139,14 +144,18 @@ public class DQRespositoryView extends CommonNavigator {
         if (memento == null) {
             setLinkingEnabled(false);
         }
+        // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
+        try {
+            addPostWindowCloseListener();
 
-        addPostWindowCloseListener();
+            addResourceChangedListener();
 
-        addResourceChangedListener();
+            initToolBar();
 
-        initToolBar();
-
-        initWorkspace();
+            initWorkspace();
+        } catch (Exception e) {
+            log.error(e, e);
+        }
     }
 
     /**
