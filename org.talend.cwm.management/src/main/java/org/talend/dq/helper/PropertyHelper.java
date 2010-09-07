@@ -20,9 +20,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -97,16 +95,21 @@ public final class PropertyHelper {
     }
 
     /**
-     * DOC bZhou Comment method "getPropertyFile".
+     * DOC klliu Comment method "getPropertyFile".
      * 
      * @param elementResource
      * @return null if can't find.
      */
     public static IFile getPropertyFile(Resource elementResource) {
-        EList<EObject> contents = elementResource.getContents();
-        if (contents != null && !contents.isEmpty()) {
-            ModelElement element = (ModelElement) contents.get(0);
-            return getPropertyFile(element);
+        assert elementResource != null;
+        // MOD Beacuse of updating Model,then we use the same repository with tos .So wo can't cast the Resource to
+        // ModelEelent klliu 2010-09-07
+        if (elementResource.getURI().isPlatform()) {
+            String pString = elementResource.getURI().toPlatformString(false);
+            IPath ePath = new Path(pString);
+            ePath = ePath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+            return ResourceManager.getRoot().getFile(ePath);
         }
 
         return null;
