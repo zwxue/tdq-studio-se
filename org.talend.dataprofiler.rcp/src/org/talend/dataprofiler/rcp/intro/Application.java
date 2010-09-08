@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -26,7 +27,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.ui.swt.dialogs.ErrorDialogWidthDetailArea;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
@@ -37,7 +37,6 @@ import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.core.ui.branding.IBrandingService;
 import org.talend.dataprofiler.rcp.i18n.Messages;
-import org.talend.repository.RegistrationPlugin;
 import org.talend.repository.license.LicenseManagement;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -186,8 +185,8 @@ public class Application implements IApplication {
                 try {
                     LicenseManagement.acceptLicense();
                 } catch (BusinessException e) {
-                    ErrorDialogWidthDetailArea errorDialog = new ErrorDialogWidthDetailArea(shell, RegistrationPlugin.PLUGIN_ID,
-                            Messages.getString("RegisterWizardPage.serverCommunicationProblem"), e.getMessage()); //$NON-NLS-1$
+                    MessageDialog.openError(shell, Messages.getString("RegisterWizardPage.serverCommunicationProblem"), e
+                            .getMessage());
                     System.exit(0);
                 }
 
