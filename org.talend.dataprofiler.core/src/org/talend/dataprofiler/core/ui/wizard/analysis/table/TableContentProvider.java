@@ -15,14 +15,13 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
-import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -50,8 +49,7 @@ public class TableContentProvider extends DQRepositoryViewContentProvider {
             }
             if (container.equals(ResourceManager.getConnectionFolder())) {
 
-                members = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false,
-                        ConnectionPackage.DATABASE_CONNECTION).toArray();
+                members = DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
                 ComparatorsFactory.sort(members, ComparatorsFactory.IREPOSITORYVIEWOBJECT_COMPARATOR_ID);
             }
             return members;

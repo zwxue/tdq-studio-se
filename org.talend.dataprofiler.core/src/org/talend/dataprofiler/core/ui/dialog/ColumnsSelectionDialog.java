@@ -42,7 +42,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -66,9 +65,12 @@ import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
+import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
 import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
+import org.talend.dq.helper.DQMDMConnectionReposViewObjDelegator;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
@@ -100,7 +102,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         addFilter(new EMFObjFilter());
         addFilter(new DQFolderFliter(true));
-
+        addFilter(new TDQEEConnectionFolderFilter());
         setInput(metadataFolder);
         setTitle(title);
     }
@@ -731,11 +733,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
 
                 if (ResourceManager.getConnectionFolder().equals(container)) {
-                    return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false,
-                            ConnectionPackage.DATABASE_CONNECTION).toArray();
+                    return DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
                 } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                    return DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false,
-                            ConnectionPackage.MDM_CONNECTION).toArray();
+                    return DQMDMConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
                 }
 
                 // ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);

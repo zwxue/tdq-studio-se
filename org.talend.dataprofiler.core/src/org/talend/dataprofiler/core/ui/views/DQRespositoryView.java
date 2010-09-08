@@ -63,6 +63,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -78,6 +79,7 @@ import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
 import org.talend.dataprofiler.core.ui.ResoureceChangedListener;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
+import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditorInput;
 import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
@@ -170,6 +172,7 @@ public class DQRespositoryView extends CommonNavigator {
         SQLExplorerPlugin.getDefault().initAllDrivers();
 
         // Loading repository view objects (metadata ...)
+        // DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjectsWithFolder(Boolean.TRUE);
         DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.TRUE);
         // initialized connections in sql explorer.
         Collection<Connection> providers = DQConnectionReposViewObjDelegator.getInstance().getAllElements();
@@ -324,6 +327,10 @@ public class DQRespositoryView extends CommonNavigator {
                         } catch (PartInitException e1) {
                             log.error(e1, e1);
                         }
+                    }
+                    if (obj instanceof IRepositoryViewObject) {
+                        OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject) obj);
+                        openItemEditorAction.run();
                     }
                 }
                 super.mouseDoubleClick(e);

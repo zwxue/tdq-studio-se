@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.core.model.properties.ConnectionItem;
@@ -21,6 +22,9 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
+import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
+import org.talend.dq.helper.DQMDMConnectionReposViewObjDelegator;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -43,11 +47,20 @@ public class SchemaContentProvider extends AdapterFactoryContentProvider {
     @Override
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof IContainer) {
-            try {
-                return ((IContainer) parentElement).members();
-            } catch (CoreException e) {
-                log.error("Can't get the children of container: " + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+            IContainer container = (IContainer) parentElement;
+            IResource[] members = null;
+            if (ResourceManager.getConnectionFolder().equals(container)) {
+                return DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
+            } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
+                return DQMDMConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
             }
+            try {
+
+                members = container.members();
+            } catch (CoreException e) {
+                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+            }
+            return members;
         } else if (parentElement instanceof IRepositoryViewObject) {
             IRepositoryViewObject repoistoryViewObj = (IRepositoryViewObject) parentElement;
             Item item = repoistoryViewObj.getProperty().getItem();

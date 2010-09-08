@@ -212,11 +212,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         } else if (element instanceof IRepositoryViewObject) {
             // MOD mzhao feature 2010-08-12 14891: use same repository API with TOS to persistent metadata
             IRepositoryViewObject conn = (IRepositoryViewObject) element;
-            // Currently we only care about connection Item.
-            Item connItem = conn.getProperty().getItem();
-            if (connItem instanceof ConnectionItem) {
-                return ((ConnectionItem) connItem).getConnection().getName();
-            }
+            return conn.getLabel();
+            // // Currently we only care about connection Item.
+            // Item connItem = conn.getProperty().getItem();
+            // if (connItem instanceof ConnectionItem) {
+            // return ((ConnectionItem) connItem).getConnection().getName();
+            // }
         }
         String text = super.getText(element);
         return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;

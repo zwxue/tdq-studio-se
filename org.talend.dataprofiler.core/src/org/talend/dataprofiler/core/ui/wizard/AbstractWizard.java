@@ -20,6 +20,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
@@ -109,7 +110,15 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
 
             if (!modelElements.isEmpty()) {
                 for (ModelElement element : modelElements) {
-                    if (element.getName().equals(elementName)) {
+                    String theElementName = element.getName();
+                    if (theElementName == null) {
+                        if (element instanceof Connection) {
+                            theElementName = DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(
+                                    (Connection) element).getLabel();
+                        }
+                    }
+
+                    if (theElementName.equals(elementName)) {
                         if (!MessageUI.openConfirm(UIMessages.MSG_ANALYSIS_SAME_NAME)) {
                             getParameter().setName(elementName + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
                         }

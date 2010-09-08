@@ -23,6 +23,7 @@ import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
+import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 
@@ -50,7 +51,8 @@ public class CreateUserFolderProvider extends CommonActionProvider {
 
             currentSelection = (IFolder) obj;
 
-            if (!ResourceService.isNoSubFolder(currentSelection)) {
+            if (!ResourceService.isNoSubFolder(currentSelection) && !ResourceManager.isConnectionFolder(currentSelection)
+                    && !ResourceManager.isMdmConnectionFolder(currentSelection)) {
                 CreateUserFolderAction createSubFolderAction = new CreateUserFolderAction();
                 menu.add(createSubFolderAction);
             }

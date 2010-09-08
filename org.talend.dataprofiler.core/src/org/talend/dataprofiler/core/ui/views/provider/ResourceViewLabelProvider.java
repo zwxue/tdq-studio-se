@@ -161,7 +161,6 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             if (log.isDebugEnabled()) {
                 log.debug("Loading file " + file.getLocation());
             }
-
             // MOD qiongli ,bug 14698,add 'try...catch'
             ModelElement mElement = null;
             try {

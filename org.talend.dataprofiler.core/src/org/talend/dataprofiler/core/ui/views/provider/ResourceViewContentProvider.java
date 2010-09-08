@@ -30,7 +30,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -49,7 +48,8 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
+import org.talend.dq.helper.DQMDMConnectionReposViewObjDelegator;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.EResourceConstant;
@@ -159,21 +159,23 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (ResourceManager.isIndicatorFolder(folder)) {
                 // MOD xqliu 2009-07-27 bug 7810
                 return getIndicatorsChildren(folder);
-            } else if (ResourceManager.isConnectionFolder(folder)) {
+            } else if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
                 // MOD mzhao 2010-08-11 feature 14891: use same repository API with TOS to persistent metadata
                 // MOD qiongli 2010-9-3 bug 14891
-                List<IRepositoryViewObject> conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
-                        Boolean.TRUE);
-                conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
-                        Boolean.FALSE, ConnectionPackage.DATABASE_CONNECTION);
+                // MOD zshen 2010-9-07 bug 14891
+                // List<IRepositoryViewObject> conList = DQDBConnectionReposViewObjDelegator.getInstance()
+                // .fetchRepositoryViewObjectsWithFolder(Boolean.FALSE);
+                List<IRepositoryViewObject> conList = DQDBConnectionReposViewObjDelegator.getInstance()
+                        .fetchRepositoryViewObjects(Boolean.TRUE);
+
                 return getConnectionChildren(conList).toArray();
             } else if (ResourceManager.isMdmConnectionFolder(folder)) {
                 // MOD zshen 2010-08-30 feature 14891: use same repository API with TOS to persistent metadata
                 // MOD qiongli 2010-9-3 bug 14891
-                List<IRepositoryViewObject> conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
-                        Boolean.TRUE);
-                conList = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(
-                        Boolean.FALSE, ConnectionPackage.MDM_CONNECTION);
+                // List<IRepositoryViewObject> conList = DQMDMConnectionReposViewObjDelegator.getInstance()
+                // .fetchRepositoryViewObjectsWithFolder(Boolean.FALSE);
+                List<IRepositoryViewObject> conList = DQMDMConnectionReposViewObjDelegator.getInstance()
+                        .fetchRepositoryViewObjects(Boolean.TRUE);
                 return getConnectionChildren(conList).toArray();
             }
 
@@ -366,6 +368,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     /**
      * 
      * DOC QiongLi Comment method "getConnectionChildren".
+     * 
      * @param ls
      * @return
      */

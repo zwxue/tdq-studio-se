@@ -43,7 +43,11 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
@@ -66,6 +70,7 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -106,6 +111,13 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (editorInput instanceof ConnectionItemEditorInput) {
             ConnectionItemEditorInput input = (ConnectionItemEditorInput) editorInput;
             connection = input.getConnectionItem().getConnection();
+        } else if (editorInput instanceof FileEditorInput) {
+            Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
+            String fileLabel = proty.getLabel();
+            Item item = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(proty).getProperty().getItem();
+            if (item instanceof ConnectionItem) {
+                connection = ((ConnectionItem) item).getConnection();
+            }
         }
         return connection;
     }

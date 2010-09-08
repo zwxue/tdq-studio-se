@@ -17,13 +17,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -50,8 +49,7 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
             try {
                 Object[] members = ((IContainer) parentElement).members();
                 if (parentElement.equals(ResourceManager.getConnectionFolder())) {
-                    members = DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false,
-                            ConnectionPackage.DATABASE_CONNECTION).toArray();
+                    members = DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
                 }
                 return members;
             } catch (CoreException e) {
