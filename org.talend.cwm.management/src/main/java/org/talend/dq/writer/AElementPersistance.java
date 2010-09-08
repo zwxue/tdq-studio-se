@@ -130,7 +130,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             //
             // addResourceContent(element);
             Property property = initProperty(element);
-            property.setLabel(file.getName().substring(0, file.getName().indexOf('_')));
+            // property.setLabel(file.getName().substring(0, file.getName().indexOf('_')));
             Item item = initItem(element, property);
             // DqRepositoryViewService.createLogicalFileName(element, getFileExtension());
             try {

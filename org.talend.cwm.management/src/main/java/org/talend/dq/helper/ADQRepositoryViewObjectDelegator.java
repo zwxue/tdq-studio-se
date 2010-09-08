@@ -104,7 +104,7 @@ public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
      */
     public ReturnCode saveElement(T element) {
         ReturnCode rc = new ReturnCode();
-        DqRepositoryViewService.saveOpenDataProvider(needSavedElements.get(element), false);
+        rc = DqRepositoryViewService.saveOpenDataProvider(needSavedElements.get(element), false);
         fetchRepositoryViewObjects(Boolean.TRUE);
         return rc;
     }
@@ -126,12 +126,13 @@ public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
      * 
      * @param reload, true to reload.
      * @return
+     * @deprecated
      */
-    public List<IRepositoryViewObject> fetchRepositoryViewObjects(boolean reload, int... types) {
+    public List<IRepositoryViewObject> fetchRepositoryViewObjects(boolean reload) {
         if (!reload) {
-            if (types.length > 0) {
-                return filterArrays(types[0]);
-            }
+            // if (types.length > 0) {
+            // return filterArrays(types[0]);
+            // }
             IRepositoryViewObject[] reposViewObjs = new IRepositoryViewObject[needSavedElements.values().size()];
             return Arrays.asList(needSavedElements.values().toArray(reposViewObjs));
         }
@@ -139,7 +140,52 @@ public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
         return fetchRepositoryViewObjectsLower();
     }
 
-    protected abstract List<IRepositoryViewObject> fetchRepositoryViewObjectsLower();
+    // /**
+    // *
+    // * DOC mzhao fetch repository view object.
+    // *
+    // * @param reload, true to reload.
+    // * @return
+    // */
+    // public List<IRepositoryViewObject> fetchRepositoryViewObjectsWithFolder(boolean reload) {
+    // // Reload
+    // return fetchRepositoryViewObjectsLower();
+    // }
 
-    protected abstract List<IRepositoryViewObject> filterArrays(int type);
+    /**
+     * 
+     * DOC zshen fetch repository view object by folder.
+     * 
+     * @param reload, true to reload.
+     * @return
+     */
+    // public List<Object> fetchRepositoryViewObjectsByFolder(boolean reload, IFolder folder) {
+    // List<IRepositoryViewObject> reposViewObjs = fetchRepositoryViewObjects(reload);
+    // List<Object> returnList = new ArrayList<Object>();
+    // if (ResourceManager.getMetadataFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
+    // IResource[] folderContains = null;
+    // try {
+    // folderContains = folder.members();
+    // } catch (CoreException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+    // Iterator<IRepositoryViewObject> iter = reposViewObjs.iterator();
+    // while (iter.hasNext()) {
+    // IRepositoryViewObject repositoryViewObject = iter.next();
+    // String reposName = repositoryViewObject.getLabel();
+    // for (IResource resource : folderContains) {
+    // if (resource.getName().split("_")[0].equals(reposName)) {
+    // returnList.add(repositoryViewObject);
+    //
+    // // } else if (resource.getType() == resource) {
+    // //
+    // // }
+    // }
+    // }
+    // }
+    // return returnList;
+    // }
+
+    protected abstract List<IRepositoryViewObject> fetchRepositoryViewObjectsLower();
 }

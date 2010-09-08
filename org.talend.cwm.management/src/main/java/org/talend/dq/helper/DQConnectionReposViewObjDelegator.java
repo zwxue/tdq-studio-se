@@ -13,16 +13,18 @@
 package org.talend.dq.helper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.MDMConnectionItem;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.repository.ProjectManager;
-import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC mzhao This class help store the needed save connection object.
@@ -46,36 +48,114 @@ public final class DQConnectionReposViewObjDelegator extends ADQRepositoryViewOb
 
     protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower() {
         List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
-        try {
-            // ProxyRepositoryFactory.getInstance().initialize();
-            connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
-                    ProjectManager.getInstance().getCurrentProject(), true).getMembers());
-            connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),
-                    true).getMembers());
-            clear();
-            for (IRepositoryViewObject reposViewObj : connList) {
-                // Register the Repository view objects by connection to be able to grab the Repository view object
-                // later.
-                Item item = reposViewObj.getProperty().getItem();
-                Connection connection = ((ConnectionItem) item).getConnection();
-                register(connection, reposViewObj);
-            }
+        connList.addAll(DQMDMConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjectsLower());
+        connList.addAll(DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjectsLower());
 
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
+        // try {
+        // // ProxyRepositoryFactory.getInstance().initialize();
+        // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
+        // ProjectManager.getInstance().getCurrentProject(), true).getMembers());
+        // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),
+        // true).getMembers());
+        // clear();
+        // for (IRepositoryViewObject reposViewObj : connList) {
+        // // Register the Repository view objects by connection to be able to grab the Repository view object
+        // // later.
+        // Item item = reposViewObj.getProperty().getItem();
+        // DatabaseConnection connection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
+        // register(connection, reposViewObj);
+        // }
+        //
+        // } catch (PersistenceException e) {
+        // log.error(e, e);
+        // }
         return connList;
     }
 
     @Override
-    protected List<IRepositoryViewObject> filterArrays(int type) {
-        List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
-        for (Connection conn : this.needSavedElements.keySet()) {
-            if (conn.eClass().getClassifierID() == type) {
-                connList.add(this.needSavedElements.get(conn));
-            }
+    public List<IRepositoryViewObject> fetchRepositoryViewObjects(boolean reload) {
+        List<IRepositoryViewObject> returnList = new ArrayList<IRepositoryViewObject>();
+        returnList.addAll(DQMDMConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(reload));
+        returnList.addAll(DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(reload));
+        return returnList;
+    }
+
+    @Override
+    public Collection<Connection> getAllElements() {
+        List<Connection> allElements = new ArrayList();
+        allElements.addAll(DQMDMConnectionReposViewObjDelegator.getInstance().getAllElements());
+        allElements.addAll(DQDBConnectionReposViewObjDelegator.getInstance().getAllElements());
+        return allElements;
+    }
+
+    @Override
+    public IRepositoryViewObject getRepositoryViewObject(Connection element) {
+        if (element instanceof MDMConnection) {
+            return DQMDMConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject((MDMConnection) element);
+        } else if (element instanceof DatabaseConnection) {
+            return DQDBConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject((DatabaseConnection) element);
         }
-        return connList;
+        return null;
+    }
+
+    @Override
+    public IRepositoryViewObject getReposViewObjByProperty(Property property) {
+        if (property.getItem() instanceof MDMConnectionItem) {
+            return DQMDMConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(property);
+        } else if (property.getItem() instanceof DatabaseConnectionItem) {
+            return DQDBConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(property);
+        }
+        return null;
+    }
+
+    @Override
+    protected void register(Connection modelElement, IRepositoryViewObject reposViewObj) {
+        if (modelElement instanceof MDMConnection) {
+            DQMDMConnectionReposViewObjDelegator.getInstance().register((MDMConnection) modelElement, reposViewObj);
+        } else if (modelElement instanceof DatabaseConnection) {
+            DQDBConnectionReposViewObjDelegator.getInstance().register((DatabaseConnection) modelElement, reposViewObj);
+        }
+    }
+
+    @Override
+    public void remove(Connection element) {
+        if (element instanceof MDMConnection) {
+            DQMDMConnectionReposViewObjDelegator.getInstance().remove((MDMConnection) element);
+        } else if (element instanceof DatabaseConnection) {
+            DQDBConnectionReposViewObjDelegator.getInstance().remove((DatabaseConnection) element);
+        }
+    }
+
+    @Override
+    public void saveAllElements() {
+        DQMDMConnectionReposViewObjDelegator.getInstance().saveAllElements();
+        DQDBConnectionReposViewObjDelegator.getInstance().saveAllElements();
+    }
+
+    @Override
+    public void saveConnectionWithReloadPackage(Connection element) {
+        if (element instanceof MDMConnection) {
+            DQMDMConnectionReposViewObjDelegator.getInstance().saveConnectionWithReloadPackage((MDMConnection) element);
+        } else if (element instanceof DatabaseConnection) {
+            DQDBConnectionReposViewObjDelegator.getInstance().saveConnectionWithReloadPackage((DatabaseConnection) element);
+        }
+    }
+
+    @Override
+    public ReturnCode saveElement(Connection element) {
+
+        if (element instanceof MDMConnection) {
+            return DQMDMConnectionReposViewObjDelegator.getInstance().saveElement((MDMConnection) element);
+        } else if (element instanceof DatabaseConnection) {
+            return DQDBConnectionReposViewObjDelegator.getInstance().saveElement((DatabaseConnection) element);
+        }
+        return null;
+    }
+
+    @Override
+    public void clear() {
+        DQMDMConnectionReposViewObjDelegator.getInstance().clear();
+        DQDBConnectionReposViewObjDelegator.getInstance().clear();
     }
 
 }
