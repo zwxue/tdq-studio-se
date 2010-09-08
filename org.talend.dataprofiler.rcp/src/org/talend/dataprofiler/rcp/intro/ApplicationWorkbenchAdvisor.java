@@ -66,7 +66,7 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
         super.postStartup();
         // Start Web Service Registration
         try {
-            if (!RegisterManagement.isProductRegistered()) {
+            if (!RegisterManagement.getInstance().isProductRegistered()) {
                 RegisterWizard registerWizard = new RegisterWizard();
                 Shell shell = getWorkbenchConfigurer().getWorkbench().getActiveWorkbenchWindow().getShell();
                 WizardDialog dialog = new RegisterWizardDialog(shell, registerWizard);
