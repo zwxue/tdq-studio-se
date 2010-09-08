@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -127,5 +128,15 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
      */
     public boolean isPhysicalDelete() {
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#validDuplicated()
+     */
+    public ReturnCode validDuplicated() {
+        return new ReturnCode(true);
+
     }
 }

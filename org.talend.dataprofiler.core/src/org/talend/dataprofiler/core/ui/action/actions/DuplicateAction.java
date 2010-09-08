@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
@@ -29,6 +30,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -66,7 +68,13 @@ public class DuplicateAction extends Action {
             IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(property);
 
             if (handle != null) {
-                handle.duplicate();
+
+                ReturnCode rc = handle.validDuplicated();
+                if (rc.isOk()) {
+                    handle.duplicate();
+                } else {
+                    MessageDialog.openError(null, "Invalid", rc.getMessage());
+                }
             }
         }
 

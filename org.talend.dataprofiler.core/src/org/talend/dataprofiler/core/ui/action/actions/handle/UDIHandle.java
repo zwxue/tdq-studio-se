@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 import org.eclipse.core.resources.IFolder;
 import org.talend.core.model.properties.Property;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -39,5 +40,10 @@ public class UDIHandle extends EMFResourceHandle {
     @Override
     protected IFolder extractFolder(ModelElement oldObject) {
         return ResourceManager.getUDIFolder();
+    }
+
+    @Override
+    public ReturnCode validDuplicated() {
+        return super.validDuplicated();
     }
 }

@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -27,5 +28,14 @@ public interface IDuplicateHandle extends IActionHandle {
      * @return
      */
     public IFile duplicate();
+
+    /**
+     * DOC bZhou Comment method "validDuplicated".
+     * 
+     * This function is to sure this handle can be execute.
+     * 
+     * @return
+     */
+    public ReturnCode validDuplicated();
 
 }

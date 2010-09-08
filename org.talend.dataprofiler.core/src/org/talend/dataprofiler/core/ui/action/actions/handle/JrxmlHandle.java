@@ -39,6 +39,7 @@ import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.string.StringUtilities;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -189,5 +190,14 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
      */
     public boolean isPhysicalDelete() {
         return property.getItem().getState().isDeleted();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#validDuplicated()
+     */
+    public ReturnCode validDuplicated() {
+        return new ReturnCode(true);
     }
 }

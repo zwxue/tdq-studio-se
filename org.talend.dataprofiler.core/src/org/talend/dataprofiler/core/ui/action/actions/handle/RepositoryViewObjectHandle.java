@@ -23,6 +23,7 @@ import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -99,5 +100,14 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      */
     public boolean isPhysicalDelete() {
         return property.getItem().getState().isDeleted();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#validDuplicated()
+     */
+    public ReturnCode validDuplicated() {
+        return new ReturnCode(true);
     }
 }

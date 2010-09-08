@@ -32,6 +32,7 @@ import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -159,5 +160,14 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
      */
     public boolean isPhysicalDelete() {
         return property.getItem().getState().isDeleted();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#validDuplicated()
+     */
+    public ReturnCode validDuplicated() {
+        return new ReturnCode(true);
     }
 }
