@@ -104,8 +104,8 @@ public interface HandleLucene {
      * @throws Exception
      */
     public String replaceNameWithGenderInfo(String folderName, String inputName, String inputGender, boolean fuzzyQuery)
-            throws IOException,
-            ParseException, Exception;
+            throws Exception;
+
 	/**
 	 * Input filename to be indexed once for all and indexfolder to store the
 	 * files of indexing.

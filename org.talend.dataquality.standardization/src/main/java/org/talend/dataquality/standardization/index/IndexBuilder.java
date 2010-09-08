@@ -16,13 +16,14 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.TermVector;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
+import org.apache.lucene.util.Version;
 
 import com.csvreader.CsvReader;
 
@@ -54,18 +55,12 @@ public class IndexBuilder {
             throw new IOException(csvFileToIndex + " does not exist or" + directoryPath + " is not a directory");
         }
         index = new MMapDirectory(new File(directoryPath));
-        // TODO not sure about the best directory to choose, please investigate
-        // index = new MMapDirectory(new File("./data/TalendGivenNames_index"));
-
-        // 0. Specify the analyzer for tokenizing text.
         // The same analyzer should be used for indexing and searching
-        // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-        Analyzer analyzer = new SimpleAnalyzer();
-
+        Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
+        // Analyzer analyzer = new StandardAnalyzer();
         // the boolean arg in the IndexWriter ctor means to
         // create a new index, overwriting any existing index
         IndexWriter w = new IndexWriter(index, analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
-
         // read the data (this will be the input data of a component called
         // tFirstNameStandardize)
         CsvReader csvReader = new CsvReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
@@ -75,7 +70,6 @@ public class IndexBuilder {
 
         csvReader.readHeaders();
         while (csvReader.readRecord()) {
-            // String id = csvReader.get(0);
             String name = csvReader.get(columnsToBeIndexed[0]);
             String country = csvReader.get(columnsToBeIndexed[1]);
             String gender = csvReader.get(columnsToBeIndexed[2]);
@@ -98,9 +92,7 @@ public class IndexBuilder {
         doc.add(new Field("country", country, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.YES));
         doc.add(new Field("gender", gender, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.YES));
         doc.add(new Field("count", count, Field.Store.NO, Field.Index.NOT_ANALYZED, TermVector.NO));
-        // doc.add(new Field("filePath", filePath, Field.Store.YES, Field.Index.NO));
         w.addDocument(doc);
-        // w.updateDocument(new Term("filePath", filePath), doc);
         }
     }
 

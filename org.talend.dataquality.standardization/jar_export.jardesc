@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="GBK" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="C:/Documents and Settings/Administrator/桌面/org.talend.dataquality.standardization_1.0.3.jar"/>
+    <jar path="C:/Documents and Settings/Administrator/妗岄潰/oracle/org.talend.dataquality.standardization_1.4.0.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/org.talend.dataquality.standardization/jar_export.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -11,18 +11,15 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
-        <file path="/org.talend.dataquality.standardization/data/input.txt"/>
-        <file path="/org.talend.dataquality.standardization/data/TalendGivenNames.TXT"/>
-        <file path="/org.talend.dataquality.standardization/.project"/>
         <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.query"/>
+        <file path="/org.talend.dataquality.standardization/.project"/>
         <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLuceneImpl.java"/>
         <folder path="/org.talend.dataquality.standardization/META-INF"/>
         <folder path="/org.talend.dataquality.standardization/src"/>
         <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.constant"/>
-        <file path="/org.talend.dataquality.standardization/.classpath"/>
         <file path="/org.talend.dataquality.standardization/.checkstyle"/>
+        <file path="/org.talend.dataquality.standardization/.classpath"/>
         <file path="/org.talend.dataquality.standardization/version.txt"/>
-        <file path="/org.talend.dataquality.standardization/data/diminutifs.xls"/>
         <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLuceneTest.java"/>
         <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index"/>
         <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLucene.java"/>

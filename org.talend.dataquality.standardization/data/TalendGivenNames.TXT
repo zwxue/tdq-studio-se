@@ -14,6 +14,7 @@
 "Xavi","japen","0","1",
 "Paul","mosikou","0","1",
 "Edou","mosikou","0","1",
+"Edou1","mosikou","0","1",
 "Geor","mosikou","0","1",
 "Jose","mosikou","1","1",
 "Anto","mosikou","1","1",

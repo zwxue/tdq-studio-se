@@ -13,8 +13,6 @@
 package org.talend.dataquality.standardization.main;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.lucene.queryParser.ParseException;
 
@@ -24,7 +22,6 @@ import org.apache.lucene.queryParser.ParseException;
 public class HandleLuceneTest {
 
     public HandleLuceneTest() {
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -36,10 +33,9 @@ public class HandleLuceneTest {
         // String indexfolder = "C:\\Documents and Settings\\Administrator\\����\\data\\TalendGivenNames_index";
         String indexfolder = "./data/TalendGivenNames_index";
         HandleLucene hl = new HandleLuceneImpl();
-        // System.out.print(hl.createIndex(filename, indexfolder));
+        System.out.print(hl.createIndex(filename, indexfolder));
 
         try {
-            Map<String, String> information2value = new HashMap<String, String>();
 
             String res = hl.replaceName(indexfolder, "Philippe", false);
             System.out.println("replaceName:" + res);

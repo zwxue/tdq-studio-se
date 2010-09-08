@@ -27,7 +27,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopDocsCollector;
 import org.apache.lucene.search.TopFieldCollector;
@@ -45,12 +44,6 @@ public class FirstNameStandardize {
     private IndexSearcher searcher;
 
     private int hitsPerPage;
-
-    private TermQuery countryQalias;
-
-    private TermQuery genderQalias;
-
-    private TermQuery nameQalias;
 
     public FirstNameStandardize(IndexSearcher indexSearcher, Analyzer analyzer, int hitsPerPage) throws IOException {
         assert analyzer != null;
@@ -75,7 +68,7 @@ public class FirstNameStandardize {
 
                 return getFuzzySearch(input).scoreDocs;
             } catch (Exception e) {
-                // TODO Auto-generated catch block
+
                 e.printStackTrace();
             }
         }
@@ -125,9 +118,6 @@ public class FirstNameStandardize {
                 .parse(inputName);
         Query countryQuery = null;
         Query genderQuery = null;
-        //      
-        // BooleanQuery query = new BooleanQuery();
-        // query.add(new TermQuery(termName), BooleanClause.Occur.MUST);
         if (countryText != null && !countryText.equals("")) {
             countryQuery = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_COUNTRY, analyzer)
                     .parse(countryText);
@@ -185,7 +175,7 @@ public class FirstNameStandardize {
         try {
             results = standardize(inputName, fuzzyQuery);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
         }
         return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
@@ -206,8 +196,7 @@ public class FirstNameStandardize {
         return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
     }
 
-    public String replaceNameWithGenderInfo(String inputName, String inputGender, boolean fuzzyQuery) throws IOException,
-            ParseException, Exception {
+    public String replaceNameWithGenderInfo(String inputName, String inputGender, boolean fuzzyQuery) throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
         indexFields.put("gender", inputGender);
         ScoreDoc[] results;

@@ -40,7 +40,6 @@ public class HandleLuceneImpl implements HandleLucene {
 
     private final int hitsPerPage = 10;
 
-    private final String indexfolder = "./data/TalendGivenNames_index";
 
     private Map<String, String[]> hits = new HashMap<String, String[]>();
 
@@ -59,7 +58,7 @@ public class HandleLuceneImpl implements HandleLucene {
         try {
             idxBuilder.initializeIndex(filename, columnsToBeIndexed);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
             return false;
         }
@@ -88,28 +87,24 @@ public class HandleLuceneImpl implements HandleLucene {
                 try {
                     result = stdname.replaceName(inputName, fuzzyQuery);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             } else if (countryText != null && genderText != null) {
                 try {
                     result = stdname.replaceNameWithCountryGenderInfo(inputName, countryText, genderText, fuzzyQuery);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             } else if (countryText != null && genderText == null) {
                 try {
                     result = stdname.replaceNameWithCountryInfo(inputName, countryText, fuzzyQuery);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             } else if (countryText == null && genderText != null) {
                 try {
                     result = stdname.replaceNameWithGenderInfo(inputName, genderText, fuzzyQuery);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -118,14 +113,8 @@ public class HandleLuceneImpl implements HandleLucene {
         return result;
 
     }
-
-    /**
-     * 
-     * DOC Override getSearchResult
-     */
     public Map<String, String[]> getSearchResult(String folderName, String inputName, Map<String, String> information2value,
             boolean fuzzyQuery) throws IOException, ParseException {
-        // TODO Auto-generated method stub
         IndexSearcher searcher = getIndexSearcher(folderName);
 
         Analyzer searchAnalyzer = getAnalyzer();
@@ -137,7 +126,6 @@ public class HandleLuceneImpl implements HandleLucene {
             docs = stdname.standardize(inputName, information2value, fuzzyQuery);
             treatSearchResult(searcher, inputName, docs);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -147,7 +135,6 @@ public class HandleLuceneImpl implements HandleLucene {
     }
 
     private void treatSearchResult(IndexSearcher searcher, String inputName, ScoreDoc[] docs) {
-        // TODO Auto-generated method stub
         soreDoc = new ArrayList<String>();
         for (int i = 0; i < docs.length; ++i) {
             int docId = docs[i].doc;
@@ -157,10 +144,9 @@ public class HandleLuceneImpl implements HandleLucene {
                 String name = d.get("name");
                 soreDoc.add(name);
             } catch (CorruptIndexException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+
                 e.printStackTrace();
             }
         }
@@ -190,10 +176,10 @@ public class HandleLuceneImpl implements HandleLucene {
             dir = FSDirectory.open(new File(folderName));
             is = new IndexSearcher(dir);
         } catch (CorruptIndexException e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
         }
         return is;
@@ -253,7 +239,7 @@ public class HandleLuceneImpl implements HandleLucene {
      * java.lang.String, java.lang.String, boolean)
      */
     public String replaceNameWithGenderInfo(String folderName, String inputName, String inputGender, boolean fuzzyQuery)
-            throws IOException, ParseException, Exception {
+            throws Exception {
         String result = null;
         IndexSearcher searcher = getIndexSearcher(folderName);
         Analyzer searchAnalyzer = getAnalyzer();
