@@ -91,7 +91,7 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
                     // CPU
                     int nbProc = Runtime.getRuntime().availableProcessors();
 
-                    RegisterManagement.register(registerWizard.getEmail(), registerWizard.getCountry(), registerWizard
+                    RegisterManagement.getInstance().register(registerWizard.getEmail(), registerWizard.getCountry(), registerWizard
                             .isProxyEnabled(), registerWizard.getProxyHost(), registerWizard.getProxyPort(), CorePlugin
                             .getDefault().getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION).toString(),
                             projectLanguage, osName, osVersion, javaVersion, totalMemory, memRAM, nbProc);
