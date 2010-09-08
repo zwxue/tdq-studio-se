@@ -17,17 +17,15 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
@@ -35,18 +33,14 @@ import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
 import org.talend.core.runtime.CoreRuntimePlugin;
-import org.talend.core.ui.branding.IBrandingService;
+import org.talend.dataprofiler.core.license.LicenseManagement;
+import org.talend.dataprofiler.core.license.LicenseWizard;
+import org.talend.dataprofiler.core.license.LicenseWizardDialog;
 import org.talend.dataprofiler.rcp.i18n.Messages;
-import org.talend.repository.license.LicenseManagement;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryConstants;
-import org.talend.repository.registeruser.RegisterManagement;
-import org.talend.repository.ui.wizards.license.LicenseWizard;
-import org.talend.repository.ui.wizards.license.LicenseWizardDialog;
-import org.talend.repository.ui.wizards.register.RegisterWizard;
-import org.talend.repository.ui.wizards.register.RegisterWizardPage1;
 import org.talend.repository.utils.ProjectHelper;
 import org.talend.repository.utils.XmiResourceManager;
 import org.talend.resource.ResourceManager;
@@ -63,12 +57,10 @@ public class Application implements IApplication {
      */
     public Object start(IApplicationContext context) {
         Display display = PlatformUI.createDisplay();
-        // MOD mzhao open licence and register.
-        openLicenseAndRegister(display.getActiveShell());
-        // if (!licenceAccept(display.getActiveShell())) {
-        // Platform.endSplash();
-        // return EXIT_OK;
-        // }
+        if (!licenceAccept(display.getActiveShell())) {
+            Platform.endSplash();
+            return EXIT_OK;
+        }
         try {
             initProxyRepository();
             int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
@@ -136,6 +128,21 @@ public class Application implements IApplication {
 
     }
 
+    public boolean licenceAccept(Shell shell) {
+        if (!LicenseManagement.isLicenseValidated()) {
+            LicenseWizard licenseWizard = new LicenseWizard();
+            LicenseWizardDialog dialog = new LicenseWizardDialog(shell, licenseWizard);
+            dialog.setTitle(Messages.getString("Application.license")); //$NON-NLS-1$
+            if (dialog.open() == WizardDialog.OK) {
+                LicenseManagement.acceptLicense();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
 
     /*
      * (non-Javadoc)
@@ -172,36 +179,5 @@ public class Application implements IApplication {
             throw new IllegalArgumentException(Messages.getString(
                     "ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", new String[] { fileName, pattern })); //$NON-NLS-1$
         }
-    }
-
-    private void openLicenseAndRegister(Shell shell) {
-        IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
-                IBrandingService.class);
-        if (!LicenseManagement.isLicenseValidated()) {
-            LicenseWizard licenseWizard = new LicenseWizard();
-            LicenseWizardDialog dialog = new LicenseWizardDialog(shell, licenseWizard);
-            dialog.setTitle(Messages.getString("LicenseWizard.windowTitle")); //$NON-NLS-1$
-            if (dialog.open() == WizardDialog.OK) {
-                try {
-                    LicenseManagement.acceptLicense();
-                } catch (BusinessException e) {
-                    MessageDialog.openError(shell, Messages.getString("RegisterWizardPage.serverCommunicationProblem"), e
-                            .getMessage());
-                    System.exit(0);
-                }
-
-            } else {
-                System.exit(0);
-            }
-        }
-
-        if (brandingService.getBrandingConfiguration().isUseProductRegistration()) {
-            if (!RegisterManagement.isProductRegistered()) {
-                RegisterWizard registerWizard = new RegisterWizard();
-                RegisterWizardPage1 dialog = new RegisterWizardPage1(shell, registerWizard);
-                dialog.open();
-            }
-        }
-
     }
 }
