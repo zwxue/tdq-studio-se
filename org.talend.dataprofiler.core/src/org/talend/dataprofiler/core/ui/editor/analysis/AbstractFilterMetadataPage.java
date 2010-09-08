@@ -207,7 +207,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private Section statisticalSection = null;
 
     private Button reloadDatabasesBtn = null;
-    
+
     private SchemaIndicator currentCatalogIndicator = null; // used in sqlserver
 
     /**
@@ -842,7 +842,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                             tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
 
                     if (!findSqlExplorerTableNode.isOk()) {
-                        log.error(findSqlExplorerTableNode.getMessage());
+                        // log.error(findSqlExplorerTableNode.getMessage());
                     }
                 }
 
@@ -862,7 +862,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                             tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
 
                     if (!findSqlExplorerTableNode.isOk()) {
-                        log.error(findSqlExplorerTableNode.getMessage());
+                        // log.error(findSqlExplorerTableNode.getMessage());
                     }
                 }
 

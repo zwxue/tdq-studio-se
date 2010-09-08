@@ -129,7 +129,7 @@ public final class SqlExplorerBridge {
             }
         }
         MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable") + tableName);
+                DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable", tableName));
         return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
                 "SqlExplorerBridge.NotFindCorrespondTableObject", tableName), //$NON-NLS-1$
                 false);
