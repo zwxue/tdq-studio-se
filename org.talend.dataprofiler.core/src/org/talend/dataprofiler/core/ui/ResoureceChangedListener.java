@@ -237,18 +237,21 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
             IPath newPath = new Path(elementURI.toPlatformString(true));
             IPath itemTypedPath = PropertyHelper.getItemTypedPath(property);
-            IPath rootPath = ResourceManager.getRootProject().getFolder(itemTypedPath).getFullPath();
+            // MOD klliu 2010-09-08 bug 15438
+            if (itemTypedPath != null) {
+                IPath rootPath = ResourceManager.getRootProject().getFolder(itemTypedPath).getFullPath();
 
-            if (rootPath != null) {
-                newPath = newPath.makeRelativeTo(rootPath);
-                newPath = newPath.removeLastSegments(1);
+                if (rootPath != null) {
+                    newPath = newPath.makeRelativeTo(rootPath);
+                    newPath = newPath.removeLastSegments(1);
 
-                String oldPath = property.getItem().getState().getPath();
-                if (!StringUtils.equals(oldPath, newPath.toString())) {
-                    property.getItem().getState().setPath(newPath.toString());
-                    URI desUri = elementResource.getURI().trimFileExtension().appendFileExtension(
-                            FactoriesUtil.PROPERTIES_EXTENSION);
-                    EMFSharedResources.getInstance().saveToUri(propertyResource, desUri.trimSegments(1));
+                    String oldPath = property.getItem().getState().getPath();
+                    if (!StringUtils.equals(oldPath, newPath.toString())) {
+                        property.getItem().getState().setPath(newPath.toString());
+                        URI desUri = elementResource.getURI().trimFileExtension().appendFileExtension(
+                                FactoriesUtil.PROPERTIES_EXTENSION);
+                        EMFSharedResources.getInstance().saveToUri(propertyResource, desUri.trimSegments(1));
+                    }
                 }
             }
         }
