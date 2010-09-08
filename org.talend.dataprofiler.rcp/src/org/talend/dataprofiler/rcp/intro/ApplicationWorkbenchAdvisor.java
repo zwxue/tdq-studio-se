@@ -25,9 +25,9 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.rcp.register.RegisterManagement;
-import org.talend.dataprofiler.rcp.register.RegisterWizard;
-import org.talend.dataprofiler.rcp.register.RegisterWizardDialog;
+import org.talend.repository.registeruser.RegisterManagement;
+import org.talend.repository.ui.wizards.register.RegisterWizard;
+import org.talend.repository.ui.wizards.register.RegisterWizardDialog;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>

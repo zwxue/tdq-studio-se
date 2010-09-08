@@ -9,6 +9,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.intro,
  org.eclipse.ui.forms,
  org.eclipse.swt,
+ org.talend.core.runtime,
  org.talend.dataprofiler.core,
  org.eclipse.ui.ide.application,
  org.apache.xerces,
@@ -25,9 +26,9 @@ Require-Bundle: org.eclipse.ui,
  org.talend.dataquality,
  org.talend.core.repository,
  org.talend.repository.localprovider,
- org.talend.core.runtime,
  org.eclipse.core.resources,
- org.talend.model
+ org.talend.model,
+ org.talend.commons.ui
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.rcp,
