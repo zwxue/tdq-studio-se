@@ -38,12 +38,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -221,11 +218,11 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
         ModelElement modelElement = (ModelElement) EcoreUtil.getObjectByType(modelElements, CorePackage.eINSTANCE
                 .getModelElement());
-        Item item = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(
-                PropertyHelper.getProperty(PropertyHelper.getPropertyFile(propertyResource))).getProperty().getItem();
-        if (item instanceof ConnectionItem) {
-            modelElement = ((ConnectionItem) item).getConnection();
-        }
+        // Item item = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(
+        // PropertyHelper.getProperty(PropertyHelper.getPropertyFile(propertyResource))).getProperty().getItem();
+        // if (item instanceof ConnectionItem) {
+        // modelElement = ((ConnectionItem) item).getConnection();
+        // }
 
         if (modelElement != null) {
             MetadataHelper.setPropertyPath(propertyResource.getURI().toPlatformString(true), modelElement);
