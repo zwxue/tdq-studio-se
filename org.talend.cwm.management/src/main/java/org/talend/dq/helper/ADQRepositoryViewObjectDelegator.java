@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -104,8 +105,12 @@ public abstract class ADQRepositoryViewObjectDelegator<T extends ModelElement> {
      */
     public ReturnCode saveElement(T element) {
         ReturnCode rc = new ReturnCode();
-        rc = DqRepositoryViewService.saveOpenDataProvider(needSavedElements.get(element), false);
-        fetchRepositoryViewObjects(Boolean.TRUE);
+        for (T ele : needSavedElements.keySet()) {
+            if (ResourceHelper.areSame(element, ele)) {
+                rc = DqRepositoryViewService.saveOpenDataProvider(needSavedElements.get(ele), false);
+                fetchRepositoryViewObjects(Boolean.TRUE);
+            }
+        }
         return rc;
     }
 
