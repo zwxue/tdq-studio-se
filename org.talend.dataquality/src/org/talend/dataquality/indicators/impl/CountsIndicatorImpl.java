@@ -24,21 +24,28 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Counts Indicator</b></em>'. <!--
- * end-user-doc -->
+ * O <!-- begin-user-doc --> An implementation of the model object '<em><b>Counts Indicator</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getBlankCountIndicator <em>Blank Count Indicator</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getRowCountIndicator <em>Row Count Indicator</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getNullCountIndicator <em>Null Count Indicator</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getUniqueCountIndicator <em>Unique Count Indicator</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDistinctCountIndicator <em>Distinct Count Indicator</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDuplicateCountIndicator <em>Duplicate Count Indicator</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDefaultValueIndicator <em>Default Value Indicator</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getBlankCountIndicator <em>Blank Count
+ * Indicator</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getRowCountIndicator <em>Row Count Indicator
+ * </em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getNullCountIndicator <em>Null Count Indicator
+ * </em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getUniqueCountIndicator <em>Unique Count
+ * Indicator</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDistinctCountIndicator <em>Distinct Count
+ * Indicator</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDuplicateCountIndicator <em>Duplicate Count
+ * Indicator</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDefaultValueIndicator <em>Default Value
+ * Indicator</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class CountsIndicatorImpl extends CompositeIndicatorImpl implements CountsIndicator {
@@ -564,6 +571,8 @@ public class CountsIndicatorImpl extends CompositeIndicatorImpl implements Count
         addChildToList(this.getDuplicateCountIndicator(), children);
         addChildToList(this.getNullCountIndicator(), children);
         addChildToList(this.getUniqueCountIndicator(), children);
+        // MOD klliu 2010-09-09 bug 13411
+        addChildToList(this.getDefaultValueIndicator(), children);
         return children;
     }
 
