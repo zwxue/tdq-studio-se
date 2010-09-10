@@ -23,9 +23,13 @@ import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 public class ConnectionItemEditorInput extends AbstractItemEditorInput {
 
     private ConnectionItem connectionItem = null;
+
+    private IRepositoryViewObject reposViewObj = null;
+
     public ConnectionItemEditorInput(IRepositoryViewObject reposViewObj) {
         super(reposViewObj);
         connectionItem = (ConnectionItem) reposViewObj.getProperty().getItem();
+        this.reposViewObj = reposViewObj;
     }
 
     @Override
@@ -46,6 +50,16 @@ public class ConnectionItemEditorInput extends AbstractItemEditorInput {
      */
     public ConnectionItem getConnectionItem() {
         return connectionItem;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "getReposViewObj".
+     * 
+     * @return
+     */
+    public IRepositoryViewObject getReposViewObj() {
+        return this.reposViewObj;
     }
 
 }

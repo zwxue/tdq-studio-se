@@ -125,30 +125,18 @@ public final class PropertyHelper {
         if (file != null && file.exists()) {
 
             if (StringUtils.equalsIgnoreCase(file.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)) {
-                return getProperty(file.getLocation().toFile());
+                URI propURI = URI.createPlatformResourceURI(file.getFullPath().toOSString(), false);
+                Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
+                if (resource.getContents() != null) {
+                    Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
+                    if (object != null) {
+                        return (Property) object;
+                    }
+                }
             } else {
                 // try to get property from element file.
                 IFile propertyFile = getPropertyFile(file);
-                if (!propertyFile.exists()) {
-                    Property property = PropertiesFactory.eINSTANCE.createProperty();
-                    property.setLabel(file.getName());
-                    property.setId(EcoreUtil.generateUUID());
-
-                    TDQItem item = PropertiesFactory.eINSTANCE.createTDQItem();
-                    item.setFilename(file.getFullPath().toString());
-                    item.setProperty(property);
-
-                    ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
-                    itemState.setDeleted(false);
-                    item.setState(itemState);
-
-                    property.setItem(item);
-
-                    return property;
-                } else {
-                    return getProperty(propertyFile);
-                }
-
+                return getProperty(propertyFile);
             }
 
         }
@@ -212,6 +200,33 @@ public final class PropertyHelper {
         property.setId(EcoreUtil.generateUUID());
         property.setItem(item);
         item.setProperty(property);
+
+        return property;
+    }
+
+    /**
+     * 
+     * DOC bZhou Comment method "createFolderItemProperty".
+     * 
+     * This mothod is to create a tdq item for TOP, this item is used to some element which is not have spacified item
+     * definition.
+     * 
+     * like *.sql files.
+     * 
+     * @return
+     */
+    public static Property createTDQItemProperty() {
+        Property property = PropertiesFactory.eINSTANCE.createProperty();
+        property.setId(EcoreUtil.generateUUID());
+
+        TDQItem item = PropertiesFactory.eINSTANCE.createTDQItem();
+        item.setProperty(property);
+
+        ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+        itemState.setDeleted(false);
+        item.setState(itemState);
+
+        property.setItem(item);
 
         return property;
     }

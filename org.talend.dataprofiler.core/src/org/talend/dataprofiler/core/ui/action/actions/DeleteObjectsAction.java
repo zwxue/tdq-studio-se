@@ -32,6 +32,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -39,6 +40,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle;
+import org.talend.dataprofiler.core.ui.action.actions.handle.RepositoryViewObjectHandle;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.PropertyHelper;
@@ -103,8 +105,12 @@ public class DeleteObjectsAction extends Action {
 
             for (IDeletionHandle handle : handleList) {
 
-                // MOD qiongli bug 14090
-                CorePlugin.getDefault().closeEditorIfOpened(handle.getProperty());
+                // MOD qiongli bug 14090,15515
+                Property property = handle.getProperty();
+                if (handle instanceof RepositoryViewObjectHandle) {
+                    property = ((RepositoryViewObjectHandle) handle).getRepositoryObject().getProperty();
+                }
+                CorePlugin.getDefault().closeEditorIfOpened(property);
 
                 runStatus = handle.delete();
             }
@@ -158,7 +164,14 @@ public class DeleteObjectsAction extends Action {
      */
     private void iteratedProperties(Object obj, Set<Property> propList) throws Exception {
         if (obj instanceof IFile) {
-            Property property = PropertyHelper.getProperty((IFile) obj);
+            IFile file = (IFile) obj;
+            Property property = PropertyHelper.getProperty(file);
+            if (property == null) {
+                property = PropertyHelper.createTDQItemProperty();
+                property.setLabel(file.getName());
+                ((TDQItem) property.getItem()).setFilename(file.getFullPath().toString());
+            }
+
             if (!property.getItem().getState().isDeleted()) {
                 propList.add(property);
             }

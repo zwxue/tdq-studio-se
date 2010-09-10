@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
@@ -69,14 +71,18 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
      */
     public boolean delete() throws Exception {
+
+        String pathStr = property.eResource().getURI().toPlatformString(false);
+        IFile file = ResourceManager.getRoot().getFile(new Path(pathStr));
+        // MOD qiongli 2010-9-10, bug 14469,15515
         if (isPhysicalDelete()) {
             ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
+            LogicalDeleteFileHandle.deleteElement(file);
+            Connection connection = ((ConnectionItem) property.getItem()).getConnection();
+            DQConnectionReposViewObjDelegator.getInstance().remove(connection);
         } else {
-            String pathStr = property.eResource().getURI().toPlatformString(false);
-            IFile file = ResourceManager.getRoot().getFile(new Path(pathStr));
-            LogicalDeleteFileHandle.deleteLogical(file);
-
             ProxyRepositoryFactory.getInstance().deleteObjectLogical(repositoryObject);
+            LogicalDeleteFileHandle.deleteLogical(file);
         }
 
         DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.TRUE);

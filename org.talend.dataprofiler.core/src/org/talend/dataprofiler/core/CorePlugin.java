@@ -46,6 +46,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
@@ -342,6 +343,12 @@ public class CorePlugin extends AbstractUIPlugin {
                             activePage.closeEditor(reference.getEditor(false), false);
                             break;
                         }
+                    }
+                } else if (editorInput instanceof ConnectionItemEditorInput) {
+                    ConnectionItemEditorInput connectionInput = (ConnectionItemEditorInput) editorInput;
+                    if (property.equals(connectionInput.getReposViewObj().getProperty())) {
+                        activePage.closeEditor(reference.getEditor(false), false);
+                        break;
                     }
                 }
             } catch (PartInitException e) {
