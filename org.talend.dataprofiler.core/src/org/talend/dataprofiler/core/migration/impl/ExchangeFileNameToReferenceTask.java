@@ -80,7 +80,8 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
                                 file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROV));
                         TypedReturnCode<Connection> returnCode = PrvResourceFileHelper.getInstance().findProvider(theFile);
                         if (returnCode.isOk()) {
-                            PrvResourceFileHelper.getInstance().create(returnCode.getObject(), (IFolder) theFile.getParent());
+                            returnFlag &= PrvResourceFileHelper.getInstance().create(returnCode.getObject(),
+                                    (IFolder) theFile.getParent()).isOk();
                         }
                     } else {
                         continue;

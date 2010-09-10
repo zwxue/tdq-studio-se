@@ -82,13 +82,20 @@ public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
                 theResource.move(mdmFolder.getFullPath().append(theResource.getName()), true, null);
             }
         }
+
+        if (tDQDbFolder.members().length == 0 && tDQMdmFolder.members().length == 0) {
+            tDQDbFolder.getParent().delete(true, null);
+            result = true;
+        } else {
+            result = false;
+        }
         // change the path which conation in analysis and dqrule.
         File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
         File fileRule = new File(ResourceManager.getRulesFolder().getRawLocationURI());
         try {
             String[] anaFileExtentionNames = { "." + FactoriesUtil.ANA };
             String[] rulesFileEctentionNames = { "." + FactoriesUtil.DQRULE };
-            result = FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMap(), log)
+            result &= FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMap(), log)
                     && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 
         } catch (Exception e) {
