@@ -22,10 +22,10 @@ public class ProxyRepositoryManager {
     }
 
     public void save() {
-        // ImplementationHelper.getRepositoryManager().save();
+        ImplementationHelper.getRepositoryManager().save();
     }
 
     public void refresh() {
-        // ImplementationHelper.getRepositoryManager().refresh();
+        ImplementationHelper.getRepositoryManager().refresh();
     }
 }
