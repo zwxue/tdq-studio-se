@@ -48,7 +48,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
@@ -250,7 +250,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         if (save.isOk()) {
             // MOD qiongli bug 14437: save dependency
             if (tdDataProvider != null) {
-                DQConnectionReposViewObjDelegator.getInstance().saveElement(tdDataProvider);
+                ProxyRepositoryViewObject.save(tdDataProvider);
             }
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }

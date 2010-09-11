@@ -21,7 +21,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
-import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -49,7 +49,7 @@ public class TableContentProvider extends DQRepositoryViewContentProvider {
             }
             if (container.equals(ResourceManager.getConnectionFolder())) {
 
-                members = DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
+                members = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE).toArray();
                 ComparatorsFactory.sort(members, ComparatorsFactory.IREPOSITORYVIEWOBJECT_COMPARATOR_ID);
             }
             return members;

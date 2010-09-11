@@ -16,13 +16,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -44,7 +42,7 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      */
     RepositoryViewObjectHandle(Property property) {
         this.property = property;
-        repositoryObject = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(property);
+        repositoryObject = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(property);
     }
 
     /*
@@ -78,14 +76,10 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         if (isPhysicalDelete()) {
             ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
             LogicalDeleteFileHandle.deleteElement(file);
-            Connection connection = ((ConnectionItem) property.getItem()).getConnection();
-            DQConnectionReposViewObjDelegator.getInstance().remove(connection);
         } else {
             ProxyRepositoryFactory.getInstance().deleteObjectLogical(repositoryObject);
             LogicalDeleteFileHandle.deleteLogical(file);
         }
-
-        DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.TRUE);
         return true;
     }
 

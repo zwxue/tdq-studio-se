@@ -36,7 +36,7 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -164,7 +164,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     // MOD mzhao 2009-05-05, bug 6587.
     protected void reloadDataproviderAndFillConnCombo() {
-        Collection<Connection> connections = DQConnectionReposViewObjDelegator.getInstance().getAllElements();
+        Collection<Connection> connections = ProxyRepositoryViewObject.getAllDatabaseConnections();
 
         int index = 0;
         connCombo.removeAll();

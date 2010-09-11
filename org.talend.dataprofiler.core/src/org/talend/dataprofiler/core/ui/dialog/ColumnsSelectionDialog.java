@@ -68,10 +68,8 @@ import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
-import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
-import org.talend.dq.helper.DQMDMConnectionReposViewObjDelegator;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -664,7 +662,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         MessageBoxExceptionHandler.process(e);
                     }
 
-                    DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
+                    ProxyRepositoryViewObject.save(conn);
                 }
                 return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             } else {
@@ -733,9 +731,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
 
                 if (ResourceManager.getConnectionFolder().equals(container)) {
-                    return DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
+                    return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(false).toArray();
                 } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                    return DQMDMConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
+                    return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(false).toArray();
                 }
 
                 // ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
@@ -788,7 +786,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 // MOD xqliu 2010-02-02 bug 11198
                 if (element instanceof TdXmlSchema) {
                     Connection conn = DataProviderHelper.getTdDataProvider((TdXmlSchema) element);
-                    return DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(conn);
+                    return ProxyRepositoryViewObject.getRepositoryViewObject(conn);
                 } else if (element instanceof TdXmlElementType) {
                     return XmlElementHelper.getParentElement((TdXmlElementType) element);
                 }
@@ -809,7 +807,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
                 if (packageValue != null) {
                     Connection tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
-                    return DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(tdDataProvider);
+                    return ProxyRepositoryViewObject.getRepositoryViewObject(tdDataProvider);
                 }
             } else if (element instanceof IFolderNode) {
                 return ((IFolderNode) element).getParent();

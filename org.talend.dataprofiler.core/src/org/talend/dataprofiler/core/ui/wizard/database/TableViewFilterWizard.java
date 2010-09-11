@@ -20,7 +20,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -104,7 +104,7 @@ public class TableViewFilterWizard extends AbstractWizard {
         }
 
         if (needSave) {
-            return DQConnectionReposViewObjDelegator.getInstance().saveElement(tdDataProvider).isOk();
+            return ProxyRepositoryViewObject.save(tdDataProvider).isOk();
         }
         return true;
     }

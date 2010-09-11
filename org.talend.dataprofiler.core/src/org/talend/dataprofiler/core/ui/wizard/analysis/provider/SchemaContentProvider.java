@@ -22,8 +22,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
-import org.talend.dq.helper.DQMDMConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -50,9 +49,9 @@ public class SchemaContentProvider extends AdapterFactoryContentProvider {
             IContainer container = (IContainer) parentElement;
             IResource[] members = null;
             if (ResourceManager.getConnectionFolder().equals(container)) {
-                return DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
+                return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE).toArray();
             } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                return DQMDMConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
+                return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(Boolean.FALSE).toArray();
             }
             try {
 

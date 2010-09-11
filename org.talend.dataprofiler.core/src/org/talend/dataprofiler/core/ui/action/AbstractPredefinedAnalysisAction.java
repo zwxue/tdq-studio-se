@@ -39,7 +39,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -101,14 +101,13 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                         // MOD scorreia 2009-01-29 columns are stored in the table
                         // ColumnSetHelper.addColumns(columnSet, columns);
                         list.addAll(columns);
-                        DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
+                        ProxyRepositoryViewObject.save(conn);
                     } catch (TalendException e) {
                         MessageBoxExceptionHandler.process(e);
                     }
                 }
             }
 
-            DQConnectionReposViewObjDelegator.getInstance().saveAllElements();
 
             return list.toArray(new TdColumn[list.size()]);
         }

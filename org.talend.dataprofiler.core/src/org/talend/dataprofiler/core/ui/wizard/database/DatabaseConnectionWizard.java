@@ -34,7 +34,7 @@ import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
@@ -118,14 +118,9 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             }
             CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(cwmElement);
         }
-        String cwmElementURI = cwmElement.eResource().getURI().toString();
-        DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(Boolean.TRUE);
         TypedReturnCode<Object> reposViewObjRC = new TypedReturnCode<Object>();
-        for (Connection conn : DQConnectionReposViewObjDelegator.getInstance().getAllElements()) {
-            if (conn.eResource().getURI().toString().equals(cwmElementURI)) {
-                reposViewObjRC.setObject(DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(conn));
-            }
-        }
+        ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
+        reposViewObjRC.setObject(ProxyRepositoryViewObject.getRepositoryViewObject((Connection) cwmElement));
         return reposViewObjRC;
     }
 

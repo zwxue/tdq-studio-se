@@ -35,8 +35,8 @@ import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
@@ -68,8 +68,7 @@ public class DQRestoreAction extends Action {
             for (IFile file : selectedFiles) {
                 Property property = PropertyHelper.getProperty(file);
                 if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                    IRepositoryViewObject repViewObj = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(
-                            property);
+                    IRepositoryViewObject repViewObj = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(property);
                     Property propertyTMP = repViewObj.getProperty();
                     propertyTMP.getItem().getState().setDeleted(false);
                     ProxyRepositoryFactory.getInstance().save(propertyTMP);

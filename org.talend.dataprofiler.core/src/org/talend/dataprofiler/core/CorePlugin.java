@@ -51,7 +51,7 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.CWMPlugin;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -186,7 +186,7 @@ public class CorePlugin extends AbstractUIPlugin {
         Alias alias = aliasManager.getAlias(tdDataProvider.getName());
 
         if (alias == null) {
-            Collection<Connection> allDataProviders = DQConnectionReposViewObjDelegator.getInstance().getAllElements();
+            Collection<Connection> allDataProviders = ProxyRepositoryViewObject.getAllDatabaseConnections();
             for (Connection dataProvider : allDataProviders) {
                 if (dataProvider == tdDataProvider) {
                     CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);

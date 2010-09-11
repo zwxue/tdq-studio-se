@@ -29,7 +29,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -95,8 +95,8 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
             case PATTERN:
                 modelElements.addAll(PatternResourceFileHelper.getInstance().getAllPatternes(folderResource));
                 break;
-            case DBCONNECTON:
-                modelElements.addAll(DQConnectionReposViewObjDelegator.getInstance().getAllElements());
+            case CONNECTION:
+                modelElements.addAll(ProxyRepositoryViewObject.getAllMetadataConnections());
                 break;
             case DQRULE:
                 modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules(folderResource));
@@ -113,7 +113,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     String theElementName = element.getName();
                     if (theElementName == null) {
                         if (element instanceof Connection) {
-                            theElementName = DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(
+                            theElementName = ProxyRepositoryViewObject.getRepositoryViewObject(
                                     (Connection) element).getLabel();
                         }
                     }

@@ -48,9 +48,8 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
-import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
-import org.talend.dq.helper.DQMDMConnectionReposViewObjDelegator;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -165,8 +164,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 // MOD zshen 2010-9-07 bug 14891
                 // List<IRepositoryViewObject> conList = DQDBConnectionReposViewObjDelegator.getInstance()
                 // .fetchRepositoryViewObjectsWithFolder(Boolean.FALSE);
-                List<IRepositoryViewObject> conList = DQDBConnectionReposViewObjDelegator.getInstance()
-                        .fetchRepositoryViewObjects(Boolean.TRUE);
+                List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
 
                 return getConnectionChildren(conList).toArray();
             } else if (ResourceManager.isMdmConnectionFolder(folder)) {
@@ -174,8 +172,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 // MOD qiongli 2010-9-3 bug 14891
                 // List<IRepositoryViewObject> conList = DQMDMConnectionReposViewObjDelegator.getInstance()
                 // .fetchRepositoryViewObjectsWithFolder(Boolean.FALSE);
-                List<IRepositoryViewObject> conList = DQMDMConnectionReposViewObjDelegator.getInstance()
-                        .fetchRepositoryViewObjects(Boolean.TRUE);
+                List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(Boolean.FALSE);
                 return getConnectionChildren(conList).toArray();
             }
 

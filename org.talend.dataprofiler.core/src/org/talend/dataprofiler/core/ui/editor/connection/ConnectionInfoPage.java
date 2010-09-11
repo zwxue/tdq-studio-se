@@ -69,8 +69,8 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -114,7 +114,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         } else if (editorInput instanceof FileEditorInput) {
             Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
             String fileLabel = proty.getLabel();
-            Item item = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(proty).getProperty().getItem();
+            Item item = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(proty).getProperty().getItem();
             if (item instanceof ConnectionItem) {
                 connection = ((ConnectionItem) item).getConnection();
             }
@@ -453,7 +453,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void reloadDataProvider() {
-        final IRepositoryViewObject reposViewObj = DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(
+        final IRepositoryViewObject reposViewObj = ProxyRepositoryViewObject.getRepositoryViewObject(
                 connection);
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
@@ -501,7 +501,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
-        ReturnCode returnCode = DQConnectionReposViewObjDelegator.getInstance().saveElement(connection);
+        ReturnCode returnCode = ProxyRepositoryViewObject.save(connection);
         if (returnCode.isOk()) {
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$

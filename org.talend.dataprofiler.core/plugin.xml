@@ -1268,5 +1268,10 @@
            commandId="org.talend.dataprofiler.core.deselectAllIndicators">
      </handler>
   </extension>
+  <extension
+        point="org.talend.core.repository.resource_change">
+     <resourceChange
+           class="org.talend.dataprofiler.core.service.TDQResourceChangeHandler"></resourceChange>
+  </extension>
 
 </plugin>

@@ -22,7 +22,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.helper.DQDBConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -49,7 +49,7 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
             try {
                 Object[] members = ((IContainer) parentElement).members();
                 if (parentElement.equals(ResourceManager.getConnectionFolder())) {
-                    members = DQDBConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjects(false).toArray();
+                    members = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE).toArray();
                 }
                 return members;
             } catch (CoreException e) {

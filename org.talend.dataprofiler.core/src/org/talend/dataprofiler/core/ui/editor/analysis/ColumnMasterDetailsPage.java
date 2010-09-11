@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -79,7 +80,7 @@ import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.ReturnCode;
@@ -692,6 +693,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
 
             tdProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]);
+            if (tdProvider.eIsProxy()) {
+                // Resolve the connection again
+                tdProvider = ((ConnectionItem) ProxyRepositoryViewObject.getRepositoryViewObject(tdProvider).getProperty()
+                        .getItem()).getConnection();
+            }
             analysis.getContext().setConnection(tdProvider);
 
             for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
@@ -732,13 +738,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         this.updateAnalysisClientDependency();
         // ~ 14014
 
-        // File file = new File(editorInput.getFile().getParent() +
-        // File.separator + fileName);
-        // ReturnCode saved = writer.save(analysisHandler.getAnalysis(), file);
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
-                DQConnectionReposViewObjDelegator.getInstance().saveElement(tdProvider);
+                ProxyRepositoryViewObject.save(tdProvider);
             }
             // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true
             // );

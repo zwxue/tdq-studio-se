@@ -64,7 +64,7 @@ import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -504,7 +504,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                     Connection conn = DataProviderHelper.getTdDataProvider(packageValue);
                     // IFile findCorrespondingFile =
                     // PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
-                    return DQConnectionReposViewObjDelegator.getInstance().getRepositoryViewObject(conn);
+                    return ProxyRepositoryViewObject.getRepositoryViewObject(conn);
                 }
             } else if (element instanceof IFolderNode) {
                 return ((IFolderNode) element).getParent();
@@ -557,7 +557,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                             MessageBoxExceptionHandler.process(e);
                         }
 
-                        DQConnectionReposViewObjDelegator.getInstance().saveElement(provider);
+                        ProxyRepositoryViewObject.save(provider);
                     }
                     return sort(tables, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                 }
