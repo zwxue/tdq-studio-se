@@ -64,7 +64,7 @@ public class DBConnectionParameter extends ConnectionParameter {
     // ~11412
 
     public DBConnectionParameter() {
-        super(EParameterType.DBCONNECTON);
+        super(EParameterType.CONNECTION);
         retrieveAllMetadata = true;
     }
 

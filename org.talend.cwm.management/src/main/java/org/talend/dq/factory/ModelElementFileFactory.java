@@ -31,8 +31,8 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -192,7 +192,7 @@ public final class ModelElementFileFactory {
 
         Collection<Pattern> allPatternes = PatternResourceFileHelper.getInstance().getAllPatternes();
 
-        Collection<Connection> allDataProviders = DQConnectionReposViewObjDelegator.getInstance().getAllElements();
+        Collection<Connection> allDataProviders = ProxyRepositoryViewObject.getAllMetadataConnections();
 
         Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
 

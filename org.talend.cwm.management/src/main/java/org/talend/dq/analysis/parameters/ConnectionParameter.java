@@ -121,7 +121,7 @@ public class ConnectionParameter {
         ANALYSIS,
         REPORT,
         PATTERN,
-        DBCONNECTON,
+        CONNECTION,
         DQRULE,
         UDINDICATOR;
     }

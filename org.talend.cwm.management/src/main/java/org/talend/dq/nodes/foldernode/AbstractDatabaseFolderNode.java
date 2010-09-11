@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.nodes.foldernode;
 
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -29,6 +28,5 @@ public abstract class AbstractDatabaseFolderNode extends AbstractFolderNode {
     }
 
     public void loadChildren() {
-        DQConnectionReposViewObjDelegator.getInstance().saveAllElements();
     }
 }

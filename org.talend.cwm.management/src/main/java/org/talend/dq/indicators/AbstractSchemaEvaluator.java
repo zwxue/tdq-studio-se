@@ -43,7 +43,7 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -662,7 +662,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         }
 
         DataProvider dataprovider = this.getDataManager();
-        if (!DQConnectionReposViewObjDelegator.getInstance().getAllElements().contains(dataprovider)) {
+        if (!ProxyRepositoryViewObject.getAllMetadataConnections().contains(dataprovider)) {
             rc.setReturnCode(Messages.getString("Evaluator.NoConnectionFoundInMetadata", dataprovider.getName()), false);
             return rc;
         }

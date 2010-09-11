@@ -36,7 +36,6 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.builders.AbstractTableBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
@@ -64,7 +63,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.helper.DQConnectionReposViewObjDelegator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.string.AsciiUtils;
@@ -323,8 +322,7 @@ public final class DqRepositoryViewService {
      * @param addPackage decide whether need to add the Package(catalog/schema) element to dataprovider.
      * @return
      */
-    public static ReturnCode saveOpenDataProvider(IRepositoryViewObject reposViewObj, boolean addPackage) {
-        ConnectionItem connItem = (ConnectionItem) reposViewObj.getProperty().getItem();
+    public static ReturnCode saveOpenDataProvider(ConnectionItem connItem, boolean addPackage) {
         Connection conn = connItem.getConnection();
         assert conn != null;
         if (addPackage) {
@@ -622,7 +620,7 @@ public final class DqRepositoryViewService {
             elements = xmlScheBuilder.getRootElements(document);
             document.getOwnedElement().addAll(elements);
             Connection conn = (Connection) document.getDataManager().get(0);
-            DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
+            ProxyRepositoryViewObject.save(conn);
         }
         return elements;
     }
@@ -635,7 +633,7 @@ public final class DqRepositoryViewService {
             XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
             elements = xmlScheBuilder.getChildren(element);
             Connection conn = (Connection) element.getOwnedDocument().getDataManager().get(0);
-            DQConnectionReposViewObjDelegator.getInstance().saveElement(conn);
+            ProxyRepositoryViewObject.save(conn);
 
         } else {
             elements = xmlContent.getXmlElements();

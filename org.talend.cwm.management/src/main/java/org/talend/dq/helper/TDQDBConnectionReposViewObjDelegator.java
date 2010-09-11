@@ -15,56 +15,49 @@ package org.talend.dq.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ProxyRepositoryFactory;
 
 /**
- * DOC zshen class global comment. Detailled comment
+ * DOC mzhao DB connection repository view object delegator.
  */
-public final class DQMDMConnectionReposViewObjDelegator extends ADQRepositoryViewObjectDelegator<MDMConnection> {
+public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionReposViewObjDelegator<DatabaseConnection> {
 
-    private static Logger log = Logger.getLogger(DQMDMConnectionReposViewObjDelegator.class);
+    private static TDQDBConnectionReposViewObjDelegator instance = null;
 
-    private static DQMDMConnectionReposViewObjDelegator instance = null;
-
-    private DQMDMConnectionReposViewObjDelegator() {
-
+    private TDQDBConnectionReposViewObjDelegator() {
     }
 
-    public static DQMDMConnectionReposViewObjDelegator getInstance() {
+    public static TDQDBConnectionReposViewObjDelegator getInstance() {
         if (instance == null) {
-            instance = new DQMDMConnectionReposViewObjDelegator();
+            instance = new TDQDBConnectionReposViewObjDelegator();
         }
         return instance;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.helper.ADQRepositoryViewObjectDelegator#fetchRepositoryViewObjectsLower()
-     */
-    @Override
     protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower() {
         List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
         try {
             // ProxyRepositoryFactory.getInstance().initialize();
-            // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
-            // ProjectManager.getInstance().getCurrentProject(), true).getMembers());
-            connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),
-                    true).getMembers());
+            // connList.addAll(ProxyRepositoryFactory.getInstance().getAllVersion("_Qhb-I7p0Ed-F2eBqMU9vww", "",
+            // ERepositoryObjectType.METADATA_CONNECTIONS));
+            connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
+                    ProjectManager.getInstance().getCurrentProject(), true).getMembers());
             clear();
             for (IRepositoryViewObject reposViewObj : connList) {
                 // Register the Repository view objects by connection to be able to grab the Repository view object
                 // later.
                 Item item = reposViewObj.getProperty().getItem();
-                MDMConnection connection = (MDMConnection) ((MDMConnectionItem) item).getConnection();
-                register(connection, reposViewObj);
+                if (!(item instanceof FolderItem)) {
+                    DatabaseConnection connection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
+                    register(connection, reposViewObj);
+                }
             }
 
         } catch (PersistenceException e) {

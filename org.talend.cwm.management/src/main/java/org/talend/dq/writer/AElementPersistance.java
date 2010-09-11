@@ -45,6 +45,7 @@ import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
@@ -315,7 +316,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
             if (rc.isOk()) {
                 rc.setMessage("save " + element.getName() + " is OK!");
-                // ProxyRepositoryManager.getInstance().save();
+                ProxyRepositoryManager.getInstance().save();
             } else {
                 rc.setMessage(util.getLastErrorMessage());
             }
