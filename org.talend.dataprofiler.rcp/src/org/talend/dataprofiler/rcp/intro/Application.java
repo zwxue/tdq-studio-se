@@ -86,7 +86,7 @@ public class Application implements IApplication {
             proxyRepository.checkAvailability();
             proxyRepository.initialize();
 
-            XmiResourceManager xmiResourceManager = XmiResourceManager.getInstance();
+            XmiResourceManager xmiResourceManager = new XmiResourceManager();
             IProject rootProject = ResourceManager.getRootProject();
             if (rootProject.exists()) {
                 project = new Project(xmiResourceManager.loadProject(rootProject));
