@@ -52,7 +52,8 @@ public class FolderObjFilter extends AbstractViewerFilter {
                 if (((IFolder) folder).getProjectRelativePath().toString().startsWith(EResourceConstant.METADATA.getPath())) {
                     if (((IFolder) folder).getName().equals(EResourceConstant.METADATA.getPath())) {
                         return true;
-                    } else if (ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder)) {
+                    } else if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())
+                            || ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
                         return true;
                     }
                     return false;

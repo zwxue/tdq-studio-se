@@ -28,10 +28,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -49,8 +51,8 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -165,16 +167,62 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 // MOD zshen 2010-9-07 bug 14891
                 // List<IRepositoryViewObject> conList = DQDBConnectionReposViewObjDelegator.getInstance()
                 // .fetchRepositoryViewObjectsWithFolder(Boolean.FALSE);
-                List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
 
-                return getConnectionChildren(conList).toArray();
+                List<Object> returnList = new ArrayList<Object>();
+                IPath path = folder.getFullPath().makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
+                List<IRepositoryViewObject> conList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(
+                        ERepositoryObjectType.METADATA_CONNECTIONS, path);
+                returnList.addAll(getConnectionChildren(conList));
+                for (Object folderResource : Arrays.asList(getChildrenExceptRecBin(folder))) {
+                    if (folderResource instanceof IResource && ((IResource) folderResource).getType() == IResource.FOLDER) {
+                        returnList.add(folderResource);
+                    }
+                }
+                // List<IRepositoryViewObject> conList = DQDBConnectionReposViewObjDelegator.getInstance()
+                // .fetchRepositoryViewObjects(Boolean.TRUE);
+                // ProxyRepositoryFactory.getInstance().getFolderItem(
+                // ProxyRepositoryFactory.getInstance().getRepositoryContext().getProject(),
+                // ERepositoryObjectType.METADATA_CONNECTIONS, Path.EMPTY);
+                // ProxyRepositoryFactory.getInstance().getFolderItem(
+                // ProxyRepositoryFactory.getInstance().getRepositoryContext().getProject(),
+                // ERepositoryObjectType.METADATA_CONNECTIONS, new Path("aa"));
+                // try {
+                // ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS);
+                // } catch (PersistenceException e) {
+                // // TODO Auto-generated catch block
+                // e.printStackTrace();
+                // }
+                return returnList.toArray();
+
+                // List<IRepositoryViewObject> conList =
+                // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
+
+                // return getConnectionChildren(conList).toArray();
+
             } else if (ResourceManager.isMdmConnectionFolder(folder)) {
                 // MOD zshen 2010-08-30 feature 14891: use same repository API with TOS to persistent metadata
                 // MOD qiongli 2010-9-3 bug 14891
                 // List<IRepositoryViewObject> conList = DQMDMConnectionReposViewObjDelegator.getInstance()
                 // .fetchRepositoryViewObjectsWithFolder(Boolean.FALSE);
-                List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(Boolean.FALSE);
-                return getConnectionChildren(conList).toArray();
+                List<Object> returnList = new ArrayList<Object>();
+                IPath path = folder.getFullPath().makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
+                List<IRepositoryViewObject> conList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(
+                        ERepositoryObjectType.METADATA_MDMCONNECTION, path);
+                returnList.addAll(getConnectionChildren(conList));
+                for (Object folderResource : Arrays.asList(getChildrenExceptRecBin(folder))) {
+                    if (folderResource instanceof IResource && ((IResource) folderResource).getType() == IResource.FOLDER) {
+                        returnList.add(folderResource);
+                    }
+                }
+                return returnList.toArray();
+                // List<IRepositoryViewObject> conList = DQMDMConnectionReposViewObjDelegator.getInstance()
+                // .fetchRepositoryViewObjects(Boolean.TRUE);
+
+                // List<IRepositoryViewObject> conList =
+                // ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(Boolean.FALSE);
+
+                // return getConnectionChildren(conList).toArray();
+
             }
 
             return getChildrenExceptRecBin(element);// FIXME Why call this method by default, qiongli?

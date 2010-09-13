@@ -19,12 +19,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
+import org.jfree.util.Log;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.resource.ResourceManager;
 
 /**
  * This class is a wizard to create a folder on workspace.
@@ -73,7 +78,15 @@ public class FolderWizard extends Wizard {
             IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
             IFolder newFolder = folder.getFolder(folderName);
             try {
-                newFolder.create(false, true, null);
+                if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
+                    ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA_CONNECTIONS,
+                            path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath()), folderName);
+                } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
+                    ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA_MDMCONNECTION,
+                            path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath()), folderName);
+                } else {
+                    newFolder.create(false, true, null);
+                }
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
                 findView.getCommonViewer().refresh();
@@ -84,6 +97,8 @@ public class FolderWizard extends Wizard {
                         DefaultMessagesImpl.getString("FolderWizard.folderCreatedError")); //$NON-NLS-1$
                 ExceptionHandler.process(e);
                 return false;
+            } catch (PersistenceException e) {
+                Log.error(e, e);
             }
         }
         // else {

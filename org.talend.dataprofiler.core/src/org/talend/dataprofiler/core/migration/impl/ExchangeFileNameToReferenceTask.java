@@ -12,27 +12,29 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.migration.AWorkspaceTask;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * 
@@ -46,43 +48,94 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
 
     public static final String MDM_CONNECTION = "TDQ_Metadata/MDM Connections";
 
+    private List<File> mergeFolders = new ArrayList<File>();
+
     public ExchangeFileNameToReferenceTask() {
         // TODO Auto-generated constructor stub
+    }
+
+    /**
+     * DOC bZhou Comment method "addMergeFolder".
+     * 
+     * Add a folder to list to do merge.
+     * 
+     * @param file
+     */
+    public void addMergeFolder(File file) {
+        mergeFolders.add(file);
     }
 
     @Override
     protected boolean doExecute() throws Exception {
         boolean returnFlag = true;
-        IFolder tDQDbFolder = ResourceManager.getRootProject().getFolder(new Path(DB_CONNECTION));
-        IFolder tDQMdmFolder = ResourceManager.getRootProject().getFolder(new Path(MDM_CONNECTION));
-        List<IResource> resources = new ArrayList<IResource>();
-        try {
-            if (tDQDbFolder != null && tDQDbFolder.exists()) {
-                resources.addAll(Arrays.asList(tDQDbFolder.members()));
+        if (mergeFolders.isEmpty()) {
+            mergeFolders.add(ResourceManager.getRootProject().getFolder(new Path(DB_CONNECTION)).getLocation().toFile());
+            mergeFolders.add(ResourceManager.getRootProject().getFolder(new Path(MDM_CONNECTION)).getLocation().toFile());
+        }
+        List<File> resources = new ArrayList<File>();
+
+        for (File theFile : mergeFolders) {
+            if (theFile != null && theFile.exists()
+                    && (DB_CONNECTION.endsWith(theFile.getName()) || MDM_CONNECTION.endsWith(theFile.getName()))) {
+                for (File newFile : theFile.listFiles()) {
+                    if (newFile.isDirectory()) {
+                        resources.addAll(iteratorResource(newFile));
+                    } else if (newFile.getName().toLowerCase().endsWith(FactoriesUtil.PROPERTIES_EXTENSION.toLowerCase())) {
+                        resources.add(newFile);
+                    }
+                }
+                // resources.addAll(Arrays.asList(theFile.listFiles()));
             }
-            if (tDQMdmFolder != null && tDQMdmFolder.exists()) {
-                resources.addAll(Arrays.asList(tDQMdmFolder.members()));
-            }
-        } catch (CoreException e1) {
-            log.error(e1, e1);
-            returnFlag = false;
+
         }
         if (resources.size() > 0) {
-            for (IResource resource : resources) {
-                if (resource instanceof IFile && FactoriesUtil.PROPERTIES_EXTENSION.equals(resource.getFileExtension())) {
-                    IFile file = (IFile) resource;
-                    Property property = PropertyHelper.getProperty(file);
+            for (File resource : resources) {
+                if (resource.isFile()
+                        && resource.getName().toLowerCase().endsWith(FactoriesUtil.PROPERTIES_EXTENSION.toLowerCase())) {
+
+                    Property property = PropertyHelper.getProperty(resource);
 
                     Item item = property.getItem();
                     if (item instanceof TDQItem) {
+                        String fileName = ((TDQItem) item).getFilename();
+                        File theFile = new File(resource.getParent() + File.separator + fileName);
 
-                        IFile theFile = ResourceManager.getRoot().getFile(
-                                file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROV));
-                        TypedReturnCode<Connection> returnCode = PrvResourceFileHelper.getInstance().findProvider(theFile);
-                        if (returnCode.isOk()) {
-                            returnFlag &= PrvResourceFileHelper.getInstance().create(returnCode.getObject(),
-                                    (IFolder) theFile.getParent()).isOk();
+                        File desFile = new File(resource.getParent() + File.separator
+                                + fileName.substring(0, fileName.lastIndexOf('.') + 1) + FactoriesUtil.ITEM_EXTENSION);
+                        theFile.renameTo(desFile);
+
+                        URI uri = URI.createFileURI(desFile.getAbsolutePath());
+
+                        Resource prvResource = new ResourceSetImpl().getResource(uri, true);
+
+                        if (prvResource != null) {
+                            Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(prvResource
+                                    .getContents());
+                            Iterator<Connection> it = tdDataProviders.iterator();
+
+                            Connection connection = null;
+                            while (it.hasNext()) {
+                                connection = it.next();
+                                break;
+                            }
+
+                            if (connection != null) {
+
+                                ConnectionItem connectionItem = org.talend.core.model.properties.PropertiesFactory.eINSTANCE
+                                        .createConnectionItem();
+                                connectionItem.setConnection(connection);
+                                property.setItem(connectionItem);
+                                property.eResource().getContents().add(connectionItem);
+                                ProxyRepositoryFactory.getInstance().save(property);
+                            }
                         }
+
+                        // TypedReturnCode<Connection> returnCode =
+                        // PrvResourceFileHelper.getInstance().findProvider(theFile);
+                        // if (returnCode.isOk()) {
+                        // returnFlag &= PrvResourceFileHelper.getInstance().create(returnCode.getObject(),
+                        // (IFolder) theFile.getParent()).isOk();
+                        // }
                     } else {
                         continue;
                     }
@@ -102,6 +155,26 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
 
         }
         return returnFlag;
+    }
+
+    private List<File> iteratorResource(File theFolder) {
+        List<File> fileList = new ArrayList<File>();
+        for (File subFile : theFolder.listFiles()) {
+            if (subFile.isFile() && isPropertyFile(subFile)) {
+                fileList.add(subFile);
+            } else if (subFile.isDirectory()) {
+                fileList.addAll(iteratorResource(subFile));
+            }
+        }
+        return fileList;
+    }
+
+    private boolean isPropertyFile(File propertyFile) {
+        if (propertyFile.isFile()
+                && propertyFile.getName().toLowerCase().endsWith("." + FactoriesUtil.PROPERTIES_EXTENSION.toLowerCase())) {
+            return true;
+        }
+        return false;
     }
 
     public MigrationTaskType getMigrationTaskType() {
