@@ -53,6 +53,7 @@ import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -285,17 +286,25 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      * DOC qiongli Comment method "getIndicatorChildren".
      */
     private Object[] getChildrenExceptRecBin(Object element) {
-        Object[] obs = super.getChildren(element);
+        IFolder folder = (IFolder) element;
+        if (!ResourceService.isReadOnlyFolder(folder) && LogicalDeleteFileHandle.isAllChildrenDeleted(folder)) {
+            return new IFolder[0];
+        }
+        Object[] obs = super.getChildren(folder);
         List<String[]> delElements = LogicalDeleteFileHandle.getDelLs();
         if (delElements.size() == 0)
             return obs;
         List<Object> abstractLs = Arrays.asList(obs);
         List<Object> ls = new ArrayList<Object>(abstractLs);
-        removeDelElement(ls, delElements);
+        try {
+            removeDelElement(ls);
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
         return ls.toArray();
     }
 
-    private void removeDelElement(List<Object> list, List<String[]> delElements) {
+    private void removeDelElement(List<Object> list) throws Exception {
         Iterator<Object> iterator = list.iterator();
         Object object;
         IFile propFile;
@@ -314,11 +323,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 }
             } else if (object instanceof IFolder) {
                 IFolder folder = (IFolder) object;
-                for (String[] es : delElements) {
-                    if (es.length > 1 && folder.getFullPath().toOSString().equals(es[1])) {
-                        iterator.remove();
-                        break;
-                    }
+                if (!ResourceService.isReadOnlyFolder(folder) && LogicalDeleteFileHandle.isAllChildrenDeleted(folder)) {
+                    iterator.remove();
                 }
             }
         }
@@ -331,27 +337,16 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      */
     private List<Object> getRecBinNodes(DQRecycleBinNode rbn) {
 
-        List<Object> ls = new ArrayList<Object>();
+        List<Object> ls = rbn.getDeletedChildren();
+        if (ls != null) {
+            return ls;
+        }
+        ls = new ArrayList<Object>();
         Object obj = rbn.getObject();
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
             String fPath = folder.getFullPath().toOSString();
             ls = LogicalDeleteFileHandle.getChildFromTXT(fPath);
-            // MOD qiongli 2010-8-5,bug 14697.add all empty subfolders when has not deleted element in TXT
-            try {
-                if (ls.size() == 0) {
-                    DQRecycleBinNode rbnChild = null;
-                    for (IResource member : folder.members()) {
-                        if (member.getType() == IResource.FOLDER && ((IFolder) member).members().length == 0) {
-                            rbnChild = new DQRecycleBinNode();
-                            rbnChild.setObject((IFolder) member);
-                            ls.add(rbnChild);
-                        }
-                    }
-                }
-            } catch (CoreException e) {
-                log.error(e);
-            }
             if (ls.size() != 0)
                 rbn.setDeletedChildren(ls);
         }

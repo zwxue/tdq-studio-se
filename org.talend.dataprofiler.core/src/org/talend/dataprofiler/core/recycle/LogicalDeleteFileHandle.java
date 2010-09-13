@@ -248,11 +248,11 @@ public class LogicalDeleteFileHandle {
                             ls.add(rbn);
                             IFolder rootFolder = (IFolder) file.getParent();
                             // if its brother is empty folder,add its brother
-                            for (IResource res : rootFolder.members()) {
-                                if (res.getType() == IResource.FOLDER && ((IFolder) res).members().length == 0) {
-                                    set.add(folderPath + slashStr + ((IFolder) res).getName());
-                                }
-                            }
+                            // for (IResource res : rootFolder.members()) {
+                            // if (res.getType() == IResource.FOLDER && ((IFolder) res).members().length == 0) {
+                            // set.add(folderPath + slashStr + ((IFolder) res).getName());
+                            // }
+                            // }
                         } else {
                             // add the subFoler
                             addToSet(es[1], folderPath, set);
@@ -302,15 +302,15 @@ public class LogicalDeleteFileHandle {
             subFolderName = temp[0];
             hashSet.add(folderPath + slashStr + subFolderName);
             // MOD qiongli 2010-8-6 bug 14697.if its brother is empty folder,add its brother
-            if (isStartWithDelFolder(folderPath)) {
-                IPath iPath = new Path(folderPath);
-                IFolder rootFolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(iPath);
-                for (IResource res : rootFolder.members()) {
-                    if (res.getType() == IResource.FOLDER && ((IFolder) res).members().length == 0) {
-                        hashSet.add(folderPath + slashStr + ((IFolder) res).getName());
-                    }
-                }
-            }
+            // if (isStartWithDelFolder(folderPath)) {
+            // IPath iPath = new Path(folderPath);
+            // IFolder rootFolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(iPath);
+            // for (IResource res : rootFolder.members()) {
+            // if (res.getType() == IResource.FOLDER && ((IFolder) res).members().length == 0) {
+            // hashSet.add(folderPath + slashStr + ((IFolder) res).getName());
+            // }
+            // }
+            // }
         }
 
     }
@@ -369,11 +369,68 @@ public class LogicalDeleteFileHandle {
      */
     public static boolean isStartWithDelFolder(String path) {
         for (String[] es : delLs) {
-            if (es[0].equals("Folder") && path.startsWith(es[1])) {
+            if (es[1].startsWith(path)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * 
+     * DOC qiongli if it's all children are logical deleted. bug 14697
+     * 
+     * @param folder
+     * @return
+     */
+    public static boolean isAllChildrenDeleted(IFolder folder) {
+
+        List<Object> fileList = new ArrayList<Object>();
+        try {
+            getAllSubElements(folder, fileList);
+            if (fileList.size() == 0)
+                return false;
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+        for (Object obj : fileList) {
+            if (obj instanceof IFolder) {
+                return false;
+            }
+            Property property = PropertyHelper.getProperty((IFile) obj);
+            if (property != null && !property.getItem().getState().isDeleted())
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * DOC qiongli Comment method "getAllSubElements".
+     * 
+     * @param folder
+     * @param fileList
+     */
+    private static void getAllSubElements(IFolder folder, List<Object> fileList) throws Exception {
+        IResource[] members = null;
+        try {
+            members = folder.members();
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+        for (IResource res : members) {
+            if (res.getType() == IResource.FILE) {
+                IFile file = (IFile) res;
+                if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                    fileList.add(file);
+                }
+            } else if (res.getType() == IResource.FOLDER) {// add the empty folder
+                if (((IFolder) res).members().length == 0) {
+                    fileList.add((IFolder) res);
+                }
+                getAllSubElements((IFolder) res, fileList);
+            }
+        }
+
     }
 
 }

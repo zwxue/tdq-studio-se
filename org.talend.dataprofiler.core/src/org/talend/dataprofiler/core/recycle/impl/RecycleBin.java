@@ -84,42 +84,49 @@ public class RecycleBin implements IRecycleBin {
                         set.add(file.getFullPath().toOSString());
                         nodeList.add(rbn);
                     } else {
-                        addParent(nodeList, parent, file, set);
+                        // addParent(nodeList, parent, file, set);
+                        searchAddRoot(nodeList, file, set);
                     }
                 }
-            } else if (fType.equals("Folder")) {
-                IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(iPath);
-                if (folder.exists()) {
-                    IFolder parent = (IFolder) folder.getParent();
-                    addParent(nodeList, parent, folder, set);
-                }
             }
+            // else if (fType.equals("Folder")) {
+            // IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(iPath);
+            // if (folder.exists()) {
+            // IFolder parent = (IFolder) folder.getParent();
+            // addParent(nodeList, parent, folder, set);
+            // }
+            // }
         }
 
         return nodeList;
     }
 
     /**
+     * 
+     * DOC qiongli Comment method "searchAddRoot".
+     * 
      * @param fList
-     * @param parent
-     * @param child
-     * @param hSet make parent folder add to 'fList'
+     * @param currentRes
+     * @param hSet
      */
-    private void addParent(List<DQRecycleBinNode> fList, IFolder parent, Object child, HashSet<String> hSet) {
-        IFolder currentFolder = parent;
-        DQRecycleBinNode rbn = null;
-        if (!ResourceService.isReadOnlyFolder(currentFolder)) {
-            parent = (IFolder) parent.getParent();
-            addParent(fList, parent, currentFolder, hSet);
+    private void searchAddRoot(List<DQRecycleBinNode> fList, IResource currentRes, HashSet<String> hSet) {
+        IFolder parent = (IFolder) currentRes.getParent();
+        if (!ResourceService.isReadOnlyFolder(parent)) {
+            parent = (IFolder) currentRes.getParent();
+            searchAddRoot(fList, parent, hSet);
         } else {
-            String childPath = ((IResource) child).getFullPath().toOSString();
+            String childPath = ((IResource) currentRes).getFullPath().toOSString();
             if (!hSet.contains(childPath)) {// make sure the same path added once
-                rbn = new DQRecycleBinNode();
-                rbn.setObject(child);
-                hSet.add(((IResource) child).getFullPath().toOSString());
+                DQRecycleBinNode rbn = new DQRecycleBinNode();
+                rbn.setObject(currentRes);
+                if (currentRes.getType() == IResource.FOLDER) {
+                    rbn.setDeletedChildren(LogicalDeleteFileHandle.getChildFromTXT(currentRes.getFullPath().toOSString()));
+                }
+                hSet.add(((IResource) currentRes).getFullPath().toOSString());
                 fList.add(rbn);
             }
             return;
         }
+
     }
 }

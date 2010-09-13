@@ -195,12 +195,13 @@ public class DeleteObjectsAction extends Action {
             IPath path = new Path(pathStr).removeFirstSegments(1);
 
             if (path.getFileExtension() == null) {
-                List<Object> children = node.getDeletedChildren();
-                if (children != null) {
-                    for (Object child : children) {
-                        iteratedProperties(child, propList);
-                    }
-                }
+                // MOD qiongli 2010-9-13,only handle root folder
+                // List<Object> children = node.getDeletedChildren();
+                // if (children != null) {
+                // for (Object child : children) {
+                // iteratedProperties(child, propList);
+                // }
+                // }
 
                 Property property = PropertyHelper.createFolderItemProperty();
                 property.getItem().getState().setPath(path.toOSString());

@@ -16,13 +16,9 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -31,10 +27,8 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
@@ -88,22 +82,7 @@ public class DQRestoreAction extends Action {
                 }
 
             }
-            // delete folder path from logicalDelete.txt
-            if (f.exists()) {
-                DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
-                TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
-                DQRecycleBinNode rbn = (DQRecycleBinNode) treeSelection.getFirstElement();
-                // MOD qiongli 2010-8-5,bug 14697
-                if (rbn.getObject() instanceof IFolder) {
-                    IFolder selFolder = (IFolder) rbn.getObject();
-                    restoreSubFolders(selFolder.members());
-                    if (LogicalDeleteFileHandle.isStartWithDelFolder(selFolder.getFullPath().toOSString())) {
-                        LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType
-                                + selFolder.getFullPath().toOSString(), "");
-                    }
-
-                }
-            }
+            // MOD qiongli bug 14697,delete some codes which replace folder path in txt
         } catch (Exception exc) {
             log.error(exc, exc);
         }
@@ -113,28 +92,6 @@ public class DQRestoreAction extends Action {
 
         CorePlugin.getDefault().refreshWorkSpace();
 
-    }
-
-    /**
-     * 
-     * @param members Restore all subFoldes
-     */
-    private void restoreSubFolders(IResource[] members) {
-        IFolder subFolder = null;
-        try {
-            for (IResource res : members) {
-                if (res.getType() == IResource.FOLDER) {
-                    subFolder = (IFolder) res;
-                    if (LogicalDeleteFileHandle.isStartWithDelFolder(subFolder.getFullPath().toOSString())) {
-                        LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType
-                                + subFolder.getFullPath().toOSString(), PluginConstant.EMPTY_STRING);
-                    }
-                    restoreSubFolders(subFolder.members());
-                }
-            }
-        } catch (CoreException e) {
-            log.equals(e);
-        }
     }
 
 }
