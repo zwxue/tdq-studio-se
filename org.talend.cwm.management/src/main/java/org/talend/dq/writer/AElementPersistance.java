@@ -135,7 +135,7 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
             Item item = initItem(element, property);
             // DqRepositoryViewService.createLogicalFileName(element, getFileExtension());
             try {
-                ProxyRepositoryFactory.getInstance().create(item, Path.EMPTY);// file.getFullPath().removeFirstSegments(3));
+                ProxyRepositoryFactory.getInstance().create(item, filePath.removeFirstSegments(3).removeLastSegments(1));// file.getFullPath().removeFirstSegments(3));
             } catch (PersistenceException e) {
                 log.error(e, e);
             }
