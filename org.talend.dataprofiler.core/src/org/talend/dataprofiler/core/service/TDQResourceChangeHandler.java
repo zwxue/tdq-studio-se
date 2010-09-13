@@ -30,6 +30,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     private static Logger log = Logger.getLogger(TDQResourceChangeHandler.class);
+
+    private XmiResourceManager xmiResourceManager = new XmiResourceManager();
     public TDQResourceChangeHandler() {
     }
 
@@ -40,11 +42,11 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 if (eObject instanceof DatabaseConnection) {
                     ProxyRepositoryViewObject.registerURI((DatabaseConnection) eObject,
                             toBeUnloadedResource.getURI());
-                    XmiResourceManager.getInstance().saveResource(toBeUnloadedResource);
+                    // XmiResourceManager.getInstance().saveResource(toBeUnloadedResource);
                 } else if (eObject instanceof MDMConnection) {
                     ProxyRepositoryViewObject.registerURI((MDMConnection) eObject,
                             toBeUnloadedResource.getURI());
-                    XmiResourceManager.getInstance().saveResource(toBeUnloadedResource);
+                    xmiResourceManager .saveResource(toBeUnloadedResource);
                 }
             } catch (PersistenceException e) {
                 log.error(e, e);
