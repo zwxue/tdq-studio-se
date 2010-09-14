@@ -51,8 +51,8 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -170,7 +170,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
                 List<Object> returnList = new ArrayList<Object>();
                 IPath path = folder.getFullPath().makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
-                List<IRepositoryViewObject> conList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(
+                List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
                         ERepositoryObjectType.METADATA_CONNECTIONS, path);
                 returnList.addAll(getConnectionChildren(conList));
                 for (Object folderResource : Arrays.asList(getChildrenExceptRecBin(folder))) {
@@ -199,14 +199,14 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
                 // return getConnectionChildren(conList).toArray();
 
-            } else if (ResourceManager.isMdmConnectionFolder(folder)) {
+            } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
                 // MOD zshen 2010-08-30 feature 14891: use same repository API with TOS to persistent metadata
                 // MOD qiongli 2010-9-3 bug 14891
                 // List<IRepositoryViewObject> conList = DQMDMConnectionReposViewObjDelegator.getInstance()
                 // .fetchRepositoryViewObjectsWithFolder(Boolean.FALSE);
                 List<Object> returnList = new ArrayList<Object>();
                 IPath path = folder.getFullPath().makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
-                List<IRepositoryViewObject> conList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(
+                List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
                         ERepositoryObjectType.METADATA_MDMCONNECTION, path);
                 returnList.addAll(getConnectionChildren(conList));
                 for (Object folderResource : Arrays.asList(getChildrenExceptRecBin(folder))) {

@@ -38,6 +38,7 @@ import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -225,7 +226,8 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     private boolean isMdmFlag() {
         FolderProvider folderProvider = connectionParam.getFolderProvider();
-        return folderProvider != null && ResourceManager.isMdmConnectionFolder(folderProvider.getFolderResource());
+        return folderProvider != null
+                && ResourceService.isSubFolder(ResourceManager.getMDMConnectionFolder(), folderProvider.getFolderResource());
     }
 
     /**
