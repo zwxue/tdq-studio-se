@@ -15,11 +15,13 @@ package org.talend.dq.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -29,6 +31,18 @@ import org.talend.utils.sugars.ReturnCode;
 public final class ProxyRepositoryViewObject {
 
     private ProxyRepositoryViewObject() {
+
+    }
+
+    public static List<IRepositoryViewObject> fetchRepositoryViewObjectsByFolder(boolean reload, ERepositoryObjectType itemType,
+            IPath path) {
+
+        if (itemType == ERepositoryObjectType.METADATA_CONNECTIONS) {
+            return getDBConnectionInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path);
+        } else if (itemType == ERepositoryObjectType.METADATA_MDMCONNECTION) {
+            return getMDMConnectionInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path);
+        }
+        return new ArrayList<IRepositoryViewObject>();
 
     }
 
@@ -130,7 +144,6 @@ public final class ProxyRepositoryViewObject {
         // File connection ...
         return null;
     }
-
 
     public static List<IRepositoryViewObject> fetchAllDBRepositoryViewObjects(Boolean reload) {
         List<IRepositoryViewObject> dbReposViewObjs = new ArrayList<IRepositoryViewObject>();

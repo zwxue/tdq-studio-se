@@ -52,6 +52,7 @@ import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
@@ -766,6 +767,26 @@ public final class ConnectionUtils {
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
             mdmConn.setPassword(ConnectionHelper.getEncryptPassword(password));
+        }
+    }
+
+    /**
+     * DOC zshen Comment method "setPassword".
+     * 
+     * @param conn
+     * @param password
+     */
+    public static void setName(Connection conn, String name) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConn.setName(ConnectionHelper.getEncryptPassword(name));
+            ProxyRepositoryViewObject.getRepositoryViewObject(conn).getProperty().setLabel(name);
+
+        }
+        MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+        if (mdmConn != null) {
+            mdmConn.setName(ConnectionHelper.getEncryptPassword(name));
+            ProxyRepositoryViewObject.getRepositoryViewObject(mdmConn).getProperty().setLabel(name);
         }
     }
 

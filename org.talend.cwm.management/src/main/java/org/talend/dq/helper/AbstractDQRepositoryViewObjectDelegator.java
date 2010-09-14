@@ -20,11 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -40,7 +43,6 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
 
     protected Map<T, IRepositoryViewObject> modEleToReposObjMap = new HashMap<T, IRepositoryViewObject>();
 
-
     // This map is useful when the resources in unloaded, it keeps the original model element instance map to URI which
     // can be used to reload resource later.
     protected Map<T, URI> unloadResModEleURIMap = new HashMap<T, URI>();
@@ -53,6 +55,7 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
     public void register(T unloadModEle, URI uri) {
         unloadResModEleURIMap.put(unloadModEle, uri);
     }
+
     public Collection<T> getAllElements() {
         return modEleToReposObjMap.keySet();
     }
@@ -130,7 +133,6 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
         return null;
     }
 
-
     /**
      * 
      * DOC mzhao Save specific connection.
@@ -158,9 +160,7 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
         return rc;
     }
 
-
     protected abstract ReturnCode save(Item item);
-
 
     /**
      * 
@@ -177,6 +177,25 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
         // Reload
         return fetchRepositoryViewObjectsLower();
     }
+
+    /**
+     * 
+     * DOC zshen fetch repository view object all of under the path.
+     * 
+     * @param reload whether reload all of element
+     * @param itemType the type of item which you want
+     * @param path path of folder
+     * @return
+     */
+    public List<IRepositoryViewObject> fetchRepositoryViewObjectsByFolder(boolean reload, ERepositoryObjectType itemType,
+            IPath path) {
+        if (reload) {
+            fetchRepositoryViewObjectsLower();
+        }
+        return ProxyRepositoryFactory.getInstance().getMetadataByFolder(itemType, path);
+
+    }
+
     protected abstract List<IRepositoryViewObject> fetchRepositoryViewObjectsLower();
 
 }
