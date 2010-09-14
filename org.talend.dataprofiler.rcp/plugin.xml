@@ -15,13 +15,6 @@
             serviceId="org.talend.core.ui.branding.IBrandingService">
       </Service>
    </extension>
-   <extension
-         point="org.talend.core.runtime.service">
-      <Service
-            class="org.talend.dataprofiler.rcp.Service1"
-            serviceId="org.talend.dataprofiler.rcp.Service1">
-      </Service>
-   </extension>
 	
     
 
