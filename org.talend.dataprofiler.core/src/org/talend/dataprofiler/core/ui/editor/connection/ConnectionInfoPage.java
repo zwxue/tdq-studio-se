@@ -453,8 +453,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void reloadDataProvider() {
-        final IRepositoryViewObject reposViewObj = ProxyRepositoryViewObject.getRepositoryViewObject(
-                connection);
+        final IRepositoryViewObject reposViewObj = ProxyRepositoryViewObject.getRepositoryViewObject(connection);
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
@@ -490,6 +489,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     @Override
     protected void saveTextChange() {
         super.saveTextChange();
+        ConnectionUtils.setName(connection, nameText.getText());
         ConnectionUtils.setUsername(connection, loginText.getText());
         ConnectionUtils.setPassword(connection, passwordText.getText());
         ConnectionUtils.setURL(connection, urlText.getText());

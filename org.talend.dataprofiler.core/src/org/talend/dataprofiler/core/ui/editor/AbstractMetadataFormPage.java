@@ -164,7 +164,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
 
         authorText = createMetadataTextFiled(AUTHOR_LABEL, parent);
-        //ADDED 2010-04-01 sgandon bug 11760 : author size limitation
+        // ADDED 2010-04-01 sgandon bug 11760 : author size limitation
         authorText.setTextLimit(TaggedValueHelper.getStringMaxSize(TaggedValueHelper.AUTHOR,
                 MAX_TEXT_FIELD_STRING_SIZE_FOR_USUAL_STRING));
 
