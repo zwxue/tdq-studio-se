@@ -66,6 +66,7 @@ public class DQRestoreAction extends Action {
                     Property propertyTMP = repViewObj.getProperty();
                     propertyTMP.getItem().getState().setDeleted(false);
                     ProxyRepositoryFactory.getInstance().save(propertyTMP);
+                    EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
                     if (!DqRepositoryViewService.saveProperty(propertyTMP).isOk())
                         return;
                 } else {

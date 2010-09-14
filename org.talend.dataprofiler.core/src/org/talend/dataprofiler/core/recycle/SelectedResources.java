@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Property;
@@ -29,6 +30,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -120,13 +122,25 @@ public class SelectedResources {
             for (Object o : members) {
                 if (o instanceof IFile) {
                     IFile file = (IFile) o;
-                    ModelElement mElement = ModelElementFileFactory.getModelElement(file);
-                    if (mElement == null) {
-                        continue;
+                    // handle metadata connections under folder
+                    if (file.getFileExtension().equals(FactoriesUtil.ITEM_EXTENSION)) {
+                        IPath path = file.getFullPath().removeFileExtension()
+                                .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+                        IFile propFile = ResourceManager.getRoot().getFile(path);
+                        if (propFile.exists()) {
+                            Property property = PropertyHelper.getProperty(file);
+                            if (property.getItem().getState().isDeleted())
+                                fileList.add(propFile);
+                        }
+                    } else {
+                        ModelElement mElement = ModelElementFileFactory.getModelElement(file);
+                        if (mElement == null) {
+                            continue;
+                        }
+                        Property property = PropertyHelper.getProperty(file);
+                        if (property.getItem().getState().isDeleted())
+                            fileList.add(file);
                     }
-                    Property property = PropertyHelper.getProperty(mElement);
-                    if (property.getItem().getState().isDeleted())
-                        fileList.add(file);
                 } else if (o instanceof IFolder) {
                     getAllSubFilesByRecycleBinNode((IFolder) o, fileList);
                 }

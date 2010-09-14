@@ -27,6 +27,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
@@ -73,7 +74,7 @@ public class FolderHandle implements IDeletionHandle {
                     if (!file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                         ModelElementFileFactory.getResourceFileMap(file).delete(file);
                     } else {
-                        handleRepoisityoryView();
+                        handleRepoisityoryView(file);
                     }
                 }
                 delsubFolderForever(folder);
@@ -144,7 +145,8 @@ public class FolderHandle implements IDeletionHandle {
         return this.property;
     }
 
-    private void handleRepoisityoryView() {
+    private void handleRepoisityoryView(IFile propFile) {
+        property = PropertyHelper.getProperty(propFile);
         IRepositoryViewObject repViewObj = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(property);
         String paths = property.eResource().getURI().toPlatformString(false);
         IFile file = ResourceManager.getRoot().getFile(new Path(paths));

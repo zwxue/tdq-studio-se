@@ -227,6 +227,9 @@ public class DeleteObjectsAction extends Action {
      */
     private boolean existChildFolder(Set<Property> propList, IFolder folder) {
         for (Property property : propList) {
+            // bug 14697 avoid NPE
+            if (property.getItem().getState().getPath() == null)
+                return false;
             IPath path = new Path(property.getItem().getState().getPath());
             if (folder.getFullPath().isPrefixOf(path)) {
                 return true;
