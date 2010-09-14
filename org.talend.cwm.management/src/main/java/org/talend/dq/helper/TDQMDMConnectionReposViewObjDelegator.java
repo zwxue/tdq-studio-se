@@ -58,7 +58,7 @@ public final class TDQMDMConnectionReposViewObjDelegator extends TDQConnectionRe
             // ProjectManager.getInstance().getCurrentProject(), true).getMembers());
             // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),
             // true).getMembers());
-            connList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION));
+            connList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION, true));
             clear();
             for (IRepositoryViewObject reposViewObj : connList) {
                 // Register the Repository view objects by connection to be able to grab the Repository view object
