@@ -20,8 +20,8 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ProxyRepositoryFactory;
 
 /**
@@ -47,8 +47,9 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
             // ProxyRepositoryFactory.getInstance().initialize();
             // connList.addAll(ProxyRepositoryFactory.getInstance().getAllVersion("_Qhb-I7p0Ed-F2eBqMU9vww", "",
             // ERepositoryObjectType.METADATA_CONNECTIONS));
-            connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
-                    ProjectManager.getInstance().getCurrentProject(), true).getMembers());
+            // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
+            // ProjectManager.getInstance().getCurrentProject(), true).getMembers());
+            connList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS));
             clear();
             for (IRepositoryViewObject reposViewObj : connList) {
                 // Register the Repository view objects by connection to be able to grab the Repository view object

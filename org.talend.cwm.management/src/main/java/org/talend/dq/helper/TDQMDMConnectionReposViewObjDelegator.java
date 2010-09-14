@@ -20,8 +20,8 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ProxyRepositoryFactory;
 
 /**
@@ -56,8 +56,9 @@ public final class TDQMDMConnectionReposViewObjDelegator extends TDQConnectionRe
             ProxyRepositoryFactory.getInstance().initialize();
             // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
             // ProjectManager.getInstance().getCurrentProject(), true).getMembers());
-            connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),
-                    true).getMembers());
+            // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),
+            // true).getMembers());
+            connList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION));
             clear();
             for (IRepositoryViewObject reposViewObj : connList) {
                 // Register the Repository view objects by connection to be able to grab the Repository view object
