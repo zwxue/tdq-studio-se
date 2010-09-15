@@ -46,7 +46,7 @@ public class GlobalServiceRegister {
 
     static {
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        configurationElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.service"); //$NON-NLS-1$
+        configurationElements = registry.getConfigurationElementsFor("org.talend.core.ui.branding.IBrandingService"); //$NON-NLS-1$
     }
 
     /**
