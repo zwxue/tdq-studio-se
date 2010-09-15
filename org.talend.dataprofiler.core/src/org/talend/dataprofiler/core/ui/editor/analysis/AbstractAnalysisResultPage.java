@@ -18,7 +18,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -174,15 +173,15 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
      */
     protected void setupTableGridDataLimitedSize(Table table, int numOfRows) {
         int itemHeight = table.getItemHeight();
-        GridData data = new GridData(SWT.FILL, SWT.FILL, false, false);
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
         data.heightHint = numOfRows > TABLE_MIN_ROW_LIMIT ? BIG_TABLE_NUM_ROWS * itemHeight : SMALL_TABLE_NUM_ROWS * itemHeight;
 
         // MOD yyi compute table width
-        int tableWidth = 0;
-        for (TableColumn column : table.getColumns()) {
-            tableWidth += column.getWidth() + 50;
-        }
-        data.widthHint = TABLE_WIDTH_HINT > tableWidth ? tableWidth : TABLE_WIDTH_HINT;
+        // int tableWidth = 0;
+        // for (TableColumn column : table.getColumns()) {
+        // tableWidth += column.getWidth() + 50;
+        // }
+        // data.widthHint = TABLE_WIDTH_HINT > tableWidth ? tableWidth : TABLE_WIDTH_HINT;
         table.setLayoutData(data);
     }
 
