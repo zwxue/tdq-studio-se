@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.gef.palette.PaletteContainer;
-import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IFolderLayout;
@@ -150,37 +148,8 @@ public class TOPConfiguration implements IBrandingConfiguration {
         return null;
     }
 
-    private int getIndex(List<PaletteEntry> children, String label) {
-        int ret = -1;
-        for (int i = 0; i < children.size(); i++) {
-            PaletteEntry n = children.get(i);
-            if (label.equals(n.getLabel())) {
-                ret = i;
-            }
-        }
-        return ret;
-    }
 
-    /**
-     * 
-     * DOC achen Comment method "hideComponents".
-     * 
-     * @param container
-     * @param label
-     */
-    protected void hideComponents(PaletteEntry container, String label) {
-        if (container instanceof PaletteContainer) {
-            List<PaletteEntry> children = ((PaletteContainer) container).getChildren();
-            int index = getIndex(children, label);
-            if (index != -1) {
-                children.remove(index);
-            } else {
-                for (PaletteEntry n : children) {
-                    hideComponents(n, label);
-                }
-            }
-        }
-    }
+
 
     /*
      * (non-Javadoc)
