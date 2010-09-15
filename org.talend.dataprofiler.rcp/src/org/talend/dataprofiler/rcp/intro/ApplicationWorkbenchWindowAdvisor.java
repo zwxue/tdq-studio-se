@@ -17,9 +17,9 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.talend.core.ui.branding.IBrandingService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
-import org.talend.dataprofiler.core.service.IBrandingService;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
 /**
@@ -43,7 +43,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setShowStatusLine(false);
         String buildId = CorePlugin.getDefault().getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION)
                 .toString();
-        IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
+        IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getBrandingService(
                 IBrandingService.class);
         configurer.setTitle(brandingService.getFullProductName() + " (" + buildId + ")"); //$NON-NLS-1$ //$NON-NLS-2$
     }

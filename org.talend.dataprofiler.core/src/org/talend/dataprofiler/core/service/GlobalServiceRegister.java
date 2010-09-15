@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-
 /**
  * A global service register provides the service registration and acquirement. <br/>
  * 
@@ -36,17 +35,20 @@ public class GlobalServiceRegister {
 
     private static IConfigurationElement[] configurationElements;
 
+    private static IConfigurationElement[] bandingConfigurationElements;
     public static GlobalServiceRegister getDefault() {
         return instance;
     }
 
     private Map<Class<?>, IService> services = new HashMap<Class<?>, IService>();
 
+    private Map<Class<?>, org.talend.core.ui.branding.IBrandingService> brandingServices = new HashMap<Class<?>, org.talend.core.ui.branding.IBrandingService>();
     private Map<Class<?>, List<IService>> serviceGroups = new HashMap<Class<?>, List<IService>>();
 
     static {
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        configurationElements = registry.getConfigurationElementsFor("org.talend.core.ui.branding.IBrandingService"); //$NON-NLS-1$
+        configurationElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.service"); //$NON-NLS-1$
+        bandingConfigurationElements = registry.getConfigurationElementsFor("org.talend.core.runtime.service"); //$NON-NLS-1$
     }
 
     /**
@@ -69,6 +71,24 @@ public class GlobalServiceRegister {
     }
 
     /**
+     * Gets the specific IService.overide klliu 2010-09-15 bug 15520
+     * 
+     * @param klass the Service type you want to get
+     * @return IService IService
+     */
+    public org.talend.core.ui.branding.IBrandingService getBrandingService(Class<?> klass) {
+        org.talend.core.ui.branding.IBrandingService service = brandingServices.get(klass);
+        if (service == null) {
+            service = findBrandingService(klass);
+            if (service == null) {
+                throw new RuntimeException(DefaultMessagesImpl.getString(
+                        "GlobalServiceRegister.cannotFindService", klass.getName())); //$NON-NLS-1$
+            }
+            brandingServices.put(klass, service);
+        }
+        return service;
+    }
+    /**
      * Gets the specific IService group.
      * 
      * @param klass the Service type you want to get
@@ -87,11 +107,31 @@ public class GlobalServiceRegister {
     }
 
     /**
-     * Finds the specific service from the list.
+     * Finds the specific service from the list. overide klliu 2010-09-15 bug 15520
      * 
      * @param klass the interface type want to find.
      * @return IService
      */
+    private org.talend.core.ui.branding.IBrandingService findBrandingService(Class<?> klass) {
+        String key = klass.getName();
+        for (int i = 0; i < bandingConfigurationElements.length; i++) {
+            IConfigurationElement element = bandingConfigurationElements[i];
+            String id = element.getAttribute("serviceId"); //$NON-NLS-1$
+
+            if (!key.endsWith(id)) {
+                continue;
+            }
+            try {
+                Object service = element.createExecutableExtension("class"); //$NON-NLS-1$
+                if (klass.isInstance(service)) {
+                    return (org.talend.core.ui.branding.IBrandingService) service;
+                }
+            } catch (CoreException e) {
+                ExceptionHandler.process(e);
+            }
+        }
+        return null;
+    }
     private IService findService(Class<?> klass) {
         String key = klass.getName();
         for (int i = 0; i < configurationElements.length; i++) {
@@ -112,7 +152,6 @@ public class GlobalServiceRegister {
         }
         return null;
     }
-
     /**
      * Finds the special service group from the list.
      * 

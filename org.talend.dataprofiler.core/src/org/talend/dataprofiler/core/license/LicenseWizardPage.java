@@ -27,9 +27,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.core.ui.branding.IBrandingService;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
-import org.talend.dataprofiler.core.service.IBrandingService;
+
 
 /**
  * Page for new project details. <br/>
@@ -86,7 +87,7 @@ public class LicenseWizardPage extends WizardPage {
     private String getLicense() {
         String license = ""; //$NON-NLS-1$
         try {
-            IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
+            IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getBrandingService(
                     IBrandingService.class);
             final URL url = brandingService.getLicenseFile();
 
