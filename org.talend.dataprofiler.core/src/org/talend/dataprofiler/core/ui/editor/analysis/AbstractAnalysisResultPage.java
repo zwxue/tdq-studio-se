@@ -180,7 +180,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         // MOD yyi compute table width
         int tableWidth = 0;
         for (TableColumn column : table.getColumns()) {
-            tableWidth += column.getWidth();
+            tableWidth += column.getWidth() + 50;
         }
         data.widthHint = TABLE_WIDTH_HINT > tableWidth ? tableWidth : TABLE_WIDTH_HINT;
         table.setLayoutData(data);
