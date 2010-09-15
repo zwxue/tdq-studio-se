@@ -17,6 +17,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceService;
 
 /**
@@ -32,12 +33,17 @@ public class DeleteResourceProvider extends CommonActionProvider {
 
         if (obj instanceof IResource) {
             IResource resource = (IResource) obj;
-            if (!ResourceService.isReadOnlyFolder(resource)) {
+            if (!ResourceService.isReadOnlyFolder(resource) && !isSystemIndicator(resource)) {
                 menu.add(new DeleteObjectsAction());
             }
         } else {
             menu.add(new DeleteObjectsAction());
         }
+    }
+
+    private boolean isSystemIndicator(IResource resource) {
+        return resource.getFileExtension().equals("definition")
+                && resource.getFullPath().toOSString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
     }
 
 }
