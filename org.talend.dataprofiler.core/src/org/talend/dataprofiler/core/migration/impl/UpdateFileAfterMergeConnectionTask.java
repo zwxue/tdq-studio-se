@@ -57,7 +57,7 @@ public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
     public Map<String, String> getReplaceStringMap() {
         if (this.replaceStringMap == null) {
             this.replaceStringMap = initReplaceStringMap();
-            this.replaceStringMap.putAll(fileNameMap);
+            // this.replaceStringMap.putAll(fileNameMap);
         }
         return this.replaceStringMap;
     }
@@ -110,8 +110,8 @@ public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
         File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
         File fileRule = new File(ResourceManager.getRulesFolder().getRawLocationURI());
         try {
-            String[] anaFileExtentionNames = { "." + FactoriesUtil.ANA };
-            String[] rulesFileEctentionNames = { "." + FactoriesUtil.DQRULE };
+            String[] anaFileExtentionNames = { FactoriesUtil.ANA };
+            String[] rulesFileEctentionNames = { FactoriesUtil.DQRULE };
             result &= FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMap(), log)
                     && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 

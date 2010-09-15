@@ -83,7 +83,9 @@ public class RefactMdmMetadataTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
-        return createDate(2010, 8, 9);
+        // MOD xqliu 2010-09-15 bug 13941: this task must be called before SplitSysIndicatorTask
+        // return createDate(2010, 8, 9);
+        return createDate(2010, 7, 6);
     }
 
 }

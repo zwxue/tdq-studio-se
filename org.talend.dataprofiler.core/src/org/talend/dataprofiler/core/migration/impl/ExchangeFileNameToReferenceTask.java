@@ -16,8 +16,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Path;
@@ -25,6 +27,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -49,6 +52,8 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
     public static final String MDM_CONNECTION = "TDQ_Metadata/MDM Connections";
 
     private List<File> mergeFolders = new ArrayList<File>();
+
+    private Map<String, String> replaceStringMap;
 
     public ExchangeFileNameToReferenceTask() {
         // TODO Auto-generated constructor stub
@@ -153,6 +158,19 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
             // theResource.move(mdmFolder.getFullPath().append(theResource.getName()), true, null);
             // }
 
+            File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
+            File fileRule = new File(ResourceManager.getRulesFolder().getRawLocationURI());
+            try {
+                String[] anaFileExtentionNames = { FactoriesUtil.ANA };
+                String[] rulesFileEctentionNames = { FactoriesUtil.DQRULE };
+                returnFlag &= FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMap(), log)
+                        && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
+
+            } catch (Exception e) {
+                returnFlag = false;
+                log.error(e, e);
+            }
+
         }
         return returnFlag;
     }
@@ -185,4 +203,17 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
         return createDate(2010, 8, 13);
     }
 
+    public Map<String, String> getReplaceStringMap() {
+        if (this.replaceStringMap == null) {
+            this.replaceStringMap = initReplaceStringMap();
+        }
+        return this.replaceStringMap;
+    }
+
+    private Map<String, String> initReplaceStringMap() {
+        Map<String, String> result = new HashMap<String, String>();
+        result.put(".prv", ".item");
+
+        return result;
+    }
 }

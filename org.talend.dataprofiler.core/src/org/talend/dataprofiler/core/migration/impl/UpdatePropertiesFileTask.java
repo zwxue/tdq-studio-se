@@ -56,26 +56,26 @@ public class UpdatePropertiesFileTask extends AWorkspaceTask {
                 IFile ifile = file2IFile(file);
                 if (file.getName().endsWith(FactoriesUtil.ANA)) {
                     AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
-                    analysisWriter.save(AnaResourceFileHelper.getInstance().findAnalysis(ifile));
+                    analysisWriter.savePerperties(AnaResourceFileHelper.getInstance().findAnalysis(ifile));
                 } else if (file.getName().endsWith(FactoriesUtil.REP)) {
                     ReportWriter reportWriter = ElementWriterFactory.getInstance().createReportWriter();
-                    reportWriter.save(RepResourceFileHelper.getInstance().findReport(ifile));
+                    reportWriter.savePerperties(RepResourceFileHelper.getInstance().findReport(ifile));
                 } else if (file.getName().endsWith(FactoriesUtil.DEFINITION)) {
                     IndicatorDefinitionWriter indicatorDefinitionWriter = ElementWriterFactory.getInstance()
                             .createIndicatorDefinitionWriter();
                     IndicatorDefinition indicatorDefinition = IndicatorResourceFileHelper.getInstance().findIndDefinition(ifile);
                     if (indicatorDefinition != null) { // .talend.definition don't include any IndicatorDefinition now
-                        indicatorDefinitionWriter.save(indicatorDefinition);
+                        indicatorDefinitionWriter.savePerperties(indicatorDefinition);
                     }
                 } else if (file.getName().endsWith(FactoriesUtil.DQRULE)) {
                     DQRuleWriter dqRuleWriter = ElementWriterFactory.getInstance().createdRuleWriter();
-                    dqRuleWriter.save(DQRuleResourceFileHelper.getInstance().findWhereRule(ifile));
+                    dqRuleWriter.savePerperties(DQRuleResourceFileHelper.getInstance().findWhereRule(ifile));
                 } else if (file.getName().endsWith(FactoriesUtil.PATTERN)) {
                     PatternWriter patternWriter = ElementWriterFactory.getInstance().createPatternWriter();
-                    patternWriter.save(PatternResourceFileHelper.getInstance().findPattern(ifile));
+                    patternWriter.savePerperties(PatternResourceFileHelper.getInstance().findPattern(ifile));
                 } else if (file.getName().endsWith(FactoriesUtil.PROV)) {
                     DataProviderWriter dataProviderWriter = ElementWriterFactory.getInstance().createDataProviderWriter();
-                    dataProviderWriter.save(PrvResourceFileHelper.getInstance().findProvider(ifile).getObject());
+                    dataProviderWriter.savePerperties(PrvResourceFileHelper.getInstance().findProvider(ifile).getObject());
                 } else if (file.getName().endsWith(FactoriesUtil.SOFTWARE_SYSTEM)) {
                     // TODO how to handle this type file???
                 } else {
@@ -99,7 +99,9 @@ public class UpdatePropertiesFileTask extends AWorkspaceTask {
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
-        return createDate(2010, 8, 17);
+        // MOD xqliu 2010-09-15 bug 13941 this task should be called before ExchangeFileNameToReferenceTask
+        // return createDate(2010, 8, 17);
+        return createDate(2010, 8, 12);
     }
 
     /**
