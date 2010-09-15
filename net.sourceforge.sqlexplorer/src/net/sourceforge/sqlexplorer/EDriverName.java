@@ -80,15 +80,16 @@ public enum EDriverName {
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$
                        "-25",
                        "lib/jaybird-2.1.1.jar"),
-    TERADATADEFAULTURL(
-                       "Teradata",
+    TERADATADEFAULTURL("Teradata",
     // MOD klliu 2010-06-04 bug 12819: upgrade jdbc driver class used in sql explorer
                        "com.teradata.jdbc.TeraDriver",
                        "-50",
                        "lib/terajdbc4.jar",
                        "lib/tdgssconfig.jar"),
     SQLITE3DEFAULTURL("SQLite3", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar"),
-    AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar");
+    AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar"),
+    // MOD klliu bug 14791 add ingres database url and modify default_driver.xml
+    INGRESDEFAULTURL("Ingres", "com.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar");
 
     private final String dbKey;
 
@@ -171,6 +172,9 @@ public enum EDriverName {
             break;
         case AS400DEFAULTURL:
             plugins = "org.talend.libraries.jdbc.as400";
+            break;
+        case INGRESDEFAULTURL:
+            plugins = "org.talend.libraries.jdbc.ingres";
             break;
         default:
             return linkedList;
