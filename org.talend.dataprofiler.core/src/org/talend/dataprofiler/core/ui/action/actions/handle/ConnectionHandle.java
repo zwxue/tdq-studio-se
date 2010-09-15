@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.eclipse.core.resources.IFile;
 import org.talend.core.model.properties.Property;
 
@@ -39,4 +41,16 @@ public class ConnectionHandle extends RepositoryViewObjectHandle {
         return null;
     }
 
+    /*
+     * Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash bin
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.RepositoryViewObjectHandle#delete()
+     */
+    @Override
+    public boolean delete() throws Exception {
+        boolean b = super.delete();
+        SQLExplorerPlugin.getDefault().getAliasManager().modelChanged();
+        return b;
+
+    }
 }

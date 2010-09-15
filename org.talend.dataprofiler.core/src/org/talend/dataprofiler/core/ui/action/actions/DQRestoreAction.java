@@ -14,12 +14,15 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.io.File;
 
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -82,6 +85,11 @@ public class DQRestoreAction extends Action {
                     LogicalDeleteFileHandle.removeAllParent(file);
                 }
 
+                // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash
+                // bin
+                if (property.getItem() instanceof ConnectionItem) {
+                    SQLExplorerPlugin.getDefault().getAliasManager().modelChanged();
+                }
             }
             // MOD qiongli bug 14697,delete some codes which replace folder path in txt
         } catch (Exception exc) {

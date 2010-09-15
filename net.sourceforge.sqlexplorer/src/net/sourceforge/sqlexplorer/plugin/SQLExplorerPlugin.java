@@ -15,6 +15,7 @@
 package net.sourceforge.sqlexplorer.plugin;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -35,6 +36,7 @@ import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
@@ -86,6 +88,9 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     private DatabaseStructureView databaseStructureView;
 
     private IProject rootProject;
+
+    // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash bin
+    private static HashMap<Alias, IFile> propertyFile = new HashMap<Alias, IFile>();
 
     /**
      * The constructor. Moved previous logic to the start method.
@@ -437,5 +442,10 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      */
     public void setRootProject(IProject rootProject) {
         this.rootProject = rootProject;
+    }
+
+    // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash bin
+    public HashMap<Alias, IFile> getPropertyFile() {
+        return propertyFile;
     }
 }

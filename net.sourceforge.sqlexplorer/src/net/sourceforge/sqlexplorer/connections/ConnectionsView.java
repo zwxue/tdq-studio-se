@@ -31,6 +31,8 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -46,6 +48,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.widgets.Composite;
@@ -105,6 +109,23 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
         // add content and label provider
         _treeViewer.setContentProvider(new ConnectionTreeContentProvider());
         _treeViewer.setLabelProvider(new ConnectionTreeLabelProvider());
+
+        // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash bin
+        _treeViewer.addFilter(new ViewerFilter() {
+
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                try {
+                    IFile file = SQLExplorerPlugin.getDefault().getPropertyFile().get(element);
+                    if (null != file && file.exists())
+                        return !FileUtils.readFileToString(file.getLocation().toFile()).contains("deleted=\"true\"");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        });
+        // ~
 
         // set input session
         _treeViewer.setInput(SQLExplorerPlugin.getDefault().getAliasManager());
