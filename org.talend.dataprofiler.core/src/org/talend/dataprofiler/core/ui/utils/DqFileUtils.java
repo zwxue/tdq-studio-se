@@ -122,7 +122,7 @@ public final class DqFileUtils {
      * @param suffix
      * @throws IOException
      */
-    public static void searchAllFileInPlugin(List<File> result, Plugin plugin, String srcPath, boolean recurse, String suffix)
+    public static void searchAllFileInPlugin(List<File> result, Plugin plugin, String srcPath, boolean recurse, String[] suffixs)
             throws IOException {
 
         Enumeration<String> paths = plugin.getBundle().getEntryPaths(srcPath);
@@ -141,13 +141,15 @@ public final class DqFileUtils {
 
             if (file.isDirectory() && recurse) {
                 if (!file.getName().startsWith(".")) { //$NON-NLS-1$
-                    searchAllFileInPlugin(result, plugin, currentPath, recurse, suffix);
+                    searchAllFileInPlugin(result, plugin, currentPath, recurse, suffixs);
                 }
                 continue;
             }
 
-            if (suffix == null || file.getName().endsWith(suffix)) {
-                result.add(file);
+            for (String suffix : suffixs) {
+                if (suffix == null || file.getName().endsWith(suffix)) {
+                    result.add(file);
+                }
             }
         }
     }
