@@ -141,24 +141,20 @@ public final class EObjectHelper {
 
     public static List<ModelElement> getDependencyClients(IFile file) {
         ModelElement findElement = getModelElement(file);
-        EList<Dependency> clientDependencys = findElement.getSupplierDependency();
-        // locate resource of each Dependency object
-        List<ModelElement> supplierList = new ArrayList<ModelElement>();
-        for (Dependency dependency : clientDependencys) {
-            EList<ModelElement> client = dependency.getClient();
-            if (client != null) {
-                supplierList.addAll(client);
-            }
-        }
-        return supplierList;
+        return getDependencyClients(findElement);
     }
 
     public static List<ModelElement> getDependencyClients(IRepositoryViewObject repositoryObject) {
         ModelElement findElement = getModelElement(repositoryObject);
-        if (findElement == null) {
+        return getDependencyClients(findElement);
+    }
+
+    public static List<ModelElement> getDependencyClients(ModelElement modelElement) {
+
+        if (modelElement == null) {
             return new ArrayList<ModelElement>();
         }
-        EList<Dependency> clientDependencys = findElement.getSupplierDependency();
+        EList<Dependency> clientDependencys = modelElement.getSupplierDependency();
         // locate resource of each Dependency object
         List<ModelElement> supplierList = new ArrayList<ModelElement>();
         for (Dependency dependency : clientDependencys) {

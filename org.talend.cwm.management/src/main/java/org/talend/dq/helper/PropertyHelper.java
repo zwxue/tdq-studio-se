@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
@@ -354,7 +355,11 @@ public final class PropertyHelper {
 
             @Override
             public Object caseConnectionItem(ConnectionItem object) {
-                return object.getConnection();
+                Connection connection = object.getConnection();
+                if (connection.getName() == null) {
+                    connection.setName(object.getProperty().getLabel());
+                }
+                return connection;
             }
 
         };

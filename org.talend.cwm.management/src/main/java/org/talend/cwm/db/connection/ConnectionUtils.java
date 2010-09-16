@@ -779,13 +779,13 @@ public final class ConnectionUtils {
     public static void setName(Connection conn, String name) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
         if (dbConn != null) {
-            dbConn.setName(ConnectionHelper.getEncryptPassword(name));
+            dbConn.setName(name);
             ProxyRepositoryViewObject.getRepositoryViewObject(conn).getProperty().setLabel(name);
 
         }
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
-            mdmConn.setName(ConnectionHelper.getEncryptPassword(name));
+            mdmConn.setName(name);
             ProxyRepositoryViewObject.getRepositoryViewObject(mdmConn).getProperty().setLabel(name);
         }
     }
