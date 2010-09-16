@@ -261,6 +261,27 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                     IndicatorEnum.MaxLengthIndicatorEnum, textIndicator.getMaxLengthIndicator()));
             this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.AverageLengthIndicatorEnum, textIndicator.getAverageLengthIndicator()));
+            // MOD mzhao
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthWithBlankIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.MinLengthWithBlankIndicatorEnum, textIndicator.getMinLengthWithBlankIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthWithBlankNullIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.MinLengthWithBlankNullIndicatorEnum, textIndicator.getMinLengthWithBlankNullIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthWithNullIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.MinLengthWithNullIndicatorEnum, textIndicator.getMinLengthWithNullIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthWithBlankIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.MaxLengthWithBlankIndicatorEnum, textIndicator.getMaxLengthWithBlankIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthWithBlankNullIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.MaxLengthWithBlankNullIndicatorEnum, textIndicator.getMaxLengthWithBlankNullIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthWithNullIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.MaxLengthWithNullIndicatorEnum, textIndicator.getMaxLengthWithNullIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthWithBlankIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.AverageLengthWithBlankIndicatorEnum, textIndicator.getAvgLengthWithBlankIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthWithNullBlankIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.AverageLengthWithNullBlankIndicatorEnum, textIndicator.getAvgLengthWithBlankNullIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthWithNullIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.AverageLengthWithNullIndicatorEnum, textIndicator.getAvgLengthWithNullIndicator()));
+
+            
             break;
         case BoxIIndicatorEnum:
             BoxIndicator boxtIndicator = (BoxIndicator) indicator;

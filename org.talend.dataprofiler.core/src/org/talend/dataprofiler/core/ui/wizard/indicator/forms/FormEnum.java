@@ -132,6 +132,15 @@ public enum FormEnum {
         case MinLengthIndicatorEnum:
         case MaxLengthIndicatorEnum:
         case AverageLengthIndicatorEnum:
+        case MinLengthWithBlankIndicatorEnum:
+        case MinLengthWithNullIndicatorEnum:
+        case MinLengthWithBlankNullIndicatorEnum:
+        case MaxLengthWithBlankIndicatorEnum:
+        case MaxLengthWithBlankNullIndicatorEnum:
+        case MaxLengthWithNullIndicatorEnum:
+        case AverageLengthWithBlankIndicatorEnum:
+        case AverageLengthWithNullBlankIndicatorEnum:
+        case AverageLengthWithNullIndicatorEnum:
 
             forms = new FormEnum[] { TextLengthForm, IndicatorThresholdsForm };
 
