@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -42,8 +43,12 @@ public class DeleteResourceProvider extends CommonActionProvider {
     }
 
     private boolean isSystemIndicator(IResource resource) {
-        return resource.getFileExtension().equals("definition")
-                && resource.getFullPath().toOSString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
+        if (resource instanceof IFile) {
+            return resource.getFileExtension().equals("definition")
+                    && resource.getFullPath().toOSString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
+        } else {
+            return resource.getFullPath().toOSString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
+        }
     }
 
 }
