@@ -48,9 +48,6 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
     protected Map<T, URI> unloadResModEleURIMap = new HashMap<T, URI>();
 
     protected void register(T modelElement, IRepositoryViewObject reposViewObj) {
-        if (log.isInfoEnabled()) {
-            log.info(modelElement.toString());
-        }
         modEleToReposObjMap.put(modelElement, reposViewObj);
     }
 
