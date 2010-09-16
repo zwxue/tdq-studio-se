@@ -15,12 +15,10 @@ package org.talend.dataprofiler.core.service;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.repository.utils.AbstractResourceChangesService;
-import org.talend.repository.utils.XmiResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -31,14 +29,14 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     private static Logger log = Logger.getLogger(TDQResourceChangeHandler.class);
 
-    private XmiResourceManager xmiResourceManager = new XmiResourceManager();
+    // private XmiResourceManager xmiResourceManager = new XmiResourceManager();
     public TDQResourceChangeHandler() {
     }
 
     @Override
     public void handleUnload(Resource toBeUnloadedResource) {
         for (EObject eObject : toBeUnloadedResource.getContents()) {
-            try {
+            // try {
                 if (eObject instanceof DatabaseConnection) {
                     ProxyRepositoryViewObject.registerURI((DatabaseConnection) eObject,
                             toBeUnloadedResource.getURI());
@@ -46,11 +44,11 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 } else if (eObject instanceof MDMConnection) {
                     ProxyRepositoryViewObject.registerURI((MDMConnection) eObject,
                             toBeUnloadedResource.getURI());
-                    xmiResourceManager .saveResource(toBeUnloadedResource);
+                    // xmiResourceManager .saveResource(toBeUnloadedResource);
                 }
-            } catch (PersistenceException e) {
-                log.error(e, e);
-            }
+            // } catch (PersistenceException e) {
+            // log.error(e, e);
+            // }
             // else anaysis,report etc.
         }
         super.handleUnload(toBeUnloadedResource);
