@@ -23,13 +23,14 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. bug 14123
  */
-public class UpdateMDMConnectionXSDPathTask extends AWorkspaceTask {
+public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(UpdateMDMConnectionXSDPathTask.class);
 
@@ -39,7 +40,9 @@ public class UpdateMDMConnectionXSDPathTask extends AWorkspaceTask {
 
     private static final String XSD = ".xsd/";
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {

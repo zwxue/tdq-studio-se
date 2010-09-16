@@ -26,13 +26,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC yyi class global comment. Detailled comment
  */
-public class UpdateAnalysisWithMinLengthIndicator extends AWorkspaceTask {
+public class UpdateAnalysisWithMinLengthIndicator extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC yyi UpdateAnalysisWithMinLengthIndicator constructor comment.

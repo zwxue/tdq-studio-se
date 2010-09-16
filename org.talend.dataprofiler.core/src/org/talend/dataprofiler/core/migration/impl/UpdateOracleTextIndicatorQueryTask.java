@@ -14,7 +14,8 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
 
 /**
@@ -22,7 +23,7 @@ import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
  * 
  * This migration task removes the call to the Oracle TRIM function when computing the length indicators
  */
-public class UpdateOracleTextIndicatorQueryTask extends AWorkspaceTask {
+public class UpdateOracleTextIndicatorQueryTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)

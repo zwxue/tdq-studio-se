@@ -14,13 +14,14 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
 
 /**
  * DOC yyi class global comment. Detailled comment
  */
-public class UpdateAllMatchIndicatorTask extends AWorkspaceTask {
+public class UpdateAllMatchIndicatorTask extends AbstractWorksapceUpdateTask {
 
     String separator = System.getProperty("line.separator");
 

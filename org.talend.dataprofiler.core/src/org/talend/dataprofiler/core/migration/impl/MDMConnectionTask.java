@@ -16,14 +16,15 @@ import java.util.Date;
 
 import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class MDMConnectionTask extends AWorkspaceTask {
+public class MDMConnectionTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)

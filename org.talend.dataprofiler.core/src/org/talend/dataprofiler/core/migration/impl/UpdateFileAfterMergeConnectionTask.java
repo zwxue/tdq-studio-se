@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,16 +23,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.repository.utils.ResourceFilenameHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -40,19 +52,24 @@ import org.talend.resource.ResourceManager;
  * 
  * DOC zshen class global comment. Detailled comment Move Connection file form TDQ_Metadata to metadata
  */
-public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
+public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(UpdateFileAfterMergeConnectionTask.class);
 
+    private static final String TDQ_METADATA = "TDQ_Metadata";
+
     private Map<String, String> replaceStringMap;
-
-    private IFolder dbFolder = ResourceManager.getConnectionFolder();
-
-    private IFolder mdmFolder = ResourceManager.getMDMConnectionFolder();
 
     private HashMap<String, String> fileNameMap = new HashMap<String, String>();
 
-    private List<File> mergeFolders = new ArrayList<File>();
+    private ResourceSet resourceSet = new ResourceSetImpl();
+
+    private FilenameFilter nonPropertyFileFilter = new FilenameFilter() {
+
+        public boolean accept(File dir, String name) {
+            return name.endsWith(FactoriesUtil.PROPERTIES_EXTENSION);
+        }
+    };
 
     public Map<String, String> getReplaceStringMap() {
         if (this.replaceStringMap == null) {
@@ -62,17 +79,6 @@ public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
         return this.replaceStringMap;
     }
 
-    /**
-     * DOC bZhou Comment method "addMergeFolder".
-     * 
-     * Add a folder to list to do merge.
-     * 
-     * @param file
-     */
-    public void addMergeFolder(File file) {
-        mergeFolders.add(file);
-    }
-
     public UpdateFileAfterMergeConnectionTask() {
         // TODO Auto-generated constructor stub
     }
@@ -80,32 +86,28 @@ public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
     @Override
     protected boolean doExecute() throws Exception {
         boolean result = true;
-        // Move the content of connection folder
 
-        IFolder tDQDbFolder = ResourceManager.getRootProject().getFolder(new Path(ExchangeFileNameToReferenceTask.DB_CONNECTION));
-        IFolder tDQMdmFolder = ResourceManager.getRootProject().getFolder(
-                new Path(ExchangeFileNameToReferenceTask.MDM_CONNECTION));
-        if (mergeFolders.isEmpty()) {
-            mergeFolders.add(ResourceManager.getRootProject().getFolder(new Path(ExchangeFileNameToReferenceTask.DB_CONNECTION))
-                    .getLocation().toFile());
-            mergeFolders.add(ResourceManager.getRootProject().getFolder(new Path(ExchangeFileNameToReferenceTask.MDM_CONNECTION))
-                    .getLocation().toFile());
-        }
+        initStructure();
+
+        List<File> mergeFolders = new ArrayList<File>();
+        mergeFolders.add(getWorkspacePath().append(ExchangeFileNameToReferenceTask.DB_CONNECTION).toFile());
+        mergeFolders.add(getWorkspacePath().append(ExchangeFileNameToReferenceTask.MDM_CONNECTION).toFile());
+
         for (File theFile : mergeFolders) {
             try {
+                // Move the content of connection folder
                 tansferFile(theFile);
-            } catch (CoreException e) {
-                log.error(e, e);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.error(e, e);
             }
 
         }
 
-        if (tDQDbFolder.exists() || tDQMdmFolder.exists()) {
-            tDQDbFolder.getParent().delete(true, null);
-
+        File tdqMetadataFile = getWorkspacePath().append(TDQ_METADATA).toFile();
+        if (tdqMetadataFile.exists()) {
+            FileUtils.deleteDirectory(tdqMetadataFile);
         }
+
         // change the path which conation in analysis and dqrule.
         File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
         File fileRule = new File(ResourceManager.getRulesFolder().getRawLocationURI());
@@ -115,12 +117,21 @@ public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
             result &= FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMap(), log)
                     && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 
+            AnaResourceFileHelper.getInstance().clear();
         } catch (Exception e) {
             result = false;
             log.error(e, e);
         }
 
         return result;
+
+    }
+
+    private void initStructure() throws Exception {
+        ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                EResourceConstant.DB_CONNECTIONS.getName());
+        ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                EResourceConstant.MDM_CONNECTIONS.getName());
 
     }
 
@@ -205,45 +216,30 @@ public class UpdateFileAfterMergeConnectionTask extends AWorkspaceTask {
         return fileList;
     }
 
-    private void tansferFile(File currentFile) throws CoreException, IOException {
-        for (File theResource : currentFile.listFiles()) {
-            if (theResource.isFile()) {
-                File desFile = null;
-                if (theResource == null || deleteOldFile(theResource)) {
-                    continue;
-                }
-                if (dbFolder.exists()
-                        && theResource.getAbsolutePath().contains(
-                                ExchangeFileNameToReferenceTask.DB_CONNECTION.replace('/', '\\'))) {
-                    String relationName = ExchangeFileNameToReferenceTask.DB_CONNECTION.split("/")[1];
-                    desFile = dbFolder.getLocation().append(
-                            theResource.getAbsolutePath().substring(
-                                    theResource.getAbsolutePath().indexOf(relationName) + relationName.length())).toFile();
+    private void tansferFile(File parentFolder) throws Exception {
 
-                } else if (mdmFolder.exists()
-                        && theResource.getAbsolutePath().contains(
-                                ExchangeFileNameToReferenceTask.MDM_CONNECTION.replace('/', '\\'))) {
-                    String relationName = ExchangeFileNameToReferenceTask.MDM_CONNECTION.split("/")[1];
-                    desFile = mdmFolder.getLocation().append(
-                            theResource.getAbsolutePath().substring(
-                                    theResource.getAbsolutePath().indexOf(relationName) + relationName.length())).toFile();
-                }
-                if (desFile == null) {
-                    continue;
-                }
-                if (!desFile.exists()) {
+        if (!parentFolder.exists()) {
+            return;
+        }
 
-                    if (desFile.getParentFile().exists() || desFile.getParentFile().mkdirs()) {
-                        desFile.createNewFile();
-                    }
-                }
-                copyFiles(theResource.getAbsolutePath(), desFile.getAbsolutePath());
-                theResource.delete();
-            } else if (theResource.isDirectory()) {
-                tansferFile(theResource);
-                theResource.delete();
+        List<File> fileList = new ArrayList<File>();
+
+        FilesUtils.getAllFilesFromFolder(parentFolder, fileList, nonPropertyFileFilter);
+
+        for (File propFile : fileList) {
+            URI uri = URI.createFileURI(propFile.getAbsolutePath());
+
+            Resource resource = resourceSet.getResource(uri, true);
+
+            Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
+                    .getProperty());
+
+            if (property != null) {
+                Item item = property.getItem();
+                property.setLabel(uri.lastSegment().split("_")[0]);
+                IPath path = new Path(item.getState().getPath());
+                ProxyRepositoryFactory.getInstance().create(item, path, true);
             }
-
         }
 
     }

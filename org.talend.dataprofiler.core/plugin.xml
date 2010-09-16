@@ -1199,7 +1199,7 @@
 
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask"
-           id="org.talend.dataprofiler.core.migeration.exchangeFileNameToReference"
+           id="org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask"
            name="Exchange attribute of properties file from FileName To Reference"
            version="4.1.0">
      </workspacetask>
@@ -1212,7 +1212,7 @@
      </workspacetask>
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask"
-           id="org.talend.dataprofiler.core.migeration.updateFileAfterMergeConnectionTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask"
            name="Update analysis and DQRule File After Merge Connection"
            version="4.1.0">
      </workspacetask>

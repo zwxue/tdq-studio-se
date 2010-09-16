@@ -18,18 +18,17 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class CreateDQRulesFolderTask extends AWorkspaceTask {
+public class CreateDQRulesFolderTask extends AbstractWorksapceUpdateTask {
 
     protected static Logger log = Logger.getLogger(CreateDQRulesFolderTask.class);
 
     private static final String DQ_RULES = "DQ Rules"; //$NON-NLS-1$
-
 
     /*
      * (non-Javadoc)

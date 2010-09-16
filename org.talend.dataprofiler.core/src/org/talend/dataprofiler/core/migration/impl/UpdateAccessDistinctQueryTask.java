@@ -14,7 +14,8 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
 
 /**
@@ -22,7 +23,7 @@ import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
  * 
  * To update access distince query
  */
-public class UpdateAccessDistinctQueryTask extends AWorkspaceTask {
+public class UpdateAccessDistinctQueryTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)

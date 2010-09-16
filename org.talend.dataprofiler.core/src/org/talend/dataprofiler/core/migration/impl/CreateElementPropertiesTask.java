@@ -15,7 +15,8 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Date;
 
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -24,7 +25,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class CreateElementPropertiesTask extends AWorkspaceTask {
+public class CreateElementPropertiesTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)

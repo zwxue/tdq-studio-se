@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -28,7 +26,8 @@ import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -47,9 +46,10 @@ import org.talend.resource.ResourceManager;
  * DOC mzhao Migration task for splitting system indicators. The .talend.definition file would be replaced by several
  * separate files, each indicator definition is defined in its own file. feature: 13676, 2010-07-07
  */
-public class SplitSysIndicatorTask extends AWorkspaceTask {
+public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(SplitSysIndicatorTask.class);
+
     public SplitSysIndicatorTask() {
     }
 

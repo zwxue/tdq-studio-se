@@ -18,7 +18,8 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.VersionComparator;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataquality.analysis.Analysis;
@@ -32,7 +33,7 @@ import org.talend.utils.ProductVersion;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class ThresholdsValuesTask extends AWorkspaceTask {
+public class ThresholdsValuesTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(ThresholdsValuesTask.class);
 

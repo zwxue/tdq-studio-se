@@ -14,13 +14,14 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class SoundexIndicatorQueryTask extends AWorkspaceTask {
+public class SoundexIndicatorQueryTask extends AbstractWorksapceUpdateTask {
 
     private final String oldSoundexQuery = "ORDER BY d,c DESC";
 

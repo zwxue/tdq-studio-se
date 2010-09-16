@@ -39,6 +39,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.core.context.Context;
+import org.talend.core.model.properties.Project;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -47,6 +51,7 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -92,6 +97,16 @@ public final class DQStructureManager {
     }
 
     /**
+     * DOC bZhou Comment method "getCurrentProject".
+     * 
+     * @return
+     */
+    public Project getCurrentProject() {
+        Context ctx = CoreRuntimePlugin.getInstance().getContext();
+        return (Project) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
+    }
+
+    /**
      * DOC bZhou Comment method "createDQStructure".
      */
     public void createDQStructure() {
@@ -124,9 +139,16 @@ public final class DQStructureManager {
 
             // MOD mzhao 2010-08-12 14891: use same repository API with TOS to persistent metadata
             if (ReponsitoryContextBridge.isDefautProject()) {
-                IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
-                IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
-                IFolder mdmConnectionFolder = createNewFolder(metadataFolder, EResourceConstant.MDM_CONNECTIONS);
+                // IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
+                // IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
+                // IFolder mdmConnectionFolder = createNewFolder(metadataFolder, EResourceConstant.MDM_CONNECTIONS);
+
+                // ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                // EResourceConstant.METADATA.getName());
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                        EResourceConstant.DB_CONNECTIONS.getName());
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                        EResourceConstant.MDM_CONNECTIONS.getName());
             }
 
             copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null);

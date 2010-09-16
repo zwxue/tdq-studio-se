@@ -15,7 +15,8 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Date;
 
 import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
@@ -23,7 +24,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
  * DOC yyi class global comment. The task is usesd to add sql template in Unique Count.definition,Duplicate
  * Count.definition,Blank Count.definition for Sybase. 14851: 2010-08-13
  */
-public class UpdateSimpleStatisticsIndicatorsForSybaseIqTask extends AWorkspaceTask {
+public class UpdateSimpleStatisticsIndicatorsForSybaseIqTask extends AbstractWorksapceUpdateTask {
 
     private static final String UNIQUE_COUNT = "Unique Count"; //$NON-NLS-1$
 

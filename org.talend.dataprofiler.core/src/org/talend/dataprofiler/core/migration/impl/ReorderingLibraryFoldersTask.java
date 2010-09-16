@@ -27,7 +27,8 @@ import org.eclipse.emf.common.util.URI;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -43,7 +44,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * 
  * DOC mzhao 2009-07-01 feature 7482.
  */
-public class ReorderingLibraryFoldersTask extends AWorkspaceTask {
+public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(ReorderingLibraryFoldersTask.class);
 

@@ -16,7 +16,8 @@ import java.util.Date;
 
 import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -24,7 +25,7 @@ import org.talend.resource.ResourceService;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class CreateUserDefIndicatorFolderTask extends AWorkspaceTask {
+public class CreateUserDefIndicatorFolderTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)

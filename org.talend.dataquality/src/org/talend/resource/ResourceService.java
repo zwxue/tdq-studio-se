@@ -166,8 +166,11 @@ public final class ResourceService {
      */
     public static boolean checkResource() {
 
-        return ResourceManager.getRootProject().exists() && ResourceManager.getDataProfilingFolder().exists()
-                && ResourceManager.getLibrariesFolder().exists() && ResourceManager.getMetadataFolder().exists();
+        return ResourceManager.getRootProject().exists()
+                && ResourceManager.getDataProfilingFolder().exists()
+                && ResourceManager.getLibrariesFolder().exists()
+                && (ResourceManager.getMetadataFolder().exists() || ResourceManager.getRootProject().getFolder("TDQ_Metadata")
+                        .exists());
     }
 
     /**

@@ -34,8 +34,10 @@ import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
+import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.core.ui.branding.IBrandingService;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.license.LicenseManagement;
 import org.talend.dataprofiler.core.license.LicenseWizard;
 import org.talend.dataprofiler.core.license.LicenseWizardDialog;
@@ -106,6 +108,7 @@ public class Application implements IApplication {
         }
 
     }
+
     /**
      * 
      * DOC zshen Comment method "initProxyRepository".
@@ -121,7 +124,7 @@ public class Application implements IApplication {
 
             XmiResourceManager xmiResourceManager = new XmiResourceManager();
             IProject rootProject = ResourceManager.getRootProject();
-            if (rootProject.exists()) {
+            if (rootProject.getFile(FileConstants.LOCAL_PROJECT_FILENAME).exists()) {
                 project = new Project(xmiResourceManager.loadProject(rootProject));
             } else {
                 User user = PropertiesFactoryImpl.eINSTANCE.createUser();
@@ -133,18 +136,17 @@ public class Application implements IApplication {
 
                 // MOD zshen create project by proxyRepository
                 checkFileName(projectInfor.getLabel(), RepositoryConstants.PROJECT_PATTERN);
+
                 project = proxyRepository.getRepositoryFactoryFromProvider().createProject(projectInfor);
 
-                // project = proxyRepository.createProject(projectInfor);
             }
-            initRepositoryContext(project);
-            // CommonsPlugin.setHeadless(true);// arrest load tos component.
-            // proxyRepository.logOnProject(project, new NullProgressMonitor());
+
+            if (project != null) {
+                initRepositoryContext(project);
+            }
 
         } catch (PersistenceException e) {
-            e.printStackTrace();
-            // } catch (BusinessException e) {
-            // e.printStackTrace();
+            ExceptionHandler.process(e);
         }
 
     }
@@ -158,7 +160,6 @@ public class Application implements IApplication {
         repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), "");
         Context ctx = CoreRuntimePlugin.getInstance().getContext();
         ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
-
     }
 
     public boolean licenceAccept(Shell shell) {

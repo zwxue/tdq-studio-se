@@ -19,14 +19,15 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC update prv and ana files because of the renameing of classes: TdXMLDocument --> TdXmlSchema , TdXMLElement -->
  * TdXmlElementType.
  */
-public class RefactMdmMetadataTask extends AWorkspaceTask {
+public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(RefactMdmMetadataTask.class);
 
@@ -51,7 +52,9 @@ public class RefactMdmMetadataTask extends AWorkspaceTask {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -63,6 +66,7 @@ public class RefactMdmMetadataTask extends AWorkspaceTask {
         try {
             String[] anaFileExtentionNames = { ".ana" };
             result = FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMapMdm(), log);
+            AnaResourceFileHelper.getInstance().clear();
         } catch (Exception e) {
             result = false;
             log.error(e, e);
@@ -71,15 +75,18 @@ public class RefactMdmMetadataTask extends AWorkspaceTask {
         return result;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
         return MigrationTaskType.FILE;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {

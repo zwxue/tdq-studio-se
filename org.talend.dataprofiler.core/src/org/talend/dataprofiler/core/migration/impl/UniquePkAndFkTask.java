@@ -29,7 +29,8 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -45,7 +46,7 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC zshen class global comment. one table only have one primaryKey element and many foreignKey element,so filter the
  * *.prv file to check it.
  */
-public class UniquePkAndFkTask extends AWorkspaceTask {
+public class UniquePkAndFkTask extends AbstractWorksapceUpdateTask {
 
     protected static Logger log = Logger.getLogger(UniquePkAndFkTask.class);
 

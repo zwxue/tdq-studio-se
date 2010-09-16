@@ -15,14 +15,15 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Date;
 
 import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class UpdateSoundexIndicatorsForIngresTask extends AWorkspaceTask {
+public class UpdateSoundexIndicatorsForIngresTask extends AbstractWorksapceUpdateTask {
 
     private static final String SOUNDEX_FREQUENCY = "Soundex Frequency Table"; //$NON-NLS-1$
 

@@ -22,20 +22,23 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.ItemState;
+import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.dataprofiler.core.migration.AWorkspaceTask;
+import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 
@@ -43,7 +46,7 @@ import org.talend.resource.ResourceManager;
  * 
  * DOC zshen class global comment. Detailled comment change the properties "FileName" to a Reference of Connection
  */
-public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
+public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask {
 
     protected static Logger log = Logger.getLogger(ExchangeFileNameToReferenceTask.class);
 
@@ -51,32 +54,25 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
 
     public static final String MDM_CONNECTION = "TDQ_Metadata/MDM Connections";
 
-    private List<File> mergeFolders = new ArrayList<File>();
-
     private Map<String, String> replaceStringMap;
 
     public ExchangeFileNameToReferenceTask() {
         // TODO Auto-generated constructor stub
     }
 
-    /**
-     * DOC bZhou Comment method "addMergeFolder".
+    /*
+     * (non-Javadoc)
      * 
-     * Add a folder to list to do merge.
-     * 
-     * @param file
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
-    public void addMergeFolder(File file) {
-        mergeFolders.add(file);
-    }
-
     @Override
     protected boolean doExecute() throws Exception {
         boolean returnFlag = true;
-        if (mergeFolders.isEmpty()) {
-            mergeFolders.add(ResourceManager.getRootProject().getFolder(new Path(DB_CONNECTION)).getLocation().toFile());
-            mergeFolders.add(ResourceManager.getRootProject().getFolder(new Path(MDM_CONNECTION)).getLocation().toFile());
-        }
+
+        List<File> mergeFolders = new ArrayList<File>();
+        mergeFolders.add(getWorkspacePath().append(DB_CONNECTION).toFile());
+        mergeFolders.add(getWorkspacePath().append(MDM_CONNECTION).toFile());
+
         List<File> resources = new ArrayList<File>();
 
         for (File theFile : mergeFolders) {
@@ -125,38 +121,36 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
                             }
 
                             if (connection != null) {
+                                ConnectionItem connectionItem = null;
 
-                                ConnectionItem connectionItem = org.talend.core.model.properties.PropertiesFactory.eINSTANCE
-                                        .createConnectionItem();
+                                if (connection instanceof DatabaseConnection) {
+                                    connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+                                } else {
+                                    connectionItem = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
+                                }
+
                                 connectionItem.setConnection(connection);
+
+                                if (item.getState() != null) {
+                                    connectionItem.setState(item.getState());
+                                } else {
+                                    ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+                                    connectionItem.setState(itemState);
+                                }
+
                                 property.setItem(connectionItem);
                                 property.eResource().getContents().add(connectionItem);
                                 ProxyRepositoryFactory.getInstance().save(property);
                             }
                         }
 
-                        // TypedReturnCode<Connection> returnCode =
-                        // PrvResourceFileHelper.getInstance().findProvider(theFile);
-                        // if (returnCode.isOk()) {
-                        // returnFlag &= PrvResourceFileHelper.getInstance().create(returnCode.getObject(),
-                        // (IFolder) theFile.getParent()).isOk();
-                        // }
                     } else {
                         continue;
                     }
 
                 }
 
-                // tDQDbFolder.move(dbFolder.getFullPath(), true, null);
-                // tDQMdmFolder.move(mdmFolder.getFullPath(), true, null);
-
             }
-            // for (IResource theResource : tDQDbFolder.members()) {
-            // theResource.move(dbFolder.getFullPath().append(theResource.getName()), true, null);
-            // }
-            // for (IResource theResource : tDQMdmFolder.members()) {
-            // theResource.move(mdmFolder.getFullPath().append(theResource.getName()), true, null);
-            // }
 
             File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
             File fileRule = new File(ResourceManager.getRulesFolder().getRawLocationURI());
@@ -166,6 +160,7 @@ public class ExchangeFileNameToReferenceTask extends AWorkspaceTask {
                 returnFlag &= FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMap(), log)
                         && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 
+                AnaResourceFileHelper.getInstance().clear();
             } catch (Exception e) {
                 returnFlag = false;
                 log.error(e, e);
