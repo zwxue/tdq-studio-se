@@ -44,6 +44,16 @@ public class TextStatisticsExplorer extends DataExplorer {
         switch (this.indicatorEnum) {
         case MinLengthIndicatorEnum:
         case MaxLengthIndicatorEnum:
+        case AverageLengthIndicatorEnum:
+        case MinLengthWithBlankIndicatorEnum:
+        case MinLengthWithBlankNullIndicatorEnum:
+        case MinLengthWithNullIndicatorEnum:
+        case MaxLengthWithBlankIndicatorEnum:
+        case MaxLengthWithBlankNullIndicatorEnum:
+        case MaxLengthWithNullIndicatorEnum:
+        case AverageLengthWithBlankIndicatorEnum:
+        case AverageLengthWithNullBlankIndicatorEnum:
+        case AverageLengthWithNullIndicatorEnum:
             map.put(MENU_VIEW_ROWS, isSqlEngine ? getTextRowsStatement() : null);
             break;
         default:
