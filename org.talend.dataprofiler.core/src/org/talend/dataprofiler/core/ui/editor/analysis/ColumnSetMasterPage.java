@@ -45,6 +45,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -528,6 +529,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         Connection tdProvider = null;
         if (columnList != null && columnList.size() != 0) {
             tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
+            if (tdProvider.eIsProxy()) {
+                // Resolve the connection again
+                tdProvider = ((ConnectionItem) ProxyRepositoryViewObject.getRepositoryViewObject(tdProvider).getProperty()
+                        .getItem()).getConnection();
+            }
             analysis.getContext().setConnection(tdProvider);
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
             columnSetAnalysisHandler.addIndicator(columnList, simpleStatIndicator);
@@ -564,6 +570,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
+                ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
                 ProxyRepositoryViewObject.save(tdProvider);
             }
 
