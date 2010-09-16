@@ -1167,6 +1167,12 @@
            version="4.1.0">
      </workspacetask>
      <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateAnalysisWithMinLengthIndicator"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateAnalysisWithMinLengthIndicator"
+           name="Update Analysis With MinLengthIndicator Task"
+           version="4.1.0">
+     </workspacetask>     
+     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.SplitSysIndicatorTask"
            id="org.talend.dataprofiler.core.migration.impl.SplitSysIndicatorTask"
            name="Split system indicators "
