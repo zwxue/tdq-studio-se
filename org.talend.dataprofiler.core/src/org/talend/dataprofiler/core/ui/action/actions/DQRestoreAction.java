@@ -25,7 +25,6 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -35,9 +34,11 @@ import org.talend.dataprofiler.core.recycle.SelectedResources;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author qiongli Restore recycle bin element
@@ -70,7 +71,9 @@ public class DQRestoreAction extends Action {
                     propertyTMP.getItem().getState().setDeleted(false);
                     ProxyRepositoryFactory.getInstance().save(propertyTMP);
                     EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
-                    if (!DqRepositoryViewService.saveProperty(propertyTMP).isOk())
+
+                    ReturnCode rc = ElementWriterFactory.getInstance().createDataProviderWriter().save(property);
+                    if (!rc.isOk())
                         return;
                 } else {
                     property.getItem().getState().setDeleted(false);
