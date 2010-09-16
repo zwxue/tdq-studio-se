@@ -39,7 +39,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.util.PropertiesSwitch;
-import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -79,17 +78,11 @@ public final class PropertyHelper {
      * @return null if can't find.
      */
     public static IFile getPropertyFile(ModelElement modelElement) {
-        String propertyPath = MetadataHelper.getPropertyPath(modelElement);
+
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
-        IPath propPath;
-
-        if (propertyPath != null) {
-            propPath = new Path(propertyPath);
-        } else {
-            String platformString = modelElement.eResource().getURI().toPlatformString(false);
-            propPath = new Path(platformString).removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        }
+        String platformString = modelElement.eResource().getURI().toPlatformString(false);
+        IPath propPath = new Path(platformString).removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
         return root.getFile(propPath);
     }
@@ -153,12 +146,7 @@ public final class PropertyHelper {
         if (propertyFile.exists()) {
             if (propertyFile.getName().endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
                 URI propURI = URI.createFileURI(propertyFile.getAbsolutePath());
-                Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
-
-                // in this case, we need to reload the content again.
-                if (resource.getContents().isEmpty()) {
-                    resource = new ResourceSetImpl().getResource(propURI, true);
-                }
+                Resource resource = new ResourceSetImpl().getResource(propURI, true);
 
                 if (resource.getContents() != null) {
                     Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
@@ -179,8 +167,15 @@ public final class PropertyHelper {
      * @return
      */
     public static Property getProperty(ModelElement element) {
-        IFile propertyFile = PropertyHelper.getPropertyFile(element);
-        return propertyFile != null ? getProperty(propertyFile) : null;
+        URI uri = element.eResource().getURI();
+        if (uri.isPlatform()) {
+            IFile propertyFile = PropertyHelper.getPropertyFile(element);
+            return getProperty(propertyFile);
+        } else {
+            File file = new Path(uri.toFileString()).removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION)
+                    .toFile();
+            return getProperty(file);
+        }
     }
 
     /**
@@ -274,7 +269,11 @@ public final class PropertyHelper {
     public static IPath getItemStatePath(Property property) {
         Item item = property.getItem();
         URI propURI = property.eResource().getURI();
-        String statePathStr = item.getState().getPath();
+
+        String statePathStr = null;
+        if (item.getState() != null) {
+            statePathStr = item.getState().getPath();
+        }
 
         if (StringUtils.isBlank(statePathStr) && propURI.isPlatformResource()) {
             IPath propPath = new Path(propURI.toPlatformString(true)).removeLastSegments(1);
@@ -282,7 +281,7 @@ public final class PropertyHelper {
             return propPath.makeRelativeTo(typedPath);
         }
 
-        return new Path(statePathStr);
+        return statePathStr != null ? new Path(statePathStr) : null;
     }
 
     /**

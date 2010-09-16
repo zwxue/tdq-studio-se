@@ -54,7 +54,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public abstract class AElementPersistance implements IElementPersistence, IElementSerialize {
+public abstract class AElementPersistance {
 
     private static Logger log = Logger.getLogger(AElementPersistance.class);
 
@@ -114,38 +114,21 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
 
             IPath filePath = file.getFullPath();
 
-            // if (!util.addEObjectToResourceSet(filePath, element)) {
-            // rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
-            // } else {
-            // if (element instanceof RenderedObject) {
-            // ((RenderedObject) element).setFileName(filePath);
-            // }
-            //
-            // String propPaht =
-            // file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION)
-            // .toString();
-            // MetadataHelper.setPropertyPath(propPaht, element);
-            //
-            // // rc = save(element);
-            // addDependencies(element);
-            //
-            // addResourceContent(element);
             Property property = initProperty(element);
             // property.setLabel(file.getName().substring(0, file.getName().indexOf('_')));
             Item item = initItem(element, property);
-            // DqRepositoryViewService.createLogicalFileName(element, getFileExtension());
+
             try {
                 ProxyRepositoryFactory.getInstance().create(item, filePath.removeFirstSegments(3).removeLastSegments(1));// file.getFullPath().removeFirstSegments(3));
             } catch (PersistenceException e) {
                 log.error(e, e);
             }
-            //
-            // }
+
         } else {
             String filePath = file.getFullPath().toString();
 
             if (!util.addEObjectToResourceSet(filePath, element)) {
-                rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
+                rc.setReturnCode("Failed to save: " + util.getLastErrorMessage(), false);
             } else {
                 if (element instanceof RenderedObject) {
                     ((RenderedObject) element).setFileName(filePath);
@@ -267,17 +250,10 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         ReturnCode rc = new ReturnCode();
 
         URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        propertiesURI.toPlatformString(true);
         Resource propertyResource = property.eResource();
         if (propertyResource == null) {
             propertyResource = util.createResource(propertiesURI);
         }
-
-        // set the state path when first create it.
-        IPath propPath = new Path(propertiesURI.toPlatformString(true)).removeLastSegments(1);
-        IPath typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
-        IPath itemPath = propPath.makeRelativeTo(typedPath);
-        property.getItem().getState().setPath(itemPath.toString());
 
         propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getItem());
@@ -416,13 +392,42 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         return property;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.IElementSerialize#initItem(orgomg.cwm.objectmodel.core.ModelElement,
-     * org.talend.core.model.properties.Property, java.lang.String)
-     */
     public Item initItem(ModelElement element, Property property) {
+        Item item = createItem(element);
+
+        if (item != null) {
+            item.setProperty(property);
+            property.setItem(item);
+
+            // create item state
+            ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
+            itemState.setDeleted(false);
+
+            // set the state path when first create it.
+            IPath propPath, typedPath;
+
+            if (element.eResource() != null) {
+                URI itemURI = element.eResource().getURI();
+                if (itemURI.isPlatform()) {
+                    propPath = new Path(itemURI.toPlatformString(true)).removeLastSegments(1);
+                    typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
+                } else {
+                    propPath = new Path(itemURI.toFileString()).removeLastSegments(1);
+                    typedPath = ResourceManager.getRootProject().getLocation().append(PropertyHelper.getItemTypedPath(property));
+                }
+
+                IPath itemPath = propPath.makeRelativeTo(typedPath);
+                itemState.setPath(itemPath.toString());
+            }
+
+            item.setState(itemState);
+
+        }
+
+        return item;
+    }
+
+    protected Item createItem(ModelElement element) {
         Item item = null;
         // MOD mzhao feature 13114, 2010-05-19 distinguish tdq items.
         if (ModelElementIdentifier.isAnalysis(element)) {
@@ -445,11 +450,6 @@ public abstract class AElementPersistance implements IElementPersistence, IEleme
         } else {
             item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createTDQItem();
         }
-
-        ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
-        itemState.setDeleted(false);
-        item.setState(itemState);
-        item.setProperty(property);
         return item;
     }
 

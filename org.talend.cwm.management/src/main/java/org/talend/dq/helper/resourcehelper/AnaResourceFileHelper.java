@@ -25,12 +25,14 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
@@ -205,6 +207,11 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
     }
 
     public void clear() {
+        for (Analysis analysis : allAnalysisMap.values()) {
+            URI uri = analysis.eResource().getURI();
+            EMFSharedResources.getInstance().unloadResource(uri.toString());
+        }
+
         super.clear();
         this.allAnalysisMap.clear();
     }

@@ -35,7 +35,6 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Property;
 import org.talend.cwm.builders.AbstractTableBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
@@ -295,8 +294,8 @@ public final class DqRepositoryViewService {
      * @return
      * @throws TalendException
      */
-    public static List<TdColumn> getColumns(Connection dataProvider, ColumnSet columnSet, String columnPattern,
-            boolean loadFromDB) throws TalendException {
+    public static List<TdColumn> getColumns(Connection dataProvider, ColumnSet columnSet, String columnPattern, boolean loadFromDB)
+            throws TalendException {
         if (loadFromDB) {
             return loadColumns(dataProvider, columnSet, columnPattern);
         } else {
@@ -336,11 +335,6 @@ public final class DqRepositoryViewService {
 
         ReturnCode rc = new ReturnCode();
         ElementWriterFactory.getInstance().createDataProviderWriter().save(connItem);
-        return rc;
-    }
-
-    public static ReturnCode saveProperty(Property property) {
-        ReturnCode rc = ElementWriterFactory.getInstance().createDataProviderWriter().save(property);
         return rc;
     }
 
@@ -384,7 +378,8 @@ public final class DqRepositoryViewService {
      * @return
      */
     public static String createLogicalFileName(ModelElement element, String extension) {
-        return createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING + extension;
+        return createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING
+                + extension;
     }
 
     /**
@@ -408,8 +403,7 @@ public final class DqRepositoryViewService {
      * @return the list of tables matching the given pattern
      * @throws TalendException
      */
-    private static List<TdTable> loadTables(Connection dataProvider, Catalog catalog, String tablePattern)
-            throws TalendException {
+    private static List<TdTable> loadTables(Connection dataProvider, Catalog catalog, String tablePattern) throws TalendException {
         List<TdTable> tables = new ArrayList<TdTable>();
         assert dataProvider != null;
         assert catalog != null;
@@ -448,8 +442,7 @@ public final class DqRepositoryViewService {
      * @return
      * @throws TalendException
      */
-    private static List<TdView> loadViews(Connection dataProvider, Catalog catalog, String viewPattern)
-            throws TalendException {
+    private static List<TdView> loadViews(Connection dataProvider, Catalog catalog, String viewPattern) throws TalendException {
         assert catalog != null : Messages.getString("DqRepositoryViewService.NoCatalogGiven"); //$NON-NLS-1$
         List<TdView> views = new ArrayList<TdView>();
         // PTODO scorreia check return code
@@ -529,8 +522,8 @@ public final class DqRepositoryViewService {
      * @return true if ok
      * @throws TalendException
      */
-    private static <T extends List<? extends NamedColumnSet>> boolean loadColumnSets(Connection dataProvider,
-            Catalog catalog, Schema schema, String tablePattern, int classifierID, final T tables) throws TalendException {
+    private static <T extends List<? extends NamedColumnSet>> boolean loadColumnSets(Connection dataProvider, Catalog catalog,
+            Schema schema, String tablePattern, int classifierID, final T tables) throws TalendException {
         boolean ok = false;
         TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
         if (!rcConn.isOk()) {
