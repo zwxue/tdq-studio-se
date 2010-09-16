@@ -15,6 +15,7 @@ package org.talend.dq.helper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -33,6 +34,12 @@ public abstract class TDQConnectionReposViewObjDelegator<T extends Connection> e
     protected ReturnCode save(Item item) {
         ConnectionItem connItem = (ConnectionItem) item;
         return DqRepositoryViewService.saveOpenDataProvider(connItem, false);
+    }
+
+    @Override
+    protected void setActiveElement(IRepositoryViewObject viewObj, Connection element) {
+        ConnectionItem connItem = (ConnectionItem) viewObj.getProperty().getItem();
+        connItem.setConnection(element);
     }
 
 }

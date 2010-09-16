@@ -53,7 +53,7 @@ public final class TDQMDMConnectionReposViewObjDelegator extends TDQConnectionRe
     protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower() {
         List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
         try {
-            ProxyRepositoryFactory.getInstance().initialize();
+            // ProxyRepositoryFactory.getInstance().initialize();
             // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(
             // ProjectManager.getInstance().getCurrentProject(), true).getMembers());
             // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),

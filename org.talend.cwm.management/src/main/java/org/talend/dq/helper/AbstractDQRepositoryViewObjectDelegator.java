@@ -48,7 +48,9 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
     protected Map<T, URI> unloadResModEleURIMap = new HashMap<T, URI>();
 
     protected void register(T modelElement, IRepositoryViewObject reposViewObj) {
-        log.info(modelElement.toString());
+        if (log.isInfoEnabled()) {
+            log.info(modelElement.toString());
+        }
         modEleToReposObjMap.put(modelElement, reposViewObj);
     }
 
@@ -95,6 +97,7 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
             // -3 if the resource is unloaded ,try to resolve the instance then comparing the resource URI.
             // from TOS.
             if (ResourceHelper.areSame(element, ele)) {
+                setActiveElement(modEleToReposObjMap.get(ele), element);
                 return modEleToReposObjMap.get(ele);
             }
 
@@ -108,12 +111,15 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
             }
             if ((unloadResURIFirst != null && unloadResURISecond != null && unloadResURIFirst.toString().equals(
                     unloadResURISecond.toString()))) {
+                setActiveElement(modEleToReposObjMap.get(ele), element);
                 return modEleToReposObjMap.get(ele);
             }
 
         }
         return null;
     }
+
+    protected abstract void setActiveElement(IRepositoryViewObject viewObject, T element);
 
     /**
      * 

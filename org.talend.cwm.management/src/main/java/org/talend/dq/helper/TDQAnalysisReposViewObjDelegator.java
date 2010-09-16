@@ -37,4 +37,10 @@ public class TDQAnalysisReposViewObjDelegator extends AbstractDQRepositoryViewOb
         return null;
     }
 
+    @Override
+    protected void setActiveElement(IRepositoryViewObject viewObject, Analysis element) {
+        // TODO Auto-generated method stub
+
+    }
+
 }
