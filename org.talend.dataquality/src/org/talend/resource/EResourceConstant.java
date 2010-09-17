@@ -19,6 +19,8 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
@@ -151,41 +153,29 @@ public enum EResourceConstant {
      */
     public static EResourceConstant getTypedConstant(ModelElement element) {
 
+        EResourceConstant constatnt = null;
+
         if (element instanceof Analysis) {
-            return ANALYSIS;
-        }
-
-        if (element instanceof Report) {
-            return REPORTS;
-        }
-
-        if (element instanceof IndicatorDefinition) {
+            constatnt = ANALYSIS;
+        } else if (element instanceof Report) {
+            constatnt = REPORTS;
+        } else if (element instanceof IndicatorDefinition) {
             if (element instanceof WhereRule) {
-                return RULES_SQL;
+                constatnt = RULES_SQL;
+            } else {
+                constatnt = USER_DEFINED_INDICATORS;
             }
-
-            return USER_DEFINED_INDICATORS;
+        } else if (element instanceof IndicatorsDefinitions) {
+            constatnt = LIBRARIES;
+        } else if (element instanceof Pattern) {
+            constatnt = PATTERNS;
+        } else if (element instanceof DatabaseConnection) {
+            constatnt = DB_CONNECTIONS;
+        } else if (element instanceof MDMConnection) {
+            constatnt = MDM_CONNECTIONS;
         }
 
-        if (element instanceof IndicatorsDefinitions) {
-            return LIBRARIES;
-        }
-
-        if (element instanceof Pattern) {
-            return PATTERNS;
-        }
-
-        if (element instanceof DataProvider) {
-            DataProvider provider = (DataProvider) element;
-
-            if (isMDMConnection(provider)) {
-                return MDM_CONNECTIONS;
-            }
-
-            return DB_CONNECTIONS;
-        }
-
-        return null;
+        return constatnt;
     }
 
     /**
