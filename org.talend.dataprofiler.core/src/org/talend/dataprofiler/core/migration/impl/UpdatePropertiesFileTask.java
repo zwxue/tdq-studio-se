@@ -64,7 +64,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
     public boolean valid() {
         fileList = new ArrayList<File>();
 
-        for (File folder : getTopFolderList()) {
+        for (File folder : getOldTopFolderList()) {
             FilesUtils.getAllFilesFromFolder(folder, fileList, nonPropertyFileFilter);
         }
         return !fileList.isEmpty() && super.valid();
@@ -104,40 +104,6 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                     }
                 }
             }
-
-            // if (file.isFile()) {
-            // IFile ifile = file2IFile(file);
-            // if (file.getName().endsWith(FactoriesUtil.ANA)) {
-            // AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
-            // analysisWriter.save(AnaResourceFileHelper.getInstance().findAnalysis(ifile));
-            // } else if (file.getName().endsWith(FactoriesUtil.REP)) {
-            // ReportWriter reportWriter = ElementWriterFactory.getInstance().createReportWriter();
-            // reportWriter.save(RepResourceFileHelper.getInstance().findReport(ifile));
-            // } else if (file.getName().endsWith(FactoriesUtil.DEFINITION)) {
-            // IndicatorDefinitionWriter indicatorDefinitionWriter = ElementWriterFactory.getInstance()
-            // .createIndicatorDefinitionWriter();
-            // IndicatorDefinition indicatorDefinition =
-            // IndicatorResourceFileHelper.getInstance().findIndDefinition(ifile);
-            // if (indicatorDefinition != null) { // .talend.definition don't include any IndicatorDefinition now
-            // indicatorDefinitionWriter.save(indicatorDefinition);
-            // }
-            // } else if (file.getName().endsWith(FactoriesUtil.DQRULE)) {
-            // DQRuleWriter dqRuleWriter = ElementWriterFactory.getInstance().createdRuleWriter();
-            // dqRuleWriter.save(DQRuleResourceFileHelper.getInstance().findWhereRule(ifile));
-            // } else if (file.getName().endsWith(FactoriesUtil.PATTERN)) {
-            // PatternWriter patternWriter = ElementWriterFactory.getInstance().createPatternWriter();
-            // patternWriter.save(PatternResourceFileHelper.getInstance().findPattern(ifile));
-            // } else if (file.getName().endsWith(FactoriesUtil.PROV)) {
-            // DataProviderWriter dataProviderWriter = ElementWriterFactory.getInstance().createDataProviderWriter();
-            // dataProviderWriter.save(PrvResourceFileHelper.getInstance().findProvider(ifile).getObject());
-            // } else if (file.getName().endsWith(FactoriesUtil.SOFTWARE_SYSTEM)) {
-            // // TODO how to handle this type file???
-            // } else {
-            // // unknown file type, so do nothing
-            // }
-            // } else {
-            // // only update files, don't need to update folders
-            // }
         }
         return true;
     }

@@ -27,6 +27,10 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     public static final String OLD_MEATADATA_FOLDER_NAME = "TDQ_Metadata";
 
+    public static final String OLD_LIBRARIES_FOLDER_NAME = "TDQ_Libraries";
+
+    public static final String OLD_PROFILING_FOLDER_NAME = "TDQ_Data Profiling";
+
     private IPath workspacePath = ResourceManager.getRootProject().getLocation();
 
     /*
@@ -82,13 +86,25 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
         List<File> folderList = new ArrayList<File>();
 
         for (EResourceConstant constant : EResourceConstant.getTopConstants()) {
-            if (constant == EResourceConstant.METADATA && !isWorksapcePath()) {
-                folderList.add(workspacePath.append(OLD_MEATADATA_FOLDER_NAME).toFile());
-            } else {
-                folderList.add(workspacePath.append(constant.getPath()).toFile());
-            }
+            folderList.add(workspacePath.append(constant.getPath()).toFile());
         }
 
         return folderList;
     }
+
+    /**
+     * DOC bZhou Comment method "getOldTopFolderList".
+     * 
+     * @return
+     */
+    protected List<File> getOldTopFolderList() {
+        List<File> folderList = new ArrayList<File>();
+
+        folderList.add(workspacePath.append(OLD_MEATADATA_FOLDER_NAME).toFile());
+        folderList.add(workspacePath.append(OLD_LIBRARIES_FOLDER_NAME).toFile());
+        folderList.add(workspacePath.append(OLD_PROFILING_FOLDER_NAME).toFile());
+
+        return folderList;
+    }
+
 }
