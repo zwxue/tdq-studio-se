@@ -107,12 +107,11 @@ public final class WorkspaceVersionHelper {
      * 
      * MOD mzhao 2009-04-03.
      */
-    public static void storeVersion() {
-        IFile versionFile = getVersionFile();
+    public static void storeVersion(File file) {
         Properties pros = new Properties();
         pros.setProperty(VERSION, CorePlugin.getDefault().getProductVersion().toString());
         try {
-            FileOutputStream outStream = new FileOutputStream(new File(versionFile.getLocation().toOSString()));
+            FileOutputStream outStream = new FileOutputStream(file);
             pros.store(outStream, null);
             outStream.close();
         } catch (FileNotFoundException e) {
@@ -120,5 +119,13 @@ public final class WorkspaceVersionHelper {
         } catch (IOException e) {
             log.error(e, e);
         }
+    }
+
+    /**
+     * 
+     * MOD mzhao 2009-04-03.
+     */
+    public static void storeVersion() {
+        storeVersion(getVersionFile().getLocation().toFile());
     }
 }

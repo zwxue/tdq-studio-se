@@ -13,10 +13,7 @@
 package org.talend.dataprofiler.core.migration.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,7 +22,6 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
@@ -38,15 +34,14 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ProxyRepositoryFactory;
-import org.talend.repository.utils.ResourceFilenameHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * 
@@ -60,8 +55,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private Map<String, String> replaceStringMap;
 
-    private HashMap<String, String> fileNameMap = new HashMap<String, String>();
-
     private ResourceSet resourceSet = new ResourceSetImpl();
 
     private FilenameFilter nonPropertyFileFilter = new FilenameFilter() {
@@ -74,7 +67,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     public Map<String, String> getReplaceStringMap() {
         if (this.replaceStringMap == null) {
             this.replaceStringMap = initReplaceStringMap();
-            // this.replaceStringMap.putAll(fileNameMap);
         }
         return this.replaceStringMap;
     }
@@ -87,16 +79,18 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     protected boolean doExecute() throws Exception {
         boolean result = true;
 
-        initStructure();
+        Map<File, File> folderMap = initStructure();
 
-        List<File> mergeFolders = new ArrayList<File>();
-        mergeFolders.add(getWorkspacePath().append(ExchangeFileNameToReferenceTask.DB_CONNECTION).toFile());
-        mergeFolders.add(getWorkspacePath().append(ExchangeFileNameToReferenceTask.MDM_CONNECTION).toFile());
-
-        for (File theFile : mergeFolders) {
+        for (File folder : folderMap.keySet()) {
             try {
                 // Move the content of connection folder
-                tansferFile(theFile);
+                if (isBaseWorksapce()) {
+                    tansferFile(folder);
+                } else {
+                    if (folder.exists()) {
+                        FileUtils.copyDirectory(folder, folderMap.get(folder));
+                    }
+                }
             } catch (Exception e) {
                 log.error(e, e);
             }
@@ -109,8 +103,8 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         }
 
         // change the path which conation in analysis and dqrule.
-        File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
-        File fileRule = new File(ResourceManager.getRulesFolder().getRawLocationURI());
+        File fileAnalysis = getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
+        File fileRule = getWorkspacePath().append(EResourceConstant.RULES.getPath()).toFile();
         try {
             String[] anaFileExtentionNames = { FactoriesUtil.ANA };
             String[] rulesFileEctentionNames = { FactoriesUtil.DQRULE };
@@ -118,6 +112,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                     && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 
             AnaResourceFileHelper.getInstance().clear();
+            ResourceService.refreshStructure();
         } catch (Exception e) {
             result = false;
             log.error(e, e);
@@ -127,12 +122,53 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     }
 
-    private void initStructure() throws Exception {
-        ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
-                EResourceConstant.DB_CONNECTIONS.getName());
-        ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
-                EResourceConstant.MDM_CONNECTIONS.getName());
+    private Map<File, File> initStructure() throws Exception {
+        Map<File, File> folderMap = new HashMap<File, File>();
 
+        File srcDBFolder = getWorkspacePath().append(ExchangeFileNameToReferenceTask.DB_CONNECTION).toFile();
+        File srcMDMFolder = getWorkspacePath().append(ExchangeFileNameToReferenceTask.MDM_CONNECTION).toFile();
+
+        if (isBaseWorksapce()) {
+            if (!ResourceManager.getConnectionFolder().exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                        EResourceConstant.DB_CONNECTIONS.getName());
+            }
+            folderMap.put(srcDBFolder, null);
+
+            if (!ResourceManager.getMDMConnectionFolder().exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                        EResourceConstant.MDM_CONNECTIONS.getName());
+            }
+            folderMap.put(srcMDMFolder, null);
+        } else {
+            File file = getWorkspacePath().append(EResourceConstant.METADATA.getPath()).toFile();
+            if (!file.exists()) {
+                file.mkdir();
+            }
+
+            file = getWorkspacePath().append(EResourceConstant.DB_CONNECTIONS.getPath()).toFile();
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            folderMap.put(srcDBFolder, file);
+
+            file = getWorkspacePath().append(EResourceConstant.MDM_CONNECTIONS.getPath()).toFile();
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            folderMap.put(srcMDMFolder, file);
+        }
+
+        return folderMap;
+    }
+
+    /**
+     * DOC bZhou Comment method "isBaseWorksapce".
+     * 
+     * @return
+     */
+    private boolean isBaseWorksapce() {
+        return getWorkspacePath().equals(ResourceManager.getRootProject().getLocation());
     }
 
     public MigrationTaskType getMigrationTaskType() {
@@ -147,73 +183,9 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         Map<String, String> result = new HashMap<String, String>();
         result.put("TDQ_Metadata/DB Connections", EResourceConstant.DB_CONNECTIONS.getPath());
         result.put("TDQ_Metadata/MDM Connections", EResourceConstant.MDM_CONNECTIONS.getPath());
+        result.put(".prv", ".item");
 
         return result;
-    }
-
-    private boolean deleteOldFile(File theResource) throws CoreException {
-        boolean result = false;
-
-        if (theResource.getName().endsWith(FactoriesUtil.PROV)) {
-            result = true;// theResource is prv file delete it and return true.
-        } else if (theResource.getName().endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
-
-            Property property = PropertyHelper.getProperty(theResource);
-            if (property.getItem() instanceof TDQItem) {
-
-                this.fileNameMap.put(((TDQItem) property.getItem()).getFilename() + "#" + property.getId(),
-                        ResourceFilenameHelper.getExpectedFileName(property.getLabel(), property.getVersion()) + "#/0");
-                result = true;// theResource is old properties file delete it and return true.
-            }
-
-        } else {
-            // theResource isn't prv or old properties file,so don't delete it and return false.
-        }
-        if (result) {
-            theResource.delete();
-        }
-        return result;
-    }
-
-    /**
-     * This method is used for coping file from one place to the other.
-     * 
-     * @param srcFilePath
-     * @param destFilePath
-     * @throws IOException
-     * @throws IOException in case some problems occured
-     */
-    private void copyFiles(String srcFilePath, String destFilePath) throws IOException {
-        FileInputStream input = null;
-        FileOutputStream output = null;
-        try {
-            input = new FileInputStream(srcFilePath);
-            output = new FileOutputStream(destFilePath);
-            byte[] bytearray = new byte[512];
-            int len = 0;
-            while ((len = input.read(bytearray)) != -1) {
-                output.write(bytearray, 0, len);
-            }
-        } finally {
-            if (input != null) {
-                input.close();
-            }
-            if (output != null) {
-                output.close();
-            }
-        }
-    }
-
-    private List<File> iteratorResource(File theFolder) {
-        List<File> fileList = new ArrayList<File>();
-        for (File subFile : theFolder.listFiles()) {
-            if (subFile.isFile() && isPropertyFile(subFile)) {
-                fileList.add(subFile);
-            } else if (subFile.isDirectory()) {
-                fileList.addAll(iteratorResource(subFile));
-            }
-        }
-        return fileList;
     }
 
     private void tansferFile(File parentFolder) throws Exception {
@@ -227,6 +199,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         FilesUtils.getAllFilesFromFolder(parentFolder, fileList, nonPropertyFileFilter);
 
         for (File propFile : fileList) {
+
             URI uri = URI.createFileURI(propFile.getAbsolutePath());
 
             Resource resource = resourceSet.getResource(uri, true);
@@ -238,17 +211,14 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                 Item item = property.getItem();
                 property.setLabel(uri.lastSegment().split("_")[0]);
                 IPath path = new Path(item.getState().getPath());
+                if (ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(),
+                        ERepositoryObjectType.getItemType(item), path) == null) {
+                    ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.getItemType(item),
+                            path.removeLastSegments(1), path.lastSegment());
+                }
                 ProxyRepositoryFactory.getInstance().create(item, path, true);
             }
         }
 
-    }
-
-    private boolean isPropertyFile(File propertyFile) {
-        if (propertyFile.isFile()
-                && propertyFile.getName().toLowerCase().endsWith("." + FactoriesUtil.PROPERTIES_EXTENSION.toLowerCase())) {
-            return true;
-        }
-        return false;
     }
 }

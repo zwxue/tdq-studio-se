@@ -258,6 +258,8 @@ public final class MigrationTaskManager {
      * @param monitor
      */
     public static void doMigrationTask(List<IMigrationTask> tasks, IProgressMonitor monitor) {
+        monitor.beginTask("Migration...", tasks.size());
+
         for (IMigrationTask task : tasks) {
 
             if (monitor.isCanceled()) {

@@ -13,26 +13,31 @@
 package org.talend.dataprofiler.core.migration.impl;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.resource.ResourceManager;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC yyi class global comment. Detailled comment
  */
 public class UpdateAnalysisWithMinLengthIndicator extends AbstractWorksapceUpdateTask {
+
+    private FilenameFilter anaFileFilter = new FilenameFilter() {
+
+        public boolean accept(File dir, String name) {
+            return name.endsWith(FactoriesUtil.ANA);
+        }
+    };
 
     /**
      * DOC yyi UpdateAnalysisWithMinLengthIndicator constructor comment.
@@ -48,16 +53,19 @@ public class UpdateAnalysisWithMinLengthIndicator extends AbstractWorksapceUpdat
     @Override
     protected boolean doExecute() throws Exception {
 
-        Collection<IFile> analyseFiles = searchAllAnalysis(ResourceManager.getAnalysisFolder());
+        File anaFolder = getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
 
-        for (IFile file : analyseFiles) {
+        List<File> fileList = new ArrayList<File>();
+
+        FilesUtils.getAllFilesFromFolder(anaFolder, fileList, anaFileFilter);
+
+        for (File file : fileList) {
             if (file.exists()) {
-                File af = new File(file.getLocationURI());
                 try {
-                    String content = FileUtils.readFileToString(af, EMFUtil.ENCODING);
+                    String content = FileUtils.readFileToString(file, EMFUtil.ENCODING);
                     content = StringUtils.replace(content, "MinLengthIndicator xmi:id=\"", "minLengthIndicator xmi:id=\"");
                     content = StringUtils.replace(content, "</MinLengthIndicator>", "</minLengthIndicator>");
-                    FileUtils.writeStringToFile(af, content, EMFUtil.ENCODING);
+                    FileUtils.writeStringToFile(file, content, EMFUtil.ENCODING);
                 } catch (IOException e) {
                     return false;
                 }
@@ -65,24 +73,6 @@ public class UpdateAnalysisWithMinLengthIndicator extends AbstractWorksapceUpdat
 
         }
         return true;
-    }
-
-    private Collection<IFile> searchAllAnalysis(IFolder folder) {
-        Collection<IFile> analyses = new ArrayList<IFile>();
-        try {
-            for (IResource resource : folder.members()) {
-                if (resource.getType() == IResource.FOLDER) {
-                    searchAllAnalysis(folder.getFolder(resource.getName()));
-                    continue;
-                }
-                IFile file = (IFile) resource;
-                if (file.getFileExtension().equals(FactoriesUtil.ANA)) {
-                    analyses.add(file);
-                }
-            }
-        } catch (CoreException e) {
-        }
-        return analyses;
     }
 
     /*
