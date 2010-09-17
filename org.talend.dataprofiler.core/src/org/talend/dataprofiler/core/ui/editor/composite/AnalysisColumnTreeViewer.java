@@ -82,6 +82,7 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -801,7 +802,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null
-                && !tdProvider.equals(this.getAnalysis().getContext().getConnection())) {
+                && !ProxyRepositoryViewObject.areSame(tdProvider, this.getAnalysis().getContext().getConnection())) {
             return false;
         }
         // MOD mzhao, 2010-07-23 bug 14014: If the editor is dirty, save it firstly before drag and drop an elements.
