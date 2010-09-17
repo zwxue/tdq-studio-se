@@ -662,7 +662,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         }
 
         DataProvider dataprovider = this.getDataManager();
-        if (!ProxyRepositoryViewObject.getAllMetadataConnections().contains(dataprovider)) {
+        // MOD qiongli 2010-9-17，bug 15525
+        if (ProxyRepositoryViewObject.getRepositoryViewObject((Connection) dataprovider) == null) {
             rc.setReturnCode(Messages.getString("Evaluator.NoConnectionFoundInMetadata", dataprovider.getName()), false);
             return rc;
         }
