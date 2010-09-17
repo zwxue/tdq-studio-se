@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.tweaklets.Tweaklets;
+import org.eclipse.ui.internal.tweaklets.WorkbenchImplementation;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.GlobalServiceRegister;
@@ -42,6 +44,7 @@ import org.talend.dataprofiler.core.license.LicenseManagement;
 import org.talend.dataprofiler.core.license.LicenseWizard;
 import org.talend.dataprofiler.core.license.LicenseWizardDialog;
 import org.talend.dataprofiler.rcp.i18n.Messages;
+import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4CoolBar;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.ProxyRepositoryFactory;
@@ -74,6 +77,9 @@ public class Application implements IApplication {
         }
         try {
             initProxyRepository();
+
+            Tweaklets.setDefault(WorkbenchImplementation.KEY, new Workbench3xImplementation4CoolBar());
+
             int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
             if (returnCode == PlatformUI.RETURN_RESTART) {
                 return IApplication.EXIT_RESTART;

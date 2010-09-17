@@ -37,6 +37,7 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.perspective.PerspectiveMenuManager;
+import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4CoolBar;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>
@@ -135,7 +136,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         helpMenu.add(welcomeAction);
         helpMenu.add(helpAction);
         helpMenu.add(aboutAction);
-        //ADD qiongli 2010-6-3,bug 0012874 
+        // ADD qiongli 2010-6-3,bug 0012874
         CheatSheetCategoryBasedSelectionAction cscAction = new CheatSheetCategoryBasedSelectionAction();
         cscAction.setText("Cheat Sheets...");
         helpMenu.add(cscAction);
@@ -182,5 +183,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         coolBar.add(new ToolBarContributionItem(toolbar, "switch_persp")); //$NON-NLS-1$
         toolbar.add(new ChangePerspectiveAction(true));
         toolbar.add(ActionFactory.SAVE.create(window));
+
+        // add feature:15174
+        Workbench3xImplementation4CoolBar.createLinksToolbarItem(coolBar);
     }
 }
