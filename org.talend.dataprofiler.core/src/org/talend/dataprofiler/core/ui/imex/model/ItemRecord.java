@@ -33,9 +33,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.jfree.util.Log;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -74,7 +76,7 @@ public class ItemRecord {
                 init();
             }
         } catch (Exception e) {
-            // ExceptionHandler.process(e);
+            ExceptionHandler.process(e);
         }
     }
 
@@ -103,9 +105,13 @@ public class ItemRecord {
                 Resource resource = resourceSet.getResource(fileURI, true);
                 EList<EObject> contents = resource.getContents();
                 if (contents != null && !contents.isEmpty()) {
-                    EObject object = contents.get(0);
-                    if (object instanceof ModelElement) {
-                        element = (ModelElement) object;
+                    if (property.getItem() instanceof ConnectionItem) {
+                        element = ((ConnectionItem) property.getItem()).getConnection();
+                    } else {
+                        EObject object = contents.get(0);
+                        if (object instanceof ModelElement) {
+                            element = (ModelElement) object;
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -115,6 +121,15 @@ public class ItemRecord {
         }
 
         computeDependencies();
+    }
+
+    /**
+     * DOC bZhou Comment method "getElement".
+     * 
+     * @return
+     */
+    public ModelElement getElement() {
+        return element;
     }
 
     /**
@@ -373,7 +388,7 @@ public class ItemRecord {
 
         return (absolutePath.indexOf(EResourceConstant.DATA_PROFILING.getName()) > 0
                 || absolutePath.indexOf(EResourceConstant.LIBRARIES.getName()) > 0
-                || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0
+                || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0 || absolutePath.indexOf("TDQ_Metadata") > 0
                 || StringUtils.equals(file.getName(), ReponsitoryContextBridge.PROJECT_DEFAULT_NAME) || tdqProject)
                 && !file.getName().startsWith(".");
     }

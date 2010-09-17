@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
@@ -46,6 +47,20 @@ public class ImportWizard extends Wizard {
     @Override
     public void addPages() {
         addPage(importPage);
+    }
+
+    @Override
+    public boolean performCancel() {
+        final ItemRecord[] records = importPage.getElements();
+        final IImportWriter writer = importPage.getWriter();
+
+        try {
+            writer.finish(records, null);
+        } catch (Exception e) {
+            ExceptionHandler.process(e);
+        }
+
+        return super.performCancel();
     }
 
     /*

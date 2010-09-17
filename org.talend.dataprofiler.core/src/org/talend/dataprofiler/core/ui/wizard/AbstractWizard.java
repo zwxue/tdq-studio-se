@@ -67,6 +67,8 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     CorePlugin.getDefault().refreshDQView();
 
                     return true;
+                } else {
+                    MessageUI.openError(csResult.getMessage());
                 }
             }
         } else {
@@ -113,8 +115,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     String theElementName = element.getName();
                     if (theElementName == null) {
                         if (element instanceof Connection) {
-                            theElementName = ProxyRepositoryViewObject.getRepositoryViewObject(
-                                    (Connection) element).getLabel();
+                            theElementName = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) element).getLabel();
                         }
                     }
 

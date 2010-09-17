@@ -13,12 +13,15 @@
 package org.talend.dataprofiler.core.ui.imex;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -45,10 +48,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -252,6 +257,8 @@ public class ImportWizardPage extends WizardPage {
         if (path.toFile().exists()) {
             ItemRecord input = writer.computeInput(path);
 
+            migrate();
+
             repositoryTree.setInput(input);
 
             repositoryTree.expandAll();
@@ -268,6 +275,25 @@ public class ImportWizardPage extends WizardPage {
         populateElement();
 
         checkforErrors();
+    }
+
+    /**
+     * DOC bZhou Comment method "migrate".
+     */
+    private void migrate() {
+        IRunnableWithProgress op = new IRunnableWithProgress() {
+
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+                writer.migration(monitor);
+            }
+        };
+
+        try {
+            ProgressUI.popProgressDialog(op);
+        } catch (Exception e) {
+            ExceptionHandler.process(e);
+        }
     }
 
     /**

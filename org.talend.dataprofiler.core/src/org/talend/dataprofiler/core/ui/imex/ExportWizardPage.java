@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -50,6 +51,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * This class defines the UI for the export feature in TOP and TQ for the Data profile perspective.
  */
 public class ExportWizardPage extends WizardPage {
+
+    private static Logger log = Logger.getLogger(ExportWizardPage.class);
 
     private CheckboxTreeViewer repositoryTree;
 
@@ -242,7 +245,12 @@ public class ExportWizardPage extends WizardPage {
 
                 if (record.getFile().isFile()) {
                     for (File file : record.getDependencyMap().keySet()) {
-                        repositoryTree.setChecked(ItemRecord.findRecord(file), item.getChecked());
+                        ItemRecord findRecord = ItemRecord.findRecord(file);
+                        if (findRecord != null) {
+                            repositoryTree.setChecked(findRecord, item.getChecked());
+                        } else {
+                            log.error("Can't find the file: " + file.getAbsolutePath());
+                        }
                     }
 
                     repositoryTree.refresh();
