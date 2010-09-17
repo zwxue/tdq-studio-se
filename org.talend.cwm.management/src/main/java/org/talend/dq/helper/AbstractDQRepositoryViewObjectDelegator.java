@@ -116,6 +116,28 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
         return null;
     }
 
+    public boolean areSame(T element1, T element2) {
+        if (ResourceHelper.areSame(element1, element2)) {
+            return true;
+        }
+
+        URI unloadResURIFirst = unloadResModEleURIMap.get(element1);
+        if (element1.eResource() != null) {
+            unloadResURIFirst = element1.eResource().getURI();
+        }
+        URI unloadResURISecond = unloadResModEleURIMap.get(element2);
+        if (element2.eResource() != null) {
+            unloadResURISecond = element2.eResource().getURI();
+        }
+        if ((unloadResURIFirst != null && unloadResURISecond != null && unloadResURIFirst.toString().equals(
+                unloadResURISecond.toString()))) {
+            return true;
+        }
+
+        return false;
+
+    }
+
     protected abstract void setActiveElement(IRepositoryViewObject viewObject, T element);
 
     /**

@@ -25,7 +25,6 @@ import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.db.connection.XQueryExpressionUtil;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.helper.XmlElementHelper;
@@ -37,6 +36,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.MdmIndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -59,7 +59,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             return true;
         }
         // else compare
-        if (ResourceHelper.areSame(dataprovider, dp)) {
+        if (ProxyRepositoryViewObject.areSame(dataprovider, dp)) {
             return true;
         }
         // else

@@ -24,6 +24,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC mzhao Proxy of repository view object.
@@ -143,6 +144,24 @@ public final class ProxyRepositoryViewObject {
         }
         // File connection ...
         return null;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "areSame".
+     * 
+     * @param m1 the one of need to compare element
+     * @param m2 another of need to compare element
+     * @return
+     */
+    public static boolean areSame(ModelElement m1, ModelElement m2) {
+        if (m1 instanceof DatabaseConnection) {
+            return getDBConnectionInstance().areSame((Connection) m1, (Connection) m2);
+        } else if (m1 instanceof MDMConnection) {
+            return getMDMConnectionInstance().areSame((Connection) m1, (Connection) m2);
+        }
+        // File connection ...
+        return false;
     }
 
     public static List<IRepositoryViewObject> fetchAllDBRepositoryViewObjects(Boolean reload) {
