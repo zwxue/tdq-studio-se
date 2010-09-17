@@ -12,7 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -20,7 +25,9 @@ import org.talend.resource.ResourceManager;
  */
 public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
-    private IPath workspacePath;
+    public static final String OLD_MEATADATA_FOLDER_NAME = "TDQ_Metadata";
+
+    private IPath workspacePath = ResourceManager.getRootProject().getLocation();
 
     /*
      * (non-Javadoc)
@@ -54,6 +61,34 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
     }
 
     public IPath getWorkspacePath() {
-        return workspacePath == null ? ResourceManager.getRootProject().getLocation() : workspacePath;
+        return workspacePath;
+    }
+
+    /**
+     * DOC bZhou Comment method "isWorksapcePath".
+     * 
+     * @return
+     */
+    protected boolean isWorksapcePath() {
+        return workspacePath.equals(ResourceManager.getRootProject().getLocation());
+    }
+
+    /**
+     * DOC bZhou Comment method "getTopFolderList".
+     * 
+     * @return
+     */
+    protected List<File> getTopFolderList() {
+        List<File> folderList = new ArrayList<File>();
+
+        for (EResourceConstant constant : EResourceConstant.getTopConstants()) {
+            if (constant == EResourceConstant.METADATA && !isWorksapcePath()) {
+                folderList.add(workspacePath.append(OLD_MEATADATA_FOLDER_NAME).toFile());
+            } else {
+                folderList.add(workspacePath.append(constant.getPath()).toFile());
+            }
+        }
+
+        return folderList;
     }
 }

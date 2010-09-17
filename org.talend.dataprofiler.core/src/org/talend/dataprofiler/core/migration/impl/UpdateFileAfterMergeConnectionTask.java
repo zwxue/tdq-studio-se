@@ -51,8 +51,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private static Logger log = Logger.getLogger(UpdateFileAfterMergeConnectionTask.class);
 
-    private static final String TDQ_METADATA = "TDQ_Metadata";
-
     private Map<String, String> replaceStringMap;
 
     private ResourceSet resourceSet = new ResourceSetImpl();
@@ -84,7 +82,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         for (File folder : folderMap.keySet()) {
             try {
                 // Move the content of connection folder
-                if (isBaseWorksapce()) {
+                if (isWorksapcePath()) {
                     tansferFile(folder);
                 } else {
                     if (folder.exists()) {
@@ -97,7 +95,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
         }
 
-        File tdqMetadataFile = getWorkspacePath().append(TDQ_METADATA).toFile();
+        File tdqMetadataFile = getWorkspacePath().append(OLD_MEATADATA_FOLDER_NAME).toFile();
         if (tdqMetadataFile.exists()) {
             FileUtils.deleteDirectory(tdqMetadataFile);
         }
@@ -128,7 +126,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         File srcDBFolder = getWorkspacePath().append(ExchangeFileNameToReferenceTask.DB_CONNECTION).toFile();
         File srcMDMFolder = getWorkspacePath().append(ExchangeFileNameToReferenceTask.MDM_CONNECTION).toFile();
 
-        if (isBaseWorksapce()) {
+        if (isWorksapcePath()) {
             if (!ResourceManager.getConnectionFolder().exists()) {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
                         EResourceConstant.DB_CONNECTIONS.getName());
@@ -160,15 +158,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         }
 
         return folderMap;
-    }
-
-    /**
-     * DOC bZhou Comment method "isBaseWorksapce".
-     * 
-     * @return
-     */
-    private boolean isBaseWorksapce() {
-        return getWorkspacePath().equals(ResourceManager.getRootProject().getLocation());
     }
 
     public MigrationTaskType getMigrationTaskType() {

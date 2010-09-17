@@ -63,7 +63,10 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
     @Override
     public boolean valid() {
         fileList = new ArrayList<File>();
-        FilesUtils.getAllFilesFromFolder(getWorkspacePath().toFile(), fileList, nonPropertyFileFilter);
+
+        for (File folder : getTopFolderList()) {
+            FilesUtils.getAllFilesFromFolder(folder, fileList, nonPropertyFileFilter);
+        }
         return !fileList.isEmpty() && super.valid();
     }
 
