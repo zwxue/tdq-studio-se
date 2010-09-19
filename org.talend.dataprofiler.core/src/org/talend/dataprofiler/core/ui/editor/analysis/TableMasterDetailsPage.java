@@ -626,6 +626,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
+                ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
                 ProxyRepositoryViewObject.save(tdProvider);
             }
             if (log.isDebugEnabled()) {

@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -61,6 +62,7 @@ import org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
+import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.filters.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
@@ -140,7 +142,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     @SuppressWarnings("unchecked")
     private void addFirstPartFilters() {
-        final Class[] acceptedClasses = new Class[] { IResource.class, IFolderNode.class, EObject.class };
+        final Class[] acceptedClasses = new Class[] { IResource.class, IFolderNode.class, EObject.class,
+                IRepositoryViewObject.class };
         IProject rootProject = ResourceManager.getRootProject();
         IResource[] allResource = null;
         try {
@@ -159,8 +162,9 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
         this.addFilter(filter);
         this.addFilter(new EMFObjFilter());
-        //MOD qiongli 2010-6-17 bug 13727
+        // MOD qiongli 2010-6-17 bug 13727
         addFilter(new DQFolderFliter(true));
+        addFilter(new TDQEEConnectionFolderFilter());
     }
 
     protected void addCheckedListener() {
@@ -477,6 +481,11 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
                 if (container.equals(ResourceManager.getConnectionFolder())) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
+                }
+                if (ResourceManager.getConnectionFolder().equals(container)) {
+                    return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(false).toArray();
+                } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
+                    return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(false).toArray();
                 }
                 return members;
             } else if (parentElement instanceof Schema) {
