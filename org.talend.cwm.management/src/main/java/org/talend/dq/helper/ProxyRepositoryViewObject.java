@@ -20,6 +20,8 @@ import org.eclipse.emf.common.util.URI;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -122,11 +124,12 @@ public final class ProxyRepositoryViewObject {
      * @return
      */
     public static IRepositoryViewObject getRepositoryViewObjectByProperty(Property property) {
-        IRepositoryViewObject connReposViewObj = getDBConnectionInstance().getReposViewObjByProperty(property);
-        if (connReposViewObj == null) {
-            connReposViewObj = getMDMConnectionInstance().getReposViewObjByProperty(property);
+        // MOD qiongli bug 14469
+        Item item = property.getItem();
+        if (item instanceof ConnectionItem) {
+            return getRepositoryViewObject(((ConnectionItem) item).getConnection());
         }
-        return connReposViewObj;
+        return null;
     }
 
     /**
