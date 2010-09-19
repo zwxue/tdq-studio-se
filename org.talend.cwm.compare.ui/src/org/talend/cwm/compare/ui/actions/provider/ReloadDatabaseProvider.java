@@ -14,15 +14,15 @@ package org.talend.cwm.compare.ui.actions.provider;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
+import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class ReloadDatabaseProvider extends CommonActionProvider {
+public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
 
     private static final String RELOADDATABASE_MENUTEXT = Messages.getString("ReloadDatabaseProvider.reloadDBList"); //$NON-NLS-1$
 
@@ -36,6 +36,10 @@ public class ReloadDatabaseProvider extends CommonActionProvider {
     }
 
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         String menuText = RELOADDATABASE_MENUTEXT;
         if (obj instanceof IFolderNode) {

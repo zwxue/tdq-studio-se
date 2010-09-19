@@ -14,16 +14,16 @@ package org.talend.cwm.compare.ui.actions.provider;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.PopComparisonUIAction;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class PopComparisonUIProvider extends CommonActionProvider {
+public class PopComparisonUIProvider extends AbstractCommonActionProvider {
 
     private static final String COMPAREDATABASE_MENUTEXT = Messages.getString("PopComparisonUIProvider.dbCompare"); //$NON-NLS-1$
 
@@ -37,6 +37,10 @@ public class PopComparisonUIProvider extends CommonActionProvider {
     }
 
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         // ADD xqliu 2010-03-30 bug 11951
         // remove the "Database Compare" menu when the object is a mdm connection

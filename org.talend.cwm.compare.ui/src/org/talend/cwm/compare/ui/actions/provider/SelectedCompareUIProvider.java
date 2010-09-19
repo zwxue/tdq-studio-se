@@ -16,16 +16,16 @@ import java.util.Iterator;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.SelectedComparisonAction;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 
 /**
  * 
  * DOC mzhao class global comment. Compare selected model elements.
  */
-public class SelectedCompareUIProvider extends CommonActionProvider {
+public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
 
     private static final String COMPARISON_MENUTEXT = Messages.getString("SelectedCompareUIProvider.Comparison"); //$NON-NLS-1$
 

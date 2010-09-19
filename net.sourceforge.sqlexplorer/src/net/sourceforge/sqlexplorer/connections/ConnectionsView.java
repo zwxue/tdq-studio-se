@@ -118,6 +118,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
                 try {
                     IFile file = SQLExplorerPlugin.getDefault().getPropertyFile().get(element);
                     if (null != file && file.exists())
+                        // FIXME: Not recommended to judge delete status like this.
                         return !FileUtils.readFileToString(file.getLocation().toFile()).contains("deleted=\"true\"");
                 } catch (Exception e) {
                     e.printStackTrace();
