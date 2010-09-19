@@ -14,14 +14,14 @@ package org.talend.dataprofiler.core.ui.action;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public abstract class AbstractPredefinedActionProvider extends CommonActionProvider {
+public abstract class AbstractPredefinedActionProvider extends AbstractCommonActionProvider {
 
     private AbstractPredefinedAnalysisAction action;
 
@@ -35,6 +35,9 @@ public abstract class AbstractPredefinedActionProvider extends CommonActionProvi
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         action.setSelection(currentSelection);
 

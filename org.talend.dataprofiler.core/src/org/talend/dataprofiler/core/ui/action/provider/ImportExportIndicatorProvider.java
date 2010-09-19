@@ -13,14 +13,13 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.ExportIndicatorDefinitionAction;
 import org.talend.dataprofiler.core.ui.action.actions.ImportIndicatorDefinitionAction;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class ImportExportIndicatorProvider extends CommonActionProvider {
+public class ImportExportIndicatorProvider extends AbstractCommonActionProvider {
 
     /*
      * (non-Javadoc)
@@ -29,6 +28,10 @@ public class ImportExportIndicatorProvider extends CommonActionProvider {
      */
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         menu.add(new ImportIndicatorDefinitionAction());
         menu.add(new ExportIndicatorDefinitionAction());
     }

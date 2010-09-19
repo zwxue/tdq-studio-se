@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -27,7 +26,7 @@ import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class EditConnectionProvider extends CommonActionProvider {
+public class EditConnectionProvider extends AbstractCommonActionProvider {
 
     private EditConnectionAction editConnnectionAction;
 
@@ -50,6 +49,10 @@ public class EditConnectionProvider extends CommonActionProvider {
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFile) {
             currentSelection = (IFile) obj;

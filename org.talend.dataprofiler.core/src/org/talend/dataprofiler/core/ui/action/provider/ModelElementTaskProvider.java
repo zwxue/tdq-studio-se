@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 
@@ -23,7 +22,7 @@ import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
  * 
  * DOC mzhao class global comment. Detailled comment
  */
-public class ModelElementTaskProvider extends CommonActionProvider {
+public class ModelElementTaskProvider extends AbstractCommonActionProvider {
 
     private TdAddTaskAction addTaskAction = null;
 
@@ -50,6 +49,10 @@ public class ModelElementTaskProvider extends CommonActionProvider {
      */
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         // MOD by hcheng 07-28-2009,for 8273,Remove the "add task" menu on the system indicators.
         boolean showMenu = true;

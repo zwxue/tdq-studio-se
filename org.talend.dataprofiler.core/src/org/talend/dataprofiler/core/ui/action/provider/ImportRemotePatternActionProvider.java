@@ -17,14 +17,13 @@ import java.util.List;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.ImportRemotePatternAction;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class ImportRemotePatternActionProvider extends CommonActionProvider {
+public class ImportRemotePatternActionProvider extends AbstractCommonActionProvider {
 
     /*
      * (non-Javadoc)
@@ -33,7 +32,10 @@ public class ImportRemotePatternActionProvider extends CommonActionProvider {
      */
     @Override
     public void fillContextMenu(IMenuManager menu) {
-
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
         List<IEcosComponent> selectedComponents = new ArrayList<IEcosComponent>();

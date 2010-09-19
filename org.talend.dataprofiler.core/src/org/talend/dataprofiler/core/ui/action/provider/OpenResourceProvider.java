@@ -17,7 +17,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.OpenFileAction;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonMenuConstants;
@@ -26,7 +25,7 @@ import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class OpenResourceProvider extends CommonActionProvider {
+public class OpenResourceProvider extends AbstractCommonActionProvider {
 
     private OpenFileAction openFileAction;
 
@@ -43,6 +42,7 @@ public class OpenResourceProvider extends CommonActionProvider {
     }
 
     public void fillContextMenu(IMenuManager aMenu) {
+
         if (!contribute || getContext().getSelection().isEmpty()) {
             return;
         }

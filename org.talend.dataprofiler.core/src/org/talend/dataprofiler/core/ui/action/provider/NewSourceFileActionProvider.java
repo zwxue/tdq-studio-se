@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.sql.RenameFolderAction;
@@ -34,12 +33,16 @@ import org.talend.resource.ResourceService;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  * 
  */
-public class NewSourceFileActionProvider extends CommonActionProvider {
+public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
 
     public NewSourceFileActionProvider() {
     }
 
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
         List<IFile> selectedFiles = new ArrayList<IFile>();
         if (treeSelection.size() == 1) {

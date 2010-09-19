@@ -13,14 +13,13 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.DQRestoreAction;
 
 /**
  * @author qiongli
  *
  */
-public class RestoreActionProvider extends CommonActionProvider {
+public class RestoreActionProvider extends AbstractCommonActionProvider {
 
 	private DQRestoreAction restoreAction;
 	public RestoreActionProvider() {
@@ -30,6 +29,10 @@ public class RestoreActionProvider extends CommonActionProvider {
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
     	restoreAction = new DQRestoreAction();
         menu.add(restoreAction);
     }

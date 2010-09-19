@@ -36,12 +36,15 @@ public class GlobalServiceRegister {
     private static IConfigurationElement[] configurationElements;
 
     private static IConfigurationElement[] bandingConfigurationElements;
+
+    private static IConfigurationElement[] svnRepositoryElements;
     public static GlobalServiceRegister getDefault() {
         return instance;
     }
 
     private Map<Class<?>, IService> services = new HashMap<Class<?>, IService>();
 
+    private Map<Class<?>, AbstractSvnRepositoryService> svnRepositoryServices = new HashMap<Class<?>, AbstractSvnRepositoryService>();
     private Map<Class<?>, org.talend.core.ui.branding.IBrandingService> brandingServices = new HashMap<Class<?>, org.talend.core.ui.branding.IBrandingService>();
     private Map<Class<?>, List<IService>> serviceGroups = new HashMap<Class<?>, List<IService>>();
 
@@ -49,6 +52,7 @@ public class GlobalServiceRegister {
         IExtensionRegistry registry = Platform.getExtensionRegistry();
         configurationElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.service"); //$NON-NLS-1$
         bandingConfigurationElements = registry.getConfigurationElementsFor("org.talend.core.runtime.service"); //$NON-NLS-1$
+        svnRepositoryElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.svnRepositoryService"); //$NON-NLS-1$
     }
 
     /**
@@ -87,6 +91,43 @@ public class GlobalServiceRegister {
             brandingServices.put(klass, service);
         }
         return service;
+    }
+
+    /**
+     * 
+     * DOC mzhao Get svn repository service.
+     * 
+     * @param klass
+     * @return
+     */
+    public AbstractSvnRepositoryService getSvnRepositoryService(Class<?> klass) {
+        AbstractSvnRepositoryService service = svnRepositoryServices.get(klass);
+        if (service == null) {
+            service = findSvnRepositoryService(klass);
+            if (service != null) {
+                svnRepositoryServices.put(klass, service);
+            }
+        }
+        return service;
+    }
+
+    private AbstractSvnRepositoryService findSvnRepositoryService(Class<?> klass) {
+        String key = klass.getName();
+        for (int i = 0; i < svnRepositoryElements.length; i++) {
+            IConfigurationElement element = svnRepositoryElements[i];
+            if (element == null) {
+                continue;
+            }
+            try {
+                Object service = element.createExecutableExtension("class"); //$NON-NLS-1$
+                if (klass.isInstance(service)) {
+                    return (AbstractSvnRepositoryService) service;
+                }
+            } catch (CoreException e) {
+                ExceptionHandler.process(e);
+            }
+        }
+        return null;
     }
     /**
      * Gets the specific IService group.
@@ -132,6 +173,7 @@ public class GlobalServiceRegister {
         }
         return null;
     }
+
     private IService findService(Class<?> klass) {
         String key = klass.getName();
         for (int i = 0; i < configurationElements.length; i++) {

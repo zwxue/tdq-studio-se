@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -25,7 +24,7 @@ import org.talend.resource.ResourceService;
  * @author rli
  * 
  */
-public class NewAnalysisActionProvider extends CommonActionProvider {
+public class NewAnalysisActionProvider extends AbstractCommonActionProvider {
 
     protected static Logger log = Logger.getLogger(NewAnalysisActionProvider.class);
 
@@ -36,6 +35,10 @@ public class NewAnalysisActionProvider extends CommonActionProvider {
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;

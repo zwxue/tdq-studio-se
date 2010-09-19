@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.pattern.actions.ExportPatternsAction;
@@ -36,7 +35,7 @@ import org.talend.resource.ResourceService;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  * 
  */
-public class NewSourcePatternActionProvider extends CommonActionProvider {
+public class NewSourcePatternActionProvider extends AbstractCommonActionProvider {
 
     protected static Logger log = Logger.getLogger(NewSourcePatternActionProvider.class);
 
@@ -46,6 +45,10 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
     }
 
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
         List<IFile> selectedFiles = new ArrayList<IFile>();
         if (treeSelection.size() == 1) {

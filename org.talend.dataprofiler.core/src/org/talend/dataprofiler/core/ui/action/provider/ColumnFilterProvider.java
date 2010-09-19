@@ -15,14 +15,13 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.ColumnFilterAction;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class ColumnFilterProvider extends CommonActionProvider {
+public class ColumnFilterProvider extends AbstractCommonActionProvider {
 
     protected static Logger log = Logger.getLogger(ColumnFilterProvider.class);
 
@@ -31,6 +30,10 @@ public class ColumnFilterProvider extends CommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         if (currentSelection.getFirstElement() instanceof NamedColumnSet) {
             ColumnFilterAction ecfAction = new ColumnFilterAction((NamedColumnSet) currentSelection.getFirstElement());

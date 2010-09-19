@@ -6,6 +6,7 @@
      
    <extension-point id="org.talend.dataprofiler.core.migrationtask" name="Migration tool atomic task" schema="schema/migrationTask.exsd"/>
    <extension-point id="org.talend.dataprofiler.core.editorPartListener" name="Common Editor Part Listener" schema="schema/org.talend.dataprofiler.core.editorPartListener.exsd"/>
+   <extension-point id="svnRepositoryService" name="svn repoistory service" schema="schema/svnRepositoryService.exsd"/>
               <extension
          point="org.eclipse.ui.views">
          <category

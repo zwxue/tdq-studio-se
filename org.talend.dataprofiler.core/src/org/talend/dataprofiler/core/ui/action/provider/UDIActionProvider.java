@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.CreateUDIAction;
 import org.talend.dataprofiler.core.ui.action.actions.ExportUDIAction;
 import org.talend.dataprofiler.core.ui.action.actions.ImportUDIAction;
@@ -26,12 +25,16 @@ import org.talend.resource.ResourceService;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class UDIActionProvider extends CommonActionProvider {
+public class UDIActionProvider extends AbstractCommonActionProvider {
 
     protected static Logger log = Logger.getLogger(UDIActionProvider.class);
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
 
         if (treeSelection.size() == 1) {

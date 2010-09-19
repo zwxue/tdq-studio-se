@@ -15,16 +15,19 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.DuplicateAction;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
-public class DuplicateResourceProvider extends CommonActionProvider {
+public class DuplicateResourceProvider extends AbstractCommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection selection = (TreeSelection) this.getContext().getSelection();
         if (!selection.isEmpty()) {
             Object[] objs = selection.toArray();

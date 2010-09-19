@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction;
 import org.talend.resource.ResourceManager;
@@ -25,7 +24,7 @@ import org.talend.resource.ResourceService;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class DQRulesActionProvider extends CommonActionProvider {
+public class DQRulesActionProvider extends AbstractCommonActionProvider {
 
     protected static Logger log = Logger.getLogger(DQRulesActionProvider.class);
 
@@ -37,6 +36,10 @@ public class DQRulesActionProvider extends CommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
 
         if (treeSelection.size() == 1) {

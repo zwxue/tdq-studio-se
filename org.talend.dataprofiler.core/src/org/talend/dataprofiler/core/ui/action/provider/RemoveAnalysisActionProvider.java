@@ -13,17 +13,20 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.RemoveAnalysisAction;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class RemoveAnalysisActionProvider extends CommonActionProvider {
+public class RemoveAnalysisActionProvider extends AbstractCommonActionProvider {
 
     public RemoveAnalysisActionProvider() {
     }
 
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         menu.add(new RemoveAnalysisAction());
     }
 }

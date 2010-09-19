@@ -63,4 +63,8 @@ public class AbstractItemEditorInput implements IEditorInput {
         }
         return false;
     }
+
+    public IRepositoryViewObject getRepositoryViewObject() {
+        return reposViewObj;
+    }
 }

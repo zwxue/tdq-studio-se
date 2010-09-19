@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
@@ -29,7 +28,7 @@ import org.talend.top.repository.ProxyRepositoryManager;
 /**
  * This provider for creating a user folder.
  */
-public class CreateUserFolderProvider extends CommonActionProvider {
+public class CreateUserFolderProvider extends AbstractCommonActionProvider {
 
     public static final String ACTION_ID = "Create_User_Folder_Action"; //$NON-NLS-1$
 
@@ -45,6 +44,10 @@ public class CreateUserFolderProvider extends CommonActionProvider {
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
 

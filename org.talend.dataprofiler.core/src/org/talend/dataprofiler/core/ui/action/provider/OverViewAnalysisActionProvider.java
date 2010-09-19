@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -30,7 +29,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class OverViewAnalysisActionProvider extends CommonActionProvider {
+public class OverViewAnalysisActionProvider extends AbstractCommonActionProvider {
 
     /**
      * DOC rli OverViewAnalysisActionProvider constructor comment.
@@ -40,6 +39,10 @@ public class OverViewAnalysisActionProvider extends CommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         List list = currentSelection.toList();
         int catlogNumber = 0;

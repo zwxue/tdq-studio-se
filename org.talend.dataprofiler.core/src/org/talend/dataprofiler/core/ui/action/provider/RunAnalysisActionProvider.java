@@ -15,13 +15,12 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class RunAnalysisActionProvider extends CommonActionProvider {
+public class RunAnalysisActionProvider extends AbstractCommonActionProvider {
 
     private RunAnalysisAction runAnalysisAction;
 
@@ -29,6 +28,10 @@ public class RunAnalysisActionProvider extends CommonActionProvider {
      * Adds a submenu to the given menu with the name "New Component".
      */
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFile) {
             runAnalysisAction = new RunAnalysisAction();

@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnCorrelationAction;
@@ -25,7 +24,7 @@ import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnCorrelationAc
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  * 
  */
-public class AnalyzeColumnCorrelationProvider extends CommonActionProvider {
+public class AnalyzeColumnCorrelationProvider extends AbstractCommonActionProvider {
 
     private AnalyzeColumnCorrelationAction analyzeColumnCorrAction;
 
@@ -54,6 +53,10 @@ public class AnalyzeColumnCorrelationProvider extends CommonActionProvider {
     @SuppressWarnings("unchecked")
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
         analyzeColumnCorrAction.setColumnSelection(currentSelection);

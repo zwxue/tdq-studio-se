@@ -14,17 +14,21 @@ package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
+import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
-public class PreviewColumnProvider extends CommonActionProvider {
+public class PreviewColumnProvider extends AbstractCommonActionProvider {
 
     @Override
     public void fillContextMenu(IMenuManager menu) {
+        // MOD mzhao user readonly role on svn repository mode.
+        if (!isShowMenu()) {
+            return;
+        }
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
 
         Object[] selectedObjs = treeSelection.toArray();
