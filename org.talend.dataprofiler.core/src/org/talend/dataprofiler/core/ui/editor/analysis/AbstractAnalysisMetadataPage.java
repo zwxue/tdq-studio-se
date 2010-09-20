@@ -165,6 +165,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     // MOD mzhao 2009-05-05, bug 6587.
     protected void reloadDataproviderAndFillConnCombo() {
         Collection<Connection> connections = ProxyRepositoryViewObject.getAllDatabaseConnections();
+        // MOD qiongli bug 14891 2010-9-20,Add MDM connections
+        Collection<Connection> mdmConne = ProxyRepositoryViewObject.getAllMDMConnections();
+        connections.addAll(mdmConne);
 
         int index = 0;
         connCombo.removeAll();

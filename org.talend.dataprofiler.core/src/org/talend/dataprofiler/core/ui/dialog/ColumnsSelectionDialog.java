@@ -42,6 +42,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.MDMConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -813,6 +817,15 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 return ((IFolderNode) element).getParent();
             } else if (element instanceof IResource) {
                 return ((IResource) element).getParent();
+            } else if (element instanceof IRepositoryViewObject) {
+                // Add this if by qiongli bug 14891,2010-9-20
+                IRepositoryViewObject conn = (IRepositoryViewObject) element;
+                Item connItem = conn.getProperty().getItem();
+                if (connItem instanceof MDMConnectionItem) {
+                    return ResourceManager.getMDMConnectionFolder();
+                } else if (connItem instanceof ConnectionItem) {
+                    return ResourceManager.getConnectionFolder();
+                }
             }
             return super.getParent(element);
         }
