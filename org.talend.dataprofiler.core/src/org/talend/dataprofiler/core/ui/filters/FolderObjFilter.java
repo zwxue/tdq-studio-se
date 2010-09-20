@@ -50,7 +50,11 @@ public class FolderObjFilter extends AbstractViewerFilter {
                 IFolder folder = (IFolder) element;
                 // MOD mzhao 2010-08-12 14891: use same repository API with TOS to persistent metadata
                 if (((IFolder) folder).getProjectRelativePath().toString().startsWith(EResourceConstant.METADATA.getPath())) {
-                    if (((IFolder) folder).getName().equals(EResourceConstant.METADATA.getPath())) {
+                    String folderName = ((IFolder) folder).getName();
+                    if (folderName.equals("bin")) {
+                        return false;
+                    }
+                    if (folderName.equals(EResourceConstant.METADATA.getPath())) {
                         return true;
                     } else if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())
                             || ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
