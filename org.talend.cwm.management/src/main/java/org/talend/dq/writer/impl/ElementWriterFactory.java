@@ -124,8 +124,6 @@ public final class ElementWriterFactory {
             return createSoftwareSystemWriter();
         } else if (FactoriesUtil.DEFINITION.equals(fileExtension)) {
             return createIndicatorDefinitionWriter();
-        } else if (FactoriesUtil.ITEM_EXTENSION.equals(fileExtension)) {
-            return createDataProviderWriter();
         }
 
         return null;

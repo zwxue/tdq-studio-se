@@ -63,6 +63,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private static final String DEFINITION_FILE_NAME = ".Talend.definition";
 
+    private List<IMigrationTask> commonTasks = new ArrayList<IMigrationTask>();
+
     private File versionFile;
 
     private File definitionFile;
@@ -222,13 +224,12 @@ public class FileSystemImportWriter implements IImportWriter {
                     break;
                 }
 
-                // Map<IPath, IPath> toImportMap = mapping(record);
+                Map<IPath, IPath> toImportMap = mapping(record);
 
                 monitor.subTask("Importing " + record.getName());
 
                 if (record.isValid()) {
                     log.info("Importing " + record.getFile().getAbsolutePath());
-                    System.out.println("Importing " + record.getFile().getAbsolutePath());
 
                     if (record.getElement() != null) {
                         ModelElement element = record.getElement();
@@ -238,14 +239,11 @@ public class FileSystemImportWriter implements IImportWriter {
                             IPath folderPath = new Path(typedConstant.getPath());
 
                             ItemState state = property.getItem().getState();
-                            if (state != null) {
+                            if (state != null && state.getPath() != null) {
                                 folderPath.append(state.getPath());
                             }
 
                             IFolder folder = ResourceManager.getRootProject().getFolder(folderPath);
-                            // IFile file = folder.getFile(element.eResource().getURI().lastSegment());
-
-                            // URI desURI = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
 
                             ElementWriterFactory.getInstance().create(element).create(element, folder);
                         }
@@ -291,6 +289,10 @@ public class FileSystemImportWriter implements IImportWriter {
                 DefinitionHandler.getInstance();
             }
         }
+
+        if (commonTasks != null) {
+            MigrationTaskManager.doMigrationTask(commonTasks, monitor);
+        }
     }
 
     /*
@@ -300,7 +302,8 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     public void migration(IProgressMonitor monitor) {
 
-        List<IMigrationTask> migrationTasks = new ArrayList<IMigrationTask>();
+        List<IMigrationTask> modelTasks = new ArrayList<IMigrationTask>();
+
         if (versionFile != null && versionFile.exists()) {
             ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
             Iterator<IMigrationTask> it = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE, version)
@@ -309,17 +312,19 @@ public class FileSystemImportWriter implements IImportWriter {
                 IMigrationTask task = it.next();
                 if (isModelTask(task)) {
                     ((AbstractWorksapceUpdateTask) task).setWorkspacePath(basePath);
-                    migrationTasks.add(task);
+                    modelTasks.add(task);
+                } else {
+                    commonTasks.add(task);
                 }
             }
 
         }
 
-        if (!migrationTasks.isEmpty()) {
+        if (!modelTasks.isEmpty()) {
             if (monitor == null) {
                 monitor = new NullProgressMonitor();
             }
-            MigrationTaskManager.doMigrationTask(migrationTasks, monitor);
+            MigrationTaskManager.doMigrationTask(modelTasks, monitor);
 
             WorkspaceVersionHelper.storeVersion(versionFile);
         }

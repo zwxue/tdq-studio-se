@@ -31,6 +31,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
@@ -198,7 +200,11 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
             if (property != null) {
                 Item item = property.getItem();
-                property.setLabel(uri.lastSegment().split("_")[0]);
+                if (item instanceof ConnectionItem) {
+                    Connection conn = ((ConnectionItem) item).getConnection();
+                    property.setLabel(conn.getName());
+                }
+
                 IPath path = new Path(item.getState().getPath());
                 if (ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(),
                         ERepositoryObjectType.getItemType(item), path) == null) {

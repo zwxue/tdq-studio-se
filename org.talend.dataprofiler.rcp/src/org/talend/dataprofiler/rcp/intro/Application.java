@@ -27,6 +27,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.tweaklets.Tweaklets;
 import org.eclipse.ui.internal.tweaklets.WorkbenchImplementation;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.GlobalServiceRegister;
@@ -166,6 +167,8 @@ public class Application implements IApplication {
         repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), "");
         Context ctx = CoreRuntimePlugin.getInstance().getContext();
         ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
+
+        ReponsitoryContextBridge.initialized(project.getEmfProject(), project.getAuthor());
     }
 
     public boolean licenceAccept(Shell shell) {

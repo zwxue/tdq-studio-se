@@ -26,10 +26,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -40,6 +44,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(FileSystemImportWriter.class);
+
+    private EMFUtil emfUtil = new EMFUtil();
 
     private FilenameFilter nonPropertyFileFilter = new FilenameFilter() {
 
@@ -95,16 +101,41 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                         AElementPersistance writer = ElementWriterFactory.getInstance().create(uri.fileExtension());
 
                         if (writer != null) {
-                            writer.savePerperties(modelElement);
+                            IPath propPath = new Path(modelElement.eResource().getURI().toFileString()).removeFileExtension()
+                                    .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+                            Property oldProperty = PropertyHelper.getProperty(modelElement);
+
+                            Property property = writer.createProperty(modelElement);
+                            if (property.getItem() instanceof TDQItem) {
+                                ((TDQItem) property.getItem()).setFilename(uri.lastSegment());
+                            }
+
+                            if (oldProperty != null && oldProperty.getItem() != null) {
+                                property.setAuthor(oldProperty.getAuthor());
+                                property.getItem().setState(oldProperty.getItem().getState());
+                            }
+
+                            emfUtil.addPoolToResourceSet(propPath.toFile(), property);
+
+                            Resource propertyResource = property.eResource();
+                            propertyResource.getContents().add(property);
+                            propertyResource.getContents().add(property.getItem());
+                            propertyResource.getContents().add(property.getItem().getState());
+
+                            EMFUtil.saveResource(propertyResource);
                         } else {
                             log.warn("Can't create the writer of " + modelElement.getName());
                         }
                     } else {
-                        log.warn("Can't get the modelement : " + eObject.toString());
+                        log.warn("Can't get the model elment : " + eObject.toString());
                     }
                 }
             }
         }
+
+        emfUtil = null;
+
         return true;
     }
 
@@ -125,7 +156,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
     public Date getOrder() {
         // MOD xqliu 2010-09-15 bug 13941 this task should be called before ExchangeFileNameToReferenceTask
         // return createDate(2010, 8, 17);
-        return createDate(2010, 8, 12);
+        return createDate(2010, 8, 15);
     }
 
     // /**

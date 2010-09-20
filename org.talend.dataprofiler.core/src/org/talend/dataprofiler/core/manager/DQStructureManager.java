@@ -39,6 +39,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.context.Context;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -365,7 +366,9 @@ public final class DQStructureManager {
             if (modelElement != null) {
                 AElementPersistance writer = ElementWriterFactory.getInstance().create(file.getFileExtension());
                 if (writer != null) {
-                    writer.save(modelElement);
+                    IPath propPath = file.getFullPath().removeFileExtension()
+                            .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+                    writer.createProperty(modelElement, propPath);
                 }
             }
         }

@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -36,14 +35,11 @@ import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.properties.TDQItem;
-import org.talend.core.model.properties.User;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -98,45 +94,45 @@ public abstract class AElementPersistance {
         return trc;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * DOC bZhou Comment method "create".
      * 
-     * @see org.talend.dq.writer.IElementPersistence#save(orgomg.cwm.objectmodel.core.ModelElement,
-     * org.eclipse.core.resources.IFile)
+     * @param element
+     * @param file
+     * @return
      */
     public ReturnCode create(ModelElement element, IFile file) {
+        return create(element, file, true);
+    }
+
+    /**
+     * DOC bZhou Comment method "create".
+     * 
+     * @param element
+     * @param file
+     * @param withProperty
+     * @return
+     */
+    public ReturnCode create(ModelElement element, IFile file, boolean withProperty) {
         ReturnCode rc = new ReturnCode();
 
         if (!check(file)) {
             rc.setReturnCode("Failed to save! the extent file name is wrong.", false);
-            // TODO filter element make that if element isn't a Connection don't use the API
-        } else if (element instanceof Connection) {
+        } else {
 
-            IPath filePath = file.getFullPath();
+            IPath itemPath = file.getFullPath();
+            IPath propPath = itemPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-            Property property = initProperty(element);
-            // property.setLabel(file.getName().substring(0, file.getName().indexOf('_')));
-            Item item = initItem(element, property);
-
-            try {
-                ProxyRepositoryFactory.getInstance().create(item, filePath.removeFirstSegments(3).removeLastSegments(1));// file.getFullPath().removeFirstSegments(3));
-            } catch (PersistenceException e) {
-                log.error(e, e);
+            if (withProperty) {
+                createProperty(element, propPath);
             }
 
-        } else {
-            String filePath = file.getFullPath().toString();
-
-            if (!util.addEObjectToResourceSet(filePath, element)) {
+            if (!util.addEObjectToResourceSet(itemPath.toString(), element)) {
                 rc.setReturnCode("Failed to save: " + util.getLastErrorMessage(), false);
             } else {
                 if (element instanceof RenderedObject) {
-                    ((RenderedObject) element).setFileName(filePath);
+                    ((RenderedObject) element).setFileName(itemPath.toString());
                 }
-
-                String propPaht = file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION)
-                        .toString();
-                MetadataHelper.setPropertyPath(propPaht, element);
 
                 rc = save(element);
             }
@@ -146,115 +142,97 @@ public abstract class AElementPersistance {
     }
 
     /**
+     * DOC bZhou Comment method "createProperty".
      * 
-     * DOC mzhao bug:9012.
-     * 
-     * @param element
-     * @param file
+     * @param modelElement
+     * @param propPath
      * @return
      */
-    public ReturnCode saveWithoutProperty(ModelElement element, IFile file) {
-        ReturnCode rc = new ReturnCode();
+    public Property createProperty(ModelElement modelElement, IPath propPath) {
+        Property property = createProperty(modelElement);
 
-        if (!check(file)) {
-            rc.setReturnCode("Failed to element, the extent file name is wrong.", false);
-        } else {
-            String filePath = file.getFullPath().toString();
-            if (!util.addEObjectToResourceSet(filePath, element)) {
-                rc.setReturnCode("Failed to save pattern: " + util.getLastErrorMessage(), false);
-            } else {
-                addResourceContent(element);
-                addDependencies(element);
-                rc.setOk(util.saveResource(element.eResource()));
-                if (rc.isOk()) {
-                    rc.setMessage("save " + element.getName() + " is OK!");
-                } else {
-                    rc.setMessage(util.getLastErrorMessage());
-                }
-                if (rc.isOk() && element instanceof RenderedObject) {
-                    ((RenderedObject) element).setFileName(file.getFullPath().toString());
-                }
-            }
-        }
-        return rc;
-    }
+        util.addEObjectToResourceSet(propPath.toString(), property);
+        property.getItem().getState().setPath(computePath(property));
+        saveProperty(property);
 
-    /**
-     * DOC bZhou Comment method "savePerperties".
-     * 
-     * @param element
-     */
-    public Item getItem(ModelElement element) {
-        Resource resource = element.eResource();
-        String fileName = resource.getURI().lastSegment();
-
-        Property property = PropertyHelper.getProperty(element);
-        if (property == null) {
-            property = initProperty(element);
-        }
-
-        Item item = property.getItem();
-        if (item == null) {
-            item = initItem(element, property);
-        }
-        if (item instanceof TDQItem) {
-            ((TDQItem) item).setFilename(fileName);
-        }
-        URI uri = element.eResource().getURI();
-        fillProperties(property, uri);
-        String propertyPath = property.eResource().getURI().toPlatformString(true);
-        MetadataHelper.setPropertyPath(propertyPath, element);
-        return item;
-    }
-
-    /**
-     * DOC bZhou Comment method "savePerperties". need to delete
-     * 
-     * @param element
-     */
-    public Property savePerperties(ModelElement element) {
-        Resource resource = element.eResource();
-        String fileName = resource.getURI().lastSegment();
-
-        Property property = PropertyHelper.getProperty(element);
-        // MOD xqliu 2010-08-17 bug 13601
-        // if (property == null) {
-        // property = initProperty(element);
-        // }
-        property = initProperty(element, property);
-        // ~ 13601
-
-        Item item = property.getItem();
-        if (item == null) {
-            item = initItem(element, property);
-        }
-        if (item instanceof TDQItem) {
-            ((TDQItem) item).setFilename(fileName);
-        }
-        URI uri = element.eResource().getURI();
-        serialize(property, uri);
-
-        String propertyPath = property.eResource().getURI().toPlatformString(true);
-        MetadataHelper.setPropertyPath(propertyPath, element);
         return property;
     }
 
-    // TODO filter element make that if element isn't a Connection don't use the API
-    /*
-     * (non-Javadoc) need to delete
+    /**
+     * DOC bZhou Comment method "createProperty".
      * 
-     * @see org.talend.dq.writer.IElementSerialize#serialize(org.talend.core.model.properties.Property,
-     * org.eclipse.emf.common.util.URI)
+     * @param modelElement
+     * @return
      */
-    public ReturnCode serialize(Property property, URI uri) {
-        ReturnCode rc = new ReturnCode();
+    public Property createProperty(ModelElement modelElement) {
+        Property property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        property.setAuthor(ReponsitoryContextBridge.getUser());
 
-        URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        Resource propertyResource = property.eResource();
-        if (propertyResource == null) {
-            propertyResource = util.createResource(propertiesURI);
+        String purpose = MetadataHelper.getPurpose(modelElement);
+        String description = MetadataHelper.getDescription(modelElement);
+        String version = MetadataHelper.getVersion(modelElement);
+        String status = MetadataHelper.getDevStatus(modelElement);
+
+        property.setId(EcoreUtil.generateUUID());
+        property.setLabel(modelElement.getName());
+        property.setPurpose(purpose);
+        property.setDescription(description);
+        property.setStatusCode(status);
+        property.setVersion(version);
+        property.setCreationDate(new Date());
+
+        computePropertyMaxInformationLevel(property);
+
+        Item item = createItem(modelElement);
+        property.setItem(item);
+        item.setProperty(property);
+
+        return property;
+    }
+
+    private String computePath(Property property) {
+        Resource eResource = property.eResource();
+        if (eResource != null) {
+            IPath propPath, typedPath;
+
+            URI propURI = eResource.getURI();
+            if (propURI.isPlatform()) {
+                propPath = new Path(propURI.toPlatformString(true)).removeLastSegments(1);
+                typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
+
+                IPath itemPath = propPath.makeRelativeTo(typedPath);
+
+                return itemPath.toString();
+            }
         }
 
+        return "";
+    }
+
+    private void computePropertyMaxInformationLevel(Property property) {
+        EList<Information> informations = property.getInformations();
+        InformationLevel maxLevel = null;
+        for (Information information : informations) {
+            int value = information.getLevel().getValue();
+            if (maxLevel == null || value > maxLevel.getValue()) {
+                maxLevel = information.getLevel();
+            }
+        }
+        property.setMaxInformationLevel(maxLevel);
+    }
+
+    /**
+     * DOC bZhou Comment method "saveProperty".
+     * 
+     * @param property
+     * @return
+     */
+    public ReturnCode saveProperty(Property property) {
+        ReturnCode rc = new ReturnCode();
+
+        property.setModificationDate(new Date());
+
+        Resource propertyResource = property.eResource();
         propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getItem());
         propertyResource.getContents().add(property.getItem().getState());
@@ -264,10 +242,11 @@ public abstract class AElementPersistance {
         return rc;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * DOC bZhou Comment method "save".
      * 
-     * @see org.talend.dq.writer.IElementPersistence#save(orgomg.cwm.objectmodel.core.ModelElement)
+     * @param element
+     * @return
      */
     public ReturnCode save(ModelElement element) {
         ReturnCode rc = new ReturnCode();
@@ -275,159 +254,20 @@ public abstract class AElementPersistance {
         addDependencies(element);
 
         addResourceContent(element);
-        // TODO filter element make sure that if element isn't a Connection don't use the API
-        if (element instanceof Connection) {
-            Item item = getItem(element);
-            try {
-                ProxyRepositoryFactory.getInstance().save(item);
-            } catch (PersistenceException e) {
-                log.error(e, e);
-                rc.setOk(Boolean.FALSE);
-                rc.setMessage(e.getMessage());
-            }
+
+        rc.setOk(util.saveResource(element.eResource()));
+
+        if (rc.isOk()) {
+            rc.setMessage("save " + element.getName() + " is OK!");
+            ProxyRepositoryManager.getInstance().save();
         } else {
-            savePerperties(element);
-
-            rc.setOk(util.saveResource(element.eResource()));
-
-            if (rc.isOk()) {
-                rc.setMessage("save " + element.getName() + " is OK!");
-                ProxyRepositoryManager.getInstance().save();
-            } else {
-                rc.setMessage(util.getLastErrorMessage());
-            }
-
+            rc.setMessage(util.getLastErrorMessage());
         }
+
         return rc;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.IElementSerialize#initProperty(orgomg.cwm.objectmodel.core.ModelElement)
-     */
-    public Property initProperty(ModelElement element) {
-        // Property property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
-        Property property = null;
-        if (element.eResource() != null) {
-            property = PropertyHelper.getProperty(element);
-        }
-        boolean firstCreate = false;
-        if (property == null) {
-            property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
-            firstCreate = true;
-        }
-        // String author = MetadataHelper.getAuthor(element); // MOD xqliu 2010-07-05 bug 14111
-        String purpose = MetadataHelper.getPurpose(element);
-        String description = MetadataHelper.getDescription(element);
-        String version = MetadataHelper.getVersion(element);
-        String status = MetadataHelper.getDevStatus(element);
-
-        User user = ReponsitoryContextBridge.getUser();
-        if (user != null) {
-            // user.setLogin(author); // MOD xqliu 2010-07-05 bug 14111
-            property.setAuthor(user);
-        }
-
-        property.setId(EcoreUtil.generateUUID());
-        property.setLabel(element.getName());
-        property.setPurpose(purpose);
-        property.setDescription(description);
-        property.setStatusCode(status);
-        property.setVersion(version);
-        // property.setCreationDate(new Date());
-        // MOD xqliu 2010-08-17 bug 13601
-        if (firstCreate) {
-            property.setCreationDate(new Date());
-        } else {
-            property.setModificationDate(new Date());
-        }
-        // ~ 13601
-        computePropertyMaxInformationLevel(property);
-
-        return property;
-    }
-
-    // TODO filter element make that if element isn't a Connection don't use the API
-    /*
-     * (non-Javadoc) need to delete
-     * 
-     * @see org.talend.dq.writer.IElementSerialize#initProperty(orgomg.cwm.objectmodel.core.ModelElement)
-     */
-    public Property initProperty(ModelElement element, Property property) {
-        boolean firstCreate = false;
-        if (property == null) {
-            property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
-            firstCreate = true;
-        }
-
-        // String author = MetadataHelper.getAuthor(element); // MOD xqliu 2010-07-05 bug 14111
-        String purpose = MetadataHelper.getPurpose(element);
-        String description = MetadataHelper.getDescription(element);
-        String version = MetadataHelper.getVersion(element);
-        String status = MetadataHelper.getDevStatus(element);
-
-        User user = ReponsitoryContextBridge.getUser();
-        if (user != null) {
-            // user.setLogin(author); // MOD xqliu 2010-07-05 bug 14111
-            property.setAuthor(user);
-        }
-
-        property.setId(EcoreUtil.generateUUID());
-        property.setLabel(element.getName());
-        property.setPurpose(purpose);
-        property.setDescription(description);
-        property.setStatusCode(status);
-        property.setVersion(version);
-        // MOD xqliu 2010-08-17 bug 13601
-        if (firstCreate) {
-            property.setCreationDate(new Date());
-        } else {
-            property.setModificationDate(new Date());
-        }
-        // ~ 13601
-
-        computePropertyMaxInformationLevel(property);
-
-        return property;
-    }
-
-    public Item initItem(ModelElement element, Property property) {
-        Item item = createItem(element);
-
-        if (item != null) {
-            item.setProperty(property);
-            property.setItem(item);
-
-            // create item state
-            ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
-            itemState.setDeleted(false);
-
-            // set the state path when first create it.
-            IPath propPath, typedPath;
-
-            if (element.eResource() != null) {
-                URI itemURI = element.eResource().getURI();
-                if (itemURI.isPlatform()) {
-                    propPath = new Path(itemURI.toPlatformString(true)).removeLastSegments(1);
-                    typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
-                } else {
-                    propPath = new Path(itemURI.toFileString()).removeLastSegments(1);
-                    typedPath = ResourceManager.getRootProject().getLocation().append(PropertyHelper.getItemTypedPath(property));
-                }
-
-                IPath itemPath = propPath.makeRelativeTo(typedPath);
-                itemState.setPath(itemPath.toString());
-            }
-
-            item.setState(itemState);
-
-        }
-
-        return item;
-    }
-
-    protected Item createItem(ModelElement element) {
+    public Item createItem(ModelElement element) {
         Item item = null;
         // MOD mzhao feature 13114, 2010-05-19 distinguish tdq items.
         if (ModelElementIdentifier.isAnalysis(element)) {
@@ -450,61 +290,22 @@ public abstract class AElementPersistance {
         } else {
             item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createTDQItem();
         }
+
+        ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
+        itemState.setDeleted(false);
+        item.setState(itemState);
+
         return item;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.IElementSerialize#serialize(org.talend.core.model.properties.Property,
-     * org.eclipse.emf.common.util.URI)
-     */
-    public ReturnCode fillProperties(Property property, URI uri) {
-        ReturnCode rc = new ReturnCode();
-
-        URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-        propertiesURI.toPlatformString(true);
-        Resource propertyResource = property.eResource();
-        if (propertyResource == null) {
-            propertyResource = util.createResource(propertiesURI);
-        }
-
-        // set the state path when first create it.
-        IPath propPath = new Path(propertiesURI.toPlatformString(true)).removeLastSegments(1);
-        IPath typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
-        IPath itemPath = propPath.makeRelativeTo(typedPath);
-        property.getItem().getState().setPath(itemPath.toString());
-
-        propertyResource.getContents().add(property);
-        propertyResource.getContents().add(property.getItem());
-        propertyResource.getContents().add(property.getItem().getState());
-        return rc;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.IElementPersistence#check(org.eclipse.core.resources.IFile)
-     */
-    public boolean check(IFile file) {
-        return getFileExtension().equalsIgnoreCase(file.getFileExtension());
-    }
-
     /**
-     * DOC bZhou Comment method "computePropertyMaxInformationLevel".
+     * DOC bZhou Comment method "check".
      * 
-     * @param property
+     * @param file
+     * @return
      */
-    protected void computePropertyMaxInformationLevel(Property property) {
-        EList<Information> informations = property.getInformations();
-        InformationLevel maxLevel = null;
-        for (Information information : informations) {
-            int value = information.getLevel().getValue();
-            if (maxLevel == null || value > maxLevel.getValue()) {
-                maxLevel = information.getLevel();
-            }
-        }
-        property.setMaxInformationLevel(maxLevel);
+    protected boolean check(IFile file) {
+        return getFileExtension().equalsIgnoreCase(file.getFileExtension());
     }
 
     /**

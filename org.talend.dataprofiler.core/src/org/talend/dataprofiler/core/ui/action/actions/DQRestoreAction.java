@@ -72,7 +72,7 @@ public class DQRestoreAction extends Action {
                     ProxyRepositoryFactory.getInstance().save(propertyTMP);
                     EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
 
-                    ReturnCode rc = ElementWriterFactory.getInstance().createDataProviderWriter().save(property);
+                    ReturnCode rc = ElementWriterFactory.getInstance().createDataProviderWriter().saveProperty(property);
                     if (!rc.isOk())
                         return;
                 } else {

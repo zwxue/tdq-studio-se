@@ -16,6 +16,7 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
@@ -27,6 +28,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.utils.sugars.ReturnCode;
@@ -45,6 +47,53 @@ public class DataProviderWriter extends AElementPersistance {
      */
     DataProviderWriter() {
         super();
+    }
+
+    @Override
+    public ReturnCode create(ModelElement element, IFile file) {
+        ReturnCode rc = new ReturnCode();
+
+        IPath itemPath = file.getFullPath();
+
+        Property property = createProperty(element);
+        Item item = property.getItem();
+
+        try {
+            ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(3).removeLastSegments(1));
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+
+        return rc;
+    }
+
+    @Override
+    public ReturnCode saveProperty(Property property) {
+        ReturnCode rc = new ReturnCode();
+        try {
+            ProxyRepositoryFactory.getInstance().save(property);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+
+        return rc;
+    }
+
+    @Override
+    public ReturnCode save(ModelElement element) {
+        ReturnCode rc = new ReturnCode();
+
+        Item item = PropertyHelper.getProperty(element).getItem();
+        try {
+            ProxyRepositoryFactory.getInstance().save(item);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
     }
 
     /*
@@ -133,16 +182,5 @@ public class DataProviderWriter extends AElementPersistance {
         }
         return rc;
     }
-    
-    public ReturnCode save(Property property) {
-        ReturnCode rc = new ReturnCode();
-        try {
-            ProxyRepositoryFactory.getInstance().save(property);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
-        }
-        return rc;
-    }
+
 }
