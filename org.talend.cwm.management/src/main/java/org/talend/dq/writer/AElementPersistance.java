@@ -35,6 +35,7 @@ import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.properties.PropertiesFactory;
@@ -124,7 +125,12 @@ public abstract class AElementPersistance {
             IPath propPath = itemPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
             if (withProperty) {
-                createProperty(element, propPath);
+                Property property = createProperty(element, propPath);
+                if (property.getItem() instanceof TDQItem) {
+                    ((TDQItem) property.getItem()).setFilename(file.getName());
+                    saveProperty(property);
+                }
+
             }
 
             if (!util.addEObjectToResourceSet(itemPath.toString(), element)) {
