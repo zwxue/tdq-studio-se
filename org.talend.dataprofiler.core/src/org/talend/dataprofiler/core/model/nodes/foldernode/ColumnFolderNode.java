@@ -108,6 +108,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             // MOD scorreia 2009-01-29 columns are stored in the table
             // ColumnSetHelper.addColumns(columnSet, columnList);
             this.setChildren(columnList.toArray());
+            ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
             ProxyRepositoryViewObject.save(conn);
         }
         super.loadChildren();
