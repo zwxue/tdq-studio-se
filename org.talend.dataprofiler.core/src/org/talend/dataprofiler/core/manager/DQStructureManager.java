@@ -368,7 +368,7 @@ public final class DQStructureManager {
                 if (writer != null) {
                     IPath propPath = file.getFullPath().removeFileExtension()
                             .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-                    writer.createProperty(modelElement, propPath);
+                    writer.createProperty(modelElement, propPath, file.getName());
                 }
             }
         }
