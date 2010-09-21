@@ -16,9 +16,8 @@ import java.util.Date;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
-import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;

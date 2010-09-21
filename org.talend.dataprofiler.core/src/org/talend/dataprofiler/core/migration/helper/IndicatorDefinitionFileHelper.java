@@ -13,7 +13,7 @@
 package org.talend.dataprofiler.core.migration.helper;
 
 import org.apache.log4j.Logger;
-import org.talend.dataquality.expressions.TdExpression;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;

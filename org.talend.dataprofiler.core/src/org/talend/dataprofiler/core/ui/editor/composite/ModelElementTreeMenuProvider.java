@@ -354,6 +354,8 @@ public abstract class ModelElementTreeMenuProvider {
                 ModelElementIndicator meIndicator = (ModelElementIndicator) selection[0]
                         .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
                 ModelElement me = meIndicator.getModelElement();
+
+                CorePlugin.getDefault().refreshDQView();
                 dqview.showSelectedElements(me);
 
             } catch (Exception e) {

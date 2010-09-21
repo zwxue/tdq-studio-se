@@ -15,12 +15,12 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.RelationalFactory;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
-import org.talend.dataquality.expressions.ExpressionsFactory;
-import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.PluginConstant;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
@@ -126,7 +126,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     public TdExpression getExpression() {
         if (expression == null) {
-            expression = ExpressionsFactory.eINSTANCE.createTdExpression();
+            expression = RelationalFactory.eINSTANCE.createTdExpression();
         }
         if (expression != null) {
             expression.setBody(this.getParameter().getExpression());

@@ -96,6 +96,7 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
@@ -1221,6 +1222,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 try {
                     TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
                     NamedColumnSet set = tableIndicator.getColumnSet();
+                    ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true);
+                    CorePlugin.getDefault().refreshWorkSpace();
+                    CorePlugin.getDefault().refreshDQView();
                     dqview.showSelectedElements(set);
 
                 } catch (Exception e) {

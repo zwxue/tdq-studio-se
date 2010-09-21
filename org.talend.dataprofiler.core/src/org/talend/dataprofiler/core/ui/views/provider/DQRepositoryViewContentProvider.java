@@ -128,7 +128,33 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
         if (element instanceof IFile) {
             return ((IResource) element).getParent();
         }
-        return super.getParent(element);
+        // MOD make the subNode of connection can find IRepositoryViewObject on the DQView instead of the file of
+        // connection.
+        Object returnObj = super.getParent(element);
+        // if (returnObj instanceof CwmResource) {
+        // for (EObject conn : ((CwmResource) returnObj).getContents()) {
+        // if (conn instanceof Connection) {
+        // IRepositoryViewObject repObjec = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) conn);
+        // if (repObjec == null) {
+        // break;
+        // }
+        // return repObjec;
+        // }
+        // }
+        // } else if (returnObj == null && element instanceof PackageImpl && ((PackageImpl)
+        // element).getDataManager().size() > 0) {
+        // for (EObject conn : ((PackageImpl) element).getDataManager()) {
+        // if (conn instanceof Connection) {
+        // IRepositoryViewObject repObjec = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) conn);
+        //                    
+        // if (repObjec == null) {
+        // break;
+        // }
+        // return repObjec;
+        // }
+        // }
+        // }
+        return returnObj;
     }
 
     public boolean hasChildren(Object element) {

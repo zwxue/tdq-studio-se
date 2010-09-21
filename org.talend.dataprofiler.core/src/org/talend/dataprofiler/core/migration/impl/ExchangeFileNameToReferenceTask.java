@@ -137,7 +137,6 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
                                     ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
                                     connectionItem.setState(itemState);
                                 }
-
                                 property.setItem(connectionItem);
                                 property.eResource().getContents().add(connectionItem);
                                 ProxyRepositoryFactory.getInstance().save(property);
