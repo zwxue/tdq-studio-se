@@ -66,7 +66,7 @@ public class ColumnBuilder extends CwmBuilder {
         ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         while (columns.next()) {
             TdColumn column = RelationalFactory.eINSTANCE.createTdColumn();
-            tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column, connection));
+            tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column));
         }
         columns.close();
         return tableColumns;
