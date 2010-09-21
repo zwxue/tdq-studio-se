@@ -125,12 +125,7 @@ public abstract class AElementPersistance {
             IPath propPath = itemPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
             if (withProperty) {
-                Property property = createProperty(element, propPath);
-                if (property.getItem() instanceof TDQItem) {
-                    ((TDQItem) property.getItem()).setFilename(file.getName());
-                    saveProperty(property);
-                }
-
+                Property property = createProperty(element, propPath, file.getName());
             }
 
             if (!util.addEObjectToResourceSet(itemPath.toString(), element)) {
@@ -154,11 +149,15 @@ public abstract class AElementPersistance {
      * @param propPath
      * @return
      */
-    public Property createProperty(ModelElement modelElement, IPath propPath) {
+    public Property createProperty(ModelElement modelElement, IPath propPath, String fileName) {
         Property property = createProperty(modelElement);
 
         util.addEObjectToResourceSet(propPath.toString(), property);
         property.getItem().getState().setPath(computePath(property));
+        if (property.getItem() instanceof TDQItem) {
+            ((TDQItem) property.getItem()).setFilename(fileName);
+        }
+
         saveProperty(property);
 
         return property;
