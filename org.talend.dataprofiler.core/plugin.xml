@@ -620,7 +620,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.ImportExportIndicatorProvider">
          <enablement>
             <instanceof
-                  value="org.talend.dataprofiler.core.model.nodes.foldernode.IndicatorFolderNode">
+                  value="org.eclipse.core.resources.IFolder">
             </instanceof>
          </enablement>
       </actionProvider>

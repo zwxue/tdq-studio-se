@@ -166,6 +166,15 @@ public final class ResourceManager {
     }
 
     /**
+     * DOC xqliu Comment method "getSystemIndicatorFolder".
+     * 
+     * @return
+     */
+    public static IFolder getSystemIndicatorFolder() {
+        return getOneFolder(EResourceConstant.SYSTEM_INDICATORS);
+    }
+
+    /**
      * DOC bZhou Comment method "getUDIFolder".
      * 
      * @return

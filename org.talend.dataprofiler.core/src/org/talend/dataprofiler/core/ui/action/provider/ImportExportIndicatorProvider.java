@@ -12,9 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.ExportIndicatorDefinitionAction;
 import org.talend.dataprofiler.core.ui.action.actions.ImportIndicatorDefinitionAction;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -32,7 +35,21 @@ public class ImportExportIndicatorProvider extends AbstractCommonActionProvider 
         if (!isShowMenu()) {
             return;
         }
-        menu.add(new ImportIndicatorDefinitionAction());
-        menu.add(new ExportIndicatorDefinitionAction());
+        // MOD xqliu 2010-09-21 bug 15269
+        TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
+        Object firstElement = currentSelection.getFirstElement();
+        if (firstElement instanceof IFolder) {
+            String sysIndicatorFolderPath = ResourceManager.getSystemIndicatorFolder().getFullPath().toOSString();
+            String selectedFolderPath = ((IFolder) firstElement).getFullPath().toOSString();
+            if (selectedFolderPath.startsWith(sysIndicatorFolderPath)) {
+                menu.add(new ImportIndicatorDefinitionAction());
+                menu.add(new ExportIndicatorDefinitionAction());
+            } else {
+                // don't create any menu
+            }
+        } else {
+            // don't create any menu
+        }
+        // ~ 15269
     }
 }
