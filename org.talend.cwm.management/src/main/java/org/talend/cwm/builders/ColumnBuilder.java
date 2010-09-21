@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.util.TDColumnAttributeHelper;
+import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 
@@ -64,7 +65,8 @@ public class ColumnBuilder extends CwmBuilder {
         // --- add columns to table
         ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         while (columns.next()) {
-            tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, connection));
+            TdColumn column = RelationalFactory.eINSTANCE.createTdColumn();
+            tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column));
         }
         columns.close();
         return tableColumns;
