@@ -53,7 +53,7 @@ public class FirstNameStandardize {
         this.hitsPerPage = hitsPerPage;
     }
 
-    public ScoreDoc[] standardize(String input, boolean fuzzyQuery) throws ParseException, IOException {
+    private ScoreDoc[] standardize(String input, boolean fuzzyQuery) throws ParseException, IOException {
 
         if (input == null || input.length() == 0) {
             return new ScoreDoc[0];
