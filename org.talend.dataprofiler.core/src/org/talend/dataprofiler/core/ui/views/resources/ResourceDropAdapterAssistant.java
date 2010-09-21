@@ -49,6 +49,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -141,6 +142,17 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 if (resource != null) {
                     URI desUri = URI.createPlatformResourceURI(folder.getFullPath().toString(), false);
                     EMFSharedResources.getInstance().saveToUri(resource, desUri);
+                    // ADD xqliu 2010-09-21 bug 15685
+                    IFile propertyFile = PropertyHelper.getPropertyFile(fileRes);
+                    if (propertyFile != null) {
+                        IFile movedPropertyFile = folder.getFile(propertyFile.getName());
+                        try {
+                            propertyFile.move(movedPropertyFile.getFullPath(), true, null);
+                        } catch (CoreException e) {
+                            ExceptionHandler.process(e);
+                        }
+                    }
+                    // ~ 15685
                 }
                 try {
                     closeEditorIfOpened(fileRes);
