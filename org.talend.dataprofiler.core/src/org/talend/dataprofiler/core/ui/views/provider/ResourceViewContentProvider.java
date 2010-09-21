@@ -169,9 +169,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 // .fetchRepositoryViewObjectsWithFolder(Boolean.FALSE);
 
                 List<Object> returnList = new ArrayList<Object>();
-                if (ResourcesPlugin.getWorkspace().isTreeLocked()) {
-                    return returnList.toArray();
-                }
                 IPath path = folder.getFullPath().makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
                 List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
                         ERepositoryObjectType.METADATA_CONNECTIONS, path);
