@@ -73,8 +73,8 @@
     <taggedValue xmi:id="_Be9KwZ6uEd6t2KtWPIcDmg" tag="Purpose" value="analyze any real function of the data"/>
   </categories>
   <categories xmi:id="_Ba7OYXsXEd63r-VLO3_0OQ" name="User Defined Match" label="User Defined Match">
-    <taggedValue xmi:id="_C-wYoHsXEd63r-VLO3_0OQ" tag="Description" value="contains user defined indicators for pattern matching. The result set expected from this kind of indicator must contain one row and two columns. The first column contains the matching count. The second column contains the total count. "/>
-    <taggedValue xmi:id="_Ddm30HsXEd63r-VLO3_0OQ" tag="Purpose" value="evaluate the number of data matching a pattern (regular expression or SQL like expression) "/>
+    <taggedValue xmi:id="_C-wYoHsXEd63r-VLO3_0OQ" tag="Description" value="contains user defined indicators for condition matching. The result set expected from this kind of indicator must contain one row and two columns. The first column contains the count of the data matching the condition. The second column contains the total count. "/>
+    <taggedValue xmi:id="_Ddm30HsXEd63r-VLO3_0OQ" tag="Purpose" value="evaluate the number of data matching a condition "/>
   </categories>
   <categories xmi:id="_Frd2gHsXEd63r-VLO3_0OQ" name="User Defined Frequency" label="User Defined Frequency">
     <taggedValue xmi:id="_GzSaMHsXEd63r-VLO3_0OQ" tag="Description" value="contains user defined indicators for each distinct record, counts the number of records. The result set expected from this kind of indicator must contain 0 or more rows and two columns. The first column is a label, the second column is a count related to the label. "/>
