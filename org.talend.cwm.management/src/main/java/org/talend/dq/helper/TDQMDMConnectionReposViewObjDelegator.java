@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.Item;
@@ -53,9 +52,6 @@ public final class TDQMDMConnectionReposViewObjDelegator extends TDQConnectionRe
     @Override
     protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower() {
         List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
-        if (ResourcesPlugin.getWorkspace().isTreeLocked()) {
-            return connList;
-        }
         try {
             // ProxyRepositoryFactory.getInstance().initialize();
             // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataConnection(

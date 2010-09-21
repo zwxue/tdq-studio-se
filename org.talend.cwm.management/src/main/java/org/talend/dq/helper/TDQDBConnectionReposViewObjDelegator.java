@@ -15,7 +15,6 @@ package org.talend.dq.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
@@ -44,9 +43,6 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
 
     protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower() {
         List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
-        if (ResourcesPlugin.getWorkspace().isTreeLocked()) {
-            return connList;
-        }
         try {
             // ProxyRepositoryFactory.getInstance().initialize();
             // connList.addAll(ProxyRepositoryFactory.getInstance().getAllVersion("_Qhb-I7p0Ed-F2eBqMU9vww", "",
