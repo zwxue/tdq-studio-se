@@ -14,9 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
@@ -120,11 +118,13 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     }
 
                     if (theElementName.equals(elementName)) {
-                        if (!MessageUI.openConfirm(UIMessages.MSG_ANALYSIS_SAME_NAME)) {
-                            getParameter().setName(elementName + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
-                        }
-
-                        break;
+                        // MOD xqliu 2010-09-21 bug 15762
+                        return new ReturnCode(UIMessages.MSG_ANALYSIS_SAME_NAME, false);
+                        // if (!MessageUI.openConfirm(UIMessages.MSG_ANALYSIS_SAME_NAME)) {
+                        //                            getParameter().setName(elementName + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
+                        // }
+                        // break;
+                        // ~ 15762
                     }
                 }
             }

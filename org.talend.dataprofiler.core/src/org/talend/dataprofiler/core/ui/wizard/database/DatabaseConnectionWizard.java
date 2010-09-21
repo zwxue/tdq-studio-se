@@ -59,6 +59,8 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     private ManagedDriver driver;
 
+    private boolean canFinishFlag = true;
+
     /**
      * Constructor for DatabaseWizard. Analyse Iselection to extract DatabaseConnection and the pathToSave. Start the
      * Lock Strategy.
@@ -123,6 +125,19 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
         reposViewObjRC.setObject(ProxyRepositoryViewObject.getRepositoryViewObject((Connection) cwmElement));
         return reposViewObjRC;
+    }
+
+    @Override
+    public boolean performFinish() {
+        this.canFinishFlag = false;
+        boolean result = super.performFinish();
+        this.canFinishFlag = true;
+        return result;
+    }
+
+    @Override
+    public boolean canFinish() {
+        return canFinishFlag;
     }
 
     public ModelElement initCWMResourceBuilder() {
