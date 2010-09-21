@@ -35,15 +35,6 @@ public interface ExpressionsFactory extends EFactory {
     BooleanExpressionNode createBooleanExpressionNode();
 
     /**
-     * Returns a new object of class '<em>Td Expression</em>'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return a new object of class '<em>Td Expression</em>'.
-     * @generated
-     */
-    TdExpression createTdExpression();
-
-    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

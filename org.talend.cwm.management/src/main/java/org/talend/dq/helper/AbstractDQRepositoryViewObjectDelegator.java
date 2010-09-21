@@ -217,7 +217,13 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
         if (reload) {
             fetchRepositoryViewObjectsLower();
         }
-        return ProxyRepositoryFactory.getInstance().getMetadataByFolder(itemType, path);
+        List<IRepositoryViewObject> folderRepositoryObjectList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(
+                itemType, path);
+        // List<IRepositoryViewObject> returnList = new ArrayList<IRepositoryViewObject>();
+        // for (IRepositoryViewObject newRepositoryObject : folderRepositoryObjectList) {
+        // returnList.add(this.getReposViewObjByProperty(newRepositoryObject.getProperty()));
+        // }
+        return folderRepositoryObjectList;
 
     }
 

@@ -107,62 +107,6 @@ public interface ExpressionsPackage extends EPackage {
 
 
     /**
-     * The meta object id for the '{@link org.talend.dataquality.expressions.impl.TdExpressionImpl <em>Td Expression</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.dataquality.expressions.impl.TdExpressionImpl
-     * @see org.talend.dataquality.expressions.impl.ExpressionsPackageImpl#getTdExpression()
-     * @generated
-     */
-    int TD_EXPRESSION = 1;
-
-    /**
-     * The feature id for the '<em><b>Body</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TD_EXPRESSION__BODY = CorePackage.EXPRESSION__BODY;
-
-    /**
-     * The feature id for the '<em><b>Language</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TD_EXPRESSION__LANGUAGE = CorePackage.EXPRESSION__LANGUAGE;
-
-    /**
-     * The feature id for the '<em><b>Version</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TD_EXPRESSION__VERSION = CorePackage.EXPRESSION_FEATURE_COUNT + 0;
-
-    /**
-     * The feature id for the '<em><b>Modification Date</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TD_EXPRESSION__MODIFICATION_DATE = CorePackage.EXPRESSION_FEATURE_COUNT + 1;
-
-    /**
-     * The number of structural features of the '<em>Td Expression</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TD_EXPRESSION_FEATURE_COUNT = CorePackage.EXPRESSION_FEATURE_COUNT + 2;
-
-
-    /**
      * Returns the meta object for class '{@link org.talend.dataquality.expressions.BooleanExpressionNode <em>Boolean Expression Node</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -171,38 +115,6 @@ public interface ExpressionsPackage extends EPackage {
      * @generated
      */
     EClass getBooleanExpressionNode();
-
-    /**
-     * Returns the meta object for class '{@link org.talend.dataquality.expressions.TdExpression <em>Td Expression</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Td Expression</em>'.
-     * @see org.talend.dataquality.expressions.TdExpression
-     * @generated
-     */
-    EClass getTdExpression();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.expressions.TdExpression#getVersion <em>Version</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Version</em>'.
-     * @see org.talend.dataquality.expressions.TdExpression#getVersion()
-     * @see #getTdExpression()
-     * @generated
-     */
-    EAttribute getTdExpression_Version();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.expressions.TdExpression#getModificationDate <em>Modification Date</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Modification Date</em>'.
-     * @see org.talend.dataquality.expressions.TdExpression#getModificationDate()
-     * @see #getTdExpression()
-     * @generated
-     */
-    EAttribute getTdExpression_ModificationDate();
 
     /**
      * Returns the factory that creates the instances of the model.
@@ -235,29 +147,6 @@ public interface ExpressionsPackage extends EPackage {
          * @generated
          */
         EClass BOOLEAN_EXPRESSION_NODE = eINSTANCE.getBooleanExpressionNode();
-        /**
-         * The meta object literal for the '{@link org.talend.dataquality.expressions.impl.TdExpressionImpl <em>Td Expression</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @see org.talend.dataquality.expressions.impl.TdExpressionImpl
-         * @see org.talend.dataquality.expressions.impl.ExpressionsPackageImpl#getTdExpression()
-         * @generated
-         */
-        EClass TD_EXPRESSION = eINSTANCE.getTdExpression();
-        /**
-         * The meta object literal for the '<em><b>Version</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute TD_EXPRESSION__VERSION = eINSTANCE.getTdExpression_Version();
-        /**
-         * The meta object literal for the '<em><b>Modification Date</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute TD_EXPRESSION__MODIFICATION_DATE = eINSTANCE.getTdExpression_ModificationDate();
 
     }
 

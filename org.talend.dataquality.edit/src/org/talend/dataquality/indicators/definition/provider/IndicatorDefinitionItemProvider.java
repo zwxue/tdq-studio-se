@@ -23,6 +23,7 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.talend.cwm.relational.RelationalFactory;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
@@ -260,17 +261,17 @@ public class IndicatorDefinitionItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION,
-                 ExpressionsFactory.eINSTANCE.createTdExpression()));
+                 RelationalFactory.eINSTANCE.createTdExpression()));
 
         newChildDescriptors.add
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
-                 ExpressionsFactory.eINSTANCE.createTdExpression()));
+                 RelationalFactory.eINSTANCE.createTdExpression()));
 
         newChildDescriptors.add
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
-                 ExpressionsFactory.eINSTANCE.createTdExpression()));
+                 RelationalFactory.eINSTANCE.createTdExpression()));
 
         newChildDescriptors.add
             (createChildParameter

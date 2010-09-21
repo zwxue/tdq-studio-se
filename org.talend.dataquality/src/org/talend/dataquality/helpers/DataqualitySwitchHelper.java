@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.domain.DateValue;
@@ -23,7 +24,6 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.domain.util.DomainSwitch;
-import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.expressions.util.ExpressionsSwitch;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
@@ -110,6 +110,7 @@ public final class DataqualitySwitchHelper {
         }
 
     };
+
     public static final PatternSwitch<Pattern> PATTERN_SWITCH = new PatternSwitch<Pattern>() {
 
         /*

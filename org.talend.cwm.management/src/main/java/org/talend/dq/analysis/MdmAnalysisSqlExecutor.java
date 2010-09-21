@@ -30,11 +30,11 @@ import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
-import org.talend.dataquality.expressions.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -58,6 +58,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
     private static Logger log = Logger.getLogger(MdmAnalysisSqlExecutor.class);
 
     private DbmsLanguage dbmsLanguage;
+
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
@@ -215,8 +216,9 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @throws ServiceException
      * @throws RemoteException
      */
-    private boolean runAnalysisIndicators(MdmWebserviceConnection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
-            Collection<Indicator> indicators) throws RemoteException, ServiceException {
+    private boolean runAnalysisIndicators(MdmWebserviceConnection connection,
+            Map<ModelElement, List<Indicator>> elementToIndicator, Collection<Indicator> indicators) throws RemoteException,
+            ServiceException {
         boolean ok = true;
         for (Indicator indicator : indicators) {
             // skip composite indicators that do not require a sql execution
@@ -258,8 +260,8 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @throws ServiceException
      * @throws RemoteException
      */
-    protected boolean executeQuery(Indicator indicator, MdmWebserviceConnection connection, String queryStmt) throws RemoteException,
-            ServiceException {
+    protected boolean executeQuery(Indicator indicator, MdmWebserviceConnection connection, String queryStmt)
+            throws RemoteException, ServiceException {
         TdXmlElementType analyzedElement = (TdXmlElementType) indicator.getAnalyzedElement();
         TdXmlSchema xmlDocument = analyzedElement.getOwnedDocument();
         if (log.isInfoEnabled()) {

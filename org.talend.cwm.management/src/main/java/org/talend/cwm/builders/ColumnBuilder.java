@@ -20,15 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.management.connection.DatabaseContentRetriever;
+import org.talend.core.model.metadata.builder.util.TDColumnAttributeHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSqlDataType;
-import org.talend.dataquality.expressions.TdExpression;
-import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.utils.sql.metadata.constants.GetColumn;
-import orgomg.cwm.resource.relational.enumerations.NullableType;
 
 /**
  * @author scorreia
@@ -70,113 +64,120 @@ public class ColumnBuilder extends CwmBuilder {
         // --- add columns to table
         ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         while (columns.next()) {
-            // TODO scorreia other informations for columns can be retrieved here
-            // get the default value
-            // MOD mzhao 2009-04-09,Bug 6840: fetch LONG or LONG RAW column first , as these kind of columns are read as
-            // stream,if not read by select order, there will be "Stream has already been closed" error.
-            // Don't move the below block ,if you move it that emerge up bug klliu 2010-09-07
-            Object defaultvalue = null;
-            try {
-                defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-            }
-            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
-            TdExpression defExpression = BooleanExpressionHelper.createTdExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
-
-            // MOD xqliu 2009-10-29 bug 9838
-            // MOD xqliu 2009-12-08 bug 9822, if use odbc connect to sqlserver the resultset is forward only!!!
-            String colName = null;
-            try {
-                colName = columns.getString(GetColumn.COLUMN_NAME.name());
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-                if (colName == null) {
-                    colName = e1.getMessage();
-                }
-            }
-            TdColumn column = ColumnHelper.createTdColumn(colName);
-
-            int dataType = 0;
-            try {
-                dataType = columns.getInt(GetColumn.DATA_TYPE.name());
-                // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously the sql
-                // data type it is null and results in a NPE
-            } catch (Exception e) {
-                log.warn(e, e);
-            }
-
-            String typeName = null;
-            try {
-                typeName = columns.getString(GetColumn.TYPE_NAME.name());
-                // MOD zshen when the database is mssql,the datatype for "date" and "time" is "-9" and "-2"
-                // ,respective.so change them to "91" and "92" for adapt to Java2SqlType.
-                if (ConnectionUtils.isMssql(connection)) {
-                    if (typeName.toLowerCase().equals("date")) {
-                        dataType = 91;
-                        // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously
-                        // the sql
-                        // data type it is null and results in a NPE
-                    } else if (typeName.toLowerCase().equals("time")) {
-                        dataType = 92;
-                        // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously
-                        // the sql
-                        // data type it is null and results in a NPE
-                    }
-                }
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-            }
-
-            try {
-                column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-            }
-
-            int decimalDigits = 0;
-            try {
-                decimalDigits = columns.getInt(GetColumn.DECIMAL_DIGITS.name());
-            } catch (Exception e) {
-                log.warn(e);
-            }
-
-            int numPrecRadix = 0;
-            try {
-                numPrecRadix = columns.getInt(GetColumn.NUM_PREC_RADIX.name());
-            } catch (Exception e) {
-                log.warn(e);
-            }
-
-            // get column description (comment)
-            try {
-                String colComment = getComment(colName, columns);
-                ColumnHelper.setComment(colComment, column);
-            } catch (Exception e) {
-                log.warn(e, e);
-            }
-
-            // --- create and set type of column
-            // TODO scorreia get type of column on demand, not on creation of column
-            // TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);
-            TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(dataType, typeName, decimalDigits, numPrecRadix);
-            column.setSqlDataType(sqlDataType);
-            // column.setType(sqlDataType); // it's only reference to previous sql data type
-
-            try {
-                column.getSqlDataType().setNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
-            } catch (Exception e1) {
-                log.warn(e1, e1);
-            }
-
-            column.setInitialValue(defExpression);
-            tableColumns.add(column);
+            tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, connection));
         }
-
-        // release JDBC resources
         columns.close();
-
         return tableColumns;
+        // TODO scorreia other informations for columns can be retrieved here
+        // get the default value
+        // MOD mzhao 2009-04-09,Bug 6840: fetch LONG or LONG RAW column first , as these kind of columns are read as
+        // stream,if not read by select order, there will be "Stream has already been closed" error.
+        // Don't move the below block ,if you move it that emerge up bug klliu 2010-09-07
+        // Object defaultvalue = null;
+        // try {
+        // defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
+        // } catch (Exception e1) {
+        // log.warn(e1, e1);
+        // }
+        // String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
+        // TdExpression defExpression = BooleanExpressionHelper.createTdExpression(GetColumn.COLUMN_DEF.name(),
+        // defaultStr);
+        //
+        // // MOD xqliu 2009-10-29 bug 9838
+        // // MOD xqliu 2009-12-08 bug 9822, if use odbc connect to sqlserver the resultset is forward only!!!
+        // String colName = null;
+        // try {
+        // colName = columns.getString(GetColumn.COLUMN_NAME.name());
+        // } catch (Exception e1) {
+        // log.warn(e1, e1);
+        // if (colName == null) {
+        // colName = e1.getMessage();
+        // }
+        // }
+        // TdColumn column = ColumnHelper.createTdColumn(colName);
+        //
+        // int dataType = 0;
+        // try {
+        // dataType = columns.getInt(GetColumn.DATA_TYPE.name());
+        // // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously the sql
+        // // data type it is null and results in a NPE
+        // } catch (Exception e) {
+        // log.warn(e, e);
+        // }
+        //
+        // String typeName = null;
+        // try {
+        // typeName = columns.getString(GetColumn.TYPE_NAME.name());
+        // // MOD zshen when the database is mssql,the datatype for "date" and "time" is "-9" and "-2"
+        // // ,respective.so change them to "91" and "92" for adapt to Java2SqlType.
+        // if (ConnectionUtils.isMssql(connection)) {
+        // if (typeName.toLowerCase().equals("date")) {
+        // dataType = 91;
+        // // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously
+        // // the sql
+        // // data type it is null and results in a NPE
+        // } else if (typeName.toLowerCase().equals("time")) {
+        // dataType = 92;
+        // // MOD scorreia 2010-07-24 removed the call to column.getSQLDataType() here because obviously
+        // // the sql
+        // // data type it is null and results in a NPE
+        // }
+        // }
+        // } catch (Exception e1) {
+        // log.warn(e1, e1);
+        // }
+        //
+        // try {
+        // column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
+        // } catch (Exception e1) {
+        // log.warn(e1, e1);
+        // }
+        //
+        // int decimalDigits = 0;
+        // try {
+        // decimalDigits = columns.getInt(GetColumn.DECIMAL_DIGITS.name());
+        // } catch (Exception e) {
+        // log.warn(e);
+        // }
+        //
+        // int numPrecRadix = 0;
+        // try {
+        // numPrecRadix = columns.getInt(GetColumn.NUM_PREC_RADIX.name());
+        // } catch (Exception e) {
+        // log.warn(e);
+        // }
+        //
+        // // get column description (comment)
+        // try {
+        // String colComment = getComment(colName, columns);
+        // ColumnHelper.setComment(colComment, column);
+        // } catch (Exception e) {
+        // log.warn(e, e);
+        // }
+        //
+        // // --- create and set type of column
+        // // TODO scorreia get type of column on demand, not on creation of column
+        // // TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);
+        // TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(dataType, typeName, decimalDigits,
+        // numPrecRadix);
+        // column.setSqlDataType(sqlDataType);
+        // // column.setType(sqlDataType); // it's only reference to previous sql data type
+        //
+        // try {
+        // column.getSqlDataType().setNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
+        // } catch (Exception e1) {
+        // log.warn(e1, e1);
+        // }
+        //
+        // column.setInitialValue(defExpression);
+        // tableColumns.add(column);
+        // }
+        //
+        // // release JDBC resources
+        // columns.close();
+        //
+        // return tableColumns;
+
     }
 
     /**

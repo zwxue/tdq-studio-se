@@ -19,6 +19,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.talend.cwm.relational.RelationalFactory;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 import org.talend.dataquality.expressions.ExpressionsFactory;
 import orgomg.cwm.foundation.expressions.ExpressionsPackage;
@@ -112,7 +113,7 @@ public class BooleanExpressionNodeItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (ExpressionsPackage.Literals.EXPRESSION_NODE__EXPRESSION,
-                 ExpressionsFactory.eINSTANCE.createTdExpression()));
+                 RelationalFactory.eINSTANCE.createTdExpression()));
     }
 
     /**

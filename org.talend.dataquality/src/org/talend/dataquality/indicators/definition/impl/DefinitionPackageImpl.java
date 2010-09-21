@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.cwm.relational.RelationalPackage;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.category.CategoryPackage;
@@ -474,7 +475,7 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
 
         // Obtain other dependent packages
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
-        ExpressionsPackage theExpressionsPackage = (ExpressionsPackage)EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI);
+        RelationalPackage theRelationalPackage = (RelationalPackage)EPackage.Registry.INSTANCE.getEPackage(RelationalPackage.eNS_URI);
         ModelPackage theModelPackage = (ModelPackage)EPackage.Registry.INSTANCE.getEPackage(ModelPackage.eNS_URI);
 
         // Create type parameters
@@ -498,9 +499,9 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
         initEReference(getIndicatorDefinition_AggregatedDefinitions(), this.getIndicatorDefinition(), null, "aggregatedDefinitions", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getIndicatorDefinition_Label(), ecorePackage.getEString(), "label", null, 0, 1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicatorDefinition_SubCategories(), this.getIndicatorCategory(), null, "subCategories", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getIndicatorDefinition_SqlGenericExpression(), theExpressionsPackage.getTdExpression(), null, "sqlGenericExpression", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getIndicatorDefinition_Aggregate1argFunctions(), theExpressionsPackage.getTdExpression(), null, "aggregate1argFunctions", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getIndicatorDefinition_Date1argFunctions(), theExpressionsPackage.getTdExpression(), null, "date1argFunctions", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getIndicatorDefinition_SqlGenericExpression(), theRelationalPackage.getTdExpression(), null, "sqlGenericExpression", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getIndicatorDefinition_Aggregate1argFunctions(), theRelationalPackage.getTdExpression(), null, "aggregate1argFunctions", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getIndicatorDefinition_Date1argFunctions(), theRelationalPackage.getTdExpression(), null, "date1argFunctions", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicatorDefinition_CharactersMapping(), this.getCharactersMapping(), null, "charactersMapping", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicatorDefinition_IndicatorDefinitionParameter(), this.getIndicatorDefinitionParameter(), null, "indicatorDefinitionParameter", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

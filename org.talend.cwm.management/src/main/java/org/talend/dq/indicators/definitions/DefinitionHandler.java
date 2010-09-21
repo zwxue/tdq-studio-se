@@ -31,7 +31,7 @@ import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.dataquality.expressions.TdExpression;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -94,7 +94,6 @@ public final class DefinitionHandler {
 
     private EList<IndicatorCategory> indicatorCategories;
 
-
     /**
      * plugin relative path to the default file.
      */
@@ -121,11 +120,11 @@ public final class DefinitionHandler {
 
     private void initializeDefinitions() {
         this.indicatorCategories = loadDefinitionsFromFile().getCategories();
-        indicatorDefinitions.addAll(
-                IndicatorResourceFileHelper.getInstance().getAllIndicators(
-                        ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
-                                EResourceConstant.SYSTEM_INDICATORS.getName())));
+        indicatorDefinitions.addAll(IndicatorResourceFileHelper.getInstance().getAllIndicators(
+                ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
+                        EResourceConstant.SYSTEM_INDICATORS.getName())));
     }
+
     /**
      * 
      * DOC mzhao feature 13676 split system indicators.
@@ -209,7 +208,6 @@ public final class DefinitionHandler {
         return definitionsFile;
     }
 
-
     /**
      * Method "getIndicatorsDefinitions".
      * 
@@ -284,8 +282,6 @@ public final class DefinitionHandler {
         return null;
     }
 
-
-
     public boolean updateRegex(String dbmsName, String regexpFunction) {
         boolean ok = true;
         boolean replaced = false;
@@ -339,7 +335,8 @@ public final class DefinitionHandler {
      * here.
      */
     private final IndicatorsSwitch<Boolean> indicatorSwitch = new IndcatorSwitchImp(); // EOC
-                                                                                                    // IndicatorsSwitch
+
+    // IndicatorsSwitch
 
     /**
      * Method "getDQRuleIndicatorCategory".

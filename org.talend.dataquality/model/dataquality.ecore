@@ -807,11 +807,14 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="subCategories" upperBound="-1"
             eType="#//indicators/definition/IndicatorCategory"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="sqlGenericExpression"
-            upperBound="-1" eType="#//expressions/TdExpression" containment="true"/>
+            upperBound="-1" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression"
+            containment="true"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="aggregate1argFunctions"
-            upperBound="-1" eType="#//expressions/TdExpression" containment="true"/>
+            upperBound="-1" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression"
+            containment="true"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="date1argFunctions"
-            upperBound="-1" eType="#//expressions/TdExpression" containment="true"/>
+            upperBound="-1" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression"
+            containment="true"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="charactersMapping"
             upperBound="-1" eType="#//indicators/definition/CharactersMapping" containment="true">
           <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -992,10 +995,6 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="See http://portal.acm.org/citation.cfm?id=1274453.1274459"/>
       </eAnnotations>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="TdExpression" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/Expression">
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/String"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="modificationDate" eType="ecore:EDataType ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/Time"/>
     </eClassifiers>
   </eSubpackages>
   <eSubpackages name="domain" nsURI="http://dataquality.domain" nsPrefix="dataquality.domain">

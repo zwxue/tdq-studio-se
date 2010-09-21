@@ -97,29 +97,6 @@ public class ExpressionsItemProviderAdapterFactory extends ExpressionsAdapterFac
     }
 
     /**
-     * This keeps track of the one adapter used for all {@link org.talend.dataquality.expressions.TdExpression} instances.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected TdExpressionItemProvider tdExpressionItemProvider;
-
-    /**
-     * This creates an adapter for a {@link org.talend.dataquality.expressions.TdExpression}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public Adapter createTdExpressionAdapter() {
-        if (tdExpressionItemProvider == null) {
-            tdExpressionItemProvider = new TdExpressionItemProvider(this);
-        }
-
-        return tdExpressionItemProvider;
-    }
-
-    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -219,7 +196,6 @@ public class ExpressionsItemProviderAdapterFactory extends ExpressionsAdapterFac
      */
     public void dispose() {
         if (booleanExpressionNodeItemProvider != null) booleanExpressionNodeItemProvider.dispose();
-        if (tdExpressionItemProvider != null) tdExpressionItemProvider.dispose();
     }
 
 }

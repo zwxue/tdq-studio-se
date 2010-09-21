@@ -33,7 +33,8 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.apache.axis,
  javax.xml.rpc,
  org.talend.core.repository,
- org.talend.core.runtime
+ org.talend.core.runtime,
+ org.talend.metadata.managment
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.builders,
  org.talend.cwm.db.connection,
