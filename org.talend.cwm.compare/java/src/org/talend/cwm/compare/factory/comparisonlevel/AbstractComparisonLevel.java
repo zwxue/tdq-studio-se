@@ -33,6 +33,9 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -47,6 +50,7 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.objectmodel.core.util.CoreSwitch;
@@ -196,7 +200,12 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     }
 
     protected void createCopyedProvider() {
-        IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
+        if (oldDataProvider.eIsProxy()) {
+            ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                    .getResourceManager().resourceSet;
+            oldDataProvider = (Connection) EcoreUtil.resolve(oldDataProvider, resourceSet);
+        }
+        IFile selectedFile = WorkspaceUtils.getModelElementResource(oldDataProvider);
         IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
         TypedReturnCode<Connection> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
@@ -274,6 +283,11 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
         MatchModel match = null;
         try {
+            if (oldDataProvider.eIsProxy()) {
+                ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                        .getResourceManager().resourceSet;
+                oldDataProvider = (Connection) EcoreUtil.resolve(oldDataProvider, resourceSet);
+            }
             match = MatchService.doMatch(oldDataProvider, getSavedReloadObject(), options);
         } catch (InterruptedException e) {
             log.error(e, e);

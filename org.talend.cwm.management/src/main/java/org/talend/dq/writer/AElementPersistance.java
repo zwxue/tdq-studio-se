@@ -132,7 +132,7 @@ public abstract class AElementPersistance {
                     ((RenderedObject) element).setFileName(itemPath.toString());
                 }
 
-                rc = save(element);
+                rc = save(element, withProperty);
             }
         }
 
@@ -231,7 +231,7 @@ public abstract class AElementPersistance {
      * @param element
      * @return
      */
-    public ReturnCode save(ModelElement element) {
+    public ReturnCode save(ModelElement element, boolean... withProperty) {
         ReturnCode rc = new ReturnCode();
 
         addDependencies(element);

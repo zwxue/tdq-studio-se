@@ -82,9 +82,12 @@ public class DataProviderWriter extends AElementPersistance {
     }
 
     @Override
-    public ReturnCode save(ModelElement element) {
+    public ReturnCode save(ModelElement element, boolean... withProperty) {
+        // MOD Use super method to create model element without property.
+        if (withProperty != null && withProperty.length > 0 && !withProperty[0]) {
+            return super.save(element, withProperty);
+        }
         ReturnCode rc = new ReturnCode();
-
         Item item = PropertyHelper.getProperty(element).getItem();
         try {
             ProxyRepositoryFactory.getInstance().save(item);

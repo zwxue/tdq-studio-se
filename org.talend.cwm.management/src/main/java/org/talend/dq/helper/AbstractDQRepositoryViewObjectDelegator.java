@@ -167,6 +167,8 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
      */
     public ReturnCode saveElement(T element) {
         ReturnCode rc = new ReturnCode();
+        // Refresh the cache firstly so that the property won't be a proxy.
+        fetchRepositoryViewObjects(Boolean.TRUE);
         IRepositoryViewObject reposViewObj = getRepositoryViewObject(element);
         if (reposViewObj != null) {
             return saveByone(element, reposViewObj);
@@ -177,11 +179,9 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
 
     private ReturnCode saveByone(T element, IRepositoryViewObject reposViewObj) {
         ReturnCode rc = new ReturnCode();
-
         Property property = reposViewObj.getProperty();
         Item item = property.getItem();
         rc = save(item);
-        fetchRepositoryViewObjects(Boolean.TRUE);
         rc.setOk(Boolean.TRUE);
         return rc;
     }
