@@ -27,6 +27,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -74,9 +75,22 @@ public final class DependenciesHandler {
         // locate resource of each Dependency object
         List<Resource> modifiedResources = new ArrayList<Resource>();
         for (Dependency dependency : clientDependencies) {
+            // MOD qiongli bug 15587.if dependcy is Proxy,reload it and remove the client element
+            if (dependency.eIsProxy()) {
+                dependency = (Dependency) EObjectHelper.resolveObject(dependency);
+                EList<ModelElement> client = dependency.getClient();
+                Iterator<ModelElement> iterator = client.iterator();
+                while (iterator.hasNext()) {
+                    ModelElement modelElement = iterator.next();
+                    if (modelElement.getName().equals(elementToDelete.getName())) {
+                        iterator.remove();
+                    }
+                }
+            }// ~
             Resource dependencyResource = dependency.eResource();
             if (dependencyResource != null) {
                 modifiedResources.add(dependencyResource);
+
             }
         }
         // this clears also the reverse dependencies: remove the elementToDelete

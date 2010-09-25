@@ -21,7 +21,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
@@ -38,6 +40,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -199,4 +202,21 @@ public final class EObjectHelper {
         Resource res = new ResourceSetImpl().getResource(uri, true);
         return EcoreUtil.getObjectByType(res.getContents(), classfier);
     }
+
+    /**
+     * 
+     * DOC qiongli Comment method "resolveObject".
+     * 
+     * @param proxy
+     * @return
+     */
+    public static EObject resolveObject(EObject proxy) {
+        if (proxy != null && proxy.eIsProxy()) {
+            ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                    .getResourceManager().resourceSet;
+            proxy = (ModelElement) EcoreUtil.resolve(proxy, resourceSet);
+        }
+        return proxy;
+    }
+
 }
