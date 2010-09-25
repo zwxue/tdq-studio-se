@@ -435,12 +435,12 @@ public class DQRespositoryView extends CommonNavigator {
     public void showSelectedElements(Object selectedElement) {
         try {
             // MOD by zshen for bug 12940 refresh the viewer to collapse all the element.
-            getCommonViewer().refresh();
             StructuredSelection structSel = new StructuredSelection(selectedElement);
             getCommonViewer().setSelection(structSel);
             // If not select,unfold tree structure to this column.
             StructuredSelection selectionTarge = (StructuredSelection) getCommonViewer().getSelection();
             if (!selectionTarge.equals(structSel)) {
+                getCommonViewer().refresh();
                 recursiveExpandTree(selectedElement);
                 getCommonViewer().setSelection(structSel);
             }

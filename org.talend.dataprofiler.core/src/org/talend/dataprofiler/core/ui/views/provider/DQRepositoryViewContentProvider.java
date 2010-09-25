@@ -21,9 +21,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -39,9 +43,12 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.impl.PackageImpl;
 
 /**
  * @author rli
@@ -127,33 +134,39 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     public Object getParent(Object element) {
         if (element instanceof IFile) {
             return ((IResource) element).getParent();
+        } else if (element instanceof IRepositoryViewObject) {
+            Item item = ((IRepositoryViewObject) element).getProperty().getItem();
+            if (item instanceof DatabaseConnectionItem) {
+                return ResourceManager.getConnectionFolder();
+            } else if (item instanceof MDMConnectionItem) {
+                return ResourceManager.getMDMConnectionFolder();
+            }
         }
         // MOD make the subNode of connection can find IRepositoryViewObject on the DQView instead of the file of
         // connection.
         Object returnObj = super.getParent(element);
-        // if (returnObj instanceof CwmResource) {
-        // for (EObject conn : ((CwmResource) returnObj).getContents()) {
-        // if (conn instanceof Connection) {
-        // IRepositoryViewObject repObjec = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) conn);
-        // if (repObjec == null) {
-        // break;
-        // }
-        // return repObjec;
-        // }
-        // }
-        // } else if (returnObj == null && element instanceof PackageImpl && ((PackageImpl)
-        // element).getDataManager().size() > 0) {
-        // for (EObject conn : ((PackageImpl) element).getDataManager()) {
-        // if (conn instanceof Connection) {
-        // IRepositoryViewObject repObjec = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) conn);
-        //                    
-        // if (repObjec == null) {
-        // break;
-        // }
-        // return repObjec;
-        // }
-        // }
-        // }
+        if (returnObj instanceof CwmResource) {
+            for (EObject conn : ((CwmResource) returnObj).getContents()) {
+                if (conn instanceof Connection) {
+                    IRepositoryViewObject repObjec = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) conn);
+                    if (repObjec == null) {
+                        break;
+                    }
+                    return repObjec;
+                }
+            }
+        } else if (returnObj == null && element instanceof PackageImpl && ((PackageImpl) element).getDataManager().size() > 0) {
+            for (EObject conn : ((PackageImpl) element).getDataManager()) {
+                if (conn instanceof Connection) {
+                    IRepositoryViewObject repObjec = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) conn);
+
+                    if (repObjec == null) {
+                        break;
+                    }
+                    return repObjec;
+                }
+            }
+        }
         return returnObj;
     }
 
