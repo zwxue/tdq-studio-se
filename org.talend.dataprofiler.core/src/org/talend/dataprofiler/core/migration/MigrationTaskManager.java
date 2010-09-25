@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -258,6 +259,10 @@ public final class MigrationTaskManager {
      * @param monitor
      */
     public static void doMigrationTask(List<IMigrationTask> tasks, IProgressMonitor monitor) {
+        if (monitor == null) {
+            monitor = new NullProgressMonitor();
+        }
+
         monitor.beginTask("Migration...", tasks.size());
 
         for (IMigrationTask task : tasks) {

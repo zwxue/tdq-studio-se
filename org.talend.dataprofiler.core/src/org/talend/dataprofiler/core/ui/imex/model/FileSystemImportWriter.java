@@ -321,9 +321,6 @@ public class FileSystemImportWriter implements IImportWriter {
         }
 
         if (!modelTasks.isEmpty()) {
-            if (monitor == null) {
-                monitor = new NullProgressMonitor();
-            }
             MigrationTaskManager.doMigrationTask(modelTasks, monitor);
 
             WorkspaceVersionHelper.storeVersion(versionFile);

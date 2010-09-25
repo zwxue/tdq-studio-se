@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.jfree.util.Log;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -372,25 +371,17 @@ public class ItemRecord {
      * @return
      */
     private boolean isValidDirectory(File file) {
-        String absolutePath = file.getAbsolutePath();
+        if (!file.getName().startsWith(".")) {
+            String absolutePath = file.getAbsolutePath();
 
-        boolean tdqProject = false;
-
-        File[] listFiles = file.listFiles();
-        if (listFiles != null) {
-            for (File afile : listFiles) {
-                if (StringUtils.equals(afile.getName(), "talend.project")) {
-                    tdqProject = true;
-                    break;
+            for (EResourceConstant constant : EResourceConstant.getTopConstants()) {
+                if (absolutePath.indexOf(constant.getPath()) > 0) {
+                    return true;
                 }
             }
         }
 
-        return (absolutePath.indexOf(EResourceConstant.DATA_PROFILING.getName()) > 0
-                || absolutePath.indexOf(EResourceConstant.LIBRARIES.getName()) > 0
-                || absolutePath.indexOf(EResourceConstant.METADATA.getName()) > 0 || absolutePath.indexOf("TDQ_Metadata") > 0
-                || StringUtils.equals(file.getName(), ReponsitoryContextBridge.PROJECT_DEFAULT_NAME) || tdqProject)
-                && !file.getName().startsWith(".");
+        return false;
     }
 
     /**
