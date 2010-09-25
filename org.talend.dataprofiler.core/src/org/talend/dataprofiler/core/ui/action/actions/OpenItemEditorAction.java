@@ -35,7 +35,9 @@ public class OpenItemEditorAction extends Action {
     @Override
     public void run() {
         // Connection editor
-        if (reposViewObj.getType().getKey().equals(ERepositoryObjectType.METADATA_CONNECTIONS.getKey())) {
+        String key = reposViewObj.getType().getKey();
+        if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
+                || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
             ConnectionItemEditorInput connItemEditorInput = new ConnectionItemEditorInput(reposViewObj);
             CorePlugin.getDefault().openEditor(connItemEditorInput, ConnectionEditor.class.getName());
         }
