@@ -26,6 +26,7 @@ import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -114,6 +115,9 @@ public class CWMPlugin extends Plugin {
 
                     if (!aliasManager.contains(alias)) {
                         aliasManager.addAlias(alias);
+                        // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the
+                        // trash bin
+                        sqlPlugin.getPropertyFile().put(alias, PropertyHelper.getPropertyFile(dataProvider));
                     }
                 }
             } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions

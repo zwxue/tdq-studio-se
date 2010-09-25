@@ -87,6 +87,24 @@ public final class ProxyRepositoryViewObject {
     }
 
     /**
+     * DOC yyi Comment method "getAllDatabaseConnections".
+     * 
+     * @param excludeRecycleBin
+     * @return
+     */
+    public static List<Connection> getAllDatabaseConnections(boolean excludeRecycleBin) {
+        List<Connection> connections = new ArrayList<Connection>();
+        if (excludeRecycleBin) {
+            for (Connection con : getAllDatabaseConnections()) {
+                if (null != con.eResource() && !PropertyHelper.getProperty(con).getItem().getState().isDeleted()) {
+                    connections.add(con);
+                }
+            }
+        }
+        return connections;
+    }
+
+    /**
      * 
      * DOC mzhao Get all mdm connections.
      * 
@@ -97,6 +115,24 @@ public final class ProxyRepositoryViewObject {
         // Database connections
         metadataConns.addAll(getMDMConnectionInstance().getAllElements());
         return metadataConns;
+    }
+
+    /**
+     * DOC yyi Comment method "getAllDatabaseConnections".
+     * 
+     * @param excludeRecycleBin
+     * @return
+     */
+    public static List<Connection> getAllMDMConnections(boolean excludeRecycleBin) {
+        List<Connection> connections = new ArrayList<Connection>();
+        if (excludeRecycleBin) {
+            for (Connection con : getAllMDMConnections()) {
+                if (null != con.eResource() && !PropertyHelper.getProperty(con).getItem().getState().isDeleted()) {
+                    connections.add(con);
+                }
+            }
+        }
+        return connections;
     }
 
     /**
