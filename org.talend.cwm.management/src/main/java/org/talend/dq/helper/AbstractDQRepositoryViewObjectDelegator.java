@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -219,11 +220,11 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
         }
         List<IRepositoryViewObject> folderRepositoryObjectList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(
                 itemType, path);
-        // List<IRepositoryViewObject> returnList = new ArrayList<IRepositoryViewObject>();
-        // for (IRepositoryViewObject newRepositoryObject : folderRepositoryObjectList) {
-        // returnList.add(this.getReposViewObjByProperty(newRepositoryObject.getProperty()));
-        // }
-        return folderRepositoryObjectList;
+        List<IRepositoryViewObject> returnList = new ArrayList<IRepositoryViewObject>();
+        for (IRepositoryViewObject newRepositoryObject : folderRepositoryObjectList) {
+            returnList.add(this.getReposViewObjByProperty(newRepositoryObject.getProperty()));
+        }
+        return returnList;
 
     }
 
