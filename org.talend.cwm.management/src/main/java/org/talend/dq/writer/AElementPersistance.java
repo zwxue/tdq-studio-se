@@ -19,9 +19,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
@@ -41,7 +39,6 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -153,7 +150,7 @@ public abstract class AElementPersistance {
         Property property = createProperty(modelElement);
 
         util.addEObjectToResourceSet(propPath.toString(), property);
-        property.getItem().getState().setPath(computePath(property));
+        property.getItem().getState().setPath(PropertyHelper.computePath(property));
         if (property.getItem() instanceof TDQItem) {
             ((TDQItem) property.getItem()).setFilename(fileName);
         }
@@ -193,25 +190,6 @@ public abstract class AElementPersistance {
         item.setProperty(property);
 
         return property;
-    }
-
-    private String computePath(Property property) {
-        Resource eResource = property.eResource();
-        if (eResource != null) {
-            IPath propPath, typedPath;
-
-            URI propURI = eResource.getURI();
-            if (propURI.isPlatform()) {
-                propPath = new Path(propURI.toPlatformString(true)).removeLastSegments(1);
-                typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
-
-                IPath itemPath = propPath.makeRelativeTo(typedPath);
-
-                return itemPath.toString();
-            }
-        }
-
-        return "";
     }
 
     private void computePropertyMaxInformationLevel(Property property) {

@@ -391,4 +391,24 @@ public final class PropertyHelper {
 
         return ReponsitoryContextBridge.PROJECT_DEFAULT_NAME;
     }
+
+    public static String computePath(Property property) {
+        Resource eResource = property.eResource();
+        if (eResource != null) {
+            IPath propPath, typedPath;
+
+            URI propURI = eResource.getURI();
+            if (propURI.isPlatform()) {
+                propPath = new Path(propURI.toPlatformString(true)).removeLastSegments(1);
+                typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(property));
+
+                IPath itemPath = propPath.makeRelativeTo(typedPath);
+
+                return itemPath.toString();
+            }
+        }
+
+        return "";
+    }
+
 }

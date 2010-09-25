@@ -43,6 +43,7 @@ import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataquality.analysis.Analysis;
@@ -159,6 +160,10 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     fileRes.delete(true, null);
                     srcParent.refreshLocal(IResource.DEPTH_INFINITE, null);
                     folder.refreshLocal(IResource.DEPTH_INFINITE, null);
+                    // ADD xqliu 2010-09-25 bug 15685 update the path of ItemState
+                    Property property = PropertyHelper.getProperty(PropertyHelper.getPropertyFile(movedIFile));
+                    property.getItem().getState().setPath(PropertyHelper.computePath(property));
+                    // ~ 15685
                 } catch (CoreException e) {
                     ExceptionHandler.process(e);
                 }
