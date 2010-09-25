@@ -361,8 +361,10 @@ public final class TopChartFactory {
         renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer.setItemMargin(0.2);
-        renderer.setBase(0.04);
+        // MOD klliu 2010-09-25 bug15514: The chart of summary statistic indicators not beautiful
+        renderer.setMaximumBarWidth(0.1);
+        // renderer.setItemMargin(0.000000005);
+        // renderer.setBase(0.04);
         // ADD yyi 2009-09-24 9243
         renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat
                 .getInstance()));
