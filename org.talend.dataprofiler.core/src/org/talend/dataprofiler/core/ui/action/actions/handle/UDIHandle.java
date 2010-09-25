@@ -15,10 +15,13 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -56,9 +59,15 @@ public class UDIHandle extends EMFResourceHandle {
     public IFile duplicate() {
         IFile duplicatedFile = super.duplicate();
         IndicatorDefinition definition = (IndicatorDefinition) ModelElementFileFactory.getModelElement(duplicatedFile);
-
-        definition.getCategories().get(0).setLabel("User Defined Count");
+        // MOD klliu 2010-09-25 bug 15530 when duplicate the system indicator ,the definition must be reset the category
+        // and the label
+        // name
+        UDIHelper.setUDICategory(definition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
+        TaggedValueHelper.setValidStatus(true, definition);
+        definition.setLabel(definition.getName());
         IndicatorResourceFileHelper.getInstance().save(definition);
+        // MOD klliu duplicate successfully, refresh the duplicate session
+        DefinitionHandler.reload();
         return duplicatedFile;
     }
 

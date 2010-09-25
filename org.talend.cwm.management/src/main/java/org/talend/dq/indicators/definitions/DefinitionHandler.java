@@ -123,6 +123,10 @@ public final class DefinitionHandler {
         indicatorDefinitions.addAll(IndicatorResourceFileHelper.getInstance().getAllIndicators(
                 ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
                         EResourceConstant.SYSTEM_INDICATORS.getName())));
+        // MOD klliu 2010-09-25 bug 15530 the case is sloveed , when create a new UDI indicator by init definition List
+        indicatorDefinitions.addAll(IndicatorResourceFileHelper.getInstance().getAllIndicators(
+                ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
+                        EResourceConstant.USER_DEFINED_INDICATORS.getName())));
     }
 
     /**
@@ -221,6 +225,14 @@ public final class DefinitionHandler {
             throw new RuntimeException(Messages.getString("DefinitionHandler.IndicatorsDefinition")); //$NON-NLS-1$
         }
         return indicatorDefinitions;
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "reloadIndicatorsDefinitions".
+     */
+    public void reloadIndicatorsDefinitions() {
+        initializeDefinitions();
     }
 
     /**

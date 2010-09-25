@@ -63,6 +63,8 @@ public class DuplicateAction extends Action {
      */
     @Override
     public void run() {
+        // MOD klliu bug 15530 if you dupcliate the file,then the focus will enter the file
+        IFile duplicateFile = null;
         for (IFile file : files) {
             Property property = PropertyHelper.getProperty(file);
             IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(property);
@@ -71,15 +73,15 @@ public class DuplicateAction extends Action {
 
                 ReturnCode rc = handle.validDuplicated();
                 if (rc.isOk()) {
-                    handle.duplicate();
+                    duplicateFile = handle.duplicate();
                 } else {
                     MessageDialog.openError(null, "Invalid", rc.getMessage());
                 }
             }
         }
 
-        selectAndReveal(files[0]);
-
+        // selectAndReveal(files[0]);
+        selectAndReveal(duplicateFile);
         CorePlugin.getDefault().refreshWorkSpace();
     }
 
