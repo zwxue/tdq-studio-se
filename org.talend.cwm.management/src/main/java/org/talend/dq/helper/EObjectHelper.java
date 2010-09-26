@@ -214,7 +214,7 @@ public final class EObjectHelper {
         if (proxy != null && proxy.eIsProxy()) {
             ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
                     .getResourceManager().resourceSet;
-            proxy = (ModelElement) EcoreUtil.resolve(proxy, resourceSet);
+            proxy = (EObject) EcoreUtil.resolve(proxy, resourceSet);
         }
         return proxy;
     }
