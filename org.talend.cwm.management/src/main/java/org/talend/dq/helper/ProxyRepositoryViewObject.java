@@ -96,6 +96,10 @@ public final class ProxyRepositoryViewObject {
         List<Connection> connections = new ArrayList<Connection>();
         if (excludeRecycleBin) {
             for (Connection con : getAllDatabaseConnections()) {
+                if (null == con.eResource()) {
+                    con = (Connection) EObjectHelper.resolveObject(con);
+                }
+
                 if (null != con.eResource() && !PropertyHelper.getProperty(con).getItem().getState().isDeleted()) {
                     connections.add(con);
                 }
@@ -127,6 +131,9 @@ public final class ProxyRepositoryViewObject {
         List<Connection> connections = new ArrayList<Connection>();
         if (excludeRecycleBin) {
             for (Connection con : getAllMDMConnections()) {
+                if (null == con.eResource()) {
+                    con = (Connection) EObjectHelper.resolveObject(con);
+                }
                 if (null != con.eResource() && !PropertyHelper.getProperty(con).getItem().getState().isDeleted()) {
                     connections.add(con);
                 }

@@ -386,4 +386,15 @@ public class DBConnect {
     public String getDatabaseUrl() {
         return this.databaseUrl;
     }
+
+    /**
+     * 
+     * DOC zshen Comment method "getDbConnectionParameter". feature 14891 for set paramter of Tos Connection
+     * 
+     * @return
+     */
+    public DBConnectionParameter getDbConnectionParameter() {
+        return dbConnectionParameter;
+    }
+
 }

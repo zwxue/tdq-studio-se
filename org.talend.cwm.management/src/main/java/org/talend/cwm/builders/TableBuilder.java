@@ -16,7 +16,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdTable;
@@ -81,6 +81,8 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
     @Override
     protected TdTable createTable(String catalogName, String schemaPattern, ResultSet tablesSet) throws SQLException {
         TdTable table = super.createTable(catalogName, schemaPattern, tablesSet);
+        table.setTableType(ExtractMetaDataFromDataBase.ETableTypes.TABLETYPE_TABLE.getName());
+        table.setLabel(table.getName());
         return table;
     }
 
