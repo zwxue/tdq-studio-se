@@ -17,6 +17,8 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.jfree.chart.JFreeChart;
@@ -164,7 +166,8 @@ public final class ChartDecorator {
         if (render instanceof BarRenderer) {
 
             int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
-            domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));
+            if (!isContainsChineseColumn(chart))
+                domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));
             domainAxis.setUpperMargin(0.1);
             // MOD klliu bug 14570: Label size too long in Text statistics graph 2010-08-09
             domainAxis.setMaximumCategoryLabelLines(10);
@@ -275,5 +278,27 @@ public final class ChartDecorator {
     private static Color randomColorPicker() {
         int i = RandomUtils.nextInt(colorList.size());
         return colorList.get(i);
+    }
+
+    /**
+     * Returns true if this string contains the chinese char values. DOC yyi Comment method
+     * "isContainsChinese".2010-09-26:14692.
+     * 
+     * @param str
+     * @return
+     */
+    private static boolean isContainsChineseColumn(JFreeChart chart) {
+        Object[] columnNames = chart.getCategoryPlot().getDataset().getColumnKeys().toArray();
+        String regEx = "[\u4e00-\u9fa5]";
+        Pattern pat = Pattern.compile(regEx);
+        boolean flg = false;
+        for (Object str : columnNames) {
+            Matcher matcher = pat.matcher(str.toString());
+            if (matcher.find()) {
+                flg = true;
+                break;
+            }
+        }
+        return flg;
     }
 }
