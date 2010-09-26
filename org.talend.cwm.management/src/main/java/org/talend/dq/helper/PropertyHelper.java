@@ -253,7 +253,19 @@ public final class PropertyHelper {
      * @return
      */
     public static IPath getItemTypedPath(Property property) {
-        EResourceConstant rc = EResourceConstant.getTypedConstant(property.getItem());
+        return getItemTypedPath(property.getItem());
+    }
+
+    /**
+     * DOC bZhou Comment method "getItemTypedPath".
+     * 
+     * @param item
+     * @return
+     */
+    public static IPath getItemTypedPath(Item item) {
+        assert item != null;
+
+        EResourceConstant rc = EResourceConstant.getTypedConstant(item);
         return rc != null ? new Path(rc.getPath()) : null;
     }
 

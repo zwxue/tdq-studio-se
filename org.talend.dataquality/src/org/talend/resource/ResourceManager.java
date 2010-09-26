@@ -220,15 +220,6 @@ public final class ResourceManager {
     }
 
     /**
-     * DOC zshen Comment method "getMDMConnectionFolder".
-     * 
-     * @return
-     */
-    public static IFolder getTDQMDMConnectionFolder() {
-        return getOneFolder(EResourceConstant.TDQ_MDM_CONNECTIONS);
-    }
-
-    /**
      * DOC bZhou Comment method "getExchangeFolder".
      * 
      * @return
@@ -414,16 +405,6 @@ public final class ResourceManager {
      */
     public static boolean isMdmConnectionFolder(IResource resource) {
         return isOneFolder(resource, EResourceConstant.MDM_CONNECTIONS);
-    }
-
-    /**
-     * DOC zshen Comment method "isMdmConnectionFolder".
-     * 
-     * @param resource
-     * @return
-     */
-    public static boolean isTDQMdmConnectionFolder(IResource resource) {
-        return isOneFolder(resource, EResourceConstant.TDQ_MDM_CONNECTIONS);
     }
 
     /**

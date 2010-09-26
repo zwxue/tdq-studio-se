@@ -19,7 +19,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
@@ -34,11 +36,13 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.core.model.properties.User;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -54,11 +58,14 @@ public abstract class AElementPersistance {
 
     protected EMFSharedResources util = EMFSharedResources.getInstance();
 
-    /*
-     * (non-Javadoc)
+    /**
+     * DOC bZhou Comment method "create".
      * 
-     * @see org.talend.dq.writer.IElementPersistence#create(orgomg.cwm.objectmodel.core.ModelElement,
-     * org.eclipse.core.resources.IFolder)
+     * Persist an element in the specified folder, the file name is created logically by the name of this element.
+     * 
+     * @param element
+     * @param folder
+     * @return
      */
     public TypedReturnCode<Object> create(ModelElement element, IFolder folder) {
         TypedReturnCode<Object> trc = new TypedReturnCode<Object>();
@@ -95,44 +102,46 @@ public abstract class AElementPersistance {
     /**
      * DOC bZhou Comment method "create".
      * 
+     * Persist the element into the specified file.
+     * 
      * @param element
      * @param file
      * @return
      */
     public ReturnCode create(ModelElement element, IFile file) {
-        return create(element, file, true);
+        ReturnCode rc = new ReturnCode();
+        if (!check(file)) {
+            rc.setReturnCode("Failed to save! the extent file name is wrong.", false);
+        } else {
+            rc = create(element, file.getFullPath(), true);
+        }
+        return rc;
     }
 
     /**
      * DOC bZhou Comment method "create".
+     * 
+     * Persist the element into the specified path.
      * 
      * @param element
      * @param file
      * @param withProperty
      * @return
      */
-    public ReturnCode create(ModelElement element, IFile file, boolean withProperty) {
+    public ReturnCode create(ModelElement element, IPath itemPath, boolean withProperty) {
         ReturnCode rc = new ReturnCode();
 
-        if (!check(file)) {
-            rc.setReturnCode("Failed to save! the extent file name is wrong.", false);
+        if (!util.addEObjectToResourceSet(itemPath.toString(), element)) {
+            rc.setReturnCode("Failed to save: " + util.getLastErrorMessage(), false);
         } else {
-
-            IPath itemPath = file.getFullPath();
-            IPath propPath = itemPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-
-            if (withProperty) {
-                Property property = createProperty(element, propPath, file.getName());
+            if (element instanceof RenderedObject) {
+                ((RenderedObject) element).setFileName(itemPath.toString());
             }
 
-            if (!util.addEObjectToResourceSet(itemPath.toString(), element)) {
-                rc.setReturnCode("Failed to save: " + util.getLastErrorMessage(), false);
-            } else {
-                if (element instanceof RenderedObject) {
-                    ((RenderedObject) element).setFileName(itemPath.toString());
-                }
+            rc = save(element);
 
-                rc = save(element, withProperty);
+            if (withProperty) {
+                createProperty(element);
             }
         }
 
@@ -142,33 +151,53 @@ public abstract class AElementPersistance {
     /**
      * DOC bZhou Comment method "createProperty".
      * 
-     * @param modelElement
-     * @param propPath
-     * @return
-     */
-    public Property createProperty(ModelElement modelElement, IPath propPath, String fileName) {
-        Property property = createProperty(modelElement);
-
-        util.addEObjectToResourceSet(propPath.toString(), property);
-        property.getItem().getState().setPath(PropertyHelper.computePath(property));
-        if (property.getItem() instanceof TDQItem) {
-            ((TDQItem) property.getItem()).setFilename(fileName);
-        }
-
-        saveProperty(property);
-
-        return property;
-    }
-
-    /**
-     * DOC bZhou Comment method "createProperty".
+     * Create and save a property from model element resource.
      * 
      * @param modelElement
      * @return
      */
     public Property createProperty(ModelElement modelElement) {
+        Resource eResource = modelElement.eResource();
+        if (eResource == null) {
+            log.error("Can't create property: no resouce assigned to this model element!");
+            return null;
+        }
+
+        Property property = initProperty(modelElement);
+
+        URI propURI = eResource.getURI().trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+        saveProperty(property, propURI);
+
+        return property;
+    }
+
+    /**
+     * DOC bZhou Comment method "initProperty".
+     * 
+     * Initialized a new property.
+     * 
+     * @param modelElement
+     * @return
+     */
+    public Property initProperty(ModelElement modelElement) {
         Property property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
-        property.setAuthor(ReponsitoryContextBridge.getUser());
+
+        setPropertyMetadata(modelElement, property);
+
+        property.setCreationDate(new Date());
+
+        Item item = createItem(modelElement);
+        property.setItem(item);
+        item.setProperty(property);
+        return property;
+    }
+
+    private void setPropertyMetadata(ModelElement modelElement, Property property) {
+        User user = ReponsitoryContextBridge.getUser();
+        if (user != null) {
+            property.setAuthor(user);
+        }
 
         String purpose = MetadataHelper.getPurpose(modelElement);
         String description = MetadataHelper.getDescription(modelElement);
@@ -181,18 +210,7 @@ public abstract class AElementPersistance {
         property.setDescription(description);
         property.setStatusCode(status);
         property.setVersion(version);
-        property.setCreationDate(new Date());
 
-        computePropertyMaxInformationLevel(property);
-
-        Item item = createItem(modelElement);
-        property.setItem(item);
-        item.setProperty(property);
-
-        return property;
-    }
-
-    private void computePropertyMaxInformationLevel(Property property) {
         EList<Information> informations = property.getInformations();
         InformationLevel maxLevel = null;
         for (Information information : informations) {
@@ -207,20 +225,41 @@ public abstract class AElementPersistance {
     /**
      * DOC bZhou Comment method "saveProperty".
      * 
+     * Save a property.
+     * 
      * @param property
      * @return
      */
     public ReturnCode saveProperty(Property property) {
         ReturnCode rc = new ReturnCode();
 
-        property.setModificationDate(new Date());
-
         Resource propertyResource = property.eResource();
-        propertyResource.getContents().add(property);
         propertyResource.getContents().add(property.getItem());
         propertyResource.getContents().add(property.getItem().getState());
 
         rc.setOk(util.saveResource(propertyResource));
+
+        if (!rc.isOk()) {
+            rc.setMessage(util.getLastErrorMessage());
+        }
+
+        return rc;
+    }
+
+    /**
+     * DOC bZhou Comment method "saveProperty".
+     * 
+     * @param property
+     * @param uri
+     * @return
+     */
+    public ReturnCode saveProperty(Property property, URI uri) {
+        ReturnCode rc = new ReturnCode();
+
+        Resource propResource = util.createResource(uri);
+        propResource.getContents().add(property);
+
+        rc = saveProperty(property);
 
         return rc;
     }
@@ -228,7 +267,10 @@ public abstract class AElementPersistance {
     /**
      * DOC bZhou Comment method "save".
      * 
+     * Save a model element and update the related property.
+     * 
      * @param element
+     * @param withProperty
      * @return
      */
     public ReturnCode save(ModelElement element, boolean... withProperty) {
@@ -240,6 +282,8 @@ public abstract class AElementPersistance {
 
         rc.setOk(util.saveResource(element.eResource()));
 
+        updateProperty(element);
+
         if (rc.isOk()) {
             rc.setMessage("save " + element.getName() + " is OK!");
             ProxyRepositoryManager.getInstance().save();
@@ -250,6 +294,30 @@ public abstract class AElementPersistance {
         return rc;
     }
 
+    /**
+     * DOC bZhou Comment method "updateProperty".
+     * 
+     * Use model element's attribute to update the related property.
+     * 
+     * @param element
+     */
+    public void updateProperty(ModelElement element) {
+        Property property = PropertyHelper.getProperty(element);
+        if (property != null) {
+            setPropertyMetadata(element, property);
+
+            property.setModificationDate(new Date());
+
+            saveProperty(property);
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "createItem".
+     * 
+     * @param element
+     * @return
+     */
     public Item createItem(ModelElement element) {
         Item item = null;
         // MOD mzhao feature 13114, 2010-05-19 distinguish tdq items.
@@ -277,6 +345,23 @@ public abstract class AElementPersistance {
         ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
         item.setState(itemState);
+
+        Resource eResource = element.eResource();
+        if (eResource != null) {
+            URI uri = eResource.getURI();
+
+            if (item instanceof TDQItem) {
+                ((TDQItem) item).setFilename(uri.lastSegment());
+            }
+
+            if (uri.isPlatform()) {
+                IPath elementPath = new Path(uri.toPlatformString(true)).removeLastSegments(1);
+                IPath typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(item));
+
+                IPath statePath = elementPath.makeRelativeTo(typedPath);
+                itemState.setPath(statePath.toString());
+            }
+        }
 
         return item;
     }

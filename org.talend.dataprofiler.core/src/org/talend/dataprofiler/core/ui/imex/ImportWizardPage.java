@@ -192,7 +192,7 @@ public class ImportWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                textModified(basePath);
+                // textModified(basePath);
             }
         });
 
@@ -211,6 +211,8 @@ public class ImportWizardPage extends WizardPage {
                         }
                     }
                 }
+
+                populateElement();
 
                 repositoryTree.refresh();
 
@@ -239,9 +241,10 @@ public class ImportWizardPage extends WizardPage {
     public void removeInvalidRecords(ItemRecord[] invalidRecords) {
         if (invalidRecords != null) {
             for (ItemRecord record : invalidRecords) {
-                File file = record.getFile();
 
-                repositoryTree.setChecked(file, false);
+                if (!overwriteBTN.getSelection()) {
+                    repositoryTree.setChecked(record, false);
+                }
             }
 
             repositoryTree.refresh();
@@ -412,6 +415,9 @@ public class ImportWizardPage extends WizardPage {
              */
             @Override
             public Image getImage(Object element) {
+                if (overwriteBTN.getSelection()) {
+                    return ImageLib.getImage(ImageLib.WARN_OVR);
+                }
                 return ImageLib.getImage(ImageLib.ICON_ERROR_INFO);
             }
         });

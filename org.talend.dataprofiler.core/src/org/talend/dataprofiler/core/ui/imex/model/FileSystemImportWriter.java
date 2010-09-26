@@ -85,6 +85,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
         for (ItemRecord record : elements) {
 
+            record.getErrors().clear();
+
             checkDependency(record);
 
             if (checkExisted) {
@@ -262,6 +264,10 @@ public class FileSystemImportWriter implements IImportWriter {
                 monitor.worked(1);
             }
 
+            if (commonTasks != null) {
+                MigrationTaskManager.doMigrationTask(commonTasks, monitor);
+            }
+
             finish(records, monitor);
 
         } catch (Exception e) {
@@ -288,10 +294,6 @@ public class FileSystemImportWriter implements IImportWriter {
             if (!defFile.exists()) {
                 DefinitionHandler.getInstance();
             }
-        }
-
-        if (commonTasks != null) {
-            MigrationTaskManager.doMigrationTask(commonTasks, monitor);
         }
     }
 

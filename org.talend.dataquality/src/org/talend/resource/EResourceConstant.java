@@ -47,7 +47,13 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  */
 public enum EResourceConstant {
 
+    // These three resource constant is compatible with version before 4.1.
+    OLD_METADATA("TDQ_Metadata", "TDQ_Metadata", ResourceConstant.READONLY),
+    OLD_DB_CONNECTIONS("DB Connections", "TDQ_Metadata/DB Connections", ResourceConstant.READONLY),
+    OLD_MDM_CONNECTIONS("MDM Connections", "TDQ_Metadata/MDM Connections", ResourceConstant.READONLY),
+
     FOLDER("", ""),
+
     DATA_PROFILING("TDQ_Data Profiling", "TDQ_Data Profiling", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     LIBRARIES("TDQ_Libraries", "TDQ_Libraries", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     METADATA("metadata", "metadata", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
@@ -69,7 +75,6 @@ public enum EResourceConstant {
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY),
     DB_CONNECTIONS("connections", "metadata/connections", ResourceConstant.READONLY),
     MDM_CONNECTIONS("MDMconnections", "metadata/MDMconnections", ResourceConstant.READONLY),
-    TDQ_MDM_CONNECTIONS("MDM Connections", "TDQ_Metadata/MDM Connections", ResourceConstant.READONLY),
     REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY);
 
     private String name;
@@ -143,6 +148,27 @@ public enum EResourceConstant {
         }
 
         return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getTypedConstantList".
+     * 
+     * @return
+     */
+    public static List<EResourceConstant> getTypedConstantList() {
+        List<EResourceConstant> constantList = new ArrayList<EResourceConstant>();
+
+        constantList.add(ANALYSIS);
+        constantList.add(REPORTS);
+        constantList.add(DB_CONNECTIONS);
+        constantList.add(MDM_CONNECTIONS);
+        constantList.add(RULES);
+        constantList.add(INDICATORS);
+        constantList.add(JRXML_TEMPLATE);
+        constantList.add(PATTERNS);
+        constantList.add(SOURCE_FILES);
+
+        return constantList;
     }
 
     /**

@@ -55,7 +55,7 @@ public class DataProviderWriter extends AElementPersistance {
 
         IPath itemPath = file.getFullPath();
 
-        Property property = createProperty(element);
+        Property property = initProperty(element);
         Item item = property.getItem();
 
         try {

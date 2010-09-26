@@ -376,6 +376,11 @@ public class ItemRecord {
 
             for (EResourceConstant constant : EResourceConstant.getTopConstants()) {
                 if (absolutePath.indexOf(constant.getPath()) > 0) {
+                    if (constant == EResourceConstant.METADATA) {
+                        return absolutePath.endsWith(constant.getName())
+                                || absolutePath.endsWith(EResourceConstant.DB_CONNECTIONS.getName())
+                                || absolutePath.endsWith(EResourceConstant.MDM_CONNECTIONS.getName());
+                    }
                     return true;
                 }
             }
