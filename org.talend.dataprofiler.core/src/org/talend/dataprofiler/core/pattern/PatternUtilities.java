@@ -53,6 +53,7 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataprofiler.core.ui.utils.UDIFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -360,6 +361,7 @@ public final class PatternUtilities {
 
         });
         dialog.addFilter(new DQFolderFliter(true));
+        dialog.addFilter(new RecycleBinFilter());
         dialog.addFilter(new ViewerFilter() {
 
             @Override

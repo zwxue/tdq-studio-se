@@ -40,6 +40,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
@@ -158,6 +159,7 @@ public final class UDIUtils {
     public static CheckedTreeSelectionDialog createUdiCheckedTreeSelectionDialog(IFolder udiProject) {
         CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new UdiLabelProvider(),
                 new WorkbenchContentProvider());
+        dialog.addFilter(new RecycleBinFilter());
         dialog.setInput(udiProject);
         dialog.setValidator(new ISelectionStatusValidator() {
 
