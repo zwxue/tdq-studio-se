@@ -130,6 +130,9 @@ public enum FormEnum {
 
             break;
         case MinLengthIndicatorEnum:
+            forms = new FormEnum[] { IndicatorThresholdsForm };
+
+            break;
         case MaxLengthIndicatorEnum:
         case AverageLengthIndicatorEnum:
         case MinLengthWithBlankIndicatorEnum:
