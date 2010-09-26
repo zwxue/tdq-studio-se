@@ -137,7 +137,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     @Override
     public boolean canFinish() {
-        return canFinishFlag;
+        return databaseWizardPage == null ? false : databaseWizardPage.isPageComplete() && canFinishFlag;
     }
 
     public ModelElement initCWMResourceBuilder() {
