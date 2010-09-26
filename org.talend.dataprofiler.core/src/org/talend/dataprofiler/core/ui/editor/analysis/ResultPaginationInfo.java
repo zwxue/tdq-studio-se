@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -44,6 +45,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
+import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
@@ -220,31 +222,22 @@ public class ResultPaginationInfo extends PaginationInfo {
                 chartComp.setDomainZoomable(flag);
                 chartComp.setRangeZoomable(flag);
 
-                ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
-                if (flag || ExecutionLanguage.JAVA == currentEngine) {
+                final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
+                // MOD xqliu 2010-09-26 bug 15745
+                // if (flag || ExecutionLanguage.JAVA == currentEngine) {
+                if (flag) {
                     return;
                 }
+                // ~ 15745
 
                 ChartEntity chartEntity = event.getEntity();
                 if (chartEntity != null && chartEntity instanceof CategoryItemEntity) {
                     CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
                     ICustomerDataset dataEntity = (ICustomerDataset) cateEntity.getDataset();
 
-                    ChartDataEntity currentDataEntity = null;
-                    ChartDataEntity[] dataEntities = dataEntity.getDataEntities();
-                    if (dataEntities.length == 1) {
-                        currentDataEntity = dataEntities[0];
-                    } else {
-                        for (ChartDataEntity entity : dataEntities) {
-                            if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
-                                currentDataEntity = entity;
-                            } else {
-                                if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
-                                    currentDataEntity = entity;
-                                }
-                            }
-                        }
-                    }
+                    // MOD xqliu 2010-09-26 bug 15745
+                    final ChartDataEntity currentDataEntity = getCurrentChartDateEntity(cateEntity, dataEntity);
+                    // ~ 15745
 
                     if (currentDataEntity != null) {
                         // create menu
@@ -262,17 +255,34 @@ public class ResultPaginationInfo extends PaginationInfo {
 
                                 @Override
                                 public void widgetSelected(SelectionEvent e) {
-                                    Display.getDefault().asyncExec(new Runnable() {
-
-                                        public void run() {
-                                            Connection tdDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analysis
-                                                    .getContext().getConnection());
-                                            String query = itemEntity.getQuery();
-                                            String editorName = currentIndicator.getName();
-                                            CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                    // MOD xqliu 2010-09-26 bug 15745
+                                    if (ExecutionLanguage.JAVA == currentEngine) {
+                                        try {
+                                            CorePlugin
+                                                    .getDefault()
+                                                    .getWorkbench()
+                                                    .getActiveWorkbenchWindow()
+                                                    .getActivePage()
+                                                    .openEditor(
+                                                            new DrillDownEditorInput(analysis, currentDataEntity, itemEntity),
+                                                            "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");
+                                        } catch (PartInitException e1) {
+                                            e1.printStackTrace();
                                         }
+                                    } else {
+                                        Display.getDefault().asyncExec(new Runnable() {
 
-                                    });
+                                            public void run() {
+                                                Connection tdDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analysis
+                                                        .getContext().getConnection());
+                                                String query = itemEntity.getQuery();
+                                                String editorName = currentIndicator.getName();
+                                                CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                            }
+
+                                        });
+                                    }
+                                    // ~ 15745
                                 }
                             });
 
@@ -303,6 +313,32 @@ public class ResultPaginationInfo extends PaginationInfo {
                         menu.setVisible(true);
                     }
                 }
+            }
+
+            /**
+             * DOC xqliu Comment method "getCurrentChartDateEntity". bug 15745.
+             * 
+             * @param cateEntity
+             * @param dataEntity
+             * @return
+             */
+            private ChartDataEntity getCurrentChartDateEntity(CategoryItemEntity cateEntity, ICustomerDataset dataEntity) {
+                ChartDataEntity currentDataEntity = null;
+                ChartDataEntity[] dataEntities = dataEntity.getDataEntities();
+                if (dataEntities.length == 1) {
+                    currentDataEntity = dataEntities[0];
+                } else {
+                    for (ChartDataEntity entity : dataEntities) {
+                        if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
+                            currentDataEntity = entity;
+                        } else {
+                            if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
+                                currentDataEntity = entity;
+                            }
+                        }
+                    }
+                }
+                return currentDataEntity;
             }
 
             public void chartMouseMoved(ChartMouseEvent event) {
