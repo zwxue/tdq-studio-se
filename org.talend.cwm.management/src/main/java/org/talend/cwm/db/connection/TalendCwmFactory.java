@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.MetadataTalendType;
@@ -137,12 +138,14 @@ public final class TalendCwmFactory {
         if (log.isDebugEnabled()) {
             printInformations(catalogs, schemata);
         }
-        String dbType = connector.getDbConnectionParameter().getSqlTypeName();
-        String product = EDatabaseTypeName.getTypeFromDisplayName(dbType).getProduct();
-        String mapping = MetadataTalendType.getDefaultDbmsFromProduct(product).getId();
-        if (dataProvider instanceof DatabaseConnection) {
-            ((DatabaseConnection) dataProvider).setProductId(product);
-            ((DatabaseConnection) dataProvider).setDbmsId(mapping);
+        if (!ReponsitoryContextBridge.isDefautProject()) {
+            String dbType = connector.getDbConnectionParameter().getSqlTypeName();
+            String product = EDatabaseTypeName.getTypeFromDisplayName(dbType).getProduct();
+            String mapping = MetadataTalendType.getDefaultDbmsFromProduct(product).getId();
+            if (dataProvider instanceof DatabaseConnection) {
+                ((DatabaseConnection) dataProvider).setProductId(product);
+                ((DatabaseConnection) dataProvider).setDbmsId(mapping);
+            }
         }
         return dataProvider;
     }
