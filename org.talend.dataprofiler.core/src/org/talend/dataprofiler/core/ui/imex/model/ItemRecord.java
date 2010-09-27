@@ -372,14 +372,14 @@ public class ItemRecord {
      */
     private boolean isValidDirectory(File file) {
         if (!file.getName().startsWith(".")) {
-            String absolutePath = file.getAbsolutePath();
+            IPath filePath = new Path(file.getAbsolutePath());
 
             for (EResourceConstant constant : EResourceConstant.getTopConstants()) {
-                if (absolutePath.indexOf(constant.getPath()) > 0) {
+                if (filePath.toString().indexOf(constant.getPath()) > 0) {
                     if (constant == EResourceConstant.METADATA) {
-                        return absolutePath.endsWith(constant.getName())
-                                || absolutePath.endsWith(EResourceConstant.DB_CONNECTIONS.getName())
-                                || absolutePath.endsWith(EResourceConstant.MDM_CONNECTIONS.getName());
+                        String lastSeg = filePath.lastSegment();
+                        return lastSeg.equals(constant.getName()) || lastSeg.equals(EResourceConstant.DB_CONNECTIONS.getName())
+                                || lastSeg.equals(EResourceConstant.MDM_CONNECTIONS.getName());
                     }
                     return true;
                 }

@@ -37,6 +37,8 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.ItemState;
+import org.talend.core.model.properties.Project;
+import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
@@ -44,8 +46,10 @@ import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -247,7 +251,12 @@ public class FileSystemImportWriter implements IImportWriter {
 
                             IFolder folder = ResourceManager.getRootProject().getFolder(folderPath);
 
-                            ElementWriterFactory.getInstance().create(element).create(element, folder);
+                            AElementPersistance creator = ElementWriterFactory.getInstance().create(element);
+                            if (creator != null) {
+                                creator.create(element, folder);
+                            } else {
+                                log.error("Can't create the element : " + element.getName());
+                            }
                         }
 
                     }
@@ -345,6 +354,17 @@ public class FileSystemImportWriter implements IImportWriter {
             if (!versionFile.exists() || !definitionFile.exists()) {
                 return null;
             }
+
+            IPath projPath = path.append("talend.project");
+            if (projPath.toFile().exists()) {
+                Object projOBJ = EObjectHelper.retrieveEObject(projPath, PropertiesPackage.eINSTANCE.getProject());
+                if (projOBJ != null) {
+                    Project project = (Project) projOBJ;
+                    projectName = project.getTechnicalLabel();
+                }
+            } else {
+                projectName = ReponsitoryContextBridge.PROJECT_DEFAULT_NAME;
+            }
         }
 
         return new ItemRecord(path.toFile());
@@ -401,18 +421,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * @return
      */
     private boolean checkProject() {
-        try {
-            List<ItemRecord> allItemRecords = ItemRecord.getAllItemRecords();
-            for (ItemRecord record : allItemRecords) {
-                if (record.getProperty() != null) {
-                    this.projectName = PropertyHelper.extractProjectLabel(record.getProperty());
-                    break;
-                }
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return projectName != null;
     }
 
     /**

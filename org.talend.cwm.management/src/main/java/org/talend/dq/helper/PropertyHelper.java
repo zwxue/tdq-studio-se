@@ -394,10 +394,12 @@ public final class PropertyHelper {
             Resource projResource = iAuthor.eResource();
             if (projResource != null) {
                 IPath projectPath = new Path(projResource.getURI().toFileString());
-                Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
-                if (projOBJ != null) {
-                    Project project = (Project) projOBJ;
-                    return project.getTechnicalLabel();
+                if (projectPath.toFile().exists()) {
+                    Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
+                    if (projOBJ != null) {
+                        Project project = (Project) projOBJ;
+                        return project.getTechnicalLabel();
+                    }
                 }
             }
         }

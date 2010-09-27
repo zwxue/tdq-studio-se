@@ -120,15 +120,15 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                             URI propURI = resource.getURI().trimFileExtension().appendFileExtension(
                                     FactoriesUtil.PROPERTIES_EXTENSION);
 
-                            Resource propResource =  emfUtil.getResourceSet().createResource(propURI);
+                            Resource propResource = emfUtil.getResourceSet().createResource(propURI);
                             propResource.getContents().add(property);
                             propResource.getContents().add(property.getItem());
                             propResource.getContents().add(property.getItem().getState());
-                            
+
                             EMFUtil.saveResource(propResource);
 
                         } else {
-                            log.warn("Can't create the writer of " + modelElement.getName());
+                            log.warn("The property of " + modelElement.getName() + " is ignored.");
                         }
                     } else {
                         log.warn("Can't get the model elment : " + eObject.toString());
@@ -136,7 +136,6 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                 }
             }
         }
-
 
         emfUtil = null;
 
