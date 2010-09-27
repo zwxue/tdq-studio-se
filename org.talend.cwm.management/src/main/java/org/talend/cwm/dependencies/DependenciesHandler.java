@@ -352,6 +352,10 @@ public final class DependenciesHandler {
         DataManager connection = analysis.getContext().getConnection();
         if (clientDependency != null) {
             for (Dependency dependency : clientDependency) {
+                // MOD qiongli bug 15587
+                if (dependency.eIsProxy()) {
+                    dependency = (Dependency) EObjectHelper.resolveObject(dependency);
+                }
                 EList<ModelElement> supplier = dependency.getSupplier();
                 if (supplier != null && supplier.size() > 0) {
                     ModelElement modelElement = supplier.get(0);
