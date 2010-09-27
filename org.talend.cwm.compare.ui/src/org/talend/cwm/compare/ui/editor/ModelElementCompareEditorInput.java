@@ -136,8 +136,11 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
         for (int i = 0; i < tree.getItemCount(); i++) {
             String text = tree.getItem(i).getText();
             StringBuffer sb = new StringBuffer(text);
-            sb.replace(0, 2, "");
-            tree.getItem(i).setText(sb.toString());
+            if ("".equals(sb) && sb.substring(0, 3).equals("Td ")) {
+                sb.replace(0, 2, "");
+                tree.getItem(i).setText(sb.toString());
+            }
+
         }
     }
 
