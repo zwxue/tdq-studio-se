@@ -24,7 +24,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -36,6 +35,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -49,10 +49,10 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.writer.AElementPersistance;
-import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -237,33 +237,29 @@ public class FileSystemImportWriter implements IImportWriter {
                 if (record.isValid()) {
                     log.info("Importing " + record.getFile().getAbsolutePath());
 
-                    if (record.getElement() != null) {
-                        ModelElement element = record.getElement();
+                    ModelElement element = record.getElement();
+                    if (element != null && element instanceof Connection) {
                         Property property = record.getProperty();
-                        EResourceConstant typedConstant = EResourceConstant.getTypedConstant(element);
-                        if (typedConstant != null) {
-                            IPath folderPath = new Path(typedConstant.getPath());
 
-                            ItemState state = property.getItem().getState();
-                            if (state != null && state.getPath() != null) {
-                                folderPath.append(state.getPath());
-                            }
+                        String fileName = record.getFile().getName();
+                        fileName = fileName.substring(0, fileName.lastIndexOf("_"));
+                        property.setLabel(fileName);
 
-                            IFolder folder = ResourceManager.getRootProject().getFolder(folderPath);
-
-                            AElementPersistance creator = ElementWriterFactory.getInstance().create(element);
-                            if (creator != null) {
-                                creator.create(element, folder);
-                            } else {
-                                log.error("Can't create the element : " + element.getName());
-                            }
+                        IPath statePath;
+                        ItemState state = property.getItem().getState();
+                        if (state != null && state.getPath() != null) {
+                            statePath = new Path(state.getPath());
+                        } else {
+                            statePath = Path.EMPTY;
                         }
 
+                        ProxyRepositoryFactory.getInstance().create(property.getItem(), statePath);
+                    } else {
+                        for (IPath resPath : toImportMap.keySet()) {
+                            IPath desPath = toImportMap.get(resPath);
+                            write(resPath, desPath);
+                        }
                     }
-                    // for (IPath resPath : toImportMap.keySet()) {
-                    // IPath desPath = toImportMap.get(resPath);
-                    // write(resPath, desPath);
-                    // }
                 } else {
                     for (String error : record.getErrors()) {
                         log.error(error);
@@ -271,10 +267,6 @@ public class FileSystemImportWriter implements IImportWriter {
                 }
 
                 monitor.worked(1);
-            }
-
-            if (commonTasks != null) {
-                MigrationTaskManager.doMigrationTask(commonTasks, monitor);
             }
 
             finish(records, monitor);
@@ -303,6 +295,12 @@ public class FileSystemImportWriter implements IImportWriter {
             if (!defFile.exists()) {
                 DefinitionHandler.getInstance();
             }
+        }
+
+        ResourceService.refreshStructure();
+
+        if (commonTasks != null) {
+            MigrationTaskManager.doMigrationTask(commonTasks, monitor);
         }
     }
 

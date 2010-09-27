@@ -27,7 +27,6 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -57,11 +56,13 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
     protected boolean doExecute() throws Exception {
 
         // Copy system indicators.
-        DQStructureManager manager = DQStructureManager.getInstance();
-        IFolder systemIndicatorFoler = manager.createNewFolder(ResourceManager.getIndicatorFolder(),
-                EResourceConstant.SYSTEM_INDICATORS);
-        manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler,
-                null);
+        if (!ResourceManager.getSystemIndicatorFolder().exists()) {
+            DQStructureManager manager = DQStructureManager.getInstance();
+            IFolder systemIndicatorFoler = manager.createNewFolder(ResourceManager.getIndicatorFolder(),
+                    EResourceConstant.SYSTEM_INDICATORS);
+            manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.SYSTEM_INDICATOR_PATH, true,
+                    systemIndicatorFoler, null);
+        }
 
         // Migration for analyses (indicator definition)
         Collection<Analysis> analyses = searchAllAnalysis(ResourceManager.getAnalysisFolder());

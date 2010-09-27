@@ -38,7 +38,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.context.Context;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -137,16 +136,12 @@ public final class DQStructureManager {
             IFolder jrxmlFolder = createNewFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
             IFolder systemIndicatorFoler = createNewFolder(indicatorFoler, EResourceConstant.SYSTEM_INDICATORS);
 
-            // MOD mzhao 2010-08-12 14891: use same repository API with TOS to persistent metadata
-            if (ReponsitoryContextBridge.isDefautProject()) {
-                // IFolder metadataFolder = createNewFolder(project, EResourceConstant.METADATA);
-                // IFolder connectionFolder = createNewFolder(metadataFolder, EResourceConstant.DB_CONNECTIONS);
-                // IFolder mdmConnectionFolder = createNewFolder(metadataFolder, EResourceConstant.MDM_CONNECTIONS);
-
-                // ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
-                // EResourceConstant.METADATA.getName());
+            if (!project.getFolder(EResourceConstant.DB_CONNECTIONS.getPath()).exists()) {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
                         EResourceConstant.DB_CONNECTIONS.getName());
+            }
+
+            if (!project.getFolder(EResourceConstant.MDM_CONNECTIONS.getPath()).exists()) {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
                         EResourceConstant.MDM_CONNECTIONS.getName());
             }
