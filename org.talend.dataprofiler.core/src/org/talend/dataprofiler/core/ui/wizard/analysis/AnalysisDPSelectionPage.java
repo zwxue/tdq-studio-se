@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Label;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
+import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.resource.ResourceManager;
 
@@ -82,7 +83,7 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
 
         createMetaDataTree(container);
         setControl(container);
-        addFilters(new EMFObjFilter(), new DQFolderFliter(true), new TDQEEConnectionFolderFilter());
+        addFilters(new EMFObjFilter(), new DQFolderFliter(true), new TDQEEConnectionFolderFilter(), new RecycleBinFilter());
         addListeners();
 
     }

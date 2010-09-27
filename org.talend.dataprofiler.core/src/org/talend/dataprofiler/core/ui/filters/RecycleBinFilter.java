@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.filters;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.Viewer;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.RepositoryObject;
 import org.talend.dq.helper.PropertyHelper;
 
 /**
@@ -45,6 +46,13 @@ public class RecycleBinFilter extends AbstractViewerFilter {
         if (element instanceof IFile) {
             IFile model = (IFile) element;
             Property property = PropertyHelper.getProperty(model);
+            if (null != property && property.getItem().getState().isDeleted()) {
+                return false;
+            }
+        }
+        if (element instanceof RepositoryObject) {
+            RepositoryObject obj = (RepositoryObject) element;
+            Property property = obj.getProperty();
             if (null != property && property.getItem().getState().isDeleted()) {
                 return false;
             }
