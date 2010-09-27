@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -64,8 +65,10 @@ public final class TDQMDMConnectionReposViewObjDelegator extends TDQConnectionRe
                 // Register the Repository view objects by connection to be able to grab the Repository view object
                 // later.
                 Item item = reposViewObj.getProperty().getItem();
-                MDMConnection connection = (MDMConnection) ((MDMConnectionItem) item).getConnection();
-                register(connection, reposViewObj);
+                if (!(item instanceof FolderItem)) {
+                    MDMConnection connection = (MDMConnection) ((MDMConnectionItem) item).getConnection();
+                    register(connection, reposViewObj);
+                }
             }
 
         } catch (PersistenceException e) {

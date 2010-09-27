@@ -1001,7 +1001,7 @@ public final class ConnectionUtils {
         Properties properties = new Properties();
         properties.put(TaggedValueHelper.USER, mdmConn.getUsername());
         properties.put(TaggedValueHelper.PASSWORD, mdmConn.getPassword());
-        properties.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse());
+        properties.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse());
         MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), properties);
         ConnectionHelper.addXMLDocuments(mdmWsConn.createConnection(), mdmConn);
         return mdmConn;

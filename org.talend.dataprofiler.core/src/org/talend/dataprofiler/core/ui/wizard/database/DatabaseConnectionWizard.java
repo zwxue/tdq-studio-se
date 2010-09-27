@@ -122,7 +122,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(cwmElement);
         }
         TypedReturnCode<Object> reposViewObjRC = new TypedReturnCode<Object>();
-        ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
+        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(Boolean.TRUE);
         reposViewObjRC.setObject(ProxyRepositoryViewObject.getRepositoryViewObject((Connection) cwmElement));
         return reposViewObjRC;
     }
