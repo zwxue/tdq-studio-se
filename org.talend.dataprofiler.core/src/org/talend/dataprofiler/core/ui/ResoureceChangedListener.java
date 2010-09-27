@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -109,9 +110,11 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
                 // if (isExist(uri)) {
 
                 resource = RepResourceFileHelper.getInstance().getFileResource(file);
-                // resource = EMFSharedResources.getInstance().getResource(uri, true);
-                refreshedRannables.add(getRefreshRunnable(resource));
-                // }
+
+                if (resource != null && checkResource(resource)) {
+                    refreshedRannables.add(getRefreshRunnable(resource));
+                }
+
             } catch (Exception e) {
                 log.error(e);
                 e.printStackTrace();
@@ -121,6 +124,17 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
             postEventExecute(refreshedRannables);
         }
         // reRegisterListner();
+    }
+
+    private boolean checkResource(Resource resource) {
+        URI uri = resource.getURI();
+
+        if (uri.isFile()) {
+            return new File(uri.toFileString()).exists();
+        } else {
+            IPath fullPath = new Path(uri.toPlatformString(false));
+            return ResourceManager.getRoot().getFile(fullPath).exists();
+        }
     }
 
     // private void reRegisterListner() {
@@ -203,7 +217,6 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
                 }
             }
-
         };
     }
 

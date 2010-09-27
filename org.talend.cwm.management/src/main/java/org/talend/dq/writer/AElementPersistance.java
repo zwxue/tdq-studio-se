@@ -351,7 +351,7 @@ public abstract class AElementPersistance {
             URI uri = eResource.getURI();
 
             if (item instanceof TDQItem) {
-                ((TDQItem) item).setFilename(uri.lastSegment());
+                ((TDQItem) item).setFilename(URI.decode(uri.lastSegment()));
             }
 
             if (uri.isPlatform()) {

@@ -249,6 +249,8 @@ public class FileSystemImportWriter implements IImportWriter {
                             fileName = new Path(fileName).removeFileExtension().lastSegment();
                         }
 
+                        property.setLabel(fileName);
+
                         IPath statePath;
                         ItemState state = property.getItem().getState();
                         if (state != null && state.getPath() != null) {
