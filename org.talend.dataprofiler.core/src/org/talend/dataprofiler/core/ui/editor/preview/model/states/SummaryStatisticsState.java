@@ -46,7 +46,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
     private static Logger log = Logger.getLogger(SummaryStatisticsState.class);
 
-    public static final int FULL_FLAG = 8;
+    public static final int FULL_FLAG = 6;
 
     private int sqltype;
 
