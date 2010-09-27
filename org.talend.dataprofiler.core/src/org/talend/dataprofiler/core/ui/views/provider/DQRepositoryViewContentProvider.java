@@ -29,6 +29,7 @@ import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -81,7 +82,8 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             // Currently we only care about connection Item.
             Item connItem = conn.getProperty().getItem();
             if (connItem instanceof ConnectionItem) {
-                return ((ConnectionItem) connItem).getConnection().getDataPackage().toArray();
+                return ConnectionUtils.fillConnectionInformation(((ConnectionItem) connItem).getConnection()).getDataPackage()
+                        .toArray();
             }
         } else if (parentElement instanceof IFolderNode) {
             IFolderNode folerNode = (IFolderNode) parentElement;

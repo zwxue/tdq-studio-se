@@ -352,4 +352,29 @@ public final class MetadataHelper {
         }
         return getDefaultDataminingType(0);
     }
+
+    /**
+     * DOC xqliu Comment method "setRetrieveAllMetadata".
+     * 
+     * @param retrieveAllMetadata
+     * @param element
+     * @return
+     */
+    public static boolean setRetrieveAllMetadata(String retrieveAllMetadata, ModelElement element) {
+        return TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.RETRIEVE_ALL, retrieveAllMetadata);
+    }
+
+    /**
+     * DOC xqliu Comment method "getRetrieveAllMetadata".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getRetrieveAllMetadata(ModelElement element) {
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.RETRIEVE_ALL, element.getTaggedValue());
+        if (tv == null) {
+            return "true";
+        }
+        return tv.getValue();
+    }
 }

@@ -44,14 +44,20 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -959,5 +965,152 @@ public final class ConnectionUtils {
         if (mdmConn != null) {
             mdmConn.setContext(sid);
         }
+    }
+
+    /**
+     * DOC connection created by TOS need to fill the basic information for useing in TOP.
+     * 
+     * @param conn
+     * @return
+     */
+    public static Connection fillConnectionInformation(Connection conn) {
+        if (conn.getName() == null || conn.getLabel() == null) {
+            DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+            if (dbConn != null) {
+                conn = fillDbConnectionInformation(dbConn);
+            } else {
+                MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
+                if (mdmConn != null) {
+                    conn = fillMdmConnectionInformation(mdmConn);
+                }
+            }
+        }
+        return conn;
+    }
+
+    /**
+     * DOC xqliu Comment method "fillMdmConnectionInformation".
+     * 
+     * @param mdmConn
+     * @return
+     */
+    public static MDMConnection fillMdmConnectionInformation(MDMConnection mdmConn) {
+        // fill name label and metadata
+        mdmConn = (MDMConnection) fillConnectionMetadataInformation(mdmConn);
+        // fill database structure
+        Properties properties = new Properties();
+        properties.put(TaggedValueHelper.USER, mdmConn.getUsername());
+        properties.put(TaggedValueHelper.PASSWORD, mdmConn.getPassword());
+        properties.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse());
+        MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), properties);
+        ConnectionHelper.addXMLDocuments(mdmWsConn.createConnection(), mdmConn);
+        return mdmConn;
+    }
+
+    /**
+     * DOC xqliu Comment method "fillDbConnectionInformation".
+     * 
+     * @param dbConn
+     * @return
+     */
+    /**
+     * DOC xqliu Comment method "fillDbConnectionInformation".
+     * 
+     * @param dbConn
+     * @return
+     */
+    public static DatabaseConnection fillDbConnectionInformation(DatabaseConnection dbConn) {
+        // fill name label and metadata
+        dbConn = (DatabaseConnection) fillConnectionMetadataInformation(dbConn);
+        // fill database structure
+        if (dbConn.getDriverClass().equals(DatabaseConstant.XML_EXIST_DRIVER_NAME)) { // xmldb(e.g eXist)
+            IXMLDBConnection xmlDBConnection = new EXistXMLDBConnection(dbConn.getDriverClass(), dbConn.getURL());
+            ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(), dbConn);
+        } else {
+            try {
+                dbConn = (DatabaseConnection) TalendCwmFactory.createDataProvider(createDBConnect(dbConn, false));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return dbConn;
+    }
+
+    /**
+     * DOC xqliu Comment method "fillConnectionMetadataInformation".
+     * 
+     * @param conn
+     * @return
+     */
+    public static Connection fillConnectionMetadataInformation(Connection conn) {
+        Property property = PropertyHelper.getProperty(conn);
+        // fill name and label
+        conn.setName(property.getLabel());
+        conn.setLabel(property.getLabel());
+        // fill metadata
+        MetadataHelper.setAuthor(conn, property.getAuthor().getLogin());
+        MetadataHelper.setDescription(property.getDescription(), conn);
+        String statusCode = property.getStatusCode() == null ? "" : property.getStatusCode();
+        MetadataHelper.setDevStatus(conn, "".equals(statusCode) ? DevelopmentStatus.DRAFT.getLiteral() : statusCode);
+        MetadataHelper.setPurpose(property.getPurpose(), conn);
+        MetadataHelper.setVersion(property.getVersion(), conn);
+        MetadataHelper.setRetrieveAllMetadata("true", conn);
+        return conn;
+    }
+
+    /**
+     * DOC xqliu Comment method "createConnectionParam".
+     * 
+     * @param conn
+     * @return
+     */
+    public static DBConnectionParameter createConnectionParam(Connection conn) {
+        DBConnectionParameter connectionParam = new DBConnectionParameter();
+
+        Properties properties = new Properties();
+        // MOD xqliu 2010-08-06 bug 14593
+        properties.setProperty(TaggedValueHelper.USER, ConnectionUtils.getUsernameDefault(conn));
+        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionUtils.getPasswordDefault(conn));
+        // ~ 14593
+        connectionParam.setParameters(properties);
+        connectionParam.setName(conn.getName());
+        connectionParam.setAuthor(MetadataHelper.getAuthor(conn));
+        connectionParam.setDescription(MetadataHelper.getDescription(conn));
+        connectionParam.setPurpose(MetadataHelper.getPurpose(conn));
+        connectionParam.setStatus(MetadataHelper.getDevStatus(conn));
+        connectionParam.setDriverPath("");
+        connectionParam.setDriverClassName(ConnectionUtils.getDriverClass(conn));
+        connectionParam.setJdbcUrl(ConnectionUtils.getURL(conn));
+        connectionParam.setHost(ConnectionUtils.getServerName(conn));
+        connectionParam.setPort(ConnectionUtils.getPort(conn));
+        // MOD mzhao adapte model. MDM connection editing need handle additionally.
+        // connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE,
+        // DataProviderHelper.getUniverse(connection));
+        connectionParam.setDbName(ConnectionUtils.getSID(conn));
+
+        return connectionParam;
+    }
+
+    /**
+     * DOC xqliu Comment method "createDBConnect".
+     * 
+     * @param conn
+     * @param connect
+     * @return
+     */
+    public static DBConnect createDBConnect(Connection conn, boolean connect) {
+        DBConnect dbConnect = new DBConnect(createConnectionParam(conn));
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
+        if (dbConn != null) {
+            dbConnect.setDatabaseConnection(dbConn);
+        }
+        if (connect) {
+            try {
+                dbConnect.connect();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return dbConnect;
     }
 }

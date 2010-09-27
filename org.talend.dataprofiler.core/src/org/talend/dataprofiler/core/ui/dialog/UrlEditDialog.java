@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.dialog;
 
-import java.util.Properties;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
@@ -27,11 +25,9 @@ import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControlFactory;
-import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
 /**
@@ -89,30 +85,8 @@ public class UrlEditDialog extends TrayDialog {
         return comp;
     }
 
-    private DBConnectionParameter createConnectionParam(Connection dataProvider) {
-        connectionParam = new DBConnectionParameter();
-
-        Properties properties = new Properties();
-        // MOD xqliu 2010-08-06 bug 14593
-        properties.setProperty(TaggedValueHelper.USER, ConnectionUtils.getUsernameDefault(tdDataProvider));
-        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionUtils.getPasswordDefault(tdDataProvider));
-        // ~ 14593
-        connectionParam.setParameters(properties);
-        connectionParam.setName(dataProvider.getName());
-        connectionParam.setAuthor(MetadataHelper.getAuthor(dataProvider));
-        connectionParam.setDescription(MetadataHelper.getDescription(dataProvider));
-        connectionParam.setPurpose(MetadataHelper.getPurpose(dataProvider));
-        connectionParam.setStatus(MetadataHelper.getDevStatus(dataProvider));
-        connectionParam.setDriverPath("");
-        connectionParam.setDriverClassName(ConnectionUtils.getDriverClass(tdDataProvider));
-        connectionParam.setJdbcUrl(ConnectionUtils.getURL(tdDataProvider));
-        connectionParam.setHost(ConnectionUtils.getServerName(tdDataProvider));
-        connectionParam.setPort(ConnectionUtils.getPort(tdDataProvider));
-        // MOD mzhao adapte model. MDM connection editing need handle additionally.
-        // connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE,
-        // DataProviderHelper.getUniverse(connection));
-        connectionParam.setDbName(ConnectionUtils.getSID(tdDataProvider));
-
+    private DBConnectionParameter createConnectionParam(Connection tdDataProvider2) {
+        connectionParam = ConnectionUtils.createConnectionParam(tdDataProvider2);
         return connectionParam;
     }
 

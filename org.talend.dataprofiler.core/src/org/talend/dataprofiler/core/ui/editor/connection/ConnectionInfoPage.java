@@ -119,7 +119,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 connection = ((ConnectionItem) item).getConnection();
             }
         }
-        return connection;
+        return ConnectionUtils.fillConnectionInformation(connection);
     }
 
     @Override

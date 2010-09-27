@@ -72,6 +72,10 @@ public class DBConnect {
 
     // TODO scorreia errorMessage;
 
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
+    }
+
     /**
      * DBConnect constructor.
      * 
@@ -362,7 +366,8 @@ public class DBConnect {
         // MOD xqliu 2009-02-03 bug 5261
         connection = ConnectionUtils.createConnectionWithTimeout(driver, dbUrl, props);
         if (connection != null) {
-            DatabaseContentRetriever.fillConnectionInfo(databaseConnection, dbUrl, driverClassName, props, connection);
+            databaseConnection = DatabaseContentRetriever.fillConnectionInfo(databaseConnection, dbUrl, driverClassName, props,
+                    connection);
         }
 
         return ok;
