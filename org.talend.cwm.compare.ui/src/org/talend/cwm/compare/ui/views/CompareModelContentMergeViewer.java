@@ -91,9 +91,9 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
     private Object selectedOjbect = null;
 
-    private ModelContentMergeDiffTab diffTabLeft = null;
+    public ModelContentMergeDiffTab diffTabLeft = null;
 
-    private ModelContentMergeDiffTab diffTabRight = null;
+    public ModelContentMergeDiffTab diffTabRight = null;
 
     public CompareModelContentMergeViewer(Composite parent, CompareConfiguration config, Object selObj) {
         super(parent, config);
