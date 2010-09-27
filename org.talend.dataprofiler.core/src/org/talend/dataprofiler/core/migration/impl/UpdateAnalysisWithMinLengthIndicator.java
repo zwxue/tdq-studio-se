@@ -90,7 +90,7 @@ public class UpdateAnalysisWithMinLengthIndicator extends AbstractWorksapceUpdat
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
-        return createDate(2010, 07, 06);
+        return createDate(2010, 06, 20);
     }
 
 }

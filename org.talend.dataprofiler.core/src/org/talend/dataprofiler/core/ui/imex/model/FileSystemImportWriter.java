@@ -242,8 +242,12 @@ public class FileSystemImportWriter implements IImportWriter {
                         Property property = record.getProperty();
 
                         String fileName = record.getFile().getName();
-                        fileName = fileName.substring(0, fileName.lastIndexOf("_"));
-                        property.setLabel(fileName);
+                        int lastIndex = fileName.lastIndexOf("_");
+                        if (lastIndex > 0) {
+                            fileName = fileName.substring(0, lastIndex);
+                        } else {
+                            fileName = new Path(fileName).removeFileExtension().lastSegment();
+                        }
 
                         IPath statePath;
                         ItemState state = property.getItem().getState();

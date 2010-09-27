@@ -86,7 +86,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
             if (file.isFile()) {
                 URI uri = URI.createFileURI(file.getAbsolutePath());
 
-                System.out.println("---------Translate " + uri.toString());
+                // System.out.println("---------Translate " + uri.toString());
 
                 Resource resource = emfUtil.getResourceSet().getResource(uri, true);
 
