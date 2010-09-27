@@ -75,6 +75,28 @@ public final class ProxyRepositoryViewObject {
 
     /**
      * 
+     * DOC yyi Get all metadata connections.
+     * 
+     * @return
+     */
+    public static List<Connection> getAllMetadataConnections(boolean excludeRecycleBin) {
+        List<Connection> connections = new ArrayList<Connection>();
+        if (excludeRecycleBin) {
+            for (Connection con : getAllMetadataConnections()) {
+                if (null == con.eResource()) {
+                    con = (Connection) EObjectHelper.resolveObject(con);
+                }
+
+                if (null != con.eResource() && !PropertyHelper.getProperty(con).getItem().getState().isDeleted()) {
+                    connections.add(con);
+                }
+            }
+        }
+        return connections;
+    }
+
+    /**
+     * 
      * DOC mzhao Get all database connections.
      * 
      * @return

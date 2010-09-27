@@ -164,13 +164,15 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     // MOD mzhao 2009-05-05, bug 6587.
     protected void reloadDataproviderAndFillConnCombo() {
+        // MOD yyi 2010-09-27 14549: delete or hide connections when a connection is moved to the trash bin
         // MOD xqliu 2010-09-26 bug 15685
         // Collection<Connection> connections = ProxyRepositoryViewObject.getAllDatabaseConnections(true);
         // // MOD qiongli bug 14891 2010-9-20,Add MDM connections
         // Collection<Connection> mdmConne = ProxyRepositoryViewObject.getAllMDMConnections(true);
         // connections.addAll(mdmConne);
-        Collection<Connection> connections = ProxyRepositoryViewObject.getAllMetadataConnections();
+        Collection<Connection> connections = ProxyRepositoryViewObject.getAllMetadataConnections(true);
         // ~ 15685
+        // ~ 14549
 
         int index = 0;
         connCombo.removeAll();
