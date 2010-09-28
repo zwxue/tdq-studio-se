@@ -77,6 +77,11 @@ public class LogicalDeleteFileHandle {
      */
     public static void replaceInFile(String oldString, String newString) {
 
+        File file = new Path(filePath).toFile();
+        if (!file.exists()) {
+            return;
+        }
+
         InputStream in = null;
         InputStreamReader inRead = null;
         try {
