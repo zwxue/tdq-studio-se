@@ -133,15 +133,20 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
      */
     private void repaintingTreePart(ModelContentMergeDiffTab diffTab) {
         Tree tree = diffTab.getTree();
+
         for (int i = 0; i < tree.getItemCount(); i++) {
             String text = tree.getItem(i).getText();
             StringBuffer sb = new StringBuffer(text);
-            if ("".equals(sb) && sb.substring(0, 3).equals("Td ")) {
+            if (!"".equals(sb) && sb.substring(0, 3).equals("Td ")) {
                 sb.replace(0, 2, "");
                 tree.getItem(i).setText(sb.toString());
+            } else {
+                String root = diff.getLeftRoots().get(0).toString();
+                tree.getItem(i).setText(root);
             }
 
         }
+
     }
 
     /**
