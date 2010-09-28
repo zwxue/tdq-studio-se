@@ -140,11 +140,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
             if (!"".equals(sb) && sb.substring(0, 3).equals("Td ")) {
                 sb.replace(0, 2, "");
                 tree.getItem(i).setText(sb.toString());
-            } else {
-                String root = diff.getLeftRoots().get(0).toString();
-                tree.getItem(i).setText(root);
             }
-
         }
 
     }
