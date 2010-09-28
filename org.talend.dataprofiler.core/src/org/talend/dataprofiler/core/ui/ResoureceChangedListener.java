@@ -20,6 +20,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
@@ -89,7 +91,11 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
         };
 
         try {
-            rootDelta.accept(visitor);
+            IResourceDelta docDelta = initFolderForVisitor(rootDelta);
+            if (docDelta == null) {
+                return;
+            } else
+                docDelta.accept(visitor);
         } catch (CoreException e1) {
             log.error(e1);
         }
@@ -126,6 +132,35 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
         // reRegisterListner();
     }
 
+    /**
+     * DOC klliu Comment method "initFolderForVisitor".
+     * 
+     * @param rootDelta
+     */
+    private IResourceDelta initFolderForVisitor(IResourceDelta rootDelta) {
+        IResourceDelta findMember = null;
+        IResourceDelta[] affectedChildren = rootDelta.getAffectedChildren();
+        for (IResourceDelta child : affectedChildren) {
+            String osString = child.getFullPath().toOSString();
+            if (!osString.equals("\\.JETEmitters") && !osString.equals("\\.metadata") && !osString.equals("\\.Java")) {
+                IResourceDelta[] folderDeltas = child.getAffectedChildren();
+                String[] folderNames = { "TDQ_Data Profiling", "connections", "TDQ_Libraries" };
+                IProject rootProject = ResourceManager.getRootProject();
+                IFolder folder = null;
+                for (String folderName : folderNames) {
+                    for (IResourceDelta folderDelta : folderDeltas) {
+                        if (folderDelta.getResource().getName().toString().contains(folderName)) {
+                            folder = rootProject.getFolder(folderName);
+                            IPath fullPath = folder.getFullPath();
+                            findMember = rootDelta.findMember(fullPath);
+                        }
+                    }
+                }
+            }
+        }
+
+        return findMember;
+    }
     private boolean checkResource(Resource resource) {
         URI uri = resource.getURI();
 
