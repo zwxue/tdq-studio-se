@@ -14,9 +14,18 @@ package org.talend.dataprofiler.core.migration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
@@ -24,6 +33,8 @@ import org.talend.resource.ResourceManager;
  * DOC bZhou class global comment. Detailled comment
  */
 public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
+
+    private static Logger log = Logger.getLogger(AbstractWorksapceUpdateTask.class);
 
     public static final String OLD_MEATADATA_FOLDER_NAME = "TDQ_Metadata";
 
@@ -105,6 +116,25 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
         folderList.add(workspacePath.append(OLD_PROFILING_FOLDER_NAME).toFile());
 
         return folderList;
+    }
+
+    protected Collection<Analysis> searchAllAnalysis(IFolder folder) {
+        Collection<Analysis> analyses = new ArrayList<Analysis>();
+        try {
+            for (IResource resource : folder.members()) {
+                if (resource.getType() == IResource.FOLDER) {
+                    analyses.addAll(searchAllAnalysis(folder.getFolder(resource.getName())));
+                    continue;
+                }
+                IFile file = (IFile) resource;
+                if (file.getFileExtension().equals(FactoriesUtil.ANA)) {
+                    analyses.add(AnaResourceFileHelper.getInstance().findAnalysis(file));
+                }
+            }
+        } catch (CoreException e) {
+            log.error(e);
+        }
+        return analyses;
     }
 
 }

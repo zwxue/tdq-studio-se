@@ -1235,6 +1235,12 @@
            name="Update Soundex Indicators For Ingres"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.RefineTextIndicatorsTask"
+           id="org.talend.dataprofiler.core.migration.impl.RefineTextIndicatorsTask"
+           name="Refine text statistics indicators task"
+           version="4.1.0">
+     </workspacetask>
      
 
   </extension>
