@@ -31,7 +31,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.builders.CatalogBuilder;
-import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.constants.SoftwareSystemConstants;
@@ -78,7 +77,8 @@ public final class DatabaseContentRetriever {
      * @return a map [name of catalog, catalog]
      * @throws SQLException
      */
-    public static Collection<Catalog> getCatalogs(java.sql.Connection connection) throws SQLException {
+    public static Collection<Catalog> getCatalogs(org.talend.core.model.metadata.builder.connection.Connection connection)
+            throws SQLException {
         CatalogBuilder builder = new CatalogBuilder(connection);
         return builder.getCatalogs();
     }
@@ -393,7 +393,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdTable> getTablesWithColumns(String catalogName, String schemaPattern, String tablePattern,
-            java.sql.Connection connection) throws SQLException {
+            org.talend.core.model.metadata.builder.connection.Connection connection) throws SQLException {
         TableBuilder tableBuilder = new TableBuilder(connection);
         tableBuilder.setColumnsRequested(true);
         return tableBuilder.getColumnSets(catalogName, schemaPattern, tablePattern);
@@ -410,7 +410,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdTable> getTablesWithoutColumns(String catalogName, String schemaPattern, String tablePattern,
-            java.sql.Connection connection) throws SQLException {
+            org.talend.core.model.metadata.builder.connection.Connection connection) throws SQLException {
         TableBuilder tableBuilder = new TableBuilder(connection);
         return tableBuilder.getColumnSets(catalogName, schemaPattern, tablePattern);
     }
@@ -426,7 +426,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdView> getViewsWithColumns(String catalogName, String schemaPattern, String viewPattern,
-            java.sql.Connection connection) throws SQLException {
+            org.talend.core.model.metadata.builder.connection.Connection connection) throws SQLException {
         ViewBuilder viewBuilder = new ViewBuilder(connection);
         viewBuilder.setColumnsRequested(true);
         return viewBuilder.getColumnSets(catalogName, schemaPattern, viewPattern);
@@ -443,7 +443,7 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      */
     public static List<TdView> getViewsWithoutColumns(String catalogName, String schemaPattern, String viewPattern,
-            java.sql.Connection connection) throws SQLException {
+            org.talend.core.model.metadata.builder.connection.Connection connection) throws SQLException {
         ViewBuilder viewBuilder = new ViewBuilder(connection);
         return viewBuilder.getColumnSets(catalogName, schemaPattern, viewPattern);
     }
@@ -515,8 +515,7 @@ public final class DatabaseContentRetriever {
 
     // MOD mzhao feature 10814, 2010-05-26
     public static DatabaseConnection fillConnectionInfo(DatabaseConnection prov, String dbUrl, String driverClassName,
-            Properties props,
-            java.sql.Connection connection) throws SQLException {
+            Properties props, java.sql.Connection connection) throws SQLException {
         prov.setDriverClass(driverClassName);
         prov.setURL(dbUrl);
         try {
@@ -708,10 +707,12 @@ public final class DatabaseContentRetriever {
      * @throws SQLException
      * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
-    public static List<TdColumn> getColumns(String catalogName, String schemaPattern, String tablePattern, String columnPattern,
-            java.sql.Connection connection) throws SQLException {
-        return new ColumnBuilder(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
-    }
+    // MOD by zshen need DatabaseConnection to be prarmeter
+    // public static List<TdColumn> getColumns(String catalogName, String schemaPattern, String tablePattern, String
+    // columnPattern,
+    // java.sql.Connection connection) throws SQLException {
+    // return new ColumnBuilder(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
+    // }
 
     // method not used!? TODO remove?
     /**

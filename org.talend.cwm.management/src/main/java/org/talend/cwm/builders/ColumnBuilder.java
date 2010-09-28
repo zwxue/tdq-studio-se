@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.util.TDColumnAttributeHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
@@ -41,7 +42,12 @@ public class ColumnBuilder extends CwmBuilder {
      * @param conn
      * @throws SQLException
      */
+    // private ColumnBuilder(java.sql.Connection conn) {
+    // super(conn);
+    // }
+
     public ColumnBuilder(Connection conn) {
+        // this(JavaSqlFactory.createConnection(conn).getObject());
         super(conn);
     }
 
@@ -66,7 +72,11 @@ public class ColumnBuilder extends CwmBuilder {
         ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         while (columns.next()) {
             TdColumn column = RelationalFactory.eINSTANCE.createTdColumn();
-            tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column, connection));
+            if (dbConnection != null) {
+                tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column, (DatabaseConnection) dbConnection));
+            } else {
+                tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column, connection));
+            }
         }
         columns.close();
         return tableColumns;

@@ -38,7 +38,7 @@ public class DataProviderBuilder extends CwmBuilder {
      */
     public DataProviderBuilder(DatabaseConnection databaseConn, Connection conn, Driver driver, String databaseUrl)
             throws SQLException {
-        super(conn);
+        super(databaseConn);
         dataProvider = databaseConn;
 
         // MOD xqliu 2009-07-13 bug 7888

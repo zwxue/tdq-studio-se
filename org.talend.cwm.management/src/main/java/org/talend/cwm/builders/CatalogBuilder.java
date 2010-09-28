@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,6 +59,7 @@ public class CatalogBuilder extends CwmBuilder {
     public DBConnectionParameter getDbConnectionParameter() {
         return dbConnectionParameter;
     }
+
     // ~11412
 
     /**
@@ -69,7 +69,27 @@ public class CatalogBuilder extends CwmBuilder {
      * @param connection2 the sql connection
      * @throws SQLException
      */
-    public CatalogBuilder(Connection conn) {
+    // public CatalogBuilder(Connection conn) {
+    // super(conn);
+    // try {
+    // if (log.isDebugEnabled()) {
+    // printMetadata();
+    // }
+    // } catch (RuntimeException e) {
+    // log.error(e, e);
+    // } catch (SQLException e) {
+    // log.error(e, e);
+    // }
+    //
+    // }
+    /**
+     * CatalogBuilder constructor. Catalogs and/or schemata are initialized, but not the lower structure such as the
+     * table, trigger, procedures...
+     * 
+     * @param connection2 the sql connection
+     * @throws SQLException
+     */
+    public CatalogBuilder(org.talend.core.model.metadata.builder.connection.Connection conn) {
         super(conn);
         try {
             if (log.isDebugEnabled()) {
@@ -89,7 +109,19 @@ public class CatalogBuilder extends CwmBuilder {
      * @param conn
      * @param dbParam
      */
-    public CatalogBuilder(Connection conn, DBConnectionParameter dbParam) {
+    // public CatalogBuilder(Connection conn, DBConnectionParameter dbParam) {
+    // this(conn);
+    // this.dbConnectionParameter = dbParam;
+    // }
+
+    /**
+     * 
+     * DOC zshen CatalogBuilder constructor comment.
+     * 
+     * @param conn
+     * @param dbParam
+     */
+    public CatalogBuilder(org.talend.core.model.metadata.builder.connection.Connection conn, DBConnectionParameter dbParam) {
         this(conn);
         this.dbConnectionParameter = dbParam;
     }
@@ -328,7 +360,7 @@ public class CatalogBuilder extends CwmBuilder {
                 // ADD xqliu 2010-04-21 bug 12452
                 List<Schema> retrievedSchemas = new ArrayList<Schema>();
                 for (Schema schema : schemas) {
-                	// MOD xqliu 2010-05-07 bug 9840
+                    // MOD xqliu 2010-05-07 bug 9840
                     if (retrieveCatalogSchema(dbName, schema.getName()) || odbcIngres) {
                         retrievedSchemas.add(schema);
                     }

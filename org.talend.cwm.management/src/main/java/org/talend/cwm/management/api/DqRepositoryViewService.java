@@ -454,13 +454,15 @@ public final class DqRepositoryViewService {
             throws TalendException {
         assert table != null;
         List<TdColumn> columns = new ArrayList<TdColumn>();
+
         TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
         if (!rcConn.isOk()) {
             log.error(rcConn.getMessage()); // scorreia show error to the user
             throw new TalendException(rcConn.getMessage());
         }
         java.sql.Connection connection = rcConn.getObject();
-        ColumnBuilder colBuilder = new ColumnBuilder(connection);
+        // MOD by zshen for add the attribute of talend_type on tos.
+        ColumnBuilder colBuilder = new ColumnBuilder(dataProvider);
 
         String catalogName = getName(CatalogHelper.getParentCatalog(table));
         Schema schema = SchemaHelper.getParentSchema(table);
@@ -480,7 +482,7 @@ public final class DqRepositoryViewService {
             ColumnSetHelper.addColumns(table, columns);
             // MOD scorreia 2009-01-29 get primary keys of the table
             if (orgomg.cwm.resource.relational.RelationalPackage.eINSTANCE.getTable().isSuperTypeOf(table.eClass())) {
-                TableBuilder tableBuild = new TableBuilder(connection);
+                TableBuilder tableBuild = new TableBuilder(dataProvider);
                 // link PKs to Columns
                 List<PrimaryKey> primaryKeys = tableBuild.getPrimaryKeys(catalogName, schemaPattern, tablePattern);
                 TableHelper.addPrimaryKeys(table, primaryKeys);
@@ -536,7 +538,7 @@ public final class DqRepositoryViewService {
         String schemaName = (schema == null) ? null : schema.getName();
         String catalogName = (catalog == null) ? null : catalog.getName();
         try {
-            AbstractTableBuilder<? extends NamedColumnSet> tableBuilder = getBuilder(connection, classifierID);
+            AbstractTableBuilder<? extends NamedColumnSet> tableBuilder = getBuilder(dataProvider, classifierID);
             // tableBuilder.setColumnsRequested(true);
             List loadedTables = tableBuilder.getColumnSets(catalogName, schemaName, tablePattern);
             tables.addAll(loadedTables);
@@ -559,7 +561,7 @@ public final class DqRepositoryViewService {
      * @param classifierID
      * @return
      */
-    private static AbstractTableBuilder<? extends NamedColumnSet> getBuilder(java.sql.Connection connection, int classifierID) {
+    private static AbstractTableBuilder<? extends NamedColumnSet> getBuilder(Connection connection, int classifierID) {
         switch (classifierID) {
         case RelationalPackage.TD_TABLE:
             return new TableBuilder(connection);

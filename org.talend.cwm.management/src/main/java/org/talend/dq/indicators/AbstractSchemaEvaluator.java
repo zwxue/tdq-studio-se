@@ -419,7 +419,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         schemaIndic.setAnalyzedElement(hasSchema ? tdSchema : tdCatalog);
 
         // profile tables
-        TableBuilder tableBuilder = new TableBuilder(connection);
+        TableBuilder tableBuilder = new TableBuilder(this.getDataManager());
         int tableCount = 0;
         final String[] tablePatterns = tablePattern != null && tablePattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
                 .split(this.tablePattern, FILTER_SEP) : new String[] { this.tablePattern };
@@ -436,7 +436,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         schemaIndic.setTableCount(tableCount);
 
         // do the same for views
-        ViewBuilder viewBuilder = new ViewBuilder(connection);
+        ViewBuilder viewBuilder = new ViewBuilder(this.getDataManager());
         int viewCount = 0;
         final String[] viewPatterns = viewPattern != null && viewPattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
                 .split(this.viewPattern, FILTER_SEP) : new String[] { this.viewPattern };
@@ -570,7 +570,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     public boolean checkCatalog(String catName) {
 
         if (0 == catalogsName.size()) {
-            Collection<Catalog> catalogs = new CatalogBuilder(connection).getCatalogs();
+            Collection<Catalog> catalogs = new CatalogBuilder(this.getDataManager()).getCatalogs();
             for (Catalog tc : catalogs) {
                 catalogsName.add(tc.getName());
             }
@@ -592,7 +592,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     protected boolean checkSchemaByName(String catName) {
 
         if (0 == schemasName.size()) {
-            Collection<Schema> schemas = new CatalogBuilder(connection).getSchemata();
+            Collection<Schema> schemas = new CatalogBuilder(this.getDataManager()).getSchemata();
             for (Schema ts : schemas) {
                 schemasName.add(ts.getName());
             }
@@ -618,7 +618,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             if (catalog != null) {
                 try {
                     connection.setCatalog(catalog.getName());
-                    DatabaseContentRetriever.getCatalogs(connection);
+                    DatabaseContentRetriever.getCatalogs(this.getDataManager());
                     // MOD xqliu 2010-01-20 bug 9841
                     List<Schema> schemas = null;
                     if (connection.getMetaData().getDriverName().equals(DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0)) {

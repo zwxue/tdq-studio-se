@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
@@ -30,7 +29,11 @@ public class SoftwareSystemBuilder extends CwmBuilder {
 
     private TypeSystem typeSystem;
 
-    public SoftwareSystemBuilder(Connection conn) throws SQLException {
+    // public SoftwareSystemBuilder(Connection conn) throws SQLException {
+    // super(conn);
+    // softwareSystem = initializeSoftwareSystem();
+    // }
+    public SoftwareSystemBuilder(org.talend.core.model.metadata.builder.connection.Connection conn) throws SQLException {
         super(conn);
         softwareSystem = initializeSoftwareSystem();
     }

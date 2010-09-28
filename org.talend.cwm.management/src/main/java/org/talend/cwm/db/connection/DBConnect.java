@@ -278,7 +278,7 @@ public class DBConnect {
     public boolean retrieveDeployedSystemInformations() throws SQLException {
         boolean ok = checkConnection("Cannot retrieve deployed system informations");
         if (ok) {
-            softwareSystemBuilder = new SoftwareSystemBuilder(connection);
+            softwareSystemBuilder = new SoftwareSystemBuilder(this.databaseConnection);
         }
         return ok;
     }
@@ -294,7 +294,7 @@ public class DBConnect {
         boolean ok = checkConnection("Cannot retrieve database structure. ");
         if (ok && catalogBuilder == null) {
             // MOD xqliu 2010-03-03 feature 11412
-            catalogBuilder = new CatalogBuilder(connection, dbConnectionParameter);
+            catalogBuilder = new CatalogBuilder(this.databaseConnection, dbConnectionParameter);
             // ~11412
             // initialize database structure
             catalogBuilder.getCatalogs();

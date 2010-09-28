@@ -86,7 +86,7 @@ public enum EDriverName {
                        "-50",
                        "lib/terajdbc4.jar",
                        "lib/tdgssconfig.jar"),
-    SQLITE3DEFAULTURL("SQLite3", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar"),
+    SQLITE3DEFAULTURL("SQLite", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar"),
     AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar"),
     // MOD klliu bug 14791 add ingres database url and modify default_driver.xml
     INGRESDEFAULTURL("Ingres", "com.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar");

@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
@@ -34,7 +33,12 @@ public class DataManagerBuilder extends CwmBuilder {
      * @param conn
      * @throws SQLException
      */
-    public DataManagerBuilder(Connection conn) throws SQLException {
+    // public DataManagerBuilder(Connection conn) throws SQLException {
+    // super(conn);
+    // this.dataManager = initializeDataManager();
+    // this.machine = initializeMachine();
+    // }
+    public DataManagerBuilder(org.talend.core.model.metadata.builder.connection.Connection conn) throws SQLException {
         super(conn);
         this.dataManager = initializeDataManager();
         this.machine = initializeMachine();

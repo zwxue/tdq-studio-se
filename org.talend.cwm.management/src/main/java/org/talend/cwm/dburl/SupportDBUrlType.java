@@ -41,7 +41,7 @@ public enum SupportDBUrlType {
                             "oracle.jdbc.OracleDriver", //$NON-NLS-1$ 
                             null,
                             "Oracle"), //$NON-NLS-1$
-    ORACLEWITHSERVICENAMEDEFAULTURL("Oracle with Service Name", //$NON-NLS-1$
+    ORACLEWITHSERVICENAMEDEFAULTURL("Oracle with service name", //$NON-NLS-1$
                                     "localhost", //$NON-NLS-1$
                                     "1521", //$NON-NLS-1$
                                     "dbname", //$NON-NLS-1$
@@ -65,7 +65,7 @@ public enum SupportDBUrlType {
                  "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
                  null,
                  "Microsoft SQL Server 2005/2008"), //$NON-NLS-1$
-    DB2DEFAULTURL("DB2", //$NON-NLS-1$
+    DB2DEFAULTURL("IBM DB2", //$NON-NLS-1$
                   "localhost", //$NON-NLS-1$
                   "50000", //$NON-NLS-1$
                   "dbname", //$NON-NLS-1$
@@ -73,7 +73,7 @@ public enum SupportDBUrlType {
                   "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
                   null,
                   "DB2"), //$NON-NLS-1$
-    DB2ZOSDEFAULTURL("DB2 ZOS", //$NON-NLS-1$
+    DB2ZOSDEFAULTURL("IBM DB2 ZOS", //$NON-NLS-1$
                      "localhost", //$NON-NLS-1$
                      "557", //$NON-NLS-1$
                      "dbname", //$NON-NLS-1$
@@ -121,7 +121,7 @@ public enum SupportDBUrlType {
                        null,
                        "FireBird"), //$NON-NLS-1$
     INGRESDEFAULTURL("Ingres", "localhost", "II7", "dbname", null, "com.ingres.jdbc.IngresDriver", null, "Ingres"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-    SQLITE3DEFAULTURL("SQLite3", "localhost", "", "dbname", null, "org.sqlite.JDBC", null, "SQLite"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+    SQLITE3DEFAULTURL("SQLite", "localhost", "", "dbname", null, "org.sqlite.JDBC", null, "SQLite"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     GENERICJDBCDEFAULTURL("Generic JDBC", "", "", "", null, "", null, "Generic JDBC"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     // MOD klliu 2010-06-04 bug 12819: upgrade jdbc driver class used in sql explorer
     TERADATADEFAULTURL("Teradata", "localhost", null, "dbname", null, "com.teradata.jdbc.TeraDriver", null, "Teradata"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$

@@ -337,7 +337,7 @@ public final class TalendCwmFactory {
                     if (tables.isEmpty()) {
                         // TODO try to load them from DB.
                         List<TdTable> tablesWithAllColumns = DatabaseContentRetriever.getTablesWithColumns(catalog.getName(),
-                                schema.getName(), null, connection);
+                                schema.getName(), null, connector.getDataProvider());
                         ok = SchemaHelper.addTables(tablesWithAllColumns, schema);
                     }
                 }
@@ -346,7 +346,7 @@ public final class TalendCwmFactory {
                 if (tables.isEmpty()) {
                     // TODO try to load them from DB.
                     List<TdTable> tablesWithAllColumns = DatabaseContentRetriever.getTablesWithColumns(catalog.getName(), null,
-                            null, connection);
+                            null, connector.getDataProvider());
                     ok = CatalogHelper.addTables(tablesWithAllColumns, catalog);
 
                     // --- get the resource of the catalog

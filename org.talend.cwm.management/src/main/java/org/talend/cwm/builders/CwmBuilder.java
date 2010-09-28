@@ -20,6 +20,7 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -37,14 +38,21 @@ abstract class CwmBuilder {
 
     protected DbmsLanguage dbms;
 
+    protected org.talend.core.model.metadata.builder.connection.Connection dbConnection;
+
     /**
      * CwmBuilder constructor.
      * 
      * @param conn a connection
      */
-    public CwmBuilder(Connection conn) {
+    private CwmBuilder(Connection conn) {
         this.connection = conn;
         this.dbms = DbmsLanguageFactory.createDbmsLanguage(connection);
+    }
+
+    public CwmBuilder(org.talend.core.model.metadata.builder.connection.Connection conn) {
+        this(JavaSqlFactory.createConnection(conn).getObject());
+        this.dbConnection = conn;
     }
 
     protected void print(String tag, String str) { // for tests only

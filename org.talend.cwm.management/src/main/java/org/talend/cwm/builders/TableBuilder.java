@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -58,7 +57,10 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
      * 
      * @param conn the connection from which the tables will be created.
      */
-    public TableBuilder(Connection conn) {
+    // public TableBuilder(Connection conn) {
+    // super(conn, TableType.TABLE);
+    // }
+    public TableBuilder(org.talend.core.model.metadata.builder.connection.Connection conn) {
         super(conn, TableType.TABLE);
     }
 

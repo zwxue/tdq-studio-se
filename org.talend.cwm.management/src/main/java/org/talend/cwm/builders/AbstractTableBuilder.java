@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,7 +46,14 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
      * @param conn
      * @param type the type of columnSet
      */
-    public AbstractTableBuilder(Connection conn, TableType type) {
+    // public AbstractTableBuilder(Connection conn, TableType type) {
+    // super(conn);
+    // if (type == null) {
+    //            throw new IllegalArgumentException(Messages.getString("AbstractTableBuilder.NoTypeGiven")); //$NON-NLS-1$
+    // }
+    // this.tableType = new String[] { type.toString() };
+    // }
+    public AbstractTableBuilder(org.talend.core.model.metadata.builder.connection.Connection conn, TableType type) {
         super(conn);
         if (type == null) {
             throw new IllegalArgumentException(Messages.getString("AbstractTableBuilder.NoTypeGiven")); //$NON-NLS-1$
@@ -153,7 +159,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
             ColumnSetHelper.setComment(tableComment, table);
         }
         if (columnsRequested) {
-            ColumnBuilder colBuild = new ColumnBuilder(connection);
+            ColumnBuilder colBuild = new ColumnBuilder(dbConnection);
             List<TdColumn> columns = colBuild.getColumns(catalogName, schemaPattern, tableName, null);
             ColumnSetHelper.addColumns(table, columns);
         }

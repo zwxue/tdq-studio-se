@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.cwm.builders;
 
-import java.sql.Connection;
-
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdView;
 import org.talend.utils.sql.metadata.constants.TableType;
@@ -30,7 +29,10 @@ public class ViewBuilder extends AbstractTableBuilder<TdView> {
      * 
      * @param conn the connection from which the views will be created.
      */
-    public ViewBuilder(Connection conn) {
+    // public ViewBuilder(Connection conn) {
+    // super(conn, TableType.VIEW);
+    // }
+    public ViewBuilder(org.talend.core.model.metadata.builder.connection.Connection conn) {
         super(conn, TableType.VIEW);
     }
 
@@ -41,7 +43,10 @@ public class ViewBuilder extends AbstractTableBuilder<TdView> {
      */
     @Override
     protected TdView createTable() {
-        return RelationalFactory.eINSTANCE.createTdView();
+        TdView view = RelationalFactory.eINSTANCE.createTdView();
+        view.setTableType(ExtractMetaDataFromDataBase.ETableTypes.TABLETYPE_VIEW.getName());
+        view.setLabel(view.getName());
+        return view;
     }
 
 }
