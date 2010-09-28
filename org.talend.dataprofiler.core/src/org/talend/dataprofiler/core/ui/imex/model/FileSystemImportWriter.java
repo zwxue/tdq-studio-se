@@ -48,6 +48,7 @@ import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationT
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
@@ -308,6 +309,8 @@ public class FileSystemImportWriter implements IImportWriter {
         if (commonTasks != null) {
             MigrationTaskManager.doMigrationTask(commonTasks, monitor);
         }
+
+        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true);
     }
 
     /*
@@ -337,8 +340,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
         if (!modelTasks.isEmpty()) {
             MigrationTaskManager.doMigrationTask(modelTasks, monitor);
-
-            WorkspaceVersionHelper.storeVersion(versionFile);
+            //
+            // WorkspaceVersionHelper.storeVersion(versionFile);
         }
     }
 

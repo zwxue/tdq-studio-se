@@ -188,7 +188,7 @@ public class CorePlugin extends AbstractUIPlugin {
         if (alias == null) {
             Collection<Connection> allDataProviders = ProxyRepositoryViewObject.getAllDatabaseConnections();
             for (Connection dataProvider : allDataProviders) {
-                if (dataProvider == tdDataProvider) {
+                if (dataProvider.getId().equals(tdDataProvider.getId())) {
                     CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
                     openInSqlEditor(tdDataProvider, query, editorName);
                 }
