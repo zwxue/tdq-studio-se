@@ -138,11 +138,11 @@ public abstract class AElementPersistance {
                 ((RenderedObject) element).setFileName(itemPath.toString());
             }
 
-            rc = save(element);
-
             if (withProperty) {
                 createProperty(element);
             }
+            rc = save(element, withProperty);
+
         }
 
         return rc;
