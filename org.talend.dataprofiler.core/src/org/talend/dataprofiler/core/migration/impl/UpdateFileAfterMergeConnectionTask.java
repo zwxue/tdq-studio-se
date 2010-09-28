@@ -31,12 +31,14 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ProxyRepositoryFactory;
@@ -199,7 +201,11 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
             if (property != null) {
                 Item item = property.getItem();
+                String connNameBofore = null;
+                String connNameAfter = null;
                 if (item instanceof ConnectionItem) {
+                    Connection conn = ((ConnectionItem) item).getConnection();
+                    connNameBofore = conn.eResource().getURI().trimFileExtension().lastSegment();
                     String fileName = propFile.getName();
                     int lastIndex = fileName.lastIndexOf("_");
                     if (lastIndex > 0) {
@@ -207,7 +213,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                     } else {
                         fileName = new Path(fileName).removeFileExtension().lastSegment();
                     }
-
                     property.setLabel(fileName);
                 }
 
@@ -218,6 +223,16 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                             path.removeLastSegments(1), path.lastSegment());
                 }
                 ProxyRepositoryFactory.getInstance().create(item, path, true);
+                if (item instanceof ConnectionItem) {
+                    Connection conn = ((ConnectionItem) item).getConnection();
+                    if (conn.eIsProxy()) {
+                        conn = (Connection) EObjectHelper.resolveObject(conn);
+                    }
+                    connNameAfter = conn.eResource().getURI().trimFileExtension().lastSegment();
+                    if (connNameBofore != null && connNameAfter != null) {
+                        getReplaceStringMap().put(connNameBofore, connNameAfter);
+                    }
+                }
             }
         }
 
