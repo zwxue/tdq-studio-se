@@ -34,6 +34,13 @@
             id="org.talend.dataprofiler.core.ui.views.PatternTestView"
             name="%context.name.PatternTestViewScope">`
       </view>
+       <view
+             category="org.talend.dataprofiler.view.category"
+             class="org.talend.dataprofiler.core.ui.views.DQCheatSheetView"
+             id="org.talend.dataprofiler.core.ui.views.CheatSheetViewId"
+             name="%CheatSheet"
+             restorable="true">
+       </view>
       <!-- view
             category="org.talend.dataprofiler.view.category"
             class="org.talend.dataprofiler.core.ui.views.GraphsView"
@@ -718,12 +725,11 @@
               visible="false">
         </view>
         <view
-              id="org.eclipse.ui.cheatsheets.views.CheatSheetView"
-              minimized="false"
+              id="org.talend.dataprofiler.core.ui.views.CheatSheetViewId"
               ratio="0.6"
               relationship="right"
               relative="org.eclipse.ui.editorss"
-              standalone="true"
+              standalone="false"
               visible="true">
         </view>
       <!--  <view id="org.talend.dataprofiler.core.ui.views.QuanlityView"
