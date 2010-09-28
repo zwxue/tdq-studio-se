@@ -142,6 +142,7 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
             }
         } catch (IOException e) {
             // Fichier non lisible
+            System.out.println(e);
             assert false;
         }
     }
