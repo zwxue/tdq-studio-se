@@ -20,7 +20,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -86,11 +87,16 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                     }
                 }
             }
+			if (columnSet.eIsProxy()) {
+				// resolve the proxy object.
+				columnSet = (ColumnSet) EObjectHelper.resolveObject(columnSet);
+			}
             Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
             if (parentCatalogOrSchema == null) {
                 return;
             }
-            Connection conn = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+			Connection conn = ConnectionHelper
+					.getTdDataProvider(parentCatalogOrSchema);
             if (conn == null) {
                 return;
             }
@@ -108,7 +114,6 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             // MOD scorreia 2009-01-29 columns are stored in the table
             // ColumnSetHelper.addColumns(columnSet, columnList);
             this.setChildren(columnList.toArray());
-            ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
             ProxyRepositoryViewObject.save(conn);
         }
         super.loadChildren();

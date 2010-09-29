@@ -17,11 +17,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.resource.relational.Catalog;
@@ -76,7 +77,16 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         }
         // ~
 
-        Connection conn = DataProviderHelper.getTdDataProvider(pack);
+        if (pack.eIsProxy()) {
+        	// resolve the proxy object.
+        	pack = (orgomg.cwm.objectmodel.core.Package) EObjectHelper.resolveObject(pack);
+			if (pack instanceof Catalog) {
+				catalog = (Catalog) pack;
+			} else if (pack instanceof Schema) {
+				schema = (Schema) pack;
+			}
+        }
+        Connection conn = ConnectionHelper.getTdDataProvider(pack);
         if (conn == null) {
             log.warn(pack.getName());
             return;
@@ -84,9 +94,8 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         // load from database
         loadColumnSets(catalog, schema, conn, columnSets);
         // store views in catalog or schema
-        pack.getOwnedElement().addAll(columnSets);
+        catalog.getOwnedElement().addAll(columnSets);
         this.setChildren(columnSets.toArray());
-        ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
         ProxyRepositoryViewObject.save(conn);
     }
 
