@@ -1054,7 +1054,8 @@ public final class ConnectionUtils {
         MetadataHelper.setDevStatus(conn, "".equals(statusCode) ? DevelopmentStatus.DRAFT.getLiteral() : statusCode);
         MetadataHelper.setPurpose(property.getPurpose(), conn);
         MetadataHelper.setVersion(property.getVersion(), conn);
-        MetadataHelper.setRetrieveAllMetadata("true", conn);
+        String retrieveAllMetadataStr = MetadataHelper.getRetrieveAllMetadata(conn);
+        MetadataHelper.setRetrieveAllMetadata(retrieveAllMetadataStr == null ? "true" : retrieveAllMetadataStr, conn);
         return conn;
     }
 
@@ -1087,6 +1088,9 @@ public final class ConnectionUtils {
         // connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE,
         // DataProviderHelper.getUniverse(connection));
         connectionParam.setDbName(ConnectionUtils.getSID(conn));
+        // MOD by zshen for bug 15314
+        String retrieveAllMetadata = MetadataHelper.getRetrieveAllMetadata(conn);
+        connectionParam.setRetrieveAllMetadata(retrieveAllMetadata == null ? true : Boolean.getBoolean(retrieveAllMetadata));
 
         return connectionParam;
     }

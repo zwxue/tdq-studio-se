@@ -24,7 +24,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
@@ -325,6 +327,10 @@ public class CatalogBuilder extends CwmBuilder {
         // ADD xqliu 2010-03-03 feature 11412
         String dbName = getDbConnectionParameter() == null ? null : getDbConnectionParameter().getDbName();
         // ~11412
+        if (SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage().equals(dbms.getDbmsName())
+                && dbConnection instanceof DatabaseConnection) {
+            dbName = ((DatabaseConnection) dbConnection).getUsername().toUpperCase();
+        }
         // initialize the catalog if not already done
         if (!this.catalogsInitialized) {
             initializeCatalog();
