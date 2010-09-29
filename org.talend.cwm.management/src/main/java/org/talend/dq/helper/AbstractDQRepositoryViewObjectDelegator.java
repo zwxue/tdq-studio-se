@@ -222,7 +222,10 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
                 itemType, path);
         List<IRepositoryViewObject> returnList = new ArrayList<IRepositoryViewObject>();
         for (IRepositoryViewObject newRepositoryObject : folderRepositoryObjectList) {
-            returnList.add(this.getReposViewObjByProperty(newRepositoryObject.getProperty()));
+            IRepositoryViewObject tempRepositoryViewObject = this.getReposViewObjByProperty(newRepositoryObject.getProperty());
+            if (tempRepositoryViewObject != null) {
+                returnList.add(tempRepositoryViewObject);
+            }
         }
         return returnList;
 

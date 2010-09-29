@@ -22,6 +22,7 @@ import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.repository.model.ProxyRepositoryFactory;
 
 /**
@@ -43,6 +44,7 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
 
     protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower() {
         List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
+        List<IRepositoryViewObject> returnconnList = new ArrayList<IRepositoryViewObject>();
         try {
             connList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS, true));
             clear();
@@ -52,14 +54,23 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
                 Item item = reposViewObj.getProperty().getItem();
                 if (!(item instanceof FolderItem)) {
                     DatabaseConnection connection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
-                    register(connection, reposViewObj);
+                    String connectionType = connection.getDatabaseType();
+                    for (SupportDBUrlType dbType : SupportDBUrlType.values()) {
+                        if (dbType.getDBKey().equals(connectionType)
+                                || connectionType.contains(SupportDBUrlType.SYBASEDEFAULTURL.getDBKey())) {
+                            register(connection, reposViewObj);
+                            returnconnList.add(reposViewObj);
+                            break;
+                        }
+                    }
+
                 }
             }
 
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return connList;
+        return returnconnList;
     }
 
 }
