@@ -1055,6 +1055,7 @@ public final class ConnectionUtils {
         MetadataHelper.setPurpose(property.getPurpose(), conn);
         MetadataHelper.setVersion(property.getVersion(), conn);
         String retrieveAllMetadataStr = MetadataHelper.getRetrieveAllMetadata(conn);
+        // MOD klliu bug 15821 retrieveAllMetadataStr for Diff database
         MetadataHelper.setRetrieveAllMetadata(retrieveAllMetadataStr == null ? "true" : retrieveAllMetadataStr, conn);
         return conn;
     }
@@ -1090,7 +1091,8 @@ public final class ConnectionUtils {
         connectionParam.setDbName(ConnectionUtils.getSID(conn));
         // MOD by zshen for bug 15314
         String retrieveAllMetadata = MetadataHelper.getRetrieveAllMetadata(conn);
-        connectionParam.setRetrieveAllMetadata(retrieveAllMetadata == null ? true : Boolean.getBoolean(retrieveAllMetadata));
+        connectionParam.setRetrieveAllMetadata(retrieveAllMetadata == null ? true : new Boolean(retrieveAllMetadata)
+                .booleanValue());
 
         return connectionParam;
     }
