@@ -34,11 +34,9 @@ import org.talend.dataprofiler.core.recycle.SelectedResources;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author qiongli Restore recycle bin element
@@ -70,11 +68,6 @@ public class DQRestoreAction extends Action {
                     Property propertyTMP = repViewObj.getProperty();
                     propertyTMP.getItem().getState().setDeleted(false);
                     ProxyRepositoryFactory.getInstance().save(propertyTMP);
-                    EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
-
-                    ReturnCode rc = ElementWriterFactory.getInstance().createDataProviderWriter().saveProperty(property);
-                    if (!rc.isOk())
-                        return;
                 } else {
                     property.getItem().getState().setDeleted(false);
                     Resource propertyResource = property.eResource();

@@ -21,6 +21,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -76,6 +77,7 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         if (isPhysicalDelete()) {
             ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
             LogicalDeleteFileHandle.deleteElement(file);
+            EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
         } else {
             ProxyRepositoryFactory.getInstance().deleteObjectLogical(repositoryObject);
             LogicalDeleteFileHandle.deleteLogical(file);

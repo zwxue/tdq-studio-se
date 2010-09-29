@@ -192,7 +192,11 @@ public final class ProxyRepositoryViewObject {
         // MOD qiongli bug 14469
         Item item = property.getItem();
         if (item instanceof ConnectionItem) {
-            return getRepositoryViewObject(((ConnectionItem) item).getConnection());
+            Connection connection = ((ConnectionItem) item).getConnection();
+            if (connection != null && connection.eIsProxy()) {
+                connection = (Connection) EObjectHelper.resolveObject(connection);
+            }
+            return getRepositoryViewObject(connection);
         }
         return null;
     }

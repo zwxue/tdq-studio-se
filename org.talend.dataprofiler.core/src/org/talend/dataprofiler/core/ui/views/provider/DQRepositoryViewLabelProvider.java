@@ -44,6 +44,7 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
@@ -188,7 +189,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         } else if ((element instanceof TdTable || element instanceof TdView) && tableOwner != null && !"".equals(tableOwner)) {
             return super.getText(element) + "(" + tableOwner + ")";
         } else
-        // MOD qiongli FIXME give more description here for the modification purpose.
+        // MOD qiongli :get the name of recycle bin's child
         if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
             Object obj = rbn.getObject();
@@ -198,7 +199,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                     Item connItem = (PropertyHelper.getProperty(file)).getItem();
                     if (connItem instanceof ConnectionItem) {
-                        return ((ConnectionItem) connItem).getConnection().getName();
+                        Connection connection = ((ConnectionItem) connItem).getConnection();
+                        if (connection.eIsProxy()) {
+                            connection = (Connection) EObjectHelper.resolveObject(connection);
+                        }
+                        return connection.getName();
                     }
                 } else if (mElement != null) {
                     return DqRepositoryViewService.buildElementName(mElement);
