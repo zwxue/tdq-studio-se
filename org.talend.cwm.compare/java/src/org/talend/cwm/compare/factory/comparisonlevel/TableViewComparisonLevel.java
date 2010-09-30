@@ -46,6 +46,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
@@ -77,8 +78,13 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     }
 
     protected void createTempConnectionFile() throws ReloadCompareException {
+        // MOD klliu bug 15822 201-09-30
+        if (oldDataProvider != null && oldDataProvider.eIsProxy()) {
+            oldDataProvider = (Connection) EObjectHelper.resolveObject(oldDataProvider);
+        }
         IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
         if (findCorrespondingFile == null) {
+
             throw new ReloadCompareException(DefaultMessagesImpl.getString(
                     "TableViewComparisonLevel.NotFindFileOfDataprovider", oldDataProvider.getName())); //$NON-NLS-1$
         }
