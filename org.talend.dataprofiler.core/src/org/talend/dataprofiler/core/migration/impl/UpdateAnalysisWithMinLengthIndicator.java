@@ -65,6 +65,8 @@ public class UpdateAnalysisWithMinLengthIndicator extends AbstractWorksapceUpdat
                     String content = FileUtils.readFileToString(file, EMFUtil.ENCODING);
                     content = StringUtils.replace(content, "MinLengthIndicator xmi:id=\"", "minLengthIndicator xmi:id=\"");
                     content = StringUtils.replace(content, "</MinLengthIndicator>", "</minLengthIndicator>");
+                    content = StringUtils.replace(content, "dataquality.indicators:MinLengthIndicator",
+                            "dataquality.indicators:minLengthIndicator");
                     FileUtils.writeStringToFile(file, content, EMFUtil.ENCODING);
                 } catch (IOException e) {
                     return false;
