@@ -16,6 +16,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -28,6 +29,7 @@ import org.talend.core.model.metadata.MetadataTalendType;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.database.EDatabaseSchemaOrCatalogMapping;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -140,8 +142,39 @@ public final class TalendCwmFactory {
         }
         if (!ReponsitoryContextBridge.isDefautProject()) {
             String dbType = connector.getDbConnectionParameter().getSqlTypeName();
-            String product = EDatabaseTypeName.getTypeFromDisplayName(dbType).getProduct();
-            // String jdbcProperty=connector.getDbConnectionParameter().getJdbcUrl()
+            EDatabaseTypeName edatabasetypeInstance = EDatabaseTypeName.getTypeFromDisplayName(dbType);
+            String product = edatabasetypeInstance.getProduct();
+            // AdditionalParams
+            String additionalParams = ((DatabaseConnection) dataProvider).getAdditionalParams();
+            if (additionalParams == null) {
+                String[] urlSplitArray = ((DatabaseConnection) dataProvider).getURL().split("\\?");
+                if (urlSplitArray.length == 2) {
+                    ((DatabaseConnection) dataProvider).setAdditionalParams(urlSplitArray[1]);
+                }
+            }
+            // uischema
+            if (edatabasetypeInstance.isNeedSchema()
+                    && edatabasetypeInstance.getSchemaMappingField() == EDatabaseSchemaOrCatalogMapping.Schema
+                    && schemata != null) {
+                Iterator<Schema> iter = schemata.iterator();
+                while (iter.hasNext()) {
+                    String uischema = iter.next().getName();
+                    ((DatabaseConnection) dataProvider).setUiSchema(uischema);
+                    break;
+                }
+
+            }
+
+            // change catalog
+            String dbname = connector.getDbConnectionParameter().getDbName();
+            if (dbname == null && catalogs != null) {
+                Iterator<Catalog> iter = catalogs.iterator();
+                while (iter.hasNext()) {
+                    ((DatabaseConnection) dataProvider).setSID(iter.next().getName());
+                    break;
+                }
+            }
+            // setDbmsId and setProductId
             String mapping = MetadataTalendType.getDefaultDbmsFromProduct(product).getId();
             if (dataProvider instanceof DatabaseConnection) {
                 ((DatabaseConnection) dataProvider).setProductId(product);
