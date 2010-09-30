@@ -23,9 +23,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
@@ -120,6 +123,9 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     protected Collection<Analysis> searchAllAnalysis(IFolder folder) {
         Collection<Analysis> analyses = new ArrayList<Analysis>();
+
+        ResourceSet resoruceSet = new ResourceSetImpl();
+
         try {
             for (IResource resource : folder.members()) {
                 if (resource.getType() == IResource.FOLDER) {
@@ -128,7 +134,9 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
                 }
                 IFile file = (IFile) resource;
                 if (file.getFileExtension().equals(FactoriesUtil.ANA)) {
-                    analyses.add(AnaResourceFileHelper.getInstance().findAnalysis(file));
+                    URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+                    Resource eResource = resoruceSet.getResource(uri, true);
+                    analyses.add((Analysis) eResource.getContents().get(0));
                 }
             }
         } catch (CoreException e) {

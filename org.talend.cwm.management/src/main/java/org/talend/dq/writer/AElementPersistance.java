@@ -165,6 +165,11 @@ public abstract class AElementPersistance {
 
         Property property = initProperty(modelElement);
 
+        User user = ReponsitoryContextBridge.getUser();
+        if (user != null) {
+            property.setAuthor(user);
+        }
+
         URI propURI = eResource.getURI().trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
         saveProperty(property, propURI);
@@ -194,10 +199,6 @@ public abstract class AElementPersistance {
     }
 
     private void setPropertyMetadata(ModelElement modelElement, Property property) {
-        User user = ReponsitoryContextBridge.getUser();
-        if (user != null) {
-            property.setAuthor(user);
-        }
 
         String purpose = MetadataHelper.getPurpose(modelElement);
         String description = MetadataHelper.getDescription(modelElement);

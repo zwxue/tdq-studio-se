@@ -99,18 +99,6 @@ public final class ModelElementFileFactory {
         if (theItem instanceof ConnectionItem) {
             modelElement = ((ConnectionItem) theItem).getConnection();
         }
-        // String fileExtension = file.getFileExtension();
-        // if (FactoriesUtil.isAnalysisFile(fileExtension)) {
-        // modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
-        // } else if (FactoriesUtil.isReportFile(fileExtension)) {
-        // modelElement = RepResourceFileHelper.getInstance().findReport(file);
-        // } else if (FactoriesUtil.isDQRuleFile(fileExtension)) {
-        // modelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-        // } else if (FactoriesUtil.isPatternFile(fileExtension)) {
-        // modelElement = PatternResourceFileHelper.getInstance().findPattern(file);
-        // } else if (FactoriesUtil.isUDIFile(fileExtension)) {
-        // modelElement = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
-        // }
 
         return modelElement;
     }
@@ -122,9 +110,12 @@ public final class ModelElementFileFactory {
      * @return
      */
     public static ResourceFileMap getResourceFileMap(IFile file) {
+        return getResourceFileMap(file.getFileExtension());
+    }
+
+    public static ResourceFileMap getResourceFileMap(String fileExtension) {
         ResourceFileMap modelElement = null;
 
-        String fileExtension = file.getFileExtension();
         if (FactoriesUtil.isAnalysisFile(fileExtension)) {
             modelElement = AnaResourceFileHelper.getInstance();
         } else if (FactoriesUtil.isReportFile(fileExtension)) {

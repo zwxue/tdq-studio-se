@@ -16,7 +16,6 @@ import java.util.Date;
 
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
@@ -43,28 +42,32 @@ public class UpdateSimpleStatisticsIndicatorsForSybaseIqTask extends AbstractWor
     protected boolean doExecute() throws Exception {
 
         IndicatorDefinition definition0 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(UNIQUE_COUNT);
-        IndicatorDefinitionFileHelper
-                .addSqlExpression(
-                        definition0,
-                        SYBASE,
-                        "SELECT COUNT(*) FROM (SELECT <%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) AS myquery");
-
         IndicatorDefinition definition1 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(DUPLICATE_COUNT);
-        IndicatorDefinitionFileHelper
-                .addSqlExpression(
-                        definition1,
-                        SYBASE,
-                        "SELECT COUNT(*) FROM (SELECT <%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM <%=__TABLE_NAME__%>  m <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) AS myquery");
-
         IndicatorDefinition definition2 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(BLANK_COUNT);
-        IndicatorDefinitionFileHelper
-                .addSqlExpression(
-                        definition2,
-                        SYBASE,
-                        "SELECT COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> WHERE RTRIM(LTRIM(<%=__COLUMN_NAMES__%>)) = '' <%=__AND_WHERE_CLAUSE__%>");
+        if (definition0 != null && definition1 != null && definition2 != null) {
+            IndicatorDefinitionFileHelper
+                    .addSqlExpression(
+                            definition0,
+                            SYBASE,
+                            "SELECT COUNT(*) FROM (SELECT <%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) AS myquery");
 
-        return IndicatorDefinitionFileHelper.save(definition0) & IndicatorDefinitionFileHelper.save(definition1)
-                & IndicatorDefinitionFileHelper.save(definition2);
+            IndicatorDefinitionFileHelper
+                    .addSqlExpression(
+                            definition1,
+                            SYBASE,
+                            "SELECT COUNT(*) FROM (SELECT <%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM <%=__TABLE_NAME__%>  m <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) AS myquery");
+
+            IndicatorDefinitionFileHelper
+                    .addSqlExpression(
+                            definition2,
+                            SYBASE,
+                            "SELECT COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> WHERE RTRIM(LTRIM(<%=__COLUMN_NAMES__%>)) = '' <%=__AND_WHERE_CLAUSE__%>");
+
+            return IndicatorDefinitionFileHelper.save(definition0) & IndicatorDefinitionFileHelper.save(definition1)
+                    & IndicatorDefinitionFileHelper.save(definition2);
+        }
+
+        return false;
     }
 
     /*

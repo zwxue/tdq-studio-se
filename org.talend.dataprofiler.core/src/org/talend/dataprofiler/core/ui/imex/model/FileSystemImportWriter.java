@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +30,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
@@ -41,15 +41,18 @@ import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -66,9 +69,9 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private static final String VERSION_FILE_NAME = ".version.txt";
 
-    private static final String DEFINITION_FILE_NAME = ".Talend.definition";
+    private static final String DEFINITION_FILE_NAME = DefinitionHandler.FILENAME;
 
-    private List<IMigrationTask> commonTasks = new ArrayList<IMigrationTask>();
+    private List<IMigrationTask> commTasks = new ArrayList<IMigrationTask>();
 
     private File versionFile;
 
@@ -126,6 +129,12 @@ public class FileSystemImportWriter implements IImportWriter {
             String aString = record.getName();
 
             if (itemFile.exists()) {
+                ModelElementFileFactory.getResourceFileMap(itemFile).clear();
+                URI itemURI = URI.createPlatformResourceURI(itemFile.getFullPath().toString(), false);
+                EMFSharedResources.getInstance().unloadResource(itemURI.toString());
+                URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+                EMFSharedResources.getInstance().unloadResource(propURI.toString());
+
                 record.addError("\"" + aString + "\" is existed in workspace : " + itemFile.getFullPath().toString());
             }
         }
@@ -209,6 +218,8 @@ public class FileSystemImportWriter implements IImportWriter {
             if (user != null) {
                 property.setAuthor(user);
             }
+
+            EMFSharedResources.getInstance().saveResource(property.eResource());
         }
     }
 
@@ -298,16 +309,12 @@ public class FileSystemImportWriter implements IImportWriter {
         if (definitionFile != null && definitionFile.exists()) {
             File defintionFile = defFile.getLocation().toFile();
             FilesUtils.copyFile(definitionFile, defintionFile);
-        } else {
-            if (!defFile.exists()) {
-                DefinitionHandler.getInstance();
-            }
         }
 
         ResourceService.refreshStructure();
 
-        if (commonTasks != null) {
-            MigrationTaskManager.doMigrationTask(commonTasks, monitor);
+        if (!commTasks.isEmpty() && monitor != null) {
+            MigrationTaskManager.doMigrationTask(commTasks, monitor);
         }
 
         ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true);
@@ -324,24 +331,30 @@ public class FileSystemImportWriter implements IImportWriter {
 
         if (versionFile != null && versionFile.exists()) {
             ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
-            Iterator<IMigrationTask> it = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE, version)
-                    .iterator();
-            while (it.hasNext()) {
-                IMigrationTask task = it.next();
-                if (isModelTask(task)) {
-                    ((AbstractWorksapceUpdateTask) task).setWorkspacePath(basePath);
-                    modelTasks.add(task);
-                } else {
-                    commonTasks.add(task);
+            List<IMigrationTask> taskList = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE, version);
+
+            if (!taskList.isEmpty()) {
+
+                for (IMigrationTask task : taskList) {
+                    if (isModelTask(task)) {
+                        ((AbstractWorksapceUpdateTask) task).setWorkspacePath(basePath);
+                        modelTasks.add(task);
+                    } else {
+                        commTasks.add(task);
+                    }
                 }
             }
 
         }
 
-        if (!modelTasks.isEmpty()) {
+        File file = basePath.append(EResourceConstant.LIBRARIES.getPath()).append("modMig.flag").toFile();
+        if (!modelTasks.isEmpty() && !file.exists()) {
             MigrationTaskManager.doMigrationTask(modelTasks, monitor);
-            //
-            // WorkspaceVersionHelper.storeVersion(versionFile);
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                ExceptionHandler.process(e);
+            }
         }
     }
 
@@ -358,7 +371,7 @@ public class FileSystemImportWriter implements IImportWriter {
             versionFile = path.append(EResourceConstant.LIBRARIES.getPath()).append(VERSION_FILE_NAME).toFile();
             definitionFile = path.append(EResourceConstant.LIBRARIES.getPath()).append(DEFINITION_FILE_NAME).toFile();
 
-            if (!versionFile.exists() || !definitionFile.exists()) {
+            if (!versionFile.exists()) {
                 return null;
             }
 

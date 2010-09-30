@@ -179,6 +179,11 @@ public class DQRespositoryView extends CommonNavigator {
         for (DataProvider provider : providers) {
             CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(provider);
         }
+
+        IFile defFile = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);
+        if (!defFile.exists()) {
+            DefinitionHandler.getInstance();
+        }
     }
 
     /**

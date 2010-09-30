@@ -111,6 +111,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                             Property property = writer.initProperty(modelElement);
 
                             if (oldPropery != null) {
+                                property.setId(oldPropery.getId());
                                 property.setAuthor(oldPropery.getAuthor());
                                 property.getItem().setState(oldPropery.getItem().getState());
                             }

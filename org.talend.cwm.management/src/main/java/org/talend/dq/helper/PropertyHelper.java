@@ -393,13 +393,14 @@ public final class PropertyHelper {
             InternalEObject iAuthor = (InternalEObject) property.getAuthor();
             Resource projResource = iAuthor.eResource();
             if (projResource != null) {
-                IPath projectPath = new Path(projResource.getURI().toFileString());
-                if (projectPath.toFile().exists()) {
-                    Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
-                    if (projOBJ != null) {
-                        Project project = (Project) projOBJ;
-                        return project.getTechnicalLabel();
-                    }
+                URI uri = projResource.getURI();
+                String pathString = uri.isPlatform() ? uri.toPlatformString(false) : uri.toFileString();
+                IPath projectPath = new Path(pathString);
+
+                Object projOBJ = EObjectHelper.retrieveEObject(projectPath, PropertiesPackage.eINSTANCE.getProject());
+                if (projOBJ != null) {
+                    Project project = (Project) projOBJ;
+                    return project.getTechnicalLabel();
                 }
             }
         }

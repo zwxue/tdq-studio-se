@@ -41,6 +41,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -198,9 +199,34 @@ public final class EObjectHelper {
      * @return
      */
     public static Object retrieveEObject(IPath filePath, EClass classfier) {
-        URI uri = URI.createFileURI(filePath.toOSString());
-        Resource res = new ResourceSetImpl().getResource(uri, true);
-        return EcoreUtil.getObjectByType(res.getContents(), classfier);
+        if (isEObjectPathExited(filePath)) {
+
+            URI uri;
+            if (filePath.isAbsolute()) {
+                uri = URI.createFileURI(filePath.toOSString());
+            } else {
+                uri = URI.createPlatformResourceURI(filePath.toOSString(), false);
+            }
+
+            Resource res = new ResourceSetImpl().getResource(uri, true);
+            return EcoreUtil.getObjectByType(res.getContents(), classfier);
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC bZhou Comment method "isEObjectPathExited".
+     * 
+     * @param objectPath
+     * @return
+     */
+    public static boolean isEObjectPathExited(IPath objectPath) {
+        if (objectPath.isAbsolute()) {
+            return objectPath.toFile().exists();
+        } else {
+            return ResourceManager.getRoot().getFile(objectPath).exists();
+        }
     }
 
     /**
