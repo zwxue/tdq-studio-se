@@ -315,6 +315,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         }
         // MOD qiongli feature 9486
         if (element instanceof IFolder) {
+            // MOD yyi 2010-09-30 15271: svn project can't load exchange nodes
+            if (ResourceManager.isExchangeFolder((IFolder) element)) {
+                return true;
+            }
+            // ~15271
             List<Object> obsLs = Arrays.asList(super.getChildren(element));
             if (obsLs.size() == 1) {
                 Object obj = (Object) obsLs.get(0);
