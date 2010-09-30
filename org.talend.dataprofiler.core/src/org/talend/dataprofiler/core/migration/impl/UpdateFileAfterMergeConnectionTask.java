@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,10 +26,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -56,6 +59,8 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private Map<String, String> replaceStringMap;
 
+    private Map<File, File> folderMap;
+
     private ResourceSet resourceSet = new ResourceSetImpl();
 
     private FilenameFilter nonPropertyFileFilter = new FilenameFilter() {
@@ -80,18 +85,12 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     protected boolean doExecute() throws Exception {
         boolean result = true;
 
-        Map<File, File> folderMap = initStructure();
+        folderMap = initStructure();
 
         for (File folder : folderMap.keySet()) {
             try {
                 // Move the content of connection folder
-                if (isWorksapcePath()) {
-                    tansferFile(folder);
-                } else {
-                    if (folder.exists()) {
-                        FileUtils.copyDirectory(folder, folderMap.get(folder));
-                    }
-                }
+                tansferFile(folder);
             } catch (Exception e) {
                 log.error(e, e);
             }
@@ -206,14 +205,14 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                 if (item instanceof ConnectionItem) {
                     Connection conn = ((ConnectionItem) item).getConnection();
                     connNameBofore = conn.eResource().getURI().trimFileExtension().lastSegment();
-                    String fileName = propFile.getName();
-                    int lastIndex = fileName.lastIndexOf("_");
-                    if (lastIndex > 0) {
-                        fileName = fileName.substring(0, lastIndex);
-                    } else {
-                        fileName = new Path(fileName).removeFileExtension().lastSegment();
+
+                    String version = property.getVersion();
+                    if (version == null) {
+                        version = "0.1";
                     }
-                    property.setLabel(fileName);
+
+                    String label = conn.getName() + "_" + version;
+                    connNameAfter = label;
                 }
 
                 IPath path = new Path(item.getState().getPath());
@@ -222,19 +221,86 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                     ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.getItemType(item),
                             path.removeLastSegments(1), path.lastSegment());
                 }
-                ProxyRepositoryFactory.getInstance().create(item, path, true);
-                if (item instanceof ConnectionItem) {
-                    Connection conn = ((ConnectionItem) item).getConnection();
-                    if (conn.eIsProxy()) {
-                        conn = (Connection) EObjectHelper.resolveObject(conn);
+
+                if (isWorksapcePath()) {
+                    ProxyRepositoryFactory.getInstance().create(item, path, true);
+
+                    if (item instanceof ConnectionItem) {
+                        Connection conn = ((ConnectionItem) item).getConnection();
+                        if (conn.eIsProxy()) {
+                            conn = (Connection) EObjectHelper.resolveObject(conn);
+                        }
+                        connNameAfter = conn.eResource().getURI().trimFileExtension().lastSegment();
+
                     }
-                    connNameAfter = conn.eResource().getURI().trimFileExtension().lastSegment();
-                    if (connNameBofore != null && connNameAfter != null) {
-                        getReplaceStringMap().put(connNameBofore, connNameAfter);
-                    }
+                } else {
+                    copyFile(parentFolder, propFile, property, path, connNameAfter);
+                }
+
+                if (connNameBofore != null && connNameAfter != null) {
+                    getReplaceStringMap().put(connNameBofore, connNameAfter);
                 }
             }
         }
 
+    }
+
+    private void copyFile(File parentFolder, File propFile, Property property, IPath path, String connNameAfter)
+            throws IOException {
+        if (path == null) {
+            path = Path.EMPTY;
+        }
+
+        File targetFolder = folderMap.get(parentFolder);
+
+        File destItemFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter).addFileExtension(
+                FactoriesUtil.ITEM_EXTENSION).toFile();
+        File destPropFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter).addFileExtension(
+                FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+
+        File srcItemFile = new Path(propFile.getAbsolutePath()).removeFileExtension().addFileExtension(
+                FactoriesUtil.ITEM_EXTENSION).toFile();
+        File srcPropFile = propFile;
+
+        FileUtils.copyFile(srcItemFile, destItemFile);
+        FileUtils.copyFile(srcPropFile, destPropFile);
+
+        Item item = property.getItem();
+        if (item instanceof ConnectionItem) {
+            ConnectionItem connectionItem = (ConnectionItem) item;
+
+            Resource resource = getResource(destItemFile.getAbsolutePath());
+
+            for (EObject object : resource.getContents()) {
+                if (object instanceof Connection) {
+                    connectionItem.setConnection((Connection) object);
+                }
+            }
+
+            resource = getResource(destPropFile.getAbsolutePath());
+
+            Property newProperty = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
+                    .getProperty());
+            newProperty.setAuthor(property.getAuthor());
+            newProperty.setLabel(connectionItem.getConnection().getName());
+            newProperty.setItem(item);
+            item.setProperty(newProperty);
+
+            resource.getContents().clear();
+
+            resource.getContents().add(newProperty);
+            resource.getContents().add(item);
+            resource.getContents().add(item.getState());
+
+            EMFUtil.saveResource(resource);
+        }
+    }
+
+    private Resource getResource(String filePath) {
+        URI uri = URI.createFileURI(filePath);
+
+        Resource resource = resourceSet.getResource(uri, true);
+
+        return resource;
     }
 }

@@ -253,16 +253,6 @@ public class FileSystemImportWriter implements IImportWriter {
                     if (element != null && element instanceof Connection) {
                         Property property = record.getProperty();
 
-                        String fileName = record.getFile().getName();
-                        int lastIndex = fileName.lastIndexOf("_");
-                        if (lastIndex > 0) {
-                            fileName = fileName.substring(0, lastIndex);
-                        } else {
-                            fileName = new Path(fileName).removeFileExtension().lastSegment();
-                        }
-
-                        property.setLabel(fileName);
-
                         IPath statePath;
                         ItemState state = property.getItem().getState();
                         if (state != null && state.getPath() != null) {
