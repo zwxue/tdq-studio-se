@@ -46,7 +46,7 @@ import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -257,7 +257,9 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected abstract Resource getRightResource() throws ReloadCompareException;
 
     protected void saveReloadResult() {
-        PrvResourceFileHelper.getInstance().save(oldDataProvider);
+        // MOD klliu bug 15940 201-09-30
+        ProxyRepositoryViewObject.save(oldDataProvider);
+        // PrvResourceFileHelper.getInstance().save(oldDataProvider);
     }
 
     /**
