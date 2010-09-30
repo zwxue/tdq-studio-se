@@ -69,6 +69,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.i18n.Messages;
@@ -501,6 +502,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
+        if (connection != null && connection.eIsProxy()) {
+            connection = (Connection) EObjectHelper.resolveObject(connection);
+        }
         ReturnCode returnCode = ProxyRepositoryViewObject.save(connection);
         if (returnCode.isOk()) {
             if (log.isDebugEnabled()) {
