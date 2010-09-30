@@ -167,7 +167,7 @@ public final class TalendCwmFactory {
 
             // change catalog
             String dbname = connector.getDbConnectionParameter().getDbName();
-            if (dbname == null && catalogs != null) {
+            if ((dbname == null || "".equals(dbname)) && catalogs != null) {
                 Iterator<Catalog> iter = catalogs.iterator();
                 while (iter.hasNext()) {
                     ((DatabaseConnection) dataProvider).setSID(iter.next().getName());
