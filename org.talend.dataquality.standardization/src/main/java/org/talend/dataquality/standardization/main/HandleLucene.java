@@ -21,20 +21,19 @@ import org.apache.lucene.queryParser.ParseException;
  * DOC klliu class global comment.
  */
 public interface HandleLucene {
-	/**
-	 * Expect that by accepting parameter and returns the correct result, if not
-	 * correspond with the result of searchwords, do a fuzzy query, returns the
-	 * result of the similar.
-	 * 
-	 * @param searchType
-	 * @param searchWords
-	 * @return
-	 * @throws IOException
-	 * @throws ParseException
-	 */
-	 public Map<String, String[]> getSearchResult(String folderName,
-	            String inputName, Map<String,String> information2value,boolean fuzzyQuery) throws IOException,
-	            ParseException ;
+
+    /**
+     * Expect that by accepting parameter and returns the correct result, if not correspond with the result of
+     * searchwords, do a fuzzy query, returns the result of the similar.
+     * 
+     * @param searchType
+     * @param searchWords
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    public Map<String, String[]> getSearchResult(String folderName, String inputName, Map<String, String> information2value,
+            boolean fuzzyQuery) throws IOException, ParseException;
 
     /**
      * 
@@ -75,8 +74,7 @@ public interface HandleLucene {
      * @throws Exception
      */
     public String replaceNameWithCountryGenderInfo(String folderName, String inputName, String inputCountry, String inputGender,
-            boolean fuzzyQuery)
-            throws Exception;
+            boolean fuzzyQuery) throws Exception;
 
     /**
      * 
@@ -106,14 +104,13 @@ public interface HandleLucene {
     public String replaceNameWithGenderInfo(String folderName, String inputName, String inputGender, boolean fuzzyQuery)
             throws Exception;
 
-	/**
-	 * Input filename to be indexed once for all and indexfolder to store the
-	 * files of indexing.
-	 * 
-	 * @param filename
-	 * @param indexfolder
-	 * @return
-	 */
-	public boolean createIndex(String filename, String indexfolder);
+    /**
+     * Input filename to be indexed once for all and indexfolder to store the files of indexing.
+     * 
+     * @param filename
+     * @param indexfolder
+     * @return
+     */
+    public boolean createIndex(String filename, String indexfolder);
 
 }

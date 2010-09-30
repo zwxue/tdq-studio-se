@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="C:/Documents and Settings/Administrator/桌面/oracle/org.talend.dataquality.standardization_1.4.0.jar"/>
+    <jar path="../org.talend.designer.components.tdqprovider/components/tFirstnameMatch/org.talend.dataquality.standardization_1.5.0.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/org.talend.dataquality.standardization/jar_export.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -10,19 +10,10 @@
             <packagesToUnSeal/>
         </sealing>
     </manifest>
-    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.query"/>
-        <file path="/org.talend.dataquality.standardization/.project"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLuceneImpl.java"/>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <folder path="/org.talend.dataquality.standardization/META-INF"/>
-        <folder path="/org.talend.dataquality.standardization/src"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.constant"/>
-        <file path="/org.talend.dataquality.standardization/.checkstyle"/>
-        <file path="/org.talend.dataquality.standardization/.classpath"/>
         <file path="/org.talend.dataquality.standardization/version.txt"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLuceneTest.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLucene.java"/>
-        <file path="/org.talend.dataquality.standardization/build.properties"/>
+        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java"/>
+        <folder path="/org.talend.dataquality.standardization/src"/>
     </selectedElements>
 </jardesc>

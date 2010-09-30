@@ -175,10 +175,9 @@ public class FirstNameStandardize {
         try {
             results = standardize(inputName, fuzzyQuery);
         } catch (Exception e) {
-
             e.printStackTrace();
         }
-        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
+        return (results == null || results.length == 0) ? "" : searcher.doc(results[0].doc).get("name");
     }
     public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender, boolean fuzzyQuery)
             throws Exception {

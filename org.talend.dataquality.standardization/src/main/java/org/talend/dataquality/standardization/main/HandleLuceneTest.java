@@ -19,9 +19,9 @@ import org.apache.lucene.queryParser.ParseException;
 /**
  * DOC klliu class global comment.
  */
-public class HandleLuceneTest {
+public final class HandleLuceneTest {
 
-    public HandleLuceneTest() {
+    private HandleLuceneTest() {
     }
 
     /**
