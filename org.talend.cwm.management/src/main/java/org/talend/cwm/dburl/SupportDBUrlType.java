@@ -133,6 +133,15 @@ public enum SupportDBUrlType {
                     "com.ibm.as400.access.AS400JDBCDriver", //$NON-NLS-1$
                     null,
                     "AS/400"), //$NON-NLS-1$
+    // MOD klliu 2010-09-17 bug 14742 support Netezza database url as :jdbc:netezza://127.0.1.10:5480/talend
+    NETEZZADEFAULTURL("Netezza", //$NON-NLS-1$
+                      "localhost", //$NON-NLS-1$
+                      "5480", //$NON-NLS-1$
+                      "dbname", //$NON-NLS-1$
+                      "?", //$NON-NLS-1$
+                      "org.netezza.Driver", //$NON-NLS-1$
+                      null,
+                      "Netezza"), //$NON-NLS-1$
     XML_eXist("eXist", //$NON-NLS-1$
               "localhost", //$NON-NLS-1$
               "8080", //$NON-NLS-1$

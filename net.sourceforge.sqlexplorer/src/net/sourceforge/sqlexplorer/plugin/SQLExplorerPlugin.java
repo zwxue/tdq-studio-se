@@ -110,7 +110,6 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             getLog().addLogListener(new ILogListener() {
 
                 public void logging(IStatus status, String plugin) {
-                    System.err.println(status.getMessage());
                     Throwable t = status.getException();
                     if (t != null) {
                         System.err.println(t.getMessage());

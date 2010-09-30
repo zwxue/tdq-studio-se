@@ -88,6 +88,7 @@ public final class SupportDBUrlStore {
         supportDBUrlMap.put(SupportDBUrlType.AS400DEFAULTURL.getDBKey(), SupportDBUrlType.AS400DEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.XML_eXist.getDBKey(), SupportDBUrlType.XML_eXist);
         supportDBUrlMap.put(SupportDBUrlType.MDM.getDBKey(), SupportDBUrlType.MDM);
+        supportDBUrlMap.put(SupportDBUrlType.NETEZZADEFAULTURL.getDBKey(), SupportDBUrlType.NETEZZADEFAULTURL);
 
         // MOD mzhao bug 12313, 2010-04-02 There is not dbType in prv files before 4.0 release, here use driver class
         // name
@@ -119,6 +120,7 @@ public final class SupportDBUrlStore {
         supportDiverNameDBUrlMap.put(SupportDBUrlType.AS400DEFAULTURL.getDbDriver(), SupportDBUrlType.AS400DEFAULTURL);
         supportDiverNameDBUrlMap.put(SupportDBUrlType.XML_eXist.getDbDriver(), SupportDBUrlType.XML_eXist);
         supportDiverNameDBUrlMap.put(SupportDBUrlType.MDM.getDbDriver(), SupportDBUrlType.MDM);
+        supportDiverNameDBUrlMap.put(SupportDBUrlType.NETEZZADEFAULTURL.getDbDriver(), SupportDBUrlType.NETEZZADEFAULTURL);
         // ~12313
     }
 
@@ -191,6 +193,7 @@ public final class SupportDBUrlStore {
             return MessageFormat.format(propUrlValue, argsUrl);
         } else {
             return MessageFormat.format(propUrlValue, argsUrl) + defaultUrlType.getParamSeprator() + paramString;
+
         }
     }
 

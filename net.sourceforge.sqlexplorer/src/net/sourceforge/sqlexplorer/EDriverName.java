@@ -89,7 +89,9 @@ public enum EDriverName {
     SQLITE3DEFAULTURL("SQLite", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar"),
     AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar"),
     // MOD klliu bug 14791 add ingres database url and modify default_driver.xml
-    INGRESDEFAULTURL("Ingres", "com.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar");
+    INGRESDEFAULTURL("Ingres", "com.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar"),
+    NETEZZADEFAULTURL("Netezza", "org.netezza.Driver", "-66", "lib/nzjdbc.jar") //$NON-NLS-1$
+    ;
 
     private final String dbKey;
 
@@ -175,6 +177,9 @@ public enum EDriverName {
             break;
         case INGRESDEFAULTURL:
             plugins = "org.talend.libraries.jdbc.ingres";
+            break;
+        case NETEZZADEFAULTURL:
+            plugins = "org.talend.libraries.jdbc.netezza";
             break;
         default:
             return linkedList;

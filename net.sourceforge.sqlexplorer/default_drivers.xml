@@ -172,4 +172,9 @@
 		<url>jdbc:ingres://&lt;host&gt;/&lt;DBNAME&gt;</url>
 		<jars></jars>
 	</driver>
+		<driver id="-66">
+		<name>Netezza</name>
+		<url>jdbc:netezza://&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>
+		<jars></jars>
+	</driver>
 </drivers>

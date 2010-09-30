@@ -93,6 +93,7 @@ public class DbmsLanguage {
 
     static final String INFOMIX = SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage();
 
+    static final String NETEZZA = SupportDBUrlType.NETEZZADEFAULTURL.getLanguage();
     /**
      * Ansi SQL.
      */

@@ -543,6 +543,7 @@ public final class DatabaseContentRetriever {
 
     public static TdSoftwareSystem getSoftwareSystem(java.sql.Connection connection) throws SQLException {
         // MOD xqliu 2009-07-13 bug 7888
+
         DatabaseMetaData databaseMetadata = ConnectionUtils.getConnectionMetadata(connection);
         // ~
         // --- get informations
