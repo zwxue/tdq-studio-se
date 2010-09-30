@@ -37,6 +37,7 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.resource.ResourceManager;
@@ -126,6 +127,8 @@ public final class ModelElementFileFactory {
             modelElement = PatternResourceFileHelper.getInstance();
         } else if (FactoriesUtil.isUDIFile(fileExtension)) {
             modelElement = IndicatorResourceFileHelper.getInstance();
+        } else if (FactoriesUtil.isItemFile(fileExtension)) {
+            modelElement = PrvResourceFileHelper.getInstance();
         }
         return modelElement;
     }

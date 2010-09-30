@@ -61,7 +61,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private Map<File, File> folderMap;
 
-    private ResourceSet resourceSet = new ResourceSetImpl();
+    private ResourceSet resourceSet;
 
     private FilenameFilter nonPropertyFileFilter = new FilenameFilter() {
 
@@ -180,6 +180,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     }
 
     private void tansferFile(File parentFolder) throws Exception {
+        resourceSet = new ResourceSetImpl();
 
         if (!parentFolder.exists()) {
             return;
