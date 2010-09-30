@@ -186,6 +186,9 @@ public final class TalendCwmFactory {
             DataProviderHelper.addXMLDocuments(mdmConnection.createConnection(), dataProvider);
             dataProvider.setUsername(mdmConnection.getUserName());
             dataProvider.setPassword(mdmConnection.getUserPass());
+            // MOD qiongli bug 14469:if don't setLable,it will run ConnectionUtils.fillMdmConnectionInformation(mdmConn)
+            // and create redundant folder under folder '.xsd'.
+            dataProvider.setLabel(parameter.getName());
             return dataProvider;
         }
         return null;
