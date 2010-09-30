@@ -141,6 +141,7 @@ public final class TalendCwmFactory {
         if (!ReponsitoryContextBridge.isDefautProject()) {
             String dbType = connector.getDbConnectionParameter().getSqlTypeName();
             String product = EDatabaseTypeName.getTypeFromDisplayName(dbType).getProduct();
+            // String jdbcProperty=connector.getDbConnectionParameter().getJdbcUrl()
             String mapping = MetadataTalendType.getDefaultDbmsFromProduct(product).getId();
             if (dataProvider instanceof DatabaseConnection) {
                 ((DatabaseConnection) dataProvider).setProductId(product);
