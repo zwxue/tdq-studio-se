@@ -78,13 +78,13 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         // ~
 
         if (pack.eIsProxy()) {
-        	// resolve the proxy object.
-        	pack = (orgomg.cwm.objectmodel.core.Package) EObjectHelper.resolveObject(pack);
-			if (pack instanceof Catalog) {
-				catalog = (Catalog) pack;
-			} else if (pack instanceof Schema) {
-				schema = (Schema) pack;
-			}
+            // resolve the proxy object.
+            pack = (orgomg.cwm.objectmodel.core.Package) EObjectHelper.resolveObject(pack);
+            if (pack instanceof Catalog) {
+                catalog = (Catalog) pack;
+            } else if (pack instanceof Schema) {
+                schema = (Schema) pack;
+            }
         }
         Connection conn = ConnectionHelper.getTdDataProvider(pack);
         if (conn == null) {
@@ -94,7 +94,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         // load from database
         loadColumnSets(catalog, schema, conn, columnSets);
         // store views in catalog or schema
-        catalog.getOwnedElement().addAll(columnSets);
+        pack.getOwnedElement().addAll(columnSets);
         this.setChildren(columnSets.toArray());
         ProxyRepositoryViewObject.save(conn);
     }
