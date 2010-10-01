@@ -405,7 +405,7 @@ public final class PropertyHelper {
             }
         }
 
-        return ReponsitoryContextBridge.PROJECT_DEFAULT_NAME;
+        return ReponsitoryContextBridge.getProjectName();
     }
 
     public static String computePath(Property property) {

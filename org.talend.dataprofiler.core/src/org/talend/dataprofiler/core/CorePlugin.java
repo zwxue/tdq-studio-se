@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
@@ -24,6 +26,8 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.help.internal.base.BaseHelpSystem;
@@ -41,17 +45,34 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.context.Context;
+import org.talend.core.context.RepositoryContext;
+import org.talend.core.language.ECodeLanguage;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.User;
+import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
+import org.talend.core.repository.constants.FileConstants;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.repository.localprovider.model.LocalRepositoryFactory;
+import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.repository.model.RepositoryConstants;
+import org.talend.repository.utils.ProjectHelper;
+import org.talend.repository.utils.XmiResourceManager;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -68,6 +89,17 @@ public class CorePlugin extends AbstractUIPlugin {
     private static CorePlugin plugin;
 
     private RefreshAction refreshAction;
+
+    private boolean repositoryInitialized = false;
+
+    /**
+     * Getter for repositoryInitialized.
+     * 
+     * @return the repositoryInitialized
+     */
+    public boolean isRepositoryInitialized() {
+        return this.repositoryInitialized;
+    }
 
     /**
      * The constructor.
@@ -92,6 +124,7 @@ public class CorePlugin extends AbstractUIPlugin {
             log.error(e, e);
         }
 
+        repositoryInitialized = this.initProxyRepository();
         SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
     }
 
@@ -356,4 +389,87 @@ public class CorePlugin extends AbstractUIPlugin {
             }
         }
     }
+
+    /**
+     * 
+     * DOC zshen Comment method "initProxyRepository".
+     * 
+     */
+    public boolean initProxyRepository() {
+        Project project = null;
+        RepositoryContext repositoryContext = (RepositoryContext) org.talend.core.runtime.CoreRuntimePlugin.getInstance()
+                .getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
+        if (repositoryContext != null) { // 
+            project = repositoryContext.getProject();
+            User user = repositoryContext.getUser();
+
+            ReponsitoryContextBridge.initialized(project.getEmfProject(), user);
+        } else { // else project is null, then we are in TOP only
+            ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
+            proxyRepository.setRepositoryFactoryFromProvider(LocalRepositoryFactory.getInstance());
+            try {
+                proxyRepository.checkAvailability();
+                proxyRepository.initialize();
+
+                XmiResourceManager xmiResourceManager = new XmiResourceManager();
+                IProject rootProject = ResourceManager.getRootProject();
+                if (rootProject.getFile(FileConstants.LOCAL_PROJECT_FILENAME).exists()) {
+                    project = new Project(xmiResourceManager.loadProject(rootProject));
+                } else {
+                    User user = PropertiesFactoryImpl.eINSTANCE.createUser();
+                    user.setLogin("talend@talend.com");
+                    user.setPassword("talend@talend.com".getBytes());
+                    String projectName = ResourceManager.getRootProjectName();
+                    String projectDesc = ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment();
+                    Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA.getName(),
+                            user);
+
+                    // MOD zshen create project by proxyRepository
+                    checkFileName(projectInfor.getLabel(), RepositoryConstants.PROJECT_PATTERN);
+
+                    project = proxyRepository.getRepositoryFactoryFromProvider().createProject(projectInfor);
+
+                }
+
+                if (project != null) {
+                    initRepositoryContext(project);
+                }
+
+            } catch (PersistenceException e) {
+                ExceptionHandler.process(e);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void initRepositoryContext(Project project) {
+        RepositoryContext repositoryContext = new RepositoryContext();
+        repositoryContext.setUser(project.getAuthor());
+        repositoryContext.setClearPassword(project.getLabel());
+        repositoryContext.setProject(project);
+        repositoryContext.setFields(new HashMap<String, String>());
+        repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), "");
+        Context ctx = CoreRuntimePlugin.getInstance().getContext();
+        ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
+
+        ReponsitoryContextBridge.initialized(project.getEmfProject(), project.getAuthor());
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "checkFileName".
+     * 
+     * @param fileName
+     * @param pattern
+     * 
+     * copy the method from ProxyRepositoryFactory to avoid tos migeration.
+     */
+    private void checkFileName(String fileName, String pattern) {
+        if (!Pattern.matches(pattern, fileName)) {
+            throw new IllegalArgumentException(DefaultMessagesImpl.getString(
+                    "ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", new Object[] { fileName, pattern })); //$NON-NLS-1$
+        }
+    }
+
 }

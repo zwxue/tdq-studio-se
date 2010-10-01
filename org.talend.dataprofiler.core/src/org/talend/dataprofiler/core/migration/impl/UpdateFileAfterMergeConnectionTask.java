@@ -59,8 +59,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private Map<String, String> replaceStringMap;
 
-    private Map<File, File> folderMap;
-
     private ResourceSet resourceSet;
 
     private FilenameFilter nonPropertyFileFilter = new FilenameFilter() {
@@ -85,12 +83,12 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     protected boolean doExecute() throws Exception {
         boolean result = true;
 
-        folderMap = initStructure();
+        Map<File, File> folderMap = initStructure();
 
         for (File folder : folderMap.keySet()) {
             try {
                 // Move the content of connection folder
-                tansferFile(folder);
+                tansferFile(folder, folderMap);
             } catch (Exception e) {
                 log.error(e, e);
             }
@@ -179,7 +177,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         return result;
     }
 
-    private void tansferFile(File parentFolder) throws Exception {
+    private void tansferFile(File parentFolder, Map<File, File> folderMap) throws Exception {
         resourceSet = new ResourceSetImpl();
 
         if (!parentFolder.exists()) {
@@ -235,7 +233,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
                     }
                 } else {
-                    copyFile(parentFolder, propFile, property, path, connNameAfter);
+                    copyFile(parentFolder, propFile, property, path, connNameAfter, folderMap);
                 }
 
                 if (connNameBofore != null && connNameAfter != null) {
@@ -246,7 +244,8 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     }
 
-    private void copyFile(File parentFolder, File propFile, Property property, IPath path, String connNameAfter)
+    private void copyFile(File parentFolder, File propFile, Property property, IPath path, String connNameAfter,
+            Map<File, File> folderMap)
             throws IOException {
         if (path == null) {
             path = Path.EMPTY;

@@ -373,7 +373,7 @@ public class FileSystemImportWriter implements IImportWriter {
                     projectName = project.getTechnicalLabel();
                 }
             } else {
-                projectName = ReponsitoryContextBridge.PROJECT_DEFAULT_NAME;
+                projectName = ReponsitoryContextBridge.getProjectName();
             }
         }
 
