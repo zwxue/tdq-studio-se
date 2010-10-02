@@ -34,6 +34,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
@@ -321,6 +322,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @return the quoted column name
      */
     protected String getQuotedColumnName(TdColumn column) {
+        if (column != null && column.eIsProxy()) {
+            column = (TdColumn) EObjectHelper.resolveObject(column);
+        }
         assert column != null;
         String quotedColName = quote(column.getName());
         return quotedColName;
@@ -333,6 +337,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @return the quoted table name
      */
     protected String getQuotedTableName(TdColumn column) {
+        if (column != null && column.eIsProxy()) {
+            column = (TdColumn) EObjectHelper.resolveObject(column);
+        }
         String table = quote(ColumnHelper.getColumnSetFullName(column));
         return table;
     }

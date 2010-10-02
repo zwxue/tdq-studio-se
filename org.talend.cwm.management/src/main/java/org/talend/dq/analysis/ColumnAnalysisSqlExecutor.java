@@ -64,6 +64,7 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -158,6 +159,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (tdColumn == null) {
             return traceError("Analyzed element is not a column for indicator " + indicator.getName());
         }
+        if (tdColumn.eIsProxy()) {
+            tdColumn = (TdColumn) EObjectHelper.resolveObject(tdColumn);
+        }
         String colName = getQuotedColumnName(tdColumn);
         if (!belongToSameSchemata(tdColumn)) {
             StringBuffer buf = new StringBuffer();
@@ -248,7 +252,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         }
 
-        final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(tdColumn);
+        final ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         String schemaName = getQuotedSchemaName(columnSetOwner);
 
         String table = getQuotedTableName(tdColumn);

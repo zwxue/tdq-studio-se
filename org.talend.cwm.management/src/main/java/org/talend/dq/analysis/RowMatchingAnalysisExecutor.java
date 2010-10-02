@@ -33,6 +33,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -252,6 +253,9 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private String getTableName(EList<TdColumn> columnSetA) {
         String tableName = null;
         for (TdColumn column : columnSetA) {
+            if (column != null && column.eIsProxy()) {
+                column = (TdColumn) EObjectHelper.resolveObject(column);
+            }
             if (belongToSameSchemata((TdColumn) column)) {
                 ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
 
@@ -404,6 +408,9 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         if (columnSetOwner == null) {
             log.error("ColumnSet Owner is null for indicator: " + indicator.getName());
         } else {
+            if (columnSetOwner.eIsProxy()) {
+                columnSetOwner = (ColumnSet) EObjectHelper.resolveObject(columnSetOwner);
+            }
             String schemaName = getQuotedSchemaName(columnSetOwner);
             String table = quote(columnSetOwner.getName());
             String catalogName = getQuotedCatalogName(columnSetOwner);

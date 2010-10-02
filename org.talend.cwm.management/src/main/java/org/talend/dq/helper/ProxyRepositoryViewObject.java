@@ -75,7 +75,7 @@ public final class ProxyRepositoryViewObject {
 
     /**
      * 
-     * DOC yyi Get all metadata connections.
+     * DOC yyi Get all metadata connections.modEleToReposObjMap
      * 
      * @return
      */
@@ -83,11 +83,8 @@ public final class ProxyRepositoryViewObject {
         List<Connection> connections = new ArrayList<Connection>();
         if (excludeRecycleBin) {
             for (Connection con : getAllMetadataConnections()) {
-                if (null == con.eResource()) {
-                    con = (Connection) EObjectHelper.resolveObject(con);
-                }
-
-                if (null != con.eResource() && !PropertyHelper.getProperty(con).getItem().getState().isDeleted()) {
+                ConnectionItem item = (ConnectionItem) getRepositoryViewObject(con).getProperty().getItem();
+                if (null != item && !item.getState().isDeleted()) {
                     connections.add(con);
                 }
             }

@@ -102,7 +102,7 @@ public final class MetadataHelper {
             if (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column)) {
                 return DataminingType.NOMINAL;
             } else {
-                return getDefaultDataminingType(column.getJavaType());
+                return getDefaultDataminingType(column.getSqlDataType().getJavaDataType());
             }
         } else {
             return DataminingType.get(contentType);

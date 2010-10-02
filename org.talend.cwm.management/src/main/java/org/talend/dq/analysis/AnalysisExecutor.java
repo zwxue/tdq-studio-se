@@ -34,6 +34,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -230,6 +231,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         if (datamanager == null) {
             rc.setReturnCode(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName()), false); //$NON-NLS-1$
             return rc;
+        }
+        if (datamanager != null && datamanager.eIsProxy()) {
+            datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
         }
         Connection dataprovider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
         if (dataprovider == null) {

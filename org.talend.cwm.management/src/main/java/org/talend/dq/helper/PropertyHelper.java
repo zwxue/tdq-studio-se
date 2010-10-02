@@ -168,6 +168,9 @@ public final class PropertyHelper {
      * @return
      */
     public static Property getProperty(ModelElement element) {
+        if (element != null && element.eIsProxy()) {
+            element = (ModelElement) EObjectHelper.resolveObject(element);
+        }
         URI uri = element.eResource().getURI();
         if (uri.isPlatform()) {
             IFile propertyFile = PropertyHelper.getPropertyFile(element);
