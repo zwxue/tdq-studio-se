@@ -26,6 +26,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -36,6 +37,7 @@ import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.ChangeConnectionAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
@@ -160,7 +162,11 @@ public abstract class AbstractPagePart {
             Object input = columnsElementViewer.getInput();
             List<TdColumn> columnSet = (List<TdColumn>) input;
             if (columnSet != null && columnSet.size() != 0) {
-                tdProvider = DataProviderHelper.getTdDataProvider(columnSet.get(0));
+                TdColumn column = columnSet.get(0);
+                if (column != null && column.eIsProxy()) {
+                    column = (TdColumn) EObjectHelper.resolveObject(column);
+                }
+                tdProvider = ConnectionHelper.getTdDataProvider(column);
                 setConnectionState(masterPage, tdProvider);
             }
         }

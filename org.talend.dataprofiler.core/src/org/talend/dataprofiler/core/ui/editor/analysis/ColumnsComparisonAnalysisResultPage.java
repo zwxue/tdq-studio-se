@@ -70,6 +70,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.explore.RowMatchExplorer;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.utils.format.StringFormatUtil;
@@ -173,12 +174,26 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         if (indicators.size() != 0) {
             rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
             rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
-            String columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnSetOwner(
-                    rowMatchingIndicatorA.getColumnSetA().get(0)).getName() : PluginConstant.EMPTY_STRING;
+            TdColumn columnA = null;
+            if (rowMatchingIndicatorA.getColumnSetA().size() > 0) {
+                columnA = rowMatchingIndicatorA.getColumnSetA().get(0);
+                if (columnA.eIsProxy()) {
+                    columnA = (TdColumn) EObjectHelper.resolveObject(columnA);
+                }
+            }
+            String columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnOwnerAsColumnSet(
+                    columnA).getName(): PluginConstant.EMPTY_STRING;
             columnHeader1.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl.getString(
                     "ColumnsComparisonAnalysisResultPage.elementsFrom", columnName)); //$NON-NLS-1$
-            columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnSetOwner(
-                    rowMatchingIndicatorA.getColumnSetB().get(0)).getName() : PluginConstant.EMPTY_STRING;
+            TdColumn columnB = null;
+            if(rowMatchingIndicatorA.getColumnSetB().size()>0){
+                columnB = rowMatchingIndicatorA.getColumnSetB().get(0);
+                if (columnB.eIsProxy()) {
+                    columnB = (TdColumn) EObjectHelper.resolveObject(columnB);
+                }
+            }
+            columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnOwnerAsColumnSet(columnB)
+                    .getName() : PluginConstant.EMPTY_STRING;
             columnHeader2.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl.getString(
                     "ColumnsComparisonAnalysisResultPage.elementsFrom", columnName)); //$NON-NLS-1$
         }
@@ -220,8 +235,16 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         int sizeB = rowMatchingIndicatorA.getColumnSetB().size();
         if (sizeA > 0 && sizeB > 0) {
 
-            String tableNameA = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetA().get(0)).getName();
-            String tableNameB = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetB().get(0)).getName();
+            TdColumn columnA = rowMatchingIndicatorA.getColumnSetA().get(0);
+            if (columnA.eIsProxy()) {
+                columnA = (TdColumn) EObjectHelper.resolveObject(columnA);
+            }
+            String tableNameA = ColumnHelper.getColumnOwnerAsColumnSet(columnA).getName();
+            TdColumn columnB = rowMatchingIndicatorA.getColumnSetB().get(0);
+            if (columnB.eIsProxy()) {
+                columnB = (TdColumn) EObjectHelper.resolveObject(columnB);
+            }
+            String tableNameB = ColumnHelper.getColumnOwnerAsColumnSet(columnB).getName();
             // ~
             // MOD zshen 11136: the chart of result lose one table
             if (tableNameA.equals(tableNameB)) {

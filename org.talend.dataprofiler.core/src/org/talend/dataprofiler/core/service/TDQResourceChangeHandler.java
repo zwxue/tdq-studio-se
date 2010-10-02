@@ -50,14 +50,14 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             // try {
             if (eObject instanceof DatabaseConnection) {
                 ProxyRepositoryViewObject.registerURI((DatabaseConnection) eObject, toBeUnloadedResource.getURI());
-                if (xmiResourceManager != null) {
-                    try {
-                        xmiResourceManager.saveResource(toBeUnloadedResource);
-                    } catch (PersistenceException e) {
-                        log.error(e, e);
-                    }
-
-                }
+                // if (xmiResourceManager != null) {
+                // try {
+                // xmiResourceManager.saveResource(toBeUnloadedResource);
+                // } catch (PersistenceException e) {
+                // log.error(e, e);
+                // }
+                //
+                // }
             } else if (eObject instanceof MDMConnection) {
 
                 ProxyRepositoryViewObject.registerURI((MDMConnection) eObject, toBeUnloadedResource.getURI());

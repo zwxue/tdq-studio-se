@@ -67,6 +67,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dq.helper.EObjectHelper;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -406,7 +407,11 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             columnsOfSectionPart.clear();
             columnsOfSectionPart.addAll(columnSet);
             if (columnSet.size() != 0) {
-                String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnSet.get(0)).getName();
+                TdColumn column = (TdColumn) columnSet.get(0);
+                if (column != null && column.eIsProxy()) {
+                    column = (TdColumn) EObjectHelper.resolveObject(column);
+                }
+                String tableName = ColumnHelper.getColumnOwnerAsColumnSet(column).getName();
                 columnsElementViewer.getTable().getColumn(0).setText(
                         DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
             }
@@ -520,7 +525,13 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         columnHeader.setWidth(260);
         columnHeader.setAlignment(SWT.CENTER);
         if (columnList.size() > 0) {
-            String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnList.get(0)).getName();
+            TdColumn column = (TdColumn) columnList.get(0);
+            if (column != null && column.eIsProxy()) {
+                columnList.remove(column);
+                column = (TdColumn) EObjectHelper.resolveObject(column);
+                columnList.add(column);
+            }
+            String tableName = ColumnHelper.getColumnOwnerAsColumnSet(column).getName();
             columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
         }
 

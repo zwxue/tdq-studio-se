@@ -80,6 +80,7 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.TableAnalysisHandler;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -607,6 +608,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (tableIndicators != null && tableIndicators.length != 0) {
 
             tdProvider = DataProviderHelper.getDataProvider(tableIndicators[0].getColumnSet());
+            if (tdProvider.eIsProxy()) {
+                // Resolve the connection again
+                tdProvider = (Connection) EObjectHelper.resolveObject(tdProvider);
+            }
             analysis.getContext().setConnection(tdProvider);
 
             for (TableIndicator tableIndicator : tableIndicators) {
