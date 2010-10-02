@@ -34,18 +34,25 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ItemState;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.management.api.SoftwareSystemManager;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
+import org.talend.dataprofiler.core.migration.helper.VersionComparator;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
@@ -72,6 +79,8 @@ public class FileSystemImportWriter implements IImportWriter {
     private static final String DEFINITION_FILE_NAME = DefinitionHandler.FILENAME;
 
     private List<IMigrationTask> commTasks = new ArrayList<IMigrationTask>();
+
+    private File tempFolder;
 
     private File versionFile;
 
@@ -194,7 +203,11 @@ public class FileSystemImportWriter implements IImportWriter {
 
         FilesUtils.copyFile(resFile, desFile);
 
-        update(desFile);
+        try {
+            update(desFile);
+        } catch (PersistenceException e) {
+            ExceptionHandler.process(e);
+        }
     }
 
     /**
@@ -202,8 +215,9 @@ public class FileSystemImportWriter implements IImportWriter {
      * 
      * @param desFile
      * @throws IOException
+     * @throws PersistenceException
      */
-    private void update(File desFile) throws IOException {
+    private void update(File desFile) throws IOException, PersistenceException {
         String curProjectLabel = ResourceManager.getRootProjectName();
         if (!StringUtils.equals(projectName, curProjectLabel)) {
             String content = FileUtils.readFileToString(desFile, "utf-8");
@@ -221,6 +235,27 @@ public class FileSystemImportWriter implements IImportWriter {
 
             EMFSharedResources.getInstance().saveResource(property.eResource());
         }
+
+        if (desFile.getName().endsWith(FactoriesUtil.ITEM_EXTENSION)) {
+            File propFile = new Path(desFile.getAbsolutePath()).removeFileExtension().addFileExtension(
+                    FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+            Property property = PropertyHelper.getProperty(propFile);
+
+            if (property.getItem() instanceof ConnectionItem) {
+                Connection connection = ((ConnectionItem) property.getItem()).getConnection();
+
+                // update software system
+                TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(connection);
+                if (softwareSystem != null) {
+                    ConnectionHelper.setSoftwareSystem(connection, softwareSystem);
+                }
+                // save
+                ProxyRepositoryFactory.getInstance().save(property.getItem(), true);
+
+                IRepositoryViewObject object = new RepositoryViewObject(property);
+                ProxyRepositoryViewObject.registerReposViewObj(connection, object);
+            }
+        }
     }
 
     /*
@@ -236,6 +271,7 @@ public class FileSystemImportWriter implements IImportWriter {
         }
 
         try {
+
             for (ItemRecord record : records) {
 
                 if (monitor.isCanceled()) {
@@ -249,25 +285,11 @@ public class FileSystemImportWriter implements IImportWriter {
                 if (record.isValid()) {
                     log.info("Importing " + record.getFile().getAbsolutePath());
 
-                    ModelElement element = record.getElement();
-                    if (element != null && element instanceof Connection) {
-                        Property property = record.getProperty();
-
-                        IPath statePath;
-                        ItemState state = property.getItem().getState();
-                        if (state != null && state.getPath() != null) {
-                            statePath = new Path(state.getPath());
-                        } else {
-                            statePath = Path.EMPTY;
-                        }
-
-                        ProxyRepositoryFactory.getInstance().create(property.getItem(), statePath);
-                    } else {
-                        for (IPath resPath : toImportMap.keySet()) {
-                            IPath desPath = toImportMap.get(resPath);
-                            write(resPath, desPath);
-                        }
+                    for (IPath resPath : toImportMap.keySet()) {
+                        IPath desPath = toImportMap.get(resPath);
+                        write(resPath, desPath);
                     }
+
                 } else {
                     for (String error : record.getErrors()) {
                         log.error(error);
@@ -307,7 +329,11 @@ public class FileSystemImportWriter implements IImportWriter {
             MigrationTaskManager.doMigrationTask(commTasks, monitor);
         }
 
-        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true);
+        if (tempFolder != null && tempFolder.exists()) {
+            log.info("Recover workspace....");
+            FileUtils.copyDirectory(tempFolder, basePath.toFile());
+            FileUtils.deleteDirectory(tempFolder);
+        }
     }
 
     /*
@@ -337,14 +363,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
         }
 
-        File file = basePath.append(EResourceConstant.LIBRARIES.getPath()).append("modMig.flag").toFile();
-        if (!modelTasks.isEmpty() && !file.exists()) {
+        if (!modelTasks.isEmpty()) {
             MigrationTaskManager.doMigrationTask(modelTasks, monitor);
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                ExceptionHandler.process(e);
-            }
         }
     }
 
@@ -365,6 +385,8 @@ public class FileSystemImportWriter implements IImportWriter {
                 return null;
             }
 
+            backUPWorksapce();
+
             IPath projPath = path.append("talend.project");
             if (projPath.toFile().exists()) {
                 Object projOBJ = EObjectHelper.retrieveEObject(projPath, PropertiesPackage.eINSTANCE.getProject());
@@ -378,6 +400,24 @@ public class FileSystemImportWriter implements IImportWriter {
         }
 
         return new ItemRecord(path.toFile());
+    }
+
+    private void backUPWorksapce() {
+        log.info("Back-up workspace....");
+        ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
+        ProductVersion version410 = new ProductVersion(4, 1, 0);
+        if (version != null && VersionComparator.isLower(version, version410)) {
+            tempFolder = basePath.removeLastSegments(1).append("tempFolder").toFile();
+            if (!tempFolder.exists()) {
+                tempFolder.mkdir();
+            }
+
+            try {
+                FileUtils.copyDirectory(basePath.toFile(), tempFolder);
+            } catch (IOException e) {
+                log.error(e);
+            }
+        }
     }
 
     private boolean isModelTask(IMigrationTask task) {
