@@ -29,7 +29,7 @@ public interface IImportWriter {
      * DOC bZhou Comment method "computeInput".
      * 
      * @param path
-     * @return
+     * @return the item record or null
      */
     public ItemRecord computeInput(IPath path);
 

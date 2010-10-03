@@ -277,7 +277,9 @@ public final class MigrationTaskManager {
                 if (!task.execute()) {
                     log.warn("Migration Task failed: " + task.getName());
                 } else {
-                    log.info("Migration Task success: " + task.getName());
+                    if (log.isInfoEnabled()) {
+                        log.info("Migration Task success: " + task.getName());
+                    }
                     System.out.println("Migration Task success: " + task.getName());
                 }
             }

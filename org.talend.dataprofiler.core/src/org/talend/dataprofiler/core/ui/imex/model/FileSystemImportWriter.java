@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
@@ -198,7 +199,7 @@ public class FileSystemImportWriter implements IImportWriter {
         File desFile = desPath.toFile();
 
         if (desFile.exists()) {
-            log.warn(desFile.getAbsoluteFile() + " is overwrittern!");
+            log.warn(desFile.getAbsoluteFile() + " is overwritten!");
         }
 
         FilesUtils.copyFile(resFile, desFile);
@@ -330,8 +331,9 @@ public class FileSystemImportWriter implements IImportWriter {
         }
 
         if (tempFolder != null && tempFolder.exists()) {
-            log.info("Recover workspace....");
-            FileUtils.copyDirectory(tempFolder, basePath.toFile());
+            if (log.isDebugEnabled()) {
+                log.debug("Deleting temporary workspace..." + tempFolder.getAbsolutePath());
+            }
             FileUtils.deleteDirectory(tempFolder);
         }
     }
@@ -375,8 +377,6 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     public ItemRecord computeInput(IPath path) {
 
-        setBasePath(path);
-
         if (path != null) {
             versionFile = path.append(EResourceConstant.LIBRARIES.getPath()).append(VERSION_FILE_NAME).toFile();
             definitionFile = path.append(EResourceConstant.LIBRARIES.getPath()).append(DEFINITION_FILE_NAME).toFile();
@@ -385,9 +385,15 @@ public class FileSystemImportWriter implements IImportWriter {
                 return null;
             }
 
-            backUPWorksapce();
+            tempFolder = backUPWorksapce(path);
+            if (tempFolder == null) {
+                // FIXME scorreia 2010-10-03 find a cleaner way to handle this error
+                throw new RuntimeException("input path " + path + " could not be backed-up");
+            }
 
-            IPath projPath = path.append("talend.project");
+            IPath tempBasePath = new Path(tempFolder.getAbsolutePath());
+            IPath projPath = tempBasePath.append("talend.project");
+            setBasePath(tempBasePath);
             if (projPath.toFile().exists()) {
                 Object projOBJ = EObjectHelper.retrieveEObject(projPath, PropertiesPackage.eINSTANCE.getProject());
                 if (projOBJ != null) {
@@ -397,27 +403,31 @@ public class FileSystemImportWriter implements IImportWriter {
             } else {
                 projectName = ReponsitoryContextBridge.getProjectName();
             }
+            return new ItemRecord(tempFolder);
         }
-
-        return new ItemRecord(path.toFile());
+        return null;
     }
 
-    private void backUPWorksapce() {
-        log.info("Back-up workspace....");
-        ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
-        ProductVersion version410 = new ProductVersion(4, 1, 0);
-        if (version != null && VersionComparator.isLower(version, version410)) {
-            tempFolder = basePath.removeLastSegments(1).append("tempFolder").toFile();
-            if (!tempFolder.exists()) {
-                tempFolder.mkdir();
+    private File backUPWorksapce(IPath workspacePath) {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Back-up workspace...." + workspacePath.toOSString());
             }
+            ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
+            ProductVersion version410 = new ProductVersion(4, 1, 0);
+            if (version != null && VersionComparator.isLower(version, version410)) {
+                File temporaryFolder = workspacePath.removeLastSegments(1).append("tempFolder" + EcoreUtil.generateUUID()).toFile();
+                if (!temporaryFolder.exists()) {
+                    temporaryFolder.mkdir();
+                }
 
-            try {
-                FileUtils.copyDirectory(basePath.toFile(), tempFolder);
-            } catch (IOException e) {
-                log.error(e);
+                FileUtils.copyDirectory(workspacePath.toFile(), temporaryFolder);
+                return temporaryFolder;
             }
+        } catch (IOException e) {
+            log.error(e);
         }
+        return null;
     }
 
     private boolean isModelTask(IMigrationTask task) {
