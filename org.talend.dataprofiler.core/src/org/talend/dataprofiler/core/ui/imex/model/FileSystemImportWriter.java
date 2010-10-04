@@ -432,10 +432,12 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private boolean isModelTask(IMigrationTask task) {
+        // FIXME this should be replaced by a method such as IMigrationTask isModelTask
         return "org.talend.dataprofiler.core.migration.impl.MergeMetadataTask".equals(task.getId())
                 || "org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask".equals(task.getId())
                 || "org.talend.dataprofiler.core.migration.impl.UpdatePropertiesFileTask".equals(task.getId())
                 || "org.talend.dataprofiler.core.migration.impl.UpdateAnalysisWithMinLengthIndicator".equals(task.getId())
+                || "org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask".equals(task.getId())
                 || "org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask".equals(task.getId());
     }
 

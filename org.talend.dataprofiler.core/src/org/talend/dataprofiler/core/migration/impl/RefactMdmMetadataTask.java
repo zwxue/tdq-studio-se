@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.resource.ResourceManager;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC update prv and ana files because of the renameing of classes: TdXMLDocument --> TdXmlSchema , TdXMLElement -->
@@ -61,7 +61,7 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
     protected boolean doExecute() throws Exception {
         boolean result = true;
 
-        File fileAnalysis = new File(ResourceManager.getAnalysisFolder().getRawLocationURI());
+        File fileAnalysis = this.getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
 
         try {
             String[] anaFileExtentionNames = { ".ana" };
