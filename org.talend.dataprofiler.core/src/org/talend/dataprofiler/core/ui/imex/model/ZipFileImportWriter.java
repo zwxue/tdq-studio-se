@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.imex.model;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.io.FilesUtils;
 
 /**
@@ -43,8 +45,8 @@ public class ZipFileImportWriter extends FileSystemImportWriter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return super.computeInput(sourcePath.append(sourcePath.lastSegment()));
+        String curProjectLabel = ResourceManager.getRootProjectName();
+        return super.computeInput(sourcePath.append(sourcePath.lastSegment()).append(curProjectLabel));
     }
 
     @Override
@@ -53,4 +55,18 @@ public class ZipFileImportWriter extends FileSystemImportWriter {
 
         FilesUtils.removeFolder(sourcePath.toFile(), true);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter#backUPWorksapce(org.eclipse.core.runtime.IPath)
+     */
+    @Override
+    protected File backUPWorksapce(IPath workspacePath) {
+        // no need to create a backup here because the folder is already created by the unzip action
+        return workspacePath.toFile();
+    }
+
+
 }

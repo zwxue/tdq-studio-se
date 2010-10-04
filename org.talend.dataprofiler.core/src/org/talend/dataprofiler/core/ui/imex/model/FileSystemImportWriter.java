@@ -53,7 +53,6 @@ import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
-import org.talend.dataprofiler.core.migration.helper.VersionComparator;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
@@ -90,6 +89,8 @@ public class FileSystemImportWriter implements IImportWriter {
     private IPath basePath;
 
     private String projectName;
+    
+
 
     /*
      * (non-Javadoc)
@@ -219,6 +220,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * @throws PersistenceException
      */
     private void update(File desFile) throws IOException, PersistenceException {
+
         String curProjectLabel = ResourceManager.getRootProjectName();
         if (!StringUtils.equals(projectName, curProjectLabel)) {
             String content = FileUtils.readFileToString(desFile, "utf-8");
@@ -234,6 +236,9 @@ public class FileSystemImportWriter implements IImportWriter {
                 property.setAuthor(user);
             }
 
+            if (log.isDebugEnabled()) {
+                log.debug("property file for " + desFile + " = " + property.getLabel());
+            }
             EMFSharedResources.getInstance().saveResource(property.eResource());
         }
 
@@ -242,7 +247,7 @@ public class FileSystemImportWriter implements IImportWriter {
                     FactoriesUtil.PROPERTIES_EXTENSION).toFile();
             Property property = PropertyHelper.getProperty(propFile);
 
-            if (property.getItem() instanceof ConnectionItem) {
+            if (property != null && property.getItem() instanceof ConnectionItem) {
                 Connection connection = ((ConnectionItem) property.getItem()).getConnection();
 
                 // update software system
@@ -387,8 +392,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
             tempFolder = backUPWorksapce(path);
             if (tempFolder == null) {
-                // FIXME scorreia 2010-10-03 find a cleaner way to handle this error
-                throw new RuntimeException("input path " + path + " could not be backed-up");
+                // the error is logged in #checkTempPath()
+                return null;
             }
 
             IPath tempBasePath = new Path(tempFolder.getAbsolutePath());
@@ -408,14 +413,11 @@ public class FileSystemImportWriter implements IImportWriter {
         return null;
     }
 
-    private File backUPWorksapce(IPath workspacePath) {
+    protected File backUPWorksapce(IPath workspacePath) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Back-up workspace...." + workspacePath.toOSString());
             }
-            ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
-            ProductVersion version410 = new ProductVersion(4, 1, 0);
-            if (version != null && VersionComparator.isLower(version, version410)) {
                 File temporaryFolder = workspacePath.removeLastSegments(1).append("tempFolder" + EcoreUtil.generateUUID()).toFile();
                 if (!temporaryFolder.exists()) {
                     temporaryFolder.mkdir();
@@ -423,7 +425,6 @@ public class FileSystemImportWriter implements IImportWriter {
 
                 FileUtils.copyDirectory(workspacePath.toFile(), temporaryFolder);
                 return temporaryFolder;
-            }
         } catch (IOException e) {
             log.error(e);
         }
@@ -462,14 +463,15 @@ public class FileSystemImportWriter implements IImportWriter {
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#check()
      */
     public List<String> check() {
-        List<String> errors = new ArrayList<String>();
-
+        List<String> errors = new ArrayList<String>(); // TODO externalize these strings!!
         if (!checkBasePath()) {
             errors.add("The root directory is invalid!");
         } else if (!checkVersion()) {
-            errors.add("Can't verify the imporeted version!");
+            errors.add("Can't verify the imported version!");
         } else if (!checkProject()) {
             errors.add("Invalid Project! Can't load the project setting.");
+        } else if (!checkTempPath()) {
+            errors.add("Cannot create temporary folder.");
         }
 
         return errors;
@@ -502,4 +504,9 @@ public class FileSystemImportWriter implements IImportWriter {
         return basePath != null && basePath.toFile().exists()
                 && basePath.append(EResourceConstant.LIBRARIES.getPath()).toFile().exists();
     }
+
+    private boolean checkTempPath() {
+        return tempFolder != null && tempFolder.exists();
+    }
+
 }
