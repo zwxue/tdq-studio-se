@@ -29,17 +29,14 @@ import org.talend.utils.collections.MapValueSorter;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValues <em>Unique Values</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDistinctValueCount <em>Distinct Value
- * Count</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValueCount <em>Unique Value Count
- * </em>}</li>
- * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDuplicateValueCount <em>Duplicate Value
- * Count</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getValueToFreq <em>Value To Freq</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValues <em>Unique Values</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDistinctValueCount <em>Distinct Value Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getUniqueValueCount <em>Unique Value Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getDuplicateValueCount <em>Duplicate Value Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#getValueToFreq <em>Value To Freq</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIndicator {
@@ -51,9 +48,9 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     private static final DecimalFormat F2_DIGIT = new DecimalFormat("00");
 
     /**
-     * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list. <!-- begin-user-doc
+     * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @see #getUniqueValues()
      * @generated
      * @ordered
@@ -121,9 +118,9 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     protected static final HashMap<Object, Long> VALUE_TO_FREQ_EDEFAULT = new HashMap<Object, Long>();
 
     /**
-     * The cached value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute. <!-- begin-user-doc -->
+     * The cached value of the '{@link #getValueToFreq() <em>Value To Freq</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getValueToFreq()
      * @generated
      * @ordered
@@ -132,7 +129,6 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected FrequencyIndicatorImpl() {
@@ -141,7 +137,6 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -151,13 +146,11 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EList<Object> getUniqueValues() {
         if (uniqueValues == null) {
-            uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this,
-                    IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES);
+            uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this, IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES);
         }
         return uniqueValues;
     }
@@ -237,20 +230,17 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setDistinctValueCount(Long newDistinctValueCount) {
         Long oldDistinctValueCount = distinctValueCount;
         distinctValueCount = newDistinctValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT,
-                    oldDistinctValueCount, distinctValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT, oldDistinctValueCount, distinctValueCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public Long getUniqueValueCount() {
@@ -259,15 +249,13 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setUniqueValueCount(Long newUniqueValueCount) {
         Long oldUniqueValueCount = uniqueValueCount;
         uniqueValueCount = newUniqueValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT,
-                    oldUniqueValueCount, uniqueValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT, oldUniqueValueCount, uniqueValueCount));
     }
 
     /**
@@ -281,7 +269,6 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public HashMap<Object, Long> getValueToFreqGen() {
@@ -307,110 +294,101 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setValueToFreqGen(HashMap<Object, Long> newValueToFreq) {
         HashMap<Object, Long> oldValueToFreq = valueToFreq;
         valueToFreq = newValueToFreq;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ,
-                    oldValueToFreq, valueToFreq));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ, oldValueToFreq, valueToFreq));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
-            return getUniqueValues();
-        case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
-            return getDistinctValueCount();
-        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
-            return getUniqueValueCount();
-        case IndicatorsPackage.FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT:
-            return getDuplicateValueCount();
-        case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
-            return getValueToFreq();
+            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
+                return getUniqueValues();
+            case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
+                return getDistinctValueCount();
+            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
+                return getUniqueValueCount();
+            case IndicatorsPackage.FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT:
+                return getDuplicateValueCount();
+            case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
+                return getValueToFreq();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
-            getUniqueValues().clear();
-            getUniqueValues().addAll((Collection<? extends Object>) newValue);
-            return;
-        case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
-            setDistinctValueCount((Long) newValue);
-            return;
-        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
-            setUniqueValueCount((Long) newValue);
-            return;
-        case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
-            setValueToFreq((HashMap<Object, Long>) newValue);
-            return;
+            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
+                getUniqueValues().clear();
+                getUniqueValues().addAll((Collection<? extends Object>)newValue);
+                return;
+            case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
+                setDistinctValueCount((Long)newValue);
+                return;
+            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
+                setUniqueValueCount((Long)newValue);
+                return;
+            case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
+                setValueToFreq((HashMap<Object, Long>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
-            getUniqueValues().clear();
-            return;
-        case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
-            setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
-            return;
-        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
-            setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
-            return;
-        case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
-            setValueToFreq(VALUE_TO_FREQ_EDEFAULT);
-            return;
+            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
+                getUniqueValues().clear();
+                return;
+            case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
+                setDistinctValueCount(DISTINCT_VALUE_COUNT_EDEFAULT);
+                return;
+            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
+                setUniqueValueCount(UNIQUE_VALUE_COUNT_EDEFAULT);
+                return;
+            case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
+                setValueToFreq(VALUE_TO_FREQ_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
-            return uniqueValues != null && !uniqueValues.isEmpty();
-        case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
-            return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT
-                    .equals(distinctValueCount);
-        case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
-            return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT
-                    .equals(uniqueValueCount);
-        case IndicatorsPackage.FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT:
-            return DUPLICATE_VALUE_COUNT_EDEFAULT == null ? getDuplicateValueCount() != null : !DUPLICATE_VALUE_COUNT_EDEFAULT
-                    .equals(getDuplicateValueCount());
-        case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
-            return VALUE_TO_FREQ_EDEFAULT == null ? valueToFreq != null : !VALUE_TO_FREQ_EDEFAULT.equals(valueToFreq);
+            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUES:
+                return uniqueValues != null && !uniqueValues.isEmpty();
+            case IndicatorsPackage.FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT:
+                return DISTINCT_VALUE_COUNT_EDEFAULT == null ? distinctValueCount != null : !DISTINCT_VALUE_COUNT_EDEFAULT.equals(distinctValueCount);
+            case IndicatorsPackage.FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT:
+                return UNIQUE_VALUE_COUNT_EDEFAULT == null ? uniqueValueCount != null : !UNIQUE_VALUE_COUNT_EDEFAULT.equals(uniqueValueCount);
+            case IndicatorsPackage.FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT:
+                return DUPLICATE_VALUE_COUNT_EDEFAULT == null ? getDuplicateValueCount() != null : !DUPLICATE_VALUE_COUNT_EDEFAULT.equals(getDuplicateValueCount());
+            case IndicatorsPackage.FREQUENCY_INDICATOR__VALUE_TO_FREQ:
+                return VALUE_TO_FREQ_EDEFAULT == null ? valueToFreq != null : !VALUE_TO_FREQ_EDEFAULT.equals(valueToFreq);
         }
         return super.eIsSet(featureID);
     }
@@ -532,8 +510,6 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         HashMap<Object, Long> mapVal2Freq = new HashMap<Object, Long>();
         boolean debug = log.isDebugEnabled();
         StringBuffer matrix = debug ? new StringBuffer() : null;
-
-        Long count = 0l;
         for (Object[] value2freq : objects) {
             if (value2freq.length != nbColumns) {
                 log.error("Problem with result for Frequency indicator");
@@ -545,14 +521,11 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             if (debug) {
                 matrix.append("\n").append("\"").append(value).append("\"").append(",").append(freq);
             }
-
-            count = count + freq;
         }
         if (debug) {
             log.debug(matrix);
         }
 
-        this.setCount(count);
         this.setValueToFreq(mapVal2Freq);
         return true;
     }
