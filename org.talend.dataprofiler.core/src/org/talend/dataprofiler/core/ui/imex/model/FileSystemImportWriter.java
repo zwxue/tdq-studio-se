@@ -89,8 +89,6 @@ public class FileSystemImportWriter implements IImportWriter {
     private IPath basePath;
 
     private String projectName;
-    
-
 
     /*
      * (non-Javadoc)
@@ -418,13 +416,15 @@ public class FileSystemImportWriter implements IImportWriter {
             if (log.isDebugEnabled()) {
                 log.debug("Back-up workspace...." + workspacePath.toOSString());
             }
-                File temporaryFolder = workspacePath.removeLastSegments(1).append("tempFolder" + EcoreUtil.generateUUID()).toFile();
-                if (!temporaryFolder.exists()) {
-                    temporaryFolder.mkdir();
-                }
 
-                FileUtils.copyDirectory(workspacePath.toFile(), temporaryFolder);
-                return temporaryFolder;
+            File temporaryFolder = ResourceManager.getRootFolderLocation().append("tempFolder" + EcoreUtil.generateUUID())
+                    .toFile();
+            if (!temporaryFolder.exists()) {
+                temporaryFolder.mkdir();
+            }
+
+            FileUtils.copyDirectory(workspacePath.toFile(), temporaryFolder);
+            return temporaryFolder;
         } catch (IOException e) {
             log.error(e);
         }
