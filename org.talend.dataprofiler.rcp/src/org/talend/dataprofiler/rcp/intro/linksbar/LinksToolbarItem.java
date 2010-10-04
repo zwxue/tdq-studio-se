@@ -40,9 +40,9 @@ public class LinksToolbarItem extends ContributionItem {
 
     private static final String ASK_URL = "<a href=\"http://www.talendforge.org/forum/\">Ask</a>"; //$NON-NLS-1$
 
-    private static final String SHARE_URL = "<a href=\"http://www.talendforge.org/exchange/\">Share</a>"; //$NON-NLS-1$
+    // private static final String SHARE_URL = "<a href=\"http://www.talendforge.org/exchange/\">Share</a>"; //$NON-NLS-1$
 
-    private static final String UPGRADE_URL = "<a href=\"http://www.talend.com/products-upgrade.php\">Upgrade!</a>"; //$NON-NLS-1$
+    private static final String UPGRADE_URL = "<a href=\"http://www.talend.com/whyupgrade.php\">Upgrade!</a>"; //$NON-NLS-1$
 
     @Override
     public void fill(ToolBar parent, int index) {
@@ -106,24 +106,24 @@ public class LinksToolbarItem extends ContributionItem {
         new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         // 3.share
-        Label shareLabel = new Label(composite, SWT.NONE);
+//        Label shareLabel = new Label(composite, SWT.NONE);
+//
+//        shareLabel.setImage(Activator.getImageDescriptor("icons/Globe2.png").createImage()); //$NON-NLS-1$
 
-        shareLabel.setImage(Activator.getImageDescriptor("icons/Globe2.png").createImage()); //$NON-NLS-1$
-
-        Link share = new Link(composite, SWT.NONE);
-        share.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-        share.setText(SHARE_URL);
-        share.setToolTipText(Messages.getString("LinksToolbarItem_9"));
-
-        share.addListener(SWT.Selection, new Listener() {
-
-            public void handleEvent(Event event) {
-                openBrower(event.text);
-            }
-        });
+//        Link share = new Link(composite, SWT.NONE);
+//        share.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+//        share.setText(SHARE_URL);
+//        share.setToolTipText(Messages.getString("LinksToolbarItem_9"));
+//
+//        share.addListener(SWT.Selection, new Listener() {
+//
+//            public void handleEvent(Event event) {
+//                openBrower(event.text);
+//            }
+//        });
 
         // blank label
-        new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+//        new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         // 4.upgrade
         Label upgradeLabel = new Label(composite, SWT.NONE);
