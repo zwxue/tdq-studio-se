@@ -72,6 +72,7 @@ public class PreviewColumnAction extends Action {
                                 DefaultMessagesImpl.getString("PreviewColumnAction.Warning"), DefaultMessagesImpl.getString("PreviewColumnAction.previewColumns")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         } else {
+            // FIXME from scorreia 2010-10-05 why is there a System.out here? There should not be!!
             System.out.println("Unsupport this method yet!!!");
         }
 

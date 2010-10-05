@@ -94,7 +94,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  * here. <br>
  * mzhao split system indicators. feature 13676, 2010-07-12
  */
-public class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
+class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
     public IndcatorSwitchImp() {
     }

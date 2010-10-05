@@ -374,7 +374,7 @@ public final class DefinitionHandler {
 
     /**
      * 
-     * DOC mzhao Get indicator definition by definition id (xmi id)
+     * DOC mzhao Get indicator definition by definition id (xmi id).
      * 
      * @param definitionId
      * @return

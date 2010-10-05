@@ -61,7 +61,7 @@ public class UpdateAnalysisWithMinLengthIndicator extends AbstractWorksapceUpdat
 
         for (File file : fileList) {
             if (file.exists()) {
-                try {// only migrate feature that was renamed, not the type
+                try { // only migrate feature that was renamed, not the type
                     String content = FileUtils.readFileToString(file, EMFUtil.ENCODING);
                     content = StringUtils.replace(content, "<MinLengthIndicator", "<minLengthIndicator");
                     content = StringUtils.replace(content, "</MinLengthIndicator>", "</minLengthIndicator>");

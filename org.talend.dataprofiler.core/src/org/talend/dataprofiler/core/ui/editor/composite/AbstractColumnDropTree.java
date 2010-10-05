@@ -476,7 +476,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     private boolean hideParameters(IndicatorUnit indicatorUnit) {
         EClass indicatorEclass = indicatorUnit.getIndicator().eClass();
-        System.out.println(indicatorEclass.getName());
         if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithNullIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankNullIndicator())

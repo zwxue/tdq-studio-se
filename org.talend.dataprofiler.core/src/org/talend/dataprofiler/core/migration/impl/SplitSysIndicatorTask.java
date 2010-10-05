@@ -80,7 +80,11 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
     }
 
     private void updateIndDefinition(Indicator ind) {
-        if (ind == null || ind.getIndicatorDefinition() == null) {
+        if (ind == null) {
+            return;
+        }
+        IndicatorDefinition indicatorDefinition = ind.getIndicatorDefinition();
+        if (indicatorDefinition == null) {
             return;
         }
         // ADD xqliu 2010-07-28 13676 don't update UserDefIndicator
@@ -88,11 +92,27 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
             return;
         }
         // ~ 13676
-        CwmResource indDefResource = (CwmResource) ind.getIndicatorDefinition().eResource();
-        // Find updated indicator definition
-        IndicatorDefinition updatedDefinition = DefinitionHandler.getInstance().getDefinitionById(
-                indDefResource.getID(ind.getIndicatorDefinition()));
-        ind.setIndicatorDefinition(updatedDefinition);
+        CwmResource indDefResource = (CwmResource) indicatorDefinition.eResource();
+        if (indDefResource == null) {
+            // MOD scorreia 2010-10-05 16030 set the link between indicators and their definition
+            if (DefinitionHandler.getInstance().setDefaultIndicatorDefinition(ind)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("MIGRATING: indicator definition " + indicatorDefinition.getName() + " in indicator "
+                            + ind.getName() + " in analysis " + ind.eResource());
+                }
+            } else {
+                // TODO externalize this string
+                log.error("MIGRATION ERROR: Could not change the indicator definition " + indicatorDefinition.getName()
+                        + " in indicator " + ind.getName() + " in analysis " + ind.eResource());
+            }
+            // ~ 16030
+        } else {
+            // Find updated indicator definition
+            IndicatorDefinition updatedDefinition = DefinitionHandler.getInstance().getDefinitionById(
+                    indDefResource.getID(ind.getIndicatorDefinition()));
+            ind.setIndicatorDefinition(updatedDefinition);
+        }
+
     }
 
     public MigrationTaskType getMigrationTaskType() {

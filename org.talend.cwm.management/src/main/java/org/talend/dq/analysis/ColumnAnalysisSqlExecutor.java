@@ -1264,7 +1264,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     protected String getCatalogOrSchemaName(ModelElement analyzedElement) {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
-            log.error("No schema found for column " + analyzedElement.getName());
+            log.error("No schema found for column " + ((analyzedElement != null) ? analyzedElement.getName() : "Unknow column"));
             return null;
         }
         // else
