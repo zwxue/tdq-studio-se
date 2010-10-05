@@ -96,6 +96,7 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -327,7 +328,15 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 treeItem.setImage(ImageLib.getImage(ImageLib.VIEW));
             }
 
-            treeItem.setText(0, tableIndicator.getColumnSet().getName());
+            ModelElement columnSet = tableIndicator.getColumnSet();
+            if (columnSet.eIsProxy()) { // try to resolve the proxy
+                columnSet = (ModelElement) EObjectHelper.resolveObject(columnSet);
+            }
+            String columnSetName = columnSet.getName();
+            if (columnSetName == null) {
+                columnSetName = "Unknown name"; // TODO from scorreia 2010-10-05 externalize string
+            }
+            treeItem.setText(0, columnSetName);
             treeItem.setData(TABLE_INDICATOR_KEY, tableIndicator);
 
             TreeEditor addDQRuleEditor = new TreeEditor(tree);
