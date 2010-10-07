@@ -1023,7 +1023,7 @@ public final class ConnectionUtils {
         // fill name label and metadata
         dbConn = (DatabaseConnection) fillConnectionMetadataInformation(dbConn);
         // fill database structure
-        if (dbConn.getDriverClass().equals(DatabaseConstant.XML_EXIST_DRIVER_NAME)) { // xmldb(e.g eXist)
+        if (DatabaseConstant.XML_EXIST_DRIVER_NAME.equals(dbConn.getDriverClass())) { // xmldb(e.g eXist)
             IXMLDBConnection xmlDBConnection = new EXistXMLDBConnection(dbConn.getDriverClass(), dbConn.getURL());
             ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(), dbConn);
         } else {
