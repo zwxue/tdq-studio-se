@@ -47,6 +47,7 @@ import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -805,7 +806,15 @@ public final class ConnectionUtils {
     public static String getDriverClass(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
         if (dbConn != null) {
-            return dbConn.getDriverClass();
+            String driverClassName = dbConn.getDriverClass();
+            // SG : issue http://talendforge.org/bugs/view.php?id=16199
+            if (driverClassName == null) {// no drive is specified so let us try to guess it
+                SupportDBUrlType dbType = SupportDBUrlStore.getInstance().findDBTypeByName(dbConn.getDatabaseType());
+                if (dbType != null) {
+                    driverClassName = dbType.getDbDriver();
+                }// else we keep the drive class to null, we do not know how to guess it anymore.
+            } // else we are ok
+            return driverClassName;
         }
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
