@@ -316,6 +316,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         }
         return is;
     }
+
     private EObject getEObject(IFile fe2) {
         EObject object = null;
 
@@ -414,8 +415,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private void createTdColumn(TdColumn column) {
         createNameCommentDetail(column);
-        newLabelAndText(gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.typex"), column.getSqlDataType().getName()); //$NON-NLS-1$
+        newLabelAndText(
+                gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.typex"), column.getSqlDataType() != null ? column.getSqlDataType().getName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
         String purpose = "" + column.isNullable();
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.nullable"), purpose); //$NON-NLS-1$
         final Expression initialValue = column.getInitialValue();
