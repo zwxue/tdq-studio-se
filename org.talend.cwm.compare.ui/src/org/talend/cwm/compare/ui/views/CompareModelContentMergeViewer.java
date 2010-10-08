@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
@@ -66,6 +67,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -400,6 +402,13 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
             TypedReturnCode<Connection> returnValue = PrvResourceFileHelper.getInstance()
                     .findProvider((IFile) selectedOjbect);
             modelElement = returnValue.getObject();
+        } else if (selectedOjbect instanceof IRepositoryViewObject) {
+            // MOD klliu 2010-10-08 bug 16173: get changes in "database compare" editor
+            ModelElement me = PropertyHelper.retrieveElement(((IRepositoryViewObject) selectedOjbect).getProperty().getItem());
+            if (me instanceof Connection) {
+                modelElement = me;
+            }
+
         } else {
             // Folder
             Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect)
