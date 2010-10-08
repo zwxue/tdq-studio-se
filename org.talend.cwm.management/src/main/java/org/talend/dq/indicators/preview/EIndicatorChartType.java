@@ -59,6 +59,24 @@ public enum EIndicatorChartType {
                               Messages.getString("EIndicatorChartType.DateFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
     DATE_LOW_FREQUENCE_STATISTICS(
                                   Messages.getString("EIndicatorChartType.DateLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    // MOD yyi 2010-10-08 16081
+    WEEK_FREQUENCE_STATISTICS(
+                              Messages.getString("EIndicatorChartType.WeekFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    WEEK_LOW_FREQUENCE_STATISTICS(
+                                  Messages.getString("EIndicatorChartType.WeekLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    MONTH_FREQUENCE_STATISTICS(
+                               Messages.getString("EIndicatorChartType.MonthFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    MONTH_LOW_FREQUENCE_STATISTICS(
+                                   Messages.getString("EIndicatorChartType.MonthLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    QUARTER_FREQUENCE_STATISTICS(
+                                 Messages.getString("EIndicatorChartType.QuarterFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    QUARTER_LOW_FREQUENCE_STATISTICS(
+                                     Messages.getString("EIndicatorChartType.QuarterLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    YEAR_FREQUENCE_STATISTICS(
+                              Messages.getString("EIndicatorChartType.YearFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    YEAR_LOW_FREQUENCE_STATISTICS(
+                                  Messages.getString("EIndicatorChartType.YearLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    // ~
     SIMPLE_TEXT_STATISTICS(Messages.getString("EIndicatorChartType.SimpleTextStatistics"), new TextStatisticsExplorer()); //$NON-NLS-1$
 
     private String literal;
