@@ -14,7 +14,6 @@ package org.talend.dq.dbms;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.indicators.DateGrain;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -184,31 +183,6 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
         }
 
         return false;
-    }
-
-    @Override
-    public orgomg.cwm.objectmodel.core.Expression getInstantiatedExpression(Indicator indicator) {
-        orgomg.cwm.objectmodel.core.Expression expression = super.getInstantiatedExpression(indicator);
-        if (expression != null && expression.getBody() != null) {
-            String query = expression.getBody();
-            String splitForRegex = getBackSlashForRegex();
-            String[] sqlitAtrray = query.split(splitForRegex);
-            query = "";
-            int index = 0;
-            for (String str : sqlitAtrray) {
-
-                if (index == 1) {
-                    query += splitForRegex;
-                } else if (index > 0) {
-                    query += "\\";
-                }
-                query += str;
-                index++;
-            }
-
-            expression.setBody(query);
-        }
-        return expression;
     }
 
 }

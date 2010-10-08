@@ -31,6 +31,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.builders.CatalogBuilder;
+import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.constants.SoftwareSystemConstants;
@@ -275,7 +276,7 @@ public final class DatabaseContentRetriever {
                     hasSchema = true; // found at least one schema
                 }
                 // handle case of SQLite (no schema no catalog)
-                if (!hasSchema && catalogName2schemas.isEmpty()) {
+                if (!hasSchema && catalogName2schemas.isEmpty() && catalogNames.isEmpty()) {
                     // create a fake schema with an empty name (otherwise queries will use the name and will fail)
                     Schema schema = createSchema(" "); //$NON-NLS-1$
                     MultiMapHelper.addUniqueObjectToListMap(null, schema, catalogName2schemas);
@@ -709,11 +710,10 @@ public final class DatabaseContentRetriever {
      * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
     // MOD by zshen need DatabaseConnection to be prarmeter
-    // public static List<TdColumn> getColumns(String catalogName, String schemaPattern, String tablePattern, String
-    // columnPattern,
-    // java.sql.Connection connection) throws SQLException {
-    // return new ColumnBuilder(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
-    // }
+    public static List<TdColumn> getColumns(String catalogName, String schemaPattern, String tablePattern, String columnPattern,
+            DatabaseConnection connection) throws SQLException {
+        return new ColumnBuilder(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
+    }
 
     // method not used!? TODO remove?
     /**
