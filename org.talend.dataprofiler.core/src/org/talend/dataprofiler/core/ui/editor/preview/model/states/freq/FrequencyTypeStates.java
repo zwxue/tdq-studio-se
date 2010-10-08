@@ -81,7 +81,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                     entity.setLabelNull(freqExt.getKey() == null);
                     entity.setLabel(keyLabel);
                     entity.setValue(String.valueOf(freqExt.getValue()));
-                    entity.setPercent(String.valueOf(freqExt.getFrequency()));
+                    entity.setPercent(freqExt.getFrequency());
 
                     customerdataset.addDataEntity(entity);
                 }
@@ -125,6 +125,5 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     protected abstract void sortIndicator(FrequencyExt[] frequencyExt);
 
     protected abstract String getTitle();
-
 
 }

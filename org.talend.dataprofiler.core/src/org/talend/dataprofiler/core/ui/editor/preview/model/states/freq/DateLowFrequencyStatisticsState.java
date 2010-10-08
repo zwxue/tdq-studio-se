@@ -24,7 +24,7 @@ import org.talend.dq.indicators.ext.FrequencyExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
- * DOC yyi  class global comment. Detailled comment
+ * DOC yyi class global comment. Detailled comment
  */
 public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState {
 
@@ -80,7 +80,7 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
                     entity.setLabelNull(freqExt.getKey() == null);
                     entity.setLabel(keyLabel);
                     entity.setValue(String.valueOf(freqExt.getValue()));
-                    entity.setPercent(String.valueOf(freqExt.getFrequency()));
+                    entity.setPercent(freqExt.getFrequency());
 
                     customerdataset.addDataEntity(entity);
                 }

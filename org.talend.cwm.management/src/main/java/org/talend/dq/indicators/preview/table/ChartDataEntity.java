@@ -43,7 +43,7 @@ public class ChartDataEntity {
 
     private Indicator indicator;
 
-    private String percent;
+    private Double percent;
 
     private Boolean outOfRange = null;
 
@@ -65,7 +65,7 @@ public class ChartDataEntity {
         this(indicator, label, value, null, false);
     }
 
-    public ChartDataEntity(Indicator indicator, String label, String value, String percent, boolean labelNull) {
+    public ChartDataEntity(Indicator indicator, String label, String value, Double percent, boolean labelNull) {
         this.label = label;
         this.value = value;
         this.percent = percent;
@@ -125,7 +125,7 @@ public class ChartDataEntity {
 
     public String getPersent() {
         if (percent != null) {
-            if (percent.matches("-?\\d+(\\.\\d+)?")) { //$NON-NLS-1$
+            if (percent != Double.NaN) { //$NON-NLS-1$
                 return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
             } else {
                 return "N/A"; //$NON-NLS-1$
@@ -135,7 +135,7 @@ public class ChartDataEntity {
         }
     }
 
-    public void setPercent(String percent) {
+    public void setPercent(Double percent) {
         this.percent = percent;
     }
 

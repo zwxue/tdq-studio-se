@@ -60,7 +60,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
             entity.setIndicator(unit.getIndicator());
             entity.setLabel(label);
             entity.setValue(String.valueOf(value));
-            entity.setPercent(String.valueOf(value / unit.getIndicator().getCount()));
+            entity.setPercent(value / unit.getIndicator().getCount());
 
             customerdataset.addDataEntity(entity);
         }
