@@ -12,30 +12,23 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.io.File;
-
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.ProxyRepositoryFactory;
-import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -55,32 +48,26 @@ public class DQRestoreAction extends Action {
 
     @Override
     public void run() {
-
+        // MOD qiongli 2010-10-9,bug 15674
         SelectedResources selectedResources = new SelectedResources();
-        IFile[] selectedFiles = selectedResources.getSelectedResourcesArrayForDelForever();
+        Property[] selectedProps = selectedResources.getSelectedArrayForDelForever();
         try {
-            String fileString = ResourceManager.getLibrariesFolder().getLocation().toOSString() + "/.logicalDelete.txt";
-            File f = new Path(fileString).toFile();
-            for (IFile file : selectedFiles) {
-                Property property = PropertyHelper.getProperty(file);
-                if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+
+            for (Property property : selectedProps) {
+                Item item = property.getItem();
+                if (item instanceof ConnectionItem) {
                     IRepositoryViewObject repViewObj = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(property);
                     Property propertyTMP = repViewObj.getProperty();
                     propertyTMP.getItem().getState().setDeleted(false);
                     ProxyRepositoryFactory.getInstance().save(propertyTMP);
+                    EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
                 } else {
                     property.getItem().getState().setDeleted(false);
                     Resource propertyResource = property.eResource();
                     if (!EMFSharedResources.getInstance().saveResource(propertyResource))
                         return;
                 }
-
-                if (f.exists()) {
-                    LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.fileType + file.getFullPath().toOSString(),
-                            PluginConstant.EMPTY_STRING);
-                    LogicalDeleteFileHandle.removeAllParent(file);
-                }
-
+                LogicalDeleteFileHandle.refreshDelPropertys(0, property);
                 // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash
                 // bin
                 if (property.getItem() instanceof ConnectionItem) {

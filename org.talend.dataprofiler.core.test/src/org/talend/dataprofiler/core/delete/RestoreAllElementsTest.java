@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.delete;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -21,8 +22,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 import org.talend.core.model.properties.Property;
-import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
@@ -35,7 +34,8 @@ public class RestoreAllElementsTest {
     @Test
     public void restoreAllByTXTFile() throws Exception {
 
-        List<String[]> delLs = LogicalDeleteFileHandle.getDelLs();
+        // List<String[]> delLs = LogicalDeleteFileHandle.getDelLs();
+        List<String[]> delLs = new ArrayList();
         for (int i = 0; i < delLs.size(); i++) {
             String[] els = (String[]) delLs.get(i);
             IPath path = new Path(els[1]);
@@ -47,15 +47,17 @@ public class RestoreAllElementsTest {
                     Resource propertyResource = property.eResource();
                     if (!EMFSharedResources.getInstance().saveResource(propertyResource))
                         continue;
-                    LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.fileType + file.getFullPath().toOSString(),
-                            PluginConstant.EMPTY_STRING);
+                    // LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.fileType +
+                    // file.getFullPath().toOSString(),
+                    // PluginConstant.EMPTY_STRING);
                     i--;
                 }
             } else if (els[0].equals("Folder")) {
                 IFolder folder = ResourceManager.getRoot().getFolder(path);
                 if (folder.exists()) {
-                    LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType + folder.getFullPath().toOSString(),
-                            PluginConstant.EMPTY_STRING);
+                    // LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType +
+                    // folder.getFullPath().toOSString(),
+                    // PluginConstant.EMPTY_STRING);
                     i--;
                 }
             }

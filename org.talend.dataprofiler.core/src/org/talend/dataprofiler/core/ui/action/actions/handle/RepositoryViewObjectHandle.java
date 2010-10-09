@@ -76,7 +76,7 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         // MOD qiongli 2010-9-10, bug 14469,15515
         if (isPhysicalDelete()) {
             ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
-            LogicalDeleteFileHandle.deleteElement(file);
+            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
             EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
         } else {
             ProxyRepositoryFactory.getInstance().deleteObjectLogical(repositoryObject);

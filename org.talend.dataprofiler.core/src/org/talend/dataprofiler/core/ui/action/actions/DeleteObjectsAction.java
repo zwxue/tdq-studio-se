@@ -13,24 +13,20 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -44,7 +40,6 @@ import org.talend.dataprofiler.core.ui.action.actions.handle.RepositoryViewObjec
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -190,31 +185,17 @@ public class DeleteObjectsAction extends Action {
         } else if (obj instanceof IRepositoryViewObject) {
             propList.add(((IRepositoryViewObject) obj).getProperty());
         } else if (obj instanceof DQRecycleBinNode) {
-            DQRecycleBinNode node = (DQRecycleBinNode) obj;
-            String pathStr = node.getObject().toString();
-            IPath path = new Path(pathStr).removeFirstSegments(1);
-
-            if (path.getFileExtension() == null) {
-                // MOD qiongli 2010-9-13,only handle root folder
-                // List<Object> children = node.getDeletedChildren();
-                // if (children != null) {
-                // for (Object child : children) {
-                // iteratedProperties(child, propList);
-                // }
-                // }
-
+            // MOD qiongli 2010-10-9,bug 15674
+            Object o = ((DQRecycleBinNode) obj).getObject();
+            if (o instanceof Property) {
+                propList.add((Property) o);
+            } else {
+                String pathStr = o.toString();
+                IPath path = new Path(pathStr).removeFirstSegments(1);
                 Property property = PropertyHelper.createFolderItemProperty();
                 property.getItem().getState().setPath(path.toOSString());
-
                 propList.add(property);
-            } else {
-                path = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-                IFile propFile = ResourceManager.getRoot().getFile(path);
-                if (propFile.exists()) {
-                    propList.add(PropertyHelper.getProperty(propFile));
-                }
             }
-
         }
     }
 
@@ -236,25 +217,6 @@ public class DeleteObjectsAction extends Action {
             }
         }
         return false;
-    }
-
-    /**
-     * DOC bZhou Comment method "getAllSubFileProperties".
-     * 
-     * @param folder
-     * @return
-     */
-    private Collection<? extends Property> getAllSubFileProperties(IFolder folder) {
-        List<Property> propList = new ArrayList<Property>();
-
-        List<IFile> fileList = new ArrayList<IFile>();
-        getAllSubFiles(folder, fileList);
-
-        for (IFile file : fileList) {
-            propList.add(PropertyHelper.getProperty(file));
-        }
-
-        return propList;
     }
 
     /**
@@ -286,57 +248,5 @@ public class DeleteObjectsAction extends Action {
      */
     public boolean getRunStatus() {
         return runStatus;
-    }
-
-    /**
-     * Return an array of the currently selected resources.
-     * 
-     * @return the selected resources
-     */
-    @SuppressWarnings("unchecked")
-    private IFile[] getSelectedResourcesArray() {
-        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
-        TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
-        List<IFile> fileList = new ArrayList<IFile>();
-        Iterator iterator = treeSelection.iterator();
-        while (iterator.hasNext()) {
-            Object obj = iterator.next();
-            if (obj instanceof IFile) {
-                IFile file = (IFile) obj;
-                fileList.add(file);
-            } else if (obj instanceof IFolder) {
-                IFolder folder = (IFolder) obj;
-                getAllSubFiles(folder, fileList);
-            } else {
-                return new IFile[0];
-            }
-        }
-        return fileList.toArray(new IFile[fileList.size()]);
-    }
-
-    /**
-     * DOC bZhou Comment method "getAllSubFiles".
-     * 
-     * @param folder
-     * @param fileList
-     */
-    private void getAllSubFiles(IFolder folder, List<IFile> fileList) {
-        IResource[] members = null;
-        try {
-            members = folder.members();
-        } catch (CoreException e) {
-            log.error(e, e);
-        }
-        for (IResource res : members) {
-            if (res.getType() == IResource.FILE) {
-                IFile file = (IFile) res;
-                if (!StringUtils.equals(file.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)) {
-                    fileList.add(file);
-                }
-            } else if (res.getType() == IResource.FOLDER) {
-                getAllSubFiles((IFolder) res, fileList);
-            }
-        }
-
     }
 }

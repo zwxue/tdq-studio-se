@@ -23,8 +23,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Property;
-import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle;
 import org.talend.dq.helper.PropertyHelper;
@@ -75,9 +73,10 @@ public class DeleteLogicalTest {
                     }
                 }
                 if (!hasDelFailing) {
-                    LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType
-                            + subfolder.getFullPath().toOSString(), PluginConstant.EMPTY_STRING);
-                    LogicalDeleteFileHandle.saveElement(LogicalDeleteFileHandle.folderType, subfolder.getFullPath().toOSString());
+                    // LogicalDeleteFileHandle.replaceInFile(LogicalDeleteFileHandle.folderType
+                    // + subfolder.getFullPath().toOSString(), PluginConstant.EMPTY_STRING);
+                    // LogicalDeleteFileHandle.saveElement(LogicalDeleteFileHandle.folderType,
+                    // subfolder.getFullPath().toOSString());
                     System.out.println("Logical delete " + subfolder.getName() + " successful!");
                 }
 

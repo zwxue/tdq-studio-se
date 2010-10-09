@@ -96,8 +96,7 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
      */
     public boolean delete() throws Exception {
         if (isPhysicalDelete()) {
-            LogicalDeleteFileHandle.deleteElement(file);
-
+            // MOD qiongli 2010-10-9,bug 15674
             IPath filePath = file.getFullPath();
             filePath = filePath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
             IFile propFile = ResourceManager.getRoot().getFile(filePath);
@@ -108,6 +107,7 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
             if (file.exists() && isPhysicalDelete()) {
                 file.delete(true, null);
             }
+            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
         } else {
             LogicalDeleteFileHandle.deleteLogical(file);
         }

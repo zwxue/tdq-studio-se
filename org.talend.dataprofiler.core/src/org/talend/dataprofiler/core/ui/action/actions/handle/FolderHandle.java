@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -20,8 +19,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
@@ -63,22 +62,25 @@ public class FolderHandle implements IDeletionHandle {
 
         IFolder folder = ResourceManager.getRoot().getFolder(new Path(pathStr));
         // MOD qiongli 2010-9-13,bug 14697.
+        // MOD qiongli 2010-10-8,bug 15674
         if (isPhysicalDelete()) {
             if (folder.members().length == 0) {
                 folder.delete(true, null);
             } else {
                 SelectedResources selectedResources = new SelectedResources();
-                IFile[] selectedFiles = selectedResources.getSelectedResourcesArrayForDelForever();
-                for (IFile file : selectedFiles) {
-                    LogicalDeleteFileHandle.deleteElement(file);
-                    if (!file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                        ModelElementFileFactory.getResourceFileMap(file).delete(file);
+                Property[] selProps = selectedResources.getSelectedArrayForDelForever();
+                for (Property prop : selProps) {
+                    if (prop.getItem() instanceof ConnectionItem) {
+                        handleRepoisityoryView(prop);
                     } else {
-                        handleRepoisityoryView(file);
+                        IFile primFile = PropertyHelper.getItemFile(prop);
+                        ModelElementFileFactory.getResourceFileMap(primFile).delete(primFile);
                     }
+                    LogicalDeleteFileHandle.refreshDelPropertys(0, prop);
                 }
                 delsubFolderForever(folder);
             }
+            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
 
         }
 
@@ -126,14 +128,15 @@ public class FolderHandle implements IDeletionHandle {
      */
     public boolean isPhysicalDelete() {
         // MOD qiongli bug 14697
+        IFolder folder = null;
         try {
-            IFolder folder = ResourceManager.getRoot().getFolder(new Path(pathStr));
+            folder = ResourceManager.getRoot().getFolder(new Path(pathStr));
             if (folder.members().length == 0)
                 return true;
         } catch (Exception exc) {
             log.error(exc, exc);
         }
-        return LogicalDeleteFileHandle.isStartWithDelFolder(File.separator + pathStr);
+        return LogicalDeleteFileHandle.hasChildDeleted(folder);
     }
 
     /*
@@ -145,14 +148,10 @@ public class FolderHandle implements IDeletionHandle {
         return this.property;
     }
 
-    private void handleRepoisityoryView(IFile propFile) {
-        property = PropertyHelper.getProperty(propFile);
-        IRepositoryViewObject repViewObj = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(property);
-        String paths = property.eResource().getURI().toPlatformString(false);
-        IFile file = ResourceManager.getRoot().getFile(new Path(paths));
+    private void handleRepoisityoryView(Property prop) {
+        IRepositoryViewObject repViewObj = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(prop);
         try {
             ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repViewObj);
-            LogicalDeleteFileHandle.deleteElement(file);
         } catch (PersistenceException e) {
             log.error(e, e);
         }

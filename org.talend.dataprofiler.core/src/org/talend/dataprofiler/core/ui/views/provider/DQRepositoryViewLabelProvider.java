@@ -17,16 +17,15 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -42,8 +41,12 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
-import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -91,10 +94,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
             Object obj = rbn.getObject();
-            if (obj instanceof IFile) {
-                IFile file = (IFile) obj;
-                String type = file.getFileExtension();
-                if (type.equals(FactoriesUtil.ANA)) {
+            // MOD qiongli 2010-10-8,bug 15674
+            if (obj instanceof Property) {
+                Property property = (Property) obj;
+                Item item = property.getItem();
+                if (item instanceof TDQAnalysisItem) {
+                    IFile file = PropertyHelper.getItemFile(property);
                     Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
                     ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
                     analysisHandler.setAnalysis(analysis);
@@ -106,23 +111,18 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                         }
                     }
                     return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
-                } else if (type.equals(FactoriesUtil.REP)) {
+                } else if (item instanceof TDQReportItem) {
                     return ImageLib.getImage(ImageLib.REPORT_OBJECT);
-                } else if (type.equals(FactoriesUtil.PATTERN)) {
+                } else if (item instanceof TDQPatternItem) {
                     return ImageLib.getImage(ImageLib.PATTERN_REG);
-                } else if (type.equals(FactoriesUtil.DQRULE)) {
+                } else if (item instanceof TDQBusinessRuleItem) {
                     return ImageLib.getImage(ImageLib.DQ_RULE);
-                } else if (type.equals(FactoriesUtil.PROV)) {
-                    return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-                } else if (type.equals(FactoriesUtil.DEFINITION)) {
+                } else if (item instanceof TDQIndicatorDefinitionItem) {
                     return ImageLib.getImage(ImageLib.IND_DEFINITION);
-                } else if (type.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                    Item connItem = (PropertyHelper.getProperty(file)).getItem();
-                    if (connItem instanceof MDMConnectionItem) {
-                        return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-                    } else if (connItem instanceof ConnectionItem) {
-                        return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-                    }
+                } else if (item instanceof MDMConnectionItem) {
+                    return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                } else if (item instanceof ConnectionItem) {
+                    return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 }
             } else if (obj instanceof IFolder) {
                 return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
@@ -193,23 +193,18 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
             Object obj = rbn.getObject();
-            if (obj instanceof IFile) {
-                IFile file = (IFile) obj;
-                ModelElement mElement = ModelElementFileFactory.getModelElement(file);
-                if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                    Item connItem = (PropertyHelper.getProperty(file)).getItem();
-                    if (connItem instanceof ConnectionItem) {
-                        Connection connection = ((ConnectionItem) connItem).getConnection();
-                        if (connection.eIsProxy()) {
-                            connection = (Connection) EObjectHelper.resolveObject(connection);
-                        }
-                        return connection.getName();
+            // MOD qiongli 2010-8-10,bug 15674
+            if (obj instanceof Property) {
+                Property property = (Property) obj;
+                Item item = property.getItem();
+                if (item instanceof ConnectionItem) {
+                    Connection connection = ((ConnectionItem) item).getConnection();
+                    if (connection.eIsProxy()) {
+                        connection = (Connection) EObjectHelper.resolveObject(connection);
                     }
-                } else if (mElement != null) {
-                    return DqRepositoryViewService.buildElementName(mElement);
-                } else {
-                    return file.getName();
+                    return connection.getName();
                 }
+                return property.getLabel();
             } else if (obj instanceof IFolder) {
                 return ((IFolder) obj).getName();
             }

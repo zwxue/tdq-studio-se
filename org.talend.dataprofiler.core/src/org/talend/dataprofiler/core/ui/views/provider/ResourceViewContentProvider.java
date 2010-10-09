@@ -16,6 +16,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -342,15 +343,12 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     }
 
     /**
-     * DOC qiongli Comment method "getIndicatorChildren".
+     * DOC qiongli Comment method "getIndicatorChildren".Get all Children which have not been logical deleted.
      */
     private Object[] getChildrenExceptRecBin(Object element) {
         IFolder folder = (IFolder) element;
-        if (!ResourceService.isReadOnlyFolder(folder) && LogicalDeleteFileHandle.isAllChildrenDeleted(folder)) {
-            return new IFolder[0];
-        }
         Object[] obs = super.getChildren(folder);
-        List<String[]> delElements = LogicalDeleteFileHandle.getDelLs();
+        HashSet<Property> delElements = LogicalDeleteFileHandle.getDelPropertyLs();
         if (delElements.size() == 0)
             return obs;
         List<Object> abstractLs = Arrays.asList(obs);
@@ -405,7 +403,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
             String fPath = folder.getFullPath().toOSString();
-            ls = LogicalDeleteFileHandle.getChildFromTXT(fPath);
+            ls = LogicalDeleteFileHandle.getLogicalDelNodes(fPath);
             if (ls.size() != 0)
                 rbn.setDeletedChildren(ls);
         }

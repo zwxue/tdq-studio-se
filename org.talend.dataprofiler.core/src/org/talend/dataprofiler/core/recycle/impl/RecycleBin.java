@@ -19,13 +19,12 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.recycle.IRecycleBin;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceService;
 
 /**
@@ -63,39 +62,24 @@ public class RecycleBin implements IRecycleBin {
      * @return get the logical deleted elements
      */
     private List<DQRecycleBinNode> getRecycleBinChildren() {
-        List<String[]> delElements = LogicalDeleteFileHandle.getDelLs();
+        //MOD qiongli 2010-10-8,bug 15674
+        HashSet<Property> delElements = LogicalDeleteFileHandle.getDelPropertyLs();
         List<DQRecycleBinNode> nodeList = new ArrayList<DQRecycleBinNode>();
-        HashSet<String> set = new HashSet<String>();
-        String fType = null;
-        String pathStr = null;
-        for (String[] es : delElements) {
-            if (es.length < 2)
-                continue;
-            fType = es[0];
-            pathStr = es[1];
-            IPath iPath = new Path(pathStr);
-            if (fType.equals("File")) {
-                IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(iPath);
-                if (file.exists()) {
-                    IFolder parent = (IFolder) file.getParent();
-                    if (ResourceService.isReadOnlyFolder(parent)) {
-                        DQRecycleBinNode rbn = new DQRecycleBinNode();
-                        rbn.setObject(file);
-                        set.add(file.getFullPath().toOSString());
-                        nodeList.add(rbn);
-                    } else {
-                        // addParent(nodeList, parent, file, set);
-                        searchAddRoot(nodeList, file, set);
-                    }
+        HashSet<String> tempSet = new HashSet<String>();
+        for (Property property : delElements) {
+            IFile file = PropertyHelper.getItemFile(property);
+            if (file.exists()) {
+                IFolder parent = (IFolder) file.getParent();
+                if (ResourceService.isReadOnlyFolder(parent)) {
+                    DQRecycleBinNode rbn = new DQRecycleBinNode();
+                    rbn.setObject(property);
+                    tempSet.add(file.getFullPath().toOSString());
+                    nodeList.add(rbn);
+                } else {
+                    // addParent(nodeList, parent, file, set);
+                    searchAddRoot(nodeList, file, tempSet);
                 }
             }
-            // else if (fType.equals("Folder")) {
-            // IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(iPath);
-            // if (folder.exists()) {
-            // IFolder parent = (IFolder) folder.getParent();
-            // addParent(nodeList, parent, folder, set);
-            // }
-            // }
         }
 
         return nodeList;
@@ -119,9 +103,6 @@ public class RecycleBin implements IRecycleBin {
             if (!hSet.contains(childPath)) {// make sure the same path added once
                 DQRecycleBinNode rbn = new DQRecycleBinNode();
                 rbn.setObject(currentRes);
-                if (currentRes.getType() == IResource.FOLDER) {
-                    rbn.setDeletedChildren(LogicalDeleteFileHandle.getChildFromTXT(currentRes.getFullPath().toOSString()));
-                }
                 hSet.add(((IResource) currentRes).getFullPath().toOSString());
                 fList.add(rbn);
             }
