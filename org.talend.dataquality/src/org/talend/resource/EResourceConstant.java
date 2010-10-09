@@ -162,7 +162,7 @@ public enum EResourceConstant {
         constantList.add(REPORTS);
         constantList.add(DB_CONNECTIONS);
         constantList.add(MDM_CONNECTIONS);
-        constantList.add(RULES);
+        constantList.add(RULES_SQL);
         constantList.add(INDICATORS);
         constantList.add(JRXML_TEMPLATE);
         constantList.add(PATTERNS);
@@ -253,7 +253,7 @@ public enum EResourceConstant {
 
             @Override
             public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
-                return RULES;
+                return RULES_SQL;
             }
 
             @Override
