@@ -1231,6 +1231,12 @@
            name="Refine text statistics indicators task"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateSomePatternToMatchMysql"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateSomePatternToMatchMysql"
+           name="update International phone number to matching mysql if exist"
+           version="4.1.0">
+     </workspacetask>
      
 
   </extension>
