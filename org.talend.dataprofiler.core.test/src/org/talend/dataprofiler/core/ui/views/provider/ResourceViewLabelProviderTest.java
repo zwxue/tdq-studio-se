@@ -28,7 +28,7 @@ import org.junit.Test;
  * DOC zshen class global comment. Test the method
  * org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider#getFileCount
  */
-public class GetFileCountTest {
+public class ResourceViewLabelProviderTest {
 
     private static String[] filterExtensions = { "ana", "rep" };
 

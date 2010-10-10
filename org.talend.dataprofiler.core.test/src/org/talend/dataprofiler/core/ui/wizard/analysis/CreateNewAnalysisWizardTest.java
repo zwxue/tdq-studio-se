@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui;
+package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -21,12 +21,13 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.talend.dataquality.test.TDQSWTBotTest;
 
 /**
  * DOC yyi class global comment. Detailled comment
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class CreateNewAnalysisWizardTest extends WizardTest {
+public class CreateNewAnalysisWizardTest extends TDQSWTBotTest {
 
     @Test
     public void createColumnSetAnalysis() {

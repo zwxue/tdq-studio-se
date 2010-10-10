@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui;
+package org.talend.dataprofiler.core.ui.wizard.database;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.allOf;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
@@ -27,19 +27,19 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.talend.dataquality.test.TDQSWTBotTest;
 
 /**
  * DOC yyi class global comment. Detailled comment
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class DatabaseConnectionWizardTest extends WizardTest {
+public class DatabaseConnectionWizardTest extends TDQSWTBotTest {
 
     @Test
     public void createDBConnection() {
 
         view = bot.viewByTitle("DQ Repository");
         view.setFocus();
-
         SWTBotTree tree = new SWTBotTree((Tree) bot.widget(WidgetOfType.widgetOfType(Tree.class), view.getWidget()));
         tree.setFocus();
 

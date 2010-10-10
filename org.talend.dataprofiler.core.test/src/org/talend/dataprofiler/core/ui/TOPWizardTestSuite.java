@@ -17,6 +17,8 @@ import junit.framework.TestSuite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizardTest;
+import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizardTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { CreateNewAnalysisWizardTest.class, DatabaseConnectionWizardTest.class })
