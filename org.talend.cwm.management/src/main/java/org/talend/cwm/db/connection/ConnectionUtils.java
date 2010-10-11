@@ -1042,7 +1042,6 @@ public final class ConnectionUtils {
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (TalendException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

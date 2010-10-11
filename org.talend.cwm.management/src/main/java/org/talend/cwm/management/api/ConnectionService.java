@@ -93,7 +93,6 @@ public final class ConnectionService {
             try {
                 dataProvider = TalendCwmFactory.createDataProvider(connector);
             } catch (TalendException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             String connectionName = connectionParameters.getName();

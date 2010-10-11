@@ -69,7 +69,6 @@ public class DataProviderBuilder {
                 returnCode.setOk(false);
                 returnCode.setMessage(msg);
             } catch (TalendException e) {
-                // TODO Auto-generated catch block
                 msg = "Failed to create a data provider for the given connection parameters: " + e.getMessage();
                 log.warn(msg, e);
 
