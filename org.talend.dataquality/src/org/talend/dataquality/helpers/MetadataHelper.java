@@ -51,8 +51,34 @@ public final class MetadataHelper {
 
     private final static String PROJECT_FILE = "talend.project";
 
+    // MOD klliu 2010-10-09 feature 15821
+    /**
+     * 
+     * DOC klliu Comment method "getOtherParameter".
+     * 
+     * @return
+     */
+    public static String getOtherParameter(ModelElement element) {
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.OTHER_PARAMETER, element.getTaggedValue());
+        if (tv == null) {
+            return "";
+        }
+        return tv.getValue();
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "setOtherParameter".
+     * 
+     * @param otherParameter
+     */
+    public static void setOtherParameter(String otherParameter, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.OTHER_PARAMETER, otherParameter);
+    }
+
     private MetadataHelper() {
     }
+
 
     /**
      * Method "setDataminingType" sets the type of the content of a column.
