@@ -105,4 +105,13 @@ public abstract class AMigrationTask implements IMigrationTask {
      * @throws SQLException
      */
     protected abstract boolean doExecute() throws Exception;
+
+    public Boolean isModelTask() {
+        return "org.talend.dataprofiler.core.migration.impl.MergeMetadataTask".equals(getId())
+                || "org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask".equals(getId())
+                || "org.talend.dataprofiler.core.migration.impl.UpdatePropertiesFileTask".equals(getId())
+                || "org.talend.dataprofiler.core.migration.impl.UpdateAnalysisWithMinLengthIndicator".equals(getId())
+                || "org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask".equals(getId())
+                || "org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask".equals(getId());
+    }
 }

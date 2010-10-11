@@ -357,7 +357,7 @@ public class FileSystemImportWriter implements IImportWriter {
             if (!taskList.isEmpty()) {
 
                 for (IMigrationTask task : taskList) {
-                    if (isModelTask(task)) {
+                    if (task.isModelTask()) {
                         ((AbstractWorksapceUpdateTask) task).setWorkspacePath(basePath);
                         modelTasks.add(task);
                     } else {
@@ -431,15 +431,7 @@ public class FileSystemImportWriter implements IImportWriter {
         return null;
     }
 
-    private boolean isModelTask(IMigrationTask task) {
-        // FIXME this should be replaced by a method such as IMigrationTask isModelTask
-        return "org.talend.dataprofiler.core.migration.impl.MergeMetadataTask".equals(task.getId())
-                || "org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask".equals(task.getId())
-                || "org.talend.dataprofiler.core.migration.impl.UpdatePropertiesFileTask".equals(task.getId())
-                || "org.talend.dataprofiler.core.migration.impl.UpdateAnalysisWithMinLengthIndicator".equals(task.getId())
-                || "org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask".equals(task.getId())
-                || "org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask".equals(task.getId());
-    }
+
 
     /*
      * (non-Javadoc)

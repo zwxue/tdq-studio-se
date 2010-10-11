@@ -108,4 +108,13 @@ public interface IMigrationTask {
      * @return
      */
     public MigrationTaskType getMigrationTaskType();
+
+    /**
+     * 
+     * DOC mzhao Verify if the task is a model (CWM) task by comparing the task id.
+     * 
+     * @param taskId
+     * @return true if the task id is match.
+     */
+    public Boolean isModelTask();
 }
