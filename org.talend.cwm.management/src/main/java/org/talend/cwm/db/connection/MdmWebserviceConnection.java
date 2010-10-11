@@ -147,8 +147,12 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         try {
             XtentisBindingStub stub = getXtentisBindingStub();
             WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(""));
-            String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
-                    + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+            // MOD xqliu 2010-10-11 bug 15756
+            // String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
+            // + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+            String techXSDFolderName = getTechXSDFolderName();
+            // ~ 15756
+
             for (WSDataModelPK pk : pks) {
                 String filterName = props.getProperty(TaggedValueHelper.DATA_FILTER);
                 if (filterName == null || filterName.equals("") || Arrays.asList(filterName.split(",")).contains((pk.getPk()))) {
@@ -160,6 +164,21 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             return null;
         }
         return xmlDocs;
+    }
+
+    private String getTechXSDFolderName() {
+        String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
+                + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+        IFolder xsdFolder = ResourceManager.getMDMConnectionFolder().getFolder(XSD_SUFIX);
+        if (xsdFolder.getFolder(techXSDFolderName).exists()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return getTechXSDFolderName();
+        }
+        return techXSDFolderName;
     }
 
     public Collection<String> getConnectionContent() {
