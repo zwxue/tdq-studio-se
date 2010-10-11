@@ -227,7 +227,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
     }
 
     public String getInitialWindowPerspectiveId() {
-        return "org.talend.rcp.perspective"; //$NON-NLS-1$
+        return "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
     }
 
     public String getTISProductNameForWelcome() {
