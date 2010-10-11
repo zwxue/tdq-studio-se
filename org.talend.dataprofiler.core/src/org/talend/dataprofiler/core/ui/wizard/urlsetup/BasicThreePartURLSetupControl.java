@@ -470,6 +470,26 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                 }
             });
             urlText.setText(getConnectionURL());
+            // MOD klliu 2010-10-09 feature 15821
+            if (dbType == SupportDBUrlType.ORACLEWITHSIDDEFAULTURL) {
+                label = new Label(parent, SWT.NONE);
+                label.setText("Schema"); //$NON-NLS-1$
+                final Text schemaText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+                schemaText.setEditable(true);
+                schemaText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+                if (schemaText.getText().equals("")) {
+                    schemaText.setText("Schema");
+                    connectionParam.setOtherParameter(schemaText.getText());
+                }
+                schemaText.addModifyListener(new ModifyListener() {
+
+                    public void modifyText(ModifyEvent event) {
+                        String schema = schemaText.getText();
+                        connectionParam.setOtherParameter(schema);
+                    }
+                });
+
+            }
             urlText.addKeyListener(new KeyAdapter() {
 
                 public void keyReleased(KeyEvent e) {

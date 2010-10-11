@@ -49,6 +49,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -1040,6 +1041,9 @@ public final class ConnectionUtils {
                 dbConn = (DatabaseConnection) TalendCwmFactory.createDataProvider(createDBConnect(dbConn, false));
             } catch (SQLException e) {
                 e.printStackTrace();
+            } catch (TalendException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
         return dbConn;
@@ -1066,6 +1070,8 @@ public final class ConnectionUtils {
         String retrieveAllMetadataStr = MetadataHelper.getRetrieveAllMetadata(conn);
         // MOD klliu bug 15821 retrieveAllMetadataStr for Diff database
         MetadataHelper.setRetrieveAllMetadata(retrieveAllMetadataStr == null ? "true" : retrieveAllMetadataStr, conn);
+        String schema = MetadataHelper.getOtherParameter(conn);
+        MetadataHelper.setOtherParameter(schema, conn);
         return conn;
     }
 
@@ -1094,6 +1100,9 @@ public final class ConnectionUtils {
         connectionParam.setJdbcUrl(ConnectionUtils.getURL(conn));
         connectionParam.setHost(ConnectionUtils.getServerName(conn));
         connectionParam.setPort(ConnectionUtils.getPort(conn));
+        // MOD klliu if oracle set schema to other parameter
+        String schema = MetadataHelper.getOtherParameter(conn);
+        connectionParam.setOtherParameter(schema);
         // MOD mzhao adapte model. MDM connection editing need handle additionally.
         // connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE,
         // DataProviderHelper.getUniverse(connection));

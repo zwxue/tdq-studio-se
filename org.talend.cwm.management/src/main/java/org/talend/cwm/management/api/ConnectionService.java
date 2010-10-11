@@ -20,6 +20,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
+import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
@@ -88,7 +89,13 @@ public final class ConnectionService {
         DBConnect connector = new DBConnect(connectionParameters);
         TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>();
         try {
-            Connection dataProvider = TalendCwmFactory.createDataProvider(connector);
+            Connection dataProvider = null;
+            try {
+                dataProvider = TalendCwmFactory.createDataProvider(connector);
+            } catch (TalendException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             String connectionName = connectionParameters.getName();
             dataProvider.setName(connectionName);
             MetadataHelper.setDescription(connectionParameters.getDescription(), dataProvider);

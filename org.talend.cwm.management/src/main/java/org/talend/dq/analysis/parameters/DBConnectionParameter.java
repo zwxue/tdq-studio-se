@@ -40,6 +40,17 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     private String dbName;
 
+    // ADD kllliu 2010-10-09 feature 15821
+    private String otherParameter;
+
+    public String getOtherParameter() {
+        return this.otherParameter;
+    }
+
+    public void setOtherParameter(String otherParameter) {
+        this.otherParameter = otherParameter;
+    }
+
     // ADD xqliu 2010-03-03 feature 11412
     private boolean retrieveAllMetadata;
 

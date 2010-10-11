@@ -31,7 +31,6 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sql.metadata.constants.MetaDataConstants;
 import orgomg.cwm.resource.relational.Catalog;
@@ -309,8 +308,9 @@ public class CatalogBuilder extends CwmBuilder {
      * @return
      */
     private boolean retrieveCatalogSchema(String dbName, String catalogSchemaName) {
-        if (getDbConnectionParameter() == null || getDbConnectionParameter().isRetrieveAllMetadata() || dbName == null
-                || dbName.equals(catalogSchemaName)) {
+        if (getDbConnectionParameter() == null || getDbConnectionParameter().isRetrieveAllMetadata() || dbName == null) {
+            return true;
+        } else if (dbName.equals(catalogSchemaName)) {
             return true;
         }
         return false;
@@ -331,7 +331,10 @@ public class CatalogBuilder extends CwmBuilder {
         if (SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage().equals(dbms.getDbmsName())
                 && dbConnection instanceof DatabaseConnection) {
             // MOD klliu bug 15821 retrieveAllMetadataStr for Diff database
-            if (!Boolean.parseBoolean(MetadataHelper.getRetrieveAllMetadata(dbConnection))) {
+            String otherParameter = getDbConnectionParameter().getOtherParameter();
+            if (!otherParameter.equals("Schema") && !getDbConnectionParameter().isRetrieveAllMetadata()) {
+                dbName = getDbConnectionParameter().getOtherParameter();
+            } else {
                 dbName = ((DatabaseConnection) dbConnection).getUsername().toUpperCase();
             }
         }

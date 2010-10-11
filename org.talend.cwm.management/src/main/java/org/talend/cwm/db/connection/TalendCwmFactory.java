@@ -30,6 +30,8 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.EDatabaseSchemaOrCatalogMapping;
+import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -74,8 +76,9 @@ public final class TalendCwmFactory {
      * @param connector
      * @param folderProvider
      * @throws SQLException
+     * @throws TalendException
      */
-    static void initializeConnection(DBConnect connector, FolderProvider folderProvider) throws SQLException {
+    static void initializeConnection(DBConnect connector, FolderProvider folderProvider) throws SQLException, TalendException {
         Connection dataProvider = createDataProvider(connector);
 
         // --- close connection now
@@ -94,8 +97,9 @@ public final class TalendCwmFactory {
      * @param folderProvider contains the path where the file will be stored.
      * @return the data provider
      * @throws SQLException
+     * @throws TalendException
      */
-    public static Connection createDataProvider(DBConnect connector) throws SQLException {
+    public static Connection createDataProvider(DBConnect connector) throws SQLException, TalendException {
         // --- connect and check the connection
         checkConnection(connector);
 
@@ -120,6 +124,7 @@ public final class TalendCwmFactory {
         // DataProviderHelper.addProviderConnection(providerConnection, dataProvider);
         boolean allAdded = false;
         // TODO scorreia probably add only when catalogs is empty.
+        String dbType = connector.getDbConnectionParameter().getSqlTypeName();
         if (catalogs.isEmpty()) {
             allAdded = ConnectionHelper.addSchemas(schemata, dataProvider);
             if (log.isDebugEnabled()) {
@@ -135,13 +140,17 @@ public final class TalendCwmFactory {
         if (log.isInfoEnabled()) {
             log.info(catalogs.size() + " catalog(s) loaded from database");
             log.info(schemata.size() + " schema(s) loaded from database");
+            // MOD klliu if sechema
+            if (schemata.size() == 0 && SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage().equals(dbType)) {
+                throw new TalendException("Please check the otherParameter which didn't be found!");
+            }
         }
         // --- print some informations
         if (log.isDebugEnabled()) {
             printInformations(catalogs, schemata);
         }
         if (!ReponsitoryContextBridge.isDefautProject()) {
-            String dbType = connector.getDbConnectionParameter().getSqlTypeName();
+            // String dbType = connector.getDbConnectionParameter().getSqlTypeName();
             EDatabaseTypeName edatabasetypeInstance = EDatabaseTypeName.getTypeFromDisplayName(dbType);
             String product = edatabasetypeInstance.getProduct();
             // AdditionalParams
@@ -337,7 +346,7 @@ public final class TalendCwmFactory {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TalendException {
 
         // --- load connection parameters from properties file
         TypedProperties connectionParams = PropertiesLoader.getProperties(THAT, "db.properties"); //$NON-NLS-1$

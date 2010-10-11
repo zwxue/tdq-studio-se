@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sugars.ReturnCode;
@@ -67,6 +68,13 @@ public class DataProviderBuilder {
 
                 returnCode.setOk(false);
                 returnCode.setMessage(msg);
+            } catch (TalendException e) {
+                // TODO Auto-generated catch block
+                msg = "Failed to create a data provider for the given connection parameters: " + e.getMessage();
+                log.warn(msg, e);
+
+                returnCode.setOk(false);
+                returnCode.setMessage(msg);
             } finally {
                 connector.closeConnection();
             }
@@ -79,7 +87,7 @@ public class DataProviderBuilder {
             return returnCode;
         } else {
             returnCode.setOk(false);
-            returnCode.setMessage("Can't create data provider!");
+            // returnCode.setMessage("Can't create data provider!");
             return returnCode;
         }
     }

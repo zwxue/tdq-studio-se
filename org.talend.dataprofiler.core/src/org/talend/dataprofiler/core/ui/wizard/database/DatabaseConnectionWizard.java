@@ -213,6 +213,8 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                 ConnectionUtils.setSID(dataProvider, getParameter().getDbName());
                 // ADD xqliu 2010-03-03 feature 11412
                 ConnectionHelper.setRetrieveAllMetadata(getParameter().isRetrieveAllMetadata(), dataProvider);
+                // ADD klliu 2010-10-11 feature 15821
+                ConnectionHelper.setOtherParameter(getParameter().getOtherParameter(), dataProvider);
             } else {
                 MessageUI.openError("Connection is null!");
             }
