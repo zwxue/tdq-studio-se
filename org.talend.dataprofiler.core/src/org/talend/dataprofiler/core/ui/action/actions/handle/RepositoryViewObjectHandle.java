@@ -21,7 +21,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
-import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -42,6 +41,9 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      * @param property
      */
     RepositoryViewObjectHandle(Property property) {
+        if(property.eIsProxy()){
+            property = (Property) EObjectHelper.resolveObject(property);
+        }
         this.property = property;
         repositoryObject = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(property);
     }
@@ -71,13 +73,17 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      */
     public boolean delete() throws Exception {
 
+        if (property.eIsProxy()) {
+            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
+            property = (Property) EObjectHelper.resolveObject(property);
+        }
         String pathStr = property.eResource().getURI().toPlatformString(false);
         IFile file = ResourceManager.getRoot().getFile(new Path(pathStr));
         // MOD qiongli 2010-9-10, bug 14469,15515
         if (isPhysicalDelete()) {
             ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
             LogicalDeleteFileHandle.refreshDelPropertys(0, property);
-            EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
+            // EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
         } else {
             ProxyRepositoryFactory.getInstance().deleteObjectLogical(repositoryObject);
             LogicalDeleteFileHandle.deleteLogical(file);
