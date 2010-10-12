@@ -172,21 +172,25 @@ public class LogicalDeleteFileHandle {
 
         IResource[] members = null;
         try {
+            if (!folder.exists())
+                return true;
             members = folder.members();
         } catch (CoreException e) {
             e.printStackTrace();
         }
+        String fileType = null;
         for (IResource res : members) {
             if (res.getType() == IResource.FILE) {
                 IFile file = (IFile) res;
-                if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                fileType = file.getFileExtension();
+                if (fileType != null && fileType.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                     Property prop = PropertyHelper.getProperty(file);
                     if (!prop.getItem().getState().isDeleted())
                         return false;
                 }
             } else if (res.getType() == IResource.FOLDER) {// add the empty folder
-
-                return isAllChildrenDeleted((IFolder) res);
+                if (!res.getName().equals(PluginConstant.SVN_SUFFIX))
+                    return isAllChildrenDeleted((IFolder) res);
             }
         }
         return true;
@@ -203,22 +207,26 @@ public class LogicalDeleteFileHandle {
      */
     private static List<Property> getLogicalDelElemFromFolder(IFolder folder, List<Property> fileList) throws Exception {
         IResource[] members = null;
-        try {
-            members = folder.members();
-        } catch (CoreException e) {
-            e.printStackTrace();
+
+        if (!folder.exists()) {
+            return fileList;
         }
+        members = folder.members();
+
+        String type = null;
         for (IResource res : members) {
             if (res.getType() == IResource.FILE) {
                 IFile file = (IFile) res;
-                if (file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                type = file.getFileExtension();
+                if (type != null && type.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                     Property property = PropertyHelper.getProperty(file);
                     if (property.getItem().getState().isDeleted()) {
                         fileList.add(property);
                     }
                 }
             } else if (res.getType() == IResource.FOLDER) {// add the empty folder
-                getLogicalDelElemFromFolder((IFolder) res, fileList);
+                if (!res.getName().equals(PluginConstant.SVN_SUFFIX))
+                    getLogicalDelElemFromFolder((IFolder) res, fileList);
             }
         }
         return fileList;
@@ -251,7 +259,7 @@ public class LogicalDeleteFileHandle {
 
     /**
      * 
-     * DOC qiongli Comment method "refreshDelProperty".Add or remove property
+     * DOC qiongli Comment method "refreshDelProperty".Add or remove property.
      * 
      * @param type
      * @param prop
@@ -261,8 +269,12 @@ public class LogicalDeleteFileHandle {
             Iterator<Property> it = delPropertys.iterator();
             while (it.hasNext()) {
                 Property property = it.next();
-                if (property.getId().equals(prop.getId()))
+                if (property.getId().equals(prop.getId())) {
+                    if (!prop.eIsProxy())
+                        EMFSharedResources.getInstance().unloadResource(prop.eResource().getURI().toString());
                     it.remove();
+                    break;
+                }
             }
         } else if (type == 1) {
             delPropertys.add(prop);
