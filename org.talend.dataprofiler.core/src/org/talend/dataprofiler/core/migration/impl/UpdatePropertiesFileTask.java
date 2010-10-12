@@ -88,22 +88,28 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
 
                 // System.out.println("---------Translate " + uri.toString());
 
-                Resource resource = emfUtil.getResourceSet().getResource(uri, true);
+                EObject eObject = null;
+                try {
+                    Resource resource = emfUtil.getResourceSet().getResource(uri, true);
 
-                EObject eObject = resource.getContents().get(0);
+                    eObject = resource.getContents().get(0);
 
-                if (FactoriesUtil.isProvFile(uri.fileExtension())) {
-                    for (EObject object : resource.getContents()) {
-                        if (object instanceof Connection) {
-                            eObject = object;
-                            break;
+                    if (FactoriesUtil.isProvFile(uri.fileExtension())) {
+                        for (EObject object : resource.getContents()) {
+                            if (object instanceof Connection) {
+                                eObject = object;
+                                break;
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    log.warn("Can't update property of file: " + file.getAbsolutePath(), e);
                 }
 
                 if (eObject != null) {
                     if (eObject instanceof ModelElement) {
                         ModelElement modelElement = (ModelElement) eObject;
+
                         AElementPersistance writer = ElementWriterFactory.getInstance().create(uri.fileExtension());
 
                         Property oldPropery = PropertyHelper.getProperty(modelElement);
@@ -118,8 +124,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
 
                             computePath(property, file);
 
-                            URI propURI = resource.getURI().trimFileExtension().appendFileExtension(
-                                    FactoriesUtil.PROPERTIES_EXTENSION);
+                            URI propURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
                             Resource propResource = emfUtil.getResourceSet().createResource(propURI);
                             propResource.getContents().add(property);

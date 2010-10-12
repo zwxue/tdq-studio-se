@@ -320,4 +320,44 @@ public final class FactoriesUtil {
     public static boolean isItemFile(String fileExt) {
         return StringUtils.equalsIgnoreCase(fileExt, ITEM_EXTENSION);
     }
+
+    public enum EElementEName {
+        UNKNOWN("Unknow", ""),
+
+        ANALYSIS("Analysis", FactoriesUtil.ANA),
+        REPORT("Report", FactoriesUtil.REP),
+        PROVIDER("DataProvider", FactoriesUtil.PROV),
+        PATTERN("Pattern", FactoriesUtil.PATTERN),
+        RULE("Rule", FactoriesUtil.DQRULE),
+        DEFINITION("Definition", FactoriesUtil.DEFINITION),
+        JRXML("ReportTemplate", FactoriesUtil.JRXML),
+        SQL("SQLFile", FactoriesUtil.SQL),
+        ITEM("Item", FactoriesUtil.ITEM_EXTENSION),
+        PROPERTY("Property", FactoriesUtil.PROPERTIES_EXTENSION);
+
+        String name, fileExt;
+
+        EElementEName(String name, String fileExt) {
+            this.name = name;
+            this.fileExt = fileExt;
+        }
+
+        public String getFileExt() {
+            return fileExt;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static EElementEName findENameByExt(String fileExt) {
+            for (EElementEName eName : values()) {
+                if (eName.getFileExt().equalsIgnoreCase(fileExt)) {
+                    return eName;
+                }
+            }
+
+            return UNKNOWN;
+        }
+    }
 }

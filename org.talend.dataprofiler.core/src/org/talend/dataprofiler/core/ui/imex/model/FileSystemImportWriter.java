@@ -102,7 +102,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
         for (ItemRecord record : elements) {
 
-            record.getErrors().clear();
+            // record.getErrors().clear();
 
             checkDependency(record);
 
@@ -135,8 +135,6 @@ public class FileSystemImportWriter implements IImportWriter {
                 //
             }
 
-            String aString = record.getName();
-
             if (itemFile.exists()) {
                 ModelElementFileFactory.getResourceFileMap(itemFile).clear();
                 URI itemURI = URI.createPlatformResourceURI(itemFile.getFullPath().toString(), false);
@@ -144,7 +142,7 @@ public class FileSystemImportWriter implements IImportWriter {
                 URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
                 EMFSharedResources.getInstance().unloadResource(propURI.toString());
 
-                record.addError("\"" + aString + "\" is existed in workspace : " + itemFile.getFullPath().toString());
+                record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());
             }
         }
     }

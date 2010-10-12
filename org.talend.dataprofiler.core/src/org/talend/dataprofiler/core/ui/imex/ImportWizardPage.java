@@ -225,7 +225,9 @@ public class ImportWizardPage extends WizardPage {
      * DOC bZhou Comment method "populateElement".
      */
     private void populateElement() {
-        ItemRecord[] invalidRecords = writer.populate(getElements(), !overwriteBTN.getSelection());
+        List<ItemRecord> allRecordList = ItemRecord.getAllItemRecords();
+        ItemRecord[] invalidRecords = writer.populate(allRecordList.toArray(new ItemRecord[allRecordList.size()]), !overwriteBTN
+                .getSelection());
         updateErrorList(invalidRecords);
 
         if (invalidRecords.length > 0) {

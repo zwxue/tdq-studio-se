@@ -30,13 +30,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.jfree.util.Log;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -63,6 +62,8 @@ public class ItemRecord {
 
     private ItemRecord[] childern;
 
+    private EElementEName elementEName;
+
     private static ResourceSet resourceSet;
 
     private static List<ItemRecord> allItemRecords;
@@ -75,7 +76,7 @@ public class ItemRecord {
                 init();
             }
         } catch (Exception e) {
-            ExceptionHandler.process(e);
+            addError("Can't initialize element [" + getName() + "] : " + e.getMessage());
         }
     }
 
@@ -94,29 +95,27 @@ public class ItemRecord {
 
         allItemRecords.add(this);
 
+        URI fileURI = URI.createFileURI(file.getAbsolutePath());
+
+        elementEName = EElementEName.findENameByExt(fileURI.fileExtension());
+
         if (property == null) {
             property = (Property) EObjectHelper.retrieveEObject(getPropertyPath(), PropertiesPackage.eINSTANCE.getProperty());
         }
 
         if (element == null && !isJRXml()) {
-            try {
-                URI fileURI = URI.createFileURI(file.getAbsolutePath());
-                Resource resource = resourceSet.getResource(fileURI, true);
-                EList<EObject> contents = resource.getContents();
-                if (contents != null && !contents.isEmpty()) {
-                    if (property.getItem() instanceof ConnectionItem) {
-                        element = ((ConnectionItem) property.getItem()).getConnection();
-                    } else {
-                        EObject object = contents.get(0);
-                        if (object instanceof ModelElement) {
-                            element = (ModelElement) object;
-                        }
+            Resource resource = resourceSet.getResource(fileURI, true);
+            EList<EObject> contents = resource.getContents();
+            if (contents != null && !contents.isEmpty()) {
+                if (property.getItem() instanceof ConnectionItem) {
+                    element = ((ConnectionItem) property.getItem()).getConnection();
+                } else {
+                    EObject object = contents.get(0);
+                    if (object instanceof ModelElement) {
+                        element = (ModelElement) object;
                     }
                 }
-            } catch (Exception e) {
-                Log.warn("Can't get the element: " + getName());
             }
-
         }
 
         computeDependencies();
@@ -234,6 +233,9 @@ public class ItemRecord {
      * @param error
      */
     public void addError(String error) {
+        if (elementEName != null) {
+            error = "[" + elementEName.name() + "]" + error;
+        }
         this.errors.add(error);
     }
 
@@ -309,7 +311,10 @@ public class ItemRecord {
             if (listFiles != null) {
                 for (File aFile : listFiles) {
                     if (isValid(aFile)) {
-                        recordList.add(new ItemRecord(aFile));
+                        ItemRecord itemRecord = new ItemRecord(aFile);
+                        if (itemRecord.isValid()) {
+                            recordList.add(itemRecord);
+                        }
                     }
                 }
             }
