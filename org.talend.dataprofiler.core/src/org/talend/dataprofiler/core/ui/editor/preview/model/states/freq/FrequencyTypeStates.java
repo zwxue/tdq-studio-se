@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 
 import java.util.List;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
@@ -27,9 +28,13 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructur
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.FrequencyLabelProvider;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dq.indicators.ext.FrequencyExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -81,7 +86,9 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                     entity.setLabelNull(freqExt.getKey() == null);
                     entity.setLabel(keyLabel);
                     entity.setValue(String.valueOf(freqExt.getValue()));
-                    entity.setPercent(freqExt.getFrequency());
+
+                    Double percent = isWithRowCountIndicator() ? freqExt.getFrequency() : Double.NaN;
+                    entity.setPercent(percent);
 
                     customerdataset.addDataEntity(entity);
                 }
@@ -120,6 +127,30 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     protected IStructuredContentProvider getContentProvider() {
         // TODO Auto-generated method stub
         return new CommonContenteProvider();
+    }
+
+    /**
+     * DOC bZhou Comment method "isWithRowCountIndicator".
+     * 
+     * If have RowCountIndicator in the indicator list, return true, otherwise, return false.
+     * 
+     * @return
+     */
+    protected boolean isWithRowCountIndicator() {
+        if (!units.isEmpty()) {
+            Indicator indicator = units.get(0).getIndicator();
+            ModelElement currentAnalyzedElement = indicator.getAnalyzedElement();
+            InternalEObject eIndicator = (InternalEObject) indicator;
+            AnalysisResult result = (AnalysisResult) eIndicator.eContainer();
+            for (Indicator indi : result.getIndicators()) {
+                ModelElement analyzedElement = indi.getAnalyzedElement();
+                if (indi instanceof RowCountIndicator && analyzedElement == currentAnalyzedElement) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     protected abstract void sortIndicator(FrequencyExt[] frequencyExt);

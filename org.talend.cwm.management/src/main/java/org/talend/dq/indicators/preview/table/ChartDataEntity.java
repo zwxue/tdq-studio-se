@@ -125,10 +125,10 @@ public class ChartDataEntity {
 
     public String getPersent() {
         if (percent != null) {
-            if (percent != Double.NaN) { //$NON-NLS-1$
-                return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
-            } else {
+            if (Double.isNaN(percent)) {
                 return "N/A"; //$NON-NLS-1$
+            } else {
+                return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
             }
         } else {
             return null;
