@@ -62,6 +62,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -479,6 +480,9 @@ public final class DqRepositoryViewService {
             }
             // ~
             columns = colBuilder.getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
+            if (table.eResource() == null) {
+                table = (ColumnSet) EObjectHelper.resolveObject(table);
+            }
             ColumnSetHelper.addColumns(table, columns);
             // MOD scorreia 2009-01-29 get primary keys of the table
             if (orgomg.cwm.resource.relational.RelationalPackage.eINSTANCE.getTable().isSuperTypeOf(table.eClass())) {
