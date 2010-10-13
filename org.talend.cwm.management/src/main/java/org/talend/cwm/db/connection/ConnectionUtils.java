@@ -40,6 +40,7 @@ import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
+import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -1161,5 +1162,19 @@ public final class ConnectionUtils {
             }
         }
         return dbConnect;
+    }
+
+    /**
+     * DOC xqliu Comment method "createDatabaseVersionString".
+     * 
+     * @param dbConn
+     * @return
+     */
+    public static String createDatabaseVersionString(DatabaseConnection dbConn) {
+        List<EDatabaseVersion4Drivers> eVersions = EDatabaseVersion4Drivers.indexOfByDbType(dbConn.getProductId());
+        if (eVersions != null && !eVersions.isEmpty()) {
+            return eVersions.get(0).getVersionValue();
+        }
+        return null;
     }
 }

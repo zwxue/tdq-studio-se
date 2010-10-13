@@ -164,7 +164,15 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         ReturnCode rc = dpBuilder.initializeDataProvider(connectionParam);
 
         if (rc.isOk()) {
-            return dpBuilder.getDataProvider();
+            // MOD xqliu 2010-10-13 bug 15756
+            DataProvider dataProvider = dpBuilder.getDataProvider();
+            DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
+            if (dbConn != null) {
+                dbConn.setDbVersionString(ConnectionUtils.createDatabaseVersionString(dbConn));
+                return dbConn;
+            }
+            return dataProvider;
+            // 15756
         } else {
             MessageDialog
                     .openInformation(
