@@ -23,13 +23,11 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
-import org.eclipse.emf.compare.ui.viewer.content.part.diff.ModelContentMergeDiffTab;
 import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Tree;
 import org.talend.cwm.compare.ui.actions.provider.CompareModelStructureLabelProvider;
 import org.talend.cwm.compare.ui.views.CompareModelContentMergeViewer;
 import org.talend.cwm.compare.ui.views.CompareModelStructureMergeViewer;
@@ -114,10 +112,10 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
         contentMergeViewer.setInput(inputSnapshot);
         // MOD klliu bug 15529 replace "Td Table" to "Table"
-        ModelContentMergeDiffTab diffTabLeft = contentMergeViewer.diffTabLeft;
-        repaintingTreePart(diffTabLeft);
-        ModelContentMergeDiffTab diffTabRight = contentMergeViewer.diffTabRight;
-        repaintingTreePart(diffTabRight);
+        // ModelContentMergeDiffTab diffTabLeft = contentMergeViewer.diffTabLeft;
+        // repaintingTreePart(diffTabLeft);
+        // ModelContentMergeDiffTab diffTabRight = contentMergeViewer.diffTabRight;
+        // repaintingTreePart(diffTabRight);
 
         final int structureWeight = 30;
         final int contentWeight = 70;
@@ -131,19 +129,19 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
      * 
      * @param diffTab
      */
-    private void repaintingTreePart(ModelContentMergeDiffTab diffTab) {
-        Tree tree = diffTab.getTree();
-        for (int i = 0; i < tree.getItemCount(); i++) {
-            String text = tree.getItem(i).getText() == null ? null : tree.getItem(i).getText();
-            if (!"".equals(text) && text != null) {
-                StringBuffer sb = new StringBuffer(text);
-                if (!"".equals(sb) && sb.substring(0, 3).equals("Td ")) {
-                    sb.replace(0, 2, "");
-                    tree.getItem(i).setText(sb.toString());
-                }
-            }
-        }
-    }
+    // private void repaintingTreePart(ModelContentMergeDiffTab diffTab) {
+    // Tree tree = diffTab.getTree();
+    // for (int i = 0; i < tree.getItemCount(); i++) {
+    // String text = tree.getItem(i).getText() == null ? null : tree.getItem(i).getText();
+    // if (!"".equals(text) && text != null) {
+    // StringBuffer sb = new StringBuffer(text);
+    // if (!"".equals(sb) && sb.substring(0, 3).equals("Td ")) {
+    // sb.replace(0, 2, "");
+    // tree.getItem(i).setText(sb.toString());
+    // }
+    // }
+    // }
+    // }
 
     /**
      * {@inheritDoc}
