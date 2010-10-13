@@ -36,6 +36,7 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -177,6 +178,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         int index = 0;
         connCombo.removeAll();
         for (Connection prov : connections) {
+            if (prov.eResource() == null) {
+                prov = (Connection) EObjectHelper.resolveObject(prov);
+            }
             connCombo.add(prov.getName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
             connCombo.setData(prov.getName(), index);

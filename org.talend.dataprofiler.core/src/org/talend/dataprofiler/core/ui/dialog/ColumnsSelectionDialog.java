@@ -735,9 +735,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
 
                 if (ResourceManager.getConnectionFolder().equals(container)) {
-                    return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(false).toArray();
+                    return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(true).toArray();
                 } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                    return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(false).toArray();
+                    return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(true).toArray();
                 }
 
                 // ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
