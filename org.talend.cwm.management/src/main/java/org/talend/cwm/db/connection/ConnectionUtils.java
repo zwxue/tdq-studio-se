@@ -342,9 +342,10 @@ public final class ConnectionUtils {
      * @param driver
      * @param props
      * @param tableName
+     * @param schema
      * @return
      */
-    public static boolean existTable(String url, String driver, Properties props, String tableName) {
+    public static boolean existTable(String url, String driver, Properties props, String tableName, String schema) {
         java.sql.Connection connection = null;
         if (tableName == null || "".equals(tableName.trim())) {
             tableName = DEFAULT_TABLE_NAME;
@@ -353,7 +354,11 @@ public final class ConnectionUtils {
             connection = ConnectionUtils.createConnection(url, driver, props);
             if (connection != null) {
                 Statement stat = connection.createStatement();
-                stat.executeQuery("Select * from " + tableName);
+                if(!"".equals(schema)){
+                    stat.executeQuery("Select * from " + schema.toUpperCase() + "." + tableName);
+                } else {
+                    stat.executeQuery("Select * from " + tableName);
+                }
             }
         } catch (Exception e) {
             return false;
