@@ -25,6 +25,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -70,7 +71,7 @@ public final class ProxyRepositoryViewObject {
         // MDM Connections
         metadataConns.addAll(getMDMConnectionInstance().getAllElements());
         // File connections ...
-        return metadataConns;
+        return ConnectionUtils.fillConnectionInformation(metadataConns);
     }
 
     /**

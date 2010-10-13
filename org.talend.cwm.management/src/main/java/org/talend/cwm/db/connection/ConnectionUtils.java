@@ -38,6 +38,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -64,6 +65,7 @@ import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
+import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * Utility class for database connection handling.
@@ -994,8 +996,23 @@ public final class ConnectionUtils {
                     conn = fillMdmConnectionInformation(mdmConn);
                 }
             }
+            ProxyRepositoryViewObject.save(conn);
         }
         return conn;
+    }
+
+    /**
+     * DOC xqliu Comment method "fillConnectionInformation".
+     * 
+     * @param conns
+     * @return
+     */
+    public static List<Connection> fillConnectionInformation(List<Connection> conns) {
+        List<Connection> results = new ArrayList<Connection>();
+        for (Connection conn : conns) {
+            results.add(fillConnectionInformation(conn));
+        }
+        return results;
     }
 
     /**
@@ -1055,6 +1072,10 @@ public final class ConnectionUtils {
      * @return
      */
     public static Connection fillConnectionMetadataInformation(Connection conn) {
+        // ADD xqliu 2010-10-13 bug 15756
+        int tSize = conn.getTaggedValue().size();
+        EList<Package> dataPackage = conn.getDataPackage();
+        // ~ 15756
         Property property = PropertyHelper.getProperty(conn);
         // fill name and label
         conn.setName(property.getLabel());
@@ -1067,6 +1088,11 @@ public final class ConnectionUtils {
         MetadataHelper.setPurpose(property.getPurpose(), conn);
         MetadataHelper.setVersion(property.getVersion(), conn);
         String retrieveAllMetadataStr = MetadataHelper.getRetrieveAllMetadata(conn);
+        // ADD xqliu 2010-10-13 bug 15756
+        if (tSize == 0 && dataPackage.size() == 1 && !"".equals(dataPackage.get(0).getName())) {
+            retrieveAllMetadataStr = "false";
+        }
+        // ~ 15756
         // MOD klliu bug 15821 retrieveAllMetadataStr for Diff database
         MetadataHelper.setRetrieveAllMetadata(retrieveAllMetadataStr == null ? "true" : retrieveAllMetadataStr, conn);
         String schema = MetadataHelper.getOtherParameter(conn);
