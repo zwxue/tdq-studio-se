@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -189,7 +190,7 @@ public class LogicalDeleteFileHandle {
                         return false;
                 }
             } else if (res.getType() == IResource.FOLDER) {// add the empty folder
-                if (!res.getName().equals(PluginConstant.SVN_SUFFIX))
+                if (!FilesUtils.isSVNFolder((IFolder) res))
                     return isAllChildrenDeleted((IFolder) res);
             }
         }
@@ -225,7 +226,7 @@ public class LogicalDeleteFileHandle {
                     }
                 }
             } else if (res.getType() == IResource.FOLDER) {// add the empty folder
-                if (!res.getName().equals(PluginConstant.SVN_SUFFIX))
+                if (!FilesUtils.isSVNFolder((IFolder) res))
                     getLogicalDelElemFromFolder((IFolder) res, fileList);
             }
         }
