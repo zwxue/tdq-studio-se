@@ -21,12 +21,15 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.indicators.ext.FrequencyExt;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * DOC yyi class global comment. Detailled comment
  */
 public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState {
+
+    private EIndicatorChartType type;
 
     /**
      * DOC yyi DateLowFrequencyStatisticsState constructor comment.
@@ -36,6 +39,11 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
     public DateLowFrequencyStatisticsState(List<IndicatorUnit> units) {
         super(units);
         // TODO Auto-generated constructor stub
+    }
+
+    public DateLowFrequencyStatisticsState(List<IndicatorUnit> units, EIndicatorChartType type) {
+        this(units);
+        this.type = type;
     }
 
     /*
@@ -91,6 +99,7 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
 
     @Override
     protected String getTitle() {
-        return DefaultMessagesImpl.getString("DateLowFrequencyStatisticsState.DateLowFrequencyStatistics"); //$NON-NLS-1$
+        return null == type ? DefaultMessagesImpl.getString("DateFrequencyStatisticsState.DateFrequencyStatistics") : type
+                .getLiteral();
     }
 }

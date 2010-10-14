@@ -105,17 +105,25 @@ public final class ChartTypeStatesOperator {
             return new SoundexLowFrequencyTableState(units);
 
         case DATE_FREQUENCE_STATISTICS:
+            return new DateFrequencyStatisticsState(units, EIndicatorChartType.DATE_FREQUENCE_STATISTICS);
         case WEEK_FREQUENCE_STATISTICS:
+            return new DateFrequencyStatisticsState(units, EIndicatorChartType.WEEK_FREQUENCE_STATISTICS);
         case MONTH_FREQUENCE_STATISTICS:
+            return new DateFrequencyStatisticsState(units, EIndicatorChartType.MONTH_FREQUENCE_STATISTICS);
         case QUARTER_FREQUENCE_STATISTICS:
+            return new DateFrequencyStatisticsState(units, EIndicatorChartType.QUARTER_FREQUENCE_STATISTICS);
         case YEAR_FREQUENCE_STATISTICS:
-            return new DateFrequencyStatisticsState(units);
+            return new DateFrequencyStatisticsState(units, EIndicatorChartType.YEAR_FREQUENCE_STATISTICS);
         case DATE_LOW_FREQUENCE_STATISTICS:
+            return new DateLowFrequencyStatisticsState(units, EIndicatorChartType.DATE_LOW_FREQUENCE_STATISTICS);
         case WEEK_LOW_FREQUENCE_STATISTICS:
+            return new DateLowFrequencyStatisticsState(units, EIndicatorChartType.WEEK_LOW_FREQUENCE_STATISTICS);
         case MONTH_LOW_FREQUENCE_STATISTICS:
+            return new DateLowFrequencyStatisticsState(units, EIndicatorChartType.MONTH_LOW_FREQUENCE_STATISTICS);
         case QUARTER_LOW_FREQUENCE_STATISTICS:
+            return new DateLowFrequencyStatisticsState(units, EIndicatorChartType.QUARTER_LOW_FREQUENCE_STATISTICS);
         case YEAR_LOW_FREQUENCE_STATISTICS:
-            return new DateLowFrequencyStatisticsState(units);
+            return new DateLowFrequencyStatisticsState(units, EIndicatorChartType.YEAR_LOW_FREQUENCE_STATISTICS);
         case SIMPLE_TEXT_STATISTICS:
             return new SimpleTextStatisticsState(units);
         default:
