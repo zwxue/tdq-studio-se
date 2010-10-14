@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
@@ -297,9 +298,12 @@ public class LogicalDeleteFileHandle {
             Iterator<Property> it = delPropertys.iterator();
             while (it.hasNext()) {
                 Property property = it.next();
-                if (property != null && property.getId().equals(prop.getId())) {
-                    if (!prop.eIsProxy())
-                        EMFSharedResources.getInstance().unloadResource(prop.eResource().getURI().toString());
+                if (property.getId().equals(prop.getId())) {
+                    if (!prop.eIsProxy()) {
+                        URI uri = prop.eResource().getURI();
+                        if (uri != null)
+                            EMFSharedResources.getInstance().unloadResource(uri.toString());
+                    }
                     it.remove();
                     break;
                 }
