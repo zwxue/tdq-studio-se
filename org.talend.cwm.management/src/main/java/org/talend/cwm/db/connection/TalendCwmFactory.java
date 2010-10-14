@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.database.EDatabaseTypeName;
+import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.MetadataTalendType;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -183,11 +184,32 @@ public final class TalendCwmFactory {
                     break;
                 }
             }
-            // setDbmsId and setProductId
+            // set DbmsId and setProductId
             String mapping = MetadataTalendType.getDefaultDbmsFromProduct(product).getId();
             if (dataProvider instanceof DatabaseConnection) {
+                // add the attribute of productID for TOS
                 ((DatabaseConnection) dataProvider).setProductId(product);
+                // add the attribute of DbmsId for TOS
                 ((DatabaseConnection) dataProvider).setDbmsId(mapping);
+                // add the attribute of DbVersion for TOS
+                int versionNum = connector.getConnection().getMetaData().getDatabaseMajorVersion();
+                String connectionDbType = ((DatabaseConnection) dataProvider).getDatabaseType();
+                if (connectionDbType == null) {
+                    connectionDbType = connector.getDbConnectionParameter().getSqlTypeName();
+                    ((DatabaseConnection) dataProvider).setDatabaseType(connectionDbType);
+                }
+                List<EDatabaseVersion4Drivers> dbTypeList = EDatabaseVersion4Drivers.indexOfByDbType(connectionDbType);
+                if (dbTypeList.size() == 1) {
+                    ((DatabaseConnection) dataProvider).setDbVersionString(dbTypeList.get(0).getVersionValue());
+                } else if (dbTypeList.size() > 1) {
+                    for (EDatabaseVersion4Drivers eDatabaseVersion : dbTypeList) {
+                        String[] strArray = eDatabaseVersion.getVersionValue().split("_");
+                        if (strArray.length > 1 && strArray[1].startsWith(Integer.toString(versionNum))) {
+                            ((DatabaseConnection) dataProvider).setDbVersionString(eDatabaseVersion.getVersionValue());
+                            break;
+                        }
+                    }
+                }
             }
         }
         return dataProvider;

@@ -402,4 +402,14 @@ public class DBConnect {
         return dbConnectionParameter;
     }
 
+    /**
+     * 
+     * DOC zshen Comment method "getConnection".
+     * 
+     * @return
+     */
+    public Connection getConnection() {
+        return connection;
+    }
+
 }
