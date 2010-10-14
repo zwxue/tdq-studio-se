@@ -289,11 +289,15 @@ public class LogicalDeleteFileHandle {
      * @param prop
      */
     public static void refreshDelPropertys(int type, Property prop) {
+        // MOD qiongli ,bug 16371.avoid the NPE
+        if (delPropertys == null) {
+            getDelPropertyLs();
+        }
         if (type == 0) {
             Iterator<Property> it = delPropertys.iterator();
             while (it.hasNext()) {
                 Property property = it.next();
-                if (property.getId().equals(prop.getId())) {
+                if (property != null && property.getId().equals(prop.getId())) {
                     if (!prop.eIsProxy())
                         EMFSharedResources.getInstance().unloadResource(prop.eResource().getURI().toString());
                     it.remove();
