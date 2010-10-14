@@ -1046,12 +1046,6 @@ public final class ConnectionUtils {
      * @param dbConn
      * @return
      */
-    /**
-     * DOC xqliu Comment method "fillDbConnectionInformation".
-     * 
-     * @param dbConn
-     * @return
-     */
     public static DatabaseConnection fillDbConnectionInformation(DatabaseConnection dbConn) {
         // fill name label and metadata
         dbConn = (DatabaseConnection) fillConnectionMetadataInformation(dbConn);
