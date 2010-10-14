@@ -233,28 +233,34 @@ public final class SupportDBUrlStore {
 
     public Properties getDBPameterProperties(String connectionStr) {
         Properties paramProperties = new Properties();
-        String matchSubStr = connectionStr.substring(0, 8);
-        Set<Object> s = PROP.keySet();
-        Iterator<Object> it = s.iterator();
-        while (it.hasNext()) {
-            String id = (String) it.next();
-            String value = PROP.getProperty(id);
-            if (value.contains(matchSubStr)) {
-                paramProperties.setProperty(PluginConstant.DBTYPE_PROPERTY, id);
-                MessageFormat mf = new MessageFormat(value);
-                Object[] parseResult = mf.parse(connectionStr, new ParsePosition(0));
-                if (parseResult != null) {
-                    if (parseResult[0] != null) {
-                        paramProperties.setProperty(PluginConstant.HOSTNAME_PROPERTY, (String) parseResult[0]);
-                    }
+        if (connectionStr != null) {
+            String matchSubStr = connectionStr.substring(0, 8);
+            Set<Object> s = PROP.keySet();
+            Iterator<Object> it = s.iterator();
+            while (it.hasNext()) {
+                String id = (String) it.next();
+                String value = PROP.getProperty(id);
+                if (value.contains(matchSubStr)) {
+                    paramProperties.setProperty(PluginConstant.DBTYPE_PROPERTY, id);
+                    MessageFormat mf = new MessageFormat(value);
+                    Object[] parseResult = mf.parse(connectionStr, new ParsePosition(0));
+                    if (parseResult != null) {
+                        if (parseResult[0] != null) {
+                            paramProperties.setProperty(PluginConstant.HOSTNAME_PROPERTY, (String) parseResult[0]);
+                        }
 
-                    if (parseResult[1] != null) {
-                        paramProperties.setProperty(PluginConstant.PORT_PROPERTY, (String) parseResult[1]);
-                    }
+                        if (parseResult[1] != null) {
+                            paramProperties.setProperty(PluginConstant.PORT_PROPERTY, (String) parseResult[1]);
+                        }
 
-                    break;
+                        break;
+                    }
                 }
             }
+        } else {
+            paramProperties.setProperty(PluginConstant.DBTYPE_PROPERTY, "");
+            paramProperties.setProperty(PluginConstant.HOSTNAME_PROPERTY, "");
+            paramProperties.setProperty(PluginConstant.PORT_PROPERTY, "");
         }
 
         return paramProperties;

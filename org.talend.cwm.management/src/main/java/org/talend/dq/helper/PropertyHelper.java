@@ -13,6 +13,7 @@
 package org.talend.dq.helper;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
@@ -411,6 +412,12 @@ public final class PropertyHelper {
         return ReponsitoryContextBridge.getProjectName();
     }
 
+    /**
+     * DOC bZhou Comment method "computePath".
+     * 
+     * @param property
+     * @return
+     */
     public static String computePath(Property property) {
         Resource eResource = property.eResource();
         if (eResource != null) {
@@ -424,10 +431,55 @@ public final class PropertyHelper {
                 IPath itemPath = propPath.makeRelativeTo(typedPath);
 
                 return itemPath.toString();
+            } else if (propURI.isFile()) {
+                File file = new File(propURI.toFileString());
+                return computePath(property, file);
             }
         }
 
         return "";
     }
 
+    /**
+     * DOC bZhou Comment method "computePath".
+     * 
+     * @param property
+     * @param file
+     * @return
+     */
+    public static String computePath(Property property, File file) {
+        IPath filePath = new Path(file.getAbsolutePath()).setDevice(null);
+
+        int flag = 0;
+        EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
+        if (typedConstant != null) {
+            String typedName = typedConstant.getName();
+
+            for (int i = 0; i < filePath.segmentCount(); i++) {
+                String seg = filePath.segment(i);
+                if (seg.equals(typedName)) {
+                    flag = i + 1;
+                    break;
+                }
+            }
+        } else {
+            List<EResourceConstant> typedConstantList = EResourceConstant.getTypedConstantList();
+            typedConstantList.add(EResourceConstant.OLD_DB_CONNECTIONS);
+            typedConstantList.add(EResourceConstant.MDM_CONNECTIONS);
+
+            for (int i = 0; i < filePath.segmentCount() && flag == 0; i++) {
+                String seg = filePath.segment(i);
+                for (EResourceConstant constant : typedConstantList) {
+                    if (seg.equals(constant.getName())) {
+                        flag = i + 1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        IPath statPath = filePath.removeFirstSegments(flag).removeLastSegments(1);
+
+        return statPath.toString();
+    }
 }

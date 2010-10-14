@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -35,7 +34,6 @@ import org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -86,7 +84,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
             if (file.isFile()) {
                 URI uri = URI.createFileURI(file.getAbsolutePath());
 
-                // System.out.println("---------Translate " + uri.toString());
+                System.out.println("---------Translate " + uri.toString());
 
                 EObject eObject = null;
                 try {
@@ -122,7 +120,12 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                                 property.getItem().setState(oldPropery.getItem().getState());
                             }
 
-                            computePath(property, file);
+                            if (file.getName().endsWith("ana")) {
+                                System.out.println("123");
+                            }
+
+                            String statePathStr = PropertyHelper.computePath(property, file);
+                            property.getItem().getState().setPath(statePathStr);
 
                             URI propURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
@@ -146,36 +149,6 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
         emfUtil = null;
 
         return true;
-    }
-
-    private void computePath(Property property, File file) {
-        if (StringUtils.isBlank(property.getItem().getState().getPath())) {
-            IPath filePath = new Path(file.getAbsolutePath());
-
-            List<EResourceConstant> typedConstantList = EResourceConstant.getTypedConstantList();
-            typedConstantList.add(EResourceConstant.OLD_DB_CONNECTIONS);
-            typedConstantList.add(EResourceConstant.MDM_CONNECTIONS);
-
-            for (int i = filePath.segmentCount(); i > 0; i--) {
-                String seg = filePath.lastSegment();
-                boolean flag = false;
-                for (EResourceConstant constant : typedConstantList) {
-                    if (seg.equals(constant.getName())) {
-                        flag = true;
-                        break;
-                    }
-                }
-
-                if (!flag) {
-                    filePath = filePath.removeLastSegments(1);
-                } else {
-                    break;
-                }
-            }
-
-            IPath statPath = new Path(file.getAbsolutePath()).makeRelativeTo(filePath).removeLastSegments(1);
-            property.getItem().getState().setPath(statPath.toString());
-        }
     }
 
     /*
