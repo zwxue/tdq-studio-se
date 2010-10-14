@@ -167,7 +167,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             // MOD xqliu 2010-10-13 bug 15756
             DataProvider dataProvider = dpBuilder.getDataProvider();
             DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
-            if (dbConn != null) {
+            if (dbConn != null && dbConn.getDbVersionString() == null) {
                 dbConn.setDbVersionString(ConnectionUtils.createDatabaseVersionString(dbConn));
                 return dbConn;
             }

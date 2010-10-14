@@ -92,16 +92,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                             .getString("TDQResourceChangeHandler.ConnectionNotBeSave"));
             return false;
         }
-        // List<ModelElement> supplierList = new ArrayList<ModelElement>();
-        // for (Dependency dependency : clientDependencys) {
-        // EList<ModelElement> client = dependency.getClient();
-        // if (client != null) {
-        // supplierList.addAll(client);
-        // }
-        // }
-        // ModelElement[] modelElements = new ModelElement[supplierList.size()];
-        // DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-        // .getShell(), supplierList.toArray(modelElements), "", "");
 
         // TODO Handle element deletion from resource, resource delete.
         return super.handleResourceChange(modelElement);
