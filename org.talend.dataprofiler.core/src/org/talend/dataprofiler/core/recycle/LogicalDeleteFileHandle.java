@@ -22,7 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
@@ -30,9 +30,12 @@ import org.talend.commons.utils.StringUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -170,28 +173,48 @@ public class LogicalDeleteFileHandle {
      * @return
      */
     public static boolean isAllChildrenDeleted(IFolder folder) {
-
+        if (!folder.exists())
+            return true;
         IResource[] members = null;
         try {
-            if (!folder.exists())
-                return true;
             members = folder.members();
-        } catch (CoreException e) {
-            e.printStackTrace();
+            if(members.length==0)
+                return false;
+        } catch (Exception e) {
+            log.error(e, e);
         }
-        String fileType = null;
-        for (IResource res : members) {
-            if (res.getType() == IResource.FILE) {
-                IFile file = (IFile) res;
-                fileType = file.getFileExtension();
-                if (fileType != null && fileType.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                    Property prop = PropertyHelper.getProperty(file);
-                    if (!prop.getItem().getState().isDeleted())
-                        return false;
+        IPath path = folder.getFullPath();
+        List<IRepositoryViewObject> conList = null;
+        if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
+            path = path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
+            conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
+                    ERepositoryObjectType.METADATA_CONNECTIONS, path);
+        } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
+            path = path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
+            conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
+                    ERepositoryObjectType.METADATA_MDMCONNECTION, path);
+        }
+        if (conList != null) {
+            for (IRepositoryViewObject repViewObj : conList) {
+                if (!repViewObj.getProperty().getItem().getState().isDeleted()) {
+                    return false;
                 }
-            } else if (res.getType() == IResource.FOLDER) {// add the empty folder
-                if (!FilesUtils.isSVNFolder((IFolder) res))
-                    return isAllChildrenDeleted((IFolder) res);
+            }
+        } else {
+            String fileType = null;
+            for (IResource res : members) {
+                if (res.getType() == IResource.FILE) {
+                    IFile file = (IFile) res;
+                    fileType = file.getFileExtension();
+                    if (fileType != null && fileType.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                        Property prop = PropertyHelper.getProperty(file);
+                        if (!prop.getItem().getState().isDeleted())
+                            return false;
+                    }
+                } else if (res.getType() == IResource.FOLDER) {// add the empty folder
+                    if (!FilesUtils.isSVNFolder((IFolder) res))
+                        return isAllChildrenDeleted((IFolder) res);
+                }
             }
         }
         return true;

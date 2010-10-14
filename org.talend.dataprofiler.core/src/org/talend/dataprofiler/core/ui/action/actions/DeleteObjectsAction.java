@@ -21,19 +21,14 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.properties.TDQItem;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
+import org.talend.dataprofiler.core.recycle.SelectedResources;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle;
 import org.talend.dataprofiler.core.ui.action.actions.handle.RepositoryViewObjectHandle;
@@ -133,6 +128,7 @@ public class DeleteObjectsAction extends Action {
         TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
 
         Iterator iterator = treeSelection.iterator();
+        SelectedResources selRes = new SelectedResources();
         while (iterator.hasNext()) {
             Object obj = iterator.next();
 
@@ -143,81 +139,13 @@ public class DeleteObjectsAction extends Action {
                 }
             }
 
-            iteratedProperties(obj, propList);
+            selRes.getPropertiesByObject(obj, propList);
 
         }
 
         return propList;
     }
 
-    /**
-     * DOC bZhou Comment method "iteratedProperties".
-     * 
-     * @param obj
-     * @param propList
-     * @throws Exception
-     */
-    private void iteratedProperties(Object obj, Set<Property> propList) throws Exception {
-        if (obj instanceof IFile) {
-            IFile file = (IFile) obj;
-            Property property = PropertyHelper.getProperty(file);
-            if (property == null) {
-                property = PropertyHelper.createTDQItemProperty();
-                property.setLabel(file.getName());
-                ((TDQItem) property.getItem()).setFilename(file.getFullPath().toString());
-            }
-
-            if (!property.getItem().getState().isDeleted()) {
-                propList.add(property);
-            }
-        } else if (obj instanceof IFolder) {
-            IFolder folder = (IFolder) obj;
-            if (!existChildFolder(propList, folder)) {
-                Property property = PropertyHelper.createFolderItemProperty();
-                property.getItem().getState().setPath(folder.getFullPath().toOSString());
-                propList.add(property);
-            }
-
-            for (IResource rersource : folder.members()) {
-                iteratedProperties(rersource, propList);
-            }
-
-        } else if (obj instanceof IRepositoryViewObject) {
-            propList.add(((IRepositoryViewObject) obj).getProperty());
-        } else if (obj instanceof DQRecycleBinNode) {
-            // MOD qiongli 2010-10-9,bug 15674
-            Object o = ((DQRecycleBinNode) obj).getObject();
-            if (o instanceof Property) {
-                propList.add((Property) o);
-            } else {
-                String pathStr = o.toString();
-                IPath path = new Path(pathStr).removeFirstSegments(1);
-                Property property = PropertyHelper.createFolderItemProperty();
-                property.getItem().getState().setPath(path.toOSString());
-                propList.add(property);
-            }
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "existChildFolder".
-     * 
-     * @param propList
-     * @param folder
-     * @return
-     */
-    private boolean existChildFolder(Set<Property> propList, IFolder folder) {
-        for (Property property : propList) {
-            // bug 14697 avoid NPE
-            if (property.getItem().getState().getPath() == null)
-                return false;
-            IPath path = new Path(property.getItem().getState().getPath());
-            if (folder.getFullPath().isPrefixOf(path)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * DOC bZhou Comment method "showDependenciesDialog".

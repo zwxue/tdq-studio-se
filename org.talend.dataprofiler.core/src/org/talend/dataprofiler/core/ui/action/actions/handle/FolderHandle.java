@@ -78,9 +78,10 @@ public class FolderHandle implements IDeletionHandle {
                     }
                     LogicalDeleteFileHandle.refreshDelPropertys(0, prop);
                 }
-                delsubFolderForever(folder);
+                if (selProps.length > 0)
+                    delsubFolderForever(folder);
             }
-            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
+            // LogicalDeleteFileHandle.refreshDelPropertys(0, property);
 
         }
 
@@ -152,6 +153,7 @@ public class FolderHandle implements IDeletionHandle {
         IRepositoryViewObject repViewObj = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(prop);
         try {
             ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repViewObj);
+            LogicalDeleteFileHandle.refreshDelPropertys(0, prop);
         } catch (PersistenceException e) {
             log.error(e, e);
         }

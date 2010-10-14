@@ -20,13 +20,11 @@ import org.eclipse.jface.action.Action;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -56,11 +54,9 @@ public class DQRestoreAction extends Action {
             for (Property property : selectedProps) {
                 Item item = property.getItem();
                 if (item instanceof ConnectionItem) {
-                    IRepositoryViewObject repViewObj = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(property);
-                    Property propertyTMP = repViewObj.getProperty();
-                    propertyTMP.getItem().getState().setDeleted(false);
-                    ProxyRepositoryFactory.getInstance().save(propertyTMP);
-                    // EMFSharedResources.getInstance().unloadResource(property.eResource().getURI().toString());
+                    // MOD qiongli 2010-10-14,bug 15587.this property is no longer from file.
+                    property.getItem().getState().setDeleted(false);
+                    ProxyRepositoryFactory.getInstance().save(property);
                 } else {
                     property.getItem().getState().setDeleted(false);
                     Resource propertyResource = property.eResource();
