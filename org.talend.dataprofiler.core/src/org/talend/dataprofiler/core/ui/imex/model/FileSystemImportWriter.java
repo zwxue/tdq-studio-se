@@ -246,6 +246,8 @@ public class FileSystemImportWriter implements IImportWriter {
             if (property != null && property.getItem() instanceof ConnectionItem) {
                 Connection connection = ((ConnectionItem) property.getItem()).getConnection();
 
+                // FIXME scorreia 2010-10-15 do not update software system during the import process it will try to
+                // connect to all databases!!
                 // update software system
                 TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(connection);
                 if (softwareSystem != null) {

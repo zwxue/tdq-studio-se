@@ -1050,12 +1050,17 @@ public final class ConnectionUtils {
         // fill name label and metadata
         dbConn = (DatabaseConnection) fillConnectionMetadataInformation(dbConn);
         // fill database structure
+
         if (DatabaseConstant.XML_EXIST_DRIVER_NAME.equals(dbConn.getDriverClass())) { // xmldb(e.g eXist)
             IXMLDBConnection xmlDBConnection = new EXistXMLDBConnection(dbConn.getDriverClass(), dbConn.getURL());
             ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(), dbConn);
         } else {
             try {
-                dbConn = (DatabaseConnection) TalendCwmFactory.createDataProvider(createDBConnect(dbConn, false));
+                boolean noStructureExists = ConnectionHelper.getAllCatalogs(dbConn).isEmpty()
+                        && ConnectionHelper.getAllSchemas(dbConn).isEmpty();
+                if (noStructureExists) { // do no override existing catalogs or schemas
+                    dbConn = (DatabaseConnection) TalendCwmFactory.createDataProvider(createDBConnect(dbConn, false));
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             } catch (TalendException e) {
