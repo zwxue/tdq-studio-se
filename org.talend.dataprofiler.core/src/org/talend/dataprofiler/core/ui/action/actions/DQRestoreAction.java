@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -55,6 +56,9 @@ public class DQRestoreAction extends Action {
                 Item item = property.getItem();
                 if (item instanceof ConnectionItem) {
                     // MOD qiongli 2010-10-14,bug 15587.this property is no longer from file.
+                    if (property.eIsProxy()) {
+                        property = (Property) EObjectHelper.resolveObject(property);
+                    }
                     property.getItem().getState().setDeleted(false);
                     ProxyRepositoryFactory.getInstance().save(property);
                 } else {
