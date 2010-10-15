@@ -64,6 +64,7 @@ public class LogicalDeleteFileHandle {
     public static List<Object> getLogicalDelNodes(String folderPath) {
         List<Object> ls = new ArrayList<Object>();
         try {
+            getDelPropertyLs();
             IFile file = null;
             IFolder folder = null;
             HashSet<String> set = new HashSet<String>();
@@ -102,7 +103,7 @@ public class LogicalDeleteFileHandle {
      * @param folderPath
      * @param hashSet
      */
-    public static void addToSet(String fullPath, String folderPath, HashSet<String> hashSet) {
+    private static void addToSet(String fullPath, String folderPath, HashSet<String> hashSet) {
         if (!fullPath.startsWith(folderPath))
             return;
         String subFolderName = fullPath.replace(folderPath, PluginConstant.EMPTY_STRING);
@@ -157,6 +158,7 @@ public class LogicalDeleteFileHandle {
     public static boolean hasChildDeleted(IFolder folder) {
         String strPath = folder.getFullPath().toOSString();
         IFile file = null;
+        getDelPropertyLs();
         for (Property property : delPropertys) {
             file = PropertyHelper.getItemFile(property);
             if (file.getFullPath().toOSString().startsWith(strPath)) {
@@ -245,11 +247,10 @@ public class LogicalDeleteFileHandle {
                 type = file.getFileExtension();
                 if (type != null && type.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                     Property property = PropertyHelper.getProperty(file);
-                    if (property.getItem().getState().isDeleted()) {
+                    if (property.getItem().getState().isDeleted())
                         fileList.add(property);
-                    }
                 }
-            } else if (res.getType() == IResource.FOLDER) {// add the empty folder
+            } else if (res.getType() == IResource.FOLDER) {
                 if (!FilesUtils.isSVNFolder((IFolder) res))
                     getLogicalDelElemFromFolder((IFolder) res, fileList);
             }
@@ -291,18 +292,16 @@ public class LogicalDeleteFileHandle {
      */
     public static void refreshDelPropertys(int type, Property prop) {
         // MOD qiongli ,bug 16371.avoid the NPE
-        if (delPropertys == null) {
-            getDelPropertyLs();
-        }
+        getDelPropertyLs();
         if (type == 0) {
             Iterator<Property> it = delPropertys.iterator();
             while (it.hasNext()) {
                 Property property = it.next();
-                if (property.getId().equals(prop.getId())) {
+                if (property != null && property.getId().equals(prop.getId())) {
                     if (!prop.eIsProxy()) {
                         URI uri = prop.eResource().getURI();
                         if (uri != null)
-                            EMFSharedResources.getInstance().unloadResource(uri.toString());
+                        EMFSharedResources.getInstance().unloadResource(prop.eResource().getURI().toString());
                     }
                     it.remove();
                     break;
