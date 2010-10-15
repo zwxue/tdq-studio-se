@@ -318,7 +318,9 @@ public final class PropertyHelper {
             return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property)).append(
                     getItemStatePath(property)).append(tdqItem.getFilename());
         } else {
-            property = (Property) EObjectHelper.resolveObject(property);
+            if (property.eIsProxy()) {
+                property = (Property) EObjectHelper.resolveObject(property);
+            }
             IPath itemFilePath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension().addFileExtension(
                     FactoriesUtil.ITEM_EXTENSION);
             return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property)).append(

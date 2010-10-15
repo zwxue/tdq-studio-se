@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -380,7 +381,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 }
             } else if (object instanceof IFolder) {
                 IFolder folder = (IFolder) object;
-                if (!ResourceService.isReadOnlyFolder(folder) && LogicalDeleteFileHandle.isAllChildrenDeleted(folder)) {
+                if (ResourceService.isReadOnlyFolder(folder) || FilesUtils.isSVNFolder(folder))
+                    continue;
+                if (LogicalDeleteFileHandle.isAllChildrenDeleted(folder)) {
                     iterator.remove();
                 }
             }

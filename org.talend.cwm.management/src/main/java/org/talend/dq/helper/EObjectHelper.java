@@ -41,6 +41,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.repository.utils.XmiResourceManager;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -238,9 +239,13 @@ public final class EObjectHelper {
      */
     public static EObject resolveObject(EObject proxy) {
         if (proxy != null && proxy.eIsProxy()) {
-            ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
-                    .getResourceManager().resourceSet;
-            proxy = (EObject) EcoreUtil.resolve(proxy, resourceSet);
+            // if it is remote project,xmiRes will be null
+            XmiResourceManager xmiRes = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                    .getResourceManager();
+            if (xmiRes != null) {
+                ResourceSet resourceSet = xmiRes.resourceSet;
+                proxy = (EObject) EcoreUtil.resolve(proxy, resourceSet);
+            }
         }
         return proxy;
     }
