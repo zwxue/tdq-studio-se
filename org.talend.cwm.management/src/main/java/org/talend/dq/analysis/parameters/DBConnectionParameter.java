@@ -30,6 +30,8 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     private String jdbcUrl;
 
+    private String aDDParameter;
+
     private String driverClassName;
 
     private Properties parameters;
@@ -210,4 +212,25 @@ public class DBConnectionParameter extends ConnectionParameter {
     public void setDbName(String dbName) {
         this.dbName = dbName;
     }
+
+    /**
+     * 
+     * DOC zshen Comment method "getaDDParameter".
+     * 
+     * @return
+     */
+    public String getaDDParameter() {
+        return aDDParameter;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "setaDDParameter".
+     * 
+     * @param aDDParameter
+     */
+    public void setaDDParameter(String aDDParameter) {
+        this.aDDParameter = aDDParameter;
+    }
+
 }

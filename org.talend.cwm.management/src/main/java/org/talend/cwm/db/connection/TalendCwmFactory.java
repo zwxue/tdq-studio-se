@@ -37,6 +37,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
@@ -55,6 +56,7 @@ import org.talend.utils.time.TimeTracer;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
+import orgomg.cwm.resource.relational.impl.CatalogImpl;
 
 /**
  * @author scorreia
@@ -157,22 +159,25 @@ public final class TalendCwmFactory {
             // AdditionalParams
             String additionalParams = ((DatabaseConnection) dataProvider).getAdditionalParams();
             if (additionalParams == null) {
-                String[] urlSplitArray = ((DatabaseConnection) dataProvider).getURL().split("\\?");
-                if (urlSplitArray.length == 2) {
-                    ((DatabaseConnection) dataProvider).setAdditionalParams(urlSplitArray[1]);
-                }
+                ((DatabaseConnection) dataProvider).setAdditionalParams(connector.getDbConnectionParameter().getaDDParameter());
             }
             // uischema
-            if (edatabasetypeInstance.isNeedSchema()
-                    && edatabasetypeInstance.getSchemaMappingField() == EDatabaseSchemaOrCatalogMapping.Schema
-                    && schemata != null) {
-                Iterator<Schema> iter = schemata.iterator();
-                while (iter.hasNext()) {
-                    String uischema = iter.next().getName();
-                    ((DatabaseConnection) dataProvider).setUiSchema(uischema);
-                    break;
+            if (edatabasetypeInstance.isNeedSchema()) {
+                if (schemata.size() == 0 && catalogs.size() > 0) {
+                    schemata = CatalogHelper.getSchemas(SwitchHelpers.CATALOG_SWITCH
+                            .doSwitch((CatalogImpl) catalogs.toArray()[0]));
                 }
 
+                if (edatabasetypeInstance.getSchemaMappingField() == EDatabaseSchemaOrCatalogMapping.Schema
+                        && schemata.size() > 0) {
+                    Iterator<Schema> iter = schemata.iterator();
+                    while (iter.hasNext()) {
+                        String uischema = iter.next().getName();
+                        ((DatabaseConnection) dataProvider).setUiSchema(uischema);
+                        break;
+                    }
+
+                }
             }
 
             // change catalog
