@@ -67,7 +67,7 @@ public final class ActionHandleFactory {
                 handle = new ReportHandle(property);
                 break;
             case PATTERNS:
-            case RULES:
+            case RULES_SQL:
                 handle = new EMFResourceHandle(property);
                 break;
             case INDICATORS:
@@ -112,7 +112,7 @@ public final class ActionHandleFactory {
                 case ANALYSIS:
                 case REPORTS:
                 case PATTERNS:
-                case RULES:
+                case RULES_SQL:
                 case INDICATORS:
                     handle = new EMFResourceHandle(property);
                     break;
