@@ -452,8 +452,10 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             parameterText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             if (dbType.getParamSeprator() != null) {
                 parameterText.setText(org.talend.dq.PluginConstant.DEFAULT_PARAMETERS);
+                connectionParam.setaDDParameter(org.talend.dq.PluginConstant.DEFAULT_PARAMETERS);
             } else {
                 parameterText.setText(PluginConstant.EMPTY_STRING);
+                connectionParam.setaDDParameter(PluginConstant.EMPTY_STRING);
             }
             parameterText.setEnabled(compositeEnable);
             label.setEnabled(compositeEnable);
@@ -556,6 +558,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             parameterText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
+                    connectionParam.setaDDParameter(parameterText.getText());
                     setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(),
                             portText.getText(), databaseNameText.getText(), dataSourceText.getText(), parameterText.getText()));
                     urlText.setText(getConnectionURL());
