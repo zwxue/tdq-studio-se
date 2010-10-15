@@ -18,7 +18,9 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.talend.resource.ResourceManager;
+import org.eclipse.core.runtime.Path;
+import org.talend.dataprofiler.core.ui.utils.DqFileUtils;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.io.FilesUtils;
 
 /**
@@ -45,8 +47,11 @@ public class ZipFileImportWriter extends FileSystemImportWriter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String curProjectLabel = ResourceManager.getRootProjectName();
-        return super.computeInput(sourcePath.append(sourcePath.lastSegment()).append(curProjectLabel));
+
+        File libFolder = DqFileUtils.getFile(sourcePath.toFile(), EResourceConstant.LIBRARIES.getName(), true);
+
+        IPath projectPath = new Path(libFolder.getParentFile().getAbsolutePath());
+        return super.computeInput(projectPath);
     }
 
     @Override
@@ -67,6 +72,5 @@ public class ZipFileImportWriter extends FileSystemImportWriter {
         // no need to create a backup here because the folder is already created by the unzip action
         return workspacePath.toFile();
     }
-
 
 }
