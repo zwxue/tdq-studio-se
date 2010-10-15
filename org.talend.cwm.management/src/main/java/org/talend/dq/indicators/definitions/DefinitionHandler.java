@@ -44,7 +44,6 @@ import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -119,14 +118,10 @@ public final class DefinitionHandler {
     }
 
     private void initializeDefinitions() {
+        this.indicatorDefinitions.clear();
         this.indicatorCategories = loadDefinitionsFromFile().getCategories();
         indicatorDefinitions.addAll(IndicatorResourceFileHelper.getInstance().getAllIndicators(
-                ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
-                        EResourceConstant.SYSTEM_INDICATORS.getName())));
-        // MOD klliu 2010-09-25 bug 15530 the case is sloveed , when create a new UDI indicator by init definition List
-        indicatorDefinitions.addAll(IndicatorResourceFileHelper.getInstance().getAllIndicators(
-                ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName()).getFolder(
-                        EResourceConstant.USER_DEFINED_INDICATORS.getName())));
+                ResourceManager.getIndicatorFolder()));
     }
 
     /**
@@ -218,7 +213,7 @@ public final class DefinitionHandler {
      * @return the singleton analysis categories (or throws an exception if a problem occured)
      */
     public List<IndicatorDefinition> getIndicatorsDefinitions() {
-        if (indicatorDefinitions == null) {
+        if (indicatorDefinitions == null || indicatorDefinitions.isEmpty()) {
             initializeDefinitions();
         }
         if (indicatorDefinitions == null) {
@@ -380,7 +375,6 @@ public final class DefinitionHandler {
      * @return
      */
     public IndicatorDefinition getDefinitionById(String definitionId) {
-
         for (IndicatorDefinition indDef : indicatorDefinitions) {
             CwmResource resource = (CwmResource) indDef.eResource();
             EObject object = resource.getEObject(definitionId);

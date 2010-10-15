@@ -50,13 +50,17 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
     protected boolean doExecute() throws Exception {
 
         // Copy system indicators.
-        if (!ResourceManager.getSystemIndicatorFolder().exists()) {
-            DQStructureManager manager = DQStructureManager.getInstance();
-            IFolder systemIndicatorFoler = manager.createNewFolder(ResourceManager.getIndicatorFolder(),
+        DQStructureManager manager = DQStructureManager.getInstance();
+        IFolder systemIndicatorFolder = ResourceManager.getSystemIndicatorFolder();
+        if (!systemIndicatorFolder.exists()) {
+            systemIndicatorFolder = manager.createNewFolder(ResourceManager.getIndicatorFolder(),
                     EResourceConstant.SYSTEM_INDICATORS);
-            manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.SYSTEM_INDICATOR_PATH, true,
-                    systemIndicatorFoler, null);
         }
+
+        manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.SYSTEM_INDICATOR_PATH, true, systemIndicatorFolder,
+                null);
+
+        DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
 
         // Migration for analyses (indicator definition)
         Collection<Analysis> analyses = searchAllAnalysis(ResourceManager.getAnalysisFolder());

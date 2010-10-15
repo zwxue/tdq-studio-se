@@ -90,7 +90,7 @@ public abstract class ResourceFileMap {
 
         if (!dependencyClients.isEmpty()) {
             rc.setOk(false);
-            rc.setMessage("This item is depended by others! it can't be deleted!");
+            rc.setMessage("This item is depended by [ " + dependencyClients.get(0).getName() + " ]! it can't be deleted!");
         } else {
             // remove dependency
             EObjectHelper.removeDependencys(ifile);

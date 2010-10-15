@@ -80,16 +80,17 @@ public final class DependenciesHandler {
             // MOD qiongli bug 15587.if dependcy is Proxy,reload it and remove the client element
             if (dependency.eIsProxy()) {
                 dependency = (Dependency) EObjectHelper.resolveObject(dependency);
-                EList<ModelElement> client = dependency.getClient();
-                Iterator<ModelElement> iterator = client.iterator();
-                while (iterator.hasNext()) {
-                    ModelElement modelElement = iterator.next();
-                    if (modelElement.getName().equals(elementToDelete.getName())) {
-                        iterator.remove();
-                        if (client.size() == 0)
-                            it.remove();
-                    }
-                }
+                // EList<ModelElement> client = dependency.getClient();
+                // Iterator<ModelElement> iterator = client.iterator();
+                // while (iterator.hasNext()) {
+                // ModelElement modelElement = iterator.next();
+                // if (modelElement.getName().equals(elementToDelete.getName())) {
+                // iterator.remove();
+                // }
+                // }
+                //
+                // if (client.size() == 0)
+                // it.remove();
             }// ~
             Resource dependencyResource = dependency.eResource();
             if (dependencyResource != null) {
@@ -121,7 +122,6 @@ public final class DependenciesHandler {
         }
         return modifiedResources;
     }
-    
 
     /**
      * Method "removeDependenciesBetweenModels" is to be used before a model dependency(elementToRemove) removed from
