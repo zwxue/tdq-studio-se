@@ -74,7 +74,9 @@ public final class DependenciesHandler {
         clientDependencies = elementToDelete.getClientDependency();
         // locate resource of each Dependency object
         List<Resource> modifiedResources = new ArrayList<Resource>();
-        for (Dependency dependency : clientDependencies) {
+        Iterator<Dependency> it = clientDependencies.iterator();
+        while (it.hasNext()) {
+            Dependency dependency = (Dependency) it.next();
             // MOD qiongli bug 15587.if dependcy is Proxy,reload it and remove the client element
             if (dependency.eIsProxy()) {
                 dependency = (Dependency) EObjectHelper.resolveObject(dependency);
@@ -84,6 +86,8 @@ public final class DependenciesHandler {
                     ModelElement modelElement = iterator.next();
                     if (modelElement.getName().equals(elementToDelete.getName())) {
                         iterator.remove();
+                        if (client.size() == 0)
+                            it.remove();
                     }
                 }
             }// ~
