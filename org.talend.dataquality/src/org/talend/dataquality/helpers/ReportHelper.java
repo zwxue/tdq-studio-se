@@ -71,15 +71,22 @@ public final class ReportHelper {
         EVOLUTION_MUTICOLUMN(EVOLUTION, PROPS.getProperty("EVOLUTION_MUTICOLUMN")), //$NON-NLS-1$
         // Analysis: connection
         BASIC_CONNECTION(BASIC, PROPS.getProperty("BASIC_CONNECTION")), //$NON-NLS-1$
+        BASIC_CONNECTION_ORACLE(BASIC, PROPS.getProperty("BASIC_CONNECTION_ORACLE")), //$NON-NLS-1$
         EVOLUTION_CONNECTION(EVOLUTION, PROPS.getProperty("EVOLUTION_CONNECTION")), //$NON-NLS-1$
+        EVOLUTION_CONNECTION_ORACLE(EVOLUTION, PROPS.getProperty("EVOLUTION_CONNECTION_ORACLE")), //$NON-NLS-1$
         // EVOLUTION_CONNECTION(BASIC, "/reports/column/report_04.jrxml"),
         // Analysis: schema
         BASIC_SCHEMA(BASIC, PROPS.getProperty("BASIC_SCHEMA")), //$NON-NLS-1$
+        BASIC_SCHEMA_ORACLE(BASIC, PROPS.getProperty("BASIC_SCHEMA_ORACLE")), //$NON-NLS-1$
+
         EVOLUTION_SCHEMA(EVOLUTION, PROPS.getProperty("EVOLUTION_SCHEMA")), //$NON-NLS-1$
+        EVOLUTION_SCHEMA_ORACLE(EVOLUTION, PROPS.getProperty("EVOLUTION_SCHEMA_ORACLE")), //$NON-NLS-1$
         // TODO assign type to specific jrxml
         // Analysis: catalog
         BASIC_CATALOG(BASIC, PROPS.getProperty("BASIC_CATALOG")), //$NON-NLS-1$
+        BASIC_CATALOG_ORACLE(BASIC, PROPS.getProperty("BASIC_CATALOG_ORACLE")), //$NON-NLS-1$
         EVOLUTION_CATALOG(EVOLUTION, PROPS.getProperty("EVOLUTION_CATALOG")), //$NON-NLS-1$
+        EVOLUTION_CATALOG_ORACLE(EVOLUTION, PROPS.getProperty("EVOLUTION_CATALOG_ORACLE")), //$NON-NLS-1$
         // Analysis: table
         BASIC_TABLE(BASIC, PROPS.getProperty("BASIC_TABLE")), //$NON-NLS-1$
         EVOLUTION_TABLE(EVOLUTION, PROPS.getProperty("EVOLUTION_TABLE")), //$NON-NLS-1$
@@ -224,6 +231,7 @@ public final class ReportHelper {
         }
 
         public static ReportType getReportType(AnalysisType anaType, String text, String dbType) {
+            // MOD klliu 16372 add Basic and evolution to fit oracle type
             if (USER_MADE.getLabel().equals(text)) {
                 return USER_MADE;
             }
@@ -235,22 +243,46 @@ public final class ReportHelper {
                     return EVOLUTION_MUTICOLUMN;
                 }
             } else if (anaType.getName().equals(AnalysisType.CONNECTION.getName())) {
-                if (BASIC_CONNECTION.getLabel().equals(text)) {
-                    return BASIC_CONNECTION;
-                } else if (EVOLUTION_CONNECTION.getLabel().equals(text)) {
-                    return EVOLUTION_CONNECTION;
+                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+                    if (BASIC_CONNECTION_ORACLE.getLabel().equals(text)) {
+                        return BASIC_CONNECTION_ORACLE;
+                    } else if (EVOLUTION_CONNECTION_ORACLE.getLabel().equals(text)) {
+                        return EVOLUTION_CONNECTION_ORACLE;
+                    }
+                } else {
+                    if (BASIC_CONNECTION.getLabel().equals(text)) {
+                        return BASIC_CONNECTION;
+                    } else if (EVOLUTION_CONNECTION.getLabel().equals(text)) {
+                        return EVOLUTION_CONNECTION;
+                    }
                 }
             } else if (anaType.getName().equals(AnalysisType.SCHEMA.getName())) {
-                if (BASIC_SCHEMA.getLabel().equals(text)) {
-                    return BASIC_SCHEMA;
-                } else if (EVOLUTION_SCHEMA.getLabel().equals(text)) {
-                    return EVOLUTION_SCHEMA;
+                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+                    if (BASIC_SCHEMA_ORACLE.getLabel().equals(text)) {
+                        return BASIC_SCHEMA_ORACLE;
+                    } else if (EVOLUTION_SCHEMA_ORACLE.getLabel().equals(text)) {
+                        return EVOLUTION_SCHEMA_ORACLE;
+                    }
+                } else {
+                    if (BASIC_SCHEMA.getLabel().equals(text)) {
+                        return BASIC_SCHEMA;
+                    } else if (EVOLUTION_SCHEMA.getLabel().equals(text)) {
+                        return EVOLUTION_SCHEMA;
+                    }
                 }
             } else if (anaType.getName().equals(AnalysisType.CATALOG.getName())) {
-                if (BASIC_CATALOG.getLabel().equals(text)) {
-                    return BASIC_CATALOG;
-                } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
-                    return EVOLUTION_CATALOG;
+                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
+                    if (BASIC_CATALOG_ORACLE.getLabel().equals(text)) {
+                        return BASIC_CATALOG_ORACLE;
+                    } else if (EVOLUTION_CATALOG_ORACLE.getLabel().equals(text)) {
+                        return EVOLUTION_CATALOG_ORACLE;
+                    }
+                } else {
+                    if (BASIC_CATALOG.getLabel().equals(text)) {
+                        return BASIC_CATALOG;
+                    } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
+                        return EVOLUTION_CATALOG;
+                    }
                 }
             } else if (anaType.getName().equals(AnalysisType.TABLE.getName())) {
                 if (BASIC_TABLE.getLabel().equals(text)) {
