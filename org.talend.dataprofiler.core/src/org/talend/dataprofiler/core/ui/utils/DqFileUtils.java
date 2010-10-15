@@ -45,10 +45,23 @@ public final class DqFileUtils {
      */
     public static File getFile(File parent, String fileName) {
         List<File> allFiles = new ArrayList<File>();
-        searchAllFile(allFiles, parent, true);
+        searchAllFile(allFiles, parent, true, false);
 
         for (File file : allFiles) {
-            if (file.isFile() && StringUtils.equals(fileName, file.getName())) {
+            if (StringUtils.equals(fileName, file.getName())) {
+                return file;
+            }
+        }
+
+        return null;
+    }
+
+    public static File getFile(File parent, String fileName, boolean withFolder) {
+        List<File> allFiles = new ArrayList<File>();
+        searchAllFile(allFiles, parent, true, withFolder);
+
+        for (File file : allFiles) {
+            if (StringUtils.equals(fileName, file.getName())) {
                 return file;
             }
         }
@@ -96,13 +109,17 @@ public final class DqFileUtils {
      * @param result
      * @param parent
      * @param recursive
+     * @param withFolder
      */
-    public static void searchAllFile(List<File> result, File parent, boolean recursive) {
+    public static void searchAllFile(List<File> result, File parent, boolean recursive, boolean withFolder) {
         File[] files = parent.listFiles();
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory() && recursive) {
-                    searchAllFile(result, file, recursive);
+                    if (withFolder) {
+                        result.add(file);
+                    }
+                    searchAllFile(result, file, recursive, withFolder);
                 } else {
                     result.add(file);
                 }
