@@ -102,7 +102,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
         for (ItemRecord record : elements) {
 
-            // record.getErrors().clear();
+            record.getErrors().clear();
 
             checkDependency(record);
 
@@ -428,8 +428,6 @@ public class FileSystemImportWriter implements IImportWriter {
         }
         return null;
     }
-
-
 
     /*
      * (non-Javadoc)

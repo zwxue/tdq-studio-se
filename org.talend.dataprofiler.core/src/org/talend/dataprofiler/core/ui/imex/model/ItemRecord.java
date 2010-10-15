@@ -71,20 +71,6 @@ public class ItemRecord {
     public ItemRecord(File file) {
         this.file = file;
 
-        try {
-            if (file != null && file.isFile()) {
-                init();
-            }
-        } catch (Exception e) {
-            addError("Can't initialize element [" + getName() + "] : " + e.getMessage());
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "init".
-     */
-    private void init() {
-
         if (resourceSet == null) {
             resourceSet = new ResourceSetImpl();
         }
@@ -93,32 +79,44 @@ public class ItemRecord {
             allItemRecords = new ArrayList<ItemRecord>();
         }
 
-        allItemRecords.add(this);
+        if (file != null && file.isFile()) {
+            allItemRecords.add(this);
+            initialize();
+        }
+    }
 
+    /**
+     * DOC bZhou Comment method "initialize".
+     */
+    private void initialize() {
         URI fileURI = URI.createFileURI(file.getAbsolutePath());
 
         elementEName = EElementEName.findENameByExt(fileURI.fileExtension());
 
-        if (property == null) {
-            property = (Property) EObjectHelper.retrieveEObject(getPropertyPath(), PropertiesPackage.eINSTANCE.getProperty());
-        }
+        try {
+            if (property == null) {
+                property = (Property) EObjectHelper.retrieveEObject(getPropertyPath(), PropertiesPackage.eINSTANCE.getProperty());
+            }
 
-        if (element == null && !isJRXml()) {
-            Resource resource = resourceSet.getResource(fileURI, true);
-            EList<EObject> contents = resource.getContents();
-            if (contents != null && !contents.isEmpty()) {
-                if (property.getItem() instanceof ConnectionItem) {
-                    element = ((ConnectionItem) property.getItem()).getConnection();
-                } else {
-                    EObject object = contents.get(0);
-                    if (object instanceof ModelElement) {
-                        element = (ModelElement) object;
+            if (element == null && !isJRXml()) {
+                Resource resource = resourceSet.getResource(fileURI, true);
+                EList<EObject> contents = resource.getContents();
+                if (contents != null && !contents.isEmpty()) {
+                    if (property.getItem() instanceof ConnectionItem) {
+                        element = ((ConnectionItem) property.getItem()).getConnection();
+                    } else {
+                        EObject object = contents.get(0);
+                        if (object instanceof ModelElement) {
+                            element = (ModelElement) object;
+                        }
                     }
                 }
             }
-        }
 
-        computeDependencies();
+            computeDependencies();
+        } catch (Exception e) {
+            addError("Can't initialize element [" + getName() + "] : " + e.getMessage());
+        }
     }
 
     /**
