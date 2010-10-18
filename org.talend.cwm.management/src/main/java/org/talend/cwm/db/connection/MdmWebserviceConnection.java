@@ -210,11 +210,18 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
      */
     private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort stub, String resName, String providerTechName)
             throws RemoteException, CoreException {
-        String resXSD = stub.getDataModel(new WSGetDataModel(new WSDataModelPK(resName))).getXsdSchema();
+        // MOD xqliu 2010-10-18 bug 16161
+        String resXSD = null;
+        try {
+            resXSD = stub.getDataModel(new WSGetDataModel(new WSDataModelPK(resName))).getXsdSchema();
+        } catch (Exception e1) {
+            log.warn(e1, e1);
+        }
         if (resXSD == null || "".equals(resXSD.trim())) {
-            log.error("XSD not exist for \"" + resName + "\"");
+            log.warn("XSD not exist for \"" + resName + "\"");
             return;
         }
+        // ~ 16161
         // Save xsd file to local disk.
         // TODO Specify unique xsd file name.
         IFolder xsdFolder = ResourceManager.getMDMConnectionFolder().getFolder(XSD_SUFIX);
