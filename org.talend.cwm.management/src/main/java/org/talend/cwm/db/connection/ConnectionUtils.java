@@ -67,6 +67,8 @@ import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * Utility class for database connection handling.
@@ -354,7 +356,7 @@ public final class ConnectionUtils {
             connection = ConnectionUtils.createConnection(url, driver, props);
             if (connection != null) {
                 Statement stat = connection.createStatement();
-                if(!"".equals(schema)){
+                if (!"".equals(schema)) {
                     stat.executeQuery("Select * from " + schema.toUpperCase() + "." + tableName);
                 } else {
                     stat.executeQuery("Select * from " + tableName);
@@ -992,7 +994,17 @@ public final class ConnectionUtils {
      * @return
      */
     public static Connection fillConnectionInformation(Connection conn) {
+        boolean saveFlag = false;
+        // fill metadata of connection
         if (conn.getName() == null || conn.getLabel() == null) {
+            saveFlag = true;
+            conn = fillConnectionMetadataInformation(conn);
+        }
+        // fill structure of connection
+        List<Catalog> catalogs = ConnectionHelper.getCatalogs(conn);
+        List<Schema> schemas = ConnectionHelper.getSchema(conn);
+        if (catalogs.isEmpty() && schemas.isEmpty()) {
+            saveFlag = true;
             DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
             if (dbConn != null) {
                 conn = fillDbConnectionInformation(dbConn);
@@ -1002,6 +1014,8 @@ public final class ConnectionUtils {
                     conn = fillMdmConnectionInformation(mdmConn);
                 }
             }
+        }
+        if (saveFlag) {
             ProxyRepositoryViewObject.save(conn);
         }
         return conn;
