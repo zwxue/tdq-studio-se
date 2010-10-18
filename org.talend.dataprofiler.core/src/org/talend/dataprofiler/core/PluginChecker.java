@@ -12,11 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
-
 /**
  * DOC Administrator class global comment. Detailled comment
+ * 
+ * @deprecated use org.talend.commons.utils.platform.PluginChecker instead
  */
 public final class PluginChecker {
 
@@ -34,12 +33,7 @@ public final class PluginChecker {
      * @return isLoaded
      */
     public static boolean isPluginLoaded(String pluginID) {
-        boolean isLoaded = true;
-        Bundle bundle = Platform.getBundle(pluginID);
-        if (bundle == null || (bundle != null && bundle.getState() == Bundle.UNINSTALLED)) {
-            isLoaded = false;
-        }
-        return isLoaded;
+        return org.talend.commons.utils.platform.PluginChecker.isPluginLoaded(pluginID);
     }
 
     /**

@@ -39,6 +39,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -81,6 +82,13 @@ public class ReloadDatabaseAction extends Action {
     @Override
     public void run() {
 
+        boolean confirmed = PluginChecker.isOnlyTopLoaded() ? true : MessageDialog.openConfirm(PlatformUI.getWorkbench()
+                .getDisplay().getActiveShell(), "Confirm reload",
+                "This action will reload the metadata from the remote connection. This may impact existing Jobs. Are you sure?");
+        if (!confirmed) {
+            return;
+        }
+
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
@@ -89,6 +97,7 @@ public class ReloadDatabaseAction extends Action {
 
                     public void run() {
                         try {
+
                             DataProvider oldDataProvider = creatComparisonLevel.reloadCurrentLevelElement();
 
                             // MOD mzhao 2009-07-13 bug 7454 Impact existing
@@ -104,6 +113,7 @@ public class ReloadDatabaseAction extends Action {
                     }
                 });
             }
+
         };
         try {
             ProgressUI.popProgressDialog(op);
