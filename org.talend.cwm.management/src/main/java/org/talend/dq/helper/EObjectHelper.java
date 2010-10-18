@@ -163,9 +163,13 @@ public final class EObjectHelper {
         // locate resource of each Dependency object
         List<ModelElement> supplierList = new ArrayList<ModelElement>();
         for (Dependency dependency : clientDependencys) {
-            EList<ModelElement> client = dependency.getClient();
-            if (client != null) {
-                supplierList.addAll(client);
+            EList<ModelElement> clients = dependency.getClient();
+            if (clients != null) {
+                for (ModelElement client : clients) {
+                    if (!client.eIsProxy()) {
+                        supplierList.add(client);
+                    }
+                }
             }
         }
         return supplierList;
