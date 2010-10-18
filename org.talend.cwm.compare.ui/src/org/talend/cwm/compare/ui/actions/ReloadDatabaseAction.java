@@ -83,8 +83,8 @@ public class ReloadDatabaseAction extends Action {
     public void run() {
 
         boolean confirmed = PluginChecker.isOnlyTopLoaded() ? true : MessageDialog.openConfirm(PlatformUI.getWorkbench()
-                .getDisplay().getActiveShell(), "Confirm reload",
-                "This action will reload the metadata from the remote connection. This may impact existing Jobs. Are you sure?");
+                .getDisplay().getActiveShell(), Messages.getString("ReloadDatabaseAction.0"), //$NON-NLS-1$
+                Messages.getString("ReloadDatabaseAction.1")); //$NON-NLS-1$
         if (!confirmed) {
             return;
         }
