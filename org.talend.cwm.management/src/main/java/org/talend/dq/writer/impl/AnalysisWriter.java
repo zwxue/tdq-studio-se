@@ -29,6 +29,7 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -123,5 +124,11 @@ public class AnalysisWriter extends AElementPersistance {
     public ReturnCode save(Item item) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    protected void notifyResourceChanges() {
+        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+
     }
 }

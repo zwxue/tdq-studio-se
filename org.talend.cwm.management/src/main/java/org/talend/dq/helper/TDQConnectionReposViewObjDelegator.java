@@ -40,6 +40,9 @@ public abstract class TDQConnectionReposViewObjDelegator<T extends Connection> e
     protected void setActiveElement(IRepositoryViewObject viewObj, Connection element) {
         ConnectionItem connItem = (ConnectionItem) viewObj.getProperty().getItem();
         connItem.setConnection(element);
+        // Set dependency additionally.
+        // connItem.getConnection().getSupplierDependency().clear();
+        // connItem.getConnection().getSupplierDependency().addAll(element.getSupplierDependency());
     }
 
 }

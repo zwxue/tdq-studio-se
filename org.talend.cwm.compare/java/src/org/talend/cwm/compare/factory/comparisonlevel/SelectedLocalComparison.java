@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -32,6 +33,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
@@ -74,8 +76,13 @@ public class SelectedLocalComparison implements IComparisonLevel {
         // Judge selected elements types.
         ModelElementAdapter meAdapter = new ModelElementAdapter();
         firstSelectedDataProvider = meAdapter.getAdaptableProvider(firstSelectedObj);
+        if (firstSelectedDataProvider != null && firstSelectedDataProvider.eIsProxy()) {
+            firstSelectedDataProvider = (DatabaseConnection) EObjectHelper.resolveObject(firstSelectedDataProvider);
+        }
         secondSelectedDataProvider = meAdapter.getAdaptableProvider(secondSelectedObj);
-
+        if (secondSelectedDataProvider != null && secondSelectedDataProvider.eIsProxy()) {
+            secondSelectedDataProvider = (DatabaseConnection) EObjectHelper.resolveObject(secondSelectedDataProvider);
+        }
         if (firstSelectedDataProvider == null || secondSelectedDataProvider == null) {
             return;
         }

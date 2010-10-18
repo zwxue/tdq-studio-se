@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Item;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -68,5 +69,11 @@ public class PatternWriter extends AElementPersistance {
     public ReturnCode save(Item item) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    protected void notifyResourceChanges() {
+        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+
     }
 }

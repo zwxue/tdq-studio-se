@@ -17,7 +17,7 @@ import org.talend.core.model.properties.Item;
 /***/
 public class RepositoryManager {
 
-    public void save() {
+    public void save(boolean avoidUnload) {
 
     }
 

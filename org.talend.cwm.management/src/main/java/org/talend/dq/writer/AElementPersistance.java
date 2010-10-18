@@ -43,7 +43,6 @@ import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
-import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
@@ -287,13 +286,15 @@ public abstract class AElementPersistance {
 
         if (rc.isOk()) {
             rc.setMessage("save " + element.getName() + " is OK!");
-            ProxyRepositoryManager.getInstance().save();
+            notifyResourceChanges();
         } else {
             rc.setMessage(util.getLastErrorMessage());
         }
 
         return rc;
     }
+
+    protected abstract void notifyResourceChanges();
 
     /**
      * DOC bZhou Comment method "updateProperty".

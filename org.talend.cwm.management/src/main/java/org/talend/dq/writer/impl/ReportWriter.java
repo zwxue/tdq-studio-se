@@ -22,6 +22,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -81,5 +82,11 @@ public class ReportWriter extends AElementPersistance {
     public ReturnCode save(Item item) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    protected void notifyResourceChanges() {
+        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+
     }
 }

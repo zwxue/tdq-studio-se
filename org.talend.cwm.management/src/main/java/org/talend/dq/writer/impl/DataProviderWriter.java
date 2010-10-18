@@ -31,6 +31,7 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -186,4 +187,8 @@ public class DataProviderWriter extends AElementPersistance {
         return rc;
     }
 
+    @Override
+    protected void notifyResourceChanges() {
+        ProxyRepositoryManager.getInstance().save(Boolean.FALSE);
+    }
 }
