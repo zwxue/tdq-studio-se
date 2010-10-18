@@ -45,7 +45,6 @@ import org.talend.dataprofiler.ecos.model.impl.EcosCategory;
 import org.talend.dataprofiler.ecos.model.impl.Revision;
 import org.talend.dataprofiler.ecos.pref.PreferenceConstants;
 import org.talend.dataprofiler.ecos.proxy.EcosystemProxyAdapter;
-import org.talend.dataprofiler.ecos.proxy.EcosystemSocketFactory;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -69,7 +68,8 @@ public abstract class EcosystemService {
     private static int TIMEOUT;
 
     static {
-        System.setProperty("axis.socketFactory", EcosystemSocketFactory.class.getName()); //$NON-NLS-1$
+        // MOD mzhao bug:16496
+        //        System.setProperty("axis.socketFactory", TDQEcosystemSocketFactory.class.getName()); //$NON-NLS-1$
         TIMEOUT = EcosPlugin.getDefault().getPluginPreferences().getInt(PreferenceConstants.ECOS_TIME_OUT_VALUE);
         log.info("Setting of ecos time-out: " + TIMEOUT + "ms");
     }
