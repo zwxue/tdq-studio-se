@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
@@ -120,13 +121,18 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 for (IEditorReference reference : editorReferences) {
                     FileEditorInput finput;
                     try {
-                        finput = (FileEditorInput) reference.getEditorInput();
-                        if (finput.getFile().equals(selectionFile)) {
-                            IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true)).getActivePageInstance();
-                            //MOD qiongli bug 13880
-//                            if (reference instanceof IRuningStatusListener) {
-                            if (activePageInstance instanceof IRuningStatusListener) {
-                                listener = (IRuningStatusListener) activePageInstance;
+                        // MOD qiongli bug 16505.
+                        IEditorInput editorInput = reference.getEditorInput();
+                        if (editorInput instanceof FileEditorInput) {
+                            finput = (FileEditorInput) reference.getEditorInput();
+                            if (finput.getFile().equals(selectionFile)) {
+                                IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true))
+                                        .getActivePageInstance();
+                                // MOD qiongli bug 13880
+                                // if (reference instanceof IRuningStatusListener) {
+                                if (activePageInstance instanceof IRuningStatusListener) {
+                                    listener = (IRuningStatusListener) activePageInstance;
+                                }
                             }
                         }
                     } catch (PartInitException e) {
