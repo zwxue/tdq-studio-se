@@ -434,6 +434,22 @@ public final class ConnectionUtils {
     }
 
     /**
+     * DOC xqliu Comment method "isAs400".
+     * 
+     * @param connection
+     * @return
+     */
+    public static boolean isAs400(Connection connection) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            String databaseType = dbConn.getDatabaseType() == null ? "" : dbConn.getDatabaseType();
+            return EDriverName.AS400DEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
+                    || EDatabaseTypeName.AS400.getDisplayName().equalsIgnoreCase(databaseType);
+        }
+        return false;
+    }
+
+    /**
      * DOC zshen Comment method "isSybase".
      * 
      * @param connection
@@ -1040,8 +1056,8 @@ public final class ConnectionUtils {
         List<Schema> schemas = ConnectionHelper.getSchema(conn);
         // MOD xqliu 2010-10-19 bug 16441: case insensitive
         if ((catalogs.isEmpty() && schemas.isEmpty())
-                || (ConnectionHelper.getAllSchemas(conn).isEmpty() && (ConnectionUtils.isMssql(conn) || ConnectionUtils
-                        .isPostgresql(conn)))) {
+                || (ConnectionHelper.getAllSchemas(conn).isEmpty() && (ConnectionUtils.isMssql(conn)
+                        || ConnectionUtils.isPostgresql(conn) || ConnectionUtils.isAs400(conn)))) {
             // ~ 16441
             saveFlag = true;
             DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
@@ -1108,7 +1124,8 @@ public final class ConnectionUtils {
                         && ConnectionHelper.getAllSchemas(dbConn).isEmpty();
                 // MOD xqliu 2010-10-19 bug 16441: case insensitive
                 if (ConnectionHelper.getAllSchemas(dbConn).isEmpty()
-                        && (ConnectionUtils.isMssql(dbConn) || ConnectionUtils.isPostgresql(dbConn))) {
+                        && (ConnectionUtils.isMssql(dbConn) || ConnectionUtils.isPostgresql(dbConn) || ConnectionUtils
+                                .isAs400(dbConn))) {
                     noStructureExists = true;
                 }
                 // ~ 16441
