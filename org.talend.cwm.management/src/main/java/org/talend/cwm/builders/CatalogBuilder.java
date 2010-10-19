@@ -310,7 +310,9 @@ public class CatalogBuilder extends CwmBuilder {
     private boolean retrieveCatalogSchema(String dbName, String catalogSchemaName) {
         if (getDbConnectionParameter() == null || getDbConnectionParameter().isRetrieveAllMetadata() || dbName == null) {
             return true;
-        } else if (dbName.equals(catalogSchemaName)) {
+            // MOD xqliu 2010-10-19 bug 16441: case insensitive
+        } else if (dbName.equalsIgnoreCase(catalogSchemaName)) {
+            // ~ 16441
             return true;
         }
         return false;
@@ -363,7 +365,10 @@ public class CatalogBuilder extends CwmBuilder {
             List<Schema> schemas = catalog2schemas.get(catName);
             if (catName != null) { // a mapping between catalog and schema exist
                 if (schemas != null) {
-                    Catalog catalog = this.name2catalog.get(catName);
+                    // MOD xqliu 2010-10-19 bug 16441: case insensitive
+                    // Catalog catalog = this.name2catalog.get(catName);
+                    Catalog catalog = getCatalog(catName);
+                    // ~ 16441
                     // MOD mzhao bug 8502 2009-10-28, filter user for MSSQL 2005 and 2008.
                     if (catalog != null && schemas != null) {
                         if (!(schemas.size() == 1 && schemas.get(0) == null)) {

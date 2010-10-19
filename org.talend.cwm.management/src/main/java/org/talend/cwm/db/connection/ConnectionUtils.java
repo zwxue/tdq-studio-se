@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
@@ -40,6 +41,7 @@ import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -415,6 +417,23 @@ public final class ConnectionUtils {
     }
 
     /**
+     * DOC xqliu Comment method "isMssql".
+     * 
+     * @param connection
+     * @return
+     */
+    public static boolean isMssql(Connection connection) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            String databaseType = dbConn.getDatabaseType() == null ? "" : dbConn.getDatabaseType();
+            return EDriverName.MSSQL2008URL.getDBKey().equalsIgnoreCase(databaseType)
+                    || EDriverName.MSSQLDEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
+                    || EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(databaseType);
+        }
+        return false;
+    }
+
+    /**
      * DOC zshen Comment method "isSybase".
      * 
      * @param connection
@@ -547,6 +566,22 @@ public final class ConnectionUtils {
             if (databaseProductName != null) {
                 return databaseProductName.toLowerCase().indexOf(DatabaseConstant.POSTGRESQL_PRODUCT_NAME) > -1;
             }
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "isPostgresql".
+     * 
+     * @param connection
+     * @return
+     */
+    public static boolean isPostgresql(Connection connection) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            String databaseType = dbConn.getDatabaseType() == null ? "" : dbConn.getDatabaseType();
+            return EDriverName.POSTGRESQLEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
+                    || EDatabaseTypeName.PSQL.getDisplayName().equalsIgnoreCase(databaseType);
         }
         return false;
     }
@@ -1003,7 +1038,11 @@ public final class ConnectionUtils {
         // fill structure of connection
         List<Catalog> catalogs = ConnectionHelper.getCatalogs(conn);
         List<Schema> schemas = ConnectionHelper.getSchema(conn);
-        if (catalogs.isEmpty() && schemas.isEmpty()) {
+        // MOD xqliu 2010-10-19 bug 16441: case insensitive
+        if ((catalogs.isEmpty() && schemas.isEmpty())
+                || (ConnectionHelper.getAllSchemas(conn).isEmpty() && (ConnectionUtils.isMssql(conn) || ConnectionUtils
+                        .isPostgresql(conn)))) {
+            // ~ 16441
             saveFlag = true;
             DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
             if (dbConn != null) {
@@ -1042,8 +1081,6 @@ public final class ConnectionUtils {
      * @return
      */
     public static MDMConnection fillMdmConnectionInformation(MDMConnection mdmConn) {
-        // fill name label and metadata
-        mdmConn = (MDMConnection) fillConnectionMetadataInformation(mdmConn);
         // fill database structure
         Properties properties = new Properties();
         properties.put(TaggedValueHelper.USER, mdmConn.getUsername());
@@ -1061,10 +1098,7 @@ public final class ConnectionUtils {
      * @return
      */
     public static DatabaseConnection fillDbConnectionInformation(DatabaseConnection dbConn) {
-        // fill name label and metadata
-        dbConn = (DatabaseConnection) fillConnectionMetadataInformation(dbConn);
         // fill database structure
-
         if (DatabaseConstant.XML_EXIST_DRIVER_NAME.equals(dbConn.getDriverClass())) { // xmldb(e.g eXist)
             IXMLDBConnection xmlDBConnection = new EXistXMLDBConnection(dbConn.getDriverClass(), dbConn.getURL());
             ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(), dbConn);
@@ -1072,6 +1106,12 @@ public final class ConnectionUtils {
             try {
                 boolean noStructureExists = ConnectionHelper.getAllCatalogs(dbConn).isEmpty()
                         && ConnectionHelper.getAllSchemas(dbConn).isEmpty();
+                // MOD xqliu 2010-10-19 bug 16441: case insensitive
+                if (ConnectionHelper.getAllSchemas(dbConn).isEmpty()
+                        && (ConnectionUtils.isMssql(dbConn) || ConnectionUtils.isPostgresql(dbConn))) {
+                    noStructureExists = true;
+                }
+                // ~ 16441
                 if (noStructureExists) { // do no override existing catalogs or schemas
                     dbConn = (DatabaseConnection) TalendCwmFactory.createDataProvider(createDBConnect(dbConn, false));
                 }
