@@ -59,6 +59,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
@@ -68,6 +69,7 @@ import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -1123,11 +1125,11 @@ public final class ConnectionUtils {
                 boolean noStructureExists = ConnectionHelper.getAllCatalogs(dbConn).isEmpty()
                         && ConnectionHelper.getAllSchemas(dbConn).isEmpty();
                 // MOD xqliu 2010-10-19 bug 16441: case insensitive
-                if (ConnectionHelper.getAllSchemas(dbConn).isEmpty()
-                        && (ConnectionUtils.isMssql(dbConn) || ConnectionUtils.isPostgresql(dbConn) || ConnectionUtils
-                                .isAs400(dbConn))) {
-                    noStructureExists = true;
-                }
+                // if (ConnectionHelper.getAllSchemas(dbConn).isEmpty()
+                // && (ConnectionUtils.isMssql(dbConn) || ConnectionUtils.isPostgresql(dbConn) || ConnectionUtils
+                // .isAs400(dbConn))) {
+                // noStructureExists = true;
+                // }
                 // ~ 16441
                 if (noStructureExists) { // do no override existing catalogs or schemas
                     dbConn = (DatabaseConnection) TalendCwmFactory.createDataProvider(createDBConnect(dbConn, false));
@@ -1251,5 +1253,52 @@ public final class ConnectionUtils {
             return eVersions.get(0).getVersionValue();
         }
         return null;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "retrieveColumn".
+     * 
+     * @param tdTable
+     * 
+     * retrieve sqlDataType if it have a name is "Null".
+     */
+    public static void retrieveColumn(TdTable tdTable) {
+        // List<MetadataColumn> columnList = tdTable.getColumns();
+        // if (columnList != null && columnList.size() > 0 && columnList.get(0) instanceof TdColumn) {
+        // TdColumn testColumn = ((TdColumn) columnList.get(0));
+        //            if (testColumn.getSqlDataType() == null || "NULL".equalsIgnoreCase(testColumn.getSqlDataType().getName())//$NON-NLS-1$
+        // && 0 == testColumn.getSqlDataType().getJavaDataType()) {
+        //
+        // if (tdTable != null) {
+        // Connection tempConnection = ConnectionHelper.getConnection(tdTable);
+        // if (tempConnection != null) {
+        // java.sql.Connection connection = JavaSqlFactory.createConnection(tempConnection).getObject();
+        // if (connection == null) {
+        // return;
+        // }
+        // for (Object colobj : columnList) {
+        // TdColumn tdColumn = (TdColumn) colobj;
+        //
+        // try {
+        // List<TdSqlDataType> newDataTypeList = DatabaseContentRetriever.getDataType(getName(CatalogHelper
+        // .getParentCatalog(tdTable)), getName(SchemaHelper.getParentSchema(tdTable)), tdTable
+        // .getName(), tdColumn.getName(), connection);
+        // if (newDataTypeList.size() > 0) {
+        // tdColumn.setSqlDataType(newDataTypeList.get(0));
+        // }
+        // } catch (SQLException e) {
+        // log.error(e, e);
+        // }
+        // }
+        // }
+        // ProxyRepositoryViewObject.save(tempConnection);
+        // }
+        // }
+        // }
+    }
+
+    private static String getName(ModelElement element) {
+        return element != null ? element.getName() : null;
     }
 }

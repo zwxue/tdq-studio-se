@@ -15,6 +15,7 @@ package org.talend.dq.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
@@ -22,8 +23,13 @@ import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.repository.model.ProxyRepositoryFactory;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC mzhao DB connection repository view object delegator.
@@ -54,6 +60,10 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
                 Item item = reposViewObj.getProperty().getItem();
                 if (!(item instanceof FolderItem)) {
                     DatabaseConnection connection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
+                    // Judge the structure of database connection, some of them which comes from TOS may be brocken.
+                    if (!isDBStructureCorrect(connection)) {
+                        continue;
+                    }
                     String connectionType = connection.getDatabaseType();
                     for (SupportDBUrlType dbType : SupportDBUrlType.values()) {
                         if (dbType.getDBKey().equals(connectionType)
@@ -73,4 +83,41 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
         return returnconnList;
     }
 
+    /**
+     * DOC mzhao Judge the structure of database connection, some of them which comes from TOS may be brocken.
+     */
+    private boolean isDBStructureCorrect(DatabaseConnection connection) {
+        List<Catalog> catalogs = ConnectionHelper.getCatalogs(connection);
+        List<Schema> schemas = ConnectionHelper.getSchema(connection);
+        // If the database has both catalog and schema (SQL Server).
+        if ((ConnectionHelper.getAllSchemas(connection).isEmpty() && (ConnectionUtils.isMssql(connection)
+                || ConnectionUtils.isPostgresql(connection) || ConnectionUtils.isAs400(connection)))) {
+            if (catalogs != null && catalogs.size() > 0) {
+                List<Schema> catSchemas = CatalogHelper.getSchemas(catalogs.get(0));
+                if (catSchemas != null && catSchemas.size() > 0) {
+                    if (StringUtils.isEmpty(catSchemas.get(0).getName())) {
+                        return Boolean.FALSE;
+                    }
+                }
+            }
+        }
+        // If the database has only catalogs (e.g MYSQL).
+        if (catalogs != null && catalogs.size() > 0) {
+            if (catalogs != null && catalogs.size() > 0) {
+                if (StringUtils.isEmpty(catalogs.get(0).getName())) {
+                    return Boolean.FALSE;
+                }
+            }
+        }
+        // If the database has only schema(Oracle).
+        if (schemas != null && schemas.size() > 0) {
+            if (schemas != null && schemas.size() > 0) {
+                if (StringUtils.isEmpty(schemas.get(0).getName())) {
+                    return Boolean.FALSE;
+                }
+            }
+        }
+        return Boolean.TRUE;
+
+    }
 }
