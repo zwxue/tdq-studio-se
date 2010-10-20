@@ -301,7 +301,7 @@ public class LogicalDeleteFileHandle {
                     if (!prop.eIsProxy()) {
                         URI uri = prop.eResource().getURI();
                         if (uri != null)
-                        EMFSharedResources.getInstance().unloadResource(prop.eResource().getURI().toString());
+                            EMFSharedResources.getInstance().unloadResource(uri.toString());
                     }
                     it.remove();
                     break;

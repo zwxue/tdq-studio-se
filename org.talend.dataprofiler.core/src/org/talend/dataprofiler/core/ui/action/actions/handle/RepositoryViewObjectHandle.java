@@ -14,9 +14,12 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import java.util.List;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.repository.model.ProxyRepositoryFactory;
@@ -78,11 +81,13 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         // MOD qiongli 2010-10-14,bug 15587,save property instance which is not from file to the static var.
         if (isPhysicalDelete()) {
             ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
-            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
+            // MOD qiongli 2010-10-19,bug 16349
+            Connection con = ((ConnectionItem) property.getItem()).getConnection();
+            if (con != null)
+                CWMPlugin.getDefault().removeAliasInSQLExplorer(con);
         } else {
             ProxyRepositoryFactory.getInstance().deleteObjectLogical(repositoryObject);
             // LogicalDeleteFileHandle.deleteLogical(file);
-            LogicalDeleteFileHandle.refreshDelPropertys(1, property);
         }
         return true;
     }
