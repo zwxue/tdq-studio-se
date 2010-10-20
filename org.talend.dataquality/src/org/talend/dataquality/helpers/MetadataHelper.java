@@ -32,6 +32,7 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DataminingType;
@@ -128,7 +129,9 @@ public final class MetadataHelper {
             if (ColumnHelper.isPrimaryKey(column) || ColumnHelper.isForeignKey(column)) {
                 return DataminingType.NOMINAL;
             } else {
-                return getDefaultDataminingType(column.getSqlDataType().getJavaDataType());
+                // MOD scorreia 2010-10-20 bug 16403 avoid NPE here
+                TdSqlDataType sqlDataType = column.getSqlDataType();
+                return (sqlDataType != null) ? getDefaultDataminingType(sqlDataType.getJavaDataType()) : DataminingType.OTHER;
             }
         } else {
             return DataminingType.get(contentType);
@@ -139,7 +142,7 @@ public final class MetadataHelper {
      * method "getDefaultDataminingType" gets the default type of the content of a column.
      * 
      * @param javaSqlType
-     * @return
+     * @return the datamining type (never null)
      */
     public static DataminingType getDefaultDataminingType(int javaSqlType) {
 
@@ -159,7 +162,7 @@ public final class MetadataHelper {
             return DataminingType.OTHER;
         }
 
-        return null;
+        return DataminingType.OTHER;
     }
 
     /**

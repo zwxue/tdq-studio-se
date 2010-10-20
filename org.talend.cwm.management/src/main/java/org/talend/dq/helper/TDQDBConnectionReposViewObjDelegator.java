@@ -17,9 +17,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
-import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -58,10 +58,13 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
                 // Register the Repository view objects by connection to be able to grab the Repository view object
                 // later.
                 Item item = reposViewObj.getProperty().getItem();
-                if (!(item instanceof FolderItem)) {
-                    DatabaseConnection connection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
+                // MOD scorreia 2010-10-20 avoid several class cast exceptions here
+                if (item instanceof DatabaseConnectionItem) {
+                    DatabaseConnectionItem dbConnectionItem = (DatabaseConnectionItem) item;
+                    Connection dbConn = dbConnectionItem.getConnection();
+                    DatabaseConnection connection = dbConn instanceof DatabaseConnection ? (DatabaseConnection) dbConn : null;
                     // Judge the structure of database connection, some of them which comes from TOS may be brocken.
-                    if (!isDBStructureCorrect(connection)) {
+                    if (connection == null || !isDBStructureCorrect(connection)) {
                         continue;
                     }
                     String connectionType = connection.getDatabaseType();

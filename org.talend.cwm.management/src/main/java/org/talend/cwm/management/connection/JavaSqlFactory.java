@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -108,8 +109,15 @@ public final class JavaSqlFactory {
         if (url == null) {
             rc.setMessage(Messages.getString("JavaSqlFactory.DatabaseConnectionNull")); //$NON-NLS-1$
             rc.setOk(false);
+            return rc; // MOD scorreia 2010-10-20 bug 16403 avoid NPE while importing items
         }
         String driverClassName = ConnectionUtils.getDriverClass(connection);
+        // MOD scorreia 2010-10-20 bug 16403 avoid NPE while importing items
+        if (StringUtils.isEmpty(driverClassName)) {
+            rc.setMessage("No classname given to find the driver");
+            rc.setOk(false);
+            return rc;
+        }
         Properties props = new Properties();
         // MOD xqliu 2010-08-06 bug 14593
         props.put(TaggedValueHelper.USER, ConnectionUtils.getUsernameDefault(connection));

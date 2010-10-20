@@ -54,6 +54,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.XmlElementHelper;
+import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
@@ -590,7 +591,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         String meName = meIndicator.getElementName();
         String typeName = "";
         if (meIndicator instanceof ColumnIndicator) {
-            typeName = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType().getName();
+            // MOD scorreia 2010-10-20 bug 16403 avoid NPE here
+            TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
+            typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";
         } else if (meIndicator instanceof XmlElementIndicator) {
             typeName = ((TdXmlElementType) meIndicator.getModelElement()).getJavaType();
         }
