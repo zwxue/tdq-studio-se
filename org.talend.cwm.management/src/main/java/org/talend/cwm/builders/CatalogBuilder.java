@@ -328,15 +328,16 @@ public class CatalogBuilder extends CwmBuilder {
 
     private void initializeSchemaLow() throws SQLException {
         // ADD xqliu 2010-03-03 feature 11412
-        String dbName = getDbConnectionParameter() == null ? null : getDbConnectionParameter().getDbName();
+        String dbName = dbConnectionParameter == null ? null : dbConnectionParameter.getDbName();
         // ~11412
         if (SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage().equals(dbms.getDbmsName())
                 && dbConnection instanceof DatabaseConnection) {
             // MOD klliu bug 15821 retrieveAllMetadataStr for Diff database
-            String otherParameter = getDbConnectionParameter().getOtherParameter() == null ? null
-                    : getDbConnectionParameter()
-                    .getOtherParameter().toUpperCase();
-            if (otherParameter != null && !getDbConnectionParameter().isRetrieveAllMetadata()) {
+            String otherParameter = null; // MOD scorreia 2010-10-20 bug 16562 avoid NPE
+            if (dbConnectionParameter != null && dbConnectionParameter.getOtherParameter() != null) {
+                otherParameter = dbConnectionParameter.getOtherParameter().toUpperCase();
+            }
+            if (otherParameter != null && !dbConnectionParameter.isRetrieveAllMetadata()) {
                 dbName = otherParameter;
             } else {
                 dbName = ((DatabaseConnection) dbConnection).getUsername().toUpperCase();
