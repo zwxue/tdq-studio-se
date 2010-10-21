@@ -77,6 +77,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
      */
     @Override
     protected boolean doExecute() throws Exception {
+        boolean ok = true;
         EMFUtil emfUtil = new EMFUtil();
 
         for (File file : fileList) {
@@ -84,7 +85,9 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
             if (file.isFile()) {
                 URI uri = URI.createFileURI(file.getAbsolutePath());
 
-                System.out.println("---------Translate " + uri.toString());
+                if (log.isDebugEnabled()) {
+                    log.debug("---------Translate " + uri.toString());
+                }
 
                 EObject eObject = null;
                 try {
@@ -102,45 +105,20 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                     }
                 } catch (Exception e) {
                     log.warn("Can't update property of file: " + file.getAbsolutePath(), e);
+                    ok = false;
                 }
 
                 if (eObject != null) {
                     if (eObject instanceof ModelElement) {
-                        ModelElement modelElement = (ModelElement) eObject;
-
-                        AElementPersistance writer = ElementWriterFactory.getInstance().create(uri.fileExtension());
-
-                        Property oldPropery = PropertyHelper.getProperty(modelElement);
-                        if (writer != null) {
-                            Property property = writer.initProperty(modelElement);
-
-                            if (oldPropery != null) {
-                                property.setId(oldPropery.getId());
-                                property.setAuthor(oldPropery.getAuthor());
-                                property.getItem().setState(oldPropery.getItem().getState());
-                            }
-
-                            if (file.getName().endsWith("ana")) {
-                                System.out.println("123");
-                            }
-
-                            String statePathStr = PropertyHelper.computePath(property, file);
-                            property.getItem().getState().setPath(statePathStr);
-
-                            URI propURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-
-                            Resource propResource = emfUtil.getResourceSet().createResource(propURI);
-                            propResource.getContents().add(property);
-                            propResource.getContents().add(property.getItem());
-                            propResource.getContents().add(property.getItem().getState());
-
-                            EMFUtil.saveResource(propResource);
-
-                        } else {
-                            log.warn("The property of " + modelElement.getName() + " is ignored.");
+                        try {
+                            saveObject(emfUtil, file, uri, eObject);
+                        } catch (Exception e) {
+                            log.error("Error when saving " + eObject + " in " + file + " with URI " + uri, e);
+                            ok = false;
                         }
                     } else {
                         log.warn("Can't get the model elment : " + eObject.toString());
+                        ok = false;
                     }
                 }
             }
@@ -148,7 +126,39 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
 
         emfUtil = null;
 
-        return true;
+        return ok;
+    }
+
+    private void saveObject(EMFUtil emfUtil, File file, URI uri, EObject eObject) {
+        ModelElement modelElement = (ModelElement) eObject;
+
+        AElementPersistance writer = ElementWriterFactory.getInstance().create(uri.fileExtension());
+
+        Property oldPropery = PropertyHelper.getProperty(modelElement);
+        if (writer != null) {
+            Property property = writer.initProperty(modelElement);
+
+            if (oldPropery != null) {
+                property.setId(oldPropery.getId());
+                property.setAuthor(oldPropery.getAuthor());
+                property.getItem().setState(oldPropery.getItem().getState());
+            }
+
+            String statePathStr = PropertyHelper.computePath(property, file);
+            property.getItem().getState().setPath(statePathStr);
+
+            URI propURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+            Resource propResource = emfUtil.getResourceSet().createResource(propURI);
+            propResource.getContents().add(property);
+            propResource.getContents().add(property.getItem());
+            propResource.getContents().add(property.getItem().getState());
+
+            EMFUtil.saveResource(propResource);
+
+        } else {
+            log.warn("The property of " + modelElement.getName() + " is ignored.");
+        }
     }
 
     /*

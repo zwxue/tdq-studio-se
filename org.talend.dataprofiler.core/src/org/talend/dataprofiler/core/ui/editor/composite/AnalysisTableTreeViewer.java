@@ -551,7 +551,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      * @return
      */
     private Object[] getOwnedWhereRuleFiles(TableIndicator tableIndicator, IFolder whereRuleFolder) {
-        ArrayList ret = new ArrayList();
+        ArrayList<IFile> ret = new ArrayList<IFile>();
         Indicator[] indicators = tableIndicator.getIndicators();
         for (Indicator indicator : indicators) {
             Object obj = indicator.getIndicatorDefinition();
@@ -581,7 +581,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         if (IndicatorEnum.WhereRuleIndicatorEnum.compareTo(type) == 0) {
             indicatorItem.setImage(0, ImageLib.getImage(ImageLib.DQ_RULE));
         }
-        indicatorItem.setText(0, label);
+        indicatorItem.setText(0, label != null ? label : "Unknown indicator");
 
         TreeEditor optionEditor = new TreeEditor(tree);
         Label optionLabel = new Label(tree, SWT.NONE);
