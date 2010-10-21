@@ -99,21 +99,25 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
     }
 
     /**
-     * add a prop instance to the static var
+     * add a prop instance to the static var.
      */
     public void handleLogicalDelete(Property prop) {
-        LogicalDeleteFileHandle.refreshDelPropertys(1, prop);
+        // MOD qiongli 2010-10-22,bug 16610
+        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true);
+        if (ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(prop) != null) {
+            LogicalDeleteFileHandle.refreshDelPropertys(1, prop);
+        }
     }
 
     /**
-     * remove prop instance in the static var
+     * remove prop instance in the static var.
      */
     public void handlePhysicalDelete(Property prop) {
         LogicalDeleteFileHandle.refreshDelPropertys(0, prop);
     }
 
     /**
-     * remove prop instance in the static var
+     * remove prop instance in the static var.
      */
     public void handleRestore(Property prop) {
         LogicalDeleteFileHandle.refreshDelPropertys(0, prop);
