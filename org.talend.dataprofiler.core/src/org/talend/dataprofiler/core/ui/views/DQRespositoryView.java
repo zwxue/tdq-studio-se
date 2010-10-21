@@ -94,6 +94,8 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.repository.RepositoryWorkUnit;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -119,10 +121,17 @@ public class DQRespositoryView extends CommonNavigator {
     public DQRespositoryView() {
         super();
 
-        DQStructureManager manager = DQStructureManager.getInstance();
+        final DQStructureManager manager = DQStructureManager.getInstance();
 
         if (manager.isNeedCreateStructure()) {
-            manager.createDQStructure();
+            ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(
+                    new RepositoryWorkUnit("Create DQ Repository structure") {
+
+                @Override
+                protected void run() {
+                    manager.createDQStructure();
+                }
+            });
         }
 
         if (manager.isNeedMigration()) {
