@@ -48,6 +48,7 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
 
     @Override
     protected boolean doExecute() throws Exception {
+        boolean ok = true;
 
         // Copy system indicators.
         DQStructureManager manager = DQStructureManager.getInstance();
@@ -66,21 +67,26 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
         Collection<Analysis> analyses = searchAllAnalysis(ResourceManager.getAnalysisFolder());
         AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
         for (Analysis ana : analyses) {
-            for (Indicator ind : ana.getResults().getIndicators()) {
-                updateIndDefinition(ind);
-                if (ind instanceof CompositeIndicator) {
-                    for (Indicator indLeave : IndicatorHelper.getIndicatorLeaves(ind)) {
-                        updateIndDefinition(indLeave);
+            try {
+                for (Indicator ind : ana.getResults().getIndicators()) {
+                    updateIndDefinition(ind);
+                    if (ind instanceof CompositeIndicator) {
+                        for (Indicator indLeave : IndicatorHelper.getIndicatorLeaves(ind)) {
+                            updateIndDefinition(indLeave);
+                        }
                     }
                 }
+                analysisWriter.save(ana);
+            } catch (Exception e) {
+                log.warn(e, e);
+                ok = false;
             }
-            analysisWriter.save(ana);
         }
         // Copy system indicator categories.
         ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME).delete(true, new NullProgressMonitor());
         DefinitionHandler.getInstance().copyDefinitionsIntoFolder(ResourceManager.getLibrariesFolder());
 
-        return true;
+        return ok;
     }
 
     private void updateIndDefinition(Indicator ind) {

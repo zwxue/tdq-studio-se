@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -94,57 +95,11 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
                 if (resource.isFile()
                         && resource.getName().toLowerCase().endsWith(FactoriesUtil.PROPERTIES_EXTENSION.toLowerCase())) {
 
-                    Property property = PropertyHelper.getProperty(resource);
-
-                    Item item = property.getItem();
-                    if (item instanceof TDQItem) {
-                        String fileName = ((TDQItem) item).getFilename();
-                        File theFile = new File(resource.getParent() + File.separator + fileName);
-
-                        File desFile = new File(resource.getParent() + File.separator
-                                + fileName.substring(0, fileName.lastIndexOf('.') + 1) + FactoriesUtil.ITEM_EXTENSION);
-                        theFile.renameTo(desFile);
-
-                        URI uri = URI.createFileURI(desFile.getAbsolutePath());
-
-                        Resource prvResource = new ResourceSetImpl().getResource(uri, true);
-
-                        if (prvResource != null) {
-                            Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(prvResource
-                                    .getContents());
-                            Iterator<Connection> it = tdDataProviders.iterator();
-
-                            Connection connection = null;
-                            while (it.hasNext()) {
-                                connection = it.next();
-                                break;
-                            }
-
-                            if (connection != null) {
-                                ConnectionItem connectionItem = null;
-
-                                if (connection instanceof DatabaseConnection) {
-                                    connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
-                                } else {
-                                    connectionItem = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
-                                }
-
-                                connectionItem.setConnection(connection);
-
-                                if (item.getState() != null) {
-                                    connectionItem.setState(item.getState());
-                                } else {
-                                    ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
-                                    connectionItem.setState(itemState);
-                                }
-                                property.setItem(connectionItem);
-                                property.eResource().getContents().add(connectionItem);
-                                ProxyRepositoryFactory.getInstance().save(property);
-                            }
-                        }
-
-                    } else {
-                        continue;
+                    try {
+                        handlePropertiesFile(resource);
+                    } catch (Exception e) {
+                        returnFlag = false;
+                        log.warn("Error when migrating resource " + resource.getAbsolutePath(), e);
                     }
 
                 }
@@ -167,6 +122,58 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
 
         }
         return returnFlag;
+    }
+
+    private void handlePropertiesFile(File resource) throws PersistenceException {
+        Property property = PropertyHelper.getProperty(resource);
+
+        Item item = property.getItem();
+        if (item instanceof TDQItem) {
+            String fileName = ((TDQItem) item).getFilename();
+            File theFile = new File(resource.getParent() + File.separator + fileName);
+
+            File desFile = new File(resource.getParent() + File.separator + fileName.substring(0, fileName.lastIndexOf('.') + 1)
+                    + FactoriesUtil.ITEM_EXTENSION);
+            theFile.renameTo(desFile);
+
+            URI uri = URI.createFileURI(desFile.getAbsolutePath());
+
+            Resource prvResource = new ResourceSetImpl().getResource(uri, true);
+
+            if (prvResource != null) {
+                Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(prvResource.getContents());
+                Iterator<Connection> it = tdDataProviders.iterator();
+
+                Connection connection = null;
+                while (it.hasNext()) {
+                    connection = it.next();
+                    break;
+                }
+
+                if (connection != null) {
+                    ConnectionItem connectionItem = null;
+
+                    if (connection instanceof DatabaseConnection) {
+                        connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+                    } else {
+                        connectionItem = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
+                    }
+
+                    connectionItem.setConnection(connection);
+
+                    if (item.getState() != null) {
+                        connectionItem.setState(item.getState());
+                    } else {
+                        ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+                        connectionItem.setState(itemState);
+                    }
+                    property.setItem(connectionItem);
+                    property.eResource().getContents().add(connectionItem);
+                    ProxyRepositoryFactory.getInstance().save(property);
+                }
+            }
+
+        }
     }
 
     private List<File> iteratorResource(File theFolder) {

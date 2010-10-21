@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -139,7 +138,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
                     analyses.add((Analysis) eResource.getContents().get(0));
                 }
             }
-        } catch (CoreException e) {
+        } catch (Exception e) {
             log.error(e);
         }
         return analyses;

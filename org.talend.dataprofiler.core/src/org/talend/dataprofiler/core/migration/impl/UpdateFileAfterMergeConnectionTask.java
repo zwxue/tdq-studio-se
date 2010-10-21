@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -189,59 +190,67 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         FilesUtils.getAllFilesFromFolder(parentFolder, fileList, nonPropertyFileFilter);
 
         for (File propFile : fileList) {
-
-            URI uri = URI.createFileURI(propFile.getAbsolutePath());
-
-            Resource resource = resourceSet.getResource(uri, true);
-
-            Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
-                    .getProperty());
-
-            if (property != null) {
-                Item item = property.getItem();
-                String connNameBofore = null;
-                String connNameAfter = null;
-                if (item instanceof ConnectionItem) {
-                    Connection conn = ((ConnectionItem) item).getConnection();
-                    connNameBofore = conn.eResource().getURI().trimFileExtension().lastSegment();
-
-                    String version = property.getVersion();
-                    if (version == null) {
-                        version = "0.1";
-                    }
-
-                    String label = conn.getName() + "_" + version;
-                    connNameAfter = label;
-                }
-
-                IPath path = new Path(item.getState().getPath());
-                if (ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(),
-                        ERepositoryObjectType.getItemType(item), path) == null) {
-                    ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.getItemType(item),
-                            path.removeLastSegments(1), path.lastSegment());
-                }
-
-                if (isWorksapcePath()) {
-                    ProxyRepositoryFactory.getInstance().create(item, path, true);
-
-                    if (item instanceof ConnectionItem) {
-                        Connection conn = ((ConnectionItem) item).getConnection();
-                        if (conn.eIsProxy()) {
-                            conn = (Connection) EObjectHelper.resolveObject(conn);
-                        }
-                        connNameAfter = conn.eResource().getURI().trimFileExtension().lastSegment();
-
-                    }
-                } else {
-                    copyFile(parentFolder, propFile, property, path, connNameAfter, folderMap);
-                }
-
-                if (connNameBofore != null && connNameAfter != null) {
-                    getReplaceStringMap().put(connNameBofore, connNameAfter);
-                }
+            try {
+                handlePropertiesFile(propFile, folderMap, parentFolder);
+            } catch (Exception e) {
+                log.warn(e, e);
             }
         }
 
+    }
+
+    private void handlePropertiesFile(File propFile, Map<File, File> folderMap, File parentFolder) throws PersistenceException,
+            IOException {
+        URI uri = URI.createFileURI(propFile.getAbsolutePath());
+
+        Resource resource = resourceSet.getResource(uri, true);
+
+        Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
+                .getProperty());
+
+        if (property != null) {
+            Item item = property.getItem();
+            String connNameBofore = null;
+            String connNameAfter = null;
+            if (item instanceof ConnectionItem) {
+                Connection conn = ((ConnectionItem) item).getConnection();
+                connNameBofore = conn.eResource().getURI().trimFileExtension().lastSegment();
+
+                String version = property.getVersion();
+                if (version == null) {
+                    version = "0.1";
+                }
+
+                String label = conn.getName() + "_" + version;
+                connNameAfter = label;
+            }
+
+            IPath path = new Path(item.getState().getPath());
+            if (ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(),
+                    ERepositoryObjectType.getItemType(item), path) == null) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.getItemType(item),
+                        path.removeLastSegments(1), path.lastSegment());
+            }
+
+            if (isWorksapcePath()) {
+                ProxyRepositoryFactory.getInstance().create(item, path, true);
+
+                if (item instanceof ConnectionItem) {
+                    Connection conn = ((ConnectionItem) item).getConnection();
+                    if (conn.eIsProxy()) {
+                        conn = (Connection) EObjectHelper.resolveObject(conn);
+                    }
+                    connNameAfter = conn.eResource().getURI().trimFileExtension().lastSegment();
+
+                }
+            } else {
+                copyFile(parentFolder, propFile, property, path, connNameAfter, folderMap);
+            }
+
+            if (connNameBofore != null && connNameAfter != null) {
+                getReplaceStringMap().put(connNameBofore, connNameAfter);
+            }
+        }
     }
 
     private void copyFile(File parentFolder, File propFile, Property property, IPath path, String connNameAfter,

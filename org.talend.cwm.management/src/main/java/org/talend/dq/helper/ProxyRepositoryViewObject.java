@@ -84,7 +84,19 @@ public final class ProxyRepositoryViewObject {
         List<Connection> connections = new ArrayList<Connection>();
         if (excludeRecycleBin) {
             for (Connection con : getAllMetadataConnections()) {
-                ConnectionItem item = (ConnectionItem) getRepositoryViewObject(con).getProperty().getItem();
+                IRepositoryViewObject repositoryViewObject = getRepositoryViewObject(con);
+                if (repositoryViewObject == null) {
+                    continue;
+                }
+                Property property = repositoryViewObject.getProperty();
+                if (property == null) {
+                    continue;
+                }
+                Item propItem = property.getItem();
+                if (propItem == null || !(propItem instanceof ConnectionItem)) {
+                    continue;
+                }
+                ConnectionItem item = (ConnectionItem) propItem;
                 if (null != item && !item.getState().isDeleted()) {
                     connections.add(con);
                 }
