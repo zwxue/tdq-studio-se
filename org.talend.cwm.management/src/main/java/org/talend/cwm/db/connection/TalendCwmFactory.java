@@ -185,7 +185,9 @@ public final class TalendCwmFactory {
             if ((dbname == null || "".equals(dbname)) && catalogs != null) {
                 Iterator<Catalog> iter = catalogs.iterator();
                 while (iter.hasNext()) {
-                    ((DatabaseConnection) dataProvider).setSID(iter.next().getName());
+                    String sid = iter.next().getName();
+                    ((DatabaseConnection) dataProvider).setSID(sid);
+                    connector.getDbConnectionParameter().setDbName(sid);
                     break;
                 }
             }
