@@ -171,7 +171,7 @@ public class FileSystemExportWriter implements IExportWriter {
      */
     private void writeSysFile(IFile file) throws IOException, CoreException {
         if (file.exists()) {
-            write(file.getLocation(), file.getFullPath());
+            write(file.getLocation(), file.getFullPath().makeRelative());
         }
     }
 

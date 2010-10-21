@@ -69,9 +69,7 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
             file.createNewFile();
         }
 
-        String lastSegment = getBasePath().removeFileExtension().lastSegment();
-        IPath newDestPath = new Path(lastSegment).append(desPath);
-        tempMap.put(resPath.toFile(), newDestPath.toOSString());
+        tempMap.put(resPath.toFile(), desPath.toOSString());
 
         // File file = getBasePath().toFile();
         // if (!file.exists()) {
