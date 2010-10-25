@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,6 +31,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -37,6 +40,7 @@ import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -68,12 +72,12 @@ public abstract class ModelElementTreeMenuProvider {
     }
 
     /**
-     * DOC qzhang Comment method "createTreeMenu".
+     * DOC qzhang Comment method "createTreeMenu". MOD qiongli bug 16252.Add a param of 'isColumnSetMenu'
      * 
      * @param newTree
      * @param containEdit
      */
-    public void createTreeMenu() {
+    public void createTreeMenu(boolean isColumnSetMenu) {
         Menu oldMenu = tree.getMenu();
         if (oldMenu != null && !oldMenu.isDisposed()) {
             oldMenu.dispose();
@@ -97,6 +101,19 @@ public abstract class ModelElementTreeMenuProvider {
                 }
 
             });
+
+            if (isColumnSetMenu) {
+                MenuItem createColumnAnalysisMenuItem = new MenuItem(menu, SWT.CASCADE);
+                createColumnAnalysisMenuItem.setText(DefaultMessagesImpl.getString("CreateColumnAnalysisAction.columnAnalysis")); //$NON-NLS-1$
+                createColumnAnalysisMenuItem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
+                createColumnAnalysisMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        createColumnAnalysis(tree);
+                    }
+                });
+            }
 
             MenuItem showLocationMenuItem = new MenuItem(menu, SWT.CASCADE);
             showLocationMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
@@ -490,6 +507,27 @@ public abstract class ModelElementTreeMenuProvider {
         }
 
         return true;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "createColumnAnalysis".bug 16252.
+     * 
+     * @param newTree
+     */
+    private void createColumnAnalysis(Tree newTree) {
+        TreeItem[] items = newTree.getSelection();
+        if (items.length > 0) {
+            TreePath[] paths = new TreePath[items.length];
+
+            for (int i = 0; i < items.length; i++) {
+                TdColumn tdColumn = (TdColumn) items[i].getData("COLUMN_INDICATOR_KEY");
+                paths[i] = new TreePath(new Object[] { tdColumn });
+            }
+            CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();
+            analysisAction.setSelection(new TreeSelection(paths));
+            analysisAction.run();
+        }
     }
 
 }

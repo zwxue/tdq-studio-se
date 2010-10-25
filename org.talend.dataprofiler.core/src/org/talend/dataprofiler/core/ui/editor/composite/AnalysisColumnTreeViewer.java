@@ -705,7 +705,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
                     tree.setMenu(null);
                 } else {
-                    new AnalysisColumnColumnMenuProvider(tree).createTreeMenu();
+                    new AnalysisColumnColumnMenuProvider(tree).createTreeMenu(Boolean.FALSE);
                 }
             }
 

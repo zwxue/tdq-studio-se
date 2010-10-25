@@ -561,7 +561,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                         // IndicatorEnum type = indicatorUnit.getType();
                         // con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
                         // || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0;
-                        new AnalysisColumnSetMenuProvider(tree).createTreeMenu();
+                        new AnalysisColumnSetMenuProvider(tree).createTreeMenu(Boolean.TRUE);
                     }
                 }
                 // createTreeMenu(tree, con);
