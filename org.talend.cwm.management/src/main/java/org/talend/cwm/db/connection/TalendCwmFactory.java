@@ -198,8 +198,18 @@ public final class TalendCwmFactory {
                 ((DatabaseConnection) dataProvider).setProductId(product);
                 // add the attribute of DbmsId for TOS
                 ((DatabaseConnection) dataProvider).setDbmsId(mapping);
+                // MOD yyi 2010-10-25 16497: Handel exception for Sybase DB
                 // add the attribute of DbVersion for TOS
-                int versionNum = connector.getConnection().getMetaData().getDatabaseMajorVersion();
+                int versionNum = 0;
+                try {
+                    versionNum = connector.getConnection().getMetaData().getDatabaseMajorVersion();
+                } catch (RuntimeException e) {
+                    // happens for Sybase for example
+                    if (log.isDebugEnabled()) {
+                        log.debug(e, e);
+                    }
+                }
+                // ~16497
                 String connectionDbType = ((DatabaseConnection) dataProvider).getDatabaseType();
                 if (connectionDbType == null) {
                     connectionDbType = connector.getDbConnectionParameter().getSqlTypeName();
