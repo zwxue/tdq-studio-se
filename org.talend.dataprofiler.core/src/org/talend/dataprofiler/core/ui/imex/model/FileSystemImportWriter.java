@@ -23,7 +23,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -32,35 +31,30 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
-import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.management.api.SoftwareSystemManager;
-import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
-import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -129,19 +123,7 @@ public class FileSystemImportWriter implements IImportWriter {
             IPath itemPath = PropertyHelper.getItemPath(property);
             IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
 
-            try {
-                itemFile.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
-            } catch (CoreException e) {
-                //
-            }
-
             if (itemFile.exists()) {
-                ModelElementFileFactory.getResourceFileMap(itemFile).clear();
-                URI itemURI = URI.createPlatformResourceURI(itemFile.getFullPath().toString(), false);
-                EMFSharedResources.getInstance().unloadResource(itemURI.toString());
-                URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-                EMFSharedResources.getInstance().unloadResource(propURI.toString());
-
                 record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());
             }
         }
@@ -201,21 +183,21 @@ public class FileSystemImportWriter implements IImportWriter {
 
         FilesUtils.copyFile(resFile, desFile);
 
-        try {
-            update(desFile);
-        } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-        }
+        update(desFile);
+
     }
 
     /**
      * DOC bZhou Comment method "update".
      * 
      * @param desFile
+     * 
      * @throws IOException
-     * @throws PersistenceException
+     * @throws CoreException
+     * 
+     * @throws Exception
      */
-    private void update(File desFile) throws IOException, PersistenceException {
+    private void update(File desFile) throws IOException, CoreException {
 
         String curProjectLabel = ResourceManager.getRootProjectName();
         if (!StringUtils.equals(projectName, curProjectLabel)) {
@@ -224,42 +206,44 @@ public class FileSystemImportWriter implements IImportWriter {
             FileUtils.writeStringToFile(desFile, content, "utf-8");
         }
 
-        if (desFile.getName().endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
-            Property property = PropertyHelper.getProperty(desFile);
+        if (desFile.exists()) {
 
-            User user = ReponsitoryContextBridge.getUser();
-            if (user != null) {
-                property.setAuthor(user);
-            }
+            IFile desIFile = ResourceService.file2IFile(desFile);
 
-            if (log.isDebugEnabled()) {
-                log.debug("property file for " + desFile + " = " + property.getLabel());
-            }
-            EMFSharedResources.getInstance().saveResource(property.eResource());
-        }
+            URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
+            Resource resource = EMFSharedResources.getInstance().reloadResource(uri);
 
-        if (desFile.getName().endsWith(FactoriesUtil.ITEM_EXTENSION)) {
-            File propFile = new Path(desFile.getAbsolutePath()).removeFileExtension().addFileExtension(
-                    FactoriesUtil.PROPERTIES_EXTENSION).toFile();
-            Property property = PropertyHelper.getProperty(propFile);
+            String fileExtension = desIFile.getFileExtension();
+            if (fileExtension.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
+                        .getProperty());
 
-            if (property != null && property.getItem() instanceof ConnectionItem) {
-                Connection connection = ((ConnectionItem) property.getItem()).getConnection();
+                if (property != null) {
+                    User user = ReponsitoryContextBridge.getUser();
+                    if (user != null && property.getAuthor() == null) {
+                        property.setAuthor(user);
+                    }
 
-                // FIXME scorreia 2010-10-15 do not update software system during the import process it will try to
-                // connect to all databases!!
-                // update software system
-                TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(connection);
-                if (softwareSystem != null) {
-                    ConnectionHelper.setSoftwareSystem(connection, softwareSystem);
+                    if (log.isDebugEnabled()) {
+                        log.debug("property file for " + desIFile + " = " + property.getLabel());
+                    }
+                    EMFSharedResources.getInstance().saveResource(property.eResource());
+
+                    Item item = property.getItem();
+
+                    EResourceConstant typedConstant = EResourceConstant.getTypedConstant(item);
+                    if (typedConstant == EResourceConstant.DB_CONNECTIONS || typedConstant == EResourceConstant.MDM_CONNECTIONS) {
+                        Connection connection = ((ConnectionItem) property.getItem()).getConnection();
+
+                        IRepositoryViewObject object = new RepositoryViewObject(property);
+                        ProxyRepositoryViewObject.registerReposViewObj(connection, object);
+                    }
+                } else {
+                    log.error("Loading property error: " + desIFile.getFullPath().toString());
                 }
-                // save
-                ProxyRepositoryFactory.getInstance().save(property.getItem(), true);
-
-                IRepositoryViewObject object = new RepositoryViewObject(property);
-                ProxyRepositoryViewObject.registerReposViewObj(connection, object);
             }
         }
+
     }
 
     /*
@@ -325,6 +309,9 @@ public class FileSystemImportWriter implements IImportWriter {
         if (definitionFile != null && definitionFile.exists()) {
             File defintionFile = defFile.getLocation().toFile();
             FilesUtils.copyFile(definitionFile, defintionFile);
+
+            URI uri = URI.createPlatformResourceURI(defFile.getFullPath().toString(), false);
+            EMFSharedResources.getInstance().unloadResource(uri.toString());
         }
 
         ResourceService.refreshStructure();

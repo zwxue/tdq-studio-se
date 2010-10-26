@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -38,7 +39,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -47,6 +47,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public class ItemRecord {
+
+    private static Logger log = Logger.getLogger(ItemRecord.class);
 
     private File file;
 
@@ -89,33 +91,34 @@ public class ItemRecord {
      * DOC bZhou Comment method "initialize".
      */
     private void initialize() {
-        URI fileURI = URI.createFileURI(file.getAbsolutePath());
+        URI itemURI = URI.createFileURI(file.getAbsolutePath());
+        URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-        elementEName = EElementEName.findENameByExt(fileURI.fileExtension());
+        elementEName = EElementEName.findENameByExt(itemURI.fileExtension());
 
         try {
             if (property == null) {
-                property = (Property) EObjectHelper.retrieveEObject(getPropertyPath(), PropertiesPackage.eINSTANCE.getProperty());
+                Resource resource = resourceSet.getResource(propURI, true);
+                property = (Property) EcoreUtil
+                        .getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
             }
 
             if (element == null && !isJRXml()) {
-                Resource resource = resourceSet.getResource(fileURI, true);
+                Resource resource = resourceSet.getResource(itemURI, true);
                 EList<EObject> contents = resource.getContents();
                 if (contents != null && !contents.isEmpty()) {
                     if (property.getItem() instanceof ConnectionItem) {
                         element = ((ConnectionItem) property.getItem()).getConnection();
                     } else {
                         EObject object = contents.get(0);
-                        if (object instanceof ModelElement) {
-                            element = (ModelElement) object;
-                        }
+                        element = (ModelElement) object;
                     }
                 }
             }
 
             computeDependencies();
         } catch (Exception e) {
-            addError("Can't initialize element [" + getName() + "] : " + e.getMessage());
+            log.error("Can't initialize element [" + getName() + "] : " + e.getMessage());
         }
     }
 

@@ -44,6 +44,7 @@ import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -166,14 +167,13 @@ public final class DefinitionHandler {
         // with the other files. Moreover, we need to be able to edit it when
         // needed (with default ".definition" editor
         // for development purposes)
-        EMFUtil util = new EMFUtil();
         Resource definitionsFile = null;
 
         IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(FILENAME);
         URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
         try { // load from workspace path
             // do not create it here if it does not exist.
-            definitionsFile = util.getResourceSet().getResource(uri, true);
+            definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
             if (log.isDebugEnabled()) {
                 log.debug("Definition of indicators loaded from " + uri);
             }
@@ -185,7 +185,7 @@ public final class DefinitionHandler {
         if (definitionsFile == null) {
             uri = URI.createPlatformPluginURI(PLUGIN_PATH, false);
             try { // load from plugin path
-                definitionsFile = util.getResourceSet().getResource(uri, true);
+                definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
                 if (log.isDebugEnabled()) {
                     log.debug("Definition of indicators loaded from " + uri);
                 }
@@ -198,7 +198,8 @@ public final class DefinitionHandler {
 
         if (definitionsFile == null) {
             // try to load from a local file
-            definitionsFile = util.getResourceSet().getResource(URI.createFileURI(".." + File.separator + PLUGIN_PATH), true);
+            definitionsFile = EMFSharedResources.getInstance().getResource(
+                    URI.createFileURI(".." + File.separator + PLUGIN_PATH), true);
         }
         if (definitionsFile == null) {
             log.error("No resource found at " + PLUGIN_PATH + " URI= " + uri);
@@ -249,9 +250,11 @@ public final class DefinitionHandler {
      */
     public Resource copyDefinitionsIntoFolder(URI destinationUri) {
         // MOD mzhao feature 13676,Reload from original place of .talend.definition file. 2010-07-09
-        Resource resource = getDefCategoryResourceFromFile();
+        URI uri = URI.createPlatformPluginURI(PLUGIN_PATH, false);
+        Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
         EMFUtil.changeUri(resource, destinationUri);
-        if (EMFUtil.saveResource(resource)) {
+
+        if (EMFSharedResources.getInstance().saveResource(resource)) {
             if (log.isInfoEnabled()) {
                 log.info("Indicator default definitions correctly saved in " + resource.getURI());
             }
@@ -421,9 +424,11 @@ public final class DefinitionHandler {
 
         for (IndicatorCategory indCategory : indicatorCategories) {
             CwmResource resource = (CwmResource) indCategory.eResource();
-            EObject object = resource.getEObject(categoryId);
-            if (object != null && DefinitionPackage.eINSTANCE.getIndicatorCategory().equals(object.eClass())) {
-                return (IndicatorCategory) object;
+            if (resource != null) {
+                EObject object = resource.getEObject(categoryId);
+                if (object != null && DefinitionPackage.eINSTANCE.getIndicatorCategory().equals(object.eClass())) {
+                    return (IndicatorCategory) object;
+                }
             }
         }
         return null;

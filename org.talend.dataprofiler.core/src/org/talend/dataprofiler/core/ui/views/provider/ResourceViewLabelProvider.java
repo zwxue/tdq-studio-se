@@ -92,13 +92,15 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 } else if (FactoriesUtil.isAnalysisFile(fileExtension)) {
                     // ADD qiongli 2010-8-9,feature 14252
                     Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
-                    ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
-                    analysisHandler.setAnalysis(analysis);
-                    if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
-                        if (!analysisHandler.getResultMetadata().isLastRunOk()) {
-                            image = ImageLib.createErrorIcon(image);
-                        } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
-                            image = ImageLib.createInvalidIcon(image);
+                    if (analysis != null) {
+                        ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
+                        analysisHandler.setAnalysis(analysis);
+                        if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
+                            if (!analysisHandler.getResultMetadata().isLastRunOk()) {
+                                image = ImageLib.createErrorIcon(image);
+                            } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
+                                image = ImageLib.createInvalidIcon(image);
+                            }
                         }
                     }
                 }

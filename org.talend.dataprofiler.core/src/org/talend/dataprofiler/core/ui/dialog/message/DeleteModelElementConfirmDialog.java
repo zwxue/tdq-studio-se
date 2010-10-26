@@ -133,14 +133,16 @@ public class DeleteModelElementConfirmDialog {
                     // continue;
                     // }
                     // ~
-                    impactNode = new ImpactNode(client);
-                    int index = impactNodes.indexOf(impactNode);
-                    if (index == -1) {
-                        impactNode.addRequireModelElement(children[i]);
-                        impactNodes.add(impactNode);
-                    } else {
-                        ImpactNode existNode = impactNodes.get(index);
-                        existNode.addRequireModelElement(children[i]);
+                    if (!client.eIsProxy()) {
+                        impactNode = new ImpactNode(client);
+                        int index = impactNodes.indexOf(impactNode);
+                        if (index == -1) {
+                            impactNode.addRequireModelElement(children[i]);
+                            impactNodes.add(impactNode);
+                        } else {
+                            ImpactNode existNode = impactNodes.get(index);
+                            existNode.addRequireModelElement(children[i]);
+                        }
                     }
                 }
             }

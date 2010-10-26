@@ -61,7 +61,7 @@ public abstract class ResourceFileMap {
      * @param file
      * @return
      */
-    public Resource getFileResource(IFile file) {
+    public synchronized Resource getFileResource(IFile file) {
         Resource res;
 
         if (exist(file)) {

@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -24,8 +25,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.repository.utils.XmiResourceManager;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -35,51 +39,18 @@ public final class EMFSharedResources {
 
     private static EMFSharedResources instance;
 
-    private final EMFUtil emfUtil = new EMFUtil();
+    private EMFUtil emfUtil;
 
-    private final ResourceSet resourceSet = emfUtil.getResourceSet();
+    private final XmiResourceManager resourceManager = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+            .getResourceManager();
+
+    private final ResourceSet resourceSet = resourceManager.resourceSet;
 
     private Resource softwareDeploymentResource = null;
 
-    /**
-     * Getter for softwareDeploymentResource.
-     * 
-     * @return the softwareDeploymentResource
-     */
-    public Resource getSoftwareDeploymentResource() {
-        if (softwareDeploymentResource == null) {
-            softwareDeploymentResource = initSoftwareDeploymentResource();
-        }
-        return this.softwareDeploymentResource;
-    }
-
-    public boolean saveSoftwareDeploymentResource(TdSoftwareSystem softwareSystem) {
-        getSoftwareDeploymentResource().getContents().add(softwareSystem);
-        return saveSoftwareDeploymentResource();
-    }
-
-    public boolean saveSoftwareDeploymentResource() {
-        return (softwareDeploymentResource != null) ? EMFUtil.saveSingleResource(softwareDeploymentResource) : false;
-    }
-
-    /**
-     * DOC scorreia Comment method "initSoftwareDeploymentResource".
-     * 
-     * @return
-     */
-    private Resource initSoftwareDeploymentResource() {
-        // MOD mzhao 2009-03-23,Feature 6066
-        String softwareFile = ".softwaresystem." + SoftwaredeploymentPackage.eNAME;
-        String softwarePath = ResourceManager.getLibrariesFolder().getFullPath().append(softwareFile).toString();
-        URI sUri = URI.createPlatformResourceURI(softwarePath, false); //$NON-NLS-1$
-        Resource resource = resourceSet.getResource(sUri, false);
-
-        if (resource == null) {
-            resource = resourceSet.createResource(sUri);
-        }
-
-        return resource;
-
+    private EMFSharedResources() {
+        emfUtil = new EMFUtil();
+        emfUtil.setResourceSet(resourceSet);
     }
 
     /**
@@ -95,13 +66,13 @@ public final class EMFSharedResources {
     }
 
     /**
-     * Getter for emfUtil.
+     * DOC bZhou Comment method "reloadResource".
      * 
-     * @return the emfUtil
-     * @deprecated do not use directly EMFUtil.
+     * @param uri
      */
-    private EMFUtil getEmfUtil() {
-        return this.emfUtil;
+    public synchronized Resource reloadResource(URI uri) {
+        unloadResource(uri.toString());
+        return getResource(uri, true);
     }
 
     /**
@@ -145,6 +116,11 @@ public final class EMFSharedResources {
         return resourceSet.getResource(uri, loadOnDemand);
     }
 
+    public Resource getResource(IFile file, boolean loadOnDemand) {
+        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+        return getResource(uri, loadOnDemand);
+    }
+
     /**
      * 
      * DOC mzhao Comment method "createResource".
@@ -171,7 +147,12 @@ public final class EMFSharedResources {
      * @return true when ok
      */
     public boolean saveResource(Resource resource) {
-        return EMFUtil.saveResource(resource);
+        try {
+            resourceManager.saveResource(resource);
+            return true;
+        } catch (PersistenceException e) {
+            return false;
+        }
     }
 
     /**
@@ -218,7 +199,7 @@ public final class EMFSharedResources {
      * TODO rli create other methods in this class when needed.
      */
     public static EMFUtil getSharedEmfUtil() {
-        return getInstance().getEmfUtil();
+        return getInstance().emfUtil;
     }
 
     /**
@@ -234,5 +215,59 @@ public final class EMFSharedResources {
         EObject newObject = EcoreUtil.copy(oldObject);
 
         return newObject;
+    }
+
+    public ResourceSet getResourceSet() {
+        return resourceSet;
+    }
+
+    /**
+     * Getter for softwareDeploymentResource.
+     * 
+     * @return the softwareDeploymentResource
+     */
+    public Resource getSoftwareDeploymentResource() {
+        if (softwareDeploymentResource == null) {
+            softwareDeploymentResource = initSoftwareDeploymentResource();
+        }
+        return this.softwareDeploymentResource;
+    }
+
+    public boolean saveSoftwareDeploymentResource(TdSoftwareSystem softwareSystem) {
+        getSoftwareDeploymentResource().getContents().add(softwareSystem);
+        return saveSoftwareDeploymentResource();
+    }
+
+    public boolean saveSoftwareDeploymentResource() {
+        return (softwareDeploymentResource != null) ? EMFUtil.saveSingleResource(softwareDeploymentResource) : false;
+    }
+
+    /**
+     * DOC scorreia Comment method "initSoftwareDeploymentResource".
+     * 
+     * @return
+     */
+    private Resource initSoftwareDeploymentResource() {
+        // MOD mzhao 2009-03-23,Feature 6066
+        String softwareFile = ".softwaresystem." + SoftwaredeploymentPackage.eNAME;
+        String softwarePath = ResourceManager.getLibrariesFolder().getFullPath().append(softwareFile).toString();
+        URI sUri = URI.createPlatformResourceURI(softwarePath, false); //$NON-NLS-1$
+        Resource resource = resourceSet.getResource(sUri, false);
+
+        if (resource == null) {
+            resource = resourceSet.createResource(sUri);
+        }
+
+        return resource;
+
+    }
+
+    public void changeUri(Resource resource, URI destinationUri) {
+        URI uri = resource.getURI();
+        URI newUri = destinationUri.appendSegment(uri.lastSegment());
+
+        // unloadResource(newUri.toString());
+
+        resource.setURI(newUri);
     }
 }
