@@ -1111,7 +1111,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             for (TaggedValue value : ic.getTaggedValue()) {
                 if ("Purpose".equals(value.getTag())) {
                     purposeText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue();
-                } else if (DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Descript").equals(value.getTag())) { //$NON-NLS-1$
+                } else if ("Description".equals(value.getTag())) { //$NON-NLS-1$
                     descriptionText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description")
                             + value.getValue();
                 }
@@ -1130,7 +1130,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Composite compoDetail = new Composite(composite, SWT.NONE);
         compoDetail.setLayout(new GridLayout(1, false));
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-        data.heightHint = 60;
+        data.heightHint = 150;
         data.widthHint = 300;
         compoDetail.setLayoutData(data);
 
