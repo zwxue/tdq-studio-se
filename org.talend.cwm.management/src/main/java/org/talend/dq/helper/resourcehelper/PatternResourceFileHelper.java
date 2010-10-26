@@ -161,7 +161,8 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
     private Pattern retirePattern(Resource fileResource) {
         EList<EObject> contents = fileResource.getContents();
         if (contents.isEmpty()) {
-            log.error("No content in " + fileResource);
+            // log.error("No content in " + fileResource);
+            log.info("No content in " + fileResource);
         }
         if (log.isDebugEnabled()) {
             log.debug("Nb elements in contents " + contents.size());
