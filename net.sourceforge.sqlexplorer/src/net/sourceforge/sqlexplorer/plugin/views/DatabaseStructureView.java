@@ -365,28 +365,28 @@ public class DatabaseStructureView extends ViewPart {
      * @param selection
      */
     public void setSessionSelectionNode(MetaDataSession session, ISelection selection) {
-         // MOD qiongli bug 13093,delete the condition :'if (_tabFolder == null)'
-		try {
-			addSession(session);
-		} catch (SQLCannotConnectException e) {
-			e.printStackTrace();
-		}
+        // MOD qiongli bug 13093,delete the condition :'if (_tabFolder == null)'
+        try {
+            addSession(session);
+        } catch (SQLCannotConnectException e) {
+            e.printStackTrace();
+        }
 
-		CTabItem item = _tabFolder.getSelection();
-		if (item != null) {
-			TabData tabData = (TabData) item.getData();
-			if (tabData != null) {
-				// MOD qiongli bug 13093 ,2010-7-2
-				if (tabData.session.getUser() != session.getUser()) {
-					CTabItem items[] = _tabFolder.getItems();
-					for (CTabItem it : items) {
-						tabData = (TabData) it.getData();
-						if (tabData.session.getUser() == session.getUser()) {
-							_tabFolder.setSelection(it);
-							break;
-						}
-					}
-				}
+        CTabItem item = _tabFolder.getSelection();
+        if (item != null) {
+            TabData tabData = (TabData) item.getData();
+            if (tabData != null) {
+                // MOD qiongli bug 13093 ,2010-7-2
+                if (tabData.session.getUser() != session.getUser()) {
+                    CTabItem items[] = _tabFolder.getItems();
+                    for (CTabItem it : items) {
+                        tabData = (TabData) it.getData();
+                        if (tabData.session.getUser() == session.getUser()) {
+                            _tabFolder.setSelection(it);
+                            break;
+                        }
+                    }
+                }
                 // ~
                 tabData.treeViewer.setSelection(selection);
             }
@@ -518,8 +518,9 @@ public class DatabaseStructureView extends ViewPart {
                 if (detailView == null) {
                     return;
                 }
-
-                if (_tabFolder == null || _tabFolder.getItemCount() == 0 || _tabFolder.getSelectionIndex() < 0) {
+                // MOD qiongli 2010-10-27,bug 16394.add the condition of '_tabFolder.isDisposed()'
+                if (_tabFolder == null || _tabFolder.getItemCount() == 0 || _tabFolder.getSelectionIndex() < 0
+                        || _tabFolder.isDisposed()) {
                     return;
                 }
 
@@ -557,5 +558,27 @@ public class DatabaseStructureView extends ViewPart {
             if (session.getUser().compareTo(user) == 0)
                 return true;
         return false;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "closeCurrentCabItem".bug 16394.
+     */
+    public void closeCurrentCabItem(String conName) {
+        if (_tabFolder == null || _tabFolder.isDisposed() || conName == null)
+            return;
+        CTabItem items[] = _tabFolder.getItems();
+        for (CTabItem item : items) {
+            if (!item.isDisposed() && item.getText().startsWith(conName + "/")) {
+                TabData tabData = (TabData) item.getData();
+                _allSessions.remove(tabData.session);
+                item.dispose();
+                this.dispose();
+                _filterAction.setEnabled(!_allSessions.isEmpty());
+                _tabFolder.layout();
+                _tabFolder.redraw();
+                break;
+            }
+        }
     }
 }

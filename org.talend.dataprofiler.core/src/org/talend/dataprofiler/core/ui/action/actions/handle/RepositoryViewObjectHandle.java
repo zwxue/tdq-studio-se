@@ -14,6 +14,9 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import java.util.List;
 
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
+
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -79,15 +82,19 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         }
         // MOD qiongli 2010-9-10, bug 14469,15515
         // MOD qiongli 2010-10-14,bug 15587,save property instance which is not from file to the static var.
+        // MOD qiongli 2010-10-19,bug 16349
+        Connection con = ((ConnectionItem) property.getItem()).getConnection();
         if (isPhysicalDelete()) {
-            ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
-            // MOD qiongli 2010-10-19,bug 16349
-            Connection con = ((ConnectionItem) property.getItem()).getConnection();
-            if (con != null)
+            if (con != null) {
                 CWMPlugin.getDefault().removeAliasInSQLExplorer(con);
+            }
+            ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
         } else {
             ProxyRepositoryFactory.getInstance().deleteObjectLogical(repositoryObject);
-            // LogicalDeleteFileHandle.deleteLogical(file);
+            DatabaseStructureView dsv = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
+            if (con != null && dsv != null) {
+                dsv.closeCurrentCabItem(con.getLabel());
+            }
         }
         return true;
     }
