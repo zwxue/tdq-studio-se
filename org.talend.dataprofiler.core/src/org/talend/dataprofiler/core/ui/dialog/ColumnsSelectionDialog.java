@@ -42,10 +42,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -644,6 +646,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             EObject eObj = (EObject) inputElement;
             ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObj);
             if (columnSet != null) {
+                if (columnSet instanceof MetadataTable)
+                    ConnectionUtils.retrieveColumn((MetadataTable) columnSet);
                 TdColumn[] columns = EObjectHelper.getColumns(columnSet);
                 if (columns.length <= 0) {
                     Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);

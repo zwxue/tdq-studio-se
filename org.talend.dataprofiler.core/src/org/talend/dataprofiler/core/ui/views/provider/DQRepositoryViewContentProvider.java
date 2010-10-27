@@ -24,6 +24,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -82,14 +83,19 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             // Currently we only care about connection Item.
             Item connItem = conn.getProperty().getItem();
             if (connItem instanceof ConnectionItem) {
-                return ConnectionUtils.fillConnectionInformation(((ConnectionItem) connItem).getConnection()).getDataPackage()
-                        .toArray();
+                return ComparatorsFactory.sort(ConnectionUtils.fillConnectionInformation(
+                        ((ConnectionItem) connItem).getConnection()).getDataPackage().toArray(),
+                        ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             }
         } else if (parentElement instanceof IFolderNode) {
             IFolderNode folerNode = (IFolderNode) parentElement;
             folerNode.loadChildren();
             if (folerNode.getChildren() == null) {
                 return new Object[0];
+            }
+            Object tdObject = folerNode.getParent();
+            if (tdObject instanceof MetadataTable) {
+                ConnectionUtils.retrieveColumn((MetadataTable) tdObject);
             }
             if (folerNode.getChildrenType() == IFolderNode.MODELELEMENT_TYPE) {
                 return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
@@ -194,4 +200,5 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     private boolean checkLeaf(EObject eobject) {
         return !(eobject instanceof TdColumn || eobject instanceof IndicatorDefinition || eobject instanceof RegularExpression);
     }
+
 }
