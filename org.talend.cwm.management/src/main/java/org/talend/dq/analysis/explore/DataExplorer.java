@@ -222,8 +222,10 @@ public abstract class DataExplorer implements IDataExplorer {
         String fromClause = getFromClause();
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         String table = getFullyQualifiedTableName(column);
-        return " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in() //$NON-NLS-1$
+        // MOD qiongli 2010-10-28.bug 16658 ,add it if has data filter.
+        String queryStr = " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in() //$NON-NLS-1$
                 + inBrackets("SELECT " + columnName + fromClause); //$NON-NLS-1$
+        return fromClause.contains(dbmsLanguage.where()) ? queryStr + dbmsLanguage.and() + getDataFilterClause() : queryStr;
     }
 
     protected String getDistinctValuesStatement(String columnName) {
