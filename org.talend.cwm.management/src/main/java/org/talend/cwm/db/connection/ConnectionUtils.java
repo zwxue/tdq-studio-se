@@ -38,6 +38,7 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
@@ -46,6 +47,8 @@ import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -54,12 +57,17 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.TalendException;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseConstant;
+import org.talend.cwm.management.connection.DatabaseContentRetriever;
+import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
@@ -842,7 +850,7 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC zshen Comment method "setPassword".
+     * DOC zshen Comment method "setName".
      * 
      * @param conn
      * @param password
@@ -850,14 +858,15 @@ public final class ConnectionUtils {
     public static void setName(Connection conn, String name) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
         if (dbConn != null) {
-            dbConn.setName(name);
             ProxyRepositoryViewObject.getRepositoryViewObject(conn).getProperty().setLabel(name);
-
+            dbConn.setName(name);
+            dbConn.setLabel(name);
         }
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
-            mdmConn.setName(name);
             ProxyRepositoryViewObject.getRepositoryViewObject(mdmConn).getProperty().setLabel(name);
+            mdmConn.setName(name);
+            mdmConn.setLabel(name);
         }
     }
 
@@ -1263,42 +1272,69 @@ public final class ConnectionUtils {
      * 
      * retrieve sqlDataType if it have a name is "Null".
      */
-    public static void retrieveColumn(TdTable tdTable) {
-        // List<MetadataColumn> columnList = tdTable.getColumns();
-        // if (columnList != null && columnList.size() > 0 && columnList.get(0) instanceof TdColumn) {
-        // TdColumn testColumn = ((TdColumn) columnList.get(0));
-        //            if (testColumn.getSqlDataType() == null || "NULL".equalsIgnoreCase(testColumn.getSqlDataType().getName())//$NON-NLS-1$
-        // && 0 == testColumn.getSqlDataType().getJavaDataType()) {
-        //
-        // if (tdTable != null) {
-        // Connection tempConnection = ConnectionHelper.getConnection(tdTable);
-        // if (tempConnection != null) {
-        // java.sql.Connection connection = JavaSqlFactory.createConnection(tempConnection).getObject();
-        // if (connection == null) {
-        // return;
-        // }
-        // for (Object colobj : columnList) {
-        // TdColumn tdColumn = (TdColumn) colobj;
-        //
-        // try {
-        // List<TdSqlDataType> newDataTypeList = DatabaseContentRetriever.getDataType(getName(CatalogHelper
-        // .getParentCatalog(tdTable)), getName(SchemaHelper.getParentSchema(tdTable)), tdTable
-        // .getName(), tdColumn.getName(), connection);
-        // if (newDataTypeList.size() > 0) {
-        // tdColumn.setSqlDataType(newDataTypeList.get(0));
-        // }
-        // } catch (SQLException e) {
-        // log.error(e, e);
-        // }
-        // }
-        // }
-        // ProxyRepositoryViewObject.save(tempConnection);
-        // }
-        // }
-        // }
+    public static void retrieveColumn(MetadataTable tdTable) {
+        List<MetadataColumn> columnList = tdTable.getColumns();
+        if (columnList != null && columnList.size() > 0 && columnList.get(0) instanceof TdColumn) {
+            TdColumn tempColumn = ((TdColumn) columnList.get(0));
+            if (tempColumn.getSqlDataType() == null || "NULL".equalsIgnoreCase(tempColumn.getSqlDataType().getName())//$NON-NLS-1$
+                    && 0 == tempColumn.getSqlDataType().getJavaDataType()) {
+
+                if (tdTable != null) {
+                    Connection tempConnection = ConnectionHelper.getConnection(tempColumn);
+                    if (tempConnection != null) {
+                        java.sql.Connection connection = JavaSqlFactory.createConnection(tempConnection).getObject();
+                        if (connection == null) {
+                            return;
+                        }
+                        for (Object colobj : columnList) {
+                            TdColumn tdColumn = (TdColumn) colobj;
+
+                            try {
+                                List<TdSqlDataType> newDataTypeList = DatabaseContentRetriever.getDataType(getName(CatalogHelper
+                                        .getParentCatalog(tdTable)), getName(SchemaHelper.getParentSchema(tdTable)), tdTable
+                                        .getName(), tdColumn.getName(), connection);
+                                if (newDataTypeList.size() > 0) {
+                                    tdColumn.setSqlDataType(newDataTypeList.get(0));
+                                }
+                            } catch (SQLException e) {
+                                log.error(e, e);
+                            }
+                        }
+                    }
+                    ProxyRepositoryViewObject.save(tempConnection);
+                }
+            }
+        }
+    }
+
+    /**
+     * DOC zshen Comment method "fillAttributeBetweenConnection".
+     * 
+     * @param target
+     * @param source
+     */
+    public static void fillAttributeBetweenConnection(Connection target, Connection source) {
+        if (target == null || source == null) {
+            return;
+        }
+        target.setName(source.getName());
+        target.setLabel(source.getLabel());
+        MetadataHelper.setPurpose(MetadataHelper.getPurpose(source), target);
+        MetadataHelper.setDescription(MetadataHelper.getDescription(source), target);
+        MetadataHelper.setAuthor(target, MetadataHelper.getAuthor(source));
+        // MetadataHelper.setVersion(versionText.getText(), currentModelElement);
+        MetadataHelper.setDevStatus(target, MetadataHelper.getDevStatus(source));
+        ConnectionUtils.setName(target, source.getName());
+        ConnectionUtils.setUsername(target, ConnectionUtils.getUsername(source));
+        ConnectionUtils.setPassword(target, ConnectionUtils.getPassword(source));
+        ConnectionUtils.setURL(target, ConnectionUtils.getURL(source));
     }
 
     private static String getName(ModelElement element) {
-        return element != null ? element.getName() : null;
+        String name = element == null ? null : element.getName();
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        return name;
     }
 }
