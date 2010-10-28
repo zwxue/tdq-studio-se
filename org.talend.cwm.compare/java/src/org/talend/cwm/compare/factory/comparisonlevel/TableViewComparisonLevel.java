@@ -31,6 +31,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -47,7 +48,6 @@ import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.objectmodel.core.Package;
@@ -82,7 +82,9 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         if (oldDataProvider != null && oldDataProvider.eIsProxy()) {
             oldDataProvider = (Connection) EObjectHelper.resolveObject(oldDataProvider);
         }
-        IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
+        // MOD klliu bug 16503 201-10-28 Attention,we will not use PrvResourceFileHelper and instead of WorkspaceUtils
+        // in the application,except migratory task
+        IFile findCorrespondingFile = WorkspaceUtils.getModelElementResource(oldDataProvider);
         if (findCorrespondingFile == null) {
 
             throw new ReloadCompareException(DefaultMessagesImpl.getString(
