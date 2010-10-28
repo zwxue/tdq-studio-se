@@ -112,6 +112,9 @@ public class SubelementCompareAction extends Action {
             if (selectedElement instanceof ColumnSet) {
                 Package parentPackage = (Package) ((IFolderNode) selectedOjbect).getParent();
                 Package originPackage = parentPackage;
+                if (originPackage.eIsProxy()) {
+                    originPackage = (Package) EObjectHelper.resolveObject(originPackage);
+                }
                 PackageHelper.removeColumnSet((ColumnSet) selectedElement, originPackage);
                 EMFSharedResources.getInstance().saveResource(originPackage.eResource());
             }
