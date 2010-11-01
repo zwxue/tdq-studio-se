@@ -19,9 +19,9 @@ import org.apache.axis.components.net.TransportClientProperties;
 
 public class TransportClientPropertiesFactory {
 
-    private static HashMap cache = new HashMap();
+    private static HashMap<String, TransportClientProperties> cache = new HashMap<String, TransportClientProperties>();
 
-    private static HashMap defaults = new HashMap();
+    private static HashMap<String, Class<?>> defaults = new HashMap<String, Class<?>>();
 
     static {
         defaults.put("http", DefaultHTTPTransportClientProperties.class); //$NON-NLS-1$
@@ -32,7 +32,7 @@ public class TransportClientPropertiesFactory {
         TransportClientProperties tcp = (TransportClientProperties) cache.get(protocol);
 
         if (tcp == null) {
-            tcp = (TransportClientProperties) AxisProperties.newInstance(TransportClientProperties.class, (Class) defaults
+            tcp = (TransportClientProperties) AxisProperties.newInstance(TransportClientProperties.class, (Class<?>) defaults
                     .get(protocol));
 
             if (tcp != null) {

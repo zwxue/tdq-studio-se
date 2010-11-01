@@ -36,15 +36,15 @@ public class EcosystemSocketFactory implements SocketFactory {
     public static String CONNECT_TIMEOUT = "axis.client.connect.timeout"; //$NON-NLS-1$
 
     /** attributes */
-    protected Hashtable attributes = null;
+    protected Hashtable<String, String> attributes = null;
 
     private static boolean plain;
 
-    private static Class inetClass;
+    private static Class<?> inetClass;
 
-    private static Constructor inetConstructor;
+    private static Constructor<?> inetConstructor;
 
-    private static Constructor socketConstructor;
+    private static Constructor<?> socketConstructor;
 
     private static Method connect;
 
@@ -65,7 +65,7 @@ public class EcosystemSocketFactory implements SocketFactory {
      * 
      * @param attributes
      */
-    public EcosystemSocketFactory(Hashtable attributes) {
+    public EcosystemSocketFactory(Hashtable<String, String> attributes) {
         this.attributes = attributes;
     }
 

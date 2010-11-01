@@ -1,11 +1,9 @@
 package org.talend.dataprofiler.ecos;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
-import org.talend.dataprofiler.ecos.pref.PreferenceConstants;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -36,8 +34,6 @@ public class EcosPlugin extends Plugin {
         super.start(context);
         plugin = this;
 
-        initEcosTimeout();
-
         initProxyService();
     }
 
@@ -49,19 +45,6 @@ public class EcosPlugin extends Plugin {
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         super.stop(context);
-    }
-
-    /**
-     * DOC bZhou Comment method "initEcosTimeout".
-     */
-    private void initEcosTimeout() {
-        String defaultString = getPluginPreferences().getString(PreferenceConstants.ECOS_TIME_OUT_VALUE);
-        if (StringUtils.isEmpty(defaultString)) {
-            getPluginPreferences().setValue(PreferenceConstants.ECOS_TIME_OUT_VALUE, EcosConstants.DEFAULT_TIME_OUT_VALUE);
-            if (getPluginPreferences().needsSaving()) {
-                savePluginPreferences();
-            }
-        }
     }
 
     /**

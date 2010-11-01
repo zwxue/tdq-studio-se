@@ -43,7 +43,6 @@ import org.talend.dataprofiler.ecos.model.RevisionInfo;
 import org.talend.dataprofiler.ecos.model.VersionInfo;
 import org.talend.dataprofiler.ecos.model.impl.EcosCategory;
 import org.talend.dataprofiler.ecos.model.impl.Revision;
-import org.talend.dataprofiler.ecos.pref.PreferenceConstants;
 import org.talend.dataprofiler.ecos.proxy.EcosystemProxyAdapter;
 
 /**
@@ -65,14 +64,7 @@ public abstract class EcosystemService {
 
     private static MultiValueMap versionMap = new MultiValueMap();
 
-    private static int TIMEOUT;
-
-    static {
-        // MOD mzhao bug:16496
-        //        System.setProperty("axis.socketFactory", TDQEcosystemSocketFactory.class.getName()); //$NON-NLS-1$
-        TIMEOUT = EcosPlugin.getDefault().getPluginPreferences().getInt(PreferenceConstants.ECOS_TIME_OUT_VALUE);
-        log.info("Setting of ecos time-out: " + TIMEOUT + "ms");
-    }
+    private static int TIMEOUT = 10000;
 
     /**
      * Make sure that the version match x.x.x or x.x.xMx or x.x.xRCx, where x are all digit.
@@ -112,6 +104,7 @@ public abstract class EcosystemService {
         return version;
     }
 
+    @SuppressWarnings("unchecked")
     public static String[] getVersionList() {
         versionMap.clear();
         try {
@@ -144,13 +137,13 @@ public abstract class EcosystemService {
         return new String[0];
     }
 
-    public static List parseJsonObject(String jsonContent, Class clazz) throws Exception {
+    public static <T> List<T> parseJsonObject(String jsonContent, Class<T> clazz) throws Exception {
         // need factory for creating parser to use
         JsonFactory jf = new JsonFactory();
-        List result = (List) new JavaTypeMapper().read(jf.createJsonParser(new StringReader(jsonContent)));
-        List objList = new ArrayList(result.size());
+        List<?> result = (List<?>) new JavaTypeMapper().read(jf.createJsonParser(new StringReader(jsonContent)));
+        List<T> objList = new ArrayList<T>(result.size());
         for (int i = 0; i < result.size(); i++) {
-            Object obj = clazz.newInstance();
+            T obj = clazz.newInstance();
             Object source = result.get(i);
             BeanUtils.copyProperties(obj, source);
             objList.add(obj);
@@ -222,7 +215,7 @@ public abstract class EcosystemService {
     public static List<IEcosCategory> getCategoryList(String version) throws Exception {
 
         String jsonContent = sendGetRequest(CATEGORY_LIST_URL);
-        List<IEcosCategory> categorys = parseJsonObject(jsonContent, EcosCategory.class);
+        List<IEcosCategory> categorys = parseJsonObject(jsonContent, IEcosCategory.class);
         if (categorys != null) {
             for (IEcosCategory category : categorys) {
                 ((EcosCategory) category).setVersion(version);
@@ -247,7 +240,7 @@ public abstract class EcosystemService {
             }
         }
 
-        return Collections.EMPTY_LIST;
+        return new ArrayList<RevisionInfo>();
     }
 
     /**

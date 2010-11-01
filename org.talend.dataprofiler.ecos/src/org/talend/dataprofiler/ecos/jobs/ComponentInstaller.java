@@ -33,7 +33,6 @@ public class ComponentInstaller {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public static File unzip(String zipFile, String targetFolder) throws Exception {
 
         ZipFile zip = new ZipFile(zipFile);
