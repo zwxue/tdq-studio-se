@@ -22,7 +22,7 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
  * 
  * Factory to create the record matchers.
  */
-public class RecordMatcherFactory {
+public final class RecordMatcherFactory {
 
     private static List<String> labels = new ArrayList<String>();
 

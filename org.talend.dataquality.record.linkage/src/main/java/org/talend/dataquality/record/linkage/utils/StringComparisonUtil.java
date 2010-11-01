@@ -18,7 +18,7 @@ package org.talend.dataquality.record.linkage.utils;
  * 
  * 
  */
-public class StringComparisonUtil {
+public final class StringComparisonUtil {
 
     /**
      * maximum prefix length to use.

@@ -27,12 +27,12 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
  */
 public class SimpleRecordMatcherTest extends TestCase {
 
-    public static final String[][] records1 = { { "seb", "talend", "suresnes" }, { "seb", "talend", "suresns" },
+    public static final String[][] RECORDS1 = { { "seb", "talend", "suresnes" }, { "seb", "talend", "suresns" },
             { "seb", "tlend", "sursnes" }, { "sebas", "taland", "suresnes" } };
 
-    public static final String[][] records2 = { { "seb", "tlend", "sursnes" }, { "sebas", "taland", "suresnes" }, };
+    public static final String[][] RECORDS2 = { { "seb", "tlend", "sursnes" }, { "sebas", "taland", "suresnes" }, };
 
-    public static final double[][] allAttributeWeights = { { 1, 1, 1 }, { 1, 1, 0 }, { 1, 0, 1 }, { 0, 1, 1 }, { 0, 0, 1 },
+    public static final double[][] ALLATTRIBUTEWEIGHTS = { { 1, 1, 1 }, { 1, 1, 0 }, { 1, 0, 1 }, { 0, 1, 1 }, { 0, 0, 1 },
             { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, 0 }, { 0.4, 0.2, 1 }, { 0, 0, 1.5 }, { 20, 100, 10 }, { 1, 2, 3 },
             { 20, 40, 60 } };
 
@@ -42,7 +42,7 @@ public class SimpleRecordMatcherTest extends TestCase {
      * .
      */
     public void testGetMatchingProba() {
-        for (double[] attributeWeights : allAttributeWeights) {
+        for (double[] attributeWeights : ALLATTRIBUTEWEIGHTS) {
             IRecordMatcher match = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
             computeForWeights(attributeWeights, match);
         }
@@ -70,10 +70,10 @@ public class SimpleRecordMatcherTest extends TestCase {
         assertEquals(true, match.setAttributeWeights(attributeWeights));
 
         // compute proba
-        for (int rec1 = 0; rec1 < records1.length; rec1++) {
-            String[] record1 = records1[rec1];
-            for (int rec2 = 0; rec2 < records2.length; rec2++) {
-                String[] record2 = records2[rec2];
+        for (int rec1 = 0; rec1 < RECORDS1.length; rec1++) {
+            String[] record1 = RECORDS1[rec1];
+            for (int rec2 = 0; rec2 < RECORDS2.length; rec2++) {
+                String[] record2 = RECORDS2[rec2];
                 final double matchingProba = match.getMatchingWeight(record1, record2);
                 System.out.println("P(" + printRecord(record1) + " = " + printRecord(record2) + ") =" + matchingProba);
             }

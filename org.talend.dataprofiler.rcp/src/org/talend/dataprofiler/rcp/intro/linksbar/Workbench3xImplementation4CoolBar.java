@@ -24,8 +24,6 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.presentations.DefaultActionBarPresentationFactory;
 import org.eclipse.ui.internal.provisional.presentations.IActionBarPresentationFactory;
 import org.eclipse.ui.internal.tweaklets.Workbench3xImplementation;
-import org.talend.core.GlobalServiceRegister;
-import org.talend.core.ui.branding.IBrandingService;
 import org.talend.dataprofiler.rcp.Activator;
 
 /**
@@ -36,6 +34,7 @@ import org.talend.dataprofiler.rcp.Activator;
  * @author xtan
  * 
  */
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class Workbench3xImplementation4CoolBar extends Workbench3xImplementation {
 
     public static final String COOLITEM_LINKS_ID = Activator.PLUGIN_ID + ".CoolItemLinks"; //$NON-NLS-1$
@@ -49,9 +48,9 @@ public class Workbench3xImplementation4CoolBar extends Workbench3xImplementation
      * DOC xtan, add Links ToolItem on postStartup, because need to keep it at last position.
      */
     public static void createLinksToolbarItem(ICoolBarManager coolBarManager2) {
-        IBrandingService service = (IBrandingService) GlobalServiceRegister.getDefault().getService(IBrandingService.class);
+//        IBrandingService service = (IBrandingService) GlobalServiceRegister.getDefault().getService(IBrandingService.class);
 
-        boolean isPoweredbyTalend = service.isPoweredbyTalend();
+//        boolean isPoweredbyTalend = service.isPoweredbyTalend();
 
         // for talend product
         // true, it is TOP.
@@ -70,9 +69,10 @@ public class Workbench3xImplementation4CoolBar extends Workbench3xImplementation
 }
 
 /**
- * @see WorkbenchWindow
+ * @see WorkbenchWindow.
  * 
  */
+@SuppressWarnings("restriction")  //$NON-NLS-1$
 class WorkbenchWindow4CoolBar extends WorkbenchWindow {
 
     @Override
@@ -88,9 +88,10 @@ class WorkbenchWindow4CoolBar extends WorkbenchWindow {
 }
 
 /**
- * @see DefaultActionBarPresentationFactory
+ * @see DefaultActionBarPresentationFactory.
  * 
  */
+@SuppressWarnings("restriction")  //$NON-NLS-1$
 class DefaultActionBarPresentationFactory4CoolBar extends DefaultActionBarPresentationFactory {
 
     @Override
@@ -102,9 +103,10 @@ class DefaultActionBarPresentationFactory4CoolBar extends DefaultActionBarPresen
 }
 
 /**
- * @see CoolBarManager2
+ * @see CoolBarManager2.
  * 
  */
+@SuppressWarnings("restriction")  //$NON-NLS-1$
 class CoolBarManager3 extends CoolBarManager2 {
 
     public CoolBarManager3(int style) {

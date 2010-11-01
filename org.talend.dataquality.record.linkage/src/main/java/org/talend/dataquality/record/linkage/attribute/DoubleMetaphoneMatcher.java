@@ -24,7 +24,6 @@ public class DoubleMetaphoneMatcher implements IAttributeMatcher {
 
     private final DoubleMetaphone algorithm = new DoubleMetaphone();
 
-    private final int MAX = algorithm.getMaxCodeLen();
 
     /* (non-Javadoc)
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
@@ -37,7 +36,7 @@ public class DoubleMetaphoneMatcher implements IAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
      */
     public double getMatchingWeight(String str1, String str2) {
-        return StringComparisonUtil.difference(algorithm.encode(str1), algorithm.encode(str2)) / MAX;
+        return StringComparisonUtil.difference(algorithm.encode(str1), algorithm.encode(str2)) / algorithm.getMaxCodeLen();
     }
 
 }

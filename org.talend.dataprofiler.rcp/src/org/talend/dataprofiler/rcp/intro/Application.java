@@ -38,6 +38,7 @@ import org.talend.repository.ui.wizards.register.RegisterWizardPage1;
 /**
  * This class controls all aspects of the application's execution.
  */
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class Application implements IApplication {
 
     /*

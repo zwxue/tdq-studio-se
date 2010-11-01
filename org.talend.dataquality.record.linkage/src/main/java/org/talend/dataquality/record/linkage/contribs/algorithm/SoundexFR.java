@@ -1,3 +1,15 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2010 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -36,7 +48,7 @@ import org.talend.utils.string.AsciiUtils;
  */
 public class SoundexFR {
     
-    /** Informative String about the encoding type this encoder does */
+	/** Informative String about the encoding type this encoder does .	 * */
     public static final String ENCODING_TYPE = "SoundEx_FR";
     /**  */
     private static final String[] GROUP1_INPUT = {"GUI", "GUE", "GA", "GO", "GU", "CA", "CO", "CU", "Q", "CC", "CK"};
@@ -46,8 +58,11 @@ public class SoundexFR {
     
     private static final char[] VOWELS = {'E', 'I', 'O', 'U'};
     
+    private static final int ONE_NINE_ONE = 191;
+    private static final int FOUR = 4;
+    
     /**
-     * Creates a new Soundex encoder
+     * Creates a new Soundex encoder.
      */
     public SoundexFR() {
     }
@@ -100,7 +115,7 @@ public class SoundexFR {
                 continue;
             }
             
-            if ((int) ch > 191) {                         
+            if ((int) ch > ONE_NINE_ONE) {                         
                 word.setCharAt(i, AsciiUtils.removeDiacriticalMark(ch));
             }
         }               
@@ -183,10 +198,10 @@ public class SoundexFR {
         // Keep only the first 4 characters (if the token is smaller, add spaces).
         size = word.length();
         
-        if (word.length() >= 4) {
-            word.setLength(4);
+        if (word.length() >= FOUR) {
+            word.setLength(FOUR);
         } else {
-            while (size++ < 4) {
+            while (size++ < FOUR) {
                 word.append(" ");
             }
         }
@@ -228,7 +243,7 @@ public class SoundexFR {
 
 
     /**
-     * Getter for the encoding type attribute
+     * Getter for the encoding type attribute.
      * @return the encoding type the Phonetic Encoder implements
      * (such as NYSIIS or Soundex)
      * This value is for information purposes and is not enforced to be of the

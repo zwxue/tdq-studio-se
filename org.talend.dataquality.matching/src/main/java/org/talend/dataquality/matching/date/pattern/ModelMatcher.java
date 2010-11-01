@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
  * @date 11/08/2009
  */
 
+@SuppressWarnings("unchecked")
 public class ModelMatcher implements java.lang.Comparable {
 
     // model is the pattern like "MM DD YY"
@@ -65,7 +66,8 @@ public class ModelMatcher implements java.lang.Comparable {
             return -1;
         else if (this.getScore() == ((ModelMatcher) other).getScore())
             return 0;
-        else
+        else {
             return 1;
+        }
     }
 }

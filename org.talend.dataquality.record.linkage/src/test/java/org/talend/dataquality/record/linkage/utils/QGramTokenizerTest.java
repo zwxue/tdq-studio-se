@@ -22,7 +22,7 @@ import org.junit.Test;
  */
 public class QGramTokenizerTest {
 
-    private static final String input = "DOC scorreia  class global comment. Detailled comment";
+    private static final String INPUT = "DOC scorreia  class global comment. Detailled comment";
 
     /**
      * Test method for {@link org.talend.dataquality.record.linkage.utils.QGramTokenizer#tokenizeToArrayList(java.lang.String, int)}.
@@ -30,7 +30,7 @@ public class QGramTokenizerTest {
     @Test
     public void testTokenizeToArrayList() {
         QGramTokenizer tokenizer = new QGramTokenizer();
-        List<String> tokenized = tokenizer.tokenizeToArrayList(input, 3);
+        List<String> tokenized = tokenizer.tokenizeToArrayList(INPUT, 3);
         for (String token : tokenized) {
             System.out.println(token);
         }

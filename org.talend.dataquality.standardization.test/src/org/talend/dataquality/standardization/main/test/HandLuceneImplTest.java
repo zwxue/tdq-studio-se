@@ -25,7 +25,7 @@ public class HandLuceneImplTest extends TestCase {
     public void testCreateIndex() {
 
         boolean back = hl.createIndex(filename, indexfolder);
-        this.assertTrue("Creating Index :", back);
+        assertTrue("Creating Index :", back);
 
     }
 
@@ -43,7 +43,7 @@ public class HandLuceneImplTest extends TestCase {
             e.printStackTrace();
         }
         String[] soreDocs = hits.get("Edou");
-        this.assertNotNull(soreDocs);
+        assertNotNull(soreDocs);
         if (soreDocs != null) {
             for (String doc : soreDocs) {
                 System.out.println(doc);

@@ -1,3 +1,15 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2010 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 package org.talend.rcp.branding.top;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -5,7 +17,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * The activator class controls the plug-in life cycle.
  */
 public class Activator extends AbstractUIPlugin {
 
@@ -16,7 +28,7 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 	
 	/**
-	 * The constructor
+	 * The constructor.
 	 */
 	public Activator() {
 	}
@@ -40,7 +52,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the shared instance
+	 * Returns the shared instance..
 	 *
 	 * @return the shared instance
 	 */
@@ -49,8 +61,7 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
+	 * Returns an image descriptor for the image file at the given plug-in relative path.
 	 *
 	 * @param path the path
 	 * @return the image descriptor

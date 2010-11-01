@@ -27,7 +27,7 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
  * This class is a simple example of this record linkage library usage. It is designed to help the component developper.
  * this example represents a tRecordMatching component with 3 columns selected in the join key parameter.
  */
-public class SimpleExample {
+public final class SimpleExample {
 
     // The value of the thresholds
     private static final double ACCEPTABLE_THRESHOLD = 0.95;
@@ -35,17 +35,23 @@ public class SimpleExample {
     private static final double UNACCEPTABLE_THRESHOLD = 0.8;
 
     // 2 samples of data
-    private static final String[][] mainRecords = { { "seb", "talend", "suresnes", "data not used in record matching" },
+    private static final String[][] MAINRECORDS = { { "seb", "talend", "suresnes", "data not used in record matching" },
             { "seb", "talend", "suresns", null }, { "seb", "tlend", "sursnes", null }, { "sebas", "taland", "suresnes", null } };
 
-    private static final String[][] lookupRecords = { { "seb", "tlend", "sursnes", null },
+    private static final String[][] LOOKUPRECORDS = { { "seb", "tlend", "sursnes", null },
             { "sebas", "taland", "suresnes", null }, };
 
     // the algorithms selected by the user for each of the 3 join keys
-    private static final String[] attributeMatcherAlgorithms = { "Exact", "Double Metaphone", "Levenshtein" };
+    private static final String[] ATTRIBUTEMATCHERALGORITHMS = { "Exact", "Double Metaphone", "Levenshtein" };
 
     // the weights given by the user to each of the 3 join key.
-    private static final double[] attributeWeights = { 1, 1, 1 };
+    private static final double[] ATTRIBUTEWEIGHTS = { 1, 1, 1 };
+    
+    
+    private SimpleExample(){
+    	
+    }
+    
 
     /**
      * DOC scorreia Comment method "main".
@@ -62,15 +68,15 @@ public class SimpleExample {
         recordMatcher.setRecordSize(nbRecords);
 
         // create attribute matchers for each of the join key
-        int nbJoinKey = attributeMatcherAlgorithms.length;
+        int nbJoinKey = ATTRIBUTEMATCHERALGORITHMS.length;
         IAttributeMatcher[] attributeMatchers = new IAttributeMatcher[nbJoinKey];
         for (int i = 0; i < attributeMatchers.length; i++) {
-            attributeMatchers[i] = AttributeMatcherFactory.createMatcher(attributeMatcherAlgorithms[i]);
+            attributeMatchers[i] = AttributeMatcherFactory.createMatcher(ATTRIBUTEMATCHERALGORITHMS[i]);
         }
         recordMatcher.setAttributeMatchers(attributeMatchers);
 
         // set the weights chosen by the user
-        recordMatcher.setAttributeWeights(attributeWeights);
+        recordMatcher.setAttributeWeights(ATTRIBUTEWEIGHTS);
 
         // initialize the blocking variables
         // (we use the column which are in exact match as blocking variables but we could change this in the future)
@@ -90,10 +96,10 @@ public class SimpleExample {
         // ////////////// END OF INITIALIZATION /////////////////////
 
         // /////////// MAIN LOOP now /////////////// compute proba
-        for (int rec1 = 0; rec1 < mainRecords.length; rec1++) {
-            String[] record1 = mainRecords[rec1];
-            for (int rec2 = 0; rec2 < lookupRecords.length; rec2++) {
-                String[] record2 = lookupRecords[rec2];
+        for (int rec1 = 0; rec1 < MAINRECORDS.length; rec1++) {
+            String[] record1 = MAINRECORDS[rec1];
+            for (int rec2 = 0; rec2 < LOOKUPRECORDS.length; rec2++) {
+                String[] record2 = LOOKUPRECORDS[rec2];
 
                 final double matchingProba = recordMatcher.getMatchingWeight(record1, record2);
                 if (matchingProba >= ACCEPTABLE_THRESHOLD) {

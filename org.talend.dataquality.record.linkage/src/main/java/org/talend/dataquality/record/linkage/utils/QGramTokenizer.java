@@ -63,14 +63,17 @@ public class QGramTokenizer {
             return new StringBuffer(THREE_CHARS).append(input).append(THREE_CHARS).toString();
         case 5:
             return new StringBuffer(FOUR_CHARS).append(input).append(FOUR_CHARS).toString();
-        default: {
-            StringBuffer buf = new StringBuffer();
-            for (int i = 0; i < q; i++) {
-                buf.append('#');
-            }
-            return new StringBuffer(buf.toString()).append(input).append(buf.toString()).toString();
-        }
+        default: 
+            return calDefaultPad('#',q,input);
         }
     }
+    
+	private String calDefaultPad(char charac, int repeat,String input) {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < repeat; i++) {
+			buf.append('#');
+		}
+		return 	buf.append(input).append(buf.toString()).toString();
+	}
 
 }

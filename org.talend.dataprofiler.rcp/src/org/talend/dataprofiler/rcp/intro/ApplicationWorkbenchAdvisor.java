@@ -26,6 +26,7 @@ import org.talend.repository.registeruser.RegisterManagement;
  * DOC rli class global comment. Detailled comment <br/>
  * 
  */
+@SuppressWarnings("restriction")
 public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
 
     private static Logger log = Logger.getLogger(ApplicationWorkbenchAdvisor.class);

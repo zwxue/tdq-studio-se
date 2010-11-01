@@ -43,6 +43,7 @@ import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4Cool
  * DOC rli class global comment. Detailled comment <br/>
  * 
  */
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction exitAction;
@@ -158,7 +159,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     /**
      * remove the unnecessary actions.
      */
-    @SuppressWarnings("restriction")//$NON-NLS-1$
     private void removeAction() {
         ActionSetRegistry reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
         IActionSetDescriptor[] actionSets = reg.getActionSets();

@@ -16,7 +16,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.talend.rcp.branding.top.application"
-            name="%product.name.TalendOpenProfiler">
+            name="Talend Open Profiler">
          <property
                name="windowImages"
                value="platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_16x16.gif,platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_32x32.gif,platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_48x48.gif">

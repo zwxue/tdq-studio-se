@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 
 /***/
-public class ImplementationHelper {
+public final class ImplementationHelper {
 
     protected static Logger log = Logger.getLogger(ImplementationHelper.class);
 
@@ -29,6 +29,9 @@ public class ImplementationHelper {
     private static final String REPOSITORY_MANAGER = "repositoryManager";
 
     private static RepositoryManager instance = null;
+    private ImplementationHelper(){
+    	
+    }
     
     public static synchronized RepositoryManager getRepositoryManager() {
         if (instance == null)

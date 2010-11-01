@@ -22,7 +22,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
  * 
  * Factory that helps to create attribute matchers from their label or type.
  */
-public class AttributeMatcherFactory {
+public final class AttributeMatcherFactory {
 
     private static List<String> labels = new ArrayList<String>();
 

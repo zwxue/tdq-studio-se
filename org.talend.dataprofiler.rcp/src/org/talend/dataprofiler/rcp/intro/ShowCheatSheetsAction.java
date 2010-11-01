@@ -31,6 +31,7 @@ import org.eclipse.ui.intro.config.IIntroAction;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class ShowCheatSheetsAction extends Action implements IIntroAction {
 
     private static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$

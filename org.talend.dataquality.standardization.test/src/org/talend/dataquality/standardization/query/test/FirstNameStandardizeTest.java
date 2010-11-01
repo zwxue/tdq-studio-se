@@ -19,7 +19,7 @@ import org.talend.dataquality.standardization.query.FirstNameStandardize;
 
 public class FirstNameStandardizeTest extends TestCase {
 
-    private String filename = "./data/TalendGivenNames.TXT";
+//    private String filename = "./data/TalendGivenNames.TXT";
 
     private String indexfolder = "./data/TalendGivenNames_index";
 
