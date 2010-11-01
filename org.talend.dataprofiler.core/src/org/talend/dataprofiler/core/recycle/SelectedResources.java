@@ -126,11 +126,11 @@ public class SelectedResources {
             if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
                 path = path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
                 conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                        ERepositoryObjectType.METADATA_CONNECTIONS, path);
+                        ERepositoryObjectType.METADATA_CONNECTIONS, path, true);
             } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
                 path = path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
                 conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                        ERepositoryObjectType.METADATA_MDMCONNECTION, path);
+                        ERepositoryObjectType.METADATA_MDMCONNECTION, path, true);
             }
             if (conList != null) {
                 for (IRepositoryViewObject repViewObj : conList) {

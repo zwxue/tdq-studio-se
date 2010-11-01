@@ -49,7 +49,7 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
             try {
                 Object[] members = ((IContainer) parentElement).members();
                 if (parentElement.equals(ResourceManager.getConnectionFolder())) {
-                    members = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE).toArray();
+                    members = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
                 }
                 return members;
             } catch (CoreException e) {

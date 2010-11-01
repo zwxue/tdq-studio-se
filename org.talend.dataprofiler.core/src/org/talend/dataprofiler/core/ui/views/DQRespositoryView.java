@@ -127,11 +127,11 @@ public class DQRespositoryView extends CommonNavigator {
             ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(
                     new RepositoryWorkUnit("Create DQ Repository structure") {
 
-                @Override
-                protected void run() {
-                    manager.createDQStructure();
-                }
-            });
+                        @Override
+                        protected void run() {
+                            manager.createDQStructure();
+                        }
+                    });
         }
 
         if (manager.isNeedMigration()) {
@@ -182,7 +182,7 @@ public class DQRespositoryView extends CommonNavigator {
 
         // Loading repository view objects (metadata ...)
         // DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjectsWithFolder(Boolean.TRUE);
-        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(Boolean.TRUE);
+        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
         // initialized connections in sql explorer.
         Collection<Connection> providers = ProxyRepositoryViewObject.getAllDatabaseConnections();
         for (DataProvider provider : providers) {

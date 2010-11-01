@@ -49,7 +49,7 @@ public class TableContentProvider extends DQRepositoryViewContentProvider {
             }
             if (container.equals(ResourceManager.getConnectionFolder())) {
 
-                members = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE).toArray();
+                members = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
                 ComparatorsFactory.sort(members, ComparatorsFactory.IREPOSITORYVIEWOBJECT_COMPARATOR_ID);
             }
             return members;

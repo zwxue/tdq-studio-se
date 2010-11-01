@@ -669,7 +669,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     } catch (TalendException e) {
                         MessageBoxExceptionHandler.process(e);
                     }
-                    ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
+                    ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
                     ProxyRepositoryViewObject.save(conn);
                 }
                 return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
@@ -739,9 +739,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
 
                 if (ResourceManager.getConnectionFolder().equals(container)) {
-                    return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(true).toArray();
+                    return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(true, true).toArray();
                 } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                    return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(true).toArray();
+                    return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(true, true).toArray();
                 }
 
                 // ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);

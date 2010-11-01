@@ -48,9 +48,9 @@ public class ConnectionsContentProvider extends AdapterFactoryContentProvider {
             IContainer container = (IContainer) parentElement;
             IResource[] members = null;
             if (ResourceManager.getConnectionFolder().equals(container)) {
-                return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE).toArray();
+                return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
             } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(Boolean.FALSE).toArray();
+                return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
             }
             try {
 

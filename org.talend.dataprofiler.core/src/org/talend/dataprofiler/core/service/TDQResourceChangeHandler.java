@@ -103,7 +103,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
      */
     public void handleLogicalDelete(Property prop) {
         // MOD qiongli 2010-10-22,bug 16610
-        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true);
+        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
         if (ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(prop) != null) {
             LogicalDeleteFileHandle.refreshDelPropertys(1, prop);
         }

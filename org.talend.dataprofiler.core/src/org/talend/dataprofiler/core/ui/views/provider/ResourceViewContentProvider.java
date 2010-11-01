@@ -176,7 +176,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 }
                 IPath path = folder.getFullPath().makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
                 List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                        ERepositoryObjectType.METADATA_CONNECTIONS, path);
+                        ERepositoryObjectType.METADATA_CONNECTIONS, path, true);
                 returnList.addAll(getConnectionChildren(conList));
                 for (Object folderResource : Arrays.asList(getChildrenExceptRecBin(folder))) {
                     if (folderResource instanceof IResource && ((IResource) folderResource).getType() == IResource.FOLDER) {
@@ -215,7 +215,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 }
                 IPath path = folder.getFullPath().makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
                 List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                        ERepositoryObjectType.METADATA_MDMCONNECTION, path);
+                        ERepositoryObjectType.METADATA_MDMCONNECTION, path, true);
                 returnList.addAll(getConnectionChildren(conList));
                 for (Object folderResource : Arrays.asList(getChildrenExceptRecBin(folder))) {
                     if (folderResource instanceof IResource && ((IResource) folderResource).getType() == IResource.FOLDER) {

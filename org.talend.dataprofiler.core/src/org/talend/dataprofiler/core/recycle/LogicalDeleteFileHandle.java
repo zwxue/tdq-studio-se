@@ -47,7 +47,6 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public class LogicalDeleteFileHandle {
 
-
     private static Logger log = Logger.getLogger(LogicalDeleteFileHandle.class);
 
     private static String slashStr = "\\";
@@ -69,7 +68,7 @@ public class LogicalDeleteFileHandle {
             IFolder folder = null;
             HashSet<String> set = new HashSet<String>();
             DQRecycleBinNode rbn = null;
-            
+
             for (Property property : delPropertys) {
                 file = PropertyHelper.getItemFile(property);
                 if (file.getParent().getFullPath().toOSString().equals(folderPath)) {
@@ -181,7 +180,7 @@ public class LogicalDeleteFileHandle {
         IResource[] members = null;
         try {
             members = folder.members();
-            if(members.length==0)
+            if (members.length == 0)
                 return false;
         } catch (Exception e) {
             log.error(e, e);
@@ -191,11 +190,11 @@ public class LogicalDeleteFileHandle {
         if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
             path = path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
             conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                    ERepositoryObjectType.METADATA_CONNECTIONS, path);
+                    ERepositoryObjectType.METADATA_CONNECTIONS, path, true);
         } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
             path = path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
             conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                    ERepositoryObjectType.METADATA_MDMCONNECTION, path);
+                    ERepositoryObjectType.METADATA_MDMCONNECTION, path, true);
         }
         if (conList != null) {
             for (IRepositoryViewObject repViewObj : conList) {

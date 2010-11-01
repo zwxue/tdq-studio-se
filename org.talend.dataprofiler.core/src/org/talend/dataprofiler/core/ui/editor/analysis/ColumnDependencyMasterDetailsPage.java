@@ -250,7 +250,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         if (save.isOk()) {
             // MOD qiongli bug 14437: save dependency
             if (tdDataProvider != null) {
-                ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
+                ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
                 ProxyRepositoryViewObject.save(tdDataProvider);
             }
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$

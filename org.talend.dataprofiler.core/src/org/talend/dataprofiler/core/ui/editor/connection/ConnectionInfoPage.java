@@ -426,8 +426,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         super.doSave(monitor);
         try {
             saveConnectionInfo();
+
+            this.initialize(this.getEditor());
+
             if (checkDBConnection)
                 reloadDataProvider();
+
             this.isUrlChanged = false;
             this.isDirty = false;
         } catch (DataprofilerCoreException e) {
@@ -454,6 +458,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void reloadDataProvider() {
+
+        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
         final IRepositoryViewObject reposViewObj = ProxyRepositoryViewObject.getRepositoryViewObject(connection);
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
@@ -474,6 +480,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         try {
             ProgressUI.popProgressDialog(op);
             CorePlugin.getDefault().refreshDQView();
+            this.initialize(this.getEditor());
+            this.getEditor().close(false);
         } catch (InvocationTargetException e) {
             MessageUI.openError(Messages.getString("ReloadDatabaseAction.checkConnectionFailured", e.getCause().getMessage())); //$NON-NLS-1$
             log.error(e, e);
@@ -489,8 +497,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      */
     @Override
     protected void saveTextChange() {
+        if (connection != null && connection.eIsProxy()) {
+            connection = (Connection) EObjectHelper.resolveObject(connection);
+        }
         super.saveTextChange();
         ConnectionUtils.setName(connection, nameText.getText());
+        PropertyHelper.getProperty(connection).setLabel(nameText.getText());
         ConnectionUtils.setUsername(connection, loginText.getText());
         ConnectionUtils.setPassword(connection, passwordText.getText());
         ConnectionUtils.setURL(connection, urlText.getText());

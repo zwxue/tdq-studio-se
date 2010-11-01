@@ -101,7 +101,7 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
             log.error("No content in " + fileResource);
         }
         if (log.isDebugEnabled()) {
-            log.debug("Nb elements in contents " + contents.size());
+            log.debug("No elements in contents " + contents.size());
         }
         PatternSwitch<Pattern> mySwitch = new PatternSwitch<Pattern>() {
 
