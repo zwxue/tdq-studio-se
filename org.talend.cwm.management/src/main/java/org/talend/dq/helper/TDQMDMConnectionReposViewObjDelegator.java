@@ -51,7 +51,7 @@ public final class TDQMDMConnectionReposViewObjDelegator extends TDQConnectionRe
      * @see org.talend.dq.helper.ADQRepositoryViewObjectDelegator#fetchRepositoryViewObjectsLower()
      */
     @Override
-    protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower() {
+    protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower(boolean withDelete) {
         List<IRepositoryViewObject> connList = new ArrayList<IRepositoryViewObject>();
         try {
             // ProxyRepositoryFactory.getInstance().initialize();
@@ -59,7 +59,9 @@ public final class TDQMDMConnectionReposViewObjDelegator extends TDQConnectionRe
             // ProjectManager.getInstance().getCurrentProject(), true).getMembers());
             // connList.addAll(ProxyRepositoryFactory.getInstance().getMetadataMDM(ProjectManager.getInstance().getCurrentProject(),
             // true).getMembers());
-            connList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION, true));
+            connList
+                    .addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION, withDelete));
+            ProxyRepositoryFactory.getInstance().getMetadataMDM();
             clear();
             for (IRepositoryViewObject reposViewObj : connList) {
                 // Register the Repository view objects by connection to be able to grab the Repository view object

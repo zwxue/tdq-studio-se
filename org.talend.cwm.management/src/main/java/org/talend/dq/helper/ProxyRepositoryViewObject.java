@@ -39,12 +39,12 @@ public final class ProxyRepositoryViewObject {
     }
 
     public static List<IRepositoryViewObject> fetchRepositoryViewObjectsByFolder(boolean reload, ERepositoryObjectType itemType,
-            IPath path) {
+            IPath path, boolean withDelete) {
 
         if (itemType == ERepositoryObjectType.METADATA_CONNECTIONS) {
-            return getDBConnectionInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path);
+            return getDBConnectionInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path, withDelete);
         } else if (itemType == ERepositoryObjectType.METADATA_MDMCONNECTION) {
-            return getMDMConnectionInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path);
+            return getMDMConnectionInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path, withDelete);
         }
         return new ArrayList<IRepositoryViewObject>();
 
@@ -246,15 +246,15 @@ public final class ProxyRepositoryViewObject {
         return false;
     }
 
-    public static List<IRepositoryViewObject> fetchAllDBRepositoryViewObjects(Boolean reload) {
+    public static List<IRepositoryViewObject> fetchAllDBRepositoryViewObjects(Boolean reload, boolean withDelete) {
         List<IRepositoryViewObject> dbReposViewObjs = new ArrayList<IRepositoryViewObject>();
-        dbReposViewObjs.addAll(getDBConnectionInstance().fetchRepositoryViewObjects(reload));
+        dbReposViewObjs.addAll(getDBConnectionInstance().fetchRepositoryViewObjects(reload, withDelete));
         return dbReposViewObjs;
     }
 
-    public static List<IRepositoryViewObject> fetchAllMDMRepositoryViewObjects(Boolean reload) {
+    public static List<IRepositoryViewObject> fetchAllMDMRepositoryViewObjects(Boolean reload, boolean withDelete) {
         List<IRepositoryViewObject> mdmReposViewObjs = new ArrayList<IRepositoryViewObject>();
-        mdmReposViewObjs.addAll(getMDMConnectionInstance().fetchRepositoryViewObjects(reload));
+        mdmReposViewObjs.addAll(getMDMConnectionInstance().fetchRepositoryViewObjects(reload, withDelete));
         return mdmReposViewObjs;
     }
 
@@ -264,10 +264,10 @@ public final class ProxyRepositoryViewObject {
      * 
      * @param true1
      */
-    public static List<IRepositoryViewObject> fetchAllRepositoryViewObjects(Boolean reload) {
+    public static List<IRepositoryViewObject> fetchAllRepositoryViewObjects(Boolean reload, boolean withDelete) {
         List<IRepositoryViewObject> reposViewObjs = new ArrayList<IRepositoryViewObject>();
-        reposViewObjs.addAll(getDBConnectionInstance().fetchRepositoryViewObjects(reload));
-        reposViewObjs.addAll(getMDMConnectionInstance().fetchRepositoryViewObjects(reload));
+        reposViewObjs.addAll(getDBConnectionInstance().fetchRepositoryViewObjects(reload, withDelete));
+        reposViewObjs.addAll(getMDMConnectionInstance().fetchRepositoryViewObjects(reload, withDelete));
         return reposViewObjs;
     }
 

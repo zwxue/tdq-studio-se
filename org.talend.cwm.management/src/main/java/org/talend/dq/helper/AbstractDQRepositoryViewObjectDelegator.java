@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -94,7 +95,16 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
             // -2 If the resource is not unloaded, judge by comparing with the resource instance or uuid
             // -3 if the resource is unloaded ,try to resolve the instance then comparing the resource URI.
             // from TOS.
-            if (ResourceHelper.areSame(element, ele)) {
+            EObject tempElement = null;
+            EObject tempEle = null;
+            if (element != null && element.eIsProxy() && element instanceof EObject) {
+                tempElement = EObjectHelper.resolveObject(element);
+
+            }
+            if (ele != null && ele.eIsProxy() && ele instanceof EObject) {
+                tempEle = EObjectHelper.resolveObject(ele);
+            }
+            if (ResourceHelper.areSame(element.eIsProxy() ? tempElement : element, ele.eIsProxy() ? tempEle : ele)) {
                 setActiveElement(modEleToReposObjMap.get(ele), element);
                 return modEleToReposObjMap.get(ele);
             }
@@ -168,7 +178,7 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
     public ReturnCode saveElement(T element) {
         ReturnCode rc = new ReturnCode();
         // Refresh the cache firstly so that the property won't be a proxy.
-        fetchRepositoryViewObjects(Boolean.TRUE);
+        fetchRepositoryViewObjects(Boolean.TRUE, Boolean.FALSE);
         IRepositoryViewObject reposViewObj = getRepositoryViewObject(element);
         if (reposViewObj != null) {
             return saveByone(element, reposViewObj);
@@ -195,13 +205,13 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
      * @param reload, true to reload.
      * @return
      */
-    public List<IRepositoryViewObject> fetchRepositoryViewObjects(boolean reload) {
+    public List<IRepositoryViewObject> fetchRepositoryViewObjects(boolean reload, boolean withDelete) {
         if (!reload) {
             IRepositoryViewObject[] reposViewObjs = new IRepositoryViewObject[modEleToReposObjMap.values().size()];
             return Arrays.asList(modEleToReposObjMap.values().toArray(reposViewObjs));
         }
         // Reload
-        return fetchRepositoryViewObjectsLower();
+        return fetchRepositoryViewObjectsLower(withDelete);
     }
 
     /**
@@ -214,9 +224,9 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
      * @return
      */
     public List<IRepositoryViewObject> fetchRepositoryViewObjectsByFolder(boolean reload, ERepositoryObjectType itemType,
-            IPath path) {
+            IPath path, boolean withDelete) {
         if (reload) {
-            fetchRepositoryViewObjectsLower();
+            fetchRepositoryViewObjectsLower(withDelete);
         }
         List<IRepositoryViewObject> folderRepositoryObjectList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(
                 itemType, path);
@@ -231,6 +241,6 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
 
     }
 
-    protected abstract List<IRepositoryViewObject> fetchRepositoryViewObjectsLower();
+    protected abstract List<IRepositoryViewObject> fetchRepositoryViewObjectsLower(boolean withDelete);
 
 }

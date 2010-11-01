@@ -25,9 +25,11 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.ProxyRepositoryFactory;
@@ -120,6 +122,12 @@ public class DataProviderWriter extends AElementPersistance {
      */
     @Override
     protected void addResourceContent(ModelElement element) {
+        // ProxyRepositoryViewObject.save((Connection) element);
+        ModelElement tempElement = element;
+        if (element != null && element.eIsProxy()) {
+            tempElement = (ModelElement) EObjectHelper.resolveObject(element);
+        }
+
         EList<EObject> resourceContents = element.eResource().getContents();
 
         // save dependency values
@@ -173,7 +181,16 @@ public class DataProviderWriter extends AElementPersistance {
     public ReturnCode save(Item item) {
         ReturnCode rc = new ReturnCode();
         try {
+
             ConnectionItem connItem = (ConnectionItem) item;
+
+            if (connItem != null && connItem.eIsProxy()) {
+
+                ConnectionItem tempConnItem = (ConnectionItem) EObjectHelper.resolveObject(connItem);
+                ConnectionUtils.fillAttributeBetweenConnection(tempConnItem.getConnection(), connItem.getConnection());
+                connItem = tempConnItem;
+                connItem.getProperty().setLabel(connItem.getConnection().getName());
+            }
             Connection conn = connItem.getConnection();
             addDependencies(conn);
             addResourceContent(conn);

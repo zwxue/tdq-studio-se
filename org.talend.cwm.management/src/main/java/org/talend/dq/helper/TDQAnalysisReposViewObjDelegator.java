@@ -26,7 +26,7 @@ import org.talend.utils.sugars.ReturnCode;
 public class TDQAnalysisReposViewObjDelegator extends AbstractDQRepositoryViewObjectDelegator<Analysis> {
 
     @Override
-    protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower() {
+    protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower(boolean withDelete) {
         // TODO Auto-generated method stub
         return null;
     }
